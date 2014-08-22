@@ -1,0 +1,67 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the Media: Flickr module.
+ */
+
+/**
+ * Implements hook_install().
+ */
+function media_flickr_install() {
+  return array();
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function media_flickr_uninstall() {
+  include_once('includes/media_flickr.variables.inc');
+  foreach (media_flickr_variable_default() as $name => $value) {
+    media_flickr_variable_del($name);
+  }
+  return array(array('success' => TRUE, 'query' => "Deleted all variables in the Media: Flickr namespace."));
+}
+
+/**
+ * Register new included files.
+ */
+function media_flickr_update_7001() {
+}
+
+/**
+ * We now namespace variables with a prefix, so fix old variables.
+ */
+function media_flickr_update_7002() {
+  drupal_load('module', 'media_flickr');
+  foreach (media_flickr_variable_default() as $variable => $value) {
+    if (($test = variable_get('media_flickr_' . $variable, TRUE)) == variable_get('media_flickr_' . $variable, FALSE)) {
+      media_flickr_variable_set($variable, $test);
+      variable_del('media_flickr_' . $variable);
+    }
+  }
+}
+
+/**
+ * Register new theme functions.
+ */
+function media_flickr_update_7004() {
+}
+
+/**
+ * Register new style presets for photosets.
+ */
+function media_flickr_update_7005() {
+}
+
+/**
+ * Register new style presets for photosets based on Image styles.
+ */
+function media_flickr_update_7006() {
+}
+
+/**
+ * Register new permissions.
+ */
+function media_flickr_update_7007() {
+}

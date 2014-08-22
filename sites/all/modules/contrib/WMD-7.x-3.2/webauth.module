@@ -1,0 +1,730 @@
+<?php
+/**
+ * @file
+ * Authenticates users through Stanford WebAuth
+ *
+ */
+
+define('WEBAUTH_DOMAIN', 'stanford.edu');
+
+/**
+ * Implements hook_boot().
+ *
+ * This functions very very early, before most of Drupal has even loaded.
+ *
+ * The sole purposes of this function is to ensure HTTPS protocol, and
+ * the security of the session.
+ */
+
+function webauth_boot() {
+  if (!empty($_SERVER['HTTPS'])) {
+    global $base_url, $user, $base_path;
+
+    // Mandate HTTPS for sessions.
+    ini_set('session.cookie_secure', 1);
+
+    // Session cookies should be deleted when the browser session ends
+    ini_set('session.cookie_lifetime', 0);
+    
+    $base_url = str_replace('http://', 'https://', $base_url);
+
+    // Set a flag to indicate the user is logged in and that there are
+    // secure cookies. Since sessions for logged in users are only sent
+    // through HTTPS, those sessions won't be sent through HTTP.
+    // This cookies lets WMD know to redirect the user to an HTTPS version
+    // of the site so that those secure cookies can be received.
+    if ($user->uid > 0) {
+      setcookie("WMDsecureLogin", 1, REQUEST_TIME + 3600, $base_path);
+    }
+  }
+  elseif (isset($_COOKIE["WMDsecureLogin"]) && $_COOKIE["WMDsecureLogin"]) {
+    // An session seems to exist, but we are not in HTTPs.
+    // Redirect so we can start secure session.
+    drupal_bootstrap(DRUPAL_BOOTSTRAP_FULL);
+    global $base_url;
+    $url = $base_url . '/' . drupal_get_path_alias($_GET['q']);
+    $url = str_replace('http://', 'https://', $url);
+    header("Location: $url");
+  }
+}
+
+
+/**
+ * Implements hook_init().
+ *
+ * If a user was created via webauth, we validate their session there.
+ *
+ * This function also ensures that webauth is handling 403s, and that
+ * pages for logged in users are not cached in browsers.
+ */
+
+function webauth_init() {
+  global $_webauth_session, $user;
+
+  // Make sure we are handling 403 errors to implement auto-login
+  $access_denied_page = variable_get('site_403', '');
+  if ($access_denied_page != 'webauth/403') {
+    variable_set('site_403', 'webauth/403');
+  }
+
+  // Pages for logged in users should not be cached
+  if ($user->uid > 0) {
+    header("Cache-Control: no-store, no-cache, must-revalidate");
+  }
+
+  // End the session and log user out if:
+  // the user is logged in as a WebAuth user and:
+  // either the user no longer has a webauth_at cookie
+  // or the user's token has expired, or is not there
+  if ($user->uid > 0) {
+    // We only want to go further if this user is authenticated via WebAuth
+    if (db_query("SELECT * FROM {authmap} WHERE uid = :uid and module = :module", array(':uid' => $user->uid, ':module' => 'webauth'))->fetchField()) {
+      if ((!isset($_COOKIE['webauth_at'])) ||
+          (!isset($_SESSION['wa_session_data']['wa_token_expiration'])) ||
+          ($_SESSION['wa_session_data']['wa_token_expiration'] <= time())
+         ) {
+        // Destroy the current session 
+        session_destroy();
+        // Start a new session so that we don't clobber other functions that expect
+        // a session (like logout)
+		session_start();
+        // Only variables can be passed by reference workaround.
+        $null = NULL;
+        user_module_invoke('user/logout', $null, $user);
+        // Load the anonymous user
+        $user = drupal_anonymous_user();
+      }
+    }
+  }
+}
+
+
+/**
+ * Implements hook_menu().
+ */
+
+function webauth_menu() {
+  $items = array();
+
+  // Setup our authentication URL
+  $path = variable_get('webauth_path', conf_path() . '/webauth') . '/login';
+
+  $items[$path] = array(
+    'page callback' => 'webauth_return',
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+  );
+
+  $items['webauth/403'] = array(
+    'page callback' => 'webauth_error_page',
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+  );
+
+  $items['admin/config/webauth'] = array(
+    'title' => 'WebAuth',
+    'type' => MENU_NORMAL_ITEM,
+    'description' => 'Authenticate through Stanford WebAuth',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('webauth_admin_settings'),
+    'access arguments' => array('administer site configuration'),
+    'file' => 'webauth.admin.inc',
+  );
+
+  $items['admin/config/webauth/settings'] = array(
+    'title' => 'WebAuth Settings',
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+    'weight' => -10,
+  );
+
+  $items['admin/config/webauth/authorizations'] = array(
+    'title' => 'Authorizations',
+    'description' => 'Edit the users and groups that are required for access.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('webauth_admin_users'),
+    'access arguments' => array('administer site configuration'),
+    'file' => 'webauth.admin.inc',
+    'type' => MENU_LOCAL_TASK,
+    'weight' => 1,
+  );
+
+  $items['admin/config/webauth/mappings'] = array(
+    'title' => 'Role Mappings',
+    'description' => 'Edit the groups that can use WebAuth for content access.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('webauth_admin_groups'),
+    'access arguments' => array('administer site configuration'),
+    'file' => 'webauth.admin.inc',
+    'type' => MENU_LOCAL_TASK,
+  );
+
+  return $items;
+}
+
+
+/**
+ * Implements hook_block_info().
+ */
+
+function webauth_block_info() {
+  $blocks['webauth_login_block'] = array(
+    'info'       => t('WebAuth Authentication'),
+    'status'     => 1,
+    'visibility' => BLOCK_VISIBILITY_NOTLISTED,
+	'pages'      => "user\nuser/*",
+    'weight'     => 0,
+    'region'     => 'sidebar_first'
+  );
+  return $blocks;
+}
+
+
+/**
+ * Implements hook_block_configure().
+ */
+
+function webauth_block_configure($delta = '') {
+  $form = array();
+  switch ($delta) {
+    case 'webauth_login_block':
+      $form['webauth_link_text'] = array(
+      '#type'          => 'textfield',
+      '#title'         => t('Text of the WebAuth login link'),
+      '#require'       => TRUE,
+      '#size'          => 60,
+      '#description'   => t('Here you can replace the text of the WebAuth link.'),
+      '#default_value' => variable_get('webauth_link_text', 'Log in with WebAuth'),
+    );
+  }
+  return $form;
+}
+
+
+/**
+ * Implements hook_block_save().
+ */
+
+function webauth_block_save($delta = '', $edit = array()) {
+  switch ($delta) {
+    case 'webauth_login_block':
+      variable_set('webauth_link_text', filter_xss($edit['webauth_link_text']));
+  }
+}
+
+
+/**
+ * Implements hook_block_view().
+ */
+
+function webauth_block_view($delta = '') {
+  $block = array();
+  switch ($delta) {
+    case 'webauth_login_block':
+	  // only show block for anonymous users
+	  if (user_is_logged_in()) { return $block; }
+      $block = array(
+        'subject' => t('WebAuth Login'),
+        'content' => _webauth_login_url_html(),
+      );
+      break;
+  }
+  return $block;
+}
+
+
+/**
+ * Implements hook_block_view_alter().
+ */
+
+function webauth_block_view_user_login_alter(&$data, $block) {
+  $allow_local = variable_get('webauth_allow_local', TRUE);
+  if (!$allow_local) {
+    unset($data['content']);
+  }
+  else {
+    $data['subject'] = t('Local User Login');
+  }
+}
+
+
+/**
+ * Generate the login block content
+ */
+
+function _webauth_login_url_html() {
+  global $user, $base_url, $_webauth_session;
+  // Create a webauth session if needed and not already created.
+  if (!$_webauth_session) {
+    $_webauth_session = new WebAuthSession();
+  }
+
+  $webauth_login = $_webauth_session->getLoginUrl();
+  if ($user->uid === 0) {
+    return theme('webauth_login_block',array('login_url' => $webauth_login, 'login_text' => variable_get('webauth_link_text', 'Log in with WebAuth')));
+  }
+  return NULL;
+}
+
+
+/**
+ * Handle 403 errors by redirecting users to webauth for login.
+ *
+ * If, however, they are already logged in and don't have access
+ * (for instance, a normal user requesting /admin), then display
+ * a normal error message.
+ */
+
+function webauth_error_page() {
+  global $_webauth_session, $user;
+  // @todo: Move this into a static getWebAuthSession() function within the class.
+  if (!$_webauth_session) {
+    $_webauth_session = new WebAuthSession();
+  }
+  // If logged in.
+  if ($user->uid) {
+    // Get restrict message
+    $webauth_restrict_message = filter_xss_admin(t(variable_get('webauth_restrict_message',
+      'This content has been restricted by the author or by the site administrator.')));
+    // If a custom message exists, create 403, and print message.
+    if ($webauth_restrict_message) {
+      drupal_add_http_header('Status', '403 Forbidden');
+      drupal_set_title(t('Access denied'));
+      return $webauth_restrict_message;
+    }
+    // If a message doesn't exist display default access denied page
+    else {
+      return MENU_ACCESS_DENIED;
+    }
+  }
+  // If not logged in
+  else {
+    // Redirect to login
+    $_webauth_session->getWeblogin();
+  }
+
+}
+
+
+/**
+ * Function to return from webauth login from.
+ *
+ * This handles logging a user in and then redirecting them to the page they
+ * were previously on.
+ */
+
+function webauth_return() {
+  global $_webauth_session, $user;
+  if (!$_webauth_session) {
+    $_webauth_session = new WebAuthSession();
+  }
+
+  // If the user has no webauth_at cookie, redirect immediately to log in through WebAuth
+  // After they go through there, they'll go through the menu system and come back
+  // to this function again
+  if (!isset($_COOKIE['webauth_at'])) {
+    $_webauth_session->getWeblogin();
+  }
+
+  if ($user->uid == 0) {
+    if ($_webauth_session->isValidSession()) {
+      $form_state = array();
+      $form_state['values']['name'] = $_webauth_session->getSessionData('wa_remote_user');
+      $form_state['values']['pass'] = 'dummy';
+      $form_state['weblogin']['server'] = variable_get('webauth_domain', WEBAUTH_DOMAIN);
+
+      // We check this flag later, when registering new users through WebAuth
+	  // We can't use authmap yet at that point since the user has not been added to the table yet
+      global $webauth_authenticated;
+	  $webauth_authenticated = TRUE;
+
+      drupal_form_submit('user_login', $form_state);
+    }
+    else {
+      session_destroy();
+      return $_webauth_session->getWeblogin();
+    }
+  }
+
+  if (!$_webauth_session->isValidSession()) {
+    drupal_set_message(t('Unknown error occurred.'));
+  }
+  $return = $_webauth_session->getReturnUrl();
+  $login = variable_get('webauth_path', conf_path() . '/webauth') . '/login';
+  if (substr($return, 0, strlen($login)) == $login) {
+    $return = '';
+  }
+  drupal_goto($return);
+}
+
+
+/**
+ * Implements hook_theme().
+ */
+
+function webauth_theme($existing, $type, $theme, $path) {
+  return array(
+    'webauth_htaccess' => array(
+      'template' => 'webauth_htaccess',
+      'variables' => array(
+        'groups'             => NULL,
+        'require_valid_user' => NULL,
+        'users'              => NULL,
+        'privgroups'         => NULL,
+        'rewrite_url' => NULL),
+    ),
+    'webauth_login_block' => array(
+      'template' => 'webauth_login_block',
+      'variables' => array(
+        'login_url'  => NULL,
+        'login_text' => NULL,
+      ),
+    ),
+  );
+}
+
+
+/**
+ * Implements hook_form_alter().
+ *
+ * This ensures that user login elements are webauth-enabled.
+ *
+ */
+
+function webauth_form_alter(&$form, &$form_state, $form_id) {
+  global $user, $base_url, $_webauth_session;
+  switch ($form_id) {
+    case 'user_profile_form':
+      $account = $form['#user'];
+      if (!empty($account->roles)) {
+        if (in_array(variable_get('webauth_default_role', ''), array_keys($account->roles))) {
+          // Hide password element for SUNet Users.
+          $form['account']['pass']['#type'] = 'hidden';
+          $form['account']['current_pass']['#type'] = 'hidden';
+          unset($form['account']['current_pass_required_values']['#value']['mail']);
+        }
+      }
+      break;
+    case 'user_login_block':
+    case 'user_login':
+      $form['name']['#title'] = t('Local Drupal Username');
+      $form['pass']['#title'] = t('Local Drupal Password');
+      if ($form_id === 'user_login') {
+	    // create a WebAuth login link
+        if (!$_webauth_session) {
+          $_webauth_session = new WebAuthSession();
+        }
+        $webauth_login = $_webauth_session->getLoginUrl();
+
+		// create a wrapper for the webauth link so we can de-emphasize the local user login form
+	    $form['webauth_login_wrapper']['#title']       = t('WebAuth Login');
+	    $form['webauth_login_wrapper']['#type']        = 'fieldset';
+	    $form['webauth_login_wrapper']['#collapsible'] = TRUE;
+	    $form['webauth_login_wrapper']['#collapsed']   = FALSE;
+		$form['webauth_login_wrapper']['webauth_login_link']['#markup'] = theme('webauth_login_block',array('login_url' => $webauth_login, 'login_text' => variable_get('webauth_link_text', 'Log in with WebAuth')));
+
+		// create a wrapper for the form, so we can de-emphasize the local user login form
+	    $form['local_login_wrapper']['#title']       = 'Local User Login';
+	    $form['local_login_wrapper']['#type']        = 'fieldset';
+	    $form['local_login_wrapper']['#collapsible'] = TRUE;
+	    $form['local_login_wrapper']['#collapsed']   = TRUE;
+
+		// copy and move the form fields into the wrapper
+	    $form['local_login_wrapper']['name'] = $form['name'];
+	    $form['local_login_wrapper']['pass'] = $form['pass'];
+	    $form['local_login_wrapper']['actions'] = $form['actions'];
+	    unset($form['name']);
+	    unset($form['pass']);
+	    unset($form['actions']);
+      }
+
+      // Create a webauth session if needed and not already created.
+      if (!$_webauth_session) {
+        $_webauth_session = new WebAuthSession();
+      }
+      if (isset($form_state['weblogin']['server'])) {
+        $form['#validate'] = array(
+          'user_login_name_validate',
+          // webauth_login_validate replaces user_login_authenticate_validate
+          'webauth_login_validate',
+          'user_login_final_validate',
+        );
+      }
+      // drupal_execute() for user_login comes here, and we can lose our login
+      // redirect context, so if we are on the auth path here, we should stop
+      // altering at this point.
+      //
+      // I don't love this fix, but it's necessary given how the $_webauth_session
+      // object is constructud at the moment.
+      $path = variable_get('webauth_path', conf_path() . '/webauth') . '/login';
+      if ($_GET['q'] == $path) {
+        return;
+      }
+      break;
+  }
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter() for system_clean_url_settings()
+ */
+function webauth_form_system_clean_url_settings_alter(&$form, &$form_state) {
+  // When clean URLs settings are updated, recreate the .htaccess file
+  $form['#submit'][] = 'webauth_write_htaccess';
+}
+
+function webauth_form_user_pass_alter(&$form, &$form_state) {
+  $form['name']['#description'] = t('Note: For local Drupal accounts only. Do not use this form to request a new password for a SUNet account. Use <a href="https://stanfordyou.stanford.edu">StanfordYou</a>.');
+  $form['#validate'][] = 'webauth_user_pass_validate';
+}
+
+function webauth_user_pass_validate (&$form, &$form_state) {
+  $name = trim($form_state['values']['name']);
+
+  // Try to load by email.
+  $account = user_load_by_mail($name);
+  if (!$account) {
+    // No success, try to load by name.
+    $account = user_load_by_name($name);
+  }
+  if ($account) {
+    // If this is a WebAuth account, we should not let them request a one time login link
+  if (db_query("SELECT * FROM {authmap} WHERE uid = :uid and module = :module", array(':uid' => $account->uid, ':module' => 'webauth'))->fetchField()) {
+      form_set_error('name', t('%name is an account handled by WebAuth and its password cannot be changed here.<br />If you need to update your password, please use <a href="https://stanfordyou.stanford.edu">StanfordYou</a>.', array('%name' => $name)));
+    }
+  }
+}
+
+/**
+ * Implements hook_user_login().
+ */
+
+function webauth_user_login(&$edit, &$account) {
+  // If this is a WebAuth account, check for roles and re-grant new roles.
+  if (db_query("SELECT * FROM {authmap} WHERE uid = :uid and module = :module", array(':uid' => $account->uid, ':module' => 'webauth'))->fetchField()) {
+    webauth_grant_roles($edit, $account);
+  }
+}
+
+
+/**
+ * Implements hook_user_insert().
+ */
+
+function webauth_user_insert(&$edit, &$account, $category) {
+  global $webauth_authenticated;
+
+  // We only want to run these if the user is self-creating via webauth.
+  // Otherwise an admin user will transpose their own values onto any
+  // account they manually create.
+
+  if ($webauth_authenticated) {
+    global $_webauth_session;
+    global $user;
+
+    if (!$_webauth_session) {
+      $_webauth_session = new WebAuthSession();
+    }
+
+    // Try to set the username to the user's preferred name from LDAP, but
+    // first check that no one has that name already (in which case, use the SUNetID)
+    $name = $_webauth_session->getSessionData('wa_ldap_displayname');
+    if (isset($name) && !empty($name) && db_query("SELECT uid FROM {users} WHERE name = :name", array(':name' => $name))->fetchField()) {
+      $name =  $account->name;
+    }
+
+    $mail = $_webauth_session->getSessionData('wa_ldap_mail');
+    $mail =  isset($mail) ? $mail : $account->name;
+    db_update('users')
+      ->fields(array(
+        'mail' => $mail,
+        'name' => $name,
+      ))
+      ->condition('uid', $account->uid)
+      ->execute();
+  }
+}
+
+
+/**
+ * Implements hook_user_delete().
+ */
+
+function webauth_user_delete($account) {
+  db_delete('webauth_roles_history')
+    ->condition('uid', $account->uid)
+    ->execute();
+}
+
+/**
+ * Implements hook_user_role_delete().
+ */
+
+function webauth_user_role_delete($role) {
+  db_delete('webauth_roles')->condition('rid', $role->rid)->execute();
+}
+
+
+/**
+ * Implements hook_user_logout().
+ */
+
+function webauth_user_logout($account) {
+  if (isset($_COOKIE['WMDsecureLogin'])) {
+    unset($_COOKIE['WMDsecureLogin']);
+    setcookie('WMDsecureLogin', '', REQUEST_TIME - 3600);
+  }
+  unset($_SESSION['wa_session_data']);
+}
+
+
+/**
+ * This is a helper function to grant drupal roles based on webauth data.
+ *
+ * This is called when new users are created via webauth, or when "local"
+ * drupal users log in. It could also be invoked by other operations to
+ * sync up a users roles based on their webauth settings.
+ */
+
+function webauth_grant_roles(&$edit, &$account) {
+  global $_webauth_session;
+  if (!$_webauth_session) {
+    $_webauth_session = new WebAuthSession();
+  }
+
+  if ($_webauth_session->isValidSession()) {
+    $groups = $_webauth_session->getLdapGroups();
+    $new = array('roles' => $account->roles);
+
+    // Add SUNet User role for all valid users.
+    $default_name = db_query("SELECT name FROM {role} WHERE rid = :rid", array(':rid' => variable_get('webauth_default_role', 0)))->fetchField();
+    if (variable_get('webauth_default_role', 0) != 0 && !isset($new['roles'][variable_get('webauth_default_role', 0)])) {
+      $new['roles'][variable_get('webauth_default_role', 0)] = $default_name;
+    }
+
+    $current = array();
+
+    // Find all roles that are in the webauth_roles table and add any ones that user is in.
+    $result = db_query("SELECT r.rid, r.name, wr.wa_group AS \"group\", wr.warid FROM {webauth_roles} wr INNER JOIN {role} r ON r.rid = wr.rid");
+    while ($role = $result->fetchObject()) {
+      if (in_array($role->group, $groups)) {
+        $new['roles'][$role->rid] = $role->name;
+        $current[$role->rid] = $role->rid;
+        db_delete('webauth_roles_history')
+          ->condition('warid', $role->warid)
+          ->condition('uid', $account->uid)
+          ->execute();
+        $id = db_insert('webauth_roles_history')
+          ->fields(array(
+            'warid' => $role->warid,
+            'uid' => $account->uid,
+            'rid' => $role->rid,
+          ))
+          ->execute();
+      }
+    }
+    // Close out any groups they shouldn't have access to.
+    $result = db_query("SELECT * FROM {webauth_roles_history} WHERE uid = :uid", array(':uid' => $account->uid));
+    while ($role = $result->fetchObject()) {
+      if (!isset($current[$role->rid])) {
+        unset($new['roles'][$role->rid]);
+        db_delete('webauth_roles_history')
+          ->condition('uid', $account->uid)
+          ->condition('rid', $role->rid)
+          ->execute();
+        db_delete('users_roles')
+          ->condition('uid', $account->uid)
+          ->condition('rid', $role->rid)
+          ->execute();
+      }
+    }
+
+    user_save($account, $new);
+  }
+}
+
+
+/**
+ * Perform webauth validation on users who come in via the normal Drupal login
+ * form or block.
+ */
+
+function webauth_login_validate($form, &$form_state) {
+  global $_webauth_session;
+  if (!$_webauth_session) {
+    $_webauth_session = new WebAuthSession();
+  }
+  if ($_webauth_session->isValidSession()) {
+    $name = $form_state['values']['name'] . '@' . $form_state['weblogin']['server'];
+    user_external_login_register($name, 'webauth');
+    // Replacement user_login_authenticate_validate() function must set $form_state['uid']
+    // for user_login_final_validate() not to set_message an error.
+    $account = user_external_load($name);
+    $form_state['uid'] = $account->uid;
+    user_login_finalize($form_state['values']);
+  }
+}
+
+
+/**
+ * Function to write out our .htaccess file.
+ */
+
+function webauth_write_htaccess() {
+
+  $groups = array();
+  $user_list = '';
+  $rewrite_url = '';
+
+  // Get all the available groups
+  $result = db_query("SELECT DISTINCT(wa_group) AS \"group\" FROM {webauth_roles} WHERE rid > :rid", array(':rid' => 2));
+  while ($group = $result->fetchField()) {
+    $groups[] = $group;
+  }
+
+  $user_list = array();
+  $users = explode("\n", variable_get('webauth_require_users', ''));
+  foreach ($users as $u) {
+    $u = trim($u);
+    if ($u != '') {
+      $user_list[] = $u;
+    }
+  }
+
+  $privgroup_list = array();
+  $privgroups = explode("\n", variable_get('webauth_require_privgroups', ''));
+  foreach ($privgroups as $p) {
+    $p = trim($p);
+    if ($p != '') {
+      $privgroup_list[] = $p;
+    }
+  }
+
+  if (!variable_get('clean_url', 0)) {
+    $new_path = base_path() . '?q=' . variable_get('webauth_path', conf_path() . '/webauth') . '/login';
+    $rewrite_url .= 'RewriteRule login$ ' . $new_path . ' [QSA,L,R=301]';
+  }
+
+  // Theme contents of the .htaccess file.
+  $htaccess_file = theme('webauth_htaccess', array('groups' => $groups, 'require_valid_user' => variable_get('webauth_require_valid_user', 0), 'users' => $user_list, 'privgroups' => $privgroup_list, 'rewrite_url' => $rewrite_url));
+
+  // Get the path or create it inside the files dir.
+  $webauth_path = variable_get('webauth_path', conf_path() . '/webauth');
+
+  // Set .htaccess file location
+  $webauth_htaccess = $webauth_path . '/.htaccess';
+
+  // If webauth dir doesn't exist yet, create it.
+  if (@is_dir($webauth_path) === FALSE) {
+    // Create dir.
+    mkdir($webauth_path, 0755);
+  }
+
+  // Copy necessary check.php file over.
+  $default_check_file = drupal_get_path('module', 'webauth') . '/default/check.php';
+  copy($default_check_file, $webauth_path . '/check.php');
+
+
+  // Save .htaccess file to location.
+  $fp = fopen($webauth_htaccess, 'w');
+  fwrite($fp, $htaccess_file);
+  fclose($fp);
+}

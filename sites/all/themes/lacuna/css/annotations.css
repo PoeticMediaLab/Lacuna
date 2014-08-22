@@ -1,0 +1,168 @@
+body {
+	overflow-y: scroll;
+  font-family:"Open Sans",arial,sans-serif;
+  /*color: #757575;*/
+  color: black;
+  background-color: ivory;
+  margin: 0px;
+  line-height: 30px;
+}
+
+div#charts {
+  min-height: 1024px;
+  margin-left: 24px;
+}
+
+div#total {
+}
+
+div#users {
+	height: 300px;
+  width: 1200px;
+}
+
+div#piecharts {
+  padding-top: 60px;
+  margin-left: 25px;
+  width: 100%;
+}
+
+div#lengths {
+  float: left;
+}
+
+div#categories {
+  float: right;
+  margin-right: 35%;
+}
+
+div#sharing {
+  margin: 0 auto;
+  display: inline-block;
+}
+
+div#time {
+/*	position: absolute;
+*//*	margin-top: 600px;
+	margin-left: 25px;*/
+  width: 1200px;
+  height: 350px;
+}
+
+div#pie_types {
+  position: absolute;
+  left: 50px;
+  top: 460px;
+}
+
+div#time_brush {
+  width: 100%;
+  height: 200px;
+  margin-left: 25px;
+  margin-top: 25px;
+}
+
+div#network {
+  width: 75%;
+  margin-top: 100px;
+  margin-left: 25%;
+}
+
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+.x.axis path {
+  display: none;
+}
+
+.line {
+  /*fill: none;*/
+  stroke: steelblue;
+  /*stroke-width: 1.5px;*/
+}
+
+div.bar {
+	display: inline-block;
+	width: 20px;
+	height: 75px;
+	background-color: blue;
+}
+
+h3 {
+  padding-top: 0px;
+  margin-top: 0px;
+}
+
+div.tooltip {	
+    position: absolute;						
+    padding: 5px 25px 5px 25px;
+    font: 16px sans-serif;		
+    background: white;	
+    border: 1px solid steelblue;		
+    border-radius: 8px;			
+    pointer-events: none;		
+}
+
+table#annotations {
+  margin-left: 25px;
+}
+
+div.tooltip table {
+  text-rendering: optimizeLegibility;
+}
+
+.brush {
+  stroke: #fff;
+  stroke-opacity: .6;
+  stroke-width: 2px;
+  fill-opacity: .1;
+  shape-rendering: crispEdges;
+}
+
+a.reset {
+  color: gray;
+  font-size: small;
+  background: #3498db;
+  background-image: -webkit-linear-gradient(top, #3498db, #2980b9);
+  background-image: -moz-linear-gradient(top, #3498db, #2980b9);
+  background-image: -ms-linear-gradient(top, #3498db, #2980b9);
+  background-image: -o-linear-gradient(top, #3498db, #2980b9);
+  background-image: linear-gradient(to bottom, #3498db, #2980b9);
+  -webkit-border-radius: 8;
+  -moz-border-radius: 8;
+  border-radius: 8px;
+  color: #ffffff;
+  font-size: 12px;
+  padding: 2px 6px 2px 6px;
+  text-decoration: none;
+}
+
+a.reset#all {
+  position: absolute;
+  margin-left: 75px;
+  margin-top: 100px;
+}
+
+a.reset#brush {
+  position: absolute;
+  margin-left: 150px;
+  margin-top: 100px;
+  visibility: hidden;
+}
+
+span#total {
+  position: absolute;
+  margin-left: 120px;
+  margin-top: 150px;
+}
+
+.resize path {
+  fill: #666;
+  fill-opacity: .8;
+  stroke: #000;
+  stroke-width: 1.5px;
+}

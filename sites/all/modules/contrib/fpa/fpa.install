@@ -1,0 +1,46 @@
+<?php
+
+/**
+ * @file
+ * Install, update, and uninstall functions for the Fast Permissions Administration module.
+ */
+
+/**
+ * Implements hook_requirements().
+ */
+function fpa_requirements($phase) {
+  $requirements = array();
+  
+  if ($phase == 'runtime') {
+    
+    $permissions_memory_required = _fpa_memory_required();
+    
+    if (!drupal_check_memory_limit($permissions_memory_required . 'b')) {
+      
+      $requirements['fpa_memory'] = array(
+        'severity' => REQUIREMENT_WARNING,
+        'title' => t('Insufficient memory for permissions page'),
+        'value' => t('~@permissions_memory_requiredM of memory required', array('@permissions_memory_required' => (int) ($permissions_memory_required / 1024 / 1024))),
+        'description' => t('It is likely that you will exceed your memory limit when viewing the permissions page for all roles and permissions. If you are unable to load the permissions page, this is most likely the cause.') . '<br />',
+      );
+      
+      $filter_perms_link = l('Filter Permissions', 'https://drupal.org/project/filter_perms');
+        
+      if (!module_exists('filter_perms')) {
+        
+        $requirements['fpa_memory']['description'] .= t('The !filter_perms_link module can work with Fast Permissions Administration by reducing the amount of the permissions form that is rendered and thereby reducing the memory required on the permissions page.', array('!filter_perms_link' => $filter_perms_link)) . '<br />';
+        
+        if ($php_ini_path = get_cfg_var('cfg_file_path')) {
+           $requirements['fpa_memory']['description'] .= t('Increase the memory limit by editing the memory_limit parameter in the file %configuration-file and then restart your web server (or contact your system administrator or hosting provider for assistance).', array('%configuration-file' => $php_ini_path)) . '<br />';
+        }
+      }
+      else {
+        
+        $requirements['fpa_memory']['severity'] = REQUIREMENT_OK;
+        $requirements['fpa_memory']['description'] = t('The !filter_perms_link module installed should prevent a memory issue as long as viewed permissions and roles are limited.', array('!filter_perms_link' => $filter_perms_link));
+      }
+    }
+  }
+  
+  return $requirements;
+}

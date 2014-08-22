@@ -1,0 +1,20 @@
+
+name = Media: Flickr
+description = Integrates Flickr.com photos and photosets with Media.
+package = "Media"
+core = 7.x
+dependencies[] = media
+dependencies[] = media_internet
+files[] = media_flickr.module
+files[] = includes/media_flickr.admin.inc
+files[] = includes/media_flickr.utilities.inc
+files[] = includes/MediaFlickrStreamWrapper.inc
+files[] = includes/MediaInternetFlickrHandler.inc
+files[] = includes/MediaFlickrStyles.inc
+
+; Information added by drupal.org packaging script on 2012-08-14
+version = "7.x-1.0-alpha3"
+core = "7.x"
+project = "media_flickr"
+datestamp = "1344959823"
+

@@ -1,0 +1,14 @@
+# This file is auto-generated. Changes will be overwritten.
+
+AuthType WebAuth
+WebAuthLdapAttribute displayName
+WebAuthLdapAttribute suAffiliation
+WebAuthLdapAttribute mail
+
+
+require valid-user
+
+WebAuthLdapPrivgroup stanford:student
+WebAuthLdapPrivgroup stanford:staff
+WebAuthLdapPrivgroup stanford:faculty
+

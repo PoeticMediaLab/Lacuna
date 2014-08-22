@@ -1,0 +1,39 @@
+name = Biblio
+description = Maintains bibliographic lists.
+core = 7.x
+dependencies[] = taxonomy
+package = Biblio
+
+configure = admin/config/content/biblio
+files[] = tests/biblio.test
+files[] = tests/keyword.test
+files[] = tests/contributor.test
+files[] = tests/import.export.test
+
+files[] = includes/Name.php
+files[] = includes/Parser.php
+
+files[] = views/biblio_handler_citation.inc
+files[] = views/biblio_handler_field_keyword.inc
+files[] = views/biblio_handler_field_biblio_keyword_data_word.inc
+files[] = views/biblio_handler_field_biblio_keyword_kid.inc
+files[] = views/biblio_handler_field_biblio_type.inc
+files[] = views/biblio_handler_field_contributor.inc
+files[] = views/biblio_handler_field.inc
+files[] = views/biblio_handler_field_markup.inc
+files[] = views/biblio_handler_filter_biblio_contributor_auth_type.inc
+files[] = views/biblio_handler_filter_biblio_keyword_kid.inc
+files[] = views/biblio_handler_filter_biblio_keyword_word.inc
+files[] = views/biblio_handler_filter_biblio_type.inc
+files[] = views/biblio_handler_filter_contributor_lastname.inc
+files[] = views/biblio_handler_filter_contributor_uid.inc
+files[] = views/biblio_handler_filter_contributor.inc
+files[] = views/biblio_handler_sort_contributor_lastname.inc
+files[] = views/biblio_handler_argument_many_to_one.inc
+files[] = views/biblio_handler_field_export_link.inc
+; Information added by drupal.org packaging script on 2013-07-20
+version = "7.x-1.0-rc7"
+core = "7.x"
+project = "biblio"
+datestamp = "1374290470"
+

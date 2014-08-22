@@ -1,0 +1,13 @@
+name = Biblio - RIS
+description = Provides RIS file import and export to the Biblio module.
+core = 7.x
+package = Biblio
+dependencies[] = biblio
+files[] = views/biblio_handler_field_export_link_ris.inc
+
+; Information added by drupal.org packaging script on 2013-07-20
+version = "7.x-1.0-rc7"
+core = "7.x"
+project = "biblio"
+datestamp = "1374290470"
+

@@ -1,0 +1,9 @@
+name = Sewing Kit
+description = Adds ability to stitch together items in a Sewing Kit
+package = Lacuna Stories
+core = 7.x
+
+configure = admin/structure/stitch
+
+dependencies[] = views_bulk_operations
+dependencies[] = entityreference

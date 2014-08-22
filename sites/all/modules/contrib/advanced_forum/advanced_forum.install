@@ -1,0 +1,43 @@
+<?php
+
+/**
+ * @file
+ * Installation code for Advanced Forum.
+ */
+function advanced_forum_install() {
+  db_update('system')
+      ->fields(array('weight' => 15))
+      ->condition('name', 'advanced_forum')
+      ->execute();
+}
+
+function advanced_forum_uninstall() {
+  db_delete('variable')
+      ->condition('name', "advanced_forum_%", "LIKE")
+      ->execute();
+  cache_clear_all('variables', 'cache_bootstrap');
+}
+
+function advanced_forum_update_5000() {
+  db_update('system')
+      ->fields(array('weight' => 10))
+      ->condition('name', 'advanced_forum')
+      ->execute();
+}
+
+function advanced_forum_update_5003() {
+  db_drop_table('advforum_last_post');
+}
+
+function advanced_forum_update_5005() {
+  db_update('system')
+      ->fields(array('weight' => 15))
+      ->condition('name', 'advanced_forum')
+      ->execute();
+}
+
+function advanced_forum_update_7200() {
+  if (variable_get('advanced_forum_forum_disabled') == NULL) {
+    variable_set('advanced_forum_forum_disabled', FALSE);
+  }
+}

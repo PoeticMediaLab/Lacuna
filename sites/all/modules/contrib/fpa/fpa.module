@@ -1,0 +1,220 @@
+<?php
+
+/**
+ * @file
+ * Main module file for FPA.
+ */
+
+define('FPA_ATTR_PERMISSION', 'fpa-permission');
+define('FPA_ATTR_MODULE',     'fpa-module');
+define('FPA_ATTR_ROLE',       'fpa-role');
+
+/**
+ * Implements hook_hook_info().
+ */
+function fpa_hook_info() {
+  $hooks = array();
+  
+  $hooks['theme'] = array(
+    'group' => 'theme',
+  );
+  
+  $hooks['form_node_type_form_alter'] = array(
+    'group' => 'form_alter',
+  );
+  $hooks['form_user_admin_permissions_alter'] = array(
+    'group' => 'form_alter',
+  );
+  $hooks['form_filter_perms_admin_perm_filter_alter'] = array(
+    'group' => 'form_alter',
+  );
+  
+  return $hooks;
+}
+
+/**
+ * Implements hook_menu().
+ */
+function fpa_menu() {
+  $items = array();
+  
+  $items['fpa_modal/%fpa_js/permissions'] = array(
+      'title' => 'Permissions',
+      'page callback' => '_fpa_ctools',
+      'page arguments' => array(1),
+      'access arguments' => array('administer permissions'),
+      'type' => MENU_CALLBACK,
+  );
+  
+  return $items;
+}
+
+/**
+ * Implements hook_admin_paths().
+ */
+function fpa_admin_paths() {
+  return array(
+    'fpa_modal/*/permissions' => TRUE,
+  );
+}
+
+/**
+ * Implements hook_help().
+ */
+function fpa_help($path, $arg) {
+  if ($path == 'admin/people/permissions') {
+    
+    $output = '';
+    
+    $output .= '<p>' . t('Permissions and Module names will match on the readable or system name. The system name is provided as a togglable column.') . '</p>';
+    
+    $output .= '<p>' . t('Enter in the format of "permission@module", <br>e.g. admin@system will show only permissions with<br>the text "admin" in modules with the text "system".') . '</p>';
+    
+    return $output;
+  }
+}
+
+/**
+ * Loader function to wrap ctools loader function.
+ */
+function fpa_js_load($arg) {
+  $return_code = 0;
+  
+  if (module_exists('ctools')) {
+    $return_code = ctools_js_load($arg);
+  }
+  
+  return $return_code;
+}
+
+function fpa_l($permission = '', $text = NULL, $options = array()) {
+  
+  // Available modal module system names in order of priority.
+  $supported_modules = array(
+    'ctools',
+  );
+  
+  if (is_null($text)) {
+    $text = t('Manage Permissions');
+  }
+  
+  // Find the most preferred modal method from the available methods.
+  $modules = array_intersect($supported_modules, array_keys(module_list()));
+  $method = array_shift($modules);
+  
+  $path = 'fpa_modal/nojs/permissions';
+  
+  $query = array(
+    'fpa_perm' => $permission,
+    'fpa_method' => $method,
+  );
+  
+  $attributes = array();
+  
+  switch ($method) {
+    case 'ctools':
+      ctools_include('ajax');
+      ctools_include('modal');
+      ctools_modal_add_js();
+      $attributes['class'] = 'ctools-use-modal';
+      break;
+    default:
+      $path = 'admin/people/permissions';
+      $attributes['target'] = '_blank';
+      $query['fpa_method'] = '_blank';
+      break;
+  }
+  
+  $options = array_merge_recursive(array('query' => $query, 'attributes' => $attributes), $options);
+  
+  return l($text, $path, $options);
+}
+
+function fpa_fieldset($filter_string, &$parent_item, $group = array()) {
+  
+  $parent_item['fpa_fieldset'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Permissions'),
+    '#collapsible' => TRUE,
+    '#collapsed' => TRUE,
+    '#description' => t('Clicking on this link will launch a modal/tab/window displaying the appropriate permissions.'),
+  );
+  
+  $parent_item['fpa_fieldset'] = array_merge_recursive($parent_item['fpa_fieldset'], $group);
+  
+  $parent_item['fpa_fieldset']['fpa'] = array(
+    '#type' => 'markup',
+    '#markup' => fpa_l($filter_string),
+  );
+  
+}
+
+/**
+ * Page callback for CTools modal path.
+ */
+function _fpa_ctools($js = NULL) {
+  // Need to include the file that contains the permissions form.
+  module_load_include('inc', 'user', 'user.admin');
+  
+  $form_id = 'user_admin_permissions';
+  
+  // Fall back if $js is not set.
+  if (!$js) {
+    return drupal_get_form($form_id);
+  }
+
+  ctools_include('modal');
+  ctools_include('ajax');
+  $form_state = array(
+    'title' => t('Permissions'),
+    'ajax' => TRUE,
+  );
+  
+  switch ($_GET['fpa_method']) {
+    case 'ctools':
+      $output = ctools_modal_form_wrapper($form_id, $form_state);
+      break;
+  }
+  
+  if (!empty($form_state['executed'])) {
+    $output = array();
+    $output[] = ctools_ajax_command_reload();
+  }
+  
+  echo ajax_render($output);
+  exit;
+}
+
+/**
+ * @return int Approximate number of bytes of ram required to render the permissions form.
+ */
+function _fpa_memory_required() {
+  
+  $permissions_count = count(module_invoke_all('permission'));
+  
+  $user_roles_count = count(user_roles());
+  
+  
+  $page_ram_required = (9 * 1024 * 1024);
+  
+  
+  // Takes ~26kb per row without any checkboxes.
+  $permission_row_overhead = 27261.028783658;
+  
+  $permissions_ram_required = $permissions_count * $permission_row_overhead;
+  
+  
+  // Determined by checking peak ram on permissions page, over several different number of visible roles.
+  $bytes_per_checkbox = 18924.508820799;
+  
+  $checkboxes_ram_required = $permissions_count * $user_roles_count * $bytes_per_checkbox;
+  
+  
+  return (int) ($page_ram_required + $permissions_ram_required + $checkboxes_ram_required);
+}
+
+function _fpa_reset_filter_defaults() {
+  setcookie("fpa_module_match", "", time() - 3600, '/');
+  setcookie("fpa_filter",       "", time() - 3600, '/');
+  setcookie("fpa_roles",        "", time() - 3600, '/');
+}

@@ -1,0 +1,7 @@
+name = Lacuna
+core = 7.x
+stylesheets[all][] = css/reset.css
+stylesheets[all][] = css/global.css
+;scripts[] = js/lacuna.js
+;scripts[] = js/sidebar.js
+screenshot = images/screenshot.png

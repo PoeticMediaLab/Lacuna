@@ -1,0 +1,213 @@
+<?php
+
+/**
+ *  @file
+ *  Media: Flickr provides a stream wrapper and formatters for photos provided
+ *  by Flickr, available at http://flickr.com/.
+ */
+
+// A registry of variable_get defaults.
+include_once('includes/media_flickr.variables.inc');
+
+// Hooks and callbacks for integrating with Styles module for display.
+include_once('includes/media_flickr.styles.inc');
+
+// Hooks and callbacks for integrating with File Entity module for display.
+include_once('includes/media_flickr.formatters.inc');
+
+/**
+ * Implements hook_permission().
+ */
+function media_flickr_permission() {
+  return array(
+    'configure flickr' => array(
+      'title' => t('Configure Media Flickr settings'),
+    ),
+  );
+}
+
+/**
+ * Implement hook_menu().
+ */
+function media_flickr_menu() {
+  // AJAX parser. This function is called to parse a URL from the browser,
+  // returning a valid flickr://uri.
+//   $items['media-flickr/parse'] = array(
+//     'page callback'    => 'media_flickr_ajax_parse',
+//     'access arguments' => array('access content'),
+//   );
+  $items = array();
+  $items['admin/config/media/media_flickr'] = array(
+    'title' => 'Flickr settings',
+    'description' => 'Configure required settings for Media: Flickr.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('media_flickr_settings_form'),
+    'access arguments' => array('configure flickr'),
+    'file' => 'includes/media_flickr.admin.inc',
+  );
+  $items['media/add/media_flickr'] = array(
+    'title' => 'Add media from Flickr',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('media_flickr_add'),
+    'access arguments' => array('configure flickr'),
+    'type' => MENU_LOCAL_ACTION,
+    'file' => 'includes/media_flickr.admin.inc',
+    'weight' => -1,
+  );
+
+  $items['admin/content/media/add/media_flickr'] = $items['media/add/media_flickr'];
+  return $items;
+}
+
+/**
+ *  Create stream wrapper for Flickr videos.
+ */
+function media_flickr_stream_wrappers() {
+  return array(
+    'flickr' => array(
+      'name' => t('Flickr photos'),
+      'class' => 'MediaFlickrStreamWrapper',
+      'description' => t('Photos provided by Flickr.'),
+    ),
+  );
+}
+
+/**
+ *  Implements hook_theme().
+ */
+function media_flickr_theme($existing, $type, $theme, $path) {
+  return array(
+    'media_flickr_preview_style' => array(
+      'variables' => array('field_type' => NULL, 'container_name' => NULL, 'style_name' => NULL),
+      'file' => 'media_flickr.theme.inc',
+      'path' => $path . '/themes',
+    ),
+    'media_flickr_field_formatter_styles' => array(
+      'variables' => array('element' => NULL, 'style' => NULL),
+      'file' => 'media_flickr.theme.inc',
+      'path' => $path . '/themes',
+    ),
+    'media_flickr_embed' => array(
+      'variables' => array('style_name' => NULL, 'uri' => NULL, 'alt' => NULL, 'title' => NULL),
+      'file' => 'media_flickr.theme.inc',
+      'path' => $path . '/themes',
+    ),
+    'media_flickr_styles' => array(
+      'variables' => array('element' => NULL, 'style' => NULL),
+      'file' => 'media_flickr.theme.inc',
+      'path' => $path . '/themes',
+    ),
+    'media_flickr_photoset' => array(
+      'variables' => array('uri' => NULL, 'width' => NULL, 'height' => NULL),
+      'file' => 'media_flickr.theme.inc',
+      'path' => $path . '/themes',
+      'template' => 'media-flickr-photoset',
+    ),
+  );
+}
+
+/**
+ * Implementation of Styles module hook_styles_register().
+ */
+function media_flickr_styles_register() {
+ return array(
+   'MediaFlickrStyles' => array(
+     'field_types' => 'file',
+     'name' => t('MediaFlickr'),
+     'description' => t('Media Flickr styles.'),
+     'path' => drupal_get_path('module', 'media_flickr') .'/includes',
+     'file' => 'media_flickr.styles.inc',
+   ),
+ );
+}
+
+/**
+ * Implementation of the File Styles module's hook_file_styles_filter().
+ */
+function media_flickr_file_styles_filter($object) {
+  $file = isset($object->file) ? $object->file : $object;
+  if ((file_uri_scheme($file->uri) == 'flickr') && ($file->filemime == 'image/jpeg')) {
+    return 'media_flickr';
+  }
+  elseif ((file_uri_scheme($file->uri) == 'flickr') && ($file->filemime == 'video/flickr')) {
+    return 'media_flickr';
+  }
+}
+
+/**
+ *  Determine if a stream belongs to Media: Flickr.
+ */
+function media_flickr_formatter_filter($variables) {
+  if (isset($variables['object'])) {
+    $object = $variables['object'];
+    return (file_uri_scheme($object->uri) == 'flickr');
+  }
+}
+
+/**
+ *  Based on the Photo ID of a Flickr image, this will return the URL to the
+ *  image itself.
+ *
+ *  @param $photo_code
+ *    The Flickr photo code.
+ *  @param $width
+ *  @param $height
+ *    We use this to guess the actual size provided by Flickr.
+ *  @param boolean $refresh
+ *    Optional; if TRUE, then we'll force a new load of the XML. Otherwise,
+ *    a cached version will be retrieved if possible.
+ */
+function media_flickr_image_url($photo_code, $width = 0, $height = 0, $refresh = FALSE) {
+  module_load_include('inc', 'media_flickr', 'includes/media_flickr.utilities');
+  return _media_flickr_photo_url($photo_code, $width, $height, $refresh);
+}
+
+function media_flickr_photoset_photo_id($uri, $refresh = FALSE) {
+  module_load_include('inc', 'media_flickr', 'includes/media_flickr.utilities');
+  return _media_flickr_photoset_photo_id($uri, $refresh);
+}
+
+function media_flickr_photoset_image_url($uri, $width = 0, $height = 0, $refresh = FALSE) {
+  module_load_include('inc', 'media_flickr', 'includes/media_flickr.utilities');
+  return _media_flickr_photoset_image_url($uri, $width, $height, $refresh);
+}
+
+function media_flickr_original_url($uri, $refresh = FALSE) {
+  module_load_include('inc', 'media_flickr', 'includes/media_flickr.utilities');
+  return _media_flickr_original_url($uri, $refresh);
+}
+
+/**
+ * Implements hook_media_parse().
+ */
+function media_flickr_media_parse($url, $options = array()) {
+  module_load_include('inc', 'media_flickr', 'includes/media_flickr.utilities');
+  return _media_flickr_media_parse($url, $options);
+}
+
+/**
+ * Implements hook_media_internet_providers();
+ */
+function media_flickr_media_internet_providers() {
+  $path = drupal_get_path('module', 'media_flickr');
+  return array(
+    'MediaInternetFlickrHandler' => array(
+      'title' => 'flickr',
+      'image' => $path . '/images/stream-flickr.png'
+    ),
+  );
+}
+
+/**
+ * Implements hook_ctools_plugin_api().
+ */
+function media_flickr_ctools_plugin_api($owner, $api) {
+  static $api_versions = array(
+    'file_entity' => array(
+      'file_default_displays' => 1,
+    ),
+  );
+  if (isset($api_versions[$owner][$api])) {
+    return array('version' => $api_versions[$owner][$api]);
+  }
+}

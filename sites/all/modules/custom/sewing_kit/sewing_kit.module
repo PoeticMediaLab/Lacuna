@@ -1,0 +1,145 @@
+<?php
+/**
+ *
+ * Implement the Sewing Kit functionality
+ * Uses VBO to create a new "Thread" node with entityreferences to selected nodes
+ * Adds a new content type called "Thread"
+ *
+ * Mike Widner <mikewidner@stanford.edu>
+ *
+ */
+
+define('NEW_THREAD', -1);
+/***
+ *
+ * Implement a VBO action for user-facing Sewing Kit functionality 
+ *
+ ***/
+function sewing_kit_action_info() {
+  return array(
+    'sewing_kit_stitch' => array(
+      'type' => 'entity',
+      'label' => t('Stitch'),
+      'configurable' => TRUE,
+      'vbo_configurable' => FALSE,
+      'triggers' => array('any'),
+    ),
+  );
+}
+
+global $sewing_thread;  // cuz $thread seems a dangerous name
+// Create a new Thread; populate with references to all selected nodes
+function sewing_kit_stitch(&$node, $context) {
+    global $user;
+    global $sewing_thread;
+
+    if ($context['progress']['current'] == 1) {
+      if (!$context['thread_new']) {
+        // Add to existing thread; we pass the node id in the select form
+        $sewing_thread = node_load($context['thread_add']);
+      } 
+      else {
+        $sewing_thread = new stdClass();
+        $sewing_thread->title = $context['thread_new'];
+        $sewing_thread->type = 'thread';
+        node_object_prepare($sewing_thread);
+        $sewing_thread->language = $node->language;
+        $sewing_thread->uid = $user->uid;
+        $sewing_thread->status = 1; // (1 or 0): published or not
+        $sewing_thread->promote = 0; // (1 or 0): promoted to front page
+        $sewing_thread->comment = 1; // allow commenting
+        $sewing_thread->thread_description[$node->language][]['value'] = $context['thread_description'];
+        $sewing_thread->thread_reference[$node->language] = array();
+      }
+    }
+
+    // Don't duplicate references, only add new ones
+    if (!array_key_exists($node->nid, $sewing_thread->thread_reference[$node->language])) {
+      $sewing_thread->thread_reference[$node->language][] = array(
+          'target_id' => $node->nid,
+          'target_type' => 'node'
+      );
+    }
+
+    if ($context['progress']['current'] == $context['progress']['total']) {
+      // We're done; save
+      $sewing_thread = node_submit($sewing_thread);
+      node_save($sewing_thread);
+      drupal_set_message('Your thread has been saved.');
+      // drupal_set_message('Now add a description to explain this thread.');
+      drupal_goto('node/' . $sewing_thread->nid);
+    }
+}
+
+// Require a title for the new thread
+function sewing_kit_stitch_form($settings) {
+  global $user;
+  $form = array();
+  $threads = array();
+
+  $query = new EntityFieldQuery();
+  $query->entityCondition('entity_type', 'node')
+    ->entityCondition('bundle', 'thread')
+    ->propertyCondition('status', 1)
+    ->propertyCondition('uid', $user->uid);
+  $result = $query->execute();
+ 
+  if ($result) {
+    $nids = array_keys($result['node']);
+    foreach ($nids as $nid) {
+      $threads[$nid] = node_load($nid)->title;
+    }
+  }
+
+  $threads[NEW_THREAD] = '-- Create New Thread --';
+  $form['thread_add'] = array(
+    '#type' => 'select',
+    '#title' => 'Add to thread',
+    '#options' => $threads,
+  );
+
+  // $form['thread_new'] = array();
+  $form['thread_new'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Thread Title'),
+    '#default_value' => 'My New Thread',
+    '#size' => 60,
+    '#maxlength' => 128,
+    '#description' => "Enter a title for your new thread",
+    '#states' => array(
+      'visible' => array(
+        ':input[name="thread_add"]' => array('value' => NEW_THREAD)
+        )
+      )
+  );
+
+  $form['thread_description'] = array(
+    '#type' => 'textarea',
+    '#title' => t('Description'),
+    '#default_value' => 'Enter a description here',
+    '#rows' => 5,
+    '#states' => array(
+      'visible' => array(
+        ':input[name="thread_add"]' => array('value' => NEW_THREAD)
+        )
+      )
+    );
+
+  return $form;
+}
+
+
+function sewing_kit_stitch_submit($form, $form_state) {
+  $return = array();
+  $return['thread_new'] = $form_state['values']['thread_new'];
+  $return['thread_description'] = $form_state['values']['thread_description'];
+  if ($form_state['values']['thread_add'] == NEW_THREAD) {
+    $return['thread_add'] = FALSE;
+  }
+  else {
+    $return['thread_add'] = $form_state['values']['thread_add'];
+    $return['thread_new'] = FALSE;  // just in case there's a title; wipe it
+    $return['thread_description'] = FALSE;
+  }
+  return $return;
+}

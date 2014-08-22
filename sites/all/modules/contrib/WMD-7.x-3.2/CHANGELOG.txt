@@ -1,0 +1,213 @@
+WebAuth x.x-x.x xxxx-xx-xx
+------------------------------
+
+WebAuth 7.x-3.2 2014-04-21
+------------------------------
+by mrmarco
+- General Cleanup
+- Fix the addition of ?q= in some cases
+- Remove the no_check_loop variable
+- Update 404 check for check.php
+- Remove mappings from DB if role is removed
+by cfuhrman
+- PostgreSQL support
+
+WebAuth 7.x-3.1 2012-07-13
+------------------------------
+by mrmarco
+- Allow users to change their username
+- Cleanup of unused code / parameters
+- Use drupal_get_destination instead of custom code
+- Use drupal_http_request instead of custom code
+- Do not save roles in $user object (not used)
+- Re-format .htaccess file
+- Force logout immediately if there is no webauth_at cookie
+- End sessions when browser is quit
+
+WebAuth 7.x-3.0 2012-02-24
+------------------------------
+by eosrei
+- Adjusted whitespace use
+- Corrected coder module warnings
+- Converted module for use with Drupal 7
+by mrmarco
+- Updated admin documentation
+- Updated LICENSE
+- Alter local user login form to indicate it's for local accounts
+- #83: Corrected spelling of SUNet ID and Log In
+- #82: Allow WMD users to change their email
+- #78: Allow theming of login block
+- #76: Users can't log in if anonymous users don't have the "access content" permission
+- #75: Endless redirects with expired sessions
+
+
+WebAuth 6.x-3.1 2012-02-09
+------------------------------
+#57 by mrmarco: Delete all variables at uninstall time
+#57 by mrmarco: Restored sites_403 variable at uninstall time
+#59 by mrmarco: Fix typo on DB Update message
+#60, #66 by mrmarco: Create the sites/default/webauth directory at install time
+#62 by mrmarco: Default Role Name not picked up when granting roles
+#63 by mrmarco: Roles not picked up if Rules is enabled
+#65 by mrmarco: Update WebAuthSession to handle multi-valued parameters in query string
+#67 by mrmarco: require valid-user disappears when mappings are added / removed
+#71 by mrmarco: users can't update own profile (timezone / email)
+#68-#70, #72, #73 by mrmarco: added new tests
+
+
+WebAuth 6.x-3.0 2011-11-11
+------------------------------
+by mrmarco: Updated version number
+by mrmarco: Updated README.txt
+by mrmarco: Added feature server location
+#52 by mrmarco: Implemented Custom Restricted Message
+#55 by mrmarco: Migrate workgroups correctlya
+#54 by mrmarco: Strip spaces out of workgroup list
+by mrmarco: Updated LICENSE
+
+
+WebAuth 6.x-3.0-beta2 2011-10-03
+------------------------------
+#42 by mrmarco: Added CHANGELOG.txt, Renamed README to README.txt and updated
+
+
+WebAuth 6.x-3.0-beta1 2011-10-03
+------------------------------
+by srude, joshkoenig, mrmarco:
+
+- Added site-specific WebAuth file location to support multi-site environments
+- Added all logging now uses the watchdog() function
+- Added use of preferred email address for new accounts (as set in StanfordYou)
+- Removed content-access restrictions - use content_access module instead
+- Removed ability of WebAuth-created accounts to update own username / password
+- Added ability to map Stanford Workgroups to Drupal roles
+- Added UI to update .htaccess file for site-wide restrictions (who can login)
+- Added Student, Staff and Faculty roles at install / update time
+
+
+WebAuth 6.x-2.56
+------------------------------
+by mrmarco: Allow more room for WebAuth's restrict message
+by mrmarco: Allow more room for Stanford Workgroups
+by mrmarco: Make module work with WebAuth General permissions
+by mrmarco: Remove calls to hardcoded localhost and use $url['host'] instead.
+
+
+WebAuth 6.x-2.55
+------------------------------
+by ksharp, mrmarco: Fixed content access restrictions with multiple workgroups
+
+
+WebAuth 6.x-2.54
+------------------------------
+by ksharp: Fixed bug where nodes with webauth auto-login where, after being
+           updated, were causing the search modules implementation of
+           hook_cron to fail when run anonymously.
+by ksharp: Fixed interaction between webauth auto-login and content access
+           restriction to follow more restrictive path. (That is, if auto-login
+           is set, user will still be automatically redirected to WebLogin, but
+           content will still be restricted if the node is restricted from view
+           for SUNet User role.
+
+
+WebAuth 6.x-2.53
+------------------------------
+by ksharp: Check PHP version before setting cookies;
+           PHP versions older than 5.2.0 can not set the httponly parameter.
+by ksharp: Fixed cookie_domain bug in deleting post-login destination cookie.
+by ksharp: Added capability to override post-login destination cookie with
+           wa_dest url parameter.
+by ksharp: Created webauth_login_url hook to aid in creating custom login
+           links.
+
+
+WebAuth 6.x-2.52
+------------------------------
+by ksharp: Changed step 3.e in v2.5 to "else, go to destination ''" instead of
+           destination='node' in case some other module changes the front page.
+by ksharp: Previously, if WMD detected that the current session was invalid
+           (because of missing webauth_at cookie or expired cookie) it would
+           call drupal function user_logout() which forced return to front page
+           even if another node was requested via hyperlink. This has been
+           corrected so the equivalent of user_logout() is now called without
+           forcing a return to the front page.
+by ksharp: Auto WebAuth Login and Content Access Restrictons field sets are
+           now collapsed by default on content editing pages when those
+           features are enabled and when the page is either for new content or
+           for editiing content where those fields are unchecked.
+
+
+WebAuth 6.x-2.51
+------------------------------
+by ksharp: Fixed a bug in post-login destination handling where post-login
+           COOKIE not being updated with each new page.
+
+
+WebAuth 6.x-2.5
+------------------------------
+by ksharp: WMD now implements its own session handler, bypassing Drupal's
+           version of the PHP session handler.  This is in response to
+            problems caused by caching in Drupal versions since 6.10.
+by ksharp: WMD now correctly instructs browsers not to cache or store any
+           web pages created for an authenticated SUNet user.
+           This is also in response to caching problems.
+by ksharp: Fixes a bug where the post-login URL following WebAuth login was
+           sometimes incorrect. The following algorithm is now used:
+           a. if the post-login destination is specified in the URL as
+              destination=admin, go to the drupal admin page
+           b. else, if the login is in response to an auto-login node,
+              go to that node
+           c. else, if a default webauth post-login destination is set,
+              go to that destination
+           d. else, if the 'q' parameter is set in the URL to anything but
+              'user/login', go to that destination
+           e. else, go to destination 'node' and let Drupal decide where to
+              go (including default site post-login destination).
+by ksharp: WMD now implements its database tables using the Drupal Schema
+           API, allowing Drupal to store metadata about the tables.
+by ksharp: The WMD installer script now responds to the Drupal update.php
+           script, allowing the site administrator to simply copy the new
+           version into the modules directory and run update
+by ksharp: The WMD installer should now no longer produce file system error
+           messages when being installed on AFS.
+by ksharp: WMD now implements hook_cron to remove session data from the
+           database that is over 1 day old.
+by ksharp: Information in README regarding Drupal version upgrades and WMD.
+
+
+WebAuth 6.x-2.42
+------------------------------
+by ksharp: A new feature where nodes may be set to auto-login through WebAuth
+           when accessed by an anonymous user
+by ksharp: A bug fix which caused an error message when WMD installed with PHP
+           versions older than 5.2.0
+
+
+WebAuth 6.x-2.3
+------------------------------
+by ksharp: Bug fix for restricted access in book pages.
+
+
+WebAuth 6.x-2.2
+------------------------------
+by ksharp: Security updates
+by ksharp: Handling of redirect headers
+by ksharp: Creation of cookies when running behind proxy
+by ksharp: Hiding session info from login url
+by ksharp: URL-encoding of forwarded url parameters
+by ksharp: Content-access-restriction feature is now disabled by default.
+           Enable it at the admin/settings/webauth page.
+by ksharp: The restricted-content message is now configurable at
+           admin/settings/webauth
+
+
+WebAuth 6.x-2.1
+------------------------------
+Unreleased development version.
+
+
+WebAuth 6.x-2.0
+------------------------------
+by ksharp: Functionally equivalent to WMD v1.5 but works with Drupal 6.x.
+by ksharp: No longer fixes core user.module "bug" since new authentication
+           model renders it no longer a "bug".
