@@ -19,7 +19,7 @@ function sewing_kit_action_info() {
   return array(
     'sewing_kit_stitch' => array(
       'type' => 'entity',
-      'label' => t('Stitch'),
+      'label' => t('Add to Thread'),
       'configurable' => TRUE,
       'vbo_configurable' => FALSE,
       'triggers' => array('any'),
@@ -65,9 +65,9 @@ function sewing_kit_stitch(&$node, $context) {
       // We're done; save
       $sewing_thread = node_submit($sewing_thread);
       node_save($sewing_thread);
-      drupal_set_message('Your thread has been saved.');
-      // drupal_set_message('Now add a description to explain this thread.');
-      drupal_goto('node/' . $sewing_thread->nid);
+      drupal_set_message('Your thread ' . l($sewing_thread->title, 'node/' . $sewing_thread->nid) .  ' has been saved.');
+      // drupal_goto() breaks the AJAX here
+      // drupal_goto('node/' . $sewing_thread->nid);
     }
 }
 

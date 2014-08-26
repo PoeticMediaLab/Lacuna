@@ -1,10 +1,11 @@
-@import url(http://fonts.googleapis.com/css?family=Open+Sans:400italic,700italic,400,700);
+@import url(http://fonts.googleapis.com/css?family=Noto+Sans|Open+Sans:400italic,700italic,400,700);
 
 body{
   /*background-image: url(../logo.png);
   background-repeat:no-repeat;*/
   background-color: #F8F8F8;
   font-family: 'Open Sans', sans-serif;
+  line-height: 1.2em;
 }
 #page-wrapper{
   max-width: 1200px;
@@ -16,6 +17,66 @@ body{
   /*border-right: 1px solid lightgray;
   border-left: 1px solid lightgray;  */
 }
+
+b {
+  font-weight: bold;
+}
+
+sup {
+  vertical-align: super;
+  font-size: small;
+}
+
+p {
+  margin-bottom: 10px;
+}
+
+/* main menu drop downs user superfish */
+#block-superfish-1 {
+  float: right;
+}
+
+/* Hide "Operations" text in Sewing Kit */
+legend .fieldset-legend {
+  display: none;
+}
+
+/* fix to avoid drop down menu overwrite of message pane */
+div.messages {
+  margin-top: 40px;
+}
+
+/* Theme the select list for adding to a thread */
+select#edit-thread-add {
+  width: 268px;
+  padding: 5px;
+  font-size: 16px;
+  line-height: 1;
+  border: 0;
+  border-radius: 0;
+  height: 34px;
+}
+
+/* The "Add to Thread" button for Sewing Kit */
+#edit-actionsewing-kit-stitch {
+  width:200px;
+  display:block;
+  margin-left: auto;
+  margin-right: auto;
+  height: 50px;
+}
+
+/* Center the "Select all" options */
+.vbo-fieldset-select-all {
+  margin-right: auto;
+  margin-left: auto;
+}
+
+h1,h2,h3,h4,h5,h6 {
+  font-family: 'Noto Sans', sans-serif;
+  line-height: 1.3em;
+}
+
 h1{
   font-size: 1.5em;
   margin-bottom: 10px;

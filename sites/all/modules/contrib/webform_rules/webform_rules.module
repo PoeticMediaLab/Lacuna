@@ -1,0 +1,374 @@
+<?php
+
+/**
+ * @file
+ * Adds rules integration for webform submissions.
+ */
+
+/**
+ * Implements hook_webform_submission_insert().
+ *
+ * @param $node
+ *   The webform node.
+ * @param $submission
+ *   The webform submission.
+ */
+function webform_rules_webform_submission_insert($node, $submission) {
+  // Invoke event.
+  webform_rules_rules_invoke_event($submission, $node, 'insert');
+}
+
+/**
+ * Implements hook_webform_submission_update().
+ *
+ * @param $node
+ *   The webform node.
+ * @param $submission
+ *   The webform submission.
+ */
+function webform_rules_webform_submission_update($node, $submission) {
+  // Invoke event.
+  webform_rules_rules_invoke_event($submission, $node, 'update');
+}
+
+/**
+ * Implements hook_webform_submission_delete().
+ *
+ * @param $node
+ *   The webform node.
+ * @param $submission
+ *   The webform submission.
+ */
+function webform_rules_webform_submission_delete($node, $submission) {
+  // Invoke event.
+  webform_rules_rules_invoke_event($submission, $node, 'delete');
+}
+
+/**
+ * Implements of hook_form_alter().
+ */
+function webform_rules_form_alter(&$form, $form_state, $form_id) {
+  if (strpos($form_id, 'webform_client_form_') !== FALSE) {
+    // Add custom submit handler to webform form.
+    $form['#submit'][] = 'webform_rules_client_form_submit';
+  }
+}
+
+/**
+ * Custom submit handler for webform submissions.
+ *
+ * This is needed to catch submissions of saved webform drafts as
+ * hook_webform_submission_insert() only fires once and its not possible in
+ * hook_webform_submission_update() to check if the data has been submitted
+ * before (e.g. saved as draft).
+ */
+function webform_rules_client_form_submit($form, &$form_state) {
+  // If the webform is NOT completed, don't run the submit handler!
+  // This is relevant for multistep forms.
+  if (!$form_state['webform_completed']) {
+    return;
+  }
+
+  // If we've got to this point, then we are not mid-way through a form submission.
+  $values = $form_state['values'];
+  // Check if user is submitting as a draft.
+  if ($values['op'] == t('Save Draft')) {
+    // Saving the webform as draft is handled by hook_webform_submission_insert().
+    return;
+  }
+  if ($form['#is_draft'] && isset($form_state['values']['details']['sid'])) {
+    $submission = $form['#submission'];
+    // Map submitted data to submission data.
+    foreach ($form_state['values']['submitted'] as $cid => $value) {
+      if (isset($submission->data[$cid])) {
+        if (isset($value['value'])) {
+          $submission->data[$cid]['value'] = $value;
+        }
+        else {
+          $submission->data[$cid] = $value;
+        }
+      }
+    }
+    // Invoke event.
+    webform_rules_rules_invoke_event($submission, $form['#node'], 'submit');
+  }
+}
+
+/**
+ * Invoke rules event with submitted data.
+ *
+ * @param $submission_data
+ *   Data from webform prepared by webform_submission_data().
+ * @param $node
+ *   The submitted webform node.
+ * @param $op
+ *   Type of submission: 'insert', 'update', 'delete', 'submit.
+ */
+function webform_rules_rules_invoke_event($submission, $node, $op = 'insert') {
+  global $user;
+  if (!is_array($submission->data) || count($submission->data) == 0) {
+    return;
+  }
+  $is_draft = (isset($submission->is_draft) && $submission->is_draft);
+  $webform = $node->webform;
+  $data = array(
+    'op' => $op,
+    'sid' => $submission->sid,
+    'components' => array(),
+  );
+  $form_id = 'webform-client-form-' . $webform['nid'];
+  // Map values to field names.
+  foreach ($submission->data as $cid => $value) {
+    $component = $webform['components'][$cid];
+    $data['components'][$component['form_key']]['value'] = isset($value['value']) ? $value['value'] : $value;
+    if (!is_array($data['components'][$component['form_key']]['value'])) {
+      // Convert the value to an array to equalize the data with saved
+      // submissions.
+      $data['components'][$component['form_key']]['value'] = array($data['components'][$component['form_key']]['value']);
+    }
+    $data['components'][$component['form_key']]['component'] = $component;
+  }
+  // Invoke the rules event.
+  switch ($op) {
+    case 'insert':
+      if ($is_draft) {
+        rules_invoke_event('webform_rules_submit_as_draft', $user, $node, $data, $form_id);
+      }
+      else {
+        rules_invoke_event('webform_rules_submit', $user, $node, $data, $form_id);
+      }
+      break;
+    case 'submit':
+      rules_invoke_event('webform_rules_insert', $user, $node, $data, $form_id);
+      break;
+    case 'update':
+      rules_invoke_event('webform_rules_update', $user, $node, $data, $form_id);
+      break;
+    case 'delete':
+      rules_invoke_event('webform_rules_delete', $user, $node, $data, $form_id);
+      break;
+  }
+}
+
+/**
+ * Implements hook_token_info().
+ */
+function webform_rules_token_info() {
+  $types['webform'] = array(
+    'name' => t('Webform data'),
+    'description' => t('Tokens related to data submitted by webforms.'),
+  );
+
+  $webform['sid'] = array(
+    'name' => t('Submission Id'),
+    'description' => t('The unique identifier of the submission.'),
+  );
+  $webform['data'] = array(
+    'name' => t('Submitted data'),
+    'description' => t('The submitted webform data.'),
+  );
+  $webform['data-raw'] = array(
+    'name' => t('Raw submitted data'),
+    'description' => t('The unfiltered submitted webform data.'),
+  );
+  $webform['{component}-title'] = array(
+    'name' => t('Component title'),
+    'description' => t('The title of the selected component, e.g. "email-title".'),
+  );
+  $webform['{component}-value'] = array(
+    'name' => t('Component value'),
+    'description' => t('The value of the selected component, e.g. "email-value".'),
+  );
+  $webform['{component}-value-html'] = array(
+    'name' => t('Component value as html'),
+    'description' => t('The value of the selected component rendered as html, e.g. "email-value-html".'),
+  );
+  $webform['{component}-value-raw'] = array(
+    'name' => t('Raw component value'),
+    'description' => t('The raw value of the selected component, e.g. "email-value-raw". However this is not cleaned up by check_plain(). This is raw user input so take care if you use this somewhere else.'),
+  );
+  $webform['{component}-display'] = array(
+    'name' => t('Component display'),
+    'description' => t('Title and value of the selected component, e.g. "email-display".'),
+  );
+  $webform['{component}-display-html'] = array(
+    'name' => t('Component display as html'),
+    'description' => t('Title and value of the selected component rendered as html, e.g. "email-display-html".'),
+  );
+
+  return array(
+    'types' => $types,
+    'tokens' => array(
+      'webform' => $webform,
+    ),
+  );
+}
+
+/**
+ * Implements hook_tokens().
+ */
+function webform_rules_tokens($type, $tokens, array $data = array(), array $options = array()) {
+  $replacements = array();
+  if ($type == 'webform') {
+    $component_names = array_keys($data[$type]['components']);
+    foreach ($tokens as $name => $original) {
+      if ($name == 'sid') {
+        $replacements[$original] = $data[$type]['sid'];
+      }
+      elseif ($name == 'data') {
+        $replacements[$original] = webform_rules_prepare_component_value($data[$type]);
+      }
+      elseif ($name == 'data-raw') {
+        $replacements[$original] = webform_rules_prepare_component_value($data[$type], TRUE);
+      }
+      else {
+        // Split token name to get the components name.
+        $token = explode('-', $name);
+        $component_name = array_shift($token);
+        if (!in_array($component_name, $component_names)) {
+          continue;
+        }
+        // Join token name (without component name).
+        $token = implode('-', $token);
+        // Webform component.
+        $component = $data[$type]['components'][$component_name]['component'];
+        $component_value = $data[$type]['components'][$component_name]['value'];
+        switch ($token) {
+          case 'title':
+            $replacements[$original] = $component['name'];
+            break;
+          case 'display':
+            $replacements[$original] = webform_rules_render_component($component, $component_value);
+            break;
+          case 'display-html':
+            $replacements[$original] = webform_rules_render_component($component, $component_value, 'html');
+            break;
+          case 'value':
+            $replacements[$original] = webform_rules_render_component($component, $component_value, 'text', FALSE);
+            break;
+          case 'value-html':
+            $replacements[$original] = webform_rules_render_component($component, $component_value, 'html', FALSE);
+            break;
+          case 'value-raw':
+            $replacements[$original] = webform_rules_prepare_component_value($component_value, TRUE);
+            break;
+        }
+      }
+    }
+  }
+  return $replacements;
+}
+
+/**
+ * Prepare component value for output.
+ * Code adapted from drupal_to_js().
+ *
+ * @param $component_value
+ *   Value of submitted component.
+ * @param $raw
+ *   If TRUE, leave all values unfiltered.
+ */
+function webform_rules_prepare_component_value($component_value, $raw = FALSE) {
+  switch (gettype($component_value)) {
+    case 'boolean':
+      return $component_value ? 'true' : 'false'; // Lowercase necessary!
+    case 'integer':
+    case 'double':
+      return $component_value;
+    case 'resource':
+    case 'string':
+      return $raw ? $component_value : check_plain($component_value);
+    case 'array':
+      // If the array is empty or if it has sequential whole number keys
+      // starting with 0, it's not associative so we can go ahead and
+      // convert it as an array.
+      if (empty($component_value) || array_keys($component_value) === range(0, sizeof($component_value) - 1)) {
+        $output = array();
+        foreach ($component_value as $v) {
+          $output[] = webform_rules_prepare_component_value($v, $raw);
+        }
+        return implode(', ', $output);
+      }
+    // Otherwise, fall through to convert the array as an object.
+    // This is usefull for more readable output.
+    case 'object':
+      $output = array();
+      foreach ($component_value as $k => $v) {
+        $output[] = webform_rules_prepare_component_value(strval($k), $raw) . ': ' . webform_rules_prepare_component_value($v, $raw);
+      }
+      return implode(', ', $output);
+    default:
+      return 'null';
+  }
+}
+
+/**
+ * Render value of component.
+ *
+ * @param $component
+ *   Webform component to render.
+ * @param $value
+ *   Submitted value of webform component.
+ * @param $format
+ *   How to render the components value ('html' or 'text'). Defaults to 'text'.
+ * @param $title
+ *   Renders the component title if set to TRUE.
+ *
+ * @return
+ *   The rendered component value.
+ */
+function webform_rules_render_component($component, $value, $format = 'text', $title = TRUE) {
+  if ($format != 'text') {
+    $format = 'html';
+  }
+  $display_element = webform_component_invoke($component['type'], 'display', $component, $value, $format);
+  $display_element['#parents'] = array('submitted', $component['form_key']);
+  if (!isset($display_element['#id'])) {
+    $display_element['#id'] = drupal_clean_css_identifier('edit-' . implode('-', $display_element['#parents']));
+  }
+  if (!$title) {
+    $display_element['#title'] = NULL;
+  }
+  if (!isset($display_element['#webform_component'])) {
+    $display_element['#webform_component'] = $component;
+  }
+  return drupal_render($display_element);
+}
+
+/**
+ * Get a list of all webforms.
+ */
+function webform_rules_get_webforms() {
+  // Get a list of all webform-enabled content types.
+  $webform_types = webform_variable_get('webform_node_types');
+  // Get a list of all nodes that are configured to use a webform.
+  $query = db_select('node', 'n')
+    ->fields('n', array('nid', 'title'))
+    ->condition('n.type', $webform_types, 'IN');
+  // Join to limit result list to nodes that really have a webform.
+  $query->join('webform', 'w', 'n.nid = w.nid');
+  // Join {webform_component} to prevent listing unconfigured webforms.
+  $query->join('webform_component', 'c', 'n.nid = c.nid');
+  // Get the result list.
+  $results = $query->execute();
+
+  $webforms = array();
+  foreach ($results as $record) {
+    $webforms[$record->nid] = $record->title;
+  }
+  return $webforms;
+}
+
+/**
+ * Get an option list of all webforms.
+ */
+function webform_rules_get_webforms_as_options() {
+  // Get the list of all webforms.
+  $webforms = webform_rules_get_webforms();
+
+  $options = array();
+  foreach ($webforms as $nid => $webform) {
+    $options["webform-client-form-{$nid}"] = $webform;
+  }
+  return $options;
+}

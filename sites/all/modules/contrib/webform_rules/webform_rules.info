@@ -1,0 +1,15 @@
+name = Webform Rules
+core = 7.x
+description = "Adds rules integration for webform submissions."
+package = Webform
+files[] = webform_rules.module
+files[] = webform_rules.rules.inc
+dependencies[] = webform (>=7.x-3.x)
+dependencies[] = rules
+
+; Information added by drupal.org packaging script on 2013-03-16
+version = "7.x-1.6"
+core = "7.x"
+project = "webform_rules"
+datestamp = "1363428917"
+
