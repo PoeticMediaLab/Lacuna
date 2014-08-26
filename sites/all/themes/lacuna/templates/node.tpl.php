@@ -9,7 +9,7 @@
 ?>
 <article class="node-<?php print $node->nid; ?> <?php print $classes; ?> clearfix"<?php print $attributes; ?>>
 
-  <?php if ($title_prefix || $title_suffix || $display_submitted || $unpublished || !$page && $title): ?>
+  <?php if ($title_prefix || $title_suffix || $display_submitted || !$status || !$page && $title): ?>
     <header>
       <?php print render($title_prefix); ?>
       <?php if (!$page && $title): ?>
@@ -18,9 +18,9 @@
       <?php print render($title_suffix); ?>
 
 
-      <?php // if ($classes['node-unpublished']): MLW HACK ?>
-        <mark class="unpublished"><?php // print t('Unpublished'); ?></mark>
-      <?php // endif; ?>
+      <?php if ($classes['node-unpublished']): ?>
+        <mark class="unpublished"><?php print t('Unpublished'); ?></mark>
+      <?php endif; ?>
     </header>
   <?php endif; ?>
 
