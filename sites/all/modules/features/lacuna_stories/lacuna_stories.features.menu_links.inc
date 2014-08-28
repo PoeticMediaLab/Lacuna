@@ -10,200 +10,110 @@
 function lacuna_stories_menu_default_menu_links() {
   $menu_links = array();
 
-  // Exported menu link: menu-left-menu_bibliography:biblio
-  $menu_links['menu-left-menu_bibliography:biblio'] = array(
-    'menu_name' => 'menu-left-menu',
-    'link_path' => 'biblio',
-    'router_path' => 'biblio',
-    'link_title' => 'Bibliography',
+  // Exported menu link: main-menu_account:<nolink>
+  $menu_links['main-menu_account:<nolink>'] = array(
+    'menu_name' => 'main-menu',
+    'link_path' => '<nolink>',
+    'router_path' => '<nolink>',
+    'link_title' => 'Account',
     'options' => array(
       'attributes' => array(
         'title' => '',
       ),
-      'identifier' => 'menu-left-menu_bibliography:biblio',
+      'identifier' => 'main-menu_account:<nolink>',
     ),
     'module' => 'menu',
     'hidden' => 0,
     'external' => 0,
-    'has_children' => 0,
-    'expanded' => 0,
-    'weight' => -42,
-    'customized' => 1,
-  );
-  // Exported menu link: menu-left-menu_dashboard:node/61
-  $menu_links['menu-left-menu_dashboard:node/61'] = array(
-    'menu_name' => 'menu-left-menu',
-    'link_path' => 'node/61',
-    'router_path' => 'node/%',
-    'link_title' => 'Dashboard',
-    'options' => array(
-      'attributes' => array(
-        'title' => '',
-      ),
-      'identifier' => 'menu-left-menu_dashboard:node/61',
-    ),
-    'module' => 'menu',
-    'hidden' => 0,
-    'external' => 0,
-    'has_children' => 0,
-    'expanded' => 0,
-    'weight' => -50,
-    'customized' => 1,
-  );
-  // Exported menu link: menu-left-menu_forum:forum
-  $menu_links['menu-left-menu_forum:forum'] = array(
-    'menu_name' => 'menu-left-menu',
-    'link_path' => 'forum',
-    'router_path' => 'forum',
-    'link_title' => 'Forum',
-    'options' => array(
-      'attributes' => array(
-        'title' => '',
-      ),
-      'identifier' => 'menu-left-menu_forum:forum',
-    ),
-    'module' => 'menu',
-    'hidden' => 0,
-    'external' => 0,
-    'has_children' => 0,
-    'expanded' => 0,
+    'has_children' => 1,
+    'expanded' => 1,
     'weight' => -45,
     'customized' => 1,
   );
-  // Exported menu link: menu-left-menu_instructor-dashboard:node/62
-  $menu_links['menu-left-menu_instructor-dashboard:node/62'] = array(
-    'menu_name' => 'menu-left-menu',
-    'link_path' => 'node/62',
-    'router_path' => 'node/%',
-    'link_title' => 'Instructor Dashboard',
+  // Exported menu link: main-menu_connect:<nolink>
+  $menu_links['main-menu_connect:<nolink>'] = array(
+    'menu_name' => 'main-menu',
+    'link_path' => '<nolink>',
+    'router_path' => '<nolink>',
+    'link_title' => 'Connect',
     'options' => array(
       'attributes' => array(
         'title' => '',
       ),
-      'identifier' => 'menu-left-menu_instructor-dashboard:node/62',
+      'identifier' => 'main-menu_connect:<nolink>',
     ),
     'module' => 'menu',
     'hidden' => 0,
     'external' => 0,
-    'has_children' => 0,
-    'expanded' => 0,
+    'has_children' => 1,
+    'expanded' => 1,
     'weight' => -49,
     'customized' => 1,
   );
-  // Exported menu link: menu-left-menu_materials:materials
-  $menu_links['menu-left-menu_materials:materials'] = array(
-    'menu_name' => 'menu-left-menu',
-    'link_path' => 'materials',
-    'router_path' => 'materials',
-    'link_title' => 'Materials',
+  // Exported menu link: main-menu_contact:contact
+  $menu_links['main-menu_contact:contact'] = array(
+    'menu_name' => 'main-menu',
+    'link_path' => 'contact',
+    'router_path' => 'contact',
+    'link_title' => 'Contact',
     'options' => array(
-      'identifier' => 'menu-left-menu_materials:materials',
+      'attributes' => array(
+        'title' => '',
+      ),
+      'identifier' => 'main-menu_contact:contact',
     ),
-    'module' => 'system',
+    'module' => 'menu',
     'hidden' => 0,
     'external' => 0,
     'has_children' => 0,
     'expanded' => 0,
+    'weight' => 0,
+    'customized' => 1,
+    'parent_identifier' => 'main-menu_support:<nolink>',
+  );
+  // Exported menu link: main-menu_contribute:<nolink>
+  $menu_links['main-menu_contribute:<nolink>'] = array(
+    'menu_name' => 'main-menu',
+    'link_path' => '<nolink>',
+    'router_path' => '<nolink>',
+    'link_title' => 'Contribute',
+    'options' => array(
+      'attributes' => array(
+        'title' => '',
+      ),
+      'identifier' => 'main-menu_contribute:<nolink>',
+    ),
+    'module' => 'menu',
+    'hidden' => 0,
+    'external' => 0,
+    'has_children' => 1,
+    'expanded' => 1,
     'weight' => -48,
     'customized' => 1,
   );
-  // Exported menu link: menu-left-menu_my-writing:my-writing
-  $menu_links['menu-left-menu_my-writing:my-writing'] = array(
-    'menu_name' => 'menu-left-menu',
-    'link_path' => 'my-writing',
-    'router_path' => 'my-writing',
-    'link_title' => 'My Writing',
-    'options' => array(
-      'identifier' => 'menu-left-menu_my-writing:my-writing',
-    ),
-    'module' => 'system',
-    'hidden' => 0,
-    'external' => 0,
-    'has_children' => 0,
-    'expanded' => 0,
-    'weight' => -43,
-    'customized' => 1,
-  );
-  // Exported menu link: menu-left-menu_responses:responses
-  $menu_links['menu-left-menu_responses:responses'] = array(
-    'menu_name' => 'menu-left-menu',
-    'link_path' => 'responses',
-    'router_path' => 'responses',
-    'link_title' => 'Responses',
-    'options' => array(
-      'identifier' => 'menu-left-menu_responses:responses',
-    ),
-    'module' => 'system',
-    'hidden' => 0,
-    'external' => 0,
-    'has_children' => 0,
-    'expanded' => 0,
-    'weight' => -44,
-    'customized' => 1,
-  );
-  // Exported menu link: menu-left-menu_topics:topics
-  $menu_links['menu-left-menu_topics:topics'] = array(
-    'menu_name' => 'menu-left-menu',
-    'link_path' => 'topics',
-    'router_path' => 'topics',
-    'link_title' => 'Topics',
+  // Exported menu link: main-menu_explore:<nolink>
+  $menu_links['main-menu_explore:<nolink>'] = array(
+    'menu_name' => 'main-menu',
+    'link_path' => '<nolink>',
+    'router_path' => '<nolink>',
+    'link_title' => 'Explore',
     'options' => array(
       'attributes' => array(
         'title' => '',
       ),
-      'identifier' => 'menu-left-menu_topics:topics',
+      'identifier' => 'main-menu_explore:<nolink>',
     ),
     'module' => 'menu',
     'hidden' => 0,
     'external' => 0,
-    'has_children' => 0,
-    'expanded' => 0,
-    'weight' => -47,
-    'customized' => 1,
-  );
-  // Exported menu link: menu-left-menu_wiki:http://www.lacunastories.com/wiki
-  $menu_links['menu-left-menu_wiki:http://www.lacunastories.com/wiki'] = array(
-    'menu_name' => 'menu-left-menu',
-    'link_path' => 'http://www.lacunastories.com/wiki',
-    'router_path' => '',
-    'link_title' => 'Wiki',
-    'options' => array(
-      'attributes' => array(
-        'title' => '',
-      ),
-      'identifier' => 'menu-left-menu_wiki:http://www.lacunastories.com/wiki',
-    ),
-    'module' => 'menu',
-    'hidden' => 1,
-    'external' => 1,
-    'has_children' => 0,
-    'expanded' => 0,
-    'weight' => -46,
-    'customized' => 1,
-  );
-  // Exported menu link: menu-top-right_about-this-course:node/50
-  $menu_links['menu-top-right_about-this-course:node/50'] = array(
-    'menu_name' => 'menu-top-right',
-    'link_path' => 'node/50',
-    'router_path' => 'node/%',
-    'link_title' => 'About this Course',
-    'options' => array(
-      'attributes' => array(
-        'title' => '',
-      ),
-      'identifier' => 'menu-top-right_about-this-course:node/50',
-    ),
-    'module' => 'menu',
-    'hidden' => 0,
-    'external' => 0,
-    'has_children' => 0,
-    'expanded' => 0,
+    'has_children' => 1,
+    'expanded' => 1,
     'weight' => -50,
     'customized' => 1,
   );
-  // Exported menu link: menu-top-right_logout:user/logout
-  $menu_links['menu-top-right_logout:user/logout'] = array(
-    'menu_name' => 'menu-top-right',
+  // Exported menu link: main-menu_logout:user/logout
+  $menu_links['main-menu_logout:user/logout'] = array(
+    'menu_name' => 'main-menu',
     'link_path' => 'user/logout',
     'router_path' => 'user/logout',
     'link_title' => 'Logout',
@@ -211,29 +121,7 @@ function lacuna_stories_menu_default_menu_links() {
       'attributes' => array(
         'title' => '',
       ),
-      'alter' => TRUE,
-      'identifier' => 'menu-top-right_logout:user/logout',
-    ),
-    'module' => 'menu',
-    'hidden' => 0,
-    'external' => 0,
-    'has_children' => 0,
-    'expanded' => 0,
-    'weight' => -48,
-    'customized' => 1,
-  );
-  // Exported menu link: menu-top-right_my-account:user
-  $menu_links['menu-top-right_my-account:user'] = array(
-    'menu_name' => 'menu-top-right',
-    'link_path' => 'user',
-    'router_path' => 'user',
-    'link_title' => 'My Account',
-    'options' => array(
-      'attributes' => array(
-        'title' => '',
-      ),
-      'alter' => TRUE,
-      'identifier' => 'menu-top-right_my-account:user',
+      'identifier' => 'main-menu_logout:user/logout',
     ),
     'module' => 'menu',
     'hidden' => 0,
@@ -242,21 +130,78 @@ function lacuna_stories_menu_default_menu_links() {
     'expanded' => 0,
     'weight' => -49,
     'customized' => 1,
+    'parent_identifier' => 'main-menu_account:<nolink>',
+  );
+  // Exported menu link: main-menu_my-account:user
+  $menu_links['main-menu_my-account:user'] = array(
+    'menu_name' => 'main-menu',
+    'link_path' => 'user',
+    'router_path' => 'user',
+    'link_title' => 'My Account',
+    'options' => array(
+      'attributes' => array(
+        'title' => '',
+      ),
+      'identifier' => 'main-menu_my-account:user',
+    ),
+    'module' => 'menu',
+    'hidden' => 0,
+    'external' => 0,
+    'has_children' => 0,
+    'expanded' => 0,
+    'weight' => -50,
+    'customized' => 1,
+    'parent_identifier' => 'main-menu_account:<nolink>',
+  );
+  // Exported menu link: main-menu_sewing-kit:sewing-kit
+  $menu_links['main-menu_sewing-kit:sewing-kit'] = array(
+    'menu_name' => 'main-menu',
+    'link_path' => 'sewing-kit',
+    'router_path' => 'sewing-kit',
+    'link_title' => 'Sewing Kit',
+    'options' => array(
+      'identifier' => 'main-menu_sewing-kit:sewing-kit',
+    ),
+    'module' => 'system',
+    'hidden' => 0,
+    'external' => 0,
+    'has_children' => 0,
+    'expanded' => 0,
+    'weight' => -50,
+    'customized' => 1,
+    'parent_identifier' => 'main-menu_connect:<nolink>',
+  );
+  // Exported menu link: main-menu_support:<nolink>
+  $menu_links['main-menu_support:<nolink>'] = array(
+    'menu_name' => 'main-menu',
+    'link_path' => '<nolink>',
+    'router_path' => '<nolink>',
+    'link_title' => 'Support',
+    'options' => array(
+      'attributes' => array(
+        'title' => '',
+      ),
+      'identifier' => 'main-menu_support:<nolink>',
+    ),
+    'module' => 'menu',
+    'hidden' => 0,
+    'external' => 0,
+    'has_children' => 1,
+    'expanded' => 1,
+    'weight' => -47,
+    'customized' => 1,
   );
   // Translatables
   // Included for use with string extractors like potx.
-  t('About this Course');
-  t('Bibliography');
-  t('Dashboard');
-  t('Forum');
-  t('Instructor Dashboard');
+  t('Account');
+  t('Connect');
+  t('Contact');
+  t('Contribute');
+  t('Explore');
   t('Logout');
-  t('Materials');
   t('My Account');
-  t('My Writing');
-  t('Responses');
-  t('Topics');
-  t('Wiki');
+  t('Sewing Kit');
+  t('Support');
 
 
   return $menu_links;

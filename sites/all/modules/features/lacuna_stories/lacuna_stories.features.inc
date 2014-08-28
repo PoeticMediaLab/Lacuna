@@ -24,47 +24,43 @@ function lacuna_stories_views_api($module = NULL, $api = NULL) {
 }
 
 /**
- * Implements hook_fontyourface_features_default_font().
+ * Implements hook_flag_default_flags().
  */
-function lacuna_stories_fontyourface_features_default_font() {
-  return array(
-    'Noto Sans 700 (latin-ext)' => array(
-      'name' => 'Noto Sans 700 (latin-ext)',
-      'enabled' => 1,
-      'url' => 'http://www.google.com/webfonts/family?family=Noto Sans&subset=latin-ext#700',
-      'provider' => 'google_fonts_api',
-      'css_selector' => 'h1, h2, h3, h4, h5, h6',
-      'css_family' => 'Noto Sans',
-      'css_style' => 'normal',
-      'css_weight' => 700,
-      'css_fallbacks' => '',
-      'foundry' => '',
-      'foundry_url' => '',
-      'license' => '',
-      'license_url' => '',
-      'designer' => '',
-      'designer_url' => '',
-      'metadata' => 'a:2:{s:4:"path";s:13:"Noto Sans:700";s:6:"subset";s:9:"latin-ext";}',
+function lacuna_stories_flag_default_flags() {
+  $flags = array();
+  // Exported flag: "Filled out IRB form".
+  $flags['filled_out_irb_form'] = array(
+    'entity_type' => 'user',
+    'title' => 'Filled out IRB form',
+    'global' => 1,
+    'types' => array(),
+    'flag_short' => 'Filled out IRB form',
+    'flag_long' => '',
+    'flag_message' => '',
+    'unflag_short' => 'Did not fill out IRB form',
+    'unflag_long' => '',
+    'unflag_message' => '',
+    'unflag_denied_text' => '',
+    'link_type' => 'toggle',
+    'weight' => 0,
+    'show_in_links' => array(
+      'full' => 0,
+      'token' => 0,
     ),
-    'Open Sans regular (latin)' => array(
-      'name' => 'Open Sans regular (latin)',
-      'enabled' => 1,
-      'url' => 'http://www.google.com/webfonts/family?family=Open Sans&subset=latin#regular',
-      'provider' => 'google_fonts_api',
-      'css_selector' => 'body, p, div',
-      'css_family' => 'Open Sans',
-      'css_style' => 'normal',
-      'css_weight' => 'normal',
-      'css_fallbacks' => '',
-      'foundry' => '',
-      'foundry_url' => '',
-      'license' => '',
-      'license_url' => '',
-      'designer' => '',
-      'designer_url' => '',
-      'metadata' => 'a:2:{s:4:"path";s:17:"Open Sans:regular";s:6:"subset";s:5:"latin";}',
+    'show_as_field' => 0,
+    'show_on_form' => 0,
+    'access_author' => '',
+    'show_contextual_link' => 0,
+    'show_on_profile' => 0,
+    'access_uid' => 'others',
+    'api_version' => 3,
+    'module' => 'lacuna_stories',
+    'locked' => array(
+      0 => 'name',
     ),
   );
+  return $flags;
+
 }
 
 /**
@@ -91,6 +87,45 @@ function lacuna_stories_image_default_styles() {
           'width' => 220,
           'height' => 320,
           'upscale' => 1,
+        ),
+        'weight' => 2,
+      ),
+    ),
+  );
+
+  // Exported image style: thumbnails_for_browsing.
+  $styles['thumbnails_for_browsing'] = array(
+    'name' => 'thumbnails_for_browsing',
+    'label' => 'Thumbnails for Browsing',
+    'effects' => array(
+      1 => array(
+        'label' => 'Scale',
+        'help' => 'Scaling will maintain the aspect-ratio of the original image. If only a single dimension is specified, the other dimension will be calculated.',
+        'effect callback' => 'image_scale_effect',
+        'dimensions callback' => 'image_scale_dimensions',
+        'form callback' => 'image_scale_form',
+        'summary theme' => 'image_scale_summary',
+        'module' => 'image',
+        'name' => 'image_scale',
+        'data' => array(
+          'width' => 220,
+          'height' => 320,
+          'upscale' => 1,
+        ),
+        'weight' => 1,
+      ),
+      2 => array(
+        'label' => 'Resize',
+        'help' => 'Resizing will make images an exact set of dimensions. This may cause images to be stretched or shrunk disproportionately.',
+        'effect callback' => 'image_resize_effect',
+        'dimensions callback' => 'image_resize_dimensions',
+        'form callback' => 'image_resize_form',
+        'summary theme' => 'image_resize_summary',
+        'module' => 'image',
+        'name' => 'image_resize',
+        'data' => array(
+          'width' => 220,
+          'height' => 320,
         ),
         'weight' => 2,
       ),
@@ -154,6 +189,7 @@ function lacuna_stories_node_info() {
       'help' => '',
     ),
   );
+  drupal_alter('node_info', $items);
   return $items;
 }
 

@@ -3037,9 +3037,10 @@ function lacuna_stories_field_default_field_instances() {
     'display' => array(
       'default' => array(
         'label' => 'hidden',
+        'module' => 'text',
         'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 2,
+        'type' => 'text_default',
+        'weight' => 0,
       ),
     ),
     'entity_type' => 'user',
@@ -3073,7 +3074,7 @@ function lacuna_stories_field_default_field_instances() {
         'module' => 'og_ui',
         'settings' => array(),
         'type' => 'og_list_default',
-        'weight' => 0,
+        'weight' => 1,
       ),
     ),
     'entity_type' => 'user',
@@ -3112,7 +3113,7 @@ function lacuna_stories_field_default_field_instances() {
       'module' => 'og',
       'settings' => array(),
       'type' => 'og_complex',
-      'weight' => 4,
+      'weight' => 9,
     ),
   );
 

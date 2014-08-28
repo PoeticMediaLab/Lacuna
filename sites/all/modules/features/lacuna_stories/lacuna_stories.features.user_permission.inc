@@ -188,15 +188,6 @@ function lacuna_stories_user_default_permissions() {
     'module' => 'media_internet',
   );
 
-  // Exported permission: 'administer @font-your-face'.
-  $permissions['administer @font-your-face'] = array(
-    'name' => 'administer @font-your-face',
-    'roles' => array(
-      'administrator' => 'administrator',
-    ),
-    'module' => 'fontyourface',
-  );
-
   // Exported permission: 'administer actions'.
   $permissions['administer actions'] = array(
     'name' => 'administer actions',
@@ -240,15 +231,6 @@ function lacuna_stories_user_default_permissions() {
       'administrator' => 'administrator',
     ),
     'module' => 'block',
-  );
-
-  // Exported permission: 'administer ckeditor'.
-  $permissions['administer ckeditor'] = array(
-    'name' => 'administer ckeditor',
-    'roles' => array(
-      'administrator' => 'administrator',
-    ),
-    'module' => 'ckeditor',
   );
 
   // Exported permission: 'administer comments'.
@@ -702,15 +684,6 @@ function lacuna_stories_user_default_permissions() {
       'administrator' => 'administrator',
     ),
     'module' => 'node',
-  );
-
-  // Exported permission: 'customize ckeditor'.
-  $permissions['customize ckeditor'] = array(
-    'name' => 'customize ckeditor',
-    'roles' => array(
-      'administrator' => 'administrator',
-    ),
-    'module' => 'ckeditor',
   );
 
   // Exported permission: 'customize shortcut links'.
@@ -1413,29 +1386,9 @@ function lacuna_stories_user_default_permissions() {
     'module' => 'comment',
   );
 
-  // Exported permission: 'publish any blog content'.
-  $permissions['publish any blog content'] = array(
-    'name' => 'publish any blog content',
-    'roles' => array(
-      'Content Manager' => 'Content Manager',
-      'administrator' => 'administrator',
-    ),
-    'module' => 'publishcontent',
-  );
-
   // Exported permission: 'publish any content'.
   $permissions['publish any content'] = array(
     'name' => 'publish any content',
-    'roles' => array(
-      'Content Manager' => 'Content Manager',
-      'administrator' => 'administrator',
-    ),
-    'module' => 'publishcontent',
-  );
-
-  // Exported permission: 'publish editable blog content'.
-  $permissions['publish editable blog content'] = array(
-    'name' => 'publish editable blog content',
     'roles' => array(
       'Content Manager' => 'Content Manager',
       'administrator' => 'administrator',
@@ -1448,15 +1401,6 @@ function lacuna_stories_user_default_permissions() {
     'name' => 'publish editable content',
     'roles' => array(
       'administrator' => 'administrator',
-      'authenticated user' => 'authenticated user',
-    ),
-    'module' => 'publishcontent',
-  );
-
-  // Exported permission: 'publish own blog content'.
-  $permissions['publish own blog content'] = array(
-    'name' => 'publish own blog content',
-    'roles' => array(
       'authenticated user' => 'authenticated user',
     ),
     'module' => 'publishcontent',
@@ -1566,29 +1510,9 @@ function lacuna_stories_user_default_permissions() {
     'module' => 'shortcut',
   );
 
-  // Exported permission: 'unpublish any blog content'.
-  $permissions['unpublish any blog content'] = array(
-    'name' => 'unpublish any blog content',
-    'roles' => array(
-      'Content Manager' => 'Content Manager',
-      'administrator' => 'administrator',
-    ),
-    'module' => 'publishcontent',
-  );
-
   // Exported permission: 'unpublish any content'.
   $permissions['unpublish any content'] = array(
     'name' => 'unpublish any content',
-    'roles' => array(
-      'Content Manager' => 'Content Manager',
-      'administrator' => 'administrator',
-    ),
-    'module' => 'publishcontent',
-  );
-
-  // Exported permission: 'unpublish editable blog content'.
-  $permissions['unpublish editable blog content'] = array(
-    'name' => 'unpublish editable blog content',
     'roles' => array(
       'Content Manager' => 'Content Manager',
       'administrator' => 'administrator',
@@ -1601,15 +1525,6 @@ function lacuna_stories_user_default_permissions() {
     'name' => 'unpublish editable content',
     'roles' => array(
       'administrator' => 'administrator',
-      'authenticated user' => 'authenticated user',
-    ),
-    'module' => 'publishcontent',
-  );
-
-  // Exported permission: 'unpublish own blog content'.
-  $permissions['unpublish own blog content'] = array(
-    'name' => 'unpublish own blog content',
-    'roles' => array(
       'authenticated user' => 'authenticated user',
     ),
     'module' => 'publishcontent',

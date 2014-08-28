@@ -123,7 +123,7 @@ function lacuna_stories_views_default_views() {
   $view->description = '';
   $view->tag = 'default';
   $view->base_table = 'node';
-  $view->human_name = 'Documents and Responses';
+  $view->human_name = 'Documents and Sewing Kit';
   $view->core = 7;
   $view->api_version = '3.0';
   $view->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
@@ -134,6 +134,7 @@ function lacuna_stories_views_default_views() {
   $handler->display->display_options['use_ajax'] = TRUE;
   $handler->display->display_options['use_more_always'] = FALSE;
   $handler->display->display_options['access']['type'] = 'perm';
+  $handler->display->display_options['access']['perm'] = 'create thread content';
   $handler->display->display_options['cache']['type'] = 'none';
   $handler->display->display_options['query']['type'] = 'views_query';
   $handler->display->display_options['exposed_form']['type'] = 'better_exposed_filters';
@@ -207,6 +208,10 @@ function lacuna_stories_views_default_views() {
   $handler->display->display_options['pager']['options']['quantity'] = '9';
   $handler->display->display_options['style_plugin'] = 'default';
   $handler->display->display_options['row_plugin'] = 'fields';
+  $handler->display->display_options['row_options']['inline'] = array(
+    'views_bulk_operations' => 'views_bulk_operations',
+    'field_image' => 'field_image',
+  );
   /* No results behavior: Global: Text area */
   $handler->display->display_options['empty']['area']['id'] = 'area';
   $handler->display->display_options['empty']['area']['table'] = 'views';
@@ -246,7 +251,7 @@ function lacuna_stories_views_default_views() {
   $handler->display->display_options['fields']['field_image']['hide_empty'] = TRUE;
   $handler->display->display_options['fields']['field_image']['click_sort_column'] = 'fid';
   $handler->display->display_options['fields']['field_image']['settings'] = array(
-    'image_style' => 'medium',
+    'image_style' => 'thumbnails_for_browsing',
     'image_link' => 'content',
   );
   $handler->display->display_options['fields']['field_image']['delta_offset'] = '0';
@@ -265,22 +270,16 @@ function lacuna_stories_views_default_views() {
   $handler->display->display_options['fields']['field_video_video']['settings'] = array(
     'file_view_mode' => 'media_preview',
   );
-  /* Field: Biblio: URL */
-  $handler->display->display_options['fields']['biblio_url']['id'] = 'biblio_url';
-  $handler->display->display_options['fields']['biblio_url']['table'] = 'biblio';
-  $handler->display->display_options['fields']['biblio_url']['field'] = 'biblio_url';
-  $handler->display->display_options['fields']['biblio_url']['relationship'] = 'field_bibliographic_entry_target_id';
-  $handler->display->display_options['fields']['biblio_url']['label'] = '';
-  $handler->display->display_options['fields']['biblio_url']['alter']['alter_text'] = TRUE;
-  $handler->display->display_options['fields']['biblio_url']['alter']['text'] = 'Read and Annotate';
-  $handler->display->display_options['fields']['biblio_url']['alter']['make_link'] = TRUE;
-  $handler->display->display_options['fields']['biblio_url']['alter']['path'] = '[biblio_url]';
-  $handler->display->display_options['fields']['biblio_url']['alter']['link_class'] = 'lacuna-button';
-  $handler->display->display_options['fields']['biblio_url']['alter']['target'] = '_blank';
-  $handler->display->display_options['fields']['biblio_url']['element_type'] = 'div';
-  $handler->display->display_options['fields']['biblio_url']['element_class'] = 'grid-link';
-  $handler->display->display_options['fields']['biblio_url']['element_label_colon'] = FALSE;
-  $handler->display->display_options['fields']['biblio_url']['biblio_label'] = 0;
+  /* Field: Content: Link */
+  $handler->display->display_options['fields']['view_node']['id'] = 'view_node';
+  $handler->display->display_options['fields']['view_node']['table'] = 'views_entity_node';
+  $handler->display->display_options['fields']['view_node']['field'] = 'view_node';
+  $handler->display->display_options['fields']['view_node']['label'] = '';
+  $handler->display->display_options['fields']['view_node']['alter']['alter_text'] = TRUE;
+  $handler->display->display_options['fields']['view_node']['alter']['text'] = 'Read and Annotate';
+  $handler->display->display_options['fields']['view_node']['element_type'] = 'div';
+  $handler->display->display_options['fields']['view_node']['element_class'] = 'lacuna-button';
+  $handler->display->display_options['fields']['view_node']['element_label_colon'] = FALSE;
   /* Field: Biblio: Abstract */
   $handler->display->display_options['fields']['biblio_abst_e']['id'] = 'biblio_abst_e';
   $handler->display->display_options['fields']['biblio_abst_e']['table'] = 'biblio';
@@ -319,18 +318,6 @@ function lacuna_stories_views_default_views() {
   $handler->display->display_options['fields']['biblio_short_title']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['biblio_short_title']['empty'] = '<a href="[path_1]">[title]</a>';
   $handler->display->display_options['fields']['biblio_short_title']['biblio_label'] = 0;
-  /* Field: Global: Popup */
-  $handler->display->display_options['fields']['popup']['id'] = 'popup';
-  $handler->display->display_options['fields']['popup']['table'] = 'popup_views_integration';
-  $handler->display->display_options['fields']['popup']['field'] = 'popup';
-  $handler->display->display_options['fields']['popup']['label'] = '';
-  $handler->display->display_options['fields']['popup']['element_label_colon'] = FALSE;
-  $handler->display->display_options['fields']['popup']['title'] = '(See Abstract)';
-  $handler->display->display_options['fields']['popup']['text'] = '[field_biblio_hover_abstract]';
-  $handler->display->display_options['fields']['popup']['close'] = 0;
-  $handler->display->display_options['fields']['popup']['origin'] = 'bottom-left';
-  $handler->display->display_options['fields']['popup']['width'] = '300';
-  $handler->display->display_options['fields']['popup']['style'] = '0';
   /* Field: Biblio: Year of Publication */
   $handler->display->display_options['fields']['biblio_year']['id'] = 'biblio_year';
   $handler->display->display_options['fields']['biblio_year']['table'] = 'biblio';
@@ -422,11 +409,19 @@ function lacuna_stories_views_default_views() {
   $handler->display->display_options['filters']['field_doc_genre_tid']['table'] = 'field_data_field_doc_genre';
   $handler->display->display_options['filters']['field_doc_genre_tid']['field'] = 'field_doc_genre_tid';
   $handler->display->display_options['filters']['field_doc_genre_tid']['value'] = array(
-    2 => '2',
-    3 => '3',
-    4 => '4',
-    6 => '6',
-    5 => '5',
+    20 => '20',
+    12 => '12',
+    10 => '10',
+    19 => '19',
+    9 => '9',
+    21 => '21',
+    7 => '7',
+    22 => '22',
+    23 => '23',
+    13 => '13',
+    11 => '11',
+    24 => '24',
+    8 => '8',
   );
   $handler->display->display_options['filters']['field_doc_genre_tid']['group'] = 1;
   $handler->display->display_options['filters']['field_doc_genre_tid']['exposed'] = TRUE;
@@ -649,6 +644,390 @@ function lacuna_stories_views_default_views() {
   );
   $handler->display->display_options['filters']['field_doc_type_value']['group'] = 1;
   $handler->display->display_options['path'] = 'responses';
+
+  /* Display: Sewing Kit */
+  $handler = $view->new_display('page', 'Sewing Kit', 'page_2');
+  $handler->display->display_options['defaults']['title'] = FALSE;
+  $handler->display->display_options['title'] = 'Sewing Kit';
+  $handler->display->display_options['defaults']['pager'] = FALSE;
+  $handler->display->display_options['pager']['type'] = 'full';
+  $handler->display->display_options['pager']['options']['items_per_page'] = '50';
+  $handler->display->display_options['pager']['options']['offset'] = '0';
+  $handler->display->display_options['pager']['options']['id'] = '0';
+  $handler->display->display_options['pager']['options']['quantity'] = '9';
+  $handler->display->display_options['defaults']['fields'] = FALSE;
+  /* Field: Content: Path */
+  $handler->display->display_options['fields']['path']['id'] = 'path';
+  $handler->display->display_options['fields']['path']['table'] = 'node';
+  $handler->display->display_options['fields']['path']['field'] = 'path';
+  $handler->display->display_options['fields']['path']['relationship'] = 'field_bibliographic_entry_target_id';
+  $handler->display->display_options['fields']['path']['label'] = '';
+  $handler->display->display_options['fields']['path']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['path']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['path']['absolute'] = TRUE;
+  /* Field: Content: Path */
+  $handler->display->display_options['fields']['path_1']['id'] = 'path_1';
+  $handler->display->display_options['fields']['path_1']['table'] = 'node';
+  $handler->display->display_options['fields']['path_1']['field'] = 'path';
+  $handler->display->display_options['fields']['path_1']['label'] = '';
+  $handler->display->display_options['fields']['path_1']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['path_1']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['path_1']['absolute'] = TRUE;
+  /* Field: Field: Image */
+  $handler->display->display_options['fields']['field_image']['id'] = 'field_image';
+  $handler->display->display_options['fields']['field_image']['table'] = 'field_data_field_image';
+  $handler->display->display_options['fields']['field_image']['field'] = 'field_image';
+  $handler->display->display_options['fields']['field_image']['label'] = '';
+  $handler->display->display_options['fields']['field_image']['alter']['path'] = '[path_1]';
+  $handler->display->display_options['fields']['field_image']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['field_image']['hide_empty'] = TRUE;
+  $handler->display->display_options['fields']['field_image']['click_sort_column'] = 'fid';
+  $handler->display->display_options['fields']['field_image']['settings'] = array(
+    'image_style' => 'thumbnails_for_browsing',
+    'image_link' => 'content',
+  );
+  $handler->display->display_options['fields']['field_image']['delta_offset'] = '0';
+  /* Field: Content: Video */
+  $handler->display->display_options['fields']['field_video_video']['id'] = 'field_video_video';
+  $handler->display->display_options['fields']['field_video_video']['table'] = 'field_data_field_video_video';
+  $handler->display->display_options['fields']['field_video_video']['field'] = 'field_video_video';
+  $handler->display->display_options['fields']['field_video_video']['label'] = '';
+  $handler->display->display_options['fields']['field_video_video']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['field_video_video']['alter']['make_link'] = TRUE;
+  $handler->display->display_options['fields']['field_video_video']['alter']['path'] = '[path_1] ';
+  $handler->display->display_options['fields']['field_video_video']['alter']['absolute'] = TRUE;
+  $handler->display->display_options['fields']['field_video_video']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['field_video_video']['click_sort_column'] = 'fid';
+  $handler->display->display_options['fields']['field_video_video']['type'] = 'file_rendered';
+  $handler->display->display_options['fields']['field_video_video']['settings'] = array(
+    'file_view_mode' => 'media_preview',
+  );
+  /* Field: Bulk operations: Content */
+  $handler->display->display_options['fields']['views_bulk_operations']['id'] = 'views_bulk_operations';
+  $handler->display->display_options['fields']['views_bulk_operations']['table'] = 'node';
+  $handler->display->display_options['fields']['views_bulk_operations']['field'] = 'views_bulk_operations';
+  $handler->display->display_options['fields']['views_bulk_operations']['label'] = '';
+  $handler->display->display_options['fields']['views_bulk_operations']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['views_bulk_operations']['vbo_settings']['display_type'] = '1';
+  $handler->display->display_options['fields']['views_bulk_operations']['vbo_settings']['enable_select_all_pages'] = 1;
+  $handler->display->display_options['fields']['views_bulk_operations']['vbo_settings']['force_single'] = 0;
+  $handler->display->display_options['fields']['views_bulk_operations']['vbo_settings']['entity_load_capacity'] = '1';
+  $handler->display->display_options['fields']['views_bulk_operations']['vbo_operations'] = array(
+    'action::sewing_kit_stitch' => array(
+      'selected' => 1,
+      'postpone_processing' => 0,
+      'skip_confirmation' => 1,
+      'override_label' => 0,
+      'label' => '',
+    ),
+    'action::node_assign_owner_action' => array(
+      'selected' => 0,
+      'postpone_processing' => 0,
+      'skip_confirmation' => 0,
+      'override_label' => 0,
+      'label' => '',
+    ),
+    'action::views_bulk_operations_delete_item' => array(
+      'selected' => 0,
+      'postpone_processing' => 0,
+      'skip_confirmation' => 0,
+      'override_label' => 0,
+      'label' => '',
+    ),
+    'action::views_bulk_operations_delete_revision' => array(
+      'selected' => 0,
+      'postpone_processing' => 0,
+      'skip_confirmation' => 0,
+      'override_label' => 0,
+      'label' => '',
+    ),
+    'action::views_bulk_operations_script_action' => array(
+      'selected' => 0,
+      'postpone_processing' => 0,
+      'skip_confirmation' => 0,
+      'override_label' => 0,
+      'label' => '',
+    ),
+    'action::flag_node_action' => array(
+      'selected' => 0,
+      'postpone_processing' => 0,
+      'skip_confirmation' => 0,
+      'override_label' => 0,
+      'label' => '',
+    ),
+    'action::node_make_sticky_action' => array(
+      'selected' => 0,
+      'postpone_processing' => 0,
+      'skip_confirmation' => 0,
+      'override_label' => 0,
+      'label' => '',
+    ),
+    'action::node_make_unsticky_action' => array(
+      'selected' => 0,
+      'postpone_processing' => 0,
+      'skip_confirmation' => 0,
+      'override_label' => 0,
+      'label' => '',
+    ),
+    'action::views_bulk_operations_modify_action' => array(
+      'selected' => 0,
+      'postpone_processing' => 0,
+      'skip_confirmation' => 0,
+      'override_label' => 0,
+      'label' => '',
+      'settings' => array(
+        'show_all_tokens' => 1,
+        'display_values' => array(
+          '_all_' => '_all_',
+        ),
+      ),
+    ),
+    'action::views_bulk_operations_argument_selector_action' => array(
+      'selected' => 0,
+      'skip_confirmation' => 0,
+      'override_label' => 0,
+      'label' => '',
+      'settings' => array(
+        'url' => '',
+      ),
+    ),
+    'action::node_promote_action' => array(
+      'selected' => 0,
+      'postpone_processing' => 0,
+      'skip_confirmation' => 0,
+      'override_label' => 0,
+      'label' => '',
+    ),
+    'action::node_publish_action' => array(
+      'selected' => 0,
+      'postpone_processing' => 0,
+      'skip_confirmation' => 0,
+      'override_label' => 0,
+      'label' => '',
+    ),
+    'action::node_unpromote_action' => array(
+      'selected' => 0,
+      'postpone_processing' => 0,
+      'skip_confirmation' => 0,
+      'override_label' => 0,
+      'label' => '',
+    ),
+    'action::node_save_action' => array(
+      'selected' => 0,
+      'postpone_processing' => 0,
+      'skip_confirmation' => 0,
+      'override_label' => 0,
+      'label' => '',
+    ),
+    'action::system_send_email_action' => array(
+      'selected' => 0,
+      'postpone_processing' => 0,
+      'skip_confirmation' => 0,
+      'override_label' => 0,
+      'label' => '',
+    ),
+    'action::node_unpublish_action' => array(
+      'selected' => 0,
+      'postpone_processing' => 0,
+      'skip_confirmation' => 0,
+      'override_label' => 0,
+      'label' => '',
+    ),
+    'action::node_unpublish_by_keyword_action' => array(
+      'selected' => 0,
+      'postpone_processing' => 0,
+      'skip_confirmation' => 0,
+      'override_label' => 0,
+      'label' => '',
+    ),
+    'action::pathauto_node_update_action' => array(
+      'selected' => 0,
+      'postpone_processing' => 0,
+      'skip_confirmation' => 0,
+      'override_label' => 0,
+      'label' => '',
+    ),
+  );
+  /* Field: Biblio: URL */
+  $handler->display->display_options['fields']['biblio_url']['id'] = 'biblio_url';
+  $handler->display->display_options['fields']['biblio_url']['table'] = 'biblio';
+  $handler->display->display_options['fields']['biblio_url']['field'] = 'biblio_url';
+  $handler->display->display_options['fields']['biblio_url']['relationship'] = 'field_bibliographic_entry_target_id';
+  $handler->display->display_options['fields']['biblio_url']['label'] = '';
+  $handler->display->display_options['fields']['biblio_url']['alter']['alter_text'] = TRUE;
+  $handler->display->display_options['fields']['biblio_url']['alter']['text'] = 'Read and Annotate';
+  $handler->display->display_options['fields']['biblio_url']['alter']['make_link'] = TRUE;
+  $handler->display->display_options['fields']['biblio_url']['alter']['path'] = '[biblio_url]';
+  $handler->display->display_options['fields']['biblio_url']['alter']['link_class'] = 'lacuna-button';
+  $handler->display->display_options['fields']['biblio_url']['alter']['target'] = '_blank';
+  $handler->display->display_options['fields']['biblio_url']['element_type'] = 'div';
+  $handler->display->display_options['fields']['biblio_url']['element_class'] = 'grid-link';
+  $handler->display->display_options['fields']['biblio_url']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['biblio_url']['biblio_label'] = 0;
+  /* Field: Biblio: Abstract */
+  $handler->display->display_options['fields']['biblio_abst_e']['id'] = 'biblio_abst_e';
+  $handler->display->display_options['fields']['biblio_abst_e']['table'] = 'biblio';
+  $handler->display->display_options['fields']['biblio_abst_e']['field'] = 'biblio_abst_e';
+  $handler->display->display_options['fields']['biblio_abst_e']['relationship'] = 'field_bibliographic_entry_target_id';
+  $handler->display->display_options['fields']['biblio_abst_e']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['biblio_abst_e']['alter']['max_length'] = '600';
+  $handler->display->display_options['fields']['biblio_abst_e']['alter']['trim'] = TRUE;
+  /* Field: Content: Hover Abstract */
+  $handler->display->display_options['fields']['field_biblio_hover_abstract']['id'] = 'field_biblio_hover_abstract';
+  $handler->display->display_options['fields']['field_biblio_hover_abstract']['table'] = 'field_data_field_biblio_hover_abstract';
+  $handler->display->display_options['fields']['field_biblio_hover_abstract']['field'] = 'field_biblio_hover_abstract';
+  $handler->display->display_options['fields']['field_biblio_hover_abstract']['relationship'] = 'field_bibliographic_entry_target_id';
+  $handler->display->display_options['fields']['field_biblio_hover_abstract']['label'] = '';
+  $handler->display->display_options['fields']['field_biblio_hover_abstract']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['field_biblio_hover_abstract']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['field_biblio_hover_abstract']['empty'] = '[biblio_abst_e]';
+  $handler->display->display_options['fields']['field_biblio_hover_abstract']['hide_alter_empty'] = FALSE;
+  /* Field: Content: Title */
+  $handler->display->display_options['fields']['title']['id'] = 'title';
+  $handler->display->display_options['fields']['title']['table'] = 'node';
+  $handler->display->display_options['fields']['title']['field'] = 'title';
+  $handler->display->display_options['fields']['title']['label'] = '';
+  $handler->display->display_options['fields']['title']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['title']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['title']['link_to_node'] = FALSE;
+  /* Field: Biblio: Short Title */
+  $handler->display->display_options['fields']['biblio_short_title']['id'] = 'biblio_short_title';
+  $handler->display->display_options['fields']['biblio_short_title']['table'] = 'biblio';
+  $handler->display->display_options['fields']['biblio_short_title']['field'] = 'biblio_short_title';
+  $handler->display->display_options['fields']['biblio_short_title']['relationship'] = 'field_bibliographic_entry_target_id';
+  $handler->display->display_options['fields']['biblio_short_title']['label'] = '';
+  $handler->display->display_options['fields']['biblio_short_title']['alter']['make_link'] = TRUE;
+  $handler->display->display_options['fields']['biblio_short_title']['alter']['path'] = '[path_1]';
+  $handler->display->display_options['fields']['biblio_short_title']['alter']['absolute'] = TRUE;
+  $handler->display->display_options['fields']['biblio_short_title']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['biblio_short_title']['empty'] = '<a href="[path_1]">[title]</a>';
+  $handler->display->display_options['fields']['biblio_short_title']['biblio_label'] = 0;
+  /* Field: Biblio: Year of Publication */
+  $handler->display->display_options['fields']['biblio_year']['id'] = 'biblio_year';
+  $handler->display->display_options['fields']['biblio_year']['table'] = 'biblio';
+  $handler->display->display_options['fields']['biblio_year']['field'] = 'biblio_year';
+  $handler->display->display_options['fields']['biblio_year']['relationship'] = 'field_bibliographic_entry_target_id';
+  $handler->display->display_options['fields']['biblio_year']['label'] = '';
+  $handler->display->display_options['fields']['biblio_year']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['biblio_year']['alter']['alter_text'] = TRUE;
+  $handler->display->display_options['fields']['biblio_year']['alter']['text'] = '([biblio_year])';
+  $handler->display->display_options['fields']['biblio_year']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['biblio_year']['biblio_label'] = 0;
+  /* Field: Biblio: Authors */
+  $handler->display->display_options['fields']['biblio_authors']['id'] = 'biblio_authors';
+  $handler->display->display_options['fields']['biblio_authors']['table'] = 'biblio';
+  $handler->display->display_options['fields']['biblio_authors']['field'] = 'biblio_authors';
+  $handler->display->display_options['fields']['biblio_authors']['relationship'] = 'field_bibliographic_entry_target_id';
+  $handler->display->display_options['fields']['biblio_authors']['label'] = '';
+  $handler->display->display_options['fields']['biblio_authors']['alter']['alter_text'] = TRUE;
+  $handler->display->display_options['fields']['biblio_authors']['alter']['text'] = '[biblio_authors] [biblio_year]';
+  $handler->display->display_options['fields']['biblio_authors']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['biblio_authors']['biblio_label'] = 0;
+  $handler->display->display_options['fields']['biblio_authors']['auth_category'] = '1';
+  $handler->display->display_options['fields']['biblio_authors']['initialize'] = 0;
+  $handler->display->display_options['defaults']['filter_groups'] = FALSE;
+  $handler->display->display_options['filter_groups']['operator'] = 'OR';
+  $handler->display->display_options['defaults']['filters'] = FALSE;
+  /* Filter criterion: Content: Type */
+  $handler->display->display_options['filters']['type_1']['id'] = 'type_1';
+  $handler->display->display_options['filters']['type_1']['table'] = 'node';
+  $handler->display->display_options['filters']['type_1']['field'] = 'type';
+  $handler->display->display_options['filters']['type_1']['value'] = array(
+    'audio' => 'audio',
+    'blog' => 'blog',
+    'document' => 'document',
+    'forum' => 'forum',
+    'image' => 'image',
+    'music_video' => 'music_video',
+    'video' => 'video',
+  );
+  $handler->display->display_options['filters']['type_1']['group'] = 1;
+  /* Filter criterion: Content: Published */
+  $handler->display->display_options['filters']['status']['id'] = 'status';
+  $handler->display->display_options['filters']['status']['table'] = 'node';
+  $handler->display->display_options['filters']['status']['field'] = 'status';
+  $handler->display->display_options['filters']['status']['value'] = 1;
+  $handler->display->display_options['filters']['status']['group'] = 1;
+  $handler->display->display_options['filters']['status']['expose']['operator'] = FALSE;
+  /* Filter criterion: Content: Themes (field_themes) */
+  $handler->display->display_options['filters']['field_themes_tid']['id'] = 'field_themes_tid';
+  $handler->display->display_options['filters']['field_themes_tid']['table'] = 'field_data_field_themes';
+  $handler->display->display_options['filters']['field_themes_tid']['field'] = 'field_themes_tid';
+  $handler->display->display_options['filters']['field_themes_tid']['group'] = 1;
+  $handler->display->display_options['filters']['field_themes_tid']['exposed'] = TRUE;
+  $handler->display->display_options['filters']['field_themes_tid']['expose']['operator_id'] = 'field_themes_tid_op';
+  $handler->display->display_options['filters']['field_themes_tid']['expose']['label'] = 'Limit by Topic';
+  $handler->display->display_options['filters']['field_themes_tid']['expose']['operator'] = 'field_themes_tid_op';
+  $handler->display->display_options['filters']['field_themes_tid']['expose']['identifier'] = 'field_themes_tid';
+  $handler->display->display_options['filters']['field_themes_tid']['expose']['remember'] = TRUE;
+  $handler->display->display_options['filters']['field_themes_tid']['expose']['multiple'] = TRUE;
+  $handler->display->display_options['filters']['field_themes_tid']['expose']['remember_roles'] = array(
+    2 => '2',
+    1 => '1',
+    3 => '3',
+    4 => '4',
+  );
+  $handler->display->display_options['filters']['field_themes_tid']['reduce_duplicates'] = TRUE;
+  $handler->display->display_options['filters']['field_themes_tid']['type'] = 'select';
+  $handler->display->display_options['filters']['field_themes_tid']['vocabulary'] = 'topics';
+  $handler->display->display_options['filters']['field_themes_tid']['error_message'] = FALSE;
+  /* Filter criterion: Content: Genre (field_doc_genre) */
+  $handler->display->display_options['filters']['field_doc_genre_tid']['id'] = 'field_doc_genre_tid';
+  $handler->display->display_options['filters']['field_doc_genre_tid']['table'] = 'field_data_field_doc_genre';
+  $handler->display->display_options['filters']['field_doc_genre_tid']['field'] = 'field_doc_genre_tid';
+  $handler->display->display_options['filters']['field_doc_genre_tid']['group'] = 1;
+  $handler->display->display_options['filters']['field_doc_genre_tid']['exposed'] = TRUE;
+  $handler->display->display_options['filters']['field_doc_genre_tid']['expose']['operator_id'] = 'field_doc_genre_tid_op';
+  $handler->display->display_options['filters']['field_doc_genre_tid']['expose']['label'] = 'Limit by Genre';
+  $handler->display->display_options['filters']['field_doc_genre_tid']['expose']['operator'] = 'field_doc_genre_tid_op';
+  $handler->display->display_options['filters']['field_doc_genre_tid']['expose']['identifier'] = 'field_doc_genre_tid';
+  $handler->display->display_options['filters']['field_doc_genre_tid']['expose']['remember'] = TRUE;
+  $handler->display->display_options['filters']['field_doc_genre_tid']['expose']['multiple'] = TRUE;
+  $handler->display->display_options['filters']['field_doc_genre_tid']['expose']['remember_roles'] = array(
+    2 => '2',
+    1 => '1',
+    3 => '3',
+    4 => '4',
+    5 => 0,
+  );
+  $handler->display->display_options['filters']['field_doc_genre_tid']['expose']['reduce'] = TRUE;
+  $handler->display->display_options['filters']['field_doc_genre_tid']['reduce_duplicates'] = TRUE;
+  $handler->display->display_options['filters']['field_doc_genre_tid']['type'] = 'select';
+  $handler->display->display_options['filters']['field_doc_genre_tid']['vocabulary'] = 'genre_doc';
+  $handler->display->display_options['filters']['field_doc_genre_tid']['error_message'] = FALSE;
+  /* Filter criterion: Content: Type */
+  $handler->display->display_options['filters']['type']['id'] = 'type';
+  $handler->display->display_options['filters']['type']['table'] = 'node';
+  $handler->display->display_options['filters']['type']['field'] = 'type';
+  $handler->display->display_options['filters']['type']['value'] = array(
+    'audio' => 'audio',
+    'document' => 'document',
+    'image' => 'image',
+    'video' => 'video',
+  );
+  $handler->display->display_options['filters']['type']['group'] = 1;
+  $handler->display->display_options['filters']['type']['exposed'] = TRUE;
+  $handler->display->display_options['filters']['type']['expose']['operator_id'] = 'type_op';
+  $handler->display->display_options['filters']['type']['expose']['label'] = 'Limit by Medium';
+  $handler->display->display_options['filters']['type']['expose']['operator'] = 'type_op';
+  $handler->display->display_options['filters']['type']['expose']['identifier'] = 'type';
+  $handler->display->display_options['filters']['type']['expose']['remember'] = TRUE;
+  $handler->display->display_options['filters']['type']['expose']['multiple'] = TRUE;
+  $handler->display->display_options['filters']['type']['expose']['remember_roles'] = array(
+    2 => '2',
+    1 => '1',
+    3 => '3',
+    4 => '4',
+    5 => 0,
+  );
+  $handler->display->display_options['filters']['type']['expose']['reduce'] = TRUE;
+  $handler->display->display_options['path'] = 'sewing-kit';
+  $handler->display->display_options['menu']['type'] = 'normal';
+  $handler->display->display_options['menu']['title'] = 'Sewing Kit';
+  $handler->display->display_options['menu']['weight'] = '0';
+  $handler->display->display_options['menu']['name'] = 'menu-left-menu';
+  $handler->display->display_options['menu']['context'] = 0;
+  $handler->display->display_options['menu']['context_only_inline'] = 0;
   $export['documents'] = $view;
 
   $view = new view();
@@ -760,6 +1139,8 @@ function lacuna_stories_views_default_views() {
   $handler->display->display_options['fields']['publishcontent']['table'] = 'node';
   $handler->display->display_options['fields']['publishcontent']['field'] = 'publishcontent';
   $handler->display->display_options['fields']['publishcontent']['label'] = 'Publish/Unpublish';
+  $handler->display->display_options['fields']['publishcontent']['element_type'] = 'div';
+  $handler->display->display_options['fields']['publishcontent']['element_class'] = 'lacuna-button';
   $handler->display->display_options['fields']['publishcontent']['unpublish'] = 'Unpublish';
   $handler->display->display_options['fields']['publishcontent']['publish'] = 'Publish';
   /* Field: Content: Body */
@@ -1008,7 +1389,7 @@ function lacuna_stories_views_default_views() {
   $handler->display->display_options['fields']['field_image_1']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['field_image_1']['click_sort_column'] = 'fid';
   $handler->display->display_options['fields']['field_image_1']['settings'] = array(
-    'image_style' => 'medium',
+    'image_style' => 'thumbnails_for_browsing',
     'image_link' => 'content',
   );
   /* Field: Content: Title */
@@ -1033,18 +1414,6 @@ function lacuna_stories_views_default_views() {
   $handler->display->display_options['fields']['body']['settings'] = array(
     'trim_length' => '300',
   );
-  /* Field: Global: Popup */
-  $handler->display->display_options['fields']['popup']['id'] = 'popup';
-  $handler->display->display_options['fields']['popup']['table'] = 'popup_views_integration';
-  $handler->display->display_options['fields']['popup']['field'] = 'popup';
-  $handler->display->display_options['fields']['popup']['label'] = '';
-  $handler->display->display_options['fields']['popup']['element_label_colon'] = FALSE;
-  $handler->display->display_options['fields']['popup']['title'] = 'Preview';
-  $handler->display->display_options['fields']['popup']['text'] = '[body]';
-  $handler->display->display_options['fields']['popup']['close'] = 0;
-  $handler->display->display_options['fields']['popup']['origin'] = 'bottom-left';
-  $handler->display->display_options['fields']['popup']['width'] = '300';
-  $handler->display->display_options['fields']['popup']['style'] = '0';
   /* Field: User: Display Name */
   $handler->display->display_options['fields']['field_display_name']['id'] = 'field_display_name';
   $handler->display->display_options['fields']['field_display_name']['table'] = 'field_data_field_display_name';

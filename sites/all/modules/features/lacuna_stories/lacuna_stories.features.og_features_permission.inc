@@ -113,28 +113,13 @@ function lacuna_stories_og_features_default_permissions() {
     ),
   );
 
-  // Exported og permission: 'node:group:publish any blog content'
-  $permissions['node:group:publish any blog content'] = array(
-    'roles' => array(),
-  );
-
   // Exported og permission: 'node:group:publish any content'
   $permissions['node:group:publish any content'] = array(
     'roles' => array(),
   );
 
-  // Exported og permission: 'node:group:publish editable blog content'
-  $permissions['node:group:publish editable blog content'] = array(
-    'roles' => array(),
-  );
-
   // Exported og permission: 'node:group:publish editable content'
   $permissions['node:group:publish editable content'] = array(
-    'roles' => array(),
-  );
-
-  // Exported og permission: 'node:group:publish own blog content'
-  $permissions['node:group:publish own blog content'] = array(
     'roles' => array(),
   );
 
@@ -150,28 +135,13 @@ function lacuna_stories_og_features_default_permissions() {
     'roles' => array(),
   );
 
-  // Exported og permission: 'node:group:unpublish any blog content'
-  $permissions['node:group:unpublish any blog content'] = array(
-    'roles' => array(),
-  );
-
   // Exported og permission: 'node:group:unpublish any content'
   $permissions['node:group:unpublish any content'] = array(
     'roles' => array(),
   );
 
-  // Exported og permission: 'node:group:unpublish editable blog content'
-  $permissions['node:group:unpublish editable blog content'] = array(
-    'roles' => array(),
-  );
-
   // Exported og permission: 'node:group:unpublish editable content'
   $permissions['node:group:unpublish editable content'] = array(
-    'roles' => array(),
-  );
-
-  // Exported og permission: 'node:group:unpublish own blog content'
-  $permissions['node:group:unpublish own blog content'] = array(
     'roles' => array(),
   );
 
