@@ -1,11 +1,10 @@
-@import url(http://fonts.googleapis.com/css?family=Noto+Sans|Open+Sans:400italic,700italic,400,700);
 
 body{
   /*background-image: url(../logo.png);
   background-repeat:no-repeat;*/
   background-color: #F8F8F8;
   font-family: 'Open Sans', sans-serif;
-  line-height: 1.2em;
+  line-height: 1.5em;
 }
 #page-wrapper{
   max-width: 1200px;
@@ -29,6 +28,10 @@ sup {
 
 p {
   margin-bottom: 10px;
+}
+
+article.node {
+  text-align: justify;
 }
 
 /* main menu drop downs user superfish */
