@@ -1,0 +1,10 @@
+--- categories_new.js	2014-09-05 16:39:45.000000000 +0000
++++ categories_new.js.fixed	2014-09-05 16:39:43.000000000 +0000
+@@ -1,4 +1,4 @@
+-(function() {
++(function($) {
+
+@@ -99,4 +99,4 @@
+
+-}).call(this);
++})(jQuery);

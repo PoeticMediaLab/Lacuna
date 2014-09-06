@@ -1,0 +1,26 @@
+name = Annotator
+description = Annotator
+package = Annotation
+core = 7.x
+
+configure = admin/config/content/annotator
+
+files[] = includes/AnnotatorPlugin.class.inc
+files[] = plugins/annotator/AuthAnnotatorPlugin.class.inc
+files[] = plugins/annotator/FilterAnnotatorPlugin.class.inc
+files[] = plugins/annotator/I18nAnnotatorPlugin.class.inc
+files[] = plugins/annotator/MarkdownAnnotatorPlugin.class.inc
+files[] = plugins/annotator/PermissionsAnnotatorPlugin.class.inc
+files[] = plugins/annotator/TagsAnnotatorPlugin.class.inc
+files[] = plugins/annotator/UnsupportedAnnotatorPlugin.class.inc
+files[] = plugins/annotator/CategoriesAnnotatorPlugin.class.inc
+
+dependencies[] = ctools
+dependencies[] = jquery_update
+dependencies[] = libraries
+
+; Information added by Drupal.org packaging script on 2014-06-23
+version = "7.x-1.x-dev"
+core = "7.x"
+project = "annotator"
+datestamp = "1403532828"

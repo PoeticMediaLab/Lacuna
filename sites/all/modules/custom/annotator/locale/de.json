@@ -1,0 +1,189 @@
+{
+   "de" : {
+      "" : {
+         "Plural-Forms" : " nplurals=2; plural=(n != 1);",
+         "MIME-Version" : " 1.0",
+         "POT-Creation-Date" : " 2012-03-16 12:27+0000",
+         "Language" : " de_DE",
+         "Last-Translator" : " Steini <transifex@steinbrecher.co>",
+         "Content-Type" : " text/plain; charset=UTF-8",
+         "PO-Revision-Date" : " 2012-07-10 02:57+0000",
+         "Language-Team" : " German (Germany) (http://www.transifex.com/projects/p/annotator/language/de_DE/)",
+         "Content-Transfer-Encoding" : " 8bit",
+         "Report-Msgid-Bugs-To" : " https://github.com/okfn/annotator/issues",
+         "Project-Id-Version" : " Annotator"
+      },
+      " this annotation" : [
+         null,
+         " "
+      ],
+      "Could not sniff range type" : [
+         null,
+         ""
+      ],
+      "Sorry something went wrong with the annotation store" : [
+         null,
+         ""
+      ],
+      "Trying to update unregistered annotation!" : [
+         null,
+         ""
+      ],
+      "Error deserializing range: can't find XPath '" : [
+         null,
+         ""
+      ],
+      "Getting a new token in 10s." : [
+         null,
+         "Ein neuer Token wird binnen 10s bezogen."
+      ],
+      "Add some tags here" : [
+         null,
+         "Schlagwörter hinzufügen"
+      ],
+      "Cancel" : [
+         null,
+         "Abbrechen"
+      ],
+      "Allow anyone to <strong>edit</strong> this annotation" : [
+         null,
+         "Jedem erlauben diese Kommentierung zu <strong>bearbeiten</strong>"
+      ],
+      "Tag" : [
+         null,
+         "Schlagwort"
+      ],
+      "Navigate:" : [
+         null,
+         "Navigieren:"
+      ],
+      "Warning: No ID returned from server for annotation " : [
+         null,
+         ""
+      ],
+      "Didn't get a valid token." : [
+         null,
+         "Ein gültiger Token konnte nicht bezogen werden."
+      ],
+      "Not implemented:" : [
+         null,
+         "Nicht implementiert:"
+      ],
+      "Can't dump annotations without Store plugin." : [
+         null,
+         ""
+      ],
+      "Save" : [
+         null,
+         "Speichern"
+      ],
+      "Comments" : [
+         null,
+         "Kommentare"
+      ],
+      "Previous" : [
+         null,
+         "Zurück"
+      ],
+      "User" : [
+         null,
+         "\"Benutzer"
+      ],
+      "Sorry we could not " : [
+         null,
+         "Entschuldigung, wir konnten diese Annotierung nicht "
+      ],
+      "Filter by " : [
+         null,
+         "Filtern nach "
+      ],
+      "Clear" : [
+         null,
+         "Löschen"
+      ],
+      "Annotator requires a JSON implementation: have you included lib/vendor/json2.js?" : [
+         null,
+         "Annotator benötigt eine JSON-Implementierung: Wurde lib/vendor/json2.js inkludiert?"
+      ],
+      "'. Is this the right document?" : [
+         null,
+         "'. Ist das das richtige Dokument?"
+      ],
+      "Annotator requires jQuery: have you included lib/vendor/jquery.js?" : [
+         null,
+         "Annotator benötigt jQuery: Wurde lib/vendor/jquery.js inkludiert?"
+      ],
+      "Sorry we could not search the store for annotations" : [
+         null,
+         ""
+      ],
+      "Annotate" : [
+         null,
+         "Kommentieren"
+      ],
+      " plugin. Have you included the appropriate <script> tag?" : [
+         null,
+         " nicht laden. Wurde das entsprechende <script> Tag inkludiert?"
+      ],
+      "Allow anyone to <strong>view</strong> this annotation" : [
+         null,
+         "Jedem erlauben diese Kommentierung zu <strong>verwenden</strong>"
+      ],
+      "To use the Markdown plugin, you must include Showdown into the page first." : [
+         null,
+         "Um das Markdown-Plugin nutzen zu können, muss Showdown in die erste Seite inkludiert werden."
+      ],
+      "Could not load " : [
+         null,
+         "Konnte Plugin "
+      ],
+      "Filter by:" : [
+         null,
+         "Filtern:"
+      ],
+      "Next" : [
+         null,
+         "Vor"
+      ],
+      "Sorry your current browser does not support the Annotator" : [
+         null,
+         "Dieser Browser unterstützt Annotator nicht"
+      ],
+      "You cannot have more than one instance of any plugin." : [
+         null,
+         "Von diesem Plugin darf nur eine Instanz geöffnet sein."
+      ],
+      "API request failed:" : [
+         null,
+         "API-Aufruf fehlgeschlagen:"
+      ],
+      "You may only call normalize() once on a BrowserRange!" : [
+         null,
+         "normalize() kann nur einmal auf BrowserRange aufgerufen werden!"
+      ],
+      "Annotation" : [
+         null,
+         "Kommentieren"
+      ],
+      "Sorry you are not allowed to " : [
+         null,
+         "Sorry, Sie dürfen nicht "
+      ],
+      "Couldn't get auth token:" : [
+         null,
+         "Auth-Token konnte nicht bezogen werden:"
+      ],
+      "Sorry we could not connect to the annotations store" : [
+         null,
+         ""
+      ],
+      "No Comment" : [
+         null,
+         "Kein Kommentar"
+      ],
+      " the annotations from the store" : [
+         null,
+         " "
+      ]
+   }
+}

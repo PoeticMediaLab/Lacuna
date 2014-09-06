@@ -1,0 +1,189 @@
+{
+   "fr" : {
+      "" : {
+         "Plural-Forms" : " nplurals=2; plural=(n > 1);",
+         "MIME-Version" : " 1.0",
+         "POT-Creation-Date" : " 2012-03-16 12:27+0000",
+         "Language" : " fr",
+         "Last-Translator" : " Jean-Bernard Marcon <goofy@frenchmozilla.org>",
+         "Content-Type" : " text/plain; charset=UTF-8",
+         "PO-Revision-Date" : " 2012-03-16 15:37+0000",
+         "Language-Team" : " French (http://www.transifex.com/projects/p/annotator/language/fr/)",
+         "Content-Transfer-Encoding" : " 8bit",
+         "Report-Msgid-Bugs-To" : " https://github.com/okfn/annotator/issues",
+         "Project-Id-Version" : " Annotator"
+      },
+      " this annotation" : [
+         null,
+         " cette annotation"
+      ],
+      "Could not sniff range type" : [
+         null,
+         "Impossible de détecter le type de plage"
+      ],
+      "Sorry something went wrong with the annotation store" : [
+         null,
+         "Désolé un problème est survenu avec le stockage d'ennotations"
+      ],
+      "Trying to update unregistered annotation!" : [
+         null,
+         "Essai de mise à jour des annotations non enregistrées !"
+      ],
+      "Error deserializing range: can't find XPath '" : [
+         null,
+         "Impossible de désérialiser la sélection : impossible de trouver le XPath '"
+      ],
+      "Getting a new token in 10s." : [
+         null,
+         "Nouveau jeton dans 10 s."
+      ],
+      "Add some tags here" : [
+         null,
+         "Ajouter des tags ici"
+      ],
+      "Cancel" : [
+         null,
+         "Annuler"
+      ],
+      "Allow anyone to <strong>edit</strong> this annotation" : [
+         null,
+         "Autoriser tout le monde à <strong>modifier</strong> cette annotation"
+      ],
+      "Tag" : [
+         null,
+         "Tag"
+      ],
+      "Navigate:" : [
+         null,
+         "Naviguer:"
+      ],
+      "Warning: No ID returned from server for annotation " : [
+         null,
+         "Attention: aucun ID n'est retourné par le serveur pour l'annotation "
+      ],
+      "Didn't get a valid token." : [
+         null,
+         "Pas de jeton valide."
+      ],
+      "Not implemented:" : [
+         null,
+         "Pas implémenté:"
+      ],
+      "Can't dump annotations without Store plugin." : [
+         null,
+         "Impossible de publier des annotations sans plugin Store."
+      ],
+      "Save" : [
+         null,
+         "Sauvegarder"
+      ],
+      "Comments" : [
+         null,
+         "Commentaires"
+      ],
+      "Previous" : [
+         null,
+         "Précédent"
+      ],
+      "User" : [
+         null,
+         "\"Utilisateur"
+      ],
+      "Sorry we could not " : [
+         null,
+         "Désolé nous n'avons pas pu "
+      ],
+      "Filter by " : [
+         null,
+         "Filtrer par "
+      ],
+      "Clear" : [
+         null,
+         "Effacer"
+      ],
+      "Annotator requires a JSON implementation: have you included lib/vendor/json2.js?" : [
+         null,
+         "Annotator nécessite l'implémentation de JSON; avez-vous inclus lib/vendor/json2.js?"
+      ],
+      "'. Is this the right document?" : [
+         null,
+         "'. Est-ce le bon document?"
+      ],
+      "Annotator requires jQuery: have you included lib/vendor/jquery.js?" : [
+         null,
+         "Annotator nécessite jQuery: avez-vous inclus lib/vendor/jquery.js?"
+      ],
+      "Sorry we could not search the store for annotations" : [
+         null,
+         "Désolé, impossible de rechercher dans le stockage des annotations"
+      ],
+      "Annotate" : [
+         null,
+         "Annoter"
+      ],
+      " plugin. Have you included the appropriate <script> tag?" : [
+         null,
+         ". Avez-vous inclus le tag <script> approprié?"
+      ],
+      "Allow anyone to <strong>view</strong> this annotation" : [
+         null,
+         "Autoriser tout le monde à <strong>voir</strong> cette annotation"
+      ],
+      "To use the Markdown plugin, you must include Showdown into the page first." : [
+         null,
+         "Pour utiliser le plugin Markdown, vous devez inclure d'abord Showdown sur la page."
+      ],
+      "Could not load " : [
+         null,
+         "Impossible de charger le plugin "
+      ],
+      "Filter by:" : [
+         null,
+         "Filtrer par :"
+      ],
+      "Next" : [
+         null,
+         "Suivant"
+      ],
+      "Sorry your current browser does not support the Annotator" : [
+         null,
+         "Désolé, mais votre navigateur ne prend pas en charge Annotator"
+      ],
+      "You cannot have more than one instance of any plugin." : [
+         null,
+         "Vous ne pouvez pas avoir plus d'une instance d'un plugin."
+      ],
+      "API request failed:" : [
+         null,
+         "Échec de la requête d'AP :"
+      ],
+      "You may only call normalize() once on a BrowserRange!" : [
+         null,
+         "Vous ne pouvez appeler normalize() qu'une seule fois sur un BrowserRange!"
+      ],
+      "Annotation" : [
+         null,
+         "Annotation"
+      ],
+      "Sorry you are not allowed to " : [
+         null,
+         "Désolé, vous n'avez pas l'autorisation de "
+      ],
+      "Couldn't get auth token:" : [
+         null,
+         "Impossible de trouver le jeton d'authentification:"
+      ],
+      "Sorry we could not connect to the annotations store" : [
+         null,
+         "Désolé, impossible de se connecter au stockage d'annotations"
+      ],
+      "No Comment" : [
+         null,
+         "Pas de commentaires"
+      ],
+      " the annotations from the store" : [
+         null,
+         " les annotations depuis le stockage"
+      ]
+   }
+}

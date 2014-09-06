@@ -1,0 +1,189 @@
+{
+   "el" : {
+      "" : {
+         "Plural-Forms" : " nplurals=2; plural=(n != 1);",
+         "MIME-Version" : " 1.0",
+         "POT-Creation-Date" : " 2012-03-16 12:27+0000",
+         "Language" : " el",
+         "Last-Translator" : " Konstantinos Stampoulis <geraki@gmail.com>",
+         "Content-Type" : " text/plain; charset=UTF-8",
+         "PO-Revision-Date" : " 2013-01-15 17:19+0000",
+         "Language-Team" : " Greek (http://www.transifex.com/projects/p/annotator/language/el/)",
+         "Content-Transfer-Encoding" : " 8bit",
+         "Report-Msgid-Bugs-To" : " https://github.com/okfn/annotator/issues",
+         "Project-Id-Version" : " Annotator"
+      },
+      " this annotation" : [
+         null,
+         "αυτή την επισήμανση"
+      ],
+      "Could not sniff range type" : [
+         null,
+         "Δεν ήταν δυνατό να ανιχνευθεί ο τύπος εύρους"
+      ],
+      "Sorry something went wrong with the annotation store" : [
+         null,
+         "Λυπόμαστε, κάτι πήγε στραβά με την αποθήκη επισημάνσεων"
+      ],
+      "Trying to update unregistered annotation!" : [
+         null,
+         "Προσπάθεια για ενημέρωση μη καταχωρημένης επισήμανσης"
+      ],
+      "Error deserializing range: can't find XPath '" : [
+         null,
+         "Σφάλμα αποσειριοποίησης του εύρους: δεν βρέθηκε το XPath '"
+      ],
+      "Getting a new token in 10s." : [
+         null,
+         "Λαμβάνεται νέο αναγνωριστικό σε 10 δευτερόλεπτα."
+      ],
+      "Add some tags here" : [
+         null,
+         "Προσθήκη μερικών ετικετών εδώ"
+      ],
+      "Cancel" : [
+         null,
+         "Ακύρωση"
+      ],
+      "Allow anyone to <strong>edit</strong> this annotation" : [
+         null,
+         "Να επιτρέπεται σε οποιονδήποτε να <strong>επεξεργαστεί</strong> αυτή την επισήμανση"
+      ],
+      "Tag" : [
+         null,
+         "Ετικέτα"
+      ],
+      "Navigate:" : [
+         null,
+         "Περιήγηση:"
+      ],
+      "Warning: No ID returned from server for annotation " : [
+         null,
+         "Προειδοποίηση: Κανένα ID δεν επιστράφηκε από τον διακομιστή για επισήμανση"
+      ],
+      "Didn't get a valid token." : [
+         null,
+         "Δεν λήφθηκε έγκυρο αναγνωριστικό"
+      ],
+      "Not implemented:" : [
+         null,
+         "Δεν εφαρμόζονται:"
+      ],
+      "Can't dump annotations without Store plugin." : [
+         null,
+         "Δεν μπορούν να αποθηκευτούν οι επισημάνσεις χωρίς την επέκταση Store."
+      ],
+      "Save" : [
+         null,
+         "Αποθήκευση"
+      ],
+      "Comments" : [
+         null,
+         "Σχόλια"
+      ],
+      "Previous" : [
+         null,
+         "Προηγούμενο"
+      ],
+      "User" : [
+         null,
+         "\"Χρήστης"
+      ],
+      "Sorry we could not " : [
+         null,
+         "Λυπόμαστε, δεν μπορέσαμε"
+      ],
+      "Filter by " : [
+         null,
+         "Φιλτράρισμα με:"
+      ],
+      "Clear" : [
+         null,
+         "Εκκαθάριση"
+      ],
+      "Annotator requires a JSON implementation: have you included lib/vendor/json2.js?" : [
+         null,
+         "Το Annotator χρειάζεται χρήση της JSON: έχετε συμπεριλάβει το lib/vendor/json2.js;"
+      ],
+      "'. Is this the right document?" : [
+         null,
+         "'. Είναι το σωστό αρχείο;"
+      ],
+      "Annotator requires jQuery: have you included lib/vendor/jquery.js?" : [
+         null,
+         "Το Annotator χρειάζεται την jQuery: έχετε συμπεριλάβει το lib/vendor/jquery.js;"
+      ],
+      "Sorry we could not search the store for annotations" : [
+         null,
+         "Λυπόμαστε, δεν μπορέσαμε να αναζητήσουμε την αποθήκη για επισημάνσεις"
+      ],
+      "Annotate" : [
+         null,
+         "Επισήμανση"
+      ],
+      " plugin. Have you included the appropriate <script> tag?" : [
+         null,
+         "επέκταση. Έχετε συμπεριλάβει την σχετική ετικέτα <script>;"
+      ],
+      "Allow anyone to <strong>view</strong> this annotation" : [
+         null,
+         "Να επιτρέπεται σε οποιονδήποτε να <strong>δει</strong> αυτή την επισήμανση"
+      ],
+      "To use the Markdown plugin, you must include Showdown into the page first." : [
+         null,
+         "Για να χρησιμοποιήσετε την επέκταση Markdown, πρέπει να συμπεριλάβετε στην σελίδα πρώτα το Showdown."
+      ],
+      "Could not load " : [
+         null,
+         "Δεν ήταν δυνατή η φόρτωση"
+      ],
+      "Filter by:" : [
+         null,
+         "Φιλτράρισμα με:"
+      ],
+      "Next" : [
+         null,
+         "Επόμενο"
+      ],
+      "Sorry your current browser does not support the Annotator" : [
+         null,
+         "Λυπόμαστε, ο τρέχον περιηγητής σας δεν υποστηρίζει το Annotator"
+      ],
+      "You cannot have more than one instance of any plugin." : [
+         null,
+         "Δεν μπορείτε να έχετε περισσότερες από μια φορές ένα plugin"
+      ],
+      "API request failed:" : [
+         null,
+         "Το αίτημα API απέτυχε:"
+      ],
+      "You may only call normalize() once on a BrowserRange!" : [
+         null,
+         "Μπορείτε να καλέστε την normalize() μια μόνο φορά στο BrowserRange!"
+      ],
+      "Annotation" : [
+         null,
+         "Επισήμανση"
+      ],
+      "Sorry you are not allowed to " : [
+         null,
+         "Λυπόμαστε, δεν σας επιτρέπεται να"
+      ],
+      "Couldn't get auth token:" : [
+         null,
+         "Δεν ήταν δυνατό να ανακτηθεί αναγνωριστικό αδειοδότησης:"
+      ],
+      "Sorry we could not connect to the annotations store" : [
+         null,
+         "Λυπόμαστε, δεν μπορέσαμε να συνδεθούμε στην αποθήκη επισημάνσεων"
+      ],
+      "No Comment" : [
+         null,
+         "Χωρίς Σχόλιο"
+      ],
+      " the annotations from the store" : [
+         null,
+         "τις επισημάνσεις από την αποθήκη"
+      ]
+   }
+}

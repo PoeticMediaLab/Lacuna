@@ -1,0 +1,148 @@
+<?php
+
+/**
+ * Implements hook_init().
+ */
+function annotator_init() {
+  if (user_access('administer annotations') || user_access('view annotations') || user_access('create annotations')) {
+    /*TODO
+    if (module_exists('locale')) {
+      drupal_add_library('annotator', 'jsgettext', TRUE);
+    }*/
+    $library = libraries_load('annotator');
+    if ($library['loaded'] == FALSE) {
+      drupal_set_message($library['error message'], 'error');
+      return 'Please download and install ' . l( $library['name'], $library['download url'] ) . '!';
+    }
+    drupal_add_js(array('annotator' => array('element' => variable_get('annotator_element','.node'))), 'setting');
+    drupal_add_js(drupal_get_path('module', 'annotator') . '/js/annotator.js');
+    annotator_execute_plugins();
+  }
+}
+
+/**
+ * Implements hook_permission().
+ */
+function annotator_permission() {
+  // TODO
+  return array(
+    'create annotations' => array(
+      'title' => t('Create annotations'),
+      'description' => t('Allows users to create annotations.'),
+      'restrict access' => FALSE,
+    ),
+    'view annotations' => array(
+      'title' => t('View annotations'),
+      'description' => t('Allows users to view annotations.'),
+      'restrict access' => FALSE,
+    ),
+    'edit any annotations' => array(
+      'title' => t('Edit any annotations'),
+      'description' => t('Allows users to edit any annotations.'),
+      'restrict access' => TRUE,
+    ),
+    'edit own annotations' => array(
+      'title' => t('Edit own annotation'),
+      'description' => t('Allows users to edit own annotations.'),
+      'restrict access' => FALSE,
+    ),
+    'administer annotations' => array(
+      'title' => t('Administer annotations'),
+      'description' => t('Allows users to administer annotations.'),
+      'restrict access' => TRUE,
+    ),
+  );
+}
+
+/**
+ * Implements hook_menu().
+ */
+function annotator_menu() {
+  $items = array();
+  $items['admin/config/content/annotator'] = array(
+    'title' => 'Annotator',
+    'description' => 'Configure Annotator settings.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('annotator_admin'),
+    'access arguments' => array('administer annotations'),
+    'type' => MENU_NORMAL_ITEM,
+    'file' => 'annotator.pages.inc',
+  );
+  return $items;
+}
+
+/**
+ * Implements hook_library_info().
+ */
+function annotator_libraries_info() {
+  $libraries['annotator'] = array(
+    'name' => 'Annotator',
+    'vendor url' => 'http://annotatorjs.org',
+    'download url' => 'https://github.com/openannotation/annotator/releases/latest',
+    'version arguments' => array(
+      'file' => 'annotator-full.min.js',
+      'pattern' => '@Annotator\sv(.*)@',
+      'lines' => 10,
+    ),
+    'files' => array(
+      'js' => array(
+        'annotator-full.min.js',
+      ),
+      'css' => array(
+        'annotator.min.css',
+      ),
+    ),
+    'variants' => array(
+    ),
+  );
+  return $libraries;
+}
+
+/**
+ * Implements hook_ctools_plugin_directory().
+ */
+function annotator_ctools_plugin_directory($module, $plugin) {
+  if ($module == 'annotator') {
+    return 'plugins/' . $plugin;
+  }
+}
+
+/**
+ * Implements hook_ctools_plugin_type().
+ */
+function annotator_ctools_plugin_type() {
+  return array(
+    'annotator' => array(
+      'cache' => FALSE,
+    ),
+  );
+}
+
+/**
+ * Execute ctools plugins
+ */
+function annotator_execute_plugins($annotation = NULL, $op = NULL) {
+  ctools_include('plugins');
+  $annotator_plugins = variable_get('annotator_plugins', array());
+  foreach ($annotator_plugins as $name => $enabled) {
+    if ((boolean) $enabled) {
+      $plugin = ctools_get_plugins('annotator', 'annotator', $name . 'AnnotatorPlugin');
+      $class = ctools_plugin_get_class($plugin, 'handler');
+      if (class_exists($class)) {
+        $instance = new $class($plugin);
+        $instance->setup();
+
+        if ($annotation && $op) {
+          $instance->alter($annotation, $op);
+        }
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_TYPE_alter().
+ */
+function annotator_annotation_alter($entity, $op) {
+  annotator_execute_plugins($entity, $op);
+}

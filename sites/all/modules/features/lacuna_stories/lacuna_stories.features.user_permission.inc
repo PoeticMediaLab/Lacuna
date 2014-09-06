@@ -37,6 +37,16 @@ function lacuna_stories_user_default_permissions() {
     'module' => 'views',
   );
 
+  // Exported permission: 'access all webform results'.
+  $permissions['access all webform results'] = array(
+    'name' => 'access all webform results',
+    'roles' => array(
+      'Content Manager' => 'Content Manager',
+      'administrator' => 'administrator',
+    ),
+    'module' => 'webform',
+  );
+
   // Exported permission: 'access backup and migrate'.
   $permissions['access backup and migrate'] = array(
     'name' => 'access backup and migrate',
@@ -82,7 +92,6 @@ function lacuna_stories_user_default_permissions() {
     'name' => 'access content',
     'roles' => array(
       'administrator' => 'administrator',
-      'anonymous user' => 'anonymous user',
       'authenticated user' => 'authenticated user',
     ),
     'module' => 'node',
@@ -124,6 +133,24 @@ function lacuna_stories_user_default_permissions() {
     'module' => 'overlay',
   );
 
+  // Exported permission: 'access own webform results'.
+  $permissions['access own webform results'] = array(
+    'name' => 'access own webform results',
+    'roles' => array(
+      'administrator' => 'administrator',
+    ),
+    'module' => 'webform',
+  );
+
+  // Exported permission: 'access own webform submissions'.
+  $permissions['access own webform submissions'] = array(
+    'name' => 'access own webform submissions',
+    'roles' => array(
+      'administrator' => 'administrator',
+    ),
+    'module' => 'webform',
+  );
+
   // Exported permission: 'access private fields'.
   $permissions['access private fields'] = array(
     'name' => 'access private fields',
@@ -160,6 +187,15 @@ function lacuna_stories_user_default_permissions() {
     'module' => 'system',
   );
 
+  // Exported permission: 'access site-wide contact form'.
+  $permissions['access site-wide contact form'] = array(
+    'name' => 'access site-wide contact form',
+    'roles' => array(
+      'administrator' => 'administrator',
+    ),
+    'module' => 'contact',
+  );
+
   // Exported permission: 'access statistics'.
   $permissions['access statistics'] = array(
     'name' => 'access statistics',
@@ -167,6 +203,15 @@ function lacuna_stories_user_default_permissions() {
       'administrator' => 'administrator',
     ),
     'module' => 'statistics',
+  );
+
+  // Exported permission: 'access user contact forms'.
+  $permissions['access user contact forms'] = array(
+    'name' => 'access user contact forms',
+    'roles' => array(
+      'administrator' => 'administrator',
+    ),
+    'module' => 'contact',
   );
 
   // Exported permission: 'access user profiles'.
@@ -206,6 +251,24 @@ function lacuna_stories_user_default_permissions() {
     'module' => 'advanced_forum',
   );
 
+  // Exported permission: 'administer annotation types'.
+  $permissions['administer annotation types'] = array(
+    'name' => 'administer annotation types',
+    'roles' => array(
+      'administrator' => 'administrator',
+    ),
+    'module' => 'annotation',
+  );
+
+  // Exported permission: 'administer annotations'.
+  $permissions['administer annotations'] = array(
+    'name' => 'administer annotations',
+    'roles' => array(
+      'administrator' => 'administrator',
+    ),
+    'module' => 'annotator',
+  );
+
   // Exported permission: 'administer backup and migrate'.
   $permissions['administer backup and migrate'] = array(
     'name' => 'administer backup and migrate',
@@ -240,6 +303,15 @@ function lacuna_stories_user_default_permissions() {
       'administrator' => 'administrator',
     ),
     'module' => 'comment',
+  );
+
+  // Exported permission: 'administer contact forms'.
+  $permissions['administer contact forms'] = array(
+    'name' => 'administer contact forms',
+    'roles' => array(
+      'administrator' => 'administrator',
+    ),
+    'module' => 'contact',
   );
 
   // Exported permission: 'administer content types'.
@@ -453,6 +525,15 @@ function lacuna_stories_user_default_permissions() {
     'module' => 'statistics',
   );
 
+  // Exported permission: 'administer superfish'.
+  $permissions['administer superfish'] = array(
+    'name' => 'administer superfish',
+    'roles' => array(
+      'administrator' => 'administrator',
+    ),
+    'module' => 'superfish',
+  );
+
   // Exported permission: 'administer taxonomy'.
   $permissions['administer taxonomy'] = array(
     'name' => 'administer taxonomy',
@@ -562,6 +643,22 @@ function lacuna_stories_user_default_permissions() {
     'module' => 'context_ui',
   );
 
+  // Exported permission: 'create annotation content'.
+  $permissions['create annotation content'] = array(
+    'name' => 'create annotation content',
+    'roles' => array(),
+    'module' => 'node',
+  );
+
+  // Exported permission: 'create annotations'.
+  $permissions['create annotations'] = array(
+    'name' => 'create annotations',
+    'roles' => array(
+      'administrator' => 'administrator',
+    ),
+    'module' => 'annotator',
+  );
+
   // Exported permission: 'create article content'.
   $permissions['create article content'] = array(
     'name' => 'create article content',
@@ -667,6 +764,13 @@ function lacuna_stories_user_default_permissions() {
     'module' => 'node',
   );
 
+  // Exported permission: 'create thread content'.
+  $permissions['create thread content'] = array(
+    'name' => 'create thread content',
+    'roles' => array(),
+    'module' => 'node',
+  );
+
   // Exported permission: 'create url aliases'.
   $permissions['create url aliases'] = array(
     'name' => 'create url aliases',
@@ -686,6 +790,15 @@ function lacuna_stories_user_default_permissions() {
     'module' => 'node',
   );
 
+  // Exported permission: 'create webform content'.
+  $permissions['create webform content'] = array(
+    'name' => 'create webform content',
+    'roles' => array(
+      'authenticated user' => 'authenticated user',
+    ),
+    'module' => 'node',
+  );
+
   // Exported permission: 'customize shortcut links'.
   $permissions['customize shortcut links'] = array(
     'name' => 'customize shortcut links',
@@ -693,6 +806,22 @@ function lacuna_stories_user_default_permissions() {
       'administrator' => 'administrator',
     ),
     'module' => 'shortcut',
+  );
+
+  // Exported permission: 'delete all webform submissions'.
+  $permissions['delete all webform submissions'] = array(
+    'name' => 'delete all webform submissions',
+    'roles' => array(
+      'administrator' => 'administrator',
+    ),
+    'module' => 'webform',
+  );
+
+  // Exported permission: 'delete any annotation content'.
+  $permissions['delete any annotation content'] = array(
+    'name' => 'delete any annotation content',
+    'roles' => array(),
+    'module' => 'node',
   );
 
   // Exported permission: 'delete any article content'.
@@ -792,11 +921,27 @@ function lacuna_stories_user_default_permissions() {
     'module' => 'node',
   );
 
+  // Exported permission: 'delete any thread content'.
+  $permissions['delete any thread content'] = array(
+    'name' => 'delete any thread content',
+    'roles' => array(),
+    'module' => 'node',
+  );
+
   // Exported permission: 'delete any video content'.
   $permissions['delete any video content'] = array(
     'name' => 'delete any video content',
     'roles' => array(
       'Content Manager' => 'Content Manager',
+      'administrator' => 'administrator',
+    ),
+    'module' => 'node',
+  );
+
+  // Exported permission: 'delete any webform content'.
+  $permissions['delete any webform content'] = array(
+    'name' => 'delete any webform content',
+    'roles' => array(
       'administrator' => 'administrator',
     ),
     'module' => 'node',
@@ -809,6 +954,13 @@ function lacuna_stories_user_default_permissions() {
       'administrator' => 'administrator',
     ),
     'module' => 'backup_migrate',
+  );
+
+  // Exported permission: 'delete own annotation content'.
+  $permissions['delete own annotation content'] = array(
+    'name' => 'delete own annotation content',
+    'roles' => array(),
+    'module' => 'node',
   );
 
   // Exported permission: 'delete own article content'.
@@ -907,6 +1059,13 @@ function lacuna_stories_user_default_permissions() {
     'module' => 'node',
   );
 
+  // Exported permission: 'delete own thread content'.
+  $permissions['delete own thread content'] = array(
+    'name' => 'delete own thread content',
+    'roles' => array(),
+    'module' => 'node',
+  );
+
   // Exported permission: 'delete own video content'.
   $permissions['delete own video content'] = array(
     'name' => 'delete own video content',
@@ -915,6 +1074,24 @@ function lacuna_stories_user_default_permissions() {
       'administrator' => 'administrator',
     ),
     'module' => 'node',
+  );
+
+  // Exported permission: 'delete own webform content'.
+  $permissions['delete own webform content'] = array(
+    'name' => 'delete own webform content',
+    'roles' => array(
+      'administrator' => 'administrator',
+    ),
+    'module' => 'node',
+  );
+
+  // Exported permission: 'delete own webform submissions'.
+  $permissions['delete own webform submissions'] = array(
+    'name' => 'delete own webform submissions',
+    'roles' => array(
+      'administrator' => 'administrator',
+    ),
+    'module' => 'webform',
   );
 
   // Exported permission: 'delete revisions'.
@@ -987,6 +1164,31 @@ function lacuna_stories_user_default_permissions() {
       'administrator' => 'administrator',
     ),
     'module' => 'admin_menu',
+  );
+
+  // Exported permission: 'edit all webform submissions'.
+  $permissions['edit all webform submissions'] = array(
+    'name' => 'edit all webform submissions',
+    'roles' => array(
+      'administrator' => 'administrator',
+    ),
+    'module' => 'webform',
+  );
+
+  // Exported permission: 'edit any annotation content'.
+  $permissions['edit any annotation content'] = array(
+    'name' => 'edit any annotation content',
+    'roles' => array(),
+    'module' => 'node',
+  );
+
+  // Exported permission: 'edit any annotations'.
+  $permissions['edit any annotations'] = array(
+    'name' => 'edit any annotations',
+    'roles' => array(
+      'administrator' => 'administrator',
+    ),
+    'module' => 'annotator',
   );
 
   // Exported permission: 'edit any article content'.
@@ -1087,11 +1289,27 @@ function lacuna_stories_user_default_permissions() {
     'module' => 'node',
   );
 
+  // Exported permission: 'edit any thread content'.
+  $permissions['edit any thread content'] = array(
+    'name' => 'edit any thread content',
+    'roles' => array(),
+    'module' => 'node',
+  );
+
   // Exported permission: 'edit any video content'.
   $permissions['edit any video content'] = array(
     'name' => 'edit any video content',
     'roles' => array(
       'Content Manager' => 'Content Manager',
+      'administrator' => 'administrator',
+    ),
+    'module' => 'node',
+  );
+
+  // Exported permission: 'edit any webform content'.
+  $permissions['edit any webform content'] = array(
+    'name' => 'edit any webform content',
+    'roles' => array(
       'administrator' => 'administrator',
     ),
     'module' => 'node',
@@ -1131,6 +1349,22 @@ function lacuna_stories_user_default_permissions() {
       'administrator' => 'administrator',
     ),
     'module' => 'media',
+  );
+
+  // Exported permission: 'edit own annotation content'.
+  $permissions['edit own annotation content'] = array(
+    'name' => 'edit own annotation content',
+    'roles' => array(),
+    'module' => 'node',
+  );
+
+  // Exported permission: 'edit own annotations'.
+  $permissions['edit own annotations'] = array(
+    'name' => 'edit own annotations',
+    'roles' => array(
+      'administrator' => 'administrator',
+    ),
+    'module' => 'annotator',
   );
 
   // Exported permission: 'edit own article content'.
@@ -1247,6 +1481,13 @@ function lacuna_stories_user_default_permissions() {
     'module' => 'node',
   );
 
+  // Exported permission: 'edit own thread content'.
+  $permissions['edit own thread content'] = array(
+    'name' => 'edit own thread content',
+    'roles' => array(),
+    'module' => 'node',
+  );
+
   // Exported permission: 'edit own video content'.
   $permissions['edit own video content'] = array(
     'name' => 'edit own video content',
@@ -1255,6 +1496,24 @@ function lacuna_stories_user_default_permissions() {
       'administrator' => 'administrator',
     ),
     'module' => 'node',
+  );
+
+  // Exported permission: 'edit own webform content'.
+  $permissions['edit own webform content'] = array(
+    'name' => 'edit own webform content',
+    'roles' => array(
+      'authenticated user' => 'authenticated user',
+    ),
+    'module' => 'node',
+  );
+
+  // Exported permission: 'edit own webform submissions'.
+  $permissions['edit own webform submissions'] = array(
+    'name' => 'edit own webform submissions',
+    'roles' => array(
+      'administrator' => 'administrator',
+    ),
+    'module' => 'webform',
   );
 
   // Exported permission: 'edit terms in document_type'.
@@ -1311,6 +1570,15 @@ function lacuna_stories_user_default_permissions() {
       'administrator' => 'administrator',
     ),
     'module' => 'taxonomy',
+  );
+
+  // Exported permission: 'flag filled_out_irb_form'.
+  $permissions['flag filled_out_irb_form'] = array(
+    'name' => 'flag filled_out_irb_form',
+    'roles' => array(
+      'authenticated user' => 'authenticated user',
+    ),
+    'module' => 'flag',
   );
 
   // Exported permission: 'flush caches'.
@@ -1510,6 +1778,15 @@ function lacuna_stories_user_default_permissions() {
     'module' => 'shortcut',
   );
 
+  // Exported permission: 'unflag filled_out_irb_form'.
+  $permissions['unflag filled_out_irb_form'] = array(
+    'name' => 'unflag filled_out_irb_form',
+    'roles' => array(
+      'authenticated user' => 'authenticated user',
+    ),
+    'module' => 'flag',
+  );
+
   // Exported permission: 'unpublish any content'.
   $permissions['unpublish any content'] = array(
     'name' => 'unpublish any content',
@@ -1582,6 +1859,15 @@ function lacuna_stories_user_default_permissions() {
     'name' => 'use text format popup_tags',
     'roles' => array(),
     'module' => 'filter',
+  );
+
+  // Exported permission: 'view annotations'.
+  $permissions['view annotations'] = array(
+    'name' => 'view annotations',
+    'roles' => array(
+      'administrator' => 'administrator',
+    ),
+    'module' => 'annotator',
   );
 
   // Exported permission: 'view field_video_video'.

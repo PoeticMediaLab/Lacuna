@@ -1,0 +1,189 @@
+{
+   "et" : {
+      "" : {
+         "Plural-Forms" : " nplurals=2; plural=(n != 1);",
+         "MIME-Version" : " 1.0",
+         "POT-Creation-Date" : " 2012-03-16 12:27+0000",
+         "Language" : " et",
+         "Last-Translator" : " Rivo Zängov <eraser@eraser.ee>",
+         "Content-Type" : " text/plain; charset=UTF-8",
+         "PO-Revision-Date" : " 2012-04-30 15:14+0000",
+         "Language-Team" : " Estonian (http://www.transifex.com/projects/p/annotator/language/et/)",
+         "Content-Transfer-Encoding" : " 8bit",
+         "Report-Msgid-Bugs-To" : " https://github.com/okfn/annotator/issues",
+         "Project-Id-Version" : " Annotator"
+      },
+      " this annotation" : [
+         null,
+         ""
+      ],
+      "Could not sniff range type" : [
+         null,
+         ""
+      ],
+      "Sorry something went wrong with the annotation store" : [
+         null,
+         ""
+      ],
+      "Trying to update unregistered annotation!" : [
+         null,
+         ""
+      ],
+      "Error deserializing range: can't find XPath '" : [
+         null,
+         ""
+      ],
+      "Getting a new token in 10s." : [
+         null,
+         "Uue koodi hankimine 10s pärast."
+      ],
+      "Add some tags here" : [
+         null,
+         "Lisa siia mõned sildid"
+      ],
+      "Cancel" : [
+         null,
+         "Loobu"
+      ],
+      "Allow anyone to <strong>edit</strong> this annotation" : [
+         null,
+         ""
+      ],
+      "Tag" : [
+         null,
+         "Silt"
+      ],
+      "Navigate:" : [
+         null,
+         "Navigeeri:"
+      ],
+      "Warning: No ID returned from server for annotation " : [
+         null,
+         ""
+      ],
+      "Didn't get a valid token." : [
+         null,
+         "Audentimiskood polnud korrektne."
+      ],
+      "Not implemented:" : [
+         null,
+         ""
+      ],
+      "Can't dump annotations without Store plugin." : [
+         null,
+         ""
+      ],
+      "Save" : [
+         null,
+         "Salvesta"
+      ],
+      "Comments" : [
+         null,
+         "Kommentaarid"
+      ],
+      "Previous" : [
+         null,
+         "Eelmine"
+      ],
+      "User" : [
+         null,
+         "\"Kasutata"
+      ],
+      "Sorry we could not " : [
+         null,
+         ""
+      ],
+      "Filter by " : [
+         null,
+         "Filtreeri  "
+      ],
+      "Clear" : [
+         null,
+         "Tühjenda"
+      ],
+      "Annotator requires a JSON implementation: have you included lib/vendor/json2.js?" : [
+         null,
+         ""
+      ],
+      "'. Is this the right document?" : [
+         null,
+         "'. kas see on õige dokument?"
+      ],
+      "Annotator requires jQuery: have you included lib/vendor/jquery.js?" : [
+         null,
+         ""
+      ],
+      "Sorry we could not search the store for annotations" : [
+         null,
+         ""
+      ],
+      "Annotate" : [
+         null,
+         ""
+      ],
+      " plugin. Have you included the appropriate <script> tag?" : [
+         null,
+         ""
+      ],
+      "Allow anyone to <strong>view</strong> this annotation" : [
+         null,
+         ""
+      ],
+      "To use the Markdown plugin, you must include Showdown into the page first." : [
+         null,
+         ""
+      ],
+      "Could not load " : [
+         null,
+         "Ei suutnud laadida "
+      ],
+      "Filter by:" : [
+         null,
+         "Filtreeri"
+      ],
+      "Next" : [
+         null,
+         "Järgmine"
+      ],
+      "Sorry your current browser does not support the Annotator" : [
+         null,
+         ""
+      ],
+      "You cannot have more than one instance of any plugin." : [
+         null,
+         ""
+      ],
+      "API request failed:" : [
+         null,
+         "API päring ebaõnnestus:"
+      ],
+      "You may only call normalize() once on a BrowserRange!" : [
+         null,
+         ""
+      ],
+      "Annotation" : [
+         null,
+         ""
+      ],
+      "Sorry you are not allowed to " : [
+         null,
+         ""
+      ],
+      "Couldn't get auth token:" : [
+         null,
+         "Audentimiskoodi hankimine ebaõnnestus:"
+      ],
+      "Sorry we could not connect to the annotations store" : [
+         null,
+         ""
+      ],
+      "No Comment" : [
+         null,
+         "Kommentaare pole"
+      ],
+      " the annotations from the store" : [
+         null,
+         ""
+      ]
+   }
+}

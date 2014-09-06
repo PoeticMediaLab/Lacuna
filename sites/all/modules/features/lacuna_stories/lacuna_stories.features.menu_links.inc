@@ -47,20 +47,40 @@ function lacuna_stories_menu_default_menu_links() {
     'external' => 0,
     'has_children' => 1,
     'expanded' => 1,
-    'weight' => -49,
+    'weight' => -48,
     'customized' => 1,
   );
-  // Exported menu link: main-menu_contact:contact
-  $menu_links['main-menu_contact:contact'] = array(
+  // Exported menu link: main-menu_create:<nolink>
+  $menu_links['main-menu_create:<nolink>'] = array(
     'menu_name' => 'main-menu',
-    'link_path' => 'contact',
-    'router_path' => 'contact',
-    'link_title' => 'Contact',
+    'link_path' => '<nolink>',
+    'router_path' => '<nolink>',
+    'link_title' => 'Create',
     'options' => array(
       'attributes' => array(
         'title' => '',
       ),
-      'identifier' => 'main-menu_contact:contact',
+      'identifier' => 'main-menu_create:<nolink>',
+    ),
+    'module' => 'menu',
+    'hidden' => 0,
+    'external' => 0,
+    'has_children' => 1,
+    'expanded' => 1,
+    'weight' => -49,
+    'customized' => 1,
+  );
+  // Exported menu link: main-menu_dashboard:<nolink>
+  $menu_links['main-menu_dashboard:<nolink>'] = array(
+    'menu_name' => 'main-menu',
+    'link_path' => '<nolink>',
+    'router_path' => '<nolink>',
+    'link_title' => 'Dashboard',
+    'options' => array(
+      'attributes' => array(
+        'title' => '',
+      ),
+      'identifier' => 'main-menu_dashboard:<nolink>',
     ),
     'module' => 'menu',
     'hidden' => 0,
@@ -69,27 +89,7 @@ function lacuna_stories_menu_default_menu_links() {
     'expanded' => 0,
     'weight' => 0,
     'customized' => 1,
-    'parent_identifier' => 'main-menu_support:<nolink>',
-  );
-  // Exported menu link: main-menu_contribute:<nolink>
-  $menu_links['main-menu_contribute:<nolink>'] = array(
-    'menu_name' => 'main-menu',
-    'link_path' => '<nolink>',
-    'router_path' => '<nolink>',
-    'link_title' => 'Contribute',
-    'options' => array(
-      'attributes' => array(
-        'title' => '',
-      ),
-      'identifier' => 'main-menu_contribute:<nolink>',
-    ),
-    'module' => 'menu',
-    'hidden' => 0,
-    'external' => 0,
-    'has_children' => 1,
-    'expanded' => 1,
-    'weight' => -48,
-    'customized' => 1,
+    'parent_identifier' => 'main-menu_reflect:<nolink>',
   );
   // Exported menu link: main-menu_explore:<nolink>
   $menu_links['main-menu_explore:<nolink>'] = array(
@@ -111,6 +111,68 @@ function lacuna_stories_menu_default_menu_links() {
     'weight' => -50,
     'customized' => 1,
   );
+  // Exported menu link: main-menu_export-data:<nolink>
+  $menu_links['main-menu_export-data:<nolink>'] = array(
+    'menu_name' => 'main-menu',
+    'link_path' => '<nolink>',
+    'router_path' => '<nolink>',
+    'link_title' => 'Export Data',
+    'options' => array(
+      'attributes' => array(
+        'title' => '',
+      ),
+      'identifier' => 'main-menu_export-data:<nolink>',
+    ),
+    'module' => 'menu',
+    'hidden' => 0,
+    'external' => 0,
+    'has_children' => 0,
+    'expanded' => 0,
+    'weight' => -49,
+    'customized' => 1,
+    'parent_identifier' => 'main-menu_account:<nolink>',
+  );
+  // Exported menu link: main-menu_help:contact
+  $menu_links['main-menu_help:contact'] = array(
+    'menu_name' => 'main-menu',
+    'link_path' => 'contact',
+    'router_path' => 'contact',
+    'link_title' => 'Help',
+    'options' => array(
+      'attributes' => array(
+        'title' => '',
+      ),
+      'identifier' => 'main-menu_help:contact',
+    ),
+    'module' => 'menu',
+    'hidden' => 0,
+    'external' => 0,
+    'has_children' => 0,
+    'expanded' => 0,
+    'weight' => -48,
+    'customized' => 1,
+    'parent_identifier' => 'main-menu_account:<nolink>',
+  );
+  // Exported menu link: main-menu_instructors:<nolink>
+  $menu_links['main-menu_instructors:<nolink>'] = array(
+    'menu_name' => 'main-menu',
+    'link_path' => '<nolink>',
+    'router_path' => '<nolink>',
+    'link_title' => 'Instructors',
+    'options' => array(
+      'attributes' => array(
+        'title' => '',
+      ),
+      'identifier' => 'main-menu_instructors:<nolink>',
+    ),
+    'module' => 'menu',
+    'hidden' => 0,
+    'external' => 0,
+    'has_children' => 0,
+    'expanded' => 0,
+    'weight' => -46,
+    'customized' => 1,
+  );
   // Exported menu link: main-menu_logout:user/logout
   $menu_links['main-menu_logout:user/logout'] = array(
     'menu_name' => 'main-menu',
@@ -128,21 +190,21 @@ function lacuna_stories_menu_default_menu_links() {
     'external' => 0,
     'has_children' => 0,
     'expanded' => 0,
-    'weight' => -49,
+    'weight' => -47,
     'customized' => 1,
     'parent_identifier' => 'main-menu_account:<nolink>',
   );
-  // Exported menu link: main-menu_my-account:user
-  $menu_links['main-menu_my-account:user'] = array(
+  // Exported menu link: main-menu_my-profile:user
+  $menu_links['main-menu_my-profile:user'] = array(
     'menu_name' => 'main-menu',
     'link_path' => 'user',
     'router_path' => 'user',
-    'link_title' => 'My Account',
+    'link_title' => 'My Profile',
     'options' => array(
       'attributes' => array(
         'title' => '',
       ),
-      'identifier' => 'main-menu_my-account:user',
+      'identifier' => 'main-menu_my-profile:user',
     ),
     'module' => 'menu',
     'hidden' => 0,
@@ -152,6 +214,26 @@ function lacuna_stories_menu_default_menu_links() {
     'weight' => -50,
     'customized' => 1,
     'parent_identifier' => 'main-menu_account:<nolink>',
+  );
+  // Exported menu link: main-menu_reflect:<nolink>
+  $menu_links['main-menu_reflect:<nolink>'] = array(
+    'menu_name' => 'main-menu',
+    'link_path' => '<nolink>',
+    'router_path' => '<nolink>',
+    'link_title' => 'Reflect',
+    'options' => array(
+      'attributes' => array(
+        'title' => '',
+      ),
+      'identifier' => 'main-menu_reflect:<nolink>',
+    ),
+    'module' => 'menu',
+    'hidden' => 0,
+    'external' => 0,
+    'has_children' => 1,
+    'expanded' => 0,
+    'weight' => -47,
+    'customized' => 1,
   );
   // Exported menu link: main-menu_sewing-kit:sewing-kit
   $menu_links['main-menu_sewing-kit:sewing-kit'] = array(
@@ -169,39 +251,22 @@ function lacuna_stories_menu_default_menu_links() {
     'expanded' => 0,
     'weight' => -50,
     'customized' => 1,
-    'parent_identifier' => 'main-menu_connect:<nolink>',
-  );
-  // Exported menu link: main-menu_support:<nolink>
-  $menu_links['main-menu_support:<nolink>'] = array(
-    'menu_name' => 'main-menu',
-    'link_path' => '<nolink>',
-    'router_path' => '<nolink>',
-    'link_title' => 'Support',
-    'options' => array(
-      'attributes' => array(
-        'title' => '',
-      ),
-      'identifier' => 'main-menu_support:<nolink>',
-    ),
-    'module' => 'menu',
-    'hidden' => 0,
-    'external' => 0,
-    'has_children' => 1,
-    'expanded' => 1,
-    'weight' => -47,
-    'customized' => 1,
+    'parent_identifier' => 'main-menu_create:<nolink>',
   );
   // Translatables
   // Included for use with string extractors like potx.
   t('Account');
   t('Connect');
-  t('Contact');
-  t('Contribute');
+  t('Create');
+  t('Dashboard');
   t('Explore');
+  t('Export Data');
+  t('Help');
+  t('Instructors');
   t('Logout');
-  t('My Account');
+  t('My Profile');
+  t('Reflect');
   t('Sewing Kit');
-  t('Support');
 
 
   return $menu_links;

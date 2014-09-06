@@ -1,0 +1,189 @@
+{
+   "zh" : {
+      "" : {
+         "Plural-Forms" : " nplurals=1; plural=0;",
+         "MIME-Version" : " 1.0",
+         "POT-Creation-Date" : " 2012-03-16 12:27+0000",
+         "Language" : " zh_CN",
+         "Last-Translator" : " ferryman <tongyancn+transifex@gmail.com>",
+         "Content-Type" : " text/plain; charset=UTF-8",
+         "PO-Revision-Date" : " 2012-03-28 06:40+0000",
+         "Language-Team" : " Chinese (China) (http://www.transifex.com/projects/p/annotator/language/zh_CN/)",
+         "Content-Transfer-Encoding" : " 8bit",
+         "Report-Msgid-Bugs-To" : " https://github.com/okfn/annotator/issues",
+         "Project-Id-Version" : " Annotator"
+      },
+      " this annotation" : [
+         null,
+         "这条批注"
+      ],
+      "Could not sniff range type" : [
+         null,
+         "无法获取 range type"
+      ],
+      "Sorry something went wrong with the annotation store" : [
+         null,
+         "抱歉，批注服务出现问题"
+      ],
+      "Trying to update unregistered annotation!" : [
+         null,
+         "无法更改一个未注册的批注！"
+      ],
+      "Error deserializing range: can't find XPath '" : [
+         null,
+         "反序列化 range 时出错: 找不到 XPath '"
+      ],
+      "Getting a new token in 10s." : [
+         null,
+         "10秒后重新获取新的 token。"
+      ],
+      "Add some tags here" : [
+         null,
+         "请输入标签"
+      ],
+      "Cancel" : [
+         null,
+         "取消"
+      ],
+      "Allow anyone to <strong>edit</strong> this annotation" : [
+         null,
+         "允许其他人编辑这条批注"
+      ],
+      "Tag" : [
+         null,
+         "标签"
+      ],
+      "Navigate:" : [
+         null,
+         "导航"
+      ],
+      "Warning: No ID returned from server for annotation " : [
+         null,
+         "警告: 无法获取批注的ID"
+      ],
+      "Didn't get a valid token." : [
+         null,
+         "获取到的 token 无效。"
+      ],
+      "Not implemented:" : [
+         null,
+         "未实现: "
+      ],
+      "Can't dump annotations without Store plugin." : [
+         null,
+         "需要 Store 插件来保存批注。"
+      ],
+      "Save" : [
+         null,
+         "保存"
+      ],
+      "Comments" : [
+         null,
+         "评论"
+      ],
+      "Previous" : [
+         null,
+         "上一个"
+      ],
+      "User" : [
+         null,
+         "\"用户"
+      ],
+      "Sorry we could not " : [
+         null,
+         "抱歉，无法"
+      ],
+      "Filter by " : [
+         null,
+         "使用筛选"
+      ],
+      "Clear" : [
+         null,
+         "清除"
+      ],
+      "Annotator requires a JSON implementation: have you included lib/vendor/json2.js?" : [
+         null,
+         "Annotator 需要一个 JSON 实现: 是否在页面中包含了 lib/vendor/json2.js?"
+      ],
+      "'. Is this the right document?" : [
+         null,
+         "'。文件是否正确？"
+      ],
+      "Annotator requires jQuery: have you included lib/vendor/jquery.js?" : [
+         null,
+         "Annotator 依赖 JQuery, 请检查页面是否包含 lib/vendor/jquery.js？ "
+      ],
+      "Sorry we could not search the store for annotations" : [
+         null,
+         "查找批注时出现问题"
+      ],
+      "Annotate" : [
+         null,
+         "批注"
+      ],
+      " plugin. Have you included the appropriate <script> tag?" : [
+         null,
+         "插件。请检查是否插入了正确的 <script> 标签。"
+      ],
+      "Allow anyone to <strong>view</strong> this annotation" : [
+         null,
+         "公开这条批注"
+      ],
+      "To use the Markdown plugin, you must include Showdown into the page first." : [
+         null,
+         "Markdown 插件需要在页面中集成 Showdown"
+      ],
+      "Could not load " : [
+         null,
+         "无法加载"
+      ],
+      "Filter by:" : [
+         null,
+         "筛选"
+      ],
+      "Next" : [
+         null,
+         "下一个"
+      ],
+      "Sorry your current browser does not support the Annotator" : [
+         null,
+         "您的浏览器不兼容 Annotator"
+      ],
+      "You cannot have more than one instance of any plugin." : [
+         null,
+         "每个插件只能调用一次。"
+      ],
+      "API request failed:" : [
+         null,
+         "API 请求失败: "
+      ],
+      "You may only call normalize() once on a BrowserRange!" : [
+         null,
+         "在一个 BrowserRange 中只能调用 normalize() 一次"
+      ],
+      "Annotation" : [
+         null,
+         "批注"
+      ],
+      "Sorry you are not allowed to " : [
+         null,
+         "抱歉，禁止"
+      ],
+      "Couldn't get auth token:" : [
+         null,
+         "无法获取 auth token: "
+      ],
+      "Sorry we could not connect to the annotations store" : [
+         null,
+         "抱歉，无法连接到批注服务"
+      ],
+      "No Comment" : [
+         null,
+         "暂时没有评论"
+      ],
+      " the annotations from the store" : [
+         null,
+         "服务器上的批注"
+      ]
+   }
+}

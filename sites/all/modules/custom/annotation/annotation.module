@@ -1,0 +1,384 @@
+<?php
+/**
+ * Implements hook_permission().
+ */
+function annotation_permission() {
+  return array(
+    'administer annotation types' => array(
+      'title' => t('Administer annotation types'),
+      'description' => t('Allows users to administer annotation types.'),
+      'restrict access' => TRUE,
+    ),
+    'administer annotations' => array(
+      'title' => t('Administer annotations'),
+      'description' => t('Allows users to administer annotations.'),
+      'restrict access' => TRUE,
+    ),
+    'create annotations' => array(
+      'title' => t('Create annotations'),
+      'description' => t('Allows users to annotation tasks.'),
+      'restrict access' => TRUE,
+    ),
+    'view annotations' => array(
+      'title' => t('View annotations'),
+      'description' => t('Allows users to view annotations.'),
+      'restrict access' => TRUE,
+    ),
+    'edit any annotations' => array(
+      'title' => t('Edit any annotations'),
+      'description' => t('Allows users to edit any annotations.'),
+      'restrict access' => TRUE,
+    ),
+    'edit own annotations' => array(
+      'title' => t('Edit own annotation'),
+      'description' => t('Allows users to edit own annotations.'),
+      'restrict access' => TRUE,
+    ),
+  );
+}
+
+
+/**
+ * Implements hook_entity_info().
+ */
+// function annotation_entity_info() {
+//   $info = array(
+//     'annotation' => array(
+//       'label' => t('Annotation'),
+//       'plural label' => t('Annotations'),
+//       'description' => t('An entity type used by the Annotator.'),
+//       //'entity class' => 'AnnotationClassRevision',
+//       'controller class' => 'AnnotationAPIController',
+//       'views controller class' => 'EntityDefaultViewsController',
+//       'base table' => 'annotation',
+//       // 'revision table' => 'annotation_revision',
+//       'fieldable' => FALSE,
+//       'entity keys' => array(
+//         'id' => 'id',
+//         'bundle' => 'type',
+//         'language' => 'language',
+//         // 'revision' => 'revision_id',
+//       ),
+//       'label callback' => 'annotation_label',
+//       'uri callback' => 'annotation_uri',
+//       'bundles' => array(
+//         'annotator' => array(
+//           'label' => 'Annotator',
+//           'description' => 'Default Annotation type, use Annotator (need install).',
+//           'admin' => array(
+//             'path' => 'admin/structure/annotation/manage/%annotation_type',
+//             'real path' => 'admin/structure/annotation/manage/annotator',
+//             'bundle argument' => 4,
+//             'access arguments' => array('administer annotation'),
+//           ),
+//           'custom' => FALSE,
+//           'plugin' => 'annotator',
+//         )
+//       ),
+//       'bundle keys' => array(
+//         'bundle' => 'type',
+//       ),
+//       'view modes' => array(
+//         'full' => array(
+//           'label' => t('Default'),
+//           'custom settings' => FALSE,
+//         ),
+//       ),
+//       'module' => 'annotation',
+//       'static cache' => TRUE,
+//     ),
+//   );
+
+//   // Support entity cache module.
+//   if (module_exists('entitycache')) {
+//     $info['annotation']['field cache'] = FALSE;
+//     $info['annotation']['entity cache'] = TRUE;
+//   }
+
+//   return $info;
+// }
+
+/**
+ * Implements hook_entity_property_info_alter().
+ */
+// function annotation_entity_property_info_alter(&$info) {
+//   $properties = &$info['annotation']['properties'];
+//   $properties['created'] = array(
+//     'label' => t('Date created'),
+//     'type' => 'date',
+//     'description' => t('The date the annotation was created.'),
+//     'setter callback' => 'entity_property_verbatim_set',
+//     'setter permission' => 'administer annotations',
+//     'schema field' => 'created',
+//   );
+//   $properties['updated'] = array(
+//     'label' => t('Date updated'),
+//     'type' => 'date',
+//     'schema field' => 'updated',
+//     'description' => t('The date the annotation was last updated.'),
+//   );
+//   $properties['user'] = array(
+//     'label' => t('Author'),
+//     'type' => 'user',
+//     'description' => t('The author of the annotation.'),
+//     'setter callback' => 'entity_property_verbatim_set',
+//     'setter permission' => 'administer annotations',
+//     'required' => TRUE,
+//     'schema field' => 'uid',
+//   );
+// }
+
+/**
+ * Implements hook_menu().
+ */
+function annotation_menu() {
+  $items = array();
+  // $items['admin/content/annotation'] = array(
+  //   'title' => 'Annotations',
+  //   'description' => 'Manage Annotations',
+  //   'page callback' => 'drupal_get_form',
+  //   'page arguments' => array('annotation_admin_content'),
+  //   'access arguments' => array('access content overview'),
+  //   'type' => MENU_LOCAL_TASK | MENU_NORMAL_ITEM,
+  //   'file' => 'annotation.admin.inc',
+  // );
+  // $items['admin/content/annotation/list'] = array(
+  //   'title' => 'List',
+  //   'type' => MENU_DEFAULT_LOCAL_TASK,
+  // );
+
+  // $items['admin/structure/annotation'] = array(
+  //   'title' => 'Annotation',
+  //   'description' => 'Manage annotaions.',
+  //   'page callback' => 'annotation_admin_types',
+  //   'access arguments' => array('administer content types'),
+  //   'file' => 'annotation.admin.inc',
+  // );
+  // $items['admin/structure/annotation/list'] = array(
+  //   'title' => 'List',
+  //   'type' => MENU_DEFAULT_LOCAL_TASK,
+  //   'weight' => -10,
+  // );
+  /*
+  $items['admin/structure/annotation/add'] = array(
+    'title' => 'Add annotation type',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('annotation_type_form'),
+    'access arguments' => array('administer content types'),
+    'type' => MENU_LOCAL_ACTION,
+    'file' => 'annotation.admin.inc',
+  );
+  */
+  // $entity_info = entity_get_info('annotation');
+  // foreach ($entity_info['bundles'] as $annotation_type => $bundle_info) {
+  //   if (isset($bundle_info['admin'])) {
+  //     // Get the base path and access.
+  //     $path = $bundle_info['admin']['path'];
+  //     $access = array_intersect_key($bundle_info['admin'], drupal_map_assoc(array('access callback', 'access arguments')));
+  //     $access += array(
+  //       'access callback' => 'user_access',
+  //       'access arguments' => array('administer annotations'),
+  //     );
+
+  //     // The annotation type must be passed to the page callbacks. It might be
+  //     // configured as a wildcard (multiple annotation types sharing the same menu
+  //     // router path).
+  //     $annotation_type_argument = isset($bundle_info['admin']['bundle argument']) ? $bundle_info['admin']['bundle argument'] : $annotation_type;
+  //     $items[$path] = array(
+  //       'title' => 'Edit annotation type',
+  //       //'title callback' => 'annotation_type_get_name',
+  //       //'title arguments' => array(4),
+  //       'page callback' => 'drupal_get_form',
+  //       'page arguments' => array('annotation_type_form', $annotation_type_argument),
+  //       'file' => 'annotation.admin.inc',
+  //     ) + $access;
+
+  //     // Add the 'annotation type settings' tab.
+  //     $items["$path/edit"] = array(
+  //       'title' => 'Edit',
+  //       'type' => MENU_DEFAULT_LOCAL_TASK,
+  //     );
+  //   }
+  // }
+  // $items['annotation/%entity_object'] = array(
+  //   'load arguments' => array('annotation'),
+  //   'title callback' => 'entity_label',
+  //   'title arguments' => array('annotation', 1),
+  //   'page callback' => 'annotation_view_page',
+  //   'page arguments' => array(1, 'annoation'),
+  //   'access callback' => 'annotation_access',
+  //   'access arguments' => array('view', 1),
+  //   'file' => 'annotation.pages.inc',
+  // );
+  // $items['annotation/%entity_object/delete'] = array(
+  //   'load arguments' => array('annotation'),
+  //   'title' => 'Delete',
+  //   'page callback' => 'drupal_get_form',
+  //   'page arguments'  => array('annotation_delete_form', 1),
+  //   'access callback' => 'annotation_access',
+  //   'access arguments' => array('delete', 1),
+  //   'weight' => 1,
+  //   'type' => MENU_LOCAL_TASK,
+  //   'context' => MENU_CONTEXT_PAGE | MENU_CONTEXT_INLINE,
+  //   'file' => 'annotation.pages.inc',
+  // );
+
+  // Index; API endpoint
+  $items['annotation/api'] = array(
+    'page callback' => 'annotation_api',
+    'access callback' => /*'annotation_method_access'*/TRUE,
+    'type' => MENU_CALLBACK,
+    'file' => 'annotation.store.inc',
+  );
+  // Create; API endpoint to create annotations
+  $items['annotation/api/annotations'] = array(
+    'page callback' => 'annotation_api_endpoint',
+    'access callback' => /*'annotation_method_access'*/TRUE,
+    'access arguments' => array('', 'annotation', NULL),
+    'type' => MENU_CALLBACK,
+    'file' => 'annotation.store.inc',
+  );
+  $items['annotation/api/annotations/%'] = array(
+    'page callback' => 'annotation_api_endpoint',
+    'page arguments' => array(3),
+    'access callback' => /*'annotation_method_access'*/TRUE,
+    'access arguments' => array('', 'annotation', 3),
+    'type' => MENU_CALLBACK,
+    'file' => 'annotation.store.inc',
+  );
+  $items['annotation/api/search'] = array(
+    'page callback' => 'annotation_api_search',
+//    'access callback' => 'annotation_access',
+    'access arguments' => array('access content'),
+    'type' => MENU_CALLBACK,
+    'file' => 'annotation.store.inc',
+  );
+  return $items;
+}
+
+/**
+ * Access callback.
+ */
+function annotation_access($op, $entity = NULL, $account = NULL, $entity_type = NULL) {
+  global $user;
+  if (!isset($account)) {
+    $account = $user;
+  }
+  if ($account->uid == 1) {
+    return TRUE;
+  }
+
+  switch ($op) {
+    case 'create':
+      return user_access('administer annotations', $account)
+          || user_access('create annotations', $account);
+    case 'view':
+      return user_access('administer annotations', $account)
+          || user_access('view annotations', $account)
+          || ($entity->uid == $account->uid);
+    case 'edit':
+      return user_access('administer annotations', $account)
+          || user_access('edit any annotations', $account)
+          || (user_access('edit own annotations', $account) && ($entity->uid == $account->uid));
+    case 'delete':
+      return user_access('administer annotations', $account)
+          || user_access('edit any annotations', $account)
+          || (user_access('edit own annotations', $account) && ($entity->uid == $account->uid));
+  }
+}
+
+/**
+ * Method dependent access callback
+ * @see annotation_api_endpoint()
+ */
+function annotation_entity_method_access($op, $entity_type, $entity = NULL, $account = NULL) {
+  $method = $_SERVER['REQUEST_METHOD'];
+
+  switch ($method) {
+    case 'GET':
+      if (isset($entity) && is_numeric($id)) {
+        annotation_api_read($id);
+        // entity_access('view', $entity_type, $entity = NULL, $account = NULL);
+      }
+      else {
+        annotation_api_index();
+        // entity_access('view', $entity_type, $entity = NULL, $account = NULL);
+      }
+      break;
+    case 'POST':
+      annotation_api_create();
+      // entity_access('create', $entity_type, $entity = NULL, $account = NULL);
+      break;
+    case 'PUT':
+      annotation_api_update($id);
+      break;
+    case 'DELETE':
+      annotation_api_destroy($id);
+      break;
+  }
+}
+
+/**
+ * Menu argument loader: loads a annotation type by string.
+ *
+ * @param $name
+ *   The machine-readable name of a node type to load, where '_' is replaced
+ *   with '-'.
+ *
+ * @return
+ *   A node type object or FALSE if $name does not exist.
+ */
+function annotation_type_load($name) {
+  $annotation_entity = entity_get_info('annotation');
+  $bundle = $annotation_entity['bundles'][$name];
+  $bundle['type'] = $name;
+  //$type = ctools_export_crud_load('file_type', $name);
+  return (object)$bundle;
+}
+
+function annotation_type_get_names() {
+  $names = &drupal_static(__FUNCTION__);
+
+  if (!isset($names)) {
+    $info = entity_get_info('annotation');
+    foreach ($info['bundles'] as $bundle => $bundle_info) {
+      $names[$bundle] = $bundle_info['label'];
+    }
+  }
+
+  return $names;
+}
+
+/**
+ * Implements hook_ctools_plugin_directory().
+ */
+function annotation_ctools_plugin_directory($module, $plugin) {
+  if ($module == 'annotator') {
+    return 'plugins/' . $plugin;
+  }
+}
+
+/**
+ * Implements hook_ctools_plugin_type().
+ */
+function annotation_ctools_plugin_type() {
+  return array(
+    'annotator' => array(
+      'cache' => FALSE,
+    ),
+  );
+}
+
+/**
+ * Hide fields that users should not be able to edit
+ **/
+function annotation_form_alter(&$form, &$form_state, $form_id) {
+  if ($form_id == 'annotation_node_form') {
+    $form['ranges'] = array('#access' => FALSE);
+    $form['annotation_reference'] = array('#access' => FALSE);
+    $form['quote'] = array('#access' => FALSE);
+    $form['uri'] = array('#access' => FALSE);
+    $form['category'] = array('#access' => FALSE);
+  }
+  return($form);
+}

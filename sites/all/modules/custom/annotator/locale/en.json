@@ -1,0 +1,189 @@
+{
+   "en" : {
+      "" : {
+         "Plural-Forms" : " nplurals=2; plural=(n != 1);",
+         "MIME-Version" : " 1.0",
+         "POT-Creation-Date" : " 2012-03-16 12:27+0000",
+         "Language" : " en",
+         "Last-Translator" : " Open Knowledge Foundation <sysadmin@okfn.org>",
+         "Content-Type" : " text/plain; charset=UTF-8",
+         "PO-Revision-Date" : " 2012-03-16 12:29+0000",
+         "Language-Team" : " LANGUAGE <LL@li.org>",
+         "Content-Transfer-Encoding" : " 8bit",
+         "Report-Msgid-Bugs-To" : " https://github.com/okfn/annotator/issues",
+         "Project-Id-Version" : " Annotator"
+      },
+      " this annotation" : [
+         null,
+         " this annotation"
+      ],
+      "Could not sniff range type" : [
+         null,
+         "Could not sniff range type"
+      ],
+      "Sorry something went wrong with the annotation store" : [
+         null,
+         "Sorry something went wrong with the annotation store"
+      ],
+      "Trying to update unregistered annotation!" : [
+         null,
+         "Trying to update unregistered annotation!"
+      ],
+      "Error deserializing range: can't find XPath '" : [
+         null,
+         "Error deserializing range: can't find XPath '"
+      ],
+      "Getting a new token in 10s." : [
+         null,
+         "Getting a new token in 10s."
+      ],
+      "Add some tags here" : [
+         null,
+         "Add some tags here"
+      ],
+      "Cancel" : [
+         null,
+         "Cancel"
+      ],
+      "Allow anyone to <strong>edit</strong> this annotation" : [
+         null,
+         "Allow anyone to <strong>edit</strong> this annotation"
+      ],
+      "Tag" : [
+         null,
+         "Tag"
+      ],
+      "Navigate:" : [
+         null,
+         "Navigate:"
+      ],
+      "Warning: No ID returned from server for annotation " : [
+         null,
+         "Warning: No ID returned from server for annotation "
+      ],
+      "Didn't get a valid token." : [
+         null,
+         "Didn't get a valid token."
+      ],
+      "Not implemented:" : [
+         null,
+         "Not implemented:"
+      ],
+      "Can't dump annotations without Store plugin." : [
+         null,
+         "Can't dump annotations without Store plugin."
+      ],
+      "Save" : [
+         null,
+         "Save"
+      ],
+      "Comments" : [
+         null,
+         "Comments"
+      ],
+      "Previous" : [
+         null,
+         "Previous"
+      ],
+      "User" : [
+         null,
+         "\"User"
+      ],
+      "Sorry we could not " : [
+         null,
+         "Sorry we could not "
+      ],
+      "Filter by " : [
+         null,
+         "Filter by "
+      ],
+      "Clear" : [
+         null,
+         "Clear"
+      ],
+      "Annotator requires a JSON implementation: have you included lib/vendor/json2.js?" : [
+         null,
+         "Annotator requires a JSON implementation: have you included lib/vendor/json2.js?"
+      ],
+      "'. Is this the right document?" : [
+         null,
+         "'. Is this the right document?"
+      ],
+      "Annotator requires jQuery: have you included lib/vendor/jquery.js?" : [
+         null,
+         "Annotator requires jQuery: have you included lib/vendor/jquery.js?"
+      ],
+      "Sorry we could not search the store for annotations" : [
+         null,
+         "Sorry we could not search the store for annotations"
+      ],
+      "Annotate" : [
+         null,
+         "Annotate"
+      ],
+      " plugin. Have you included the appropriate <script> tag?" : [
+         null,
+         " plugin. Have you included the appropriate <script> tag?"
+      ],
+      "Allow anyone to <strong>view</strong> this annotation" : [
+         null,
+         "Allow anyone to <strong>view</strong> this annotation"
+      ],
+      "To use the Markdown plugin, you must include Showdown into the page first." : [
+         null,
+         "To use the Markdown plugin, you must include Showdown into the page first."
+      ],
+      "Could not load " : [
+         null,
+         "Could not load "
+      ],
+      "Filter by:" : [
+         null,
+         "Filter by:"
+      ],
+      "Next" : [
+         null,
+         "Next"
+      ],
+      "Sorry your current browser does not support the Annotator" : [
+         null,
+         "Sorry your current browser does not support the Annotator"
+      ],
+      "You cannot have more than one instance of any plugin." : [
+         null,
+         "You cannot have more than one instance of any plugin."
+      ],
+      "API request failed:" : [
+         null,
+         "API request failed:"
+      ],
+      "You may only call normalize() once on a BrowserRange!" : [
+         null,
+         "You may only call normalize() once on a BrowserRange!"
+      ],
+      "Annotation" : [
+         null,
+         "Annotation"
+      ],
+      "Sorry you are not allowed to " : [
+         null,
+         "Sorry you are not allowed to "
+      ],
+      "Couldn't get auth token:" : [
+         null,
+         "Couldn't get auth token:"
+      ],
+      "Sorry we could not connect to the annotations store" : [
+         null,
+         "Sorry we could not connect to the annotations store"
+      ],
+      "No Comment" : [
+         null,
+         "No Comment"
+      ],
+      " the annotations from the store" : [
+         null,
+         " the annotations from the store"
+      ]
+   }
+}

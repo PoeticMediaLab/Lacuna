@@ -1,0 +1,189 @@
+{
+   "ru" : {
+      "" : {
+         "Plural-Forms" : " nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);",
+         "MIME-Version" : " 1.0",
+         "POT-Creation-Date" : " 2012-03-16 12:27+0000",
+         "Language" : " ru",
+         "Last-Translator" : " Stanislav Kutasevits <zerrostas@gmail.com>",
+         "Content-Type" : " text/plain; charset=UTF-8",
+         "PO-Revision-Date" : " 2013-02-22 10:47+0000",
+         "Language-Team" : " Russian (http://www.transifex.com/projects/p/annotator/language/ru/)",
+         "Content-Transfer-Encoding" : " 8bit",
+         "Report-Msgid-Bugs-To" : " https://github.com/okfn/annotator/issues",
+         "Project-Id-Version" : " Annotator"
+      },
+      " this annotation" : [
+         null,
+         " эту аннотацию"
+      ],
+      "Could not sniff range type" : [
+         null,
+         "Не удалось обнаружить тип диапазона"
+      ],
+      "Sorry something went wrong with the annotation store" : [
+         null,
+         "Извините, что-то пошло не так с хранилищем аннотаций"
+      ],
+      "Trying to update unregistered annotation!" : [
+         null,
+         "Пытаемся обновить незарегистрированные аннотации!"
+      ],
+      "Error deserializing range: can't find XPath '" : [
+         null,
+         "Ошибка десериализации диапазон: XPath не найден '"
+      ],
+      "Getting a new token in 10s." : [
+         null,
+         "Система получит новый жетон через 10 секунд."
+      ],
+      "Add some tags here" : [
+         null,
+         "Добавьте теги здесь"
+      ],
+      "Cancel" : [
+         null,
+         "Отменить"
+      ],
+      "Allow anyone to <strong>edit</strong> this annotation" : [
+         null,
+         "Любой пользователь может <strong>редактировать</strong> эту аннотацию"
+      ],
+      "Tag" : [
+         null,
+         "Тег"
+      ],
+      "Navigate:" : [
+         null,
+         "Навигация:"
+      ],
+      "Warning: No ID returned from server for annotation " : [
+         null,
+         "Предупреждение: ID этой аннотации не найден на сервере. "
+      ],
+      "Didn't get a valid token." : [
+         null,
+         "Система не получила действующего жетона."
+      ],
+      "Not implemented:" : [
+         null,
+         "Не выполненно:"
+      ],
+      "Can't dump annotations without Store plugin." : [
+         null,
+         "Невозможно сохранить аннотации без плагина Store."
+      ],
+      "Save" : [
+         null,
+         "Сохранить"
+      ],
+      "Comments" : [
+         null,
+         "Комментарии"
+      ],
+      "Previous" : [
+         null,
+         "Предыдущий"
+      ],
+      "User" : [
+         null,
+         "\"Пользователь"
+      ],
+      "Sorry we could not " : [
+         null,
+         "К сожалению, мы не могли "
+      ],
+      "Filter by " : [
+         null,
+         "Отсортировать по"
+      ],
+      "Clear" : [
+         null,
+         "Удалить"
+      ],
+      "Annotator requires a JSON implementation: have you included lib/vendor/json2.js?" : [
+         null,
+         "Annotator требует JSON: Пожалуйста, добавьте lib/vendor/json2.js?"
+      ],
+      "'. Is this the right document?" : [
+         null,
+         "'. Правильный ли документ?"
+      ],
+      "Annotator requires jQuery: have you included lib/vendor/jquery.js?" : [
+         null,
+         "Annotator требует наличия jQuery: Пожалуйста, проверьте, добавлено ли lib/vendor/jquery.js?"
+      ],
+      "Sorry we could not search the store for annotations" : [
+         null,
+         "К сожалению, поиск в хранилище-аннотаций не удался"
+      ],
+      "Annotate" : [
+         null,
+         "Создать аннотацию"
+      ],
+      " plugin. Have you included the appropriate <script> tag?" : [
+         null,
+         "plugin. Добавлен ли подходящий <script> контейнер?"
+      ],
+      "Allow anyone to <strong>view</strong> this annotation" : [
+         null,
+         "Любой пользователь может <strong>видеть</strong> эту аннотацию"
+      ],
+      "To use the Markdown plugin, you must include Showdown into the page first." : [
+         null,
+         "Чтобы использовать плагин Markdown, вы должны в первую очередь включить Showdown в страницу."
+      ],
+      "Could not load " : [
+         null,
+         "Не удалось загрузить"
+      ],
+      "Filter by:" : [
+         null,
+         "Отсортировать по:"
+      ],
+      "Next" : [
+         null,
+         "Следующий"
+      ],
+      "Sorry your current browser does not support the Annotator" : [
+         null,
+         "Извините, ваш браузер не поддерживает Annotator"
+      ],
+      "You cannot have more than one instance of any plugin." : [
+         null,
+         "Иметь более одного экземпляра любого плагина не допускается."
+      ],
+      "API request failed:" : [
+         null,
+         "API-вызов не удался"
+      ],
+      "You may only call normalize() once on a BrowserRange!" : [
+         null,
+         "Только один вызов normalize() разрешается на каждый BrowserRange"
+      ],
+      "Annotation" : [
+         null,
+         "Аннотация"
+      ],
+      "Sorry you are not allowed to " : [
+         null,
+         "Извините, Вам не разрешается "
+      ],
+      "Couldn't get auth token:" : [
+         null,
+         "Невозможно получить жетон аутентификации:"
+      ],
+      "Sorry we could not connect to the annotations store" : [
+         null,
+         "К сожалению, мы не могли подключиться к хранилищу аннотаций"
+      ],
+      "No Comment" : [
+         null,
+         "Нет комментариев"
+      ],
+      " the annotations from the store" : [
+         null,
+         " аннотации из хранилища"
+      ]
+   }
+}

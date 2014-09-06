@@ -1,0 +1,193 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# 
+# Translators:
+msgid ""
+msgstr ""
+"Project-Id-Version: Annotator\n"
+"Report-Msgid-Bugs-To: https://github.com/okfn/annotator/issues\n"
+"POT-Creation-Date: 2012-03-16 12:27+0000\n"
+"PO-Revision-Date: 2012-03-16 12:29+0000\n"
+"Last-Translator: Open Knowledge Foundation <sysadmin@okfn.org>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: en\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: lib/extensions.js:23
+msgid "Annotator requires jQuery: have you included lib/vendor/jquery.js?"
+msgstr "Annotator requires jQuery: have you included lib/vendor/jquery.js?"
+
+#: lib/extensions.js:27
+msgid ""
+"Annotator requires a JSON implementation: have you included "
+"lib/vendor/json2.js?"
+msgstr "Annotator requires a JSON implementation: have you included lib/vendor/json2.js?"
+
+#: lib/console.js:17
+msgid "Not implemented:"
+msgstr "Not implemented:"
+
+#: lib/range.js:13
+msgid "Could not sniff range type"
+msgstr "Could not sniff range type"
+
+#: lib/range.js:31
+msgid "You may only call normalize() once on a BrowserRange!"
+msgstr "You may only call normalize() once on a BrowserRange!"
+
+#: lib/range.js:247
+msgid "Error deserializing range: can't find XPath '"
+msgstr "Error deserializing range: can't find XPath '"
+
+#: lib/range.js:247
+msgid "'. Is this the right document?"
+msgstr "'. Is this the right document?"
+
+#: lib/annotator.js:47
+msgid "Annotate"
+msgstr "Annotate"
+
+#: lib/annotator.js:114
+msgid "No Comment"
+msgstr "No Comment"
+
+#: lib/annotator.js:129
+msgid "Comments"
+msgstr "Comments"
+
+#: lib/annotator.js:265
+msgid "Can't dump annotations without Store plugin."
+msgstr "Can't dump annotations without Store plugin."
+
+#: lib/annotator.js:286
+msgid "You cannot have more than one instance of any plugin."
+msgstr "You cannot have more than one instance of any plugin."
+
+#: lib/annotator.js:296
+msgid "Could not load "
+msgstr "Could not load "
+
+#: lib/annotator.js:296
+msgid " plugin. Have you included the appropriate <script> tag?"
+msgstr " plugin. Have you included the appropriate <script> tag?"
+
+#: lib/editor.js:22
+msgid "Cancel"
+msgstr "Cancel"
+
+#: lib/editor.js:22
+msgid "Save"
+msgstr "Save"
+
+#: lib/plugin/tags.js:35
+msgid "Add some tags here"
+msgstr "Add some tags here"
+
+#: lib/plugin/tags.js:44
+msgid "Tag"
+msgstr "Tag"
+
+#: lib/plugin/auth.js:62
+msgid "Couldn't get auth token:"
+msgstr "Couldn't get auth token:"
+
+#: lib/plugin/auth.js:87
+msgid "Didn't get a valid token."
+msgstr "Didn't get a valid token."
+
+#: lib/plugin/auth.js:89
+msgid "Getting a new token in 10s."
+msgstr "Getting a new token in 10s."
+
+#: lib/plugin/store.js:61
+msgid "Warning: No ID returned from server for annotation "
+msgstr "Warning: No ID returned from server for annotation "
+
+#: lib/plugin/store.js:98
+msgid "Trying to update unregistered annotation!"
+msgstr "Trying to update unregistered annotation!"
+
+#: lib/plugin/store.js:202 lib/plugin/store.js:206
+msgid "Sorry we could not "
+msgstr "Sorry we could not "
+
+#: lib/plugin/store.js:202 lib/plugin/store.js:210
+msgid " this annotation"
+msgstr " this annotation"
+
+#: lib/plugin/store.js:204
+msgid "Sorry we could not search the store for annotations"
+msgstr "Sorry we could not search the store for annotations"
+
+#: lib/plugin/store.js:206
+msgid " the annotations from the store"
+msgstr " the annotations from the store"
+
+#: lib/plugin/store.js:210
+msgid "Sorry you are not allowed to "
+msgstr "Sorry you are not allowed to "
+
+#: lib/plugin/store.js:213
+msgid "Sorry we could not connect to the annotations store"
+msgstr "Sorry we could not connect to the annotations store"
+
+#: lib/plugin/store.js:216
+msgid "Sorry something went wrong with the annotation store"
+msgstr "Sorry something went wrong with the annotation store"
+
+#: lib/plugin/store.js:219
+msgid "API request failed:"
+msgstr "API request failed:"
+
+#: lib/plugin/filter.js:27
+msgid "Navigate:"
+msgstr "Navigate:"
+
+#: lib/plugin/filter.js:27
+msgid "Previous"
+msgstr "Previous"
+
+#: lib/plugin/filter.js:27
+msgid "Next"
+msgstr "Next"
+
+#: lib/plugin/filter.js:27
+msgid "Filter by:"
+msgstr "Filter by:"
+
+#: lib/plugin/filter.js:28
+msgid "Clear"
+msgstr "Clear"
+
+#: lib/plugin/filter.js:71
+msgid "Annotation"
+msgstr "Annotation"
+
+#: lib/plugin/filter.js:118
+msgid "Filter by "
+msgstr "Filter by "
+
+#: lib/plugin/markdown.js:18
+msgid ""
+"To use the Markdown plugin, you must include Showdown into the page first."
+msgstr "To use the Markdown plugin, you must include Showdown into the page first."
+
+#: lib/plugin/unsupported.js:13
+msgid "Sorry your current browser does not support the Annotator"
+msgstr "Sorry your current browser does not support the Annotator"
+
+#: lib/plugin/permissions.js:74
+msgid "Allow anyone to <strong>view</strong> this annotation"
+msgstr "Allow anyone to <strong>view</strong> this annotation"
+
+#: lib/plugin/permissions.js:82
+msgid "Allow anyone to <strong>edit</strong> this annotation"
+msgstr "Allow anyone to <strong>edit</strong> this annotation"
+
+#: lib/plugin/permissions.js:92
+msgid "User"
+msgstr "User"

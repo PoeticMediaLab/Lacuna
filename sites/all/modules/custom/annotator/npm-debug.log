@@ -1,0 +1,42 @@
+info it worked if it ends with ok
+verbose cli [ 'node', '/usr/bin/npm', 'install', '-g', 'coffee-script' ]
+info using npm@1.1.4
+info using node@v0.6.12
+verbose config file /home/vagrant/.npmrc
+verbose config file /usr/etc/npmrc
+verbose config file /usr/share/npm/npmrc
+verbose cache add [ 'coffee-script', null ]
+silly cache add: name, spec, args [ undefined, 'coffee-script', [ 'coffee-script', null ] ]
+verbose parsed url { pathname: 'coffee-script',
+verbose parsed url   path: 'coffee-script',
+verbose parsed url   href: 'coffee-script' }
+verbose addNamed [ 'coffee-script', '' ]
+verbose addNamed [ null, '' ]
+silly name, range, hasData [ 'coffee-script', '', false ]
+verbose raw, before any munging coffee-script
+verbose url resolving [ 'https://registry.npmjs.org/', './coffee-script' ]
+verbose url resolved https://registry.npmjs.org/coffee-script
+http GET https://registry.npmjs.org/coffee-script
+ERR! Error: failed to fetch from registry: coffee-script
+ERR!     at /usr/share/npm/lib/utils/npm-registry-client/get.js:139:12
+ERR!     at cb (/usr/share/npm/lib/utils/npm-registry-client/request.js:31:9)
+ERR!     at Request._callback (/usr/share/npm/lib/utils/npm-registry-client/request.js:136:18)
+ERR!     at Request.callback (/usr/lib/nodejs/request/main.js:119:22)
+ERR!     at Request.<anonymous> (/usr/lib/nodejs/request/main.js:212:58)
+ERR!     at Request.emit (events.js:88:20)
+ERR!     at ClientRequest.<anonymous> (/usr/lib/nodejs/request/main.js:412:12)
+ERR!     at ClientRequest.emit (events.js:67:17)
+ERR!     at HTTPParser.onIncoming (http.js:1261:11)
+ERR!     at HTTPParser.onHeadersComplete (http.js:102:31)
+ERR! You may report this log at:
+ERR!     <http://bugs.debian.org/npm>
+ERR! or use
+ERR!     reportbug --attach /var/www/drupal-devel-sandbox/sites/all/modules/annotator/npm-debug.log npm
+ERR! 
+ERR! System Linux 3.2.0-23-generic-pae
+ERR! command "node" "/usr/bin/npm" "install" "-g" "coffee-script"
+ERR! cwd /var/www/drupal-devel-sandbox/sites/all/modules/annotator
+ERR! node -v v0.6.12
+ERR! npm -v 1.1.4
+ERR! message failed to fetch from registry: coffee-script
+verbose exit [ 1, true ]

@@ -1,0 +1,8 @@
+<?php
+
+/**
+ * Implements hook_uninstall().
+ */
+function annotator_uninstall() {
+  db_query("DELETE FROM {variable} WHERE name LIKE 'annotator_%'");
+}

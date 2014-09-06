@@ -1,0 +1,204 @@
+<?php
+/**
+ *
+ * Installs content types, taxonomies, etc. for Annotation storage
+ *
+ */
+
+define('ANNOTATION_TAXONOMY_NAME', 'tags'); // needs to match name in annotation.store.inc
+
+// implements hook_node_info
+function annotation_node_info() {
+  return array(
+    'annotation' => array(
+      'name' => t('Annotation'),
+      'base' => 'node_content',
+      'description' => t('An annotation of a piece of content.'),
+      'has_title' => FALSE,
+      'locked' => TRUE,
+      'comment' => array('status' => 1),
+    )
+  );
+}
+
+// implements hook_node_type_insert()
+function annotation_node_type_insert($content_type) {
+  if ($content_type->type == 'annotation') {
+    // add the taxonomy
+    if (!taxonomy_vocabulary_machine_name_load(ANNOTATION_TAXONOMY_NAME)) {
+      _annotation_create_taxonomy();
+    }
+    // Create all our fields
+    foreach (_annotation_install_fields() as $field) {
+      $field['locked'] = TRUE;
+      field_create_field($field);
+    }
+    // Create instances for each field
+    foreach (_annotation_install_instances() as $instance) {
+      $instance['entity_type'] = 'node';
+      $instance['bundle'] = 'annotation';
+      field_create_instance($instance);
+    }
+  }
+}
+
+function _annotation_create_taxonomy() {
+  $t = get_t();
+  $taxonomy = new stdClass();
+  $taxonomy->name = $t('Annotation Tags');
+  $taxonomy->machine_name = ANNOTATION_TAXONOMY_NAME;
+  $taxonomy->description = $t('User-generated tags for annotations');
+  $taxonomy->hierarchy = 1;
+  $taxonomy->module = 'annotation';
+  $taxonomy->weight = 1;
+  taxonomy_vocabulary_save($taxonomy);
+
+  // Create a field
+  $field = array(
+    'field_name' => 'annotation_tag',
+    'type' => 'text',
+  );
+
+  field_create_field($field);
+
+  // Attach the field to our taxonomy entity
+  $instance = array(
+      'field_name' => 'annotation_tag',
+      'entity_type' => 'taxonomy_term',
+      'bundle' => ANNOTATION_TAXONOMY_NAME,
+      'description' => $t('Description'),
+      'required' => TRUE
+  );
+  field_create_instance($instance);
+}
+
+// Define the fields for our annotation
+function _annotation_install_fields() {
+  return array(
+    'text' => array(
+      'field_name' => 'text',
+      'type' => 'text_long'
+    ),
+    'quote' => array(
+      'field_name' => 'quote',
+      'type' => 'text_long',
+      'settings' => array(
+        'max_length' => ''
+      ),
+    ),
+    'uri' => array(
+      'field_name' => 'uri',
+      'type' => 'link_field',
+    ),
+    'tags' => array(
+      'field_name' => 'annotation_tags',
+      'type' => 'taxonomy_term_reference',
+      'cardinality' => FIELD_CARDINALITY_UNLIMITED,
+      'settings' => array(
+        'allowed_values' => array(
+          array(
+            'vocabulary' => ANNOTATION_TAXONOMY_NAME,
+            'parent' => 0
+          )
+        )
+      )
+    ),
+    'category' => array(
+      'field_name' => 'category',
+      'type' => 'text'
+    ),
+    'ranges' => array(
+      'field_name' => 'ranges',
+      'type' => 'text_long',
+    ),
+    'annotation_reference' => array(
+      'field_name' => 'annotation_reference',
+      'cardinality' => 1,
+      'type' => 'entityreference',
+      'module' => 'entityreference',
+      'settings' => array(
+       'target_type' => 'node',
+       'handler' => 'base',
+       'handler_settings' => array(
+        // Needs a list of actual bundles here
+        // Maybe just let site builders adjust in the field settings?
+          'target_bundles' => array()
+        )
+      )
+    )
+  );
+}
+
+function _annotation_install_instances() {
+  return array(
+    'text' => array(
+      'field_name' => 'text',
+      'label' => t('Text'),
+      'description' => t('The annotation text'),
+      'required' => FALSE
+    ),
+    'quote' => array(
+      'field_name' => 'quote',
+      'label' => t('Quote'),
+      'description' => t('The selected text that was annotated'),
+      'required' => TRUE
+    ),
+    'uri' => array(
+      'field_name' => 'uri',
+      'label' => t('URI'),
+      'description' => t('The URI of the annotated work'),
+      'required' => TRUE,
+      'display' => array(
+        'default' => array(
+          'type' => 'hidden',
+          )
+        )
+    ),
+    'tags' => array(
+      'field_name' => 'annotation_tags',
+      'label' => t('Tags'),
+      'description' => t('Tags for an annotation'),
+      'required' => FALSE,
+      'widget' => array(
+        'type' => 'taxonomy_autocomplete'
+      ),
+    ),
+    'category' => array(
+      'field_name' => 'category',
+      'label' => t('Category'),
+      'description' => t('What category of annotation this is'),
+      'required' => FALSE
+    ),
+    'ranges' => array(
+      'field_name' => 'ranges',
+      'label' => t('Ranges'),
+      'description' => t('The ranges for the start and stop of a quote'),
+      'required' => TRUE,
+      'display' => array(
+        'default' => array(
+          'type'=> 'hidden',
+          )
+        )
+    ),
+    'annotation_reference' => array(
+      'field_name'  => 'annotation_reference',
+      'label' => t('Annotated Content'),
+      'description' => t('A reference to the annotated content'),
+      'required' => TRUE,
+    )
+  );
+}
+
+// implements hook_form(); use default node form
+function annotation_form($node, $form_state) {
+  return node_content_form($node, $form_state);
+}
+
+function annotation_uninstall() {
+  node_type_delete('annotation'); // delete our node type on uninstall
+  // delete all our fields
+  foreach (_annotation_install_fields() as $field) {
+    // drush_print('Deleting ' . $field['field_name']);
+    field_delete_field($field['field_name']);
+  }
+}

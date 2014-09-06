@@ -53,11 +53,11 @@ function lacuna_stories_flag_default_flags() {
     'show_contextual_link' => 0,
     'show_on_profile' => 0,
     'access_uid' => 'others',
-    'api_version' => 3,
     'module' => 'lacuna_stories',
     'locked' => array(
       0 => 'name',
     ),
+    'api_version' => 3,
   );
   return $flags;
 
@@ -140,6 +140,14 @@ function lacuna_stories_image_default_styles() {
  */
 function lacuna_stories_node_info() {
   $items = array(
+    'annotation' => array(
+      'name' => t('Annotation'),
+      'base' => 'node_content',
+      'description' => t('An annotation of a piece of content.'),
+      'has_title' => '',
+      'title_label' => '',
+      'help' => '',
+    ),
     'audio' => array(
       'name' => t('Audio'),
       'base' => 'node_content',
@@ -180,10 +188,26 @@ function lacuna_stories_node_info() {
       'title_label' => t('Title'),
       'help' => '',
     ),
+    'thread' => array(
+      'name' => t('Thread'),
+      'base' => 'node_content',
+      'description' => t('This content type stitches together items in a Sewing Kit.'),
+      'has_title' => '1',
+      'title_label' => t('Title'),
+      'help' => '',
+    ),
     'video' => array(
       'name' => t('Video'),
       'base' => 'node_content',
       'description' => t('Any videos.'),
+      'has_title' => '1',
+      'title_label' => t('Title'),
+      'help' => '',
+    ),
+    'webform' => array(
+      'name' => t('Webform'),
+      'base' => 'node_content',
+      'description' => t('Create a new form or questionnaire accessible to users. Submission results and statistics are recorded and accessible to privileged users.'),
       'has_title' => '1',
       'title_label' => t('Title'),
       'help' => '',
