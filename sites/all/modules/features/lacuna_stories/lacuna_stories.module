@@ -1,7 +1,0 @@
-<?php
-/**
- * @file
- * Code for the Lacuna Stories feature.
- */
-
-include_once 'lacuna_stories.features.inc';

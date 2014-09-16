@@ -1,0 +1,42 @@
+#annotation-filters-wrapper {
+    position: relative;
+}
+
+#annotation-filters {
+    position: fixed;
+}
+
+.annotation-filters-hide-annotation {
+  background-color: transparent !important;
+}
+
+.region-sidebar-second div#block-block-1 {
+  background-color: transparent;
+  border: none;
+}
+
+.annotation-sidebar-button {
+  display: block;
+  width: 100%;
+  color: white;
+  padding: 5px;
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+/*.annotation-sidebar-button-active {
+  background-color: green;
+}*/
+
+.annotation-filter-active {
+  display: block;
+  text-transform: capitalize;
+  width: 100%;
+}
+
+label {
+}
+
+label:first-letter {
+  text-transform: capitalize;
+}

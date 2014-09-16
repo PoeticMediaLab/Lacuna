@@ -6,6 +6,7 @@
  */
 
 define('ANNOTATION_TAXONOMY_NAME', 'tags'); // needs to match name in annotation.store.inc
+define('ANNOTATION_CATEGORY_TAXONOMY', 'annotation_categories');  // for our Categories plugin
 
 // implements hook_node_info
 function annotation_node_info() {
@@ -24,11 +25,45 @@ function annotation_node_info() {
 // implements hook_node_type_insert()
 function annotation_node_type_insert($content_type) {
   if ($content_type->type == 'annotation') {
-    // add the taxonomy
+    // add the taxonomy for tags
     if (!taxonomy_vocabulary_machine_name_load(ANNOTATION_TAXONOMY_NAME)) {
-      _annotation_create_taxonomy();
+      _annotation_create_taxonomy(ANNOTATION_TAXONOMY_NAME);
     }
-    // Create all our fields
+
+    // Add taxonomy for categories
+    // TODO: Refactor taxonomy creation to look like field/instance creation
+    // Move to Annotator module -- fits with categories plugin?
+    if (!taxonomy_vocabulary_machine_name_load(ANNOTATION_CATEGORY_TAXONOMY)) {
+      $t = get_t();
+      $taxonomy = new stdClass();
+      $taxonomy->name = $t('Annotation Categories');
+      $taxonomy->machine_name = ANNOTATION_CATEGORY_TAXONOMY;
+      $taxonomy->description = $t('Categories for annotations');
+      $taxonomy->hierarchy = 1;
+      $taxonomy->module = 'annotation';
+      $taxonomy->weight = 1;
+      taxonomy_vocabulary_save($taxonomy);
+
+      // Create a field
+      $field = array(
+        'field_name' => 'name',
+        'type' => 'text',
+      );
+
+      field_create_field($field);
+
+      // Attach the field to our taxonomy entity
+      $instance = array(
+          'field_name' => 'name',
+          'entity_type' => 'taxonomy_term',
+          'bundle' => ANNOTATION_CATEGORY_TAXONOMY,
+          'description' => $t('Name of the category'),
+          'required' => TRUE
+      );
+      field_create_instance($instance);
+    }
+
+    // Create all our fields for the Annotation node type
     foreach (_annotation_install_fields() as $field) {
       $field['locked'] = TRUE;
       field_create_field($field);
@@ -105,7 +140,16 @@ function _annotation_install_fields() {
     ),
     'category' => array(
       'field_name' => 'category',
-      'type' => 'text'
+      'type' => 'taxonomy_term_reference',
+      'cardinality' => 1,
+      'settings' => array(
+        'allowed_values' => array(
+          array(
+            'vocabulary' => ANNOTATION_CATEGORY_TAXONOMY,
+            'parent' => 0
+          )
+        )
+      )
     ),
     'ranges' => array(
       'field_name' => 'ranges',
@@ -125,7 +169,21 @@ function _annotation_install_fields() {
           'target_bundles' => array()
         )
       )
-    )
+    ),
+    'private' => array(
+      'field_name' => 'private',
+      'type' => 'list_boolean',
+      'cardinality' => 1,
+      'not null' => TRUE,
+      'default' => 1,
+      'settings' => array(
+        'allowed_values' => array(
+            0 => 'No',
+            1 => 'Yes'
+        ),
+        'allowed_value_function' => ''
+      )
+    ),
   );
 }
 
@@ -133,7 +191,7 @@ function _annotation_install_instances() {
   return array(
     'text' => array(
       'field_name' => 'text',
-      'label' => t('Text'),
+      'label' => t('Annotation Text'),
       'description' => t('The annotation text'),
       'required' => FALSE
     ),
@@ -142,6 +200,13 @@ function _annotation_install_instances() {
       'label' => t('Quote'),
       'description' => t('The selected text that was annotated'),
       'required' => TRUE
+    ),
+    'private' => array(
+      'field_name' => 'private',
+      'label' => t('Private'),
+      'description' => t('Decide if this annotation is private or not'),
+      'default_value' => array(0 => array('value' => 1)),
+      'required' => TRUE,
     ),
     'uri' => array(
       'field_name' => 'uri',
@@ -167,7 +232,10 @@ function _annotation_install_instances() {
       'field_name' => 'category',
       'label' => t('Category'),
       'description' => t('What category of annotation this is'),
-      'required' => FALSE
+      'required' => FALSE,
+      'widget' => array(
+        'type' => 'taxonomy_autocomplete'
+      )
     ),
     'ranges' => array(
       'field_name' => 'ranges',

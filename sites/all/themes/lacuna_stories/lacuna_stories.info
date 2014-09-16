@@ -12,9 +12,8 @@
 ; page at admin/appearance.
 
 screenshot  = screenshot.png
-name        = lacuna_stories
-description = Read the <a href="https://drupal.org/node/873778">online docs</a> or the included README.txt on how to create a theme with Zen.
-
+name        = Lacuna Stories
+description = The base theme for Lacuna Stories
 
 
 ; This theme is compatible with Drupal 7 core. And it is a sub-theme of Zen.
@@ -124,7 +123,7 @@ features[] = secondary_menu
 
 ; Set the default values of settings on the theme-settings.php form.
 
-settings[zen_breadcrumb]           = yes
+settings[zen_breadcrumb]           = no
 settings[zen_breadcrumb_separator] = ' › '
 settings[zen_breadcrumb_home]      = 1
 settings[zen_breadcrumb_trailing]  = 0

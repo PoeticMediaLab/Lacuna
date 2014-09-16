@@ -1,5 +1,6 @@
 <?php
 
+define('ANNOTATOR_VERSION', '1.2.9');
 /**
  * Implements hook_init().
  */
@@ -16,6 +17,7 @@ function annotator_init() {
     }
     drupal_add_js(array('annotator' => array('element' => variable_get('annotator_element','.node'))), 'setting');
     drupal_add_js(drupal_get_path('module', 'annotator') . '/js/annotator.js');
+    drupal_add_css(drupal_get_path('module', 'annotator') . '/css/style.css');
     annotator_execute_plugins();
   }
 }
@@ -80,6 +82,7 @@ function annotator_libraries_info() {
     'vendor url' => 'http://annotatorjs.org',
     'download url' => 'https://github.com/openannotation/annotator/releases/latest',
     'version arguments' => array(
+      // 'file' => 'annotator-full.js',
       'file' => 'annotator-full.min.js',
       'pattern' => '@Annotator\sv(.*)@',
       'lines' => 10,
@@ -87,6 +90,7 @@ function annotator_libraries_info() {
     'files' => array(
       'js' => array(
         'annotator-full.min.js',
+        // 'annotator-full.js',
       ),
       'css' => array(
         'annotator.min.css',

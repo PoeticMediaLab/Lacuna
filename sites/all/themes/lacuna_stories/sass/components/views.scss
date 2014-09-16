@@ -1,0 +1,147 @@
+/* Hide "Operations" text in Sewing Kit */
+legend .fieldset-legend {
+  display: none;
+}
+
+/* Theme the select list for adding to a thread */
+select#edit-thread-add {
+  width: 268px;
+  padding: 5px;
+  font-size: 16px;
+  line-height: 1;
+  border: 0;
+  border-radius: 0;
+  height: 34px;
+}
+
+/* The "Add to Thread" button for Sewing Kit */
+#edit-actionsewing-kit-stitch {
+  width:200px;
+  display:block;
+  margin-left: auto;
+  margin-right: auto;
+  height: 50px;
+}
+
+/* Center the "Select all" options */
+.vbo-fieldset-select-all {
+  margin-right: auto;
+  margin-left: auto;
+}
+
+fieldset.form-wrapper {
+  border: none;
+}
+
+.views-field-biblio-url {
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
+/* Arrange topic view */
+.view-topics .view-content div {
+  height: 200px;
+}
+
+.views-row-odd span.views-field-field-image div.topic_image {
+  float: left;
+  padding-right: 20px;
+}
+
+div.views-row-even span.views-field-field-image div.topic_image {
+  float: right;
+  padding-left: 20px;
+}
+
+div.views-row-last span.views-field-field-image div.topic_image  {
+  float: right;
+  padding-left: 20px;
+}
+
+.views-exposed-form .views-exposed-widget{
+  clear: both;
+  width: 100%;
+}
+/*.views-exposed-form .views-exposed-widget.views-reset-button {
+  margin-top: 10px;
+  padding-top:0px;
+}*/
+.views-exposed-form .views-exposed-widget label {
+  min-width: 150px;
+}
+
+.view-documents .views-submit-button,
+.view-documents .views-widget-sort-order,
+.view-responses .views-submit-button,
+.view-responses .views-widget-sort-order {
+  display: none;
+}
+.view-documents .views-widget-sort-by .form-type-bef-link,
+.view-responses .views-widget-sort-by .form-type-bef-link {
+  float: left;
+  margin: 0 10px 0 15px;
+}
+.view-documents .views-widget-sort-by .form-type-bef-link a,
+.view-responses .views-widget-sort-by .form-type-bef-link a {
+  color: #808080;
+  font-weight: bold;
+  font-size: 15px;
+}
+.view-documents .views-widget-sort-by .form-type-bef-link a:hover,
+.view-responses .views-widget-sort-by .form-type-bef-link a:hover {
+  color: #1588BA;
+}
+.view-documents .views-widget-sort-by .form-type-bef-link.selected a,
+.view-responses .views-widget-sort-by .form-type-bef-link.selected a {
+  color: #1588BA;
+}
+
+.view-documents img,
+.view-responses img {
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: 100%;
+  box-shadow: 0px 0px 10px #888888;
+}
+
+.view-documents .views-row {
+  float: left;
+  width: 150px;
+  margin: 20px;
+  height: 350px;
+}
+.view-responses .views-row {
+  float: left;
+  width: 150px;
+  margin: 20px;
+  height: 350px;
+}
+.view-documents .views-exposed-widget,
+.view-responses .views-exposed-widget {
+  margin-top: 0px;
+}
+.view-documents .views-exposed-widget>label,
+.view-documents .form-item-sort-by>label,
+.view-responses .views-exposed-widget>label,
+.view-responses .form-item-sort-by>label {
+  float: left;
+  margin-right: 10px;
+}
+.view-documents .views-widget,
+.view-responses .views-widget{
+  display: inline;
+}
+.view-documents .form-type-bef-checkbox,
+.view-responses .form-type-bef-checkbox {
+  float: left;
+  margin: 0px 5px 0px 10px;
+  font-size: 0.95em;
+  color: grey;
+}
+
+table.views-table {
+  width: 100%;
+}
+
+

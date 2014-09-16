@@ -39,11 +39,11 @@ class PermissionsAnnotatorPlugin extends AnnotatorPlugin {
     $own = FALSE;
     // Set the right permission for new annotations
     if (!isset($annotation)) {
-      $own = user_access('edit own annotations');
+      $own = user_access('create annotation content');
     }
     // Set the right permission for existing annotations
     elseif (isset($annotation->uid)) {
-      $own = user_access('edit own annotations') && ($annotation->uid == $user->uid);
+      $own = user_access('edit own annotation content') && ($annotation->uid == $user->uid);
     }
 
     $settings = $this->settings();
@@ -53,24 +53,24 @@ class PermissionsAnnotatorPlugin extends AnnotatorPlugin {
       'roles' => array_keys($user->roles),
     );
 
-    $roles = user_roles(FALSE, 'administer annotations');
+    $roles = user_roles(FALSE, 'administer nodes');
     $settings['permissions']['admin'] = array(
       'user' => array(),
       'roles' => array_keys($roles),
     );
-    $roles = user_roles(FALSE, 'edit any annotations');
+    $roles = user_roles(FALSE, 'delete any annotation content');
     $settings['permissions']['delete'] = array(
       'user' => array(
         $own ? $user->uid : NULL,
       ),
       'roles' => array_keys($roles),
     );
-    $roles = user_roles(FALSE, 'view annotations');
+    $roles = user_roles(FALSE, 'access content');
     $settings['permissions']['read'] = array(
       'user' => array(),
       'roles' => array_keys($roles),
     );
-    $roles = user_roles(FALSE, 'edit any annotations');
+    $roles = user_roles(FALSE, 'edit any annotation content');
     $settings['permissions']['update'] = array(
       'user' => array(
         $own ? $user->uid : NULL,

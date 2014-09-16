@@ -1,0 +1,16 @@
+name = Lacuna Stories Views
+description = All Views for Lacuna Stories
+core = 7.x
+package = Lacuna Stories
+version = 7.x-1.0
+project = lacuna_stories_views
+dependencies[] = lacuna_stories_content_types
+features[ctools][] = views:views_default:3.0
+features[features_api][] = api:2
+features[views_view][] = documents
+features[views_view][] = my_annotations
+features[views_view][] = my_threads
+features[views_view][] = responses
+features[views_view][] = topics
+features_exclude[dependencies][better_exposed_filters] = better_exposed_filters
+features_exclude[dependencies][views] = views

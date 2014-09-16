@@ -4,8 +4,8 @@
       Drupal.Annotator.annotator('addPlugin', 'Permissions', {
         user: settings.annotator_permissions.user,
         permissions: settings.annotator_permissions.permissions,
-        showViewPermissionsCheckbox: settings.annotator_permissions.showViewPermissionsCheckbox === 1,
-        showEditPermissionsCheckbox: settings.annotator_permissions.showEditPermissionsCheckbox === 1,
+        showViewPermissionsCheckbox: settings.annotator_permissions.showViewPermissionsCheckbox == 1,
+        showEditPermissionsCheckbox: settings.annotator_permissions.showEditPermissionsCheckbox == 1,
         userId: function (user) {
           if (user && user.uid) {
             return user.uid;

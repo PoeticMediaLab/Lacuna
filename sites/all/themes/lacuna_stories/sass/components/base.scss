@@ -1,0 +1,130 @@
+$link-color: #1588ba;
+$link-color-hover: #094762;
+$bg-color: #F8F8F8;
+
+#name-and-slogan {
+  font-size: 1em;
+}
+
+#logo {
+}
+
+#name-and-slogan span {
+  color: gray;
+}
+
+.header__name-and-slogan {
+  float: none !important;
+  margin-top: 50px;
+}
+
+#site-name {
+  font-size: 1.5em;
+}
+
+#name-and-slogan #site-name a, #name-and-slogan #site-name a:hover {
+  text-decoration: none;
+}
+
+body {
+  background-color: $bg-color;
+  font-family: 'Open Sans', sans-serif;
+  line-height: 1.5em;
+}
+
+#page {
+  max-width: 1400px;
+  padding: 15px;
+  margin: auto;
+  position: relative;
+  background-color: white;
+  box-shadow: 0px 0px 10px #888888;
+  padding-bottom: 100px;
+}
+
+b {
+  font-weight: bold;
+}
+
+sup {
+  vertical-align: super;
+  font-size: small;
+}
+
+p {
+  margin-bottom: 10px;
+}
+
+article.node {
+  text-align: justify;
+}
+
+/* fix to avoid drop down menu overwrite of message pane */
+div.messages {
+  margin-top: 40px;
+}
+
+h1,h2,h3,h4,h5,h6 {
+  font-family: 'Noto Sans', sans-serif;
+  line-height: 1.3em;
+}
+
+h1{
+  font-size: 1.5em;
+  margin-bottom: 10px;
+}
+h2{
+  font-size: 1.4em;
+  margin-bottom: 10px;
+}
+h3{
+  font-size: 1.3em;
+  margin-bottom: 10px;
+}
+h4{
+  font-size: 1.2em;
+  margin-bottom: 10px;
+}
+h5{
+  font-size: 1.1em;
+  margin-bottom: 10px;
+}
+dt{
+  margin-top: 10px;
+}
+
+a {
+  color: $link-color;
+  text-decoration: none;
+}
+
+a:hover {
+  color: $link-color-hover;
+}
+
+label {
+  margin-bottom: 10px;
+}
+input {
+  max-width: 100%;
+}
+input[checked='checked'] {
+  background-color: blue;
+}
+
+td.active {
+  background-color: white;
+}
+
+#page-title {
+  margin-bottom: 20px;
+  font-weight: bold;
+}
+
+.breadcrumb {
+  display: none;
+}
+
+.form-item {
+  margin-top: 30px;
+}

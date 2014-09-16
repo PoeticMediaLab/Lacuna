@@ -1,0 +1,31 @@
+/* line 3, ../../sass/components/content.scss */
+.field {
+  margin-bottom: 30px;
+}
+
+/* line 6, ../../sass/components/content.scss */
+.field-label {
+  margin-bottom: 10px;
+}
+
+/* line 9, ../../sass/components/content.scss */
+.submitted {
+  font-style: italic;
+  font-size: 0.9em;
+}
+
+/* line 14, ../../sass/components/content.scss */
+#comments {
+  margin-top: 40px;
+}
+
+/* line 17, ../../sass/components/content.scss */
+#comments .title {
+  margin-top: 40px;
+}
+
+/* line 21, ../../sass/components/content.scss */
+.node div.content {
+  margin-top: 20px;
+  margin-bottom: 20px;
+}

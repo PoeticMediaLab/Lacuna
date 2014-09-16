@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the Lacuna Stories Content Types feature.
+ */
+
+include_once 'lacuna_stories_content_types.features.inc';

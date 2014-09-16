@@ -1,23 +1,11 @@
 name = Annotation
-description = Annotation entity
-package = Annotation
+description = Provides storage and retrieval of annotations
+package = Lacuna Stories
 core = 7.x
 
-configure = admin/structure/annotation
-
-;files[] = annotation.class.inc
-;files[] = annotation.controller.inc
 files[] = plugins/annotator/StoreAnnotatorPlugin.class.inc
-files[] = plugins/annotator/CategoriesAnnotatorPlugin.class.inc
 
 dependencies[] = ctools
-;dependencies[] = entity
 dependencies[] = entityreference
 dependencies[] = link
-
-; Information added by Drupal.org packaging script on 2014-01-09
-;version = "7.x-1.x-dev"
-;core = "7.x"
-;project = "annotation"
-;datestamp = "1389282207"
-
+dependencies[] = annotator

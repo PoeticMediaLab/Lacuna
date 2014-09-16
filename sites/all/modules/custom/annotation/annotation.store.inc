@@ -10,6 +10,7 @@
  * Annotation API main endpoint
  */
 define('ANNOTATION_TAXONOMY_NAME', 'tags'); // needs to match name in annotation.install
+define('ANNOTATION_CATEGORY_TAXONOMY', 'annotation_categories');
 
 function annotation_api_endpoint($id = NULL) {
   $method = $_SERVER['REQUEST_METHOD'];
@@ -50,21 +51,19 @@ function annotation_api() {
  * Annotation API index
  */
 function annotation_api_index() {
-  if (annotation_access('view')) {
+  // access check unnecessary: we're using EFQ, which checks permissions
+  // if (annotation_access('view')) {
     $query = new EntityFieldQuery();
     $query->entityCondition('entity_type', 'node');
     $query->entityCondition('bundle', 'annotation');
-      // ->propertyCondition('uri')
     $records = $query->execute();
-    // $records = entity_load_multiple_by_name('annotation', FALSE);
     foreach ($records as $rid => $record) {
       $records[$rid] = annotation_api_entity_prepare($record, 'read');
     }
-
     // Send response
     return drupal_json_output(array_values($records));
-  }
-  return FALSE;
+  // }
+  // return FALSE;
 }
 
 /**
@@ -87,6 +86,19 @@ function annotation_sanitize_uri($uri) {
     return(array('root' => $root, 'path' => $path));
 }
 
+function get_term_id($term_name, $taxonomy_name) {
+  $taxonomy = taxonomy_vocabulary_machine_name_load($taxonomy_name);
+  $terms = taxonomy_get_term_by_name($term_name, $taxonomy_name);
+  $tid = NULL;
+  foreach ($terms as $term) {
+    if ($term->vid == $taxonomy->vid) {
+      $tid = $term->tid;
+      break;  // go with the first match
+    }
+  }
+  return($tid);
+}
+
 /**
  * Convert plain text tags into Drupal taxonomy terms
  **/
@@ -99,14 +111,7 @@ function annotation_format_tags(&$entity) {
     $tag = trim($tag);
     $tag = str_replace(",", "", $tag); // strip commas; needs an explode here
     // just in case users try to separate tags like "tag1,tag2"
-    // TODO: switch to use EntityFieldQuery() ?
-    $terms = taxonomy_get_term_by_name($tag, ANNOTATION_TAXONOMY_NAME);
-    foreach ($terms as $term) {
-      if ($term->vid == $taxonomy->vid) {
-        $tid = $term->tid;
-        break;  // go with the first match
-      }
-    }
+    $tid = get_term_id($tag, ANNOTATION_TAXONOMY_NAME);
     if (!$tid) {
       // add new term to taxonomy
       $term = new stdClass();
@@ -151,8 +156,7 @@ function annotation_drupal_format($entity, $update = FALSE) {
     // They'll be added back in the switch below
     // Probably a better way to do this
     unset($annotation->text);
-    unset($annotation->permissions);
-    unset($annotation->category);
+    // unset($annotation->permissions);
   }
   $annotation->updated = REQUEST_TIME;
 
@@ -163,13 +167,27 @@ function annotation_drupal_format($entity, $update = FALSE) {
         $annotation->tags = $entity->tags;
         annotation_format_tags($annotation);
         break;
+      case 'category':
+        // Categories are taxonomy references
+        $tid = get_term_id($val, ANNOTATION_CATEGORY_TAXONOMY);
+        if (isset($tid)) {
+          $annotation->category[$annotation->language][0]['tid'] = $tid;
+        }
+        break;
       case 'ranges':
         if (!$update) {
           $annotation->ranges[$annotation->language][0]['value'] = json_encode($val);
         }
         break;
       case 'permissions':
-        // TODO
+        // ddl($val, 'permissions');
+        if (!empty($val['read']) && ($val['read'][0] == $user->uid)) {
+          // Default to private
+          $annotation->private[$annotation->language][0]['value'] = 1;
+        }
+        else {
+          $annotation->private[$annotation->language][0]['value'] = 0;
+        }
         break;
       default:
         // Only prepare fields that exist in the annotation node
@@ -195,6 +213,7 @@ function annotation_api_create() {
     node_save($annotation);
     $annotation->id = $annotation->nid; // set ID for Annotator
     // Send response
+    // ddl($annotation, 'create');
     return drupal_json_output($annotation);
   }
   return FALSE;
@@ -254,8 +273,7 @@ function annotation_api_destroy($id) {
 function annotation_api_search() {
   $total = 0;
   $records = array();
-
-  if (user_access('view annotations')) {
+  if (user_access('access content')) {
     if (isset($_GET['user'])) {
       $username = $_GET['user'];
       $account = user_load(array('name' => check_plain($username)));
@@ -287,7 +305,7 @@ function annotation_api_search() {
   $quote   = isset($_GET['quote'])   ? $_GET['quote']      : NULL;
   $uri     = isset($_GET['uri'])     ? $_GET['uri']        : NULL;
   $tags    = isset($_GET['tags'])    ? explode(',', $tags) : NULL;
-  $categories    = isset($_GET['categories'])     ? $_GET['categories']        : NULL;
+  $category= isset($_GET['category'])     ? $_GET['category']        : NULL;
 
   $uri_result = annotation_sanitize_uri($uri);  // get the Drupal path
   $uri = $uri_result['root'] . $uri_result['path'];
@@ -295,7 +313,7 @@ function annotation_api_search() {
   $query = new EntityFieldQuery();
   $query->entityCondition('entity_type', 'node')
     ->entityCondition('bundle', 'annotation');
-    // ->propertyCondition('status', 1);
+
   // Add conditions to query
   if ($id) {
     $query->propertyCondition('nid', $id);  // changed from 'uri' - mlw
@@ -331,9 +349,9 @@ function annotation_api_search() {
       $query->fieldCondition('annotation_tags', '"' . $tag . '"', 'LIKE');
     }
   }
-  if ($categories) {
+  if ($category) {
     // This will need adjustment for explode/implode of categories
-    $query->fieldCondition('category', $categories);
+    $query->fieldCondition('category', $category);
   }
 
   // Get the total
@@ -397,13 +415,33 @@ function annotation_api_entity_prepare($entity, $op) {
       unset($entity->uid);
       // Translate Drupal-encoded content back into something Annotator.js can use
       $entity->ranges = drupal_json_decode($entity->ranges[$entity->language][0]['value']);
-      $entity->text = $entity->text[$entity->language][0]['value'];
+      if (isset($entity->text) && !empty($entity->text)) {
+        $entity->text = $entity->text[$entity->language][0]['value'];
+      }
       $entity->quote = $entity->quote[$entity->language][0]['value'];
+      // Category is for the Category plugin
+      // Uses a Drupal taxonomy, like tags
+      if (isset($entity->category) && !empty($entity->category)) {
+        $category = taxonomy_term_load($entity->category[$entity->language][0]['tid']);
+        if ($category) {
+          $entity->category = $category->name;
+        }
+      }
       if (isset($entity->annotation_tags[$entity->language])) {
         $entity->tags = array();
         foreach(array_values($entity->annotation_tags[$entity->language]) as $item) {
           $term = taxonomy_term_load($item['tid']);
           array_push($entity->tags, $term->name);
+        }
+      }
+      if (isset($entity->private)) {
+        // ddl('found privacy setting');
+        $entity->permissions = array();
+        if ($entity->private[$entity->language][0]['value'] = 0) {
+          $entity->permissions['read'] = array();
+        }
+        else {
+          $entity->permissions['read'][] = $account->uid;
         }
       }
       $entity->links[] = array(
@@ -419,5 +457,6 @@ function annotation_api_entity_prepare($entity, $op) {
     case 'update':
       break;
   }
+  // ddl($entity, 'entity after prep');
   return $entity;
 }

@@ -50,8 +50,6 @@ class StoreAnnotatorPlugin extends AnnotatorPlugin {
   public function settings($defaults = array()) {
     $defaults = array(
       'prefix' => base_path() . 'annotation/api',
-      'showViewPermissionsCheckbox' => FALSE,
-      'showEditPermissionsCheckbox' => FALSE,
       'urls' => array(
         'create' => '/annotations',
         'read'   => '/annotations/:id',
@@ -60,7 +58,7 @@ class StoreAnnotatorPlugin extends AnnotatorPlugin {
         'search' => '/search',
       ),
     );
-    return parent::settings($defaults);    
+    return parent::settings($defaults);
   }
 
   public function setup() {

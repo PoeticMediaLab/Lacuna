@@ -1,0 +1,13 @@
+name = Workflow actions and triggers
+description = Provides actions and triggers for workflows.
+dependencies[] = workflow
+dependencies[] = trigger
+package = Workflow
+core = 7.x
+
+; Information added by Drupal.org packaging script on 2014-07-15
+version = "7.x-2.4"
+core = "7.x"
+project = "workflow"
+datestamp = "1405454629"
+

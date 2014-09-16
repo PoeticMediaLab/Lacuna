@@ -8,6 +8,7 @@
 
 /* Import Sass mixins, variables, Compass modules, etc. */
 @import "init";
+// @import "sassy-buttons";
 
 /* HTML element (SMACSS base) rules */
 @import "normalize";
@@ -16,7 +17,14 @@
 @import "layouts/responsive";
 
 /* Component (SMACSS module) rules */
+// I'm not following SMACSS so good - MLW
+@import "components/base";
 @import "components/misc";
+@import "components/menus";
+@import "components/views";
+@import "components/content";
+@import "components/buttons";
+
 // Optionally, add your own components here.
 @import "print";
 
