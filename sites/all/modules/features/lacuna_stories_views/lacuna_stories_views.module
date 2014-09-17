@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the Lacuna Stories Views feature.
+ */
+
+include_once 'lacuna_stories_views.features.inc';
