@@ -1,0 +1,12 @@
+name = Lacuna Stories IRB Form
+core = 7.x
+package = Lacuna Stories
+version = 7.x-1.0-beta
+project = lacuna_stories_irb_form
+dependencies[] = entity
+dependencies[] = flag
+dependencies[] = rules
+features[features_api][] = api:2
+features[flag][] = irb_form_completed
+features[rules_config][] = rules_require_irb_form_completion
+project path = sites/all/modules/features
