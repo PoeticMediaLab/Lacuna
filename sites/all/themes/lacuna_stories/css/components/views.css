@@ -83,44 +83,51 @@ div.views-row-last span.views-field-field-image div.topic_image {
   min-width: 150px;
 }
 
-/* line 76, ../../sass/components/views.scss */
+/* line 78, ../../sass/components/views.scss */
 .view-documents .views-submit-button,
 .view-documents .views-widget-sort-order,
 .view-responses .views-submit-button,
-.view-responses .views-widget-sort-order {
+.view-responses .views-widget-sort-order,
+.view-my-threads .views-submit-button,
+.view-my-threads .views-widget-sort-order {
   display: none;
 }
 
-/* line 80, ../../sass/components/views.scss */
+/* line 83, ../../sass/components/views.scss */
 .view-documents .views-widget-sort-by .form-type-bef-link,
-.view-responses .views-widget-sort-by .form-type-bef-link {
+.view-responses .views-widget-sort-by .form-type-bef-link,
+.view-my-threads .views-widget-sort-by .form-type-bef-link {
   float: left;
   margin: 0 10px 0 15px;
 }
 
-/* line 85, ../../sass/components/views.scss */
+/* line 89, ../../sass/components/views.scss */
 .view-documents .views-widget-sort-by .form-type-bef-link a,
-.view-responses .views-widget-sort-by .form-type-bef-link a {
+.view-responses .views-widget-sort-by .form-type-bef-link a,
+.view-my-threads .views-widget-sort-by .form-type-bef-link a {
   color: #808080;
   font-weight: bold;
   font-size: 15px;
 }
 
-/* line 91, ../../sass/components/views.scss */
+/* line 96, ../../sass/components/views.scss */
 .view-documents .views-widget-sort-by .form-type-bef-link a:hover,
-.view-responses .views-widget-sort-by .form-type-bef-link a:hover {
+.view-responses .views-widget-sort-by .form-type-bef-link a:hover,
+.view-my-threads .views-widget-sort-by .form-type-bef-link a:hover {
   color: #1588BA;
 }
 
-/* line 95, ../../sass/components/views.scss */
+/* line 101, ../../sass/components/views.scss */
 .view-documents .views-widget-sort-by .form-type-bef-link.selected a,
-.view-responses .views-widget-sort-by .form-type-bef-link.selected a {
+.view-responses .views-widget-sort-by .form-type-bef-link.selected a,
+.view-my-threads .views-widget-sort-by .form-type-bef-link.selected a {
   color: #1588BA;
 }
 
-/* line 100, ../../sass/components/views.scss */
+/* line 107, ../../sass/components/views.scss */
 .view-documents img,
-.view-responses img {
+.view-responses img,
+.view-my-threads img {
   width: auto;
   height: auto;
   max-width: 100%;
@@ -128,53 +135,52 @@ div.views-row-last span.views-field-field-image div.topic_image {
   box-shadow: 0px 0px 10px #888888;
 }
 
-/* line 108, ../../sass/components/views.scss */
-.view-documents .views-row {
+/* line 117, ../../sass/components/views.scss */
+.view-documents .views-row,
+.view-responses .views-row,
+.view-my-threads .views-row {
   float: left;
   width: 150px;
   margin: 20px;
   height: 350px;
 }
 
-/* line 114, ../../sass/components/views.scss */
-.view-responses .views-row {
-  float: left;
-  width: 150px;
-  margin: 20px;
-  height: 350px;
-}
-
-/* line 121, ../../sass/components/views.scss */
+/* line 126, ../../sass/components/views.scss */
 .view-documents .views-exposed-widget,
-.view-responses .views-exposed-widget {
+.view-responses .views-exposed-widget,
+.view-my-threads .views-exposed-widget {
   margin-top: 0px;
 }
 
-/* line 127, ../../sass/components/views.scss */
+/* line 134, ../../sass/components/views.scss */
 .view-documents .views-exposed-widget > label,
 .view-documents .form-item-sort-by > label,
 .view-responses .views-exposed-widget > label,
-.view-responses .form-item-sort-by > label {
+.view-responses .form-item-sort-by > label,
+.view-my-threads .views-exposed-widget > label,
+.view-my-threads .form-item-sort-by > label {
   float: left;
   margin-right: 10px;
 }
 
-/* line 132, ../../sass/components/views.scss */
+/* line 140, ../../sass/components/views.scss */
 .view-documents .views-widget,
-.view-responses .views-widget {
+.view-responses .views-widget,
+.view-my-threads .views-widget {
   display: inline;
 }
 
-/* line 136, ../../sass/components/views.scss */
+/* line 145, ../../sass/components/views.scss */
 .view-documents .form-type-bef-checkbox,
-.view-responses .form-type-bef-checkbox {
+.view-responses .form-type-bef-checkbox,
+.view-my-threads .form-type-bef-checkbox {
   float: left;
   margin: 0px 5px 0px 10px;
   font-size: 0.95em;
   color: grey;
 }
 
-/* line 143, ../../sass/components/views.scss */
+/* line 152, ../../sass/components/views.scss */
 table.views-table {
   width: 100%;
 }

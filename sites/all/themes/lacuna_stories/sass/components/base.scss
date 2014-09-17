@@ -32,6 +32,11 @@ body {
   line-height: 1.5em;
 }
 
+#main {
+  padding-top: 0px !important;
+  top: -50px !important;
+}
+
 #page {
   max-width: 1200px;
   padding: 15px;

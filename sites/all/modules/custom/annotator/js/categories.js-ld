@@ -29,7 +29,6 @@
 
     Categories.prototype.pluginInit = function() {
       if (!Annotator.supported()) return;
-      this.options.categoryColorClasses[this.options.emptyCategory] = this.options.categoryClass + '-none';
       this.field = this.annotator.editor.addField({
         label: Annotator._t('Category'),
         options: this.options
@@ -47,7 +46,7 @@
     }
 
     Categories.prototype.changeHighlightColors = function(annotations) {
-      var annotation, category, cssClass, highlight, i, _i, _j, _len, _len2, _ref, _results;
+      var annotation, category, cssClass, highlight, i, _i, _j, _len, _len2, _ref, _ref2, _results;
       i = 0;
       _ref = this.options.category;
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
@@ -59,17 +58,20 @@
       _results = [];
       for (_j = 0, _len2 = annotations.length; _j < _len2; _j++) {
         annotation = annotations[_j];
-        console.log(annotation, 'loaded annotation');
-        _results.push((function() {
-          var _k, _len3, _ref2, _results2;
-          _ref2 = annotation.highlights;
-          _results2 = [];
-          for (_k = 0, _len3 = _ref2.length; _k < _len3; _k++) {
-            highlight = _ref2[_k];
-            _results2.push($(highlight).addClass(this.options.categoryColorClasses[annotation.category]));
-          }
-          return _results2;
-        }).call(this));
+        if (_ref2 = annotation.category, __indexOf.call(this.options.category, _ref2) >= 0) {
+          _results.push((function() {
+            var _k, _len3, _ref3, _results2;
+            _ref3 = annotation.highlights;
+            _results2 = [];
+            for (_k = 0, _len3 = _ref3.length; _k < _len3; _k++) {
+              highlight = _ref3[_k];
+              _results2.push($(highlight).addClass(this.options.categoryColorClasses[annotation.category]));
+            }
+            return _results2;
+          }).call(this));
+        } else {
+          _results.push(void 0);
+        }
       }
       return _results;
     };
@@ -81,7 +83,6 @@
 
     Categories.prototype.updateViewer = function(field, annotation) {
       var _ref;
-      console.log(annotation, 'annotation updateViewer');
       field = $(field);
       field.addClass(this.options.categoryClass).html(this.options.emptyCategory);
       if ((annotation.category != null) && annotation.category.length > 0) {
@@ -112,6 +113,7 @@
 
     Categories.prototype.highlightSelectedCategory = function(event, annotation) {
       var category, categoryHTML, _i, _len, _ref;
+      console.log(event, 'highlightSelectedCategory event');
       if (!(annotation.category != null)) {
         annotation.category = this.options.emptyCategory;
       }

@@ -1,6 +1,6 @@
 $menu-color: transparent;
 $tabs-color: rgb(245,245,245);
-$menu-active-color: rgba(0, 200, 0, 1);
+$menu-active-color: rgba(0, 200, 0, .1);
 
 #block-superfish-1 {
   top: -90px;
@@ -28,6 +28,9 @@ ul.sf-main-menu {
       }
       li.firstandlast, li.last {
         border-bottom: 1px solid gray;
+      }
+      li.active-trail {
+        background-color: $menu-active-color !important;
       }
     }
     li:hover {

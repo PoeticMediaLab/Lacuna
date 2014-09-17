@@ -39,7 +39,6 @@ class Annotator.Plugin.Categories extends Annotator.Plugin
   # Returns nothing.
   pluginInit: ->
     return unless Annotator.supported()
-    @options.categoryColorClasses[@options.emptyCategory] = @options.categoryClass + '-none'
     @field = @annotator.editor.addField({
       label: Annotator._t('Category')
       options: @options
@@ -64,13 +63,11 @@ class Annotator.Plugin.Categories extends Annotator.Plugin
       cssClass = @options.categoryClass + '-' + i
       @options.categoryColorClasses[category] = cssClass
       i++
+
     for annotation in annotations
-      # check if category is empty
-      console.log(annotation, 'loaded annotation')
-      # if !annotation.category.length
-      #   annotation.category = @options.emptyCategory
-      for highlight in annotation.highlights
-        $(highlight).addClass(@options.categoryColorClasses[annotation.category])
+      if annotation.category in @options.category
+        for highlight in annotation.highlights
+          $(highlight).addClass(@options.categoryColorClasses[annotation.category])
 
   setSelectedCategory: (currentCategory) ->
     # Change the selected category in the editor window
@@ -82,11 +79,8 @@ class Annotator.Plugin.Categories extends Annotator.Plugin
   updateViewer: (field, annotation) ->
     # On mouseover, gets the annotation object
     # For displaying mouseover data
-    console.log(annotation, 'annotation updateViewer')
     field = $(field)
     field.addClass(@options.categoryClass).html(@options.emptyCategory)
-    # if !annotation.category?
-    #   annotation.category = @options.emptyCategory
     if annotation.category? and annotation.category.length > 0
       field.addClass(@options.categoryClass).html(annotation.category)
       if annotation.category in @options.category
@@ -111,6 +105,7 @@ class Annotator.Plugin.Categories extends Annotator.Plugin
 
   highlightSelectedCategory: (event, annotation) ->
     # when editor first shown
+    console.log(event, 'highlightSelectedCategory event')
     if !annotation.category?
       annotation.category = @options.emptyCategory
     categoryHTML = ""

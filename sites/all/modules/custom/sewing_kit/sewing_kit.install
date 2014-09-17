@@ -7,7 +7,7 @@
  */
 
 /***
- * 
+ *
  * Initial content type set up
  * Make sure the "Thread" node type exists
  *
@@ -49,9 +49,9 @@ function _thread_install_fields() {
     'thread_reference' => array(
       'field_name' => 'thread_reference',
       'cardinality' => FIELD_CARDINALITY_UNLIMITED,
-      'type' => 'entityreference',  
-      'locked' => TRUE,  
-      'module' => 'entityreference', 
+      'type' => 'entityreference',
+      'locked' => TRUE,
+      'module' => 'entityreference',
       'settings' => array(
        'target_type' => 'node',
        'handler' => 'base',
@@ -77,7 +77,7 @@ function _thread_install_instances() {
   return array(
     'thread_description' => array(
       'field_name' => 'thread_description',
-      'label' => t('Description'),
+      'label' => t('My Description'),
       'description' => t('Describe why these pieces are stitched together'),
       'type' => 'text_long',
       'required' => TRUE,
@@ -85,9 +85,9 @@ function _thread_install_instances() {
     ),
     'thread_reference' => array(
       'field_name'  => 'thread_reference',
-      'label' => t('Stitchings'),
+      'label' => t('My Stitchings'),
       'description' => t('References to the content stitched together'),
-      'type' => 'entityreference',   
+      'type' => 'entityreference',
       'required' => TRUE,
       'weight' => 1
     )

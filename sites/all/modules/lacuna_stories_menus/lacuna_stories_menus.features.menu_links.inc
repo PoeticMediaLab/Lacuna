@@ -47,7 +47,7 @@ function lacuna_stories_menus_menu_default_menu_links() {
     'external' => 0,
     'has_children' => 0,
     'expanded' => 0,
-    'weight' => -47,
+    'weight' => -46,
     'customized' => 1,
     'parent_identifier' => 'main-menu_explore:<nolink>',
   );
@@ -250,6 +250,24 @@ function lacuna_stories_menus_menu_default_menu_links() {
     'customized' => 1,
     'parent_identifier' => 'main-menu_connect:<nolink>',
   );
+  // Exported menu link: main-menu_my-writing:my-writing
+  $menu_links['main-menu_my-writing:my-writing'] = array(
+    'menu_name' => 'main-menu',
+    'link_path' => 'my-writing',
+    'router_path' => 'my-writing',
+    'link_title' => 'My Writing',
+    'options' => array(
+      'identifier' => 'main-menu_my-writing:my-writing',
+    ),
+    'module' => 'system',
+    'hidden' => 0,
+    'external' => 0,
+    'has_children' => 0,
+    'expanded' => 0,
+    'weight' => -49,
+    'customized' => 1,
+    'parent_identifier' => 'main-menu_reflect:<nolink>',
+  );
   // Exported menu link: main-menu_reflect:<nolink>
   $menu_links['main-menu_reflect:<nolink>'] = array(
     'menu_name' => 'main-menu',
@@ -306,6 +324,24 @@ function lacuna_stories_menus_menu_default_menu_links() {
     'customized' => 1,
     'parent_identifier' => 'main-menu_create:<nolink>',
   );
+  // Exported menu link: main-menu_syllabus:syllabus
+  $menu_links['main-menu_syllabus:syllabus'] = array(
+    'menu_name' => 'main-menu',
+    'link_path' => 'syllabus',
+    'router_path' => 'syllabus',
+    'link_title' => 'Syllabus',
+    'options' => array(
+      'identifier' => 'main-menu_syllabus:syllabus',
+    ),
+    'module' => 'system',
+    'hidden' => 0,
+    'external' => 0,
+    'has_children' => 0,
+    'expanded' => 0,
+    'weight' => -47,
+    'customized' => 1,
+    'parent_identifier' => 'main-menu_explore:<nolink>',
+  );
   // Exported menu link: main-menu_topics:topics
   $menu_links['main-menu_topics:topics'] = array(
     'menu_name' => 'main-menu',
@@ -359,9 +395,11 @@ function lacuna_stories_menus_menu_default_menu_links() {
   t('My Annotations');
   t('My Profile');
   t('My Threads');
+  t('My Writing');
   t('Reflect');
   t('Responses');
   t('Sewing Kit');
+  t('Syllabus');
   t('Topics');
   t('Write a Response');
 

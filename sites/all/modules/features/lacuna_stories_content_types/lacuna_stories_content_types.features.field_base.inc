@@ -174,35 +174,6 @@ function lacuna_stories_content_types_field_default_field_bases() {
     'type' => 'file',
   );
 
-  // Exported field_base: 'field_audio_review_statistics'
-  $field_bases['field_audio_review_statistics'] = array(
-    'active' => 1,
-    'cardinality' => 1,
-    'deleted' => 0,
-    'entity_types' => array(),
-    'field_name' => 'field_audio_review_statistics',
-    'foreign keys' => array(
-      'format' => array(
-        'columns' => array(
-          'format' => 'format',
-        ),
-        'table' => 'filter_format',
-      ),
-    ),
-    'indexes' => array(
-      'format' => array(
-        0 => 'format',
-      ),
-    ),
-    'locked' => 0,
-    'module' => 'text',
-    'settings' => array(
-      'max_length' => 255,
-    ),
-    'translatable' => 0,
-    'type' => 'text',
-  );
-
   // Exported field_base: 'field_audio_transcription'
   $field_bases['field_audio_transcription'] = array(
     'active' => 1,
@@ -465,33 +436,6 @@ function lacuna_stories_content_types_field_default_field_bases() {
     'type' => 'text',
   );
 
-  // Exported field_base: 'field_doc_review_statistics'
-  $field_bases['field_doc_review_statistics'] = array(
-    'active' => 1,
-    'cardinality' => 1,
-    'deleted' => 0,
-    'entity_types' => array(),
-    'field_name' => 'field_doc_review_statistics',
-    'foreign keys' => array(
-      'format' => array(
-        'columns' => array(
-          'format' => 'format',
-        ),
-        'table' => 'filter_format',
-      ),
-    ),
-    'indexes' => array(
-      'format' => array(
-        0 => 'format',
-      ),
-    ),
-    'locked' => 0,
-    'module' => 'text',
-    'settings' => array(),
-    'translatable' => 0,
-    'type' => 'text_long',
-  );
-
   // Exported field_base: 'field_doc_text'
   $field_bases['field_doc_text'] = array(
     'active' => 1,
@@ -719,6 +663,43 @@ function lacuna_stories_content_types_field_default_field_bases() {
     'type' => 'file',
   );
 
+  // Exported field_base: 'field_priority'
+  $field_bases['field_priority'] = array(
+    'active' => 1,
+    'cardinality' => 1,
+    'deleted' => 0,
+    'entity_types' => array(),
+    'field_name' => 'field_priority',
+    'field_permissions' => array(
+      'type' => 0,
+    ),
+    'foreign keys' => array(
+      'tid' => array(
+        'columns' => array(
+          'tid' => 'tid',
+        ),
+        'table' => 'taxonomy_term_data',
+      ),
+    ),
+    'indexes' => array(
+      'tid' => array(
+        0 => 'tid',
+      ),
+    ),
+    'locked' => 0,
+    'module' => 'taxonomy',
+    'settings' => array(
+      'allowed_values' => array(
+        0 => array(
+          'vocabulary' => 'priority',
+          'parent' => 0,
+        ),
+      ),
+    ),
+    'translatable' => 0,
+    'type' => 'taxonomy_term_reference',
+  );
+
   // Exported field_base: 'field_status'
   $field_bases['field_status'] = array(
     'active' => 1,
@@ -773,6 +754,9 @@ function lacuna_stories_content_types_field_default_field_bases() {
     'deleted' => 0,
     'entity_types' => array(),
     'field_name' => 'field_tags',
+    'field_permissions' => array(
+      'type' => 0,
+    ),
     'foreign keys' => array(
       'tid' => array(
         'columns' => array(
@@ -837,31 +821,41 @@ function lacuna_stories_content_types_field_default_field_bases() {
     'type' => 'taxonomy_term_reference',
   );
 
-  // Exported field_base: 'field_video_review_stats'
-  $field_bases['field_video_review_stats'] = array(
+  // Exported field_base: 'field_unit'
+  $field_bases['field_unit'] = array(
     'active' => 1,
     'cardinality' => 1,
     'deleted' => 0,
     'entity_types' => array(),
-    'field_name' => 'field_video_review_stats',
+    'field_name' => 'field_unit',
+    'field_permissions' => array(
+      'type' => 0,
+    ),
     'foreign keys' => array(
-      'format' => array(
+      'tid' => array(
         'columns' => array(
-          'format' => 'format',
+          'tid' => 'tid',
         ),
-        'table' => 'filter_format',
+        'table' => 'taxonomy_term_data',
       ),
     ),
     'indexes' => array(
-      'format' => array(
-        0 => 'format',
+      'tid' => array(
+        0 => 'tid',
       ),
     ),
     'locked' => 0,
-    'module' => 'text',
-    'settings' => array(),
+    'module' => 'taxonomy',
+    'settings' => array(
+      'allowed_values' => array(
+        0 => array(
+          'vocabulary' => 'unit',
+          'parent' => 0,
+        ),
+      ),
+    ),
     'translatable' => 0,
-    'type' => 'text_long',
+    'type' => 'taxonomy_term_reference',
   );
 
   // Exported field_base: 'field_video_transcription'

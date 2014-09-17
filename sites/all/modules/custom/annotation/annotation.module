@@ -161,7 +161,7 @@ function annotation_form_alter(&$form, &$form_state, $form_id) {
     $form['annotation_reference'] = array('#access' => FALSE);
     $form['quote'] = array('#access' => FALSE);
     $form['uri'] = array('#access' => FALSE);
-    $form['category'] = array('#access' => FALSE);
+    // $form['category'] = array('#access' => FALSE);
   }
   return($form);
 }
