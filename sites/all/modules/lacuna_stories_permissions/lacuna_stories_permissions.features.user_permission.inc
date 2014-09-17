@@ -248,6 +248,16 @@ function lacuna_stories_permissions_user_default_permissions() {
     'module' => 'user',
   );
 
+  // Exported permission: 'access workflow summary views'.
+  $permissions['access workflow summary views'] = array(
+    'name' => 'access workflow summary views',
+    'roles' => array(
+      'Content Manager' => 'Content Manager',
+      'administrator' => 'administrator',
+    ),
+    'module' => 'workflow_views',
+  );
+
   // Exported permission: 'add media from remote sources'.
   $permissions['add media from remote sources'] = array(
     'name' => 'add media from remote sources',
@@ -823,6 +833,17 @@ function lacuna_stories_permissions_user_default_permissions() {
     'module' => 'field_permissions',
   );
 
+  // Exported permission: 'create field_status'.
+  $permissions['create field_status'] = array(
+    'name' => 'create field_status',
+    'roles' => array(
+      'Content Manager' => 'Content Manager',
+      'Instructor' => 'Instructor',
+      'administrator' => 'administrator',
+    ),
+    'module' => 'field_permissions',
+  );
+
   // Exported permission: 'create field_video_video'.
   $permissions['create field_video_video'] = array(
     'name' => 'create field_video_video',
@@ -907,7 +928,12 @@ function lacuna_stories_permissions_user_default_permissions() {
   // Exported permission: 'create thread content'.
   $permissions['create thread content'] = array(
     'name' => 'create thread content',
-    'roles' => array(),
+    'roles' => array(
+      'Content Manager' => 'Content Manager',
+      'Instructor' => 'Instructor',
+      'Student' => 'Student',
+      'administrator' => 'administrator',
+    ),
     'module' => 'node',
   );
 
@@ -934,7 +960,12 @@ function lacuna_stories_permissions_user_default_permissions() {
   // Exported permission: 'create webform content'.
   $permissions['create webform content'] = array(
     'name' => 'create webform content',
-    'roles' => array(),
+    'roles' => array(
+      'Content Manager' => 'Content Manager',
+      'Instructor' => 'Instructor',
+      'Student' => 'Student',
+      'administrator' => 'administrator',
+    ),
     'module' => 'node',
   );
 
@@ -1069,7 +1100,10 @@ function lacuna_stories_permissions_user_default_permissions() {
   // Exported permission: 'delete any thread content'.
   $permissions['delete any thread content'] = array(
     'name' => 'delete any thread content',
-    'roles' => array(),
+    'roles' => array(
+      'Content Manager' => 'Content Manager',
+      'administrator' => 'administrator',
+    ),
     'module' => 'node',
   );
 
@@ -1086,7 +1120,10 @@ function lacuna_stories_permissions_user_default_permissions() {
   // Exported permission: 'delete any webform content'.
   $permissions['delete any webform content'] = array(
     'name' => 'delete any webform content',
-    'roles' => array(),
+    'roles' => array(
+      'Content Manager' => 'Content Manager',
+      'administrator' => 'administrator',
+    ),
     'module' => 'node',
   );
 
@@ -1225,7 +1262,12 @@ function lacuna_stories_permissions_user_default_permissions() {
   // Exported permission: 'delete own thread content'.
   $permissions['delete own thread content'] = array(
     'name' => 'delete own thread content',
-    'roles' => array(),
+    'roles' => array(
+      'Content Manager' => 'Content Manager',
+      'Instructor' => 'Instructor',
+      'Student' => 'Student',
+      'administrator' => 'administrator',
+    ),
     'module' => 'node',
   );
 
@@ -1243,7 +1285,12 @@ function lacuna_stories_permissions_user_default_permissions() {
   // Exported permission: 'delete own webform content'.
   $permissions['delete own webform content'] = array(
     'name' => 'delete own webform content',
-    'roles' => array(),
+    'roles' => array(
+      'Content Manager' => 'Content Manager',
+      'Instructor' => 'Instructor',
+      'Student' => 'Student',
+      'administrator' => 'administrator',
+    ),
     'module' => 'node',
   );
 
@@ -1477,7 +1524,10 @@ function lacuna_stories_permissions_user_default_permissions() {
   // Exported permission: 'edit any thread content'.
   $permissions['edit any thread content'] = array(
     'name' => 'edit any thread content',
-    'roles' => array(),
+    'roles' => array(
+      'Content Manager' => 'Content Manager',
+      'administrator' => 'administrator',
+    ),
     'module' => 'node',
   );
 
@@ -1494,7 +1544,10 @@ function lacuna_stories_permissions_user_default_permissions() {
   // Exported permission: 'edit any webform content'.
   $permissions['edit any webform content'] = array(
     'name' => 'edit any webform content',
-    'roles' => array(),
+    'roles' => array(
+      'Content Manager' => 'Content Manager',
+      'administrator' => 'administrator',
+    ),
     'module' => 'node',
   );
 
@@ -1551,6 +1604,16 @@ function lacuna_stories_permissions_user_default_permissions() {
   $permissions['edit field_major_degree'] = array(
     'name' => 'edit field_major_degree',
     'roles' => array(
+      'administrator' => 'administrator',
+    ),
+    'module' => 'field_permissions',
+  );
+
+  // Exported permission: 'edit field_status'.
+  $permissions['edit field_status'] = array(
+    'name' => 'edit field_status',
+    'roles' => array(
+      'Content Manager' => 'Content Manager',
       'administrator' => 'administrator',
     ),
     'module' => 'field_permissions',
@@ -1746,6 +1809,17 @@ function lacuna_stories_permissions_user_default_permissions() {
     'module' => 'field_permissions',
   );
 
+  // Exported permission: 'edit own field_status'.
+  $permissions['edit own field_status'] = array(
+    'name' => 'edit own field_status',
+    'roles' => array(
+      'Content Manager' => 'Content Manager',
+      'Instructor' => 'Instructor',
+      'administrator' => 'administrator',
+    ),
+    'module' => 'field_permissions',
+  );
+
   // Exported permission: 'edit own field_video_video'.
   $permissions['edit own field_video_video'] = array(
     'name' => 'edit own field_video_video',
@@ -1828,7 +1902,12 @@ function lacuna_stories_permissions_user_default_permissions() {
   // Exported permission: 'edit own thread content'.
   $permissions['edit own thread content'] = array(
     'name' => 'edit own thread content',
-    'roles' => array(),
+    'roles' => array(
+      'Content Manager' => 'Content Manager',
+      'Instructor' => 'Instructor',
+      'Student' => 'Student',
+      'administrator' => 'administrator',
+    ),
     'module' => 'node',
   );
 
@@ -1846,7 +1925,12 @@ function lacuna_stories_permissions_user_default_permissions() {
   // Exported permission: 'edit own webform content'.
   $permissions['edit own webform content'] = array(
     'name' => 'edit own webform content',
-    'roles' => array(),
+    'roles' => array(
+      'Content Manager' => 'Content Manager',
+      'Instructor' => 'Instructor',
+      'Student' => 'Student',
+      'administrator' => 'administrator',
+    ),
     'module' => 'node',
   );
 
@@ -1927,6 +2011,8 @@ function lacuna_stories_permissions_user_default_permissions() {
   $permissions['edit workflow comment'] = array(
     'name' => 'edit workflow comment',
     'roles' => array(
+      'Content Manager' => 'Content Manager',
+      'Instructor' => 'Instructor',
       'administrator' => 'administrator',
     ),
     'module' => 'workflow',
@@ -2003,6 +2089,9 @@ function lacuna_stories_permissions_user_default_permissions() {
   $permissions['participate in workflow'] = array(
     'name' => 'participate in workflow',
     'roles' => array(
+      'Content Manager' => 'Content Manager',
+      'Instructor' => 'Instructor',
+      'Student' => 'Student',
       'administrator' => 'administrator',
     ),
     'module' => 'workflow',
@@ -2061,6 +2150,7 @@ function lacuna_stories_permissions_user_default_permissions() {
   $permissions['schedule workflow transitions'] = array(
     'name' => 'schedule workflow transitions',
     'roles' => array(
+      'Content Manager' => 'Content Manager',
       'administrator' => 'administrator',
     ),
     'module' => 'workflow',
@@ -2145,6 +2235,8 @@ function lacuna_stories_permissions_user_default_permissions() {
   $permissions['show workflow state form'] = array(
     'name' => 'show workflow state form',
     'roles' => array(
+      'Content Manager' => 'Content Manager',
+      'Instructor' => 'Instructor',
       'administrator' => 'administrator',
     ),
     'module' => 'workflow',
@@ -2316,6 +2408,16 @@ function lacuna_stories_permissions_user_default_permissions() {
     'module' => 'field_permissions',
   );
 
+  // Exported permission: 'view field_status'.
+  $permissions['view field_status'] = array(
+    'name' => 'view field_status',
+    'roles' => array(
+      'Content Manager' => 'Content Manager',
+      'administrator' => 'administrator',
+    ),
+    'module' => 'field_permissions',
+  );
+
   // Exported permission: 'view field_video_video'.
   $permissions['view field_video_video'] = array(
     'name' => 'view field_video_video',
@@ -2432,6 +2534,17 @@ function lacuna_stories_permissions_user_default_permissions() {
       'Content Manager' => 'Content Manager',
       'Instructor' => 'Instructor',
       'Student' => 'Student',
+      'administrator' => 'administrator',
+    ),
+    'module' => 'field_permissions',
+  );
+
+  // Exported permission: 'view own field_status'.
+  $permissions['view own field_status'] = array(
+    'name' => 'view own field_status',
+    'roles' => array(
+      'Content Manager' => 'Content Manager',
+      'Instructor' => 'Instructor',
       'administrator' => 'administrator',
     ),
     'module' => 'field_permissions',

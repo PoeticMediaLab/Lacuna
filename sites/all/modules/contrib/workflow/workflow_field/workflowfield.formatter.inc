@@ -22,7 +22,7 @@ function workflowfield_field_formatter_info() {
  *
  * Shows current State + Widget on a Node View page or a Workflow History tab.
  */
-function workflowfield_field_formatter_view($entity_type, $entity, $field, $instance, $langcode = 'und', $items = array(), $display = array()) {
+function workflowfield_field_formatter_view($entity_type, $entity, $field, $instance, $langcode = LANGUAGE_NONE, $items = array(), $display = array()) {
   global $user; // @todo #2287057: OK?
   // @todo: Perhaps global user is not always the correct user.
   // E.g., on ScheduledTransition->execute()? But this function is mostly used in UI.

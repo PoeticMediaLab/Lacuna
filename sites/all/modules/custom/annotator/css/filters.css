@@ -17,7 +17,7 @@
 
 .annotation-sidebar-button {
   display: block;
-  width: 100%;
+  width: 60% !important;
   color: white;
   padding: 5px;
   margin-bottom: 15px;

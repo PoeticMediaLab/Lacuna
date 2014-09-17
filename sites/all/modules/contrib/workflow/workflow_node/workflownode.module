@@ -116,6 +116,10 @@ function workflow_node_view($node, $view_mode, $langcode) {
       // $field_name = $field['field_name'];
       $field_id = $field['id'];
       $instance = field_info_instance($entity_type, $field_name, $entity_bundle);
+      // If no instance is found, restore the array.
+      if (!is_array($instance)) {
+        $instance = array();
+      }
 
       if (!$field['id']) {
         // This is a Workflow Node workflow. Set widget options as in v7.x-1.2

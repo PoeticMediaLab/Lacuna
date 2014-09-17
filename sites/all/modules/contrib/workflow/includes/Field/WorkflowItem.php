@@ -253,7 +253,8 @@ class WorkflowItem extends WorkflowD7Base {// D8: extends ConfigFieldItemBase im
   /**
    * Implements hook_field_update() -> FieldItemInterface::update().
    *
-   * @todo: in course of time, this is not used anymore...
+   * @todo: ATM, it is not used anymore. But it should replace DefaultWidget::submit().
+   * 
    * It is called also from hook_field_insert(), since we need $nid to store {workflow_node_history}.
    * We cannot use hook_field_presave(), since $nid is not yet known at that moment.
    *
@@ -263,7 +264,6 @@ class WorkflowItem extends WorkflowD7Base {// D8: extends ConfigFieldItemBase im
    */
   public function update(&$items) {// ($entity_type, $entity, $field, $instance, $langcode, &$items) {
 
-    // @todo: apparently, in course of time, this is not used anymore. Restore or remove.
     $field_name = $this->field['field_name'];
     // $field['settings']['wid'] can be numeric or named.
     $workflow = workflow_load_single($this->field['settings']['wid']);

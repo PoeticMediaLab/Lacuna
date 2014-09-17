@@ -678,6 +678,19 @@ function workflow_insert_workflow_scheduled_transition($data) {
 // }
 
 /**
+ * Deprecated functions related to table {workflow_node}.
+ */
+
+/**
+ * Given nid, update the new stamp. This probably can be refactored. Called by workflow_execute_transition().
+ *
+ * @deprecated: this is micro-optimalisation.
+ */
+function workflow_update_workflow_node_stamp($nid, $new_stamp) {
+  return db_update('workflow_node')->fields(array('stamp' => $new_stamp))->condition('nid', $nid, '=')->execute();
+}
+
+/**
  * Deprecated functions related to table {workflow_node_history}.
  */
 

@@ -123,6 +123,10 @@ function workflow_admin_ui_states_form($form, &$form_state, $workflow, $op) {
       $form['states'][$state->sid]['reassign']['#type'] = 'hidden';
       $form['states'][$state->sid]['reassign']['#disabled'] = TRUE;
     }
+    // Disabled states cannot be renamed (and is a visual clue, too.).
+    if (!$state->isActive()) {
+      $form['states'][$state->sid]['state']['#disabled'] = TRUE;
+    }
     // Set a proper weight to the new state.
     $maxweight = max($maxweight, $state->weight);
     if (!$state->sid) {

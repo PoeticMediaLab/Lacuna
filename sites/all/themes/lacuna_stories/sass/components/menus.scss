@@ -1,5 +1,6 @@
 $menu-color: transparent;
 $tabs-color: rgb(245,245,245);
+$menu-active-color: rgba(0, 200, 0, 1);
 
 #block-superfish-1 {
   top: -90px;
@@ -11,23 +12,33 @@ ul.sf-main-menu {
   background-color: $menu-color;
 }
 
-.sf-menu li.menuparent {
-  background-color: $menu-color;
+/* Superfish dropdown menu rules */
+.sf-menu {
+  li.menuparent {
+    background-color: $menu-color;
+    a {
+      border: none;
+      background-color: $menu-color !important;
+    }
+    ul {
+      li {
+        background-color: white;
+        border: 1px solid gray;
+        border-bottom: 0px;
+      }
+      li.firstandlast, li.last {
+        border-bottom: 1px solid gray;
+      }
+    }
+    li:hover {
+      // background-color: $menu-active-color !important;
+    }
+  }
 }
 
-.sf-menu li.menuparent a {
-  border: none;
-  background-color: $menu-color !important;
-}
-
-.sf-menu li.menuparent ul li {
-  background-color: white;
-  border: 1px solid gray;
-  border-bottom: 0px;
-}
-
-.sf-menu li.menuparent ul li.last, .sf-menu li.menuparent ul li.firstandlast {
-  border-bottom: 1px solid gray;
+li.sfHover {
+  // color: $menu-active-color !important;
+  // background-color: $menu-active-color !important;
 }
 
 .sf-depth-2 {

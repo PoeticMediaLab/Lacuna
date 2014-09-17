@@ -70,20 +70,22 @@ class WorkflowDefaultWidget extends WorkflowD7Base { // D8: extends WidgetBase {
    *
    * @todo D8: change "array $items" to "FieldInterface $items"
    */
-  public function formElement(array $items, $delta, array $element, $langcode, array &$form, array &$form_state) {
+  public function formElement(array $items, $delta, array $element, array &$form, array &$form_state) {
     global $user; // @todo #2287057: verify if formElement() really is only used for UI. If not, $user must be passed.
 
     $field = $this->field;
     $instance = $this->instance;
     $entity = $this->entity;
     $entity_type = $this->entity_type;
-    $entity_id = entity_id($entity_type, $entity);
+    $entity_id = ($entity) ? entity_id($entity_type, $entity) : 0;
     $field_name = $field['field_name'];
     $current_sid = FALSE;
 
     // $field['settings']['wid'] can be numeric or named.
+    // $wid may not be specified.
     $wid = $field['settings']['wid'];
     $workflow = workflow_load_single($wid);
+    $workflow_label = $workflow ? check_plain(t($workflow->label())) : '';
 
     // Capture settings to format the form/widget.
     $settings_title_as_name = !empty($field['settings']['widget']['name_as_title']);
@@ -108,7 +110,10 @@ class WorkflowDefaultWidget extends WorkflowD7Base { // D8: extends WidgetBase {
 
     $options = array();
     if (!$entity) {
-      // Sometimes, no entity is given, E.g., on the Field settings page, VBO form.
+      // Sometimes, no entity is given. We encountered the following cases: 
+      // - the Field settings page,
+      // - the VBO action form;
+      // - the Advance Action form on admin/config/system/actions;
       // If so, show all options for the given workflow(s).
 
       // Set 'grouped' option. This is only valid for select list.
@@ -158,7 +163,7 @@ class WorkflowDefaultWidget extends WorkflowD7Base { // D8: extends WidgetBase {
     // multiple workflow_fields is not indendent.
     $form_id = $form_state['build_info']['form_id'] . '_' . $field_name;
 
-    // Prepare a wrapper. This might be a fieldset.
+    // Prepare a UI wrapper. This might be a fieldset.
     $element['workflow']['#type'] = 'container'; // 'fieldset';
     $element['workflow']['#attributes'] = array('class' => array('workflow-form-container'));
 
@@ -182,8 +187,7 @@ class WorkflowDefaultWidget extends WorkflowD7Base { // D8: extends WidgetBase {
       return $element;  // <---- exit.
     }
 
-    // The 'options' widget. May be removed below if 'Action buttons' are chosen.
-    $workflow_label = check_plain(t($workflow->label()));
+    // The 'options' widget. May be removed later if 'Action buttons' are chosen.
     $element['workflow']['workflow_sid'] = array(
       '#type' => $settings_options_type,
       '#title' => $settings_title_as_name ? t('Change !name state', array('!name' => $workflow_label)) : t('Target state'),
@@ -271,55 +275,44 @@ class WorkflowDefaultWidget extends WorkflowD7Base { // D8: extends WidgetBase {
     // Finally, add Submit buttons/Action buttons.
     // Either a default 'Submit' button is added, or a button per permitted state.
     if ($settings_options_type == 'buttons') {
-
-      // Performance: inform workflow_form_alter() to do its job.
-      _workflow_use_action_buttons(TRUE);
-
-      // The options widget set above is no longer valid.
-      $element['workflow']['workflow_sid']['#type'] = 'hidden';
-
       // How do action buttons work? See also d.o. issue #2187151.
       // Create 'action buttons' per state option. Set $sid property on each button.
       // 1. Admin sets ['widget']['options']['#type'] = 'buttons'.
-      // 2. This function creates 'action buttons' per state option; sets $sid property on each button.
+      // 2. This function formElelent() creates 'action buttons' per state option;
+      //    sets $sid property on each button.
       // 3. User clicks button.
       // 4. Callback _workflow_transition_form_validate_buttons() sets proper State.
       // 5. Callback _workflow_transition_form_validate_buttons() sets Submit function.
       // @todo: this does not work yet for the Add Comment form.
 
-      foreach ($options as $sid => $state_label) {
-        $element['workflow']['submit_sid'][$sid] = array(
-          '#type' => 'submit',
-          '#value' => $state_label,
-          '#validate' => array('_workflow_transition_form_validate_buttons'), // ($form, &$form_state)
-          // Add target State ID and Field name, to set correct value in validate_buttons callback.
-          '#workflow_sid' => $sid,
-          '#workflow_field_name' => $field_name,
-          // Put current state first.
-          '#weight' => ($sid != $current_sid),
-        );
-        // Add the submit function only if one provided. Set the submit_callback accordingly.
-        if (empty($instance['widget']['settings']['submit_function'])) {
-          // #submit Must be empty, or else the submit function is not called.
-          // $element['workflow']['submit_sid'][$sid]['#submit'] = array();
-          $element['workflow']['submit_sid'][$sid]['#executes_submit_callback'] = TRUE;
-        }
-        else {
-          $element['workflow']['submit_sid'][$sid]['#submit'] = array($instance['widget']['settings']['submit_function']);
-          $element['workflow']['submit_sid'][$sid]['#executes_submit_callback'] = TRUE;
-        }
-      }
+      // Performance: inform workflow_form_alter() to do its job.
+      _workflow_use_action_buttons(TRUE);
     }
-    elseif (!empty($instance['widget']['settings']['submit_function'])) {
+
+    $submit_functions = empty($instance['widget']['settings']['submit_function']) ? array() : array($instance['widget']['settings']['submit_function']);
+    if ($settings_options_type == 'buttons' || $submit_functions) {
+      $element['workflow']['actions']['#type'] = 'actions';
+      $element['workflow']['actions']['submit'] = array(
+        '#type' => 'submit',
+//        '#access' => TRUE,
+        '#value' => t('Update workflow'),
+        '#weight' => -5,
+//        '#submit' => array( isset($instance['widget']['settings']['submit_function']) ? $instance['widget']['settings']['submit_function'] : NULL),
+        // '#executes_submit_callback' => TRUE,
+        '#attributes' => array('class' => array('form-save-default-button')),
+      );
+
       // The 'add submit' can explicitely set by workflowfield_field_formatter_view(),
       // to add the submit button on the Content view page and the Workflow history tab.
       // Add a submit button, but only on Entity View and History page.
-      $element['workflow']['submit'] = array(
-        '#type' => 'submit',
-        '#value' => t('Update workflow'),
-        '#executes_submit_callback' => TRUE,
-        '#submit' => array($instance['widget']['settings']['submit_function']),
-      );
+      // Add the submit function only if one provided. Set the submit_callback accordingly.
+      if ($submit_functions) {
+        $element['workflow']['actions']['submit']['#submit'] = $submit_functions;
+      }
+      else {
+        // '#submit' Must be empty, or else the submit function is not called.
+        // $element['workflow']['actions']['submit']['#submit'] = array();
+      }
     }
     else {
       // In some cases, no submit callback function is specified. This is
@@ -392,9 +385,9 @@ class WorkflowDefaultWidget extends WorkflowD7Base { // D8: extends WidgetBase {
       // Execution, restore the default values for Workflow Field.
       // For instance, workflow_rules evaluates this.
       if ($field_name) {
-        $items = array();
-        $items[0]['value'] = $old_sid;
-        $entity->{$field_name}[LANGUAGE_NONE] = $items;
+//        $items = array();
+//        $items[0]['value'] = $old_sid;
+//        $entity->{$field_name}[$transition->language] = $items;
       }
 
       // It's an immediate change. Do the transition.
@@ -416,7 +409,7 @@ class WorkflowDefaultWidget extends WorkflowD7Base { // D8: extends WidgetBase {
     if ($field_name) {
       $items = array();
       $items[0]['value'] = $new_sid;
-      $entity->{$field_name}[LANGUAGE_NONE] = $items;
+      $entity->{$field_name}[$transition->language] = $items;
     }
     return $new_sid;
   }

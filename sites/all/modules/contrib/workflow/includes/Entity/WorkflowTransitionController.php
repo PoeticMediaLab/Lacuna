@@ -42,7 +42,7 @@ class WorkflowTransitionController extends EntityAPIController {
     }
 
     // Make sure we haven't already inserted history for this update.
-    $last_history = workflow_transition_load_single($entity->entity_type, $entity->entity_id, $entity->field_name, $limit = 1);
+    $last_history = workflow_transition_load_single($entity->entity_type, $entity->entity_id, $entity->field_name, $entity->language);
     if ($last_history &&
         $last_history->stamp == REQUEST_TIME &&
         $last_history->new_sid == $entity->new_sid) {

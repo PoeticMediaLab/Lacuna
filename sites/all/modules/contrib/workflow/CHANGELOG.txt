@@ -570,3 +570,25 @@ Issue #2300497: Allow non-allowed transitions when $force is set.
 Issue #2296843: Added more properties and functions to entities - use them in rest of codebase.
 Issue #2211145: Added better performance when grouping workflow action buttons together with Drupal buttons ([Save], [Preview]).
 Added message on Admin pages when both WorkflowNode and WorflowField are enabled.
+
+Since 7.x-2.4
+Issue #2303925 by tucho: Fixed error due to typo in workflow_features_pipe_field_base_alter().
+Issue #2307303: Added IMPORT action to workflows, but this requires applying of patch #1967794 before it works.
+Issue #2249187: Fixed overwriting of State Name by machine name when importing a Workflow.
+Issue #2313549: Fixed workflows cannot be deleted in version 7.x-2.4
+Issue #2317243: Fixed notice: Undefined variable: new_sid in workflownode_tokens().
+Issue #2305617 by emil.virkki: Fixed Action buttons bypass Field validations.
+Issue #2326215 by sazcurrain: Fixed Views pagers with PostgreSQL DB.
+Issue #2323025: Deprecated Rules Action 'Set a Workflow Field State'.
+Issue #2314681: Fixed Notice: Trying to get property of non-object in _workflow_get_workflow_creation_sid()
+Issue #2312243: Fixed Notice: Trying to get property of non-object in _workflow_rules_workflow_get_options()
+Issue #2304365 by mgadrat: Fixed error in Rules 'Set workflow value' action when using Workflow Node.
+Issue #2323025: Reverted deprecation of Rules Action 'Set a Workflow Field State'.
+Issue #2323025: Updated Rules Action 'Set a Workflow Field State'.
+Issue #2317877: Fixed regression Fatal error: __clone method called on non-object in workflow.features.inc
+Issue #2331969 by LCM: Fixed available transitions for non-author in WorkflowState::getTransitions().
+Issue #1988990: Added translatability of Workflow Field.
+Issue #1988990: Added translatability of Workflow Field - execute scheduled transitions.
+Issue #2338547: Fixed revision_id is not set when executing a Scheduled Transitions.
+Issue #2323025: Fixed Rules Action 'Set a Workflow Field State' does not work.
+Issue #2274999: Fixing errors when creating an advanced action.

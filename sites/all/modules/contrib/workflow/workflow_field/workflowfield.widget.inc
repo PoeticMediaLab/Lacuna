@@ -30,6 +30,9 @@ function workflowfield_field_widget_settings_form($field, $instance) {
 /**
  * Implements hook_field_widget_form().
  *
+ * param $langcode
+ *   obsolete. Removed from formElement() parameter list.
+ *
  * This is a wrapper function for the 'workflow form' Widget. $form is modified by reference.
  */
 function workflowfield_field_widget_form(&$form, &$form_state, $field, $instance, $langcode, $items, $delta, $element) {
@@ -55,7 +58,7 @@ function workflowfield_field_widget_form(&$form, &$form_state, $field, $instance
   }
 
   $widget = new WorkflowDefaultWidget($field, $instance, $entity_type, $entity);
-  $element += $widget->formElement($items, $delta, $element, $langcode, $form, $form_state);
+  $element += $widget->formElement($items, $delta, $element, $form, $form_state);
 
   return $element;
 }

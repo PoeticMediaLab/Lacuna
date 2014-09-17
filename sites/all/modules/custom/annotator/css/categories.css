@@ -5,6 +5,9 @@
 
 .annotator-categories {
     border-top: solid 1px #eee;
+}
+
+.annotator-category:hover {
     cursor: pointer;
 }
 
@@ -21,14 +24,13 @@
 
 .annotator-category {
     padding: 7px;
-    background-color: rgba(255, 255, 10, .4);
+    background-color: rgba(255, 255, 10, .2);
     opacity: .7;
     margin: 1px 1px 0px;
     -webkit-border-radius: 6px 6px 6px 6px;
     -moz-border-radius: 6px 6px 6px 6px;
     border-radius: 6px 6px 6px 6px;
     color: black;
-    font-weight: bold;
 }
 
 .annotator-category-selected {
@@ -77,4 +79,9 @@
     -moz-border-radius: 4px;
     border-radius: 4px;
     float: left;
+}
+
+.annotation-sidebar-button {
+    width: 80% !important;
+    margin-bottom: 10px !important;
 }

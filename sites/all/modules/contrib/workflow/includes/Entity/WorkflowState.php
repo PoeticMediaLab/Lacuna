@@ -73,10 +73,13 @@ class WorkflowState extends Entity {
    */
   public function __construct(array $values = array(), $entityType = 'WorkflowState') {
     // Please be aware that $entity_type and $entityType are different things!
-    // Keep oficial name and external name equal.
-    if (isset($values['name'])) {
+
+    // Keep official name and external name equal. Both are required.
+    // @todo: stil needed? test import, manual creation, programmatic creation, etc.
+    if (!isset($values['state']) && isset($values['name'])) {
       $values['state'] = $values['name'];
     }
+
     // Set default values for '(creation)' state.
     if (!empty($values['is_new']) && $values['name'] == WORKFLOW_CREATION_STATE_NAME) {
       $values['sysid'] = WORKFLOW_CREATION;
@@ -336,6 +339,9 @@ class WorkflowState extends Entity {
 
     // Some entities (e.g., taxonomy_term) do not have a uid.
     $entity_uid = isset($entity->uid) ? $entity->uid : 0;
+
+    // Fetch entity_id from entity for _newness_ check
+    $entity_id = ($entity) ? entity_id($entity_type, $entity) : '';
 
     if ($force || ($user && $user->uid == 1)) {
       // Superuser is special. And $force allows Rules to cause transition.

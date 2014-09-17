@@ -135,10 +135,12 @@ class WorkflowScheduledTransition extends WorkflowTransition {
    * @deprecated: workflow_delete_workflow_scheduled_transition_by_nid() --> WorkflowScheduledTransition::delete()
    */
   public function delete() {
+    // Support translated Workflow Field workflows by including the language.
     db_delete($this->entityInfo['base table'])
         ->condition('entity_type', $this->entity_type)
         ->condition('nid', $this->entity_id)
         ->condition('field_name', $this->field_name)
+        ->condition('language', $this->language)
         ->execute();
   }
 

@@ -130,20 +130,16 @@ function workflownode_tokens($type, $tokens, array $data = array(), array $optio
       else {
         // Workflow Node/Workflow Field mode.
         if (empty($last_history)) {
-          // If the node has no workflow history,
-          // the node is being inserted and will soon be transitioned to the first valid state.
+          // If the node has no workflow history, the node is being inserted
+          // and will soon be transitioned to the first valid state.
           $uid = $node->uid;
           $account = user_load($uid);
-          if ($new_sid) {
-            // @TODO: Some users, like anonymous, may not be allowed
-            // to cause transitions, so there will be no choices.
-            $new_sid = $workflow->getFirstSid($entity_type, $node, '', $account, FALSE);
-            $old_sid = $workflow->getCreationSid();
-          }
-          else {
-            // What to choose?
+          $old_sid = $workflow->getCreationSid();
+          $new_sid = $workflow->getFirstSid($entity_type, $node, '', $account, FALSE);
+          if (!$new_sid) {
+            // Some users may not be allowed to cause transitions, so there
+            // will be no choices. What to choose?
             $new_sid = workflow_node_current_state($node, $entity_type, $field_name);
-            $old_sid = $workflow->getCreationSid();
           }
           $user_name = ($uid && isset($node->name)) ? $node->name : variable_get('anonymous', 'Anonymous');
           $mail = ($uid && isset($node->user_mail)) ? $node->user_mail : '';

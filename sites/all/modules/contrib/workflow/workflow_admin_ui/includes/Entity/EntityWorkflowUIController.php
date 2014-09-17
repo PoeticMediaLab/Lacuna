@@ -13,8 +13,8 @@ class EntityWorkflowUIController extends EntityDefaultUIController {
     $items = parent::hook_menu();
 
     // Workflow is now an exportable entity. But the 'Import' menu item is
-    // still broken. Just delete it.
-    unset($items['admin/config/workflow/workflow/import']);
+    // still broken. We show it, but it requires #1967794 before it works.
+    // unset($items['admin/config/workflow/workflow/import']);
 
     // Set this on the object so classes that extend hook_menu() can use it.
     $id_count = count(explode('/', $this->path));
@@ -131,7 +131,7 @@ class EntityWorkflowUIController extends EntityDefaultUIController {
     $status = $entity->status;
 
     // @see parent::overviewTableRow() how to determine a deletable entity.
-    if (!entity_has_status($this->entityType, $entity, ENTITY_IN_CODE) && $entity->isDeletable())  {
+    if (!entity_has_status($this->entityType, $entity, ENTITY_IN_CODE) && !$entity->isDeletable())  {
       // Set to a state that does not allow deleting, but allows other actions.
       $entity->status = ENTITY_IN_CODE;
     }

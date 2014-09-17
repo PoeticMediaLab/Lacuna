@@ -368,6 +368,13 @@ function lacuna_stories_views_views_default_views() {
     5 => 0,
   );
   $handler->display->display_options['filters']['type']['expose']['reduce'] = TRUE;
+  /* Filter criterion: Workflow current: Current state */
+  $handler->display->display_options['filters']['sid']['id'] = 'sid';
+  $handler->display->display_options['filters']['sid']['table'] = 'workflow_node_current';
+  $handler->display->display_options['filters']['sid']['field'] = 'sid';
+  $handler->display->display_options['filters']['sid']['value'] = array(
+    3 => '3',
+  );
 
   /* Display: Documents */
   $handler = $view->new_display('page', 'Documents', 'page');
@@ -735,102 +742,6 @@ function lacuna_stories_views_views_default_views() {
   $handler->display->display_options['fields']['biblio_authors']['biblio_label'] = 0;
   $handler->display->display_options['fields']['biblio_authors']['auth_category'] = '1';
   $handler->display->display_options['fields']['biblio_authors']['initialize'] = 0;
-  $handler->display->display_options['defaults']['filter_groups'] = FALSE;
-  $handler->display->display_options['filter_groups']['operator'] = 'OR';
-  $handler->display->display_options['defaults']['filters'] = FALSE;
-  /* Filter criterion: Content: Type */
-  $handler->display->display_options['filters']['type_1']['id'] = 'type_1';
-  $handler->display->display_options['filters']['type_1']['table'] = 'node';
-  $handler->display->display_options['filters']['type_1']['field'] = 'type';
-  $handler->display->display_options['filters']['type_1']['value'] = array(
-    'audio' => 'audio',
-    'blog' => 'blog',
-    'document' => 'document',
-    'forum' => 'forum',
-    'image' => 'image',
-    'music_video' => 'music_video',
-    'video' => 'video',
-  );
-  $handler->display->display_options['filters']['type_1']['group'] = 1;
-  /* Filter criterion: Content: Published */
-  $handler->display->display_options['filters']['status']['id'] = 'status';
-  $handler->display->display_options['filters']['status']['table'] = 'node';
-  $handler->display->display_options['filters']['status']['field'] = 'status';
-  $handler->display->display_options['filters']['status']['value'] = 1;
-  $handler->display->display_options['filters']['status']['group'] = 1;
-  $handler->display->display_options['filters']['status']['expose']['operator'] = FALSE;
-  /* Filter criterion: Content: Topics (field_topics) */
-  $handler->display->display_options['filters']['field_topics_tid']['id'] = 'field_topics_tid';
-  $handler->display->display_options['filters']['field_topics_tid']['table'] = 'field_data_field_topics';
-  $handler->display->display_options['filters']['field_topics_tid']['field'] = 'field_topics_tid';
-  $handler->display->display_options['filters']['field_topics_tid']['group'] = 1;
-  $handler->display->display_options['filters']['field_topics_tid']['exposed'] = TRUE;
-  $handler->display->display_options['filters']['field_topics_tid']['expose']['operator_id'] = 'field_topics_tid_op';
-  $handler->display->display_options['filters']['field_topics_tid']['expose']['label'] = 'Limit by Topic';
-  $handler->display->display_options['filters']['field_topics_tid']['expose']['operator'] = 'field_topics_tid_op';
-  $handler->display->display_options['filters']['field_topics_tid']['expose']['identifier'] = 'field_topics_tid';
-  $handler->display->display_options['filters']['field_topics_tid']['expose']['remember'] = TRUE;
-  $handler->display->display_options['filters']['field_topics_tid']['expose']['multiple'] = TRUE;
-  $handler->display->display_options['filters']['field_topics_tid']['expose']['remember_roles'] = array(
-    2 => '2',
-    1 => '1',
-    3 => '3',
-    4 => '4',
-  );
-  $handler->display->display_options['filters']['field_topics_tid']['reduce_duplicates'] = TRUE;
-  $handler->display->display_options['filters']['field_topics_tid']['type'] = 'select';
-  $handler->display->display_options['filters']['field_topics_tid']['vocabulary'] = 'topics';
-  $handler->display->display_options['filters']['field_topics_tid']['error_message'] = FALSE;
-  /* Filter criterion: Content: Genre (field_doc_genre) */
-  $handler->display->display_options['filters']['field_doc_genre_tid']['id'] = 'field_doc_genre_tid';
-  $handler->display->display_options['filters']['field_doc_genre_tid']['table'] = 'field_data_field_doc_genre';
-  $handler->display->display_options['filters']['field_doc_genre_tid']['field'] = 'field_doc_genre_tid';
-  $handler->display->display_options['filters']['field_doc_genre_tid']['group'] = 1;
-  $handler->display->display_options['filters']['field_doc_genre_tid']['exposed'] = TRUE;
-  $handler->display->display_options['filters']['field_doc_genre_tid']['expose']['operator_id'] = 'field_doc_genre_tid_op';
-  $handler->display->display_options['filters']['field_doc_genre_tid']['expose']['label'] = 'Limit by Genre';
-  $handler->display->display_options['filters']['field_doc_genre_tid']['expose']['operator'] = 'field_doc_genre_tid_op';
-  $handler->display->display_options['filters']['field_doc_genre_tid']['expose']['identifier'] = 'field_doc_genre_tid';
-  $handler->display->display_options['filters']['field_doc_genre_tid']['expose']['remember'] = TRUE;
-  $handler->display->display_options['filters']['field_doc_genre_tid']['expose']['multiple'] = TRUE;
-  $handler->display->display_options['filters']['field_doc_genre_tid']['expose']['remember_roles'] = array(
-    2 => '2',
-    1 => '1',
-    3 => '3',
-    4 => '4',
-    5 => 0,
-  );
-  $handler->display->display_options['filters']['field_doc_genre_tid']['expose']['reduce'] = TRUE;
-  $handler->display->display_options['filters']['field_doc_genre_tid']['reduce_duplicates'] = TRUE;
-  $handler->display->display_options['filters']['field_doc_genre_tid']['type'] = 'select';
-  $handler->display->display_options['filters']['field_doc_genre_tid']['vocabulary'] = 'genre_doc';
-  $handler->display->display_options['filters']['field_doc_genre_tid']['error_message'] = FALSE;
-  /* Filter criterion: Content: Type */
-  $handler->display->display_options['filters']['type']['id'] = 'type';
-  $handler->display->display_options['filters']['type']['table'] = 'node';
-  $handler->display->display_options['filters']['type']['field'] = 'type';
-  $handler->display->display_options['filters']['type']['value'] = array(
-    'audio' => 'audio',
-    'document' => 'document',
-    'image' => 'image',
-    'video' => 'video',
-  );
-  $handler->display->display_options['filters']['type']['group'] = 1;
-  $handler->display->display_options['filters']['type']['exposed'] = TRUE;
-  $handler->display->display_options['filters']['type']['expose']['operator_id'] = 'type_op';
-  $handler->display->display_options['filters']['type']['expose']['label'] = 'Limit by Medium';
-  $handler->display->display_options['filters']['type']['expose']['operator'] = 'type_op';
-  $handler->display->display_options['filters']['type']['expose']['identifier'] = 'type';
-  $handler->display->display_options['filters']['type']['expose']['remember'] = TRUE;
-  $handler->display->display_options['filters']['type']['expose']['multiple'] = TRUE;
-  $handler->display->display_options['filters']['type']['expose']['remember_roles'] = array(
-    2 => '2',
-    1 => '1',
-    3 => '3',
-    4 => '4',
-    5 => 0,
-  );
-  $handler->display->display_options['filters']['type']['expose']['reduce'] = TRUE;
   $handler->display->display_options['path'] = 'sewing-kit';
   $handler->display->display_options['menu']['type'] = 'normal';
   $handler->display->display_options['menu']['title'] = 'Sewing Kit';

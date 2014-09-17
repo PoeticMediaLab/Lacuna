@@ -1,55 +1,53 @@
-/* line 4, ../../sass/components/menus.scss */
+/* line 5, ../../sass/components/menus.scss */
 #block-superfish-1 {
   top: -90px;
   float: right;
 }
 
-/* line 9, ../../sass/components/menus.scss */
+/* line 10, ../../sass/components/menus.scss */
 ul.sf-main-menu {
   font-size: 12pt;
   background-color: transparent;
 }
 
-/* line 14, ../../sass/components/menus.scss */
+/* Superfish dropdown menu rules */
+/* line 17, ../../sass/components/menus.scss */
 .sf-menu li.menuparent {
   background-color: transparent;
 }
-
-/* line 18, ../../sass/components/menus.scss */
+/* line 19, ../../sass/components/menus.scss */
 .sf-menu li.menuparent a {
   border: none;
   background-color: transparent !important;
 }
-
-/* line 23, ../../sass/components/menus.scss */
+/* line 24, ../../sass/components/menus.scss */
 .sf-menu li.menuparent ul li {
   background-color: white;
   border: 1px solid gray;
   border-bottom: 0px;
 }
-
 /* line 29, ../../sass/components/menus.scss */
-.sf-menu li.menuparent ul li.last, .sf-menu li.menuparent ul li.firstandlast {
+.sf-menu li.menuparent ul li.firstandlast, .sf-menu li.menuparent ul li.last {
   border-bottom: 1px solid gray;
 }
 
-/* line 33, ../../sass/components/menus.scss */
+/* line 44, ../../sass/components/menus.scss */
 .sf-depth-2 {
   width: 80% !important;
 }
 
-/* line 37, ../../sass/components/menus.scss */
+/* line 48, ../../sass/components/menus.scss */
 a.nolink {
   text-decoration: none;
   color: black;
 }
 
-/* line 42, ../../sass/components/menus.scss */
+/* line 53, ../../sass/components/menus.scss */
 ul.menu {
   list-style-type: none;
 }
 
-/* line 46, ../../sass/components/menus.scss */
+/* line 57, ../../sass/components/menus.scss */
 ul.menu li.menuparent {
   list-style-type: none;
   list-style-image: none;
@@ -57,28 +55,28 @@ ul.menu li.menuparent {
   font-size: 14pt;
 }
 
-/* line 53, ../../sass/components/menus.scss */
+/* line 64, ../../sass/components/menus.scss */
 ul.menu li:hover {
   cursor: pointer;
 }
 
-/* line 57, ../../sass/components/menus.scss */
+/* line 68, ../../sass/components/menus.scss */
 ul.menu li a {
   text-decoration: none;
 }
 
-/* line 61, ../../sass/components/menus.scss */
+/* line 72, ../../sass/components/menus.scss */
 ul.tabs.primary {
   margin-bottom: 20px;
   overflow: hidden;
 }
 
-/* line 66, ../../sass/components/menus.scss */
+/* line 77, ../../sass/components/menus.scss */
 ul.tabs.primary li {
   float: left;
 }
 
-/* line 70, ../../sass/components/menus.scss */
+/* line 81, ../../sass/components/menus.scss */
 ul.tabs.primary a {
   padding: 5px 10px;
   border-radius: 5px 5px 0px 0px;
@@ -90,7 +88,7 @@ ul.tabs.primary a {
   border-bottom-color: transparent;
 }
 
-/* line 81, ../../sass/components/menus.scss */
+/* line 92, ../../sass/components/menus.scss */
 ul.tabs.primary a.active, ul.tabs.primary a:hover {
   background-color: whitesmoke;
 }

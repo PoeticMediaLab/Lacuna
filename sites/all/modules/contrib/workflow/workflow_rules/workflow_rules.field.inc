@@ -23,9 +23,10 @@ if (module_exists('rules')) {
 function _workflowfield_rules_action_info() {
   $actions = array();
 
+  // Warning: keep this action in line between Workflow Field and Workflow Node.
   $actions['workflowfield_field_set_state'] = array(
     'group' => t('Workflow'),
-    'label' => t('Set a Workflow Field state'),
+    'label' => t('Set a Workflow state (with a comment)'),
     'parameter' => array(
       // "parameter['node']" is for backwards compatibility: can be any entity_type.
       'node' => array(

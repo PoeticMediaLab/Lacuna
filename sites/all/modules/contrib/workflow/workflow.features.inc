@@ -52,7 +52,9 @@ class WorkflowFeaturesController extends EntityDefaultFeaturesController {
     $code[] = '';
     foreach ($data as $identifier) {
       // Clone workflow to make sure changes are not propagated to original.
-      if ($workflow = clone entity_load_single($this->type, $identifier)) {
+      if ($workflow = entity_load_single($this->type, $identifier)) {
+        // Make sure data is not copied to the database.
+        $workflow = clone $workflow;
         // Modification for the Workflow object:
         // For mapping workflow_field, add original wid in case target system
         // already contains workflows.

@@ -139,6 +139,15 @@ function workflow_entity_info() {
  */
 function workflow_entity_property_info_alter(&$info) {
 
+  // Properties for Entites. @todo wrapper: not only nodes.
+//  $info['node']['properties']['workflows'] = array(
+//    'type' => 'list<Workflow>',
+//    'label' => t("Workflow"),
+//    'description' => t("The workflow of the entity."),
+//    'getter callback' => '_workflow_metadata_workflow_get_properties',
+//    'entity token' => FALSE,
+//  );
+
   // Properties for Workflow.
   $info['Workflow']['properties']['wid']['label'] = 'Workflow ID';
   $info['Workflow']['properties']['options']['label'] = t('Workflow options');
@@ -246,6 +255,13 @@ function workflow_entity_property_info_alter(&$info) {
  */
 function _workflow_metadata_workflow_get_properties($entity, array $options, $name, $entity_type, $property) {
   switch ($name) {
+//    // The workflows of a normal entity.
+//    case 'workflows':
+//      $workflow = _workflow_get_workflow_creation_sid($entity_type, $entity, $field_name);
+//      return $workflow;
+//      return $entity->getWorkflow();
+
+    // The workflows of a Workflow entity.
     case 'workflow':
       return $entity->getWorkflow();
 
@@ -268,6 +284,20 @@ function _workflow_metadata_workflow_get_properties($entity, array $options, $na
       // @todo: for some reason, Tab_roles gives no result.
       // Code copied from 'user' entity.
       return isset($entity->tab_roles) ? array_keys($entity->tab_roles) : array();
+
+    case 'langcode':
+      // Gets the language code of a Workflow Field, hence its State, Transitions.
+      // '$property' is $field_name.
+      $langcode = LANGUAGE_NONE;
+    
+      if ($property) {
+        // getPropertyLanguage() may return NULL if no language is set.
+        $wrapper = entity_metadata_wrapper($entity_type, $entity);
+        if (!$langcode = $wrapper->{$property}->getPropertyLanguage()) {
+          $langcode = LANGUAGE_NONE;
+        }
+      }
+      return $langcode;
 
     // The following properties need more love. Also test their tokens!
     case 'options':
@@ -377,8 +407,8 @@ function workflow_state_load_by_name($name, $wid) {
  * @deprecated: workflow_get_workflow_node_history_by_nid() --> workflow_transition_load_single()
  * @deprecated: workflow_get_recent_node_history() --> workflow_transition_load_single()
  */
-function workflow_transition_load_multiple($entity_type, array $entity_ids, $field_name = '', $limit = NULL) {
-  return WorkflowTransition::loadMultiple($entity_type, $entity_ids, $field_name, $limit);
+function workflow_transition_load_multiple($entity_type, array $entity_ids, $field_name = '', $limit = NULL, $langcode = '') {
+  return WorkflowTransition::loadMultiple($entity_type, $entity_ids, $field_name, $limit, $langcode);
 }
 
 /**
@@ -387,9 +417,9 @@ function workflow_transition_load_multiple($entity_type, array $entity_ids, $fie
  * @return WorkflowTransition
  *   object representing one row from the {workflow_node_history} table.
  */
-function workflow_transition_load_single($entity_type, $entity_id, $field_name = '') {
+function workflow_transition_load_single($entity_type, $entity_id, $field_name = '', $langcode = '') {
   $limit = 1;
-  if ($transitions = workflow_transition_load_multiple($entity_type, array($entity_id), $field_name, $limit)) {
+  if ($transitions = workflow_transition_load_multiple($entity_type, array($entity_id), $field_name, $limit, $langcode)) {
     return reset($transitions);
   }
   return NULL;

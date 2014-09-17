@@ -406,7 +406,7 @@ function lacuna_stories_content_types_field_default_field_instances() {
         'module' => 'text',
         'settings' => array(),
         'type' => 'text_default',
-        'weight' => 4,
+        'weight' => 3,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -430,7 +430,7 @@ function lacuna_stories_content_types_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 6,
+      'weight' => 5,
     ),
   );
 
@@ -442,7 +442,7 @@ function lacuna_stories_content_types_field_default_field_instances() {
     'description' => 'A transcription of the audio.',
     'display' => array(
       'default' => array(
-        'label' => 'above',
+        'label' => 'hidden',
         'module' => 'text',
         'settings' => array(),
         'type' => 'text_default',
@@ -470,7 +470,7 @@ function lacuna_stories_content_types_field_default_field_instances() {
         'rows' => 5,
       ),
       'type' => 'text_textarea',
-      'weight' => 5,
+      'weight' => 4,
     ),
   );
 
@@ -488,7 +488,7 @@ function lacuna_stories_content_types_field_default_field_instances() {
           'link' => 1,
         ),
         'type' => 'entityreference_label',
-        'weight' => 3,
+        'weight' => 6,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -513,7 +513,7 @@ function lacuna_stories_content_types_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'entityreference_autocomplete',
-      'weight' => 1,
+      'weight' => 9,
     ),
   );
 
@@ -529,7 +529,7 @@ function lacuna_stories_content_types_field_default_field_instances() {
         'module' => 'taxonomy',
         'settings' => array(),
         'type' => 'taxonomy_term_reference_plain',
-        'weight' => 5,
+        'weight' => 4,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -550,7 +550,7 @@ function lacuna_stories_content_types_field_default_field_instances() {
       'module' => 'options',
       'settings' => array(),
       'type' => 'options_select',
-      'weight' => 4,
+      'weight' => 6,
     ),
   );
 
@@ -605,8 +605,44 @@ function lacuna_stories_content_types_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-audio-field_themes'
-  $field_instances['node-audio-field_themes'] = array(
+  // Exported field_instance: 'node-audio-field_status'
+  $field_instances['node-audio-field_status'] = array(
+    'bundle' => 'audio',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 7,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_status',
+    'label' => 'Status',
+    'required' => 1,
+    'settings' => array(
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'options',
+      'settings' => array(),
+      'type' => 'options_buttons',
+      'weight' => 1,
+    ),
+  );
+
+  // Exported field_instance: 'node-audio-field_topics'
+  $field_instances['node-audio-field_topics'] = array(
     'bundle' => 'audio',
     'default_value' => NULL,
     'deleted' => 0,
@@ -617,7 +653,7 @@ function lacuna_stories_content_types_field_default_field_instances() {
         'module' => 'taxonomy',
         'settings' => array(),
         'type' => 'taxonomy_term_reference_plain',
-        'weight' => 6,
+        'weight' => 5,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -627,8 +663,8 @@ function lacuna_stories_content_types_field_default_field_instances() {
       ),
     ),
     'entity_type' => 'node',
-    'field_name' => 'field_themes',
-    'label' => 'Themes',
+    'field_name' => 'field_topics',
+    'label' => 'Topics',
     'required' => 1,
     'settings' => array(
       'user_register_form' => FALSE,
@@ -638,7 +674,7 @@ function lacuna_stories_content_types_field_default_field_instances() {
       'module' => 'options',
       'settings' => array(),
       'type' => 'options_buttons',
-      'weight' => 9,
+      'weight' => 8,
     ),
   );
 
@@ -1215,7 +1251,7 @@ function lacuna_stories_content_types_field_default_field_instances() {
           'link' => 1,
         ),
         'type' => 'entityreference_label',
-        'weight' => 2,
+        'weight' => 1,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -1240,7 +1276,7 @@ function lacuna_stories_content_types_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'entityreference_autocomplete',
-      'weight' => 1,
+      'weight' => 2,
     ),
   );
 
@@ -1251,13 +1287,13 @@ function lacuna_stories_content_types_field_default_field_instances() {
     'description' => 'If there is a PDF or other file version of this document, attach it here.',
     'display' => array(
       'default' => array(
-        'label' => 'inline',
+        'label' => 'above',
         'module' => 'file_entity',
         'settings' => array(
           'file_view_mode' => 'default',
         ),
         'type' => 'file_rendered',
-        'weight' => 7,
+        'weight' => 6,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -1285,7 +1321,7 @@ function lacuna_stories_content_types_field_default_field_instances() {
         'progress_indicator' => 'throbber',
       ),
       'type' => 'file_generic',
-      'weight' => 9,
+      'weight' => 10,
     ),
   );
 
@@ -1297,11 +1333,11 @@ function lacuna_stories_content_types_field_default_field_instances() {
     'description' => '',
     'display' => array(
       'default' => array(
-        'label' => 'inline',
+        'label' => 'above',
         'module' => 'taxonomy',
         'settings' => array(),
         'type' => 'taxonomy_term_reference_plain',
-        'weight' => 5,
+        'weight' => 4,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -1322,7 +1358,7 @@ function lacuna_stories_content_types_field_default_field_instances() {
       'module' => 'options',
       'settings' => array(),
       'type' => 'options_select',
-      'weight' => 4,
+      'weight' => 5,
     ),
   );
 
@@ -1334,11 +1370,11 @@ function lacuna_stories_content_types_field_default_field_instances() {
     'description' => 'The page range or number of pages of this document.',
     'display' => array(
       'default' => array(
-        'label' => 'inline',
+        'label' => 'above',
         'module' => 'text',
         'settings' => array(),
         'type' => 'text_default',
-        'weight' => 3,
+        'weight' => 2,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -1362,7 +1398,7 @@ function lacuna_stories_content_types_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 6,
+      'weight' => 7,
     ),
   );
 
@@ -1374,11 +1410,11 @@ function lacuna_stories_content_types_field_default_field_instances() {
     'description' => 'Data about reviews of this document.',
     'display' => array(
       'default' => array(
-        'label' => 'inline',
+        'label' => 'above',
         'module' => 'text',
         'settings' => array(),
         'type' => 'text_default',
-        'weight' => 4,
+        'weight' => 3,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -1402,7 +1438,7 @@ function lacuna_stories_content_types_field_default_field_instances() {
         'rows' => 2,
       ),
       'type' => 'text_textarea',
-      'weight' => 3,
+      'weight' => 4,
     ),
   );
 
@@ -1418,7 +1454,7 @@ function lacuna_stories_content_types_field_default_field_instances() {
         'module' => 'text',
         'settings' => array(),
         'type' => 'text_default',
-        'weight' => 1,
+        'weight' => 0,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -1442,47 +1478,7 @@ function lacuna_stories_content_types_field_default_field_instances() {
         'rows' => 5,
       ),
       'type' => 'text_textarea',
-      'weight' => 7,
-    ),
-  );
-
-  // Exported field_instance: 'node-document-field_doc_type'
-  $field_instances['node-document-field_doc_type'] = array(
-    'bundle' => 'document',
-    'default_value' => array(
-      0 => array(
-        'value' => 0,
-      ),
-    ),
-    'deleted' => 0,
-    'description' => '',
-    'display' => array(
-      'default' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 8,
-      ),
-      'teaser' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
-      ),
-    ),
-    'entity_type' => 'node',
-    'field_name' => 'field_doc_type',
-    'label' => 'Document Type',
-    'required' => 1,
-    'settings' => array(
-      'user_register_form' => FALSE,
-    ),
-    'widget' => array(
-      'active' => 1,
-      'module' => 'options',
-      'settings' => array(),
-      'type' => 'options_buttons',
-      'weight' => 5,
+      'weight' => 8,
     ),
   );
 
@@ -1496,7 +1492,7 @@ function lacuna_stories_content_types_field_default_field_instances() {
         'label' => 'hidden',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 0,
+        'weight' => 8,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -1536,7 +1532,46 @@ function lacuna_stories_content_types_field_default_field_instances() {
         'progress_indicator' => 'throbber',
       ),
       'type' => 'media_generic',
-      'weight' => 2,
+      'weight' => 3,
+    ),
+  );
+
+  // Exported field_instance: 'node-document-field_status'
+  $field_instances['node-document-field_status'] = array(
+    'bundle' => 'document',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 7,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_status',
+    'label' => 'Status',
+    'required' => 1,
+    'settings' => array(
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'options',
+      'settings' => array(
+        'comment' => 1,
+        'name_as_title' => 1,
+      ),
+      'type' => 'options_buttons',
+      'weight' => 1,
     ),
   );
 
@@ -1551,8 +1586,8 @@ function lacuna_stories_content_types_field_default_field_instances() {
         'label' => 'above',
         'module' => 'taxonomy',
         'settings' => array(),
-        'type' => 'taxonomy_term_reference_link',
-        'weight' => 9,
+        'type' => 'taxonomy_term_reference_plain',
+        'weight' => 5,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -1573,7 +1608,7 @@ function lacuna_stories_content_types_field_default_field_instances() {
       'module' => 'options',
       'settings' => array(),
       'type' => 'options_buttons',
-      'weight' => 8,
+      'weight' => 9,
     ),
   );
 
@@ -1591,7 +1626,7 @@ function lacuna_stories_content_types_field_default_field_instances() {
           'link' => 1,
         ),
         'type' => 'entityreference_label',
-        'weight' => 1,
+        'weight' => 3,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -1616,7 +1651,7 @@ function lacuna_stories_content_types_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'entityreference_autocomplete',
-      'weight' => 1,
+      'weight' => 5,
     ),
   );
 
@@ -1632,7 +1667,7 @@ function lacuna_stories_content_types_field_default_field_instances() {
         'module' => 'taxonomy',
         'settings' => array(),
         'type' => 'taxonomy_term_reference_plain',
-        'weight' => 2,
+        'weight' => 1,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -1711,6 +1746,42 @@ function lacuna_stories_content_types_field_default_field_instances() {
         'progress_indicator' => 'throbber',
       ),
       'type' => 'media_generic',
+      'weight' => 1,
+    ),
+  );
+
+  // Exported field_instance: 'node-image-field_status'
+  $field_instances['node-image-field_status'] = array(
+    'bundle' => 'image',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 4,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_status',
+    'label' => 'Status',
+    'required' => 1,
+    'settings' => array(
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'options',
+      'settings' => array(),
+      'type' => 'options_buttons',
       'weight' => 2,
     ),
   );
@@ -1727,7 +1798,7 @@ function lacuna_stories_content_types_field_default_field_instances() {
         'module' => 'taxonomy',
         'settings' => array(),
         'type' => 'taxonomy_term_reference_plain',
-        'weight' => 5,
+        'weight' => 2,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -1748,7 +1819,7 @@ function lacuna_stories_content_types_field_default_field_instances() {
       'module' => 'options',
       'settings' => array(),
       'type' => 'options_buttons',
-      'weight' => 5,
+      'weight' => 4,
     ),
   );
 
@@ -1766,7 +1837,7 @@ function lacuna_stories_content_types_field_default_field_instances() {
           'link' => 1,
         ),
         'type' => 'entityreference_label',
-        'weight' => 1,
+        'weight' => 4,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -1791,7 +1862,7 @@ function lacuna_stories_content_types_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'entityreference_autocomplete',
-      'weight' => 3,
+      'weight' => 6,
     ),
   );
 
@@ -1806,8 +1877,8 @@ function lacuna_stories_content_types_field_default_field_instances() {
         'label' => 'above',
         'module' => 'taxonomy',
         'settings' => array(),
-        'type' => 'taxonomy_term_reference_link',
-        'weight' => 3,
+        'type' => 'taxonomy_term_reference_plain',
+        'weight' => 2,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -1832,14 +1903,10 @@ function lacuna_stories_content_types_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-music_video-field_doc_type'
-  $field_instances['node-music_video-field_doc_type'] = array(
+  // Exported field_instance: 'node-music_video-field_status'
+  $field_instances['node-music_video-field_status'] = array(
     'bundle' => 'music_video',
-    'default_value' => array(
-      0 => array(
-        'value' => 1,
-      ),
-    ),
+    'default_value' => NULL,
     'deleted' => 0,
     'description' => '',
     'display' => array(
@@ -1857,8 +1924,45 @@ function lacuna_stories_content_types_field_default_field_instances() {
       ),
     ),
     'entity_type' => 'node',
-    'field_name' => 'field_doc_type',
-    'label' => 'Document Type',
+    'field_name' => 'field_status',
+    'label' => 'Status',
+    'required' => 1,
+    'settings' => array(
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'options',
+      'settings' => array(),
+      'type' => 'options_buttons',
+      'weight' => 2,
+    ),
+  );
+
+  // Exported field_instance: 'node-music_video-field_topics'
+  $field_instances['node-music_video-field_topics'] = array(
+    'bundle' => 'music_video',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => 'The topics with which this video engages.',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'taxonomy',
+        'settings' => array(),
+        'type' => 'taxonomy_term_reference_plain',
+        'weight' => 3,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_topics',
+    'label' => 'Topics',
     'required' => 1,
     'settings' => array(
       'user_register_form' => FALSE,
@@ -1880,11 +1984,11 @@ function lacuna_stories_content_types_field_default_field_instances() {
     'description' => '',
     'display' => array(
       'default' => array(
-        'label' => 'above',
+        'label' => 'hidden',
         'module' => 'text',
         'settings' => array(),
         'type' => 'text_default',
-        'weight' => 2,
+        'weight' => 1,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -1908,7 +2012,7 @@ function lacuna_stories_content_types_field_default_field_instances() {
         'rows' => 5,
       ),
       'type' => 'text_textarea',
-      'weight' => 2,
+      'weight' => 3,
     ),
   );
 
@@ -2066,7 +2170,7 @@ function lacuna_stories_content_types_field_default_field_instances() {
           'link' => 1,
         ),
         'type' => 'entityreference_label',
-        'weight' => 2,
+        'weight' => 5,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -2091,7 +2195,7 @@ function lacuna_stories_content_types_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'entityreference_autocomplete',
-      'weight' => 1,
+      'weight' => 8,
     ),
   );
 
@@ -2107,7 +2211,7 @@ function lacuna_stories_content_types_field_default_field_instances() {
         'module' => 'taxonomy',
         'settings' => array(),
         'type' => 'taxonomy_term_reference_plain',
-        'weight' => 4,
+        'weight' => 3,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -2128,7 +2232,7 @@ function lacuna_stories_content_types_field_default_field_instances() {
       'module' => 'options',
       'settings' => array(),
       'type' => 'options_select',
-      'weight' => 4,
+      'weight' => 6,
     ),
   );
 
@@ -2142,7 +2246,7 @@ function lacuna_stories_content_types_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 6,
+        'weight' => 7,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -2175,7 +2279,43 @@ function lacuna_stories_content_types_field_default_field_instances() {
         'progress_indicator' => 'throbber',
       ),
       'type' => 'image_image',
-      'weight' => 6,
+      'weight' => 3,
+    ),
+  );
+
+  // Exported field_instance: 'node-video-field_status'
+  $field_instances['node-video-field_status'] = array(
+    'bundle' => 'video',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 6,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_status',
+    'label' => 'Status',
+    'required' => 1,
+    'settings' => array(
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'options',
+      'settings' => array(),
+      'type' => 'options_buttons',
+      'weight' => 2,
     ),
   );
 
@@ -2191,7 +2331,7 @@ function lacuna_stories_content_types_field_default_field_instances() {
         'module' => 'taxonomy',
         'settings' => array(),
         'type' => 'taxonomy_term_reference_plain',
-        'weight' => 5,
+        'weight' => 4,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -2228,7 +2368,7 @@ function lacuna_stories_content_types_field_default_field_instances() {
         'module' => 'text',
         'settings' => array(),
         'type' => 'text_default',
-        'weight' => 3,
+        'weight' => 2,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -2252,7 +2392,7 @@ function lacuna_stories_content_types_field_default_field_instances() {
         'rows' => 5,
       ),
       'type' => 'text_textarea',
-      'weight' => 2,
+      'weight' => 5,
     ),
   );
 
@@ -2292,7 +2432,7 @@ function lacuna_stories_content_types_field_default_field_instances() {
         'rows' => 5,
       ),
       'type' => 'text_textarea',
-      'weight' => 3,
+      'weight' => 4,
     ),
   );
 
@@ -2354,7 +2494,7 @@ function lacuna_stories_content_types_field_default_field_instances() {
         'progress_indicator' => 'throbber',
       ),
       'type' => 'media_generic',
-      'weight' => 5,
+      'weight' => 1,
     ),
   );
 
@@ -2697,7 +2837,6 @@ function lacuna_stories_content_types_field_default_field_instances() {
   t('Description');
   t('Determine if this is an OG group.');
   t('Display Name');
-  t('Document Type');
   t('Education');
   t('Enter an abstract to appear upon hovering over the document information');
   t('Enter the title of the bibliographic information about this document.');
@@ -2718,6 +2857,7 @@ function lacuna_stories_content_types_field_default_field_instances() {
   t('Ranges');
   t('References to the content stitched together');
   t('Review Statistics');
+  t('Status');
   t('Stitchings');
   t('Tags');
   t('Tags for an annotation');
@@ -2732,7 +2872,6 @@ function lacuna_stories_content_types_field_default_field_instances() {
   t('The text of your blog post');
   t('The topics with which this document engages.');
   t('The topics with which this video engages.');
-  t('Themes');
   t('Topics');
   t('Transcription');
   t('URI');
