@@ -1,0 +1,148 @@
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>div tests</title>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.min.js"></script>
+    <script type="text/javascript" src="../js/jquery-graphapi.js"></script>
+    <script type="text/javascript">
+      jQuery(document).ready(function() {
+        jQuery('.graphapi').graphapi({
+          menu: true,
+          applyCompass: true,
+          applyBoxOverlap: true,
+          compass: 4.0
+        }
+        );
+      });
+    </script>
+
+    <link type="text/css" rel="stylesheet" href="../css/graphapi.css" media="all" />
+  </head>
+  <body>
+    <div>
+      <p>This graph is based on my interpretation of <a href="http://drupal.org/node/467548">Templates for issue status transitions</a> and is intended to help developing <a href="http://drupal.org/node/1120672">Dreditor triage status sources</a></p>
+    </div>
+    <!--
+    <option value="1">active</option>
+    <option value="3">closed (duplicate)</option>
+    <option value="5">closed (won't fix)</option>
+    <option value="6">closed (works as designed)</option>
+    <option value="18">closed (cannot reproduce)</option>
+    <option value="7">closed (fixed)</option>
+
+    <option value="2">fixed</option>
+
+    <option value="13">needs work</option>
+    <option value="8">needs review</option>
+
+
+    <option value="15">patch (to be ported)</option>
+    <option value="4">postponed</option>
+    <option value="16">postponed (maintainer needs more info)</option>
+    <option value="14">reviewed &amp; tested by the community</option>
+    -->
+    <div class="graphapi">
+      <edges>
+        <edge from="active" to="closed-cannot-reproduce"></edge>
+        <edge from="active" to="closed-wont-fix"></edge>
+        <edge from="active" to="closed-works-as-designed"></edge>
+        <edge from="active" to="closed-duplicate"></edge>
+        <edge from="active" to="fixed"></edge>
+        <edge from="active" to="postponed"></edge>
+        <edge from="active" to="postponed-more-info"></edge>
+        <edge from="active" to="needs-review"></edge>
+        <edge from="needs-review" to="needs-work"></edge>
+        <edge from="needs-work" to="needs-review"></edge>
+        <edge from="needs-review" to="fixed"></edge>
+        <edge from="fixed" to="closed-fixed"></edge>
+        <edge from="postponed" to="active"></edge>
+        <edge from="postponed-more-info" to="active"></edge>
+
+
+      </edges>
+      <div class="graphapi-nodes">
+        <div id="active">
+          <div class="graphapi-title">Active</div>
+          <div class="graphapi-body">
+            Active (for duplicate projects)
+            The <a href="http://drupal.org/project/X">X</a> module provides a very similar feature to this module.
+
+            One of the <a href="http://drupal.org/principles">7 principles of the Drupal project</a> is collaboration. Would you consider merging your project into that one and collaborating with its authors?
+
+            Otherwise, it would be great if you could document what makes this module different so that people can make a good decision about which one to use.
+          </div>
+        </div>
+        <div id="closed-duplicate">
+          <div class="graphapi-title">Closed (Duplicate)</div>
+          <div class="graphapi-body">
+            Thanks for taking the time to report this issue.
+
+            However, I am marking this as a duplicate of [#]. You can follow up on that issue to track its status instead. If any information from this issue is missing in the other issue, please make sure you provide it over there.
+
+            If you are new to drupal.org, it would help us if you would search for existing issues before submitting a new one. We strongly advise you search using the drupal.org search facility, because it really is very good. NOT a third party search engine (e.g. Google) as you may well not find what you are looking for.
+          </div>
+        </div>
+        <div id="closed-wont-fix">
+          <div class="graphapi-title">Closed (won't fix)</div>
+          <div class="graphapi-body">
+            Won't fix (feature requests)
+            At this point, this issue is going to be marked as won't fix. This is either not in the direction of the project, or too out of the project scope.
+          </div>
+        </div>
+        <div id="closed-works-as-designed">
+          <div class="graphapi-title">Closed (Works as designed)</div>
+        </div>
+        <div id="closed-cannot-reproduce">
+          <div class="graphapi-title">Closed (cannot reproduce)</div>
+          <div class="graphapi-body">
+            Needs more info =>
+            Sorry, without further information this issue can only be closed as not reproducible.
+
+            Feel free to re-open this issue if you want to provide further information. Thanks.
+          </div>
+        </div>
+        <div id="closed-fixed">
+          <div class="graphapi-title">Closed (fixed)</div>
+          <div class="graphapi-body">
+            Thanks for reporting, reviewing, and testing! Committed to all branches.
+
+            A new development snapshot will be available within the next 12 hours. This improvement will be available in the next official release.
+          </div>
+        </div>
+        <div id="fixed">
+          <div class="graphapi-title">Fixed</div>
+          <div class="graphapi-body">
+            Thanks for reporting, reviewing, and testing! Committed to all branches.
+
+            A new development snapshot will be available within the next 12 hours. This improvement will be available in the next official release.
+          </div>
+        </div>
+        <div id="needs-work">
+          <div class="graphapi-title">Needs work</div>
+        </div>
+        <div id="needs-review">
+          <div class="graphapi-title">Needs review</div>
+        </div>
+
+        <div id="postponed">
+          <div class="graphapi-title">Postponed</div>
+          <div class="graphapi-body">
+            This issue needs revisiting, with the potential to be added to the project later. Please feel free to contribute additional information or patches.
+          </div>
+        </div>
+        <div id="postponed-more-info">
+          <div class="graphapi-title">Postponed (maintainer needs more info)</div>
+        </div>
+
+        <div id="not-supported">
+          <div class="graphapi-title">Not supported</div>
+          <div class="graphapi-body">
+            This version of X is not supported anymore. The issue is closed for this reason.
+
+            Please upgrade to a supported version and feel free to reopen the issue on the new version if applicable.
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

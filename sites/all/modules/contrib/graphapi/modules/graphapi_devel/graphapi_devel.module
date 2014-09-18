@@ -1,0 +1,294 @@
+<?php
+
+/**
+ * Implements hook_menu().
+ */
+function graphapi_devel_menu() {
+  $items['admin/config/system/graphapi/modules'] = array(
+    'title' => 'Module dependencies',
+    'description' => t("A graph of all modules."),
+    'page callback' => 'graphapi_devel_system_modules_layout',
+    'access arguments' => array('access devel information'),
+    'type' => MENU_LOCAL_TASK,
+    'weight' => 100,
+  );
+  $items['admin/config/system/graphapi/modules/current'] = array(
+    'title' => 'Module dependencies',
+    'description' => t("A graph of all modules."),
+    'page callback' => 'graphapi_devel_system_modules_layout',
+    'access arguments' => array('access devel information'),
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+    'weight' => 10,
+  );
+  $items['admin/config/system/graphapi/modules/hidden'] = array(
+    'title' => 'All module dependencies',
+    'description' => t("A graph of all modules including hidden."),
+    'page callback' => 'graphapi_devel_system_all_modules_layout',
+    'access arguments' => array('access devel information'),
+    'type' => MENU_LOCAL_TASK,
+    'weight' => 20,
+  );
+  $items['admin/config/system/graphapi/modules/install'] = array(
+    'title' => 'Update Dependencies',
+    'description' => t("A graph of all hook_update_dependencies'."),
+    'page callback' => 'graphapi_devel_system_module_install_layout',
+    'access arguments' => array('access devel information'),
+    'type' => MENU_LOCAL_TASK,
+    'weight' => 30,
+  );
+  return $items;
+}
+
+/**
+ * Helper function. Returns graphapi_devel's default settings.
+ */
+function _graphapi_devel_config() {
+  return array(
+    'menu' => true,
+    'width' => 1024,
+    'height' => 800,
+    'background-color' => '#ccc',
+    'applyBoxOverlap' => TRUE,
+  );
+}
+
+/**
+ * Graphs all drupal modules and dependancies.
+ *
+ * @return
+ *   Formatted html and canvas graph.
+ */
+function graphapi_devel_system_all_modules_layout() {
+  $graph = _graphapi_devel_system_module_layout(TRUE);
+  $config = array(
+    'id' => 'sys_mod_lay_all',
+    'width' => 1024,
+    'height' => 1024,
+    'engine' => 'graph_phyz'
+  );
+  $config += _graphapi_devel_config();
+  return theme('graphapi_dispatch', array('graph' => $graph, 'config' => $config));
+}
+
+/**
+ * Graphs drupal system modules and dependancies.
+ *
+ * @return
+ *   Formatted html and canvas graph.
+ */
+function graphapi_devel_system_modules_layout() {
+  $graph = _graphapi_devel_system_module_layout();
+  $config = array(
+    'id' => 'sys_mod_lay',
+    'width' => 1024,
+    'height' => 1024,
+    'engine' => 'graph_phyz'
+  );
+  $config += _graphapi_devel_config();
+  return theme('graphapi_dispatch', array('graph' => $graph, 'config' => $config));
+}
+
+/**
+ * Graphs drupal system modules and dependancies.
+ *
+ * @return
+ *   Formatted html and canvas graph.
+ */
+function graphapi_devel_system_module_install_layout() {
+  $graph = _graphapi_devel_system_module_install_layout();
+
+  include "includes/graph.inc";
+  drupal_depth_first_search($graph);
+  foreach ($graph as $id => $node) {
+    $graph[$id]['data']['rank'] = 1 - $graph[$id]['weight'];
+    $graph[$id]['data']['title'] .= " (" . $graph[$id]['data']['rank'] . ")";
+  }
+  $rankDepth = count($graph) + 1;
+  $config = array(
+    'applyRank' => TRUE,
+    'applyAttractToCenter' => FALSE,
+    'applyBoundingBox' => TRUE,
+    'applyBoxOverlap' => FALSE,
+    'applyCompass' => FALSE,
+    'applyHookesLaw' => FALSE,
+    'width' => 1024,
+    'height' => 800,
+    'rankDepth' => $rankDepth,
+    'engine' => 'graph_phyz',
+  );
+  $config += _graphapi_devel_config();
+
+  $vars = array(
+    'graph' => $graph,
+    'config' => $config,
+  );
+  return theme('graphapi_dispatch', array('graph' => $graph, 'config' => $config));
+}
+
+/**
+ * Helper function. Returns a graph array of all system modules.
+ */
+function _graphapi_devel_system_module_install_layout() {
+  $modules = module_list(TRUE, FALSE);
+  module_load_all_includes('install');
+  $graph = graphapi_new_graph();
+  $links = array();
+  // Remember links between module's own hook_update_N
+  $selfs = array();
+  foreach ($modules as $module) {
+    $update = module_invoke($module, 'update_dependencies');
+    if (count($update)) {
+      foreach ($update as $src_module => $versions) {
+        foreach ($versions as $version => $dests) {
+          $src = $src_module . "_update_" . $version;
+          $selfs[$src_module][] = $version;
+          graphapi_add_node($graph, $src);
+          foreach ($dests as $dest_module => $dest_version) {
+            $dst = $dest_module . "_update_" . $dest_version;
+            $links[$dst][] = $src;
+            graphapi_add_link($graph, $dst, $src);
+            graphapi_set_link_data($graph, $dst, $src, array('color' => '#FF0'));
+            $selfs[$dest_module][] = $dest_version;
+          }
+        }
+      }
+    }
+  }
+  graphapi_add_node($graph, '_first');
+  graphapi_set_node_title($graph, '_first', 'update.php:start');
+  graphapi_set_node_data($graph, '_first', array('rank' => 1));
+
+  // Add links between module's own hook_update_N
+  foreach ($selfs as $module => $versions) {
+    // delete dups
+    $v = array_flip($versions);
+    ksort($v);
+    $v = array_values(array_flip($v));
+    // Root all first update_N's
+    $current = "_first";
+    foreach ($v as $version) {
+      $dest = $module . '_update_' . $version;
+      $links[$current][] = $dest;
+      graphapi_set_link_data($graph, $current, $dest, array('color' => '#555'));
+
+      $current = $dest;
+    }
+    $links[$current][] = '_last';
+    graphapi_set_link_data($graph, $current, '_last', array('color' => '#000'));
+  }
+  // Now remove all links from _first to 'node' having more incoming
+  $reverse = graphapi_reverse($graph);
+  $targets = array();
+  foreach ($reverse as $target => $value) {
+    if (count($value['edges']) > 1 && isset($value['edges']['_first'])) {
+      $targets[] = $target;
+    }
+  }
+  foreach ($targets as $target) {
+    unset($graph['_first']['edges'][$target]);
+  }
+  // Remove all links to '_last' having more outgoing
+  $targets = array();
+  foreach ($graph as $target => $value) {
+    if (count($value['edges']) > 1 && isset($value['edges']['_last'])) {
+      $targets[] = $target;
+    }
+  }
+  foreach ($targets as $target) {
+    unset($graph[$target]['edges']['_last']);
+  }
+  return $graph;
+}
+
+/**
+ * Helper function. Returns graph array of system modules.
+ */
+function _graphapi_devel_system_module_layout($show_hidden = FALSE) {
+  $modules = system_rebuild_module_data();
+  $graph = array();
+  foreach ($modules as $module => $data) {
+    if ($show_hidden || !(isset($data->info['hidden']) && $data->info['hidden'])) {
+      if (!isset($graph[$module])) {
+        $graph[$module]['edges'] = array();
+      }
+      //foreach ($data->requires as $key => $value) {
+      foreach ($data->info['dependencies'] as $key) {
+        if ($module != $key) {
+          $graph[$module]['edges'][$key] = 1;
+        }
+        else {
+          $circular = TRUE;
+        }
+        if (!isset($graph[$key])) {
+          $graph[$key]['edges'] = array();
+        }
+      }
+      $graph[$module]['data'] = theme_graphapi_devel_module_object($data);
+    }
+  }
+  return $graph;
+}
+
+/**
+ * Theme implementation. Returns graph node array of a drupal module.
+ */
+function theme_graphapi_devel_module_object($module) {
+  if (isset($module->status)) {
+    $background_color = $module->status ? "#00ff00" : "#ffff00";
+    if (isset($module->info['hidden']) && $module->info['hidden']) {
+      $background_color = $module->status ? "#00aa00" : "#aaaa00";
+    }
+  }
+  else {
+    $background_color = "#ff0000";
+  }
+  $result = array(
+    'title' => $module->name,
+    'content' => print_r($module, true),
+    'background-color' => $background_color,
+  );
+  return $result;
+}
+
+/**
+ * Builds a graph from all hook_update and update_dependencies
+ */
+function graphapi_devel_system_modules_update_active() {
+  $result = _graphapi_system_module_install_layout_active();
+  return '<pre>' . $result . '</pre>';
+}
+
+/**
+ * Returns GraphViz formatted graph string of isntalled system modules.
+ */
+function _graphapi_system_module_install_layout_active() {
+  require_once DRUPAL_ROOT . '/includes/install.inc';
+  require_once DRUPAL_ROOT . '/includes/update.inc';
+
+  module_load_all_includes('install');
+  module_list(TRUE, FALSE);
+
+  $modules = module_list();
+  $starting_updates = array_fill_keys($modules, 6);
+
+  $update_functions = update_get_update_function_list($starting_updates);
+  $graph = update_build_dependency_graph($update_functions);
+  foreach ($graph as $node => $data) {
+    if (isset($data['edges'])) {
+      $graph[$node]['links'] = array_keys($data['edges']);
+    }
+    else {
+      $graph[$node]['links'] = array();
+    }
+  }
+
+  $result = "\ndigraph {\n";
+  foreach ($graph as $node => $data) {
+    foreach ($data['links'] as $to) {
+      $result .= '"' . $node . '"';
+      $result .= ' -> ' . '"' . $to . '"' . "\n";
+    }
+  }
+  $result .= "}\n";
+  return $result;
+}

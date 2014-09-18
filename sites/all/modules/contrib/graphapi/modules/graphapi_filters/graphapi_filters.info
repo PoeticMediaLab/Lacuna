@@ -1,0 +1,12 @@
+name = Graph API Input filters
+description = Allows for (various) input filters
+package = Input Filter
+core = 7.x
+dependencies[] = graphapi
+
+; Information added by Drupal.org packaging script on 2014-01-03
+version = "7.x-1.x-dev"
+core = "7.x"
+project = "graphapi"
+datestamp = "1388755463"
+

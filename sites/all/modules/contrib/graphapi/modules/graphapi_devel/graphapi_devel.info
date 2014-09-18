@@ -1,0 +1,16 @@
+name = Devel Graphs
+description = Displays devel related graphs
+package = Development
+version = VERSION
+core = 7.x
+dependencies[] = graphapi
+
+files[] = graphapi_devel.module
+
+
+; Information added by Drupal.org packaging script on 2014-01-03
+version = "7.x-1.x-dev"
+core = "7.x"
+project = "graphapi"
+datestamp = "1388755463"
+

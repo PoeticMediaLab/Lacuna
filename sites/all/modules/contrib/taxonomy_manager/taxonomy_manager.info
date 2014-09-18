@@ -1,0 +1,14 @@
+name = Taxonomy Manager
+description = Tool for administrating taxonomy terms.
+core = "7.x"
+dependencies[] = taxonomy
+files[] = taxonomy_manager.admin.inc
+configure = admin/config/user-interface/taxonomy-manager-settings
+package = Taxonomy
+
+; Information added by drupal.org packaging script on 2013-05-20
+version = "7.x-1.0"
+core = "7.x"
+project = "taxonomy_manager"
+datestamp = "1369041918"
+

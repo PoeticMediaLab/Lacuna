@@ -1,0 +1,66 @@
+<?php
+/**
+ * @file
+ * D3 views module file.
+ */
+
+/**
+ * Implements hook_views_api().
+ */
+function d3_views_views_api() {
+  return array(
+    'api' => 3,
+    'path' => drupal_get_path('module', 'd3_views') . '/views',
+  );
+}
+
+/**
+ * Implements hook_theme().
+ */
+function d3_views_theme() {
+
+  return array(
+    'views_ui_style_d3_options_form' => array(
+      'render element' => 'form',
+    ),
+  );
+
+}
+
+/**
+ * Implements template_preprocess_views_ui_style_d3_options_form().
+ */
+function d3_preprocess_views_ui_style_d3_options_form(&$vars) {
+  drupal_add_css(drupal_get_path('module', 'd3_views') . '/css/views_ui_style_options_form.css');
+}
+
+/**
+ * Theme the form for the table style plugin.
+ */
+function theme_views_ui_style_d3_options_form($variables) {
+  $form = $variables['form'];
+
+  $output = drupal_render($form['library']);
+
+  $header = array(
+    t('Field'),
+    t('Display'),
+    t('Aggregation'),
+    t('Data type'),
+  );
+  $rows = array();
+  foreach (element_children($form['columns']) as $id) {
+    $row = array();
+    $row[] = drupal_render($form['columns'][$id]['name']);
+    $row[] = drupal_render($form['columns'][$id]['display']);
+    $row[] = drupal_render($form['columns'][$id]['aggregate']);
+    $row[] = drupal_render($form['columns'][$id]['type']);
+
+    $rows[] = $row;
+  }
+
+  $output .= '<fieldset><legend>Data</legend>' . theme('table', array('header' => $header, 'rows' => $rows)) . '</fieldset>';
+
+  $output .= drupal_render_children($form);
+  return $output;
+}

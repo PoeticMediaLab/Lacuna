@@ -1,0 +1,130 @@
+<?php
+
+/**
+ * Implements hook_menu().
+ */
+function graphapi_demo_menu() {
+  $items['admin/config/system/graphapi/demo'] = array(
+    'title' => 'Graph API demo page',
+    'description' => t("A graph of all defined 'update_dependencies'."),
+    'page callback' => 'graphapi_demo_page',
+    'access arguments' => array('administer site configuration'),
+    'type' => MENU_LOCAL_TASK,
+  );
+
+  $engines = graphapi_get_engines();
+
+  $default = TRUE;
+  $weight = 0;
+  foreach ($engines as $engine => $data) {
+    $items["admin/config/system/graphapi/demo/$engine"] = array(
+      'title' => $data,
+      'page callback' => 'graphapi_demo_page',
+      'page arguments' => array($engine),
+      'access arguments' => array('administer site configuration'),
+      'type' => $default ? MENU_DEFAULT_LOCAL_TASK : MENU_LOCAL_TASK,
+      'weight' => $weight++,
+    );
+    $default = FALSE;
+  }
+  return $items;
+}
+
+function graphapi_demo_page($engine = NULL) {
+  $engines = graphapi_get_engines();
+  if (empty($engines)) {
+    graphapi_no_engines_found();
+    return "";
+  }
+  $engine = empty($engine) ? key($engines) : $engine;
+  return graphapi_demo_engine($engine);
+}
+
+function graphapi_demo_engine($engine) {
+  $engines = graphapi_views_formats();
+  $items = array();
+  $config = graphapi_demo_config();
+  $engine_configs = graphapi_demo_engine_config();
+  $graph = graphapi_demo_graph();
+
+  $title = $engines[$engine];
+  $vars = array(
+    'graph' => $graph,
+    'config' => $config,
+  );
+  if (isset($engine_configs[$engine])) {
+    $vars['config'] += $engine_configs[$engine];
+  }
+  $vars['config']['engine'] = $engine;
+  return '<h3>' . $title . '</h3>' . theme('graphapi_dispatch', $vars);
+}
+
+function graphapi_demo_engine_config() {
+  return array(
+    'thejit_spacetree' => array(
+      'enable_node_info' => TRUE,
+      'node_info_path' => 'graphapi/info/thejit_spacetree/module/',
+    ),
+    'thejit_forcedirected' => array(
+      'enable_node_info' => TRUE,
+      'node_info_path' => 'graphapi/info/thejit_forcedirected/module/',
+    ),
+  );
+}
+
+function graphapi_demo_config() {
+  $config = array(
+    'width' => 400,
+    'height' => 400,
+  );
+  return $config;
+}
+
+function graphapi_demo_graph() {
+  $graph = graphapi_new_graph();
+
+  graphapi_add_link($graph, 'graphapi_demo', 'graphapi');
+  graphapi_add_link($graph, 'graphapi_filters', 'graphapi');
+
+  graphapi_add_link($graph, 'thejit_spacetree', 'thejit');
+  graphapi_add_link($graph, 'thejit_forcedirected', 'thejit');
+
+  graphapi_add_link($graph, 'thejit', 'graphapi');
+
+  graphapi_add_link($graph, 'graphapi', 'views');
+  graphapi_add_link($graph, 'views_ui', 'views');
+
+  graphapi_set_node_content($graph, 'graphapi', _graphapi_demo_module_content('graphapi'));
+  graphapi_set_node_content($graph, 'thejit', _graphapi_demo_module_content('thejit'));
+  graphapi_set_node_content($graph, 'views', _graphapi_demo_module_content('views'));
+  graphapi_set_node_content($graph, 'views_ui', _graphapi_demo_module_content('views_ui', 'views'));
+
+  $sub = _graphapi_demo_subgraph();
+  graphapi_add_sub_graph($graph, 'S', $sub);
+  graphapi_set_node_title($graph, 'S', 'Subgraph if supported');
+  graphapi_add_link($graph, 'graphapi', 'A');
+  graphapi_add_link($graph, 'A', 'S');
+
+  return $graph;
+}
+
+function _graphapi_demo_subgraph() {
+  $graph = graphapi_new_graph();
+
+  graphapi_add_link($graph, 'A', 'B');
+  graphapi_add_link($graph, 'B', 'C');
+  return $graph;
+}
+
+function _graphapi_demo_module_content($id, $project_id = NULL) {
+  $text = '';
+  if (is_null($project_id)) {
+    $text .= "Project: " . $id . '<br/>';
+    $project_id = $id;
+  }
+  else {
+    $text .= "$id is part of project: " . $project_id . '<br/>';
+  }
+  $text .= 'See ' . l("$project_id", 'http://drupal.org/project/' . $project_id) . ' on drupal.org';
+  return $text;
+}

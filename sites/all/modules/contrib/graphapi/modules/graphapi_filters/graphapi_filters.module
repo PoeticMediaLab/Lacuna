@@ -1,0 +1,152 @@
+<?php
+
+function graphapi_filters_filter_info() {
+  $filters['graphapi_filters_tgf'] = array(
+    'title' => t('Allows for Trivial Graph Format'),
+    'description' => t('Allows you to create a Graph using the Trivial Graph Format.'),
+    'process callback' => '_graphapi_filters_tgf_process',
+    'settings callback' => '_graphapi_filters_tgf_settings',
+    'default settings' => array(
+      'engine' => 'graphapi',
+    ),
+    'tips callback' => '_graphapi_filters_tgf_tips',
+  );
+  return $filters;
+}
+
+function _graphapi_filters_tgf_process($text, $filter, $format, $langcode, $cache, $cache_id) {
+  $pos = strpos($text, GraphapiTrivialGraphParser::$TGF);
+  while ($pos !== FALSE) {
+    $engine = $filter->settings['engine'];
+    $p = new GraphapiTrivialGraphParser($text, $pos);
+    if ($p->parse()) {
+      $p->replace($text, $engine);
+    }
+    $pos = strpos($text, GraphapiTrivialGraphParser::$TGF);
+  }
+  return $text;
+}
+
+function _graphapi_filters_tgf_settings($form, &$form_state, $filter, $format, $defaults, $filters) {
+  $filter->settings += $defaults;
+
+  $elements = array();
+  $elements['engine'] = array(
+    '#type' => 'select',
+    '#title' => t('Choose the default engine to use.'),
+    '#default_value' => $filter->settings['engine'],
+    '#options' => graphapi_get_engines(),
+  );
+  return $elements;
+}
+
+function _graphapi_filters_tgf_tips($filter, $format, $long) {
+  if ($long) {
+    return t('With !link you can quickly define simple graphs. Try this where the first and last lines are filter markers:<br/>[tgf<br/>A label<br/>B label<br/>#<br/>A B label<br/>]<br/>Or even with links using an absolute path like: /node/1 or /user/2 for the IDs.', array('!link' => l('Trivial Graph Format', 'http://en.wikipedia.org/wiki/Trivial_Graph_Format')));
+  }
+  else {
+    return t('Renders a Trivial Graph Format to the given engine.');
+  }
+}
+
+class GraphapiTrivialGraphParser {
+
+  static $TGF = '[tgf';
+
+  var $text = NULL;
+  var $start = -1;
+  var $end = -1;
+  var $meta = array();
+  var $graph = NULL;
+
+  function __construct($text, $start) {
+    $this->text = $text;
+    $this->start = $start;
+    $this->end = $start;
+  }
+
+  function parse() {
+    $this->end = strpos($this->text, ']', $this->start);
+    if ($this->start < $this->end) {
+      $lines = substr($this->text, $this->start, $this->end - $this->start);
+      $lines = explode("\n", $lines);
+      // consume first line [tgf ...
+      $meta = array_shift($lines);
+      $this->parseMeta($meta);
+      $graph = graphapi_new_graph();
+      $mode = 'nodes';
+      while ($line = array_shift($lines)) {
+        $line = trim($line);
+        if ($line == '#') {
+          $mode = 'links';
+        }
+        elseif (empty($line)) {
+          // Skip empty lines
+        }
+        else if ($mode == 'nodes') {
+          $items = preg_split('/ /', $line);
+          $id = array_shift($items);
+          $title = trim(join(' ', $items));
+          graphapi_add_node($graph, $id);
+          if ($title) {
+            graphapi_set_node_title($graph, $id, $title);
+          }
+          if (strpos($id, '/') === 0) {
+            // assume an URI
+            graphapi_set_node_uri($graph, $id, $id);
+          }
+        }
+        else if ($mode == 'links') {
+          $items = preg_split('/ /', $line);
+          $from_id = array_shift($items);
+          $to_id = array_shift($items);
+          $title = trim(join(' ', $items));
+          graphapi_add_link($graph, $from_id, $to_id);
+          if ($title) {
+            graphapi_set_link_title($graph, $from_id, $to_id, $title);
+          }
+        }
+      }
+      $this->graph = $graph;
+      return TRUE;
+    }
+    return FALSE;
+  }
+
+  function replace(&$text, $engine) {
+    if ($this->start != $this->end) {
+      $config = array(
+        'engine' => $engine,
+        'inline' => TRUE,
+      );
+      if (!empty($this->meta)) {
+        $config = array_merge($config, $this->meta);
+      }
+      $g = theme('graphapi_dispatch', array('graph' => $this->graph, 'config' => $config));
+      $text = substr($text, 0, $this->start) . $g . substr($text, $this->end + 1);
+    }
+  }
+
+  /**
+   * Process meta line to set engine etc.
+   *
+   * @param string $meta
+   *   Contains '[tgf ...'
+   */
+  function parseMeta($meta) {
+    // TODO: remove ugly escaping
+    $result = array();
+    $meta = preg_replace("/\\" . GraphapiTrivialGraphParser::$TGF . "/", '', $meta, 1);
+    $meta = trim($meta);
+    $metas = preg_split("/ /", $meta);
+    foreach ($metas as $key_value) {
+      if (strpos($key_value, ':') !== FALSE) {
+        list($key, $value) = preg_split('/:/', $key_value);
+        if ($key == 'engine') {
+          $result['engine'] = $value;
+        }
+      }
+    }
+    $this->meta = $result;
+  }
+}

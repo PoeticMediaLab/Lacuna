@@ -1,0 +1,397 @@
+<?php
+/**
+ * @file
+ * D3 module file for creating visualizations with d3.js.
+ *
+ * Sponsored by http://www.freeflowdigital.com
+ */
+
+/**
+ * Implements hook_theme().
+ */
+function d3_theme() {
+
+  foreach (libraries_info() as $path => $library) {
+    // Call this function to get all fields - i.e. library path.
+    $library = libraries_load($path);
+    // If a template was specified in the .info file or hook_libraries_info.
+    if (isset($library['template'])) {
+      // Change d3.[library name] to d3_[library name] for a theme key.
+      $theme_key = str_replace('.', '_', $library['machine name']);
+      $themes[$theme_key] = array(
+        'template' => $library['template'],
+        'path' => $library['library path'],
+      );
+    }
+  }
+
+  $themes['d3'] = array(
+    'variables' => array(),
+    'template' => 'd3',
+  );
+
+  $themes['d3_graphapi'] = array(
+    'variables' => array(
+      'graph' => NULL,
+      'config' => NULL,
+    ),
+  );
+
+  return $themes;
+}
+
+/**
+ * Implements hook_preprocess_d3() for d3.tpl.php.
+ */
+function d3_preprocess_d3(&$variables) {
+
+  // Let drupal_attributes render this.
+  $variables['classes_array'][] = $variables['type'];
+  $variables['attributes_array']['id'] = array($variables['vis_id']);
+
+  $library = isset($variables['library']) ? $variables['library'] : FALSE;
+
+  // Let's look for a template file in the library definition.
+  if (isset($library['template'])) {
+    $variables['theme_hook_suggestion'] = isset($library['library name']) ? $library['library name'] : str_replace('.', '_', $library['machine name']);
+  }
+}
+
+/**
+ * Implements hook_libraries_info_file_paths().
+ */
+function d3_libraries_info_file_paths() {
+
+  // Get all library directories.
+  $libraries = libraries_get_libraries();
+
+  $paths = array();
+  // Output an array of paths to check for.
+  foreach ($libraries as $path) {
+    $paths[] = $path;
+  }
+
+  // Load the directory where the d3 example libraries are.
+  $example_path = drupal_get_path('module', 'd3') . '/libraries/';
+
+  // Add these to the search directories for libraries.
+  foreach (d3_default_libraries() as $example) {
+    $paths[] = $example_path . $example;
+  }
+
+  return $paths;
+}
+
+/**
+ * Implements hook_libraries_info_alter().
+ */
+function d3_libraries_info_alter(&$libraries) {
+  // Automatically add in the d3.drupal dependency so that each
+  // d3.library doesn't have to.
+  foreach (d3_get_libraries() as $library_name => $library) {
+    $libraries[$library_name]['dependencies'][] = 'd3.drupal';
+  }
+  // By default, the libraries module only checks the libraries folders.
+  // We need to add this module's libraries path to the library info.
+  $path = drupal_get_path('module', 'd3') . '/libraries/';
+  foreach (d3_default_libraries() as $library_name) {
+    // Change library path to path/to/module/d3/libraries
+    $libraries[$library_name]['library path'] = $path . $library_name;
+  }
+}
+
+/**
+ * Implements hook_libraries_info().
+ */
+function d3_libraries_info() {
+
+  $libraries = array();
+
+  // Drupal ext adds behaviors and d3 global object.
+  $libraries['d3.drupal'] = array(
+    'name' => 'D3 Drupal ext',
+    'vendor url' => 'http://drupal.org/sandbox/asherry/1477334',
+    'files' => array(
+      'js' => array(
+        'd3.js',
+      ),
+    ),
+    'path' => 'js',
+    'library path' => drupal_get_path('module', 'd3'),
+    'dependencies' => array('d3'),
+    'version' => '1',
+  );
+
+  // Path to library, (if installed).
+  $path = libraries_get_path('d3');
+
+  if ($path) {
+    $files = array();
+    // In the repository the files might me named d3.js and d3.min.js.
+    $files += file_scan_directory($path, '/d3.js|d3.min.js/');
+    // They could also have the version # in the file name.
+    $files += file_scan_directory($path, '/d3.v[0-9](.min)?.js/');
+
+    // If we don't have any files we shouldn't add the library at all.
+    // This will fire drupal error and direct the user to reports.
+    if (count($files) == 0) {
+      return $libraries;
+    }
+
+    // This will be the default file.
+    // @TODO: Add this to d3 settings so you can choose.
+    $file = array_shift($files);
+    $version = 0;
+
+    // If this is a repository, there should be a package file. We can filter
+    // out the version number.
+    $package = file_exists($path . '/package.json') ? file_get_contents($path . '/package.json') : FALSE;
+    if ($package) {
+      preg_match('/\"version\"\:\ \"([0-9\.]*)\"/', $package, $version_matches);
+      if (isset($version_matches[1])) {
+        $version = $version_matches[1];
+      }
+    }
+    // If this is from the zip file, we should be able to get the version
+    // from the actual file itself.
+    if (strpos($file->filename, '.v')) {
+      preg_match('/\.v([0-9])/', $file->filename, $version_matches);
+      if (isset($version_matches[1])) {
+        $version = $version_matches[1];
+      }
+    }
+
+    $libraries['d3'] = array(
+      'name' => 'D3',
+      'vendor url' => 'http://d3js.org/',
+      'download url' => 'http://d3js.org/',
+      'files' => array(
+        'js' => array(
+          $file->filename,
+        ),
+      ),
+      'version' => $version,
+    );
+  }
+
+  return $libraries;
+}
+
+/**
+ * Helper callback to return all sample libraries located inside this module.
+ */
+function d3_default_libraries() {
+  return array(
+    'd3.columnchart',
+    'd3.extend',
+    'd3.forcedirected',
+    'd3.module_dependencies',
+    'd3.linegraph',
+    'd3.tooltip',
+    'd3.barchart',
+    'd3.piechart',
+  );
+}
+
+/**
+ * D3's main API callback.
+ *
+ * @param array $vis
+ *   The chart data
+ *
+ * @return string
+ *   Rendered chart html
+ */
+function d3_draw($vis) {
+
+  // Type is required for correct processing.
+  $type = isset($vis['type']) ? strtolower($vis['type']) : NULL;
+
+  if (!$type) {
+    drupal_set_message(t('No chart type specified'));
+    return '';
+  }
+
+  // Form library name - convention is going to be d3.[library].
+  $library_name = 'd3.' . $type;
+
+  // Check for library instance / definition.
+  if (libraries_detect($library_name)) {
+    $vis['library'] = libraries_load($library_name);
+    $vis['library']['library name'] = str_replace('.', '_', $library_name);
+    // Enforce lowercase change.
+    $vis['type'] = $type;
+    // Store as vis_id because key ['id'] will get overridden.
+    $vis['vis_id'] = $vis['id'];
+
+    // Now add to the behaviors to execute on page load.
+    $js = array(
+      'd3' => array(
+        'inventory' => array($vis['id'] => $vis),
+      ),
+    );
+    drupal_add_js($js, 'setting');
+
+    // Renders the html - .tpl.php if specified or default d3.tpl.php.
+    return theme('d3', $vis);
+
+  }
+  else {
+    drupal_set_message(t('Invalid chart type %type and/or library %library_name is not installed', array(
+      '%type' => $type,
+      '%library_name' => $library_name,
+    )));
+    return '';
+  }
+}
+
+/**
+ * Provides an array of d3 libraries.
+ *
+ * D3 libraries are going to have a prefix of d3., see README.txt
+ * for information on creating a custom d3 library.
+ */
+function d3_get_libraries() {
+
+  static $d3_libraries;
+
+  if ($d3_libraries) {
+    return $d3_libraries;
+  }
+  // Returns all libraries in the default folders.
+  $libraries = libraries_info();
+
+  foreach ($libraries as $library) {
+    $library_name = $library['machine name'];
+    // Filter out any other non-d3 library. All d3 libraries should have
+    // the prefix "d3.".
+    if (strpos($library_name, 'd3.') === FALSE) {
+      continue;
+    }
+    // Do not list these default extension libraries.
+    if (in_array($library_name, array('d3.extend', 'd3.tooltip', 'd3.drupal'))) {
+      continue;
+    }
+
+    $d3_libraries[$library_name] = $library;
+    $d3_libraries[$library_name]['js callback'] = str_replace('d3.', '', $library_name);
+  }
+
+  return $d3_libraries;
+}
+/**
+ * Implements hook_graphapi_formats().
+ */
+function d3_graphapi_formats() {
+  return array(
+    'd3' => t('D3'),
+  );
+}
+
+/**
+ * Implements hook_graphapi_settings_form().
+ */
+function d3_graphapi_settings_form($values) {
+
+  $engine = 'd3';
+  $form[$engine] = array(
+    '#type' => 'fieldset',
+    '#title' => 'D3 settings',
+  );
+
+  $options = array();
+  foreach (d3_get_libraries() as $library) {
+    $options[$library['js callback']] = $library['name'];
+  }
+  $form[$engine]['library'] = array(
+    '#title' => 'Default library',
+    '#description' => t('Use this d3 library as the default to render graphapi visualizations'),
+    '#type' => 'select',
+    '#options' => $options,
+    '#default_value' => $values['library'],
+  );
+
+  return $form;
+
+}
+
+/**
+ * Converts $graph data array two arrays for links and nodes.
+ *
+ * @param array $graph
+ *   Associative array of nodes with link information and data.
+ *
+ * @return array
+ *   Links and nodes.
+ */
+function _d3_graphapi_format_graph_data($graph) {
+  $data = array();
+  $indices = array();
+  $index = 0;
+
+  foreach ($graph as $id => $node) {
+    $indices[$id] = $index;
+    $index++;
+  }
+
+  // Add in edges.
+  foreach ($graph as $id => $node) {
+    $index = $indices[$id];
+    $data['nodes'][$index] = array(
+      'name' => $node['data']['title'],
+      'group' => isset($node['data']['group']) ? $node['data']['group'] : 1,
+      'data' => $node['data'],
+    );
+    if (count($node['edges']) > 0) {
+      foreach ($node['edges'] as $edge => $edge_data) {
+        $value = isset($edge_data['data']['value']) ? (int) $edge_data['data']['value'] : NULL;
+
+        $data['links'][] = array(
+          'data' => isset($edge_data['data']) ? $edge_data['data'] : array(),
+          'source' => $index,
+          'target' => $indices[$edge],
+          // TODO: This is hard coded, it could be dynamic.
+          'value' => $value,
+        );
+      }
+    }
+  }
+
+  return $data;
+}
+
+/**
+ * Displays the visualization for graphapi's selected library.
+ */
+function theme_d3_graphapi($vars) {
+  if (empty($vars['graph'])) {
+    return '';
+  }
+  $default_library = variable_get('d3_graphapi_default_library', 'forcedirected');
+  $library = empty($vars['config']['library']) ? $default_library : $vars['config']['library']; 
+  $graph = _d3_graphapi_format_graph_data($vars['graph']);
+  $chart = array(
+    'id' => $vars['config']['id'],
+    'type' => $library,
+    'links' => $graph['links'],
+    'nodes' => $graph['nodes'],
+    'config' => $vars['config'],
+  );
+  return d3_draw($chart);
+}
+
+/**
+ * Implements hook_graphapi_default_settings().
+ *
+ * We reuse the default settings from thejit_forcedirected_default_settings.
+ *
+ * @see thejit_forcedirected_default_settings()
+ * @see views_object::option_definition()
+ */
+function d3_graphapi_default_settings() {
+  return array(
+    'd3' => array(
+      'library' => array('default' => 'd3.forcedirected'),
+    ),
+  );
+}

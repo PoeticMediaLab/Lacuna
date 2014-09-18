@@ -1,0 +1,15 @@
+name = Pie Chart
+description = D3 example Pie Chart library
+files[js][] = piechart.js
+files[css][] = piechart.css
+version = 0.1
+dependencies[] = d3.extend
+dependencies[] = d3.tooltip
+views = 3.0
+
+; Information added by Drupal.org packaging script on 2014-05-02
+version = "7.x-1.x-dev"
+core = "7.x"
+project = "d3"
+datestamp = "1399059149"
+

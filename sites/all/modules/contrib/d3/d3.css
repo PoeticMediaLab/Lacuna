@@ -1,0 +1,26 @@
+svg {
+  font: 10px sans-serif;
+}
+.rule {
+  shape-rendering: crispEdges;
+}
+.rule text {
+  font-size: 15px;
+}
+.ticks {
+  font-size: 15px;
+}
+path.line {
+  fill: none;
+}
+.y.axis line {
+  stroke: #000000;
+  fill: none;
+}
+.legend text {
+  font-size: 14px;
+}
+circle.node {
+  stroke: #fff;
+  stroke-width: 1.5px;
+}

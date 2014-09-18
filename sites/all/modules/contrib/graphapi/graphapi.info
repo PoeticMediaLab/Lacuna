@@ -1,0 +1,24 @@
+name = Graph API
+description = Allow developer to create graphs
+package = Visualization
+core = 7.x
+
+dependencies[] = views
+
+files[] = graphapi.module
+files[] = js/graphapi.js
+files[] = css/graphapi.css
+
+files[] = views/plugins/views_plugin_style_graphapi.inc
+
+files[] = tests/graphapi.test
+files[] = lib/Graph.class.php
+files[] = lib/DirectedGraph.class.php
+files[] = lib/AcyclicDirectedGraph.class.php
+
+; Information added by Drupal.org packaging script on 2014-01-03
+version = "7.x-1.x-dev"
+core = "7.x"
+project = "graphapi"
+datestamp = "1388755463"
+

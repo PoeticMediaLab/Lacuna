@@ -1,0 +1,252 @@
+<!--
+To change this template, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+  <head>
+    <title></title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.5.2/jquery.min.js" ></script>
+    <script type="text/javascript" src="../js/jquery-graphapi.js" ></script>
+    <script type="text/javascript">
+      jQuery(document).ready(function() {
+        jQuery('.graphapi').graphapi({
+          menu : true,
+          width : 1024,
+          height : 800,
+          backgroundColor : '#333',
+          damping : 0.92,
+          hookesLaw : 0.8,
+          compass : 1.0,
+          rankType : "TopBottom",
+          //rankType : 'BottomTop',
+          rankDepth : 6,
+
+          applyAttractToCenter : false,
+          applyBoundingBox : true,
+          applyCompass : false,
+          applyRank : true,
+
+          boxOverlap : 4.0,
+          hookesLaw : 0.1
+
+        });
+      });
+    </script>
+    <style type="text/css">
+      .graphapi {
+        background-color: lightgray;
+      }
+      .graphapi-nodes > div {
+        border: 1px dashed black;
+      }
+      .stereotype {
+        font-weight: bolder;
+        display: block;
+      }
+      .stereotype:before {
+        content:"<<";
+      }
+      .stereotype:after {
+        content:">>";
+      }
+      .website {
+        padding-top:20px;
+        padding-left:20px;
+        background-image: url(http://www.kletsmee.nl/styles/milky_way_3.07/imageset/wereldbol-link.png);
+        background-repeat: no-repeat;
+      }
+      .website > div {
+        background-color: white;
+      }
+
+      .aegir {
+        padding-top:20px;
+        padding-left:20px;
+        background-repeat: no-repeat;
+        background-image: url('http://community.aegirproject.org/sites/community.aegirproject.org/files/imagecache/designkit-image-logo/logo.png');
+      }
+
+      .aegir > div {
+        background-color: #ddd;
+      }
+      .graphapi {
+        background-color: #333;
+      }
+
+    </style>
+  </head>
+  <body>
+    <div class="graphapi" style="user-select: node; -webkit-user-select:none; -moz-user-select:none;">
+      <edges>
+        <edge color="yellow" from="aegir-user-1" to="aegir-manager-1"></edge>
+        <edge color="yellow" from="aegir-user-1" to="aegir-manager-2"></edge>
+
+        <edge color="orange" from="aegir-manager-1" to="aegir-client-1"></edge>
+        <edge color="orange" from="aegir-manager-2" to="aegir-client-1"></edge>
+        <edge color="yellow" from="aegir-manager-2" to="aegir-client-2"></edge>
+        <edge color="yellow" from="aegir-manager-1" to="aegir-client-3"></edge>
+        <edge color="yellow" from="aegir-manager-2" to="aegir-client-3"></edge>
+        <edge color="yellow" from="aegir-manager-1" to="aegir-client-4"></edge>
+
+        <edge color="green" from="aegir-client-1" to="aegir-site-1"></edge>
+        <edge color="green" from="aegir-client-2" to="aegir-site-2"></edge>
+        <edge color="green" from="aegir-client-3" to="aegir-site-3"></edge>
+        <edge color="green" from="aegir-client-3" to="aegir-site-4"></edge>
+        <edge color="green" from="aegir-client-4" to="aegir-site-5"></edge>
+        <edge color="green" from="aegir-client-4" to="aegir-site-6"></edge>
+
+        <edge color="red" from="aegir-site-1" to="client-site-1"></edge>
+        <edge color="red" from="aegir-site-2" to="client-site-2"></edge>
+        <edge color="red" from="aegir-site-3" to="client-site-3"></edge>
+        <edge color="red" from="aegir-site-4" to="client-site-4"></edge>
+        <edge color="red" from="aegir-site-5" to="client-site-5"></edge>
+        <edge color="red" from="aegir-site-6" to="client-site-6"></edge>
+        <edge color="red" from="aegir-site-7" to="client-site-7"></edge>
+        <edge color="red" from="aegir-site-8" to="client-site-8"></edge>
+      </edges>
+
+      <div class="graphapi-nodes">
+        <div id="aegir-user-1" class="aegir" rank="1">
+          <div class="graphapi-title">
+            <span class="stereotype">user-1</span>
+            <span>Aegir admin user</span>
+          </div>
+        </div>
+        <div id="aegir-manager-1" class="aegir" rank="2">
+          <div class="graphapi-title">
+            <span class="stereotype">manager</span>
+            <span>Manager 1</span>
+          </div>
+        </div>
+        <div id="aegir-manager-2" class="aegir" rank="2">
+          <div class="graphapi-title">
+            <span class="stereotype">manager</span>
+            <span>Manager 2</span>
+          </div>
+        </div>
+        <div id="aegir-client-1" class="aegir" rank="3">
+          <div class="graphapi-title">
+            <span class="stereotype">client</span>
+            <span>Client 1</span>
+          </div>
+        </div>
+        <div id="aegir-client-2" class="aegir" rank="3">
+          <div class="graphapi-title">
+            <span class="stereotype">client</span>
+            <span>Client 2</span>
+          </div>
+        </div>
+        <div id="aegir-client-3" class="aegir" rank="3">
+          <div class="graphapi-title">
+            <span class="stereotype">client</span>
+            <span>Client 3</span>
+          </div>
+        </div>
+        <div id="aegir-client-4" class="aegir" rank="3">
+          <div class="graphapi-title">
+            <span class="stereotype">client</span>
+            <span>Client 4</span>
+          </div>
+        </div>
+        <div id="aegir-site-1" class="aegir" rank="4">
+          <div class="graphapi-title">
+            <span class="stereotype">site-node</span>
+            <span>Site 1</span>
+          </div>
+        </div>
+        <div id="aegir-site-2" class="aegir" rank="4">
+          <div class="graphapi-title">
+            <span class="stereotype">site-node</span>
+            <span>Site 2</span>
+          </div>
+        </div>
+        <div id="aegir-site-3" class="aegir" rank="4">
+          <div class="graphapi-title">
+            <span class="stereotype">site-node</span>
+            <span>Site 3</span>
+          </div>
+        </div>
+        <div id="aegir-site-4" class="aegir" rank="4">
+          <div class="graphapi-title">
+            <span class="stereotype">site-node</span>
+            <span>Site 4</span>
+          </div>
+        </div>
+        <div id="aegir-site-5" class="aegir" rank="4">
+          <div class="graphapi-title">
+            <span class="stereotype">site-node</span>
+            <span>site 5</span>
+          </div>
+        </div>
+        <div id="aegir-site-6" class="aegir" rank="4">
+          <div class="graphapi-title">
+            <span class="stereotype">site-node</span>
+            <span>site 6</span>
+          </div>
+        </div>
+        <div id="aegir-site-7" class="aegir" rank="4">
+          <div class="graphapi-title">
+            <span class="stereotype">site-node</span>
+            <span>site 7</span>
+          </div>
+        </div>
+        <div id="aegir-site-8" class="aegir" rank="4">
+          <div class="graphapi-title">
+            <span class="stereotype">site-node</span>
+            <span>site 8</span>
+          </div>
+        </div>
+        <div id="client-site-1" class="website" rank="5">
+          <div class="graphapi-title">
+            <span class="stereotype">site</span>
+            <span>Site 1</span>
+          </div>
+        </div>
+        <div id="client-site-2" class="website" rank="5">
+          <div class="graphapi-title">
+            <span class="stereotype">site</span>
+            <span>Site 2</span>
+          </div>
+        </div>
+        <div id="client-site-3" class="website" rank="5">
+          <div class="graphapi-title">
+            <span class="stereotype">site</span>
+            <span>Site 3</span>
+          </div>
+        </div>
+        <div id="client-site-4" class="website" rank="5">
+          <div class="graphapi-title">
+            <span class="stereotype">site</span>
+            <span>Site 4</span>
+          </div>
+        </div>
+        <div id="client-site-5" class="website" rank="5">
+          <div class="graphapi-title">
+            <span class="stereotype">site</span>
+            <span>site 5</span>
+          </div>
+        </div>
+        <div id="client-site-6" class="website" rank="5">
+          <div class="graphapi-title">
+            <span class="stereotype">site</span>
+            <span>site 6</span>
+          </div>
+        </div>
+        <div id="client-site-7" class="website" rank="5">
+          <div class="graphapi-title">
+            <span class="stereotype">site</span>
+            <span>site 7</span>
+          </div>
+        </div>
+        <div id="client-site-8" class="website" rank="5">
+          <div class="graphapi-title">
+            <span class="stereotype">site</span>
+            <span>site 8</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
