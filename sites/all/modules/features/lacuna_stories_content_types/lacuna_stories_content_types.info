@@ -191,4 +191,6 @@ features[taxonomy][] = priority
 features[taxonomy][] = tags
 features[taxonomy][] = topics
 features[taxonomy][] = unit
+features[wysiwyg][] = full_html
 features_exclude[field_instance][node-webform-body] = node-webform-body
+features_exclude[dependencies][wysiwyg] = wysiwyg

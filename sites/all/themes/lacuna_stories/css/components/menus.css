@@ -12,46 +12,50 @@ ul.sf-main-menu {
 
 /* Superfish dropdown menu rules */
 /* line 17, ../../sass/components/menus.scss */
+.sf-menu li.sf-no-children {
+  display: none;
+}
+/* line 20, ../../sass/components/menus.scss */
 .sf-menu li.menuparent {
   background-color: transparent;
 }
-/* line 19, ../../sass/components/menus.scss */
+/* line 22, ../../sass/components/menus.scss */
 .sf-menu li.menuparent a {
   border: none;
   background-color: transparent !important;
 }
-/* line 24, ../../sass/components/menus.scss */
+/* line 27, ../../sass/components/menus.scss */
 .sf-menu li.menuparent ul li {
   background-color: white;
   border: 1px solid gray;
   border-bottom: 0px;
 }
-/* line 29, ../../sass/components/menus.scss */
+/* line 32, ../../sass/components/menus.scss */
 .sf-menu li.menuparent ul li.firstandlast, .sf-menu li.menuparent ul li.last {
   border-bottom: 1px solid gray;
 }
-/* line 32, ../../sass/components/menus.scss */
+/* line 35, ../../sass/components/menus.scss */
 .sf-menu li.menuparent ul li.active-trail {
   background-color: rgba(0, 200, 0, 0.1) !important;
 }
 
-/* line 47, ../../sass/components/menus.scss */
+/* line 50, ../../sass/components/menus.scss */
 .sf-depth-2 {
   width: 80% !important;
 }
 
-/* line 51, ../../sass/components/menus.scss */
+/* line 54, ../../sass/components/menus.scss */
 a.nolink {
   text-decoration: none;
   color: black;
 }
 
-/* line 56, ../../sass/components/menus.scss */
+/* line 59, ../../sass/components/menus.scss */
 ul.menu {
   list-style-type: none;
 }
 
-/* line 60, ../../sass/components/menus.scss */
+/* line 63, ../../sass/components/menus.scss */
 ul.menu li.menuparent {
   list-style-type: none;
   list-style-image: none;
@@ -59,28 +63,28 @@ ul.menu li.menuparent {
   font-size: 14pt;
 }
 
-/* line 67, ../../sass/components/menus.scss */
+/* line 70, ../../sass/components/menus.scss */
 ul.menu li:hover {
   cursor: pointer;
 }
 
-/* line 71, ../../sass/components/menus.scss */
+/* line 74, ../../sass/components/menus.scss */
 ul.menu li a {
   text-decoration: none;
 }
 
-/* line 75, ../../sass/components/menus.scss */
+/* line 78, ../../sass/components/menus.scss */
 ul.tabs.primary {
   margin-bottom: 20px;
   overflow: hidden;
 }
 
-/* line 80, ../../sass/components/menus.scss */
+/* line 83, ../../sass/components/menus.scss */
 ul.tabs.primary li {
   float: left;
 }
 
-/* line 84, ../../sass/components/menus.scss */
+/* line 87, ../../sass/components/menus.scss */
 ul.tabs.primary a {
   padding: 5px 10px;
   border-radius: 5px 5px 0px 0px;
@@ -92,7 +96,7 @@ ul.tabs.primary a {
   border-bottom-color: transparent;
 }
 
-/* line 95, ../../sass/components/menus.scss */
+/* line 98, ../../sass/components/menus.scss */
 ul.tabs.primary a.active, ul.tabs.primary a:hover {
   background-color: whitesmoke;
 }

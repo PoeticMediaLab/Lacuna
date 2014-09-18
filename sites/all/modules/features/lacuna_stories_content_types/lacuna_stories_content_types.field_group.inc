@@ -88,11 +88,12 @@ function lacuna_stories_content_types_field_group_info() {
     ),
     'format_type' => 'fieldset',
     'format_settings' => array(
-      'formatter' => 'collapsible',
+      'label' => 'About',
       'instance_settings' => array(
-        'description' => '',
         'classes' => 'group-about field-group-fieldset',
+        'description' => '',
       ),
+      'formatter' => 'collapsed',
     ),
   );
   $export['group_about|node|document|default'] = $field_group;
@@ -262,11 +263,12 @@ function lacuna_stories_content_types_field_group_info() {
     ),
     'format_type' => 'fieldset',
     'format_settings' => array(
-      'formatter' => 'collapsible',
+      'label' => 'About',
       'instance_settings' => array(
-        'description' => '',
         'classes' => 'group-about field-group-fieldset',
+        'description' => '',
       ),
+      'formatter' => 'collapsed',
     ),
   );
   $export['group_about|node|video|default'] = $field_group;
@@ -496,11 +498,12 @@ function lacuna_stories_content_types_field_group_info() {
     ),
     'format_type' => 'fieldset',
     'format_settings' => array(
-      'formatter' => 'collapsible',
+      'label' => 'Syllabus',
       'instance_settings' => array(
-        'description' => '',
         'classes' => 'group-syllabus field-group-fieldset',
+        'description' => '',
       ),
+      'formatter' => 'collapsed',
     ),
   );
   $export['group_syllabus|node|document|default'] = $field_group;
@@ -661,11 +664,12 @@ function lacuna_stories_content_types_field_group_info() {
     ),
     'format_type' => 'fieldset',
     'format_settings' => array(
-      'formatter' => 'collapsible',
+      'label' => 'Syllabus',
       'instance_settings' => array(
-        'description' => '',
         'classes' => 'group-syllabus field-group-fieldset',
+        'description' => '',
       ),
+      'formatter' => 'collapsed',
     ),
   );
   $export['group_syllabus|node|video|default'] = $field_group;

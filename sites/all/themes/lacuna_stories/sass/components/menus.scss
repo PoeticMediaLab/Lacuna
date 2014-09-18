@@ -14,6 +14,9 @@ ul.sf-main-menu {
 
 /* Superfish dropdown menu rules */
 .sf-menu {
+  li.sf-no-children {
+    display: none;
+  }
   li.menuparent {
     background-color: $menu-color;
     a {
