@@ -83,7 +83,8 @@ div.views-row-last span.views-field-field-image div.topic_image {
   min-width: 150px;
 }
 
-/* line 78, ../../sass/components/views.scss */
+/* View-specific theming, for Materials, Responses, Threads */
+/* line 80, ../../sass/components/views.scss */
 .view-documents .views-submit-button,
 .view-documents .views-widget-sort-order,
 .view-responses .views-submit-button,
@@ -92,39 +93,34 @@ div.views-row-last span.views-field-field-image div.topic_image {
 .view-my-threads .views-widget-sort-order {
   display: none;
 }
-
-/* line 83, ../../sass/components/views.scss */
+/* line 84, ../../sass/components/views.scss */
 .view-documents .views-widget-sort-by .form-type-bef-link,
 .view-responses .views-widget-sort-by .form-type-bef-link,
 .view-my-threads .views-widget-sort-by .form-type-bef-link {
   float: left;
   margin: 0 10px 0 15px;
 }
-
-/* line 89, ../../sass/components/views.scss */
+/* line 87, ../../sass/components/views.scss */
 .view-documents .views-widget-sort-by .form-type-bef-link a,
 .view-responses .views-widget-sort-by .form-type-bef-link a,
 .view-my-threads .views-widget-sort-by .form-type-bef-link a {
-  color: #808080;
+  color: gray;
   font-weight: bold;
   font-size: 15px;
 }
-
-/* line 96, ../../sass/components/views.scss */
+/* line 92, ../../sass/components/views.scss */
 .view-documents .views-widget-sort-by .form-type-bef-link a:hover,
 .view-responses .views-widget-sort-by .form-type-bef-link a:hover,
 .view-my-threads .views-widget-sort-by .form-type-bef-link a:hover {
-  color: #1588BA;
+  color: #1588ba;
 }
-
-/* line 101, ../../sass/components/views.scss */
+/* line 96, ../../sass/components/views.scss */
 .view-documents .views-widget-sort-by .form-type-bef-link.selected a,
 .view-responses .views-widget-sort-by .form-type-bef-link.selected a,
 .view-my-threads .views-widget-sort-by .form-type-bef-link.selected a {
-  color: #1588BA;
+  color: #1588ba;
 }
-
-/* line 107, ../../sass/components/views.scss */
+/* line 100, ../../sass/components/views.scss */
 .view-documents img,
 .view-responses img,
 .view-my-threads img {
@@ -134,8 +130,7 @@ div.views-row-last span.views-field-field-image div.topic_image {
   max-height: 100%;
   box-shadow: 0px 0px 10px #888888;
 }
-
-/* line 117, ../../sass/components/views.scss */
+/* line 107, ../../sass/components/views.scss */
 .view-documents .views-row,
 .view-responses .views-row,
 .view-my-threads .views-row {
@@ -144,15 +139,13 @@ div.views-row-last span.views-field-field-image div.topic_image {
   margin: 20px;
   height: 350px;
 }
-
-/* line 126, ../../sass/components/views.scss */
+/* line 113, ../../sass/components/views.scss */
 .view-documents .views-exposed-widget,
 .view-responses .views-exposed-widget,
 .view-my-threads .views-exposed-widget {
   margin-top: 0px;
 }
-
-/* line 134, ../../sass/components/views.scss */
+/* line 117, ../../sass/components/views.scss */
 .view-documents .views-exposed-widget > label,
 .view-documents .form-item-sort-by > label,
 .view-responses .views-exposed-widget > label,
@@ -162,15 +155,13 @@ div.views-row-last span.views-field-field-image div.topic_image {
   float: left;
   margin-right: 10px;
 }
-
-/* line 140, ../../sass/components/views.scss */
+/* line 121, ../../sass/components/views.scss */
 .view-documents .views-widget,
 .view-responses .views-widget,
 .view-my-threads .views-widget {
   display: inline;
 }
-
-/* line 145, ../../sass/components/views.scss */
+/* line 124, ../../sass/components/views.scss */
 .view-documents .form-type-bef-checkbox,
 .view-responses .form-type-bef-checkbox,
 .view-my-threads .form-type-bef-checkbox {
@@ -180,7 +171,7 @@ div.views-row-last span.views-field-field-image div.topic_image {
   color: grey;
 }
 
-/* line 152, ../../sass/components/views.scss */
+/* line 132, ../../sass/components/views.scss */
 table.views-table {
   width: 100%;
 }
