@@ -338,21 +338,6 @@ function lacuna_stories_views_views_default_views() {
   $handler->display->display_options['filters']['field_doc_genre_tid']['id'] = 'field_doc_genre_tid';
   $handler->display->display_options['filters']['field_doc_genre_tid']['table'] = 'field_data_field_doc_genre';
   $handler->display->display_options['filters']['field_doc_genre_tid']['field'] = 'field_doc_genre_tid';
-  $handler->display->display_options['filters']['field_doc_genre_tid']['value'] = array(
-    20 => '20',
-    12 => '12',
-    10 => '10',
-    19 => '19',
-    9 => '9',
-    21 => '21',
-    7 => '7',
-    22 => '22',
-    23 => '23',
-    13 => '13',
-    11 => '11',
-    24 => '24',
-    8 => '8',
-  );
   $handler->display->display_options['filters']['field_doc_genre_tid']['group'] = 1;
   $handler->display->display_options['filters']['field_doc_genre_tid']['exposed'] = TRUE;
   $handler->display->display_options['filters']['field_doc_genre_tid']['expose']['operator_id'] = 'field_doc_genre_tid_op';
@@ -363,12 +348,12 @@ function lacuna_stories_views_views_default_views() {
   $handler->display->display_options['filters']['field_doc_genre_tid']['expose']['multiple'] = TRUE;
   $handler->display->display_options['filters']['field_doc_genre_tid']['expose']['remember_roles'] = array(
     2 => '2',
-    1 => '1',
-    3 => '3',
-    4 => '4',
+    1 => 0,
+    3 => 0,
+    4 => 0,
     5 => 0,
+    6 => 0,
   );
-  $handler->display->display_options['filters']['field_doc_genre_tid']['expose']['reduce'] = TRUE;
   $handler->display->display_options['filters']['field_doc_genre_tid']['reduce_duplicates'] = TRUE;
   $handler->display->display_options['filters']['field_doc_genre_tid']['type'] = 'select';
   $handler->display->display_options['filters']['field_doc_genre_tid']['vocabulary'] = 'genre_doc';
