@@ -1909,7 +1909,7 @@ tr.selected td {
 }
 /* line 44, ../sass/components/menus.scss */
 .sf-menu li.menuparent ul li.active-trail {
-  background-color: rgba(0, 200, 0, 0.1) !important;
+  background-color: #eeeeee !important;
 }
 
 /* line 54, ../sass/components/menus.scss */
@@ -2141,7 +2141,14 @@ div.views-row-last span.views-field-field-image div.topic_image {
 .view-sewing-kit .views-widget {
   display: inline;
 }
-/* line 125, ../sass/components/views.scss */
+/* line 124, ../sass/components/views.scss */
+.view-documents .views-widget input[name=field_tags_tid],
+.view-responses .views-widget input[name=field_tags_tid],
+.view-my-threads .views-widget input[name=field_tags_tid],
+.view-sewing-kit .views-widget input[name=field_tags_tid] {
+  width: 150px;
+}
+/* line 128, ../sass/components/views.scss */
 .view-documents .form-type-bef-checkbox,
 .view-responses .form-type-bef-checkbox,
 .view-my-threads .form-type-bef-checkbox,
@@ -2152,7 +2159,7 @@ div.views-row-last span.views-field-field-image div.topic_image {
   color: grey;
 }
 
-/* line 133, ../sass/components/views.scss */
+/* line 136, ../sass/components/views.scss */
 table.views-table {
   width: 100%;
 }

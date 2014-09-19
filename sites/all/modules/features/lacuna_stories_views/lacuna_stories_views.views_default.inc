@@ -1686,7 +1686,6 @@ function lacuna_stories_views_views_default_views() {
     6 => 0,
   );
   $handler->display->display_options['filters']['field_tags_tid']['reduce_duplicates'] = TRUE;
-  $handler->display->display_options['filters']['field_tags_tid']['type'] = 'select';
   $handler->display->display_options['filters']['field_tags_tid']['vocabulary'] = 'tags';
   $handler->display->display_options['filters']['field_tags_tid']['error_message'] = FALSE;
 

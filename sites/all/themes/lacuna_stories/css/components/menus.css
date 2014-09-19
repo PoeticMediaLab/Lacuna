@@ -43,7 +43,7 @@
 }
 /* line 44, ../../sass/components/menus.scss */
 .sf-menu li.menuparent ul li.active-trail {
-  background-color: rgba(0, 200, 0, 0.1) !important;
+  background-color: #eeeeee !important;
 }
 
 /* line 54, ../../sass/components/menus.scss */
