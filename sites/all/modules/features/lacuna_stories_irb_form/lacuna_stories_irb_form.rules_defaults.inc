@@ -13,20 +13,23 @@ function lacuna_stories_irb_form_default_rules_configuration() {
       "LABEL" : "Require IRB Form Completion",
       "PLUGIN" : "reaction rule",
       "OWNER" : "rules",
-      "REQUIRES" : [ "flag", "rules" ],
+      "REQUIRES" : [ "rules", "flag" ],
       "ON" : { "user_login" : [] },
       "IF" : [
-        { "NOT flag_flagged_user" : {
-            "flag" : "irb_form_completed",
-            "user" : [ "account" ],
-            "flagging_user" : [ "account" ]
-          }
-        },
-        { "NOT text_matches" : {
-            "text" : [ "site:current-page:path" ],
-            "match" : "^user\\/reset\\/",
-            "operation" : "regex"
-          }
+        { "AND" : [
+            { "NOT text_matches" : {
+                "text" : [ "site:current-page:path" ],
+                "match" : "^user\\/reset\\/",
+                "operation" : "regex"
+              }
+            },
+            { "NOT flag_flagged_user" : {
+                "flag" : "irb_form_completed",
+                "user" : [ "account" ],
+                "flagging_user" : [ "account" ]
+              }
+            }
+          ]
         }
       ],
       "DO" : [ { "redirect" : { "url" : "content\\/digital-research-consent-form" } } ]

@@ -1,8 +1,13 @@
 /* line 5, ../../sass/components/menus.scss */
 #block-superfish-1 {
-  top: -80px;
   float: right;
   padding-right: 50px;
+}
+
+/* line 10, ../../sass/components/menus.scss */
+.sf-main-menu {
+  padding-bottom: 100px;
+  margin-top: -80px;
 }
 
 /* Superfish dropdown menu rules */

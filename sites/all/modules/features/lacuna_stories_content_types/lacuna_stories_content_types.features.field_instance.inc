@@ -843,7 +843,7 @@ function lacuna_stories_content_types_field_default_field_instances() {
     'bundle' => 'blog',
     'default_value' => NULL,
     'deleted' => 0,
-    'description' => 'Include the titles of any relevant works in the course bibliography',
+    'description' => 'Start typing the name of materials on Lacuna Stories here, and they will autofill. Add everything that gets referenced or mentioned in your post. By using this feature, your writing will be linked with other materials on the site, and the networked thinking you do will be represented in the site\'s visualizations.',
     'display' => array(
       'default' => array(
         'label' => 'above',
@@ -3269,7 +3269,6 @@ function lacuna_stories_content_types_field_default_field_instances() {
   t('Hover Abstract');
   t('If there is a PDF or other file version of this document, attach it here.');
   t('Image');
-  t('Include the titles of any relevant works in the course bibliography');
   t('Major/Degree');
   t('Media');
   t('Page Numbers');
@@ -3279,6 +3278,7 @@ function lacuna_stories_content_types_field_default_field_instances() {
   t('Quote');
   t('Ranges');
   t('References to the content stitched together');
+  t('Start typing the name of materials on Lacuna Stories here, and they will autofill. Add everything that gets referenced or mentioned in your post. By using this feature, your writing will be linked with other materials on the site, and the networked thinking you do will be represented in the site\'s visualizations.');
   t('Status');
   t('Stitchings');
   t('Tags');

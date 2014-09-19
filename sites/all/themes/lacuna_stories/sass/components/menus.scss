@@ -3,13 +3,13 @@ $tabs-color: rgb(245,245,245);
 $menu-active-color: #eee;
 
 #block-superfish-1 {
-  top: -80px;
   float: right;
   padding-right: 50px;
 }
 
 .sf-main-menu {
-
+  padding-bottom: 100px;
+  margin-top: -80px;
 }
 
 /* Superfish dropdown menu rules */

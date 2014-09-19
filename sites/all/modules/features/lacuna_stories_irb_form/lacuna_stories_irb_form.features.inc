@@ -34,11 +34,11 @@ function lacuna_stories_irb_form_flag_default_flags() {
     'show_contextual_link' => 0,
     'show_on_profile' => 0,
     'access_uid' => 'others',
-    'api_version' => 3,
     'module' => 'lacuna_stories_irb_form',
     'locked' => array(
       0 => 'name',
     ),
+    'api_version' => 3,
   );
   return $flags;
 
