@@ -4,6 +4,7 @@
 
 #annotation-filters {
     position: fixed;
+    width: 200px;
 }
 
 .annotation-filters-hide-annotation {
