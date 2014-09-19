@@ -1931,7 +1931,7 @@ function lacuna_stories_views_views_default_views() {
   $handler->display->display_options['fields']['field_image']['field'] = 'field_image';
   $handler->display->display_options['fields']['field_image']['label'] = '';
   $handler->display->display_options['fields']['field_image']['alter']['make_link'] = TRUE;
-  $handler->display->display_options['fields']['field_image']['alter']['path'] = 'materials?field_themes_tid[]=[tid]';
+  $handler->display->display_options['fields']['field_image']['alter']['path'] = 'materials?field_topics_tid[]=[tid]';
   $handler->display->display_options['fields']['field_image']['element_type'] = 'div';
   $handler->display->display_options['fields']['field_image']['element_class'] = 'topic_image';
   $handler->display->display_options['fields']['field_image']['element_label_colon'] = FALSE;
