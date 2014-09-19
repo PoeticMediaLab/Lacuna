@@ -1354,6 +1354,16 @@ function lacuna_stories_permissions_user_default_permissions() {
     'module' => 'taxonomy',
   );
 
+  // Exported permission: 'delete terms in priority'.
+  $permissions['delete terms in priority'] = array(
+    'name' => 'delete terms in priority',
+    'roles' => array(
+      'Content Manager' => 'Content Manager',
+      'administrator' => 'administrator',
+    ),
+    'module' => 'taxonomy',
+  );
+
   // Exported permission: 'delete terms in tags'.
   $permissions['delete terms in tags'] = array(
     'name' => 'delete terms in tags',
@@ -1367,6 +1377,16 @@ function lacuna_stories_permissions_user_default_permissions() {
   // Exported permission: 'delete terms in topics'.
   $permissions['delete terms in topics'] = array(
     'name' => 'delete terms in topics',
+    'roles' => array(
+      'Content Manager' => 'Content Manager',
+      'administrator' => 'administrator',
+    ),
+    'module' => 'taxonomy',
+  );
+
+  // Exported permission: 'delete terms in unit'.
+  $permissions['delete terms in unit'] = array(
+    'name' => 'delete terms in unit',
     'roles' => array(
       'Content Manager' => 'Content Manager',
       'administrator' => 'administrator',
@@ -1984,6 +2004,16 @@ function lacuna_stories_permissions_user_default_permissions() {
     'module' => 'taxonomy',
   );
 
+  // Exported permission: 'edit terms in priority'.
+  $permissions['edit terms in priority'] = array(
+    'name' => 'edit terms in priority',
+    'roles' => array(
+      'Content Manager' => 'Content Manager',
+      'administrator' => 'administrator',
+    ),
+    'module' => 'taxonomy',
+  );
+
   // Exported permission: 'edit terms in tags'.
   $permissions['edit terms in tags'] = array(
     'name' => 'edit terms in tags',
@@ -2002,6 +2032,16 @@ function lacuna_stories_permissions_user_default_permissions() {
     'roles' => array(
       'Content Manager' => 'Content Manager',
       'Instructor' => 'Instructor',
+      'administrator' => 'administrator',
+    ),
+    'module' => 'taxonomy',
+  );
+
+  // Exported permission: 'edit terms in unit'.
+  $permissions['edit terms in unit'] = array(
+    'name' => 'edit terms in unit',
+    'roles' => array(
+      'Content Manager' => 'Content Manager',
       'administrator' => 'administrator',
     ),
     'module' => 'taxonomy',
@@ -2116,6 +2156,24 @@ function lacuna_stories_permissions_user_default_permissions() {
       'administrator' => 'administrator',
     ),
     'module' => 'comment',
+  );
+
+  // Exported permission: 'publish any content'.
+  $permissions['publish any content'] = array(
+    'name' => 'publish any content',
+    'roles' => array(
+      'administrator' => 'administrator',
+    ),
+    'module' => 'publishcontent',
+  );
+
+  // Exported permission: 'publish editable content'.
+  $permissions['publish editable content'] = array(
+    'name' => 'publish editable content',
+    'roles' => array(
+      'administrator' => 'administrator',
+    ),
+    'module' => 'publishcontent',
   );
 
   // Exported permission: 'rename features'.
@@ -2270,6 +2328,24 @@ function lacuna_stories_permissions_user_default_permissions() {
       'administrator' => 'administrator',
     ),
     'module' => 'devel',
+  );
+
+  // Exported permission: 'unpublish any content'.
+  $permissions['unpublish any content'] = array(
+    'name' => 'unpublish any content',
+    'roles' => array(
+      'administrator' => 'administrator',
+    ),
+    'module' => 'publishcontent',
+  );
+
+  // Exported permission: 'unpublish editable content'.
+  $permissions['unpublish editable content'] = array(
+    'name' => 'unpublish editable content',
+    'roles' => array(
+      'administrator' => 'administrator',
+    ),
+    'module' => 'publishcontent',
   );
 
   // Exported permission: 'use PHP for settings'.

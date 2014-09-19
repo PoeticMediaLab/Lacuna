@@ -124,6 +124,8 @@ class Annotator.Plugin.Filters extends Annotator.Plugin
       @removeFilter 'user'
     else if buttonType == 'remove-filters'
       @removeAllFilters()
+    else if buttonType == 'hide-all'
+      @hideAllAnnotations()
 
   hideFilteredAnnotations: ->
     for annotationID of @data.annotations
@@ -198,6 +200,7 @@ class Annotator.Plugin.Filters extends Annotator.Plugin
     sidebar.append('<h2>Annotation Filters</h2>')
     @makeButton 'own-annotations', 'My Annotations'
     @makeButton 'all-annotations', "Everyone's Annotations"
+    @makeButton 'hide-all', 'Hide All Annotations'
     @makeButton 'remove-filters', 'Remove All Filters'
     for filter, values of @data.filterValues
       inputHTML = "<label>#{filter}: </label><input name='#{filter}' class='#{@options.class.input}' />"

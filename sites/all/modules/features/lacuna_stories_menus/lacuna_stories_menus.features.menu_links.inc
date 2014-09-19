@@ -360,17 +360,17 @@ function lacuna_stories_menus_menu_default_menu_links() {
     'customized' => 1,
     'parent_identifier' => 'main-menu_explore:<nolink>',
   );
-  // Exported menu link: main-menu_write-a-response:node/add
-  $menu_links['main-menu_write-a-response:node/add'] = array(
+  // Exported menu link: main-menu_write-a-response:node/add/blog
+  $menu_links['main-menu_write-a-response:node/add/blog'] = array(
     'menu_name' => 'main-menu',
-    'link_path' => 'node/add',
-    'router_path' => 'node/add',
+    'link_path' => 'node/add/blog',
+    'router_path' => 'node/add/blog',
     'link_title' => 'Write a Response',
     'options' => array(
       'attributes' => array(
         'title' => '',
       ),
-      'identifier' => 'main-menu_write-a-response:node/add',
+      'identifier' => 'main-menu_write-a-response:node/add/blog',
     ),
     'module' => 'menu',
     'hidden' => 0,
