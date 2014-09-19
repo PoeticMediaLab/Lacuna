@@ -830,7 +830,7 @@ function lacuna_stories_content_types_field_default_field_instances() {
       'active' => 1,
       'module' => 'text',
       'settings' => array(
-        'rows' => 20,
+        'rows' => 30,
         'summary_rows' => 5,
       ),
       'type' => 'text_textarea_with_summary',
@@ -922,7 +922,7 @@ function lacuna_stories_content_types_field_default_field_instances() {
   $field_instances['node-blog-field_image'] = array(
     'bundle' => 'blog',
     'deleted' => 0,
-    'description' => 'Choose an icon to represent this blog post when browsing.',
+    'description' => 'Choose an icon to represent this blog post when browsing. All browsing icons on Lacuna Stories are portrait dimensions, so please try to choose this proportion of image or crop it yourself before uploading. If you upload a landscape image, it will likely become skewed in the automated cropping. Also make sure your image is larger than 220 pixels wide and 320 pixels tall. If not, you can change that in programs like Mac Preview by selecting TOOLS --> ADJUST SIZE and increase the pixels.',
     'display' => array(
       'default' => array(
         'label' => 'above',
@@ -948,7 +948,7 @@ function lacuna_stories_content_types_field_default_field_instances() {
       'file_extensions' => 'png gif jpg jpeg',
       'max_filesize' => '',
       'max_resolution' => '',
-      'min_resolution' => '320x220',
+      'min_resolution' => '220x320',
       'title_field' => 0,
       'user_register_form' => FALSE,
     ),
@@ -2876,6 +2876,50 @@ function lacuna_stories_content_types_field_default_field_instances() {
     ),
   );
 
+  // Exported field_instance: 'node-webform-body'
+  $field_instances['node-webform-body'] = array(
+    'bundle' => 'webform',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'hidden',
+        'module' => 'text',
+        'settings' => array(),
+        'type' => 'text_default',
+        'weight' => 0,
+      ),
+      'teaser' => array(
+        'label' => 'hidden',
+        'module' => 'text',
+        'settings' => array(
+          'trim_length' => 600,
+        ),
+        'type' => 'text_summary_or_trimmed',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'body',
+    'label' => 'Body',
+    'required' => FALSE,
+    'settings' => array(
+      'display_summary' => TRUE,
+      'text_processing' => 1,
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'module' => 'text',
+      'settings' => array(
+        'rows' => 20,
+        'summary_rows' => 5,
+      ),
+      'type' => 'text_textarea_with_summary',
+      'weight' => 31,
+    ),
+  );
+
   // Exported field_instance: 'taxonomy_term-topics-field_image'
   $field_instances['taxonomy_term-topics-field_image'] = array(
     'bundle' => 'topics',
@@ -3206,7 +3250,7 @@ function lacuna_stories_content_types_field_default_field_instances() {
   t('Body');
   t('Category');
   t('Choose a cover image for this video.');
-  t('Choose an icon to represent this blog post when browsing.');
+  t('Choose an icon to represent this blog post when browsing. All browsing icons on Lacuna Stories are portrait dimensions, so please try to choose this proportion of image or crop it yourself before uploading. If you upload a landscape image, it will likely become skewed in the automated cropping. Also make sure your image is larger than 220 pixels wide and 320 pixels tall. If not, you can change that in programs like Mac Preview by selecting TOOLS --> ADJUST SIZE and increase the pixels.');
   t('Course or group(s) joined');
   t('Cover Image');
   t('Date of Birth');

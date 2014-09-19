@@ -15,6 +15,11 @@
   border: none;
 }
 
+.annotation-filters-title {
+  margin-left: 50px;
+  font-weight: bold;
+}
+
 .annotation-sidebar-button {
   display: block;
   width: 200px !important;

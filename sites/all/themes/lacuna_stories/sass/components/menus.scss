@@ -7,14 +7,22 @@ $menu-active-color: rgba(0, 200, 0, .1);
   float: right;
 }
 
-ul.sf-main-menu {
-  font-size: 12pt;
-  background-color: $menu-color;
+.sf-main-menu {
+
 }
 
 /* Superfish dropdown menu rules */
 .sf-menu {
-  li.sf-no-children {
+  font-size: 12pt;
+  background-color: $menu-color;
+
+  li {
+    list-style-type: none;
+    list-style-image: none;
+    padding: 10px 15px 10px 15px;
+    margin: 0px;
+  }
+  .sf-depth-1.sf-no-children {
     display: none;
   }
   li.menuparent {
@@ -25,6 +33,7 @@ ul.sf-main-menu {
     }
     ul {
       li {
+        padding: 0px;
         background-color: white;
         border: 1px solid gray;
         border-bottom: 0px;
@@ -42,11 +51,6 @@ ul.sf-main-menu {
   }
 }
 
-li.sfHover {
-  // color: $menu-active-color !important;
-  // background-color: $menu-active-color !important;
-}
-
 .sf-depth-2 {
   width: 80% !important;
 }
@@ -61,10 +65,7 @@ ul.menu {
 }
 
 ul.menu li.menuparent {
-  list-style-type: none;
-  list-style-image: none;
-  padding: 15px 20px 15px 20px;
-  font-size: 14pt;
+
 }
 
 ul.menu li:hover {

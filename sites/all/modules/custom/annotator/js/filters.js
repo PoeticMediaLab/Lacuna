@@ -29,7 +29,8 @@
         activeButton: 'annotation-sidebar-button-active',
         input: 'annotation-filter-input',
         activeFilter: 'annotation-filter-active',
-        closeIcon: 'fa fa-times'
+        closeIcon: 'fa fa-times',
+        filterTitle: 'annotation-filters-title'
       }
     };
 
@@ -317,7 +318,7 @@
           }
         });
       }
-      return sidebar.append('<div id="activeFilters"></div>');
+      return sidebar.append("<div id='activeFilters'></div>");
     };
 
     return Filters;

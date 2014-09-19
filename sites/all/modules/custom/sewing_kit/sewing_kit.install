@@ -77,7 +77,7 @@ function _thread_install_instances() {
   return array(
     'thread_description' => array(
       'field_name' => 'thread_description',
-      'label' => t('My Description'),
+      'label' => t('Description of My Thread'),
       'description' => t('Describe why these pieces are stitched together'),
       'type' => 'text_long',
       'required' => TRUE,

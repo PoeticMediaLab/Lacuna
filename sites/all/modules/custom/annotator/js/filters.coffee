@@ -32,6 +32,7 @@ class Annotator.Plugin.Filters extends Annotator.Plugin
       input: 'annotation-filter-input'
       activeFilter: 'annotation-filter-active'
       closeIcon: 'fa fa-times'
+      filterTitle: 'annotation-filters-title'
 
   data:
     annotations: {}
@@ -103,6 +104,7 @@ class Annotator.Plugin.Filters extends Annotator.Plugin
               @data.filterValues[filterName].push(annotation[filterName])
 
   filterViewer: (Viewer) ->
+    # if all hidden, hide
     for annotation in Viewer.annotations
       # maybe build a list of highlights here?
       # then for each highlight that is filtered
@@ -124,8 +126,12 @@ class Annotator.Plugin.Filters extends Annotator.Plugin
       @removeFilter 'user'
     else if buttonType == 'remove-filters'
       @removeAllFilters()
-    else if buttonType == 'hide-all'
-      @hideAllAnnotations()
+    # else if buttonType == 'hide-all'
+    #   @hideAllAnnotations()
+
+  # hideAllAnnotations: ->
+  #   for annotationID, annotation of @data.annotations
+  #     @data.filtered[]
 
   hideFilteredAnnotations: ->
     for annotationID of @data.annotations
@@ -200,7 +206,7 @@ class Annotator.Plugin.Filters extends Annotator.Plugin
     sidebar.append('<h2>Annotation Filters</h2>')
     @makeButton 'own-annotations', 'My Annotations'
     @makeButton 'all-annotations', "Everyone's Annotations"
-    @makeButton 'hide-all', 'Hide All Annotations'
+    # @makeButton 'hide-all', 'Hide All Annotations'
     @makeButton 'remove-filters', 'Remove All Filters'
     for filter, values of @data.filterValues
       inputHTML = "<label>#{filter}: </label><input name='#{filter}' class='#{@options.class.input}' />"
@@ -209,4 +215,4 @@ class Annotator.Plugin.Filters extends Annotator.Plugin
         source: values
         select: (event, ui) =>
           @filterSelected(event, ui)
-    sidebar.append('<div id="activeFilters"></div>')
+    sidebar.append("<div id='activeFilters'></div>")

@@ -878,22 +878,23 @@ table {
 /* line 25, ../sass/components/base.scss */
 #name-and-slogan #site-name a, #name-and-slogan #site-name a:hover {
   text-decoration: none;
+  font-weight: normal;
 }
 
-/* line 29, ../sass/components/base.scss */
+/* line 30, ../sass/components/base.scss */
 body {
   background-color: #f8f8f8;
   font-family: 'Open Sans', sans-serif;
   line-height: 1.5em;
 }
 
-/* line 35, ../sass/components/base.scss */
+/* line 36, ../sass/components/base.scss */
 #main {
   padding-top: 0px !important;
   top: -50px !important;
 }
 
-/* line 40, ../sass/components/base.scss */
+/* line 41, ../sass/components/base.scss */
 #page {
   max-width: 1200px;
   padding: 15px;
@@ -904,117 +905,117 @@ body {
   padding-bottom: 100px;
 }
 
-/* line 50, ../sass/components/base.scss */
+/* line 51, ../sass/components/base.scss */
 b {
   font-weight: bold;
 }
 
-/* line 54, ../sass/components/base.scss */
+/* line 55, ../sass/components/base.scss */
 sup {
   vertical-align: super;
   font-size: small;
 }
 
-/* line 59, ../sass/components/base.scss */
+/* line 60, ../sass/components/base.scss */
 p {
   margin-bottom: 10px;
 }
 
-/* line 63, ../sass/components/base.scss */
+/* line 64, ../sass/components/base.scss */
 article.node {
   text-align: justify;
 }
 
 /* fix to avoid drop down menu overwrite of message pane */
-/* line 68, ../sass/components/base.scss */
+/* line 69, ../sass/components/base.scss */
 div.messages, div.messages--status, div.messages--warning, div.messages--error {
   margin-top: 40px;
 }
 
-/* line 72, ../sass/components/base.scss */
+/* line 73, ../sass/components/base.scss */
 h1, h2, h3, h4, h5, h6 {
   font-family: 'Noto Sans', sans-serif;
   line-height: 1.3em;
 }
 
-/* line 77, ../sass/components/base.scss */
+/* line 78, ../sass/components/base.scss */
 h1 {
   font-size: 1.5em;
   margin-bottom: 10px;
 }
 
-/* line 81, ../sass/components/base.scss */
+/* line 82, ../sass/components/base.scss */
 h2 {
   font-size: 1.4em;
   margin-bottom: 10px;
 }
 
-/* line 85, ../sass/components/base.scss */
+/* line 86, ../sass/components/base.scss */
 h3 {
   font-size: 1.3em;
   margin-bottom: 10px;
 }
 
-/* line 89, ../sass/components/base.scss */
+/* line 90, ../sass/components/base.scss */
 h4 {
   font-size: 1.2em;
   margin-bottom: 10px;
 }
 
-/* line 93, ../sass/components/base.scss */
+/* line 94, ../sass/components/base.scss */
 h5 {
   font-size: 1.1em;
   margin-bottom: 10px;
 }
 
-/* line 97, ../sass/components/base.scss */
+/* line 98, ../sass/components/base.scss */
 dt {
   margin-top: 10px;
 }
 
-/* line 101, ../sass/components/base.scss */
+/* line 102, ../sass/components/base.scss */
 a {
   color: #1588ba;
   text-decoration: none;
 }
 
-/* line 106, ../sass/components/base.scss */
+/* line 107, ../sass/components/base.scss */
 a:hover {
   color: #094762;
 }
 
-/* line 110, ../sass/components/base.scss */
+/* line 111, ../sass/components/base.scss */
 label {
   margin-bottom: 10px;
 }
 
-/* line 113, ../sass/components/base.scss */
+/* line 114, ../sass/components/base.scss */
 input {
   max-width: 100%;
 }
 
-/* line 116, ../sass/components/base.scss */
+/* line 117, ../sass/components/base.scss */
 input[checked='checked'] {
   background-color: blue;
 }
 
-/* line 120, ../sass/components/base.scss */
+/* line 121, ../sass/components/base.scss */
 td.active {
   background-color: white;
 }
 
-/* line 124, ../sass/components/base.scss */
+/* line 125, ../sass/components/base.scss */
 #page-title {
   margin-bottom: 20px;
   font-weight: bold;
 }
 
-/* line 129, ../sass/components/base.scss */
+/* line 130, ../sass/components/base.scss */
 .breadcrumb {
   display: none;
 }
 
-/* line 133, ../sass/components/base.scss */
+/* line 134, ../sass/components/base.scss */
 .form-item {
   margin-top: 30px;
 }
@@ -1869,87 +1870,86 @@ tr.selected td {
   float: right;
 }
 
-/* line 10, ../sass/components/menus.scss */
-ul.sf-main-menu {
+/* Superfish dropdown menu rules */
+/* line 15, ../sass/components/menus.scss */
+.sf-menu {
   font-size: 12pt;
   background-color: transparent;
 }
-
-/* Superfish dropdown menu rules */
-/* line 17, ../sass/components/menus.scss */
-.sf-menu li.sf-no-children {
+/* line 19, ../sass/components/menus.scss */
+.sf-menu li {
+  list-style-type: none;
+  list-style-image: none;
+  padding: 10px 15px 10px 15px;
+  margin: 0px;
+}
+/* line 25, ../sass/components/menus.scss */
+.sf-menu .sf-depth-1.sf-no-children {
   display: none;
 }
-/* line 20, ../sass/components/menus.scss */
+/* line 28, ../sass/components/menus.scss */
 .sf-menu li.menuparent {
   background-color: transparent;
 }
-/* line 22, ../sass/components/menus.scss */
+/* line 30, ../sass/components/menus.scss */
 .sf-menu li.menuparent a {
   border: none;
   background-color: transparent !important;
 }
-/* line 27, ../sass/components/menus.scss */
+/* line 35, ../sass/components/menus.scss */
 .sf-menu li.menuparent ul li {
+  padding: 0px;
   background-color: white;
   border: 1px solid gray;
   border-bottom: 0px;
 }
-/* line 32, ../sass/components/menus.scss */
+/* line 41, ../sass/components/menus.scss */
 .sf-menu li.menuparent ul li.firstandlast, .sf-menu li.menuparent ul li.last {
   border-bottom: 1px solid gray;
 }
-/* line 35, ../sass/components/menus.scss */
+/* line 44, ../sass/components/menus.scss */
 .sf-menu li.menuparent ul li.active-trail {
   background-color: rgba(0, 200, 0, 0.1) !important;
 }
 
-/* line 50, ../sass/components/menus.scss */
+/* line 54, ../sass/components/menus.scss */
 .sf-depth-2 {
   width: 80% !important;
 }
 
-/* line 54, ../sass/components/menus.scss */
+/* line 58, ../sass/components/menus.scss */
 a.nolink {
   text-decoration: none;
   color: black;
 }
 
-/* line 59, ../sass/components/menus.scss */
+/* line 63, ../sass/components/menus.scss */
 ul.menu {
   list-style-type: none;
 }
 
-/* line 63, ../sass/components/menus.scss */
-ul.menu li.menuparent {
-  list-style-type: none;
-  list-style-image: none;
-  padding: 15px 20px 15px 20px;
-  font-size: 14pt;
-}
-
-/* line 70, ../sass/components/menus.scss */
+/* line 71, ../sass/components/menus.scss */
 ul.menu li:hover {
   cursor: pointer;
 }
 
-/* line 74, ../sass/components/menus.scss */
+/* line 75, ../sass/components/menus.scss */
 ul.menu li a {
   text-decoration: none;
 }
 
-/* line 78, ../sass/components/menus.scss */
+/* line 79, ../sass/components/menus.scss */
 ul.tabs.primary {
   margin-bottom: 20px;
   overflow: hidden;
 }
 
-/* line 83, ../sass/components/menus.scss */
+/* line 84, ../sass/components/menus.scss */
 ul.tabs.primary li {
   float: left;
 }
 
-/* line 87, ../sass/components/menus.scss */
+/* line 88, ../sass/components/menus.scss */
 ul.tabs.primary a {
   padding: 5px 10px;
   border-radius: 5px 5px 0px 0px;
@@ -1961,7 +1961,7 @@ ul.tabs.primary a {
   border-bottom-color: transparent;
 }
 
-/* line 98, ../sass/components/menus.scss */
+/* line 99, ../sass/components/menus.scss */
 ul.tabs.primary a.active, ul.tabs.primary a:hover {
   background-color: whitesmoke;
 }
