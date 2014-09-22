@@ -288,6 +288,27 @@ function lacuna_stories_menus_menu_default_menu_links() {
     'weight' => -47,
     'customized' => 1,
   );
+  // Exported menu link: main-menu_responses-map:visualization/responses
+  $menu_links['main-menu_responses-map:visualization/responses'] = array(
+    'menu_name' => 'main-menu',
+    'link_path' => 'visualization/responses',
+    'router_path' => 'visualization/responses',
+    'link_title' => 'Responses Map',
+    'options' => array(
+      'attributes' => array(
+        'title' => '',
+      ),
+      'identifier' => 'main-menu_responses-map:visualization/responses',
+    ),
+    'module' => 'menu',
+    'hidden' => 0,
+    'external' => 0,
+    'has_children' => 0,
+    'expanded' => 0,
+    'weight' => 0,
+    'customized' => 1,
+    'parent_identifier' => 'main-menu_reflect:<nolink>',
+  );
   // Exported menu link: main-menu_responses:responses
   $menu_links['main-menu_responses:responses'] = array(
     'menu_name' => 'main-menu',
@@ -398,6 +419,7 @@ function lacuna_stories_menus_menu_default_menu_links() {
   t('My Writing');
   t('Reflect');
   t('Responses');
+  t('Responses Map');
   t('Sewing Kit');
   t('Syllabus');
   t('Topics');
