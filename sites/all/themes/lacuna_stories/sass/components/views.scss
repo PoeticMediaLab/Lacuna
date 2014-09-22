@@ -131,7 +131,13 @@ $views-link-hover-color: #1588BA;
     font-size: 0.95em;
     color: grey;
   }
+  .view-content h3 {
+    display: inline-block;
+    width: 100%;
+    padding-top: 25px;
+  }
 }
+
 
 table.views-table {
   width: 100%;

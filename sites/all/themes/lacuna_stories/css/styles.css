@@ -2164,8 +2164,17 @@ div.views-row-last span.views-field-field-image div.topic_image {
   font-size: 0.95em;
   color: grey;
 }
+/* line 134, ../sass/components/views.scss */
+.view-documents .view-content h3,
+.view-responses .view-content h3,
+.view-my-threads .view-content h3,
+.view-sewing-kit .view-content h3 {
+  display: inline-block;
+  width: 100%;
+  padding-top: 25px;
+}
 
-/* line 136, ../sass/components/views.scss */
+/* line 142, ../sass/components/views.scss */
 table.views-table {
   width: 100%;
 }
