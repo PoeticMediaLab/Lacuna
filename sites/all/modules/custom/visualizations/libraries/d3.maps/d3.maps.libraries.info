@@ -1,0 +1,5 @@
+name = Map Visualization 
+description = Map Visualization for Lacuna Stories
+files[js][] = maps.js
+version = 0.1
+

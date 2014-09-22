@@ -1,0 +1,545 @@
+<?php
+/**
+ * @file
+ * Lacuna Stories module file. Displays a number of visualizations of
+ * user data. Currently includes maps, journeys.
+ */
+
+// to install maps:
+// 1. this one's simple. use drush to enable the module, make sure
+// that d3.js is in /sites/all/libraries/d3, and it should work. by
+// default it is displayed in /maps_view
+
+// to install journeys:
+// 0. install maps
+// 1. import the view used to feed the visualization. save the output
+// of this view to /misc/journeys.json
+// 2. set up a cron job (I don't know how to do this) to get output
+// from the view on a regular basis.
+
+// to add a new visualization:
+// 1. create directory for js in ./libraries. directory names must
+// start with "d3."
+// 2. create .info file in that directory. (see d3.maps for example).
+// custom css / custom .tpl.php can be specified in files in the
+// library's directory. (I believe; haven't tested yet)
+// 3. add name of directory to the array below.
+// 4. add an entry in lacuna_visualizations_menu
+// 5. create callback function (lacuna_visualizations_mapview is an
+// example here) that uses EntityFieldQuery to pull in data and call
+// graphapi functions (or just d3_draw).
+// 6. remember to set the library name in $options.
+// 7. wrap the javascript as described in the README.txt for the d3
+// module (or just copy one of the extant modules, but remember to
+// change the name of the function to match the name of the library
+// directory (i.e. don't have journeys.js start with:
+
+// (function($) {
+// Drupal.d3.maps = function (select, settings) {
+
+// (yes, this is a mistake I've made, and d3 will fail silently if you
+// make this mistake.)
+
+// 8. rejoice, for you you now have a new visualization.
+//
+// NOTE: remember to download d3.js and put it in
+// /sites/all/libraries/d3, else the d3 module will, once again,  fail
+// silently.  (also a mistake I've made... )
+
+// helper callback to return all visualization libraries.
+function lacuna_visualizations_default_libraries() {
+	return array(
+		'd3.maps',
+		'd3.journeys',
+		);
+}
+
+
+/**
+ * Implements hook_libraries_info_file_paths().
+ */
+function lacuna_visualizations_libraries_info_file_paths() {
+
+  // Get all library directories.
+  $libraries = libraries_get_libraries();
+
+  $paths = array();
+  // Output an array of paths to check for.
+  foreach ($libraries as $path) {
+    $paths[] = $path;
+  }
+
+  // Load the directory where the d3 example libraries are.
+  $example_path = drupal_get_path('module', 'lacuna_visualizations') . '/libraries/';
+  // Add these to the search directories for libraries.
+  foreach (lacuna_visualizations_default_libraries() as $example) {
+    $paths[] = $example_path . $example;
+  }
+
+  return $paths;
+}
+
+
+/**
+ * Provides an array of d3 libraries.
+ *
+ * D3 libraries are going to have a prefix of d3., see README.txt
+ * for information on creating a custom d3 library.
+ */
+function lacuna_visualizations_get_libraries() {
+
+  static $d3_libraries;
+
+  // Returns all libraries in the default folders.
+  $libraries = libraries_info();
+
+  foreach ($libraries as $library) {
+    $library_name = $library['machine name'];
+    // Filter out any other non-d3 library. All d3 libraries should have
+    // the prefix "d3.".
+    if (strpos($library_name, 'd3.') === FALSE) {
+      continue;
+    }
+    // Do not list these default extension libraries.
+    if (in_array($library_name, array('d3.extend', 'd3.tooltip', 'd3.drupal'))) {
+      continue;
+    }
+
+    $d3_libraries[$library_name] = $library;
+    $d3_libraries[$library_name]['js callback'] = str_replace('d3.', '', $library_name);
+  }
+
+  return $d3_libraries;
+}
+
+
+/**
+ * Implements hook_libraries_info().
+ */
+function lacuna_visualizations_libraries_info() {
+
+  $libraries = array();
+
+  // Drupal ext adds behaviors and d3 global object.
+  $libraries['d3.drupal'] = array(
+    'name' => 'D3 Drupal ext',
+    'vendor url' => 'http://drupal.org/sandbox/asherry/1477334',
+    'files' => array(
+      'js' => array(
+        'd3.js',
+      ),
+    ),
+    'path' => 'js',
+    'library path' => drupal_get_path('module', 'lacuna_visualizations'),
+    'dependencies' => array('d3'),
+    'version' => '1',
+  );
+
+  // Path to library, (if installed).
+  $path = libraries_get_path('d3');
+
+  if ($path) {
+    $files = array();
+    // In the repository the files might me named d3.js and d3.min.js.
+    $files += file_scan_directory($path, '/d3.js|d3.min.js/');
+    // They could also have the version # in the file name.
+    $files += file_scan_directory($path, '/d3.v[0-9](.min)?.js/');
+
+    // If we don't have any files we shouldn't add the library at all.
+    // This will fire drupal error and direct the user to reports.
+    if (count($files) == 0) {
+      return $libraries;
+    }
+
+    // This will be the default file.
+    // @TODO: Add this to d3 settings so you can choose.
+    $file = array_shift($files);
+    $version = 0;
+
+    // If this is a repository, there should be a package file. We can filter
+    // out the version number.
+    $package = file_exists($path . '/package.json') ? file_get_contents($path . '/package.json') : FALSE;
+    if ($package) {
+      preg_match('/\"version\"\:\ \"([0-9\.]*)\"/', $package, $version_matches);
+      if (isset($version_matches[1])) {
+        $version = $version_matches[1];
+      }
+    }
+    // If this is from the zip file, we should be able to get the version
+    // from the actual file itself.
+    if (strpos($file->filename, '.v')) {
+      preg_match('/\.v([0-9])/', $file->filename, $version_matches);
+      if (isset($version_matches[1])) {
+        $version = $version_matches[1];
+      }
+    }
+
+    $libraries['d3'] = array(
+      'name' => 'D3',
+      'vendor url' => 'http://d3js.org/',
+      'download url' => 'http://d3js.org/',
+      'files' => array(
+        'js' => array(
+          $file->filename,
+        ),
+      ),
+      'version' => $version,
+    );
+  }
+
+  return $libraries;
+}
+
+
+
+/**
+ * Implements hook_libraries_info_alter().
+ */
+function lacuna_visualizations_libraries_info_alter(&$libraries) {
+  // Automatically add in the d3.drupal dependency so that each
+  // d3.library doesn't have to.
+  foreach (lacuna_visualizations_get_libraries() as $library_name => $library) {
+    $libraries[$library_name]['dependencies'][] = 'd3.drupal';
+  }
+  // By default, the libraries module only checks the libraries folders.
+  // We need to add this module's libraries path to the library info.
+  $path = drupal_get_path('module', 'lacuna_visualizations') . '/libraries/'; foreach (lacuna_visualizations_default_libraries() as $library_name) {
+    // Change library path to path/to/module/d3/libraries
+    $libraries[$library_name]['library path'] = $path . $library_name;
+  }
+}
+
+
+/**
+ * Implements hook_theme().
+ */
+function lacuna_visualizations_theme() {
+
+
+  foreach (libraries_info() as $path => $library) {
+    // Call this function to get all fields - i.e. library path.
+    $library = libraries_load($path);
+    // If a template was specified in the .info file or hook_libraries_info.
+    if (isset($library['template'])) {
+      // Change d3.[library name] to d3_[library name] for a theme key.
+      $theme_key = str_replace('.', '_', $library['machine name']);
+      $themes[$theme_key] = array(
+        'template' => $library['template'],
+        'path' => $library['library path'],
+      );
+    }
+  }
+
+
+// template can be changed in the .info file for a library.
+  $themes['d3'] = array(
+    'variables' => array(),
+    'template' => 'lacuna_visualizations',
+  );
+
+  $themes['d3_graphapi'] = array(
+    'variables' => array(
+      'graph' => NULL,
+      'config' => NULL,
+    ),
+  );
+
+  return $themes;
+}
+
+
+
+/**
+ * Implements hook_menu().
+ */
+function lacuna_visualizations_menu() {
+
+	$items['visualization/responses'] = array(
+	  'title' => 'Responses Map',
+	  'description' => 'Visualization showing links between student blog posts and primary sources',
+	  'access callback' => TRUE,
+	  'page callback' => 'lacuna_visualizations_mapview',
+	  'type' => MENU_NORMAL_ITEM,
+	  );
+
+	 $items['visualization/journey'] = array(
+	  'title' => 'Journey view',
+	  'description' => 'Visualization showing student movement
+	  through the site',
+	  'access callback' => TRUE,
+	  'page callback' => 'lacuna_visualizations_journeyview',
+	  'type' => MENU_NORMAL_ITEM,
+	);
+	return $items;
+}
+
+/**
+ * Visualization showing links between student blog posts and primary
+ * sources. (version I'm currently working on).
+ */
+function lacuna_visualizations_journeyview() {
+
+  // BJA uses EntityFieldQuery to pull all the 'blog' and 'document' nodes
+  // BJA in the future, this should read from a view(?) rather than being
+  // BJA hard-coded here.
+  $blogQuery = new EntityFieldQuery();
+    $blogQuery
+        ->entityCondition('entity_type', 'node')
+        ->entityCondition('bundle', array('biblio', 'blog'));
+    $result = $blogQuery->execute();
+    $nids = array_keys($result['node']);
+    $nodes = node_load_multiple($nids);
+
+    $graph = graphapi_new_graph();
+    foreach($nodes as $item){
+
+	$usersQuery = new EntityFieldQuery();
+  	$usersQuery
+		->entityCondition('entity_type', 'user');
+	$usersResult = $usersQuery->execute();
+	$uids = array_keys($usersResult['user']);
+	$users = user_load_multiple($uids);
+
+	 // this array will eventually contain all relevant info about blogs and document: author, timestamp, etc.
+	 // added to nodes before graphapi passes off to d3.
+        $dataArray = array(
+            'itemType' => $item->type,
+			// author set below -- $item->name for blog posts, but
+			// more complicated for biblio entries.
+			'author'	=> ' ',
+            'title'     => $item->title,
+            'linksTitles'     => array(),
+            'thisURL'   => $GLOBALS['base_url'] . "/node/" . $item->nid,
+            'linksURL' => array(),
+			'biblio' => array(),
+			'document_abstract' => '',
+			'date' => $item->created,
+        );
+
+		// added to all links before graphapi passes off to d3.
+		// Currently only contains a date (the time that the source
+		// node was created; currently assuming that all links are
+		// created at the same time as the blog post they're
+		// associated with.
+        if (!$dataArray['author']){
+          $dataArray['author'] = "None";
+        }
+
+        $title = $item->title;
+
+		/* pull out data needed for biblio nodes and add it to
+		 * $dataArray */
+		if($item->type == "biblio")
+		{
+			$document_abstract = strip_tags($item->field_biblio_hover_abstract);
+			$dataArray['document_abstract'] = $document_abstract;
+				$author = ' ';
+			if(isset($item->biblio_contributors[0])){
+				$count = count($item->biblio_contributors);
+				for($i = 0; $i < $count; $i++) {
+					$author = $item->biblio_contributors[0]['name'];
+					$dataArray['author'] .= $author . "\r\n";
+				}
+			}
+
+		}
+        if($item->type == "blog")
+        {
+
+			$dataArray['author'] = $users[$item->uid]->field_display_name->und[0].safe_value;
+
+			// draw links based off of node's field_bibliographic_entry.
+            if($item->field_bibliographic_entry){
+               $linkArray = $item->field_bibliographic_entry;
+
+              for($i = 0; $i < count($linkArray['und']); $i++) {
+                 $linkedNid = $linkArray['und'][$i]['target_id'];
+                 if(array_key_exists($linkedNid, $nodes)){
+                    graphapi_add_link($graph, $title, $nodes[$linkedNid]->title);
+                   array_push($dataArray['linksTitles'], $nodes[$linkedNid]->title);
+                    array_push($dataArray['linksURL'], $GLOBALS['base_url'] . '/node/' . $linkedNid);
+		//			graphapi_set_link_data($graph, $title,	$nodes[$linkedNid]['title'], $item->created);
+
+                 }
+              }
+            } // end if($item->field_bibliographic_entry)
+
+
+/*			if($item->field_bibliographic_entry){
+				print_r($item->field_bibliographic_entry);
+			//	echo "<br />";
+              for($i = 0; $i < count($item->field_bibliographic_entry['und']); $i++) {
+
+				  // so this is the nid of the bibliographic reference.
+				  // print_r($item->field_bibliographic_entry['und'][$i]['target_id']);
+				  $bibnid = $item->field_bibliographic_entry['und'][$i]['target_id'];
+				  // echo "<br />";
+				  // print_r($bibnid);
+				  if(array_key_exists($bibnid, $nodes))
+					  // RESTART HERE
+					  // This is the title of the bibliographic
+					  // reference, which (should be) the same as the
+					  // title of the node that we're actually linking
+					  // to.
+
+					  // wait.
+					  // we should link to the bibliographic reference
+					  // rather than to the actual document. duh.
+					  print_r($nodes[$bibnid]);
+					  echo "<br />";
+				  }
+			  } */
+        }	// end if($item->type == "blog")
+        graphapi_set_node_data($graph, $title, $dataArray);
+    }
+
+	// settings.config
+  $options = array(
+    'width' => 600,
+    'height' => 500,
+    'item-width' => 45,
+    'engine' => 'd3',
+	'library' => 'journeys',
+	'testString' => "TEST STRING",
+	'userList' => $users,
+	'drawDocumentCircle' => true,
+  );
+  return theme('graphapi_dispatch', array('graph' => $graph, 'config' => $options));
+}  // end function lacuna_visualizations_journeyview()
+
+
+/**
+ * Visualization showing links between student blog posts and primary
+ * sources.
+ */
+function lacuna_visualizations_mapview() {
+
+  // BJA uses EntityFieldQuery to pull all the 'blog' and 'document' nodes
+  // BJA in the future, this should read from a view(?) rather than being
+  // BJA hard-coded here.
+  $blogQuery = new EntityFieldQuery();
+    $blogQuery
+        ->entityCondition('entity_type', 'node')
+        ->entityCondition('bundle', array('biblio', 'blog'));
+    $result = $blogQuery->execute();
+    $nids = array_keys($result['node']);
+    $nodes = node_load_multiple($nids);
+
+    $graph = graphapi_new_graph();
+    foreach($nodes as $item){
+
+	$usersQuery = new EntityFieldQuery();
+  	$usersQuery
+		->entityCondition('entity_type', 'user');
+	$usersResult = $usersQuery->execute();
+	$uids = array_keys($usersResult['user']);
+	$users = user_load_multiple($uids);
+
+	 // this array will eventually contain all relevant info about blogs and document: author, timestamp, etc.
+	 // added to nodes before graphapi passes off to d3.
+        $dataArray = array(
+            'itemType' => $item->type,
+			// author set below -- $item->name for blog posts, but
+			// more complicated for biblio entries.
+			'author'	=> ' ',
+            'title'     => $item->title,
+            'linksTitles'     => array(),
+            'thisURL'   => $GLOBALS['base_url'] . "/node/" . $item->nid,
+            'linksURL' => array(),
+			'biblio' => array(),
+			'document_abstract' => '',
+			'date' => $item->created,
+        );
+
+		// added to all links before graphapi passes off to d3.
+		// Currently only contains a date (the time that the source
+		// node was created; currently assuming that all links are
+		// created at the same time as the blog post they're
+		// associated with.
+        if (!$dataArray['author']){
+          $dataArray['author'] = "None";
+        }
+
+        $title = $item->title;
+
+		/* pull out data needed for biblio nodes and add it to
+		 * $dataArray */
+		if($item->type == "biblio")
+		{
+			$document_abstract = strip_tags($item->biblio_abst_e);
+			$dataArray['document_abstract'] = $document_abstract;
+				$author = ' ';
+			if(isset($item->biblio_contributors[0])){
+				$count = count($item->biblio_contributors);
+				for($i = 0; $i < $count; $i++) {
+					$author = $item->biblio_contributors[0]['name'];
+					$dataArray['author'] .= $author . "\r\n";
+				}
+			}
+
+		}
+        if($item->type == "blog")
+        {
+
+			//$dataArray['author'] = $users[$item->uid]->realname;
+			$dataArray['author'] = format_username($users[$item->uid]);
+
+			// draw links based off of node's field_bibliographic_entry.
+            if($item->field_bibliographic_entry){
+               $linkArray = $item->field_bibliographic_entry;
+
+              for($i = 0; $i < count($linkArray['und']); $i++) {
+                 $linkedNid = $linkArray['und'][$i]['target_id'];
+                 if(array_key_exists($linkedNid, $nodes)){
+                    graphapi_add_link($graph, $title, $nodes[$linkedNid]->title);
+                   array_push($dataArray['linksTitles'], $nodes[$linkedNid]->title);
+                    array_push($dataArray['linksURL'], $GLOBALS['base_url'] . '/node/' . $linkedNid);
+		//			graphapi_set_link_data($graph, $title,	$nodes[$linkedNid]['title'], $item->created);
+
+                 }
+              }
+            } // end if($item->field_bibliographic_entry)
+
+
+/*			if($item->field_bibliographic_entry){
+				print_r($item->field_bibliographic_entry);
+			//	echo "<br />";
+              for($i = 0; $i < count($item->field_bibliographic_entry['und']); $i++) {
+
+				  // so this is the nid of the bibliographic reference.
+				  // print_r($item->field_bibliographic_entry['und'][$i]['target_id']);
+				  $bibnid = $item->field_bibliographic_entry['und'][$i]['target_id'];
+				  // echo "<br />";
+				  // print_r($bibnid);
+				  if(array_key_exists($bibnid, $nodes))
+					  // RESTART HERE
+					  // This is the title of the bibliographic
+					  // reference, which (should be) the same as the
+					  // title of the node that we're actually linking
+					  // to.
+
+					  // wait.
+					  // we should link to the bibliographic reference
+					  // rather than to the actual document. duh.
+					  print_r($nodes[$bibnid]);
+					  echo "<br />";
+				  }
+			  } */
+        }	// end if($item->type == "blog")
+        graphapi_set_node_data($graph, $title, $dataArray);
+    }
+
+	// settings.config
+  $options = array(
+    'width' => 800,
+    'height' => 600,
+    'item-width' => 45,
+    'engine' => 'd3',
+	'library' => 'maps',
+	'testString' => "TEST STRING",
+	'userList' => $users,
+	'drawDocumentCircle' => true,
+  );
+  return theme('graphapi_dispatch', array('graph' => $graph, 'config' => $options));
+}  // end function lacuna_visualizations_mapview()
+

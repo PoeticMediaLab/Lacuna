@@ -1,0 +1,5 @@
+name = Journeys Visualization 
+description = Journeys Visualization for Lacuna Stories 
+files[js][] = journeys.js
+version = 0.1
+

@@ -1,0 +1,191 @@
+svg {
+  font: 10px sans-serif;
+} /* BJA as far as I can tell, this is only used by piechart */
+
+.rule {
+  shape-rendering: crispEdges;
+}
+.rule text {
+  font-size: 15px;
+}
+
+.legend text {
+  font-size: 14px;
+}
+
+.blog {
+    stroke: black;
+    stroke-width: 3;
+}
+
+.document {
+    fill: blue;
+    stroke: black;
+	stroke-width: 3;
+}
+
+.biblio {
+    fill: white;
+    stroke: black;
+	stroke-width: 3;
+}
+
+.audio {
+    fill: green;
+    stroke: black;
+	stroke-width: 3;
+}
+
+.video {
+    fill: red;
+    stroke: black;
+	stroke-width: 3;
+}
+.image {
+    fill: yellow;
+    stroke: black;
+	stroke-width: 3;
+}
+
+.music-video {
+    fill: blue;
+    stroke: black;
+	stroke-width: 3;
+}
+
+.link {
+	stroke: black;
+	stroke-width: 3;
+}
+
+/* not currently used -- turn back on if the fix-on-click behavior
+ * is desired 
+.fixed {
+    fill: green;
+    stroke: black;
+    stroke-width: 3;
+}
+*/
+
+#journeys-tooltip {
+	position: absolute;
+	width: auto;
+	height: auto;
+	padding: 10px;
+	background-color: white;
+	-webkit-border-radius: 10px;
+	-moz-border-radius: 10px;
+	border-radius: 10px;
+    border-style: solid;
+	-webkit-box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+	-moz-box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+	box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);  /* BJA removed borders 
+	                                                added shadows */
+}
+
+
+
+#maps-tooltip {
+	position: absolute;
+	width: auto;
+	height: auto;
+	padding: 10px;
+	background-color: white;
+	-webkit-border-radius: 10px;
+	-moz-border-radius: 10px;
+	border-radius: 10px;
+    border-style: solid;
+	-webkit-box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+	-moz-box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+	box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);  /* BJA removed borders 
+	                                                added shadows */
+}
+
+#maps-tooltip.hidden {
+	display: none;
+}
+
+#journeys-tooltip.hidden {
+	display: none;
+}
+
+#maps-tooltip.p {
+	margin: 0;
+	font-family: sans-serif;
+	font-size: 16px;
+	line-height: 20px;
+}
+
+p.hidden {
+    display: none;
+}
+
+
+/* stuff used by time brush */
+.axis path, 
+.axis line {
+	fill: none;
+	stroke: black;
+	shape-rendering: crispEdges;
+}
+.axis text {
+	font-family: sans-serif;
+	font-size: 11px;
+}
+
+.brush .extent {
+  stroke: #88b551; 
+  fill: #88b551; 
+  fill-opacity: .125;
+  shape-rendering: crispEdges;
+}
+
+
+/* TODO: simplify all of this; there don't need to be so many unique
+ * classes, because these buttons behave more or less the same way. */
+#arrangeDocumentNodes.selected > #arrangeDocumentNodesCircle {
+	fill: grey;
+	stroke: black;
+}
+
+#arrangeDocumentNodes > #arrangeDocumentNodesCircle {
+	fill: white;
+	stroke: grey;
+}
+
+#arrangeDocumentNodes.selected > #arrangeDocumentNodesText {
+	fill: black;
+}
+
+#arrangeDocumentNodes > #arrangeDocumentNodesText {
+	fill: grey;
+}
+
+#playFromStart > #playFromStartCircle {
+	fill: white;
+	stroke: grey;
+}
+	
+#playFromStart > #playFromStartText {
+	fill: grey;
+}
+
+#playFromStart.selected > #playFromStartCircle {
+	fill: grey;
+	stroke: black;
+}
+
+#playFromStart.selected > #playFromStartText {
+	fill: black;
+}
+
+/* unSelected rather than selected because we style selected nodes in
+ * the js */
+.userListItem.unSelected  > #userSelectionCircle {
+	fill: white;
+	stroke: grey;
+}
+
+.userListItem.unSelected > #userSelectionText {
+	fill: grey;
+}
