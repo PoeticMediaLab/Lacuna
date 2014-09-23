@@ -197,8 +197,8 @@ function _annotation_install_instances() {
     ),
     'quote' => array(
       'field_name' => 'quote',
-      'label' => t('Quote'),
-      'description' => t('The selected text that was annotated'),
+      'label' => t('Excerpt'),
+      'description' => t('The text excerpt that was annotated'),
       'required' => TRUE
     ),
     'private' => array(
