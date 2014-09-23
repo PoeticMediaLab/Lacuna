@@ -144,7 +144,7 @@ div.views-row-last span.views-field-field-image div.topic_image {
 .view-sewing-kit .views-row {
   float: left;
   width: 150px;
-  margin: 20px;
+  margin: 20px 20px 65px 20px;
   height: 350px;
 }
 /* line 114, ../../sass/components/views.scss */
