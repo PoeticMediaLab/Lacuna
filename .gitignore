@@ -6,3 +6,5 @@ sites/*/files
 sites/*/private
 .DS_Store
 sites/all/modules/contrib/devel/*
+sites/all/modules/contrib/devel*
+*.swp
