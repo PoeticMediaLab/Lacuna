@@ -26,6 +26,7 @@ function lacuna_stories_content_types_field_group_info() {
       0 => 'field_bibliographic_entry',
       1 => 'field_doc_genre',
       2 => 'field_topics',
+      3 => 'field_tags',
     ),
     'format_type' => 'fieldset',
     'format_settings' => array(
@@ -55,6 +56,7 @@ function lacuna_stories_content_types_field_group_info() {
       1 => 'field_doc_genre',
       2 => 'field_status',
       3 => 'field_topics',
+      4 => 'field_tags',
     ),
     'format_type' => 'fieldset',
     'format_settings' => array(
@@ -85,6 +87,7 @@ function lacuna_stories_content_types_field_group_info() {
       1 => 'field_doc_genre',
       2 => 'field_doc_pages',
       3 => 'field_topics',
+      4 => 'field_tags',
     ),
     'format_type' => 'fieldset',
     'format_settings' => array(
@@ -115,6 +118,7 @@ function lacuna_stories_content_types_field_group_info() {
       1 => 'field_doc_genre',
       2 => 'field_topics',
       3 => 'field_status',
+      4 => 'field_tags',
     ),
     'format_type' => 'fieldset',
     'format_settings' => array(
@@ -144,6 +148,7 @@ function lacuna_stories_content_types_field_group_info() {
       0 => 'field_bibliographic_entry',
       1 => 'field_doc_genre',
       2 => 'field_topics',
+      3 => 'field_tags',
     ),
     'format_type' => 'fieldset',
     'format_settings' => array(
@@ -173,6 +178,7 @@ function lacuna_stories_content_types_field_group_info() {
       1 => 'field_doc_genre',
       2 => 'field_topics',
       3 => 'field_status',
+      4 => 'field_tags',
     ),
     'format_type' => 'fieldset',
     'format_settings' => array(
@@ -231,6 +237,7 @@ function lacuna_stories_content_types_field_group_info() {
       1 => 'field_doc_genre',
       2 => 'field_topics',
       3 => 'field_status',
+      4 => 'field_tags',
     ),
     'format_type' => 'fieldset',
     'format_settings' => array(
@@ -260,6 +267,7 @@ function lacuna_stories_content_types_field_group_info() {
       0 => 'field_bibliographic_entry',
       1 => 'field_doc_genre',
       2 => 'field_topics',
+      3 => 'field_tags',
     ),
     'format_type' => 'fieldset',
     'format_settings' => array(
@@ -290,6 +298,7 @@ function lacuna_stories_content_types_field_group_info() {
       1 => 'field_doc_genre',
       2 => 'field_topics',
       3 => 'field_status',
+      4 => 'field_tags',
     ),
     'format_type' => 'fieldset',
     'format_settings' => array(
@@ -348,10 +357,9 @@ function lacuna_stories_content_types_field_group_info() {
     'children' => array(
       0 => 'field_doc_attachment',
       1 => 'field_doc_pages',
-      2 => 'field_doc_review_statistics',
-      3 => 'field_doc_text',
-      4 => 'field_image',
-      5 => 'title',
+      2 => 'field_doc_text',
+      3 => 'field_image',
+      4 => 'title',
     ),
     'format_type' => 'fieldset',
     'format_settings' => array(
@@ -408,10 +416,9 @@ function lacuna_stories_content_types_field_group_info() {
     'weight' => '0',
     'children' => array(
       0 => 'field_image',
-      1 => 'field_video_review_stats',
-      2 => 'field_video_transcription',
-      3 => 'field_video_video',
-      4 => 'title',
+      1 => 'field_video_transcription',
+      2 => 'field_video_video',
+      3 => 'title',
     ),
     'format_type' => 'fieldset',
     'format_settings' => array(

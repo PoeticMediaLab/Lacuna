@@ -82,15 +82,15 @@ function annotator_libraries_info() {
     'vendor url' => 'http://annotatorjs.org',
     'download url' => 'https://github.com/openannotation/annotator/releases/latest',
     'version arguments' => array(
-      // 'file' => 'annotator-full.js',
-      'file' => 'annotator-full.min.js',
+      'file' => 'annotator-full.js',
+      // 'file' => 'annotator-full.min.js',
       'pattern' => '@Annotator\sv(.*)@',
       'lines' => 10,
     ),
     'files' => array(
       'js' => array(
-        'annotator-full.min.js',
-        // 'annotator-full.js',
+        // 'annotator-full.min.js',
+        'annotator-full.js',
       ),
       'css' => array(
         'annotator.min.css',

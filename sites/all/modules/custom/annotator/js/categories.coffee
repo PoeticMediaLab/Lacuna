@@ -67,8 +67,8 @@ class Annotator.Plugin.Categories extends Annotator.Plugin
     for annotation in annotations
       # check if category is empty
       console.log(annotation, 'loaded annotation')
-      # if !annotation.category.length
-      #   annotation.category = @options.emptyCategory
+      if !annotation.category.length
+        annotation.category = @options.emptyCategory
       for highlight in annotation.highlights
         $(highlight).addClass(@options.categoryColorClasses[annotation.category])
 
@@ -83,6 +83,7 @@ class Annotator.Plugin.Categories extends Annotator.Plugin
     # On mouseover, gets the annotation object
     # For displaying mouseover data
     console.log(annotation, 'annotation updateViewer')
+    console.log(field, 'field updateViewer')
     field = $(field)
     field.addClass(@options.categoryClass).html(@options.emptyCategory)
     # if !annotation.category?
@@ -107,6 +108,7 @@ class Annotator.Plugin.Categories extends Annotator.Plugin
       annotation.category = @options.category[0]  # default is first category
     if !annotation.category?
       annotation.category = @options.emptyCategory
+      annotation.text = ""  # because it can't be null or Annotator chokes
     @changeHighlightColors([annotation])
 
   highlightSelectedCategory: (event, annotation) ->

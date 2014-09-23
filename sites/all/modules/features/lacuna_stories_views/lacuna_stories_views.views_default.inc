@@ -468,24 +468,6 @@ function lacuna_stories_views_views_default_views() {
   $handler->display->display_options['fields']['view_node']['element_type'] = 'div';
   $handler->display->display_options['fields']['view_node']['element_class'] = 'lacuna-button';
   $handler->display->display_options['fields']['view_node']['element_label_colon'] = FALSE;
-  /* Field: Biblio: Abstract */
-  $handler->display->display_options['fields']['biblio_abst_e']['id'] = 'biblio_abst_e';
-  $handler->display->display_options['fields']['biblio_abst_e']['table'] = 'biblio';
-  $handler->display->display_options['fields']['biblio_abst_e']['field'] = 'biblio_abst_e';
-  $handler->display->display_options['fields']['biblio_abst_e']['relationship'] = 'field_bibliographic_entry_target_id';
-  $handler->display->display_options['fields']['biblio_abst_e']['exclude'] = TRUE;
-  $handler->display->display_options['fields']['biblio_abst_e']['alter']['max_length'] = '600';
-  $handler->display->display_options['fields']['biblio_abst_e']['alter']['trim'] = TRUE;
-  /* Field: Content: Hover Abstract */
-  $handler->display->display_options['fields']['field_biblio_hover_abstract']['id'] = 'field_biblio_hover_abstract';
-  $handler->display->display_options['fields']['field_biblio_hover_abstract']['table'] = 'field_data_field_biblio_hover_abstract';
-  $handler->display->display_options['fields']['field_biblio_hover_abstract']['field'] = 'field_biblio_hover_abstract';
-  $handler->display->display_options['fields']['field_biblio_hover_abstract']['relationship'] = 'field_bibliographic_entry_target_id';
-  $handler->display->display_options['fields']['field_biblio_hover_abstract']['label'] = '';
-  $handler->display->display_options['fields']['field_biblio_hover_abstract']['exclude'] = TRUE;
-  $handler->display->display_options['fields']['field_biblio_hover_abstract']['element_label_colon'] = FALSE;
-  $handler->display->display_options['fields']['field_biblio_hover_abstract']['empty'] = '[biblio_abst_e]';
-  $handler->display->display_options['fields']['field_biblio_hover_abstract']['hide_alter_empty'] = FALSE;
   /* Field: Content: Title */
   $handler->display->display_options['fields']['title']['id'] = 'title';
   $handler->display->display_options['fields']['title']['table'] = 'node';
@@ -506,6 +488,40 @@ function lacuna_stories_views_views_default_views() {
   $handler->display->display_options['fields']['biblio_short_title']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['biblio_short_title']['empty'] = '<a href="[path_1]">[title]</a>';
   $handler->display->display_options['fields']['biblio_short_title']['biblio_label'] = 0;
+  /* Field: Biblio: Abstract */
+  $handler->display->display_options['fields']['biblio_abst_e']['id'] = 'biblio_abst_e';
+  $handler->display->display_options['fields']['biblio_abst_e']['table'] = 'biblio';
+  $handler->display->display_options['fields']['biblio_abst_e']['field'] = 'biblio_abst_e';
+  $handler->display->display_options['fields']['biblio_abst_e']['relationship'] = 'field_bibliographic_entry_target_id';
+  $handler->display->display_options['fields']['biblio_abst_e']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['biblio_abst_e']['alter']['max_length'] = '600';
+  $handler->display->display_options['fields']['biblio_abst_e']['alter']['trim'] = TRUE;
+  /* Field: Content: Hover Abstract */
+  $handler->display->display_options['fields']['field_biblio_hover_abstract']['id'] = 'field_biblio_hover_abstract';
+  $handler->display->display_options['fields']['field_biblio_hover_abstract']['table'] = 'field_data_field_biblio_hover_abstract';
+  $handler->display->display_options['fields']['field_biblio_hover_abstract']['field'] = 'field_biblio_hover_abstract';
+  $handler->display->display_options['fields']['field_biblio_hover_abstract']['relationship'] = 'field_bibliographic_entry_target_id';
+  $handler->display->display_options['fields']['field_biblio_hover_abstract']['label'] = '';
+  $handler->display->display_options['fields']['field_biblio_hover_abstract']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['field_biblio_hover_abstract']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['field_biblio_hover_abstract']['empty'] = '[biblio_abst_e]';
+  $handler->display->display_options['fields']['field_biblio_hover_abstract']['hide_alter_empty'] = FALSE;
+  $handler->display->display_options['fields']['field_biblio_hover_abstract']['settings'] = array(
+    'trim_length' => '600',
+  );
+  /* Field: Global: Popup */
+  $handler->display->display_options['fields']['popup']['id'] = 'popup';
+  $handler->display->display_options['fields']['popup']['table'] = 'popup_views_integration';
+  $handler->display->display_options['fields']['popup']['field'] = 'popup';
+  $handler->display->display_options['fields']['popup']['label'] = '';
+  $handler->display->display_options['fields']['popup']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['popup']['title'] = '(See abstract)';
+  $handler->display->display_options['fields']['popup']['text'] = '[field_biblio_hover_abstract] ';
+  $handler->display->display_options['fields']['popup']['close'] = 0;
+  $handler->display->display_options['fields']['popup']['origin'] = 'top-left';
+  $handler->display->display_options['fields']['popup']['expand'] = 'top-right';
+  $handler->display->display_options['fields']['popup']['width'] = '200';
+  $handler->display->display_options['fields']['popup']['style'] = '0';
   /* Field: Biblio: Year of Publication */
   $handler->display->display_options['fields']['biblio_year']['id'] = 'biblio_year';
   $handler->display->display_options['fields']['biblio_year']['table'] = 'biblio';

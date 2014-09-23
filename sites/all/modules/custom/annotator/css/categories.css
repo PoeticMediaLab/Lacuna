@@ -30,6 +30,7 @@
     -moz-border-radius: 6px 6px 6px 6px;
     border-radius: 6px 6px 6px 6px;
     color: black;
+    background-color: rgba(255, 255, 10, 0.5);
 }
 
 .annotator-category-selected {

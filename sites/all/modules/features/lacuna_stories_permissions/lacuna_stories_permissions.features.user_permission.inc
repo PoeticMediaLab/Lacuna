@@ -2140,12 +2140,34 @@ function lacuna_stories_permissions_user_default_permissions() {
     'module' => 'comment',
   );
 
+  // Exported permission: 'publish any blog content'.
+  $permissions['publish any blog content'] = array(
+    'name' => 'publish any blog content',
+    'roles' => array(),
+    'module' => 'publishcontent',
+  );
+
   // Exported permission: 'publish any content'.
   $permissions['publish any content'] = array(
     'name' => 'publish any content',
     'roles' => array(
+      'Content Manager' => 'Content Manager',
       'administrator' => 'administrator',
     ),
+    'module' => 'publishcontent',
+  );
+
+  // Exported permission: 'publish any thread content'.
+  $permissions['publish any thread content'] = array(
+    'name' => 'publish any thread content',
+    'roles' => array(),
+    'module' => 'publishcontent',
+  );
+
+  // Exported permission: 'publish editable blog content'.
+  $permissions['publish editable blog content'] = array(
+    'name' => 'publish editable blog content',
+    'roles' => array(),
     'module' => 'publishcontent',
   );
 
@@ -2153,8 +2175,32 @@ function lacuna_stories_permissions_user_default_permissions() {
   $permissions['publish editable content'] = array(
     'name' => 'publish editable content',
     'roles' => array(
+      'Content Manager' => 'Content Manager',
+      'Instructor' => 'Instructor',
+      'Student' => 'Student',
       'administrator' => 'administrator',
     ),
+    'module' => 'publishcontent',
+  );
+
+  // Exported permission: 'publish editable thread content'.
+  $permissions['publish editable thread content'] = array(
+    'name' => 'publish editable thread content',
+    'roles' => array(),
+    'module' => 'publishcontent',
+  );
+
+  // Exported permission: 'publish own blog content'.
+  $permissions['publish own blog content'] = array(
+    'name' => 'publish own blog content',
+    'roles' => array(),
+    'module' => 'publishcontent',
+  );
+
+  // Exported permission: 'publish own thread content'.
+  $permissions['publish own thread content'] = array(
+    'name' => 'publish own thread content',
+    'roles' => array(),
     'module' => 'publishcontent',
   );
 
@@ -2303,12 +2349,34 @@ function lacuna_stories_permissions_user_default_permissions() {
     'module' => 'shortcut',
   );
 
+  // Exported permission: 'unpublish any blog content'.
+  $permissions['unpublish any blog content'] = array(
+    'name' => 'unpublish any blog content',
+    'roles' => array(),
+    'module' => 'publishcontent',
+  );
+
   // Exported permission: 'unpublish any content'.
   $permissions['unpublish any content'] = array(
     'name' => 'unpublish any content',
     'roles' => array(
+      'Content Manager' => 'Content Manager',
       'administrator' => 'administrator',
     ),
+    'module' => 'publishcontent',
+  );
+
+  // Exported permission: 'unpublish any thread content'.
+  $permissions['unpublish any thread content'] = array(
+    'name' => 'unpublish any thread content',
+    'roles' => array(),
+    'module' => 'publishcontent',
+  );
+
+  // Exported permission: 'unpublish editable blog content'.
+  $permissions['unpublish editable blog content'] = array(
+    'name' => 'unpublish editable blog content',
+    'roles' => array(),
     'module' => 'publishcontent',
   );
 
@@ -2316,8 +2384,32 @@ function lacuna_stories_permissions_user_default_permissions() {
   $permissions['unpublish editable content'] = array(
     'name' => 'unpublish editable content',
     'roles' => array(
+      'Content Manager' => 'Content Manager',
+      'Instructor' => 'Instructor',
+      'Student' => 'Student',
       'administrator' => 'administrator',
     ),
+    'module' => 'publishcontent',
+  );
+
+  // Exported permission: 'unpublish editable thread content'.
+  $permissions['unpublish editable thread content'] = array(
+    'name' => 'unpublish editable thread content',
+    'roles' => array(),
+    'module' => 'publishcontent',
+  );
+
+  // Exported permission: 'unpublish own blog content'.
+  $permissions['unpublish own blog content'] = array(
+    'name' => 'unpublish own blog content',
+    'roles' => array(),
+    'module' => 'publishcontent',
+  );
+
+  // Exported permission: 'unpublish own thread content'.
+  $permissions['unpublish own thread content'] = array(
+    'name' => 'unpublish own thread content',
+    'roles' => array(),
     'module' => 'publishcontent',
   );
 
