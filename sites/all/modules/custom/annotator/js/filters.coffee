@@ -200,6 +200,14 @@ class Annotator.Plugin.Filters extends Annotator.Plugin
       .on("click", @buttonClick)
     )
 
+  # hoverFilter: (event) =>
+  #   # When a filter field is hovered
+  #   console.log(event)
+  #   if (event.target.name == 'tags')
+  #     $(event.target).tagcloud()
+  #     # data = $(event.target).data()
+  #     # items = data.uiAutocomplete.options.source
+
   drawFilters: ->
     # draw the filter elements in the sidebar
     sidebar = $(@options.selector.sidebar)
@@ -215,4 +223,6 @@ class Annotator.Plugin.Filters extends Annotator.Plugin
         source: values
         select: (event, ui) =>
           @filterSelected(event, ui)
+      # $("input[name=#{filter}]").on('hover', @hoverFilter)
+
     sidebar.append("<div id='activeFilters'></div>")

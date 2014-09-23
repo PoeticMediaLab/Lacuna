@@ -415,7 +415,7 @@ function annotation_api_entity_prepare($entity, $op) {
       unset($entity->uid);
       // Translate Drupal-encoded content back into something Annotator.js can use
       $entity->ranges = drupal_json_decode($entity->ranges[$entity->language][0]['value']);
-      if (isset($entity->text) && count($entity->text[$entity->language])) {
+      if (isset($entity->text[$entity->language]) && count($entity->text[$entity->language])) {
         $entity->text = $entity->text[$entity->language][0]['value'];
       } else {
         $entity->text = null; // Otherwise, Annotator chokes on an empty array
@@ -437,9 +437,12 @@ function annotation_api_entity_prepare($entity, $op) {
         }
       }
       if (isset($entity->private)) {
-        // ddl('found privacy setting');
+        // Format permissions for the Annotator Permissions plugin
+        // We only implement "read" permissions right now
+        // This setting is strictly to respect the current checkbox settings
+        // Drupal permissions control what is actually shown
         $entity->permissions = array();
-        if ($entity->private[$entity->language][0]['value'] = 0) {
+        if ($entity->private[$entity->language][0]['value'] == 0) {
           $entity->permissions['read'] = array();
         }
         else {
