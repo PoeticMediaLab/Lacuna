@@ -59,7 +59,7 @@
       _results = [];
       for (_j = 0, _len2 = annotations.length; _j < _len2; _j++) {
         annotation = annotations[_j];
-        if (!annotation.category.length) {
+        if (!(annotation.category != null) || !annotation.category.length) {
           annotation.category = this.options.emptyCategory;
         }
         _results.push((function() {
