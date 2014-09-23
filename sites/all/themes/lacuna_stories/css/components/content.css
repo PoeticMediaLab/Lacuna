@@ -29,3 +29,14 @@
   margin-top: 20px;
   margin-bottom: 20px;
 }
+
+/***
+ * Styling for jQuery autocomplete drop-downs in Annotator window only
+ * A bit fragile because it relies on the Tags autocomplete being the first
+ * of those UI elements to be added to the page
+ * Unsure how to add a unique id to the element that we set - MLW
+ ****/
+/* line 32, ../../sass/components/content.scss */
+ul#ui-id-1.ui-autocomplete {
+  padding-top: 50px;
+}
