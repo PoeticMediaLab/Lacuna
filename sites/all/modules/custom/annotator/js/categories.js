@@ -59,7 +59,6 @@
       _results = [];
       for (_j = 0, _len2 = annotations.length; _j < _len2; _j++) {
         annotation = annotations[_j];
-        console.log(annotation, 'loaded annotation');
         if (!annotation.category.length) {
           annotation.category = this.options.emptyCategory;
         }
@@ -84,8 +83,6 @@
 
     Categories.prototype.updateViewer = function(field, annotation) {
       var _ref;
-      console.log(annotation, 'annotation updateViewer');
-      console.log(field, 'field updateViewer');
       field = $(field);
       field.addClass(this.options.categoryClass).html(this.options.emptyCategory);
       if ((annotation.category != null) && annotation.category.length > 0) {
@@ -110,7 +107,6 @@
       }
       if (!(annotation.category != null)) {
         annotation.category = this.options.emptyCategory;
-        annotation.text = "";
       }
       return this.changeHighlightColors([annotation]);
     };

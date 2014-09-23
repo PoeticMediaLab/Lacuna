@@ -415,8 +415,10 @@ function annotation_api_entity_prepare($entity, $op) {
       unset($entity->uid);
       // Translate Drupal-encoded content back into something Annotator.js can use
       $entity->ranges = drupal_json_decode($entity->ranges[$entity->language][0]['value']);
-      if (isset($entity->text) && !empty($entity->text)) {
+      if (isset($entity->text) && count($entity->text[$entity->language])) {
         $entity->text = $entity->text[$entity->language][0]['value'];
+      } else {
+        $entity->text = null; // Otherwise, Annotator chokes on an empty array
       }
       $entity->quote = $entity->quote[$entity->language][0]['value'];
       // Category is for the Category plugin
