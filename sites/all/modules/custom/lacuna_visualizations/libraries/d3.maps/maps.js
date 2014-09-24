@@ -1,6 +1,11 @@
 /**
  * @file
  * Lacuna maps visualization.
+ *
+ * Creates a network graph of responses and their references
+ *
+ * Ben Allen <benallen@stanford.edu> 2014
+ *
  */
 
 
@@ -8,7 +13,7 @@
 
 	// using bostock's d3 margin convention
 	// (http://bl.ocks.org/mbostock/3019563)
-	// 
+	//
 	// bottom needs to be fairly large so that the axis labels don't
 	// run off the edge when in months with long names.
 	// TODO actually fix this, I've broken out the brush and axis into
@@ -17,7 +22,7 @@
 
 
  Drupal.d3.maps = function (select, settings) {
-	
+
     var initialWidth  = (settings.config.width || 800),
         initialHeight = (settings.config.height || 800),
         nodes  = settings.nodes,
@@ -28,7 +33,7 @@
 		userList = settings.config.userList,
         color  = d3.scale.category20(),
 		drawDocumentCircle = settings.config.drawDocumentCircle;
-	
+
 	var linkedNodesOnly = !drawDocumentCircle;
 	//console.log(links);
 
@@ -74,16 +79,16 @@
 	var height = initialHeight - margin.top - margin.bottom;
 
 
-	// assign date for links as the date of creation for the source node. 
+	// assign date for links as the date of creation for the source node.
 	if(links)
 	{
 		 for (var i = 0; i < links.length; i++) {
 			links[i].data.date = nodes[links[i].source].data.date;
-		} 
+		}
 	} else {
 		links = {};
 	}
-	
+
     var force = d3.layout.force(height)
       .size([width, height]);
 
@@ -94,9 +99,9 @@
 	 function displayTooltip(d) {
 		xPos = d.x;
 		yPos = d.y;
-		
+
 		d3.select("#maps-tooltip")
-		.style("left", xPos + 30 + "px") 
+		.style("left", xPos + 30 + "px")
 		.style("top", yPos + 70 + "px")
 			;
 			d3.select("#maps-tooltip")
@@ -129,10 +134,10 @@
 		// unix epoch, whereas Drupal gives time based on seconds
 		// since unix epoch.
 		var date = new Date(d.data.date * 1000);
-		
+
 		// clear out the html links, then add links based on what the
-		// node actually links to. 
-		// -- 
+		// node actually links to.
+		// --
 		d3.select("#links")
 			.selectAll("a")
 			.remove()
@@ -160,9 +165,9 @@
 				.classed("hidden", false)
 				;
 
-		// if there are no links, hide the links span 
+		// if there are no links, hide the links span
 		// altogether.
-		} 
+		}
 		else {
 			d3.select("#maps-tooltip")
 				.selectAll("#links")
@@ -182,7 +187,7 @@
 					;
 			});
   }; // end displayTooltip
- 
+
      // additional settings for the advanced force directed graphs
     if (settings.gravity) {
       force.gravity(settings.gravity)
@@ -199,33 +204,33 @@
     if (settings.linkDistance) {
       force.linkDistance(settings.linkDistance)
     }
-	
+
     force.charge(-40);
     force.distance(50);
     force.gravity(.09);
-	
 
-	// div containing: 
+
+	// div containing:
 	// 1) various toggleable features (biblio circle... more to come)
-	// 2) selectable names of all students w/ blog posts. 
+	// 2) selectable names of all students w/ blog posts.
 	var controlPanelDiv = d3.select("#" + settings.id).append("div")
 		.classed("controlPanelDiv", true)
 		.style("height", "70%")
 		.style("width", "200px")
 /*		.style("border", "2px solid")
-		.style("border-color", "black")  */	
+		.style("border-color", "black")  */
 		.style("float", "right")
 		;
-	
+
 	var controlPanelFontSize = 20;
 	var userSelectorSvg = d3.select(".controlPanelDiv").append("svg")
 		.attr("id", "userSelectorSvg")
 		.attr("height", "80%")
 		.attr("width", "200px")
 		;
-		
 
-	var playingFlag = false; 
+
+	var playingFlag = false;
 	var playFromStart = userSelectorSvg.append("g")
 							.attr("id", "playFromStart")
 							.classed("selected", function() {
@@ -242,7 +247,7 @@
 									}, 3000);
 								}
 							})
-							; 
+							;
 /*	playFromStart.append("circle")
 		.attr("id", "playFromStartCircle")
 		.attr("cx", "12px")
@@ -256,10 +261,10 @@
 			.attr("font-family", "serif")
 			.attr("x", "25px")
 			.attr("y", "50px")
-			.text(function(d) { 
+			.text(function(d) {
 				if (!playingFlag){
 					return "Play from start";
-					} 
+					}
 				else {
 					return "Pause playback";
 				}
@@ -281,7 +286,7 @@
 									if(drawDocumentCircle){
 										drawDocumentCircle = false;
 										linkedNodesOnly = !drawDocumentCircle;
-										arrangeDocumentNodes.classed("selected", true); 
+										arrangeDocumentNodes.classed("selected", true);
 										arrangeDocuments();
 
 									} else {
@@ -307,7 +312,7 @@
 				.attr("font-family", "serif")
 				.attr("x", "25px")
 				.attr("y", "20px")
-				.text(function(d) { 
+				.text(function(d) {
 					return "Linked nodes only";})
 			;
 
@@ -324,12 +329,12 @@
 			.classed("userListItem", true)
 			// unSelected vs. selected because it makes the css
 			// slightly less complicated.
-			.classed("unSelected", false) 
+			.classed("unSelected", false)
 			// stripping spaces, lest we accidentally assign two ids
 			// instead of one.
 			.attr("id", function(d) { return d[0].replace(/\s+/g, '')});
 
-		userSelectionGroup.on("click", function(d) { 
+		userSelectionGroup.on("click", function(d) {
 			foundUserFlag = false;
 			for (var i = 0; i < selectedUsers.length; i++){
 				// unselect if already selected
@@ -351,7 +356,7 @@
 			// selected/unselected user.
 
 			redrawGraph();
-			
+
 
 		})
 		.attr("transform", function(d, i) {
@@ -363,7 +368,7 @@
 				.attr("font-family", "serif")
 				.attr("id", "userSelectionText")
 				.attr("x", "25px")
-				.text(function(d) { 
+				.text(function(d) {
 					return d[0];})
 			;
 
@@ -372,7 +377,7 @@
 			.attr("cx", "12px")
 			.attr("cy", function(d, i) {
 				return -5;
-			}) 
+			})
 			.attr("r", 10)
 			.attr("fill", function(d, i) {
 				return d[1];
@@ -380,7 +385,7 @@
 			.attr("stroke", "black")
 			.attr("stroke-width", 3)
 			;
-	
+
 	var userItems = userSelectorSvg.selectAll(".userListItem");
 
 	// draw an svg for the graph display, using values from
@@ -414,7 +419,7 @@
 
 	for (var i = 0; i < nodes.length; i++) {
 		// assign ids to each node; once the array is dynamic, we can't
-		// simply refer to nodes by position. 
+		// simply refer to nodes by position.
 		 nodes[i].id = i;
 	}
 
@@ -426,7 +431,7 @@
 	// links from being drawn on top of old nodes.
 	graph.append("g").attr("id", "links");
 	graph.append("g").attr("id", "nodes");
-	
+
 	function tick() {
 
 		link.attr("x1", function(d) { return d.source.x; })
@@ -452,7 +457,7 @@
 	// link's source node, meaning that it's not necessary to check
 	// for links before or after the last nodes.
 	var startDate = new Date(firstNode * 1000);
-	var endDate = new Date(lastNode * 1000); 
+	var endDate = new Date(lastNode * 1000);
 	//console.log(startDate);
 	//console.log(endDate);
 
@@ -470,7 +475,7 @@
 			.ticks(d3.time.day)
 			.tickFormat(d3.time.format("%B %e"))
 			;
-	brushSvg.append("g") 
+	brushSvg.append("g")
 		.classed("axis", true)
 		// move to bottom of graph.
 		.attr("transform", "translate(0," + (brushSvgHeight - margin.bottom * 0.7) + ")")
@@ -496,7 +501,7 @@
 				.call(brush)
 				.call(brush.event)
 				;
-			
+
 			// 1.5. set the first entry in brushextent to margin.left.
 			// 2. set brush to ignore mouse events  (TODO)
 			// 3. set a transition on brush.
@@ -509,7 +514,7 @@
 				;
 			}, 1000);
 
-			
+
 	/*		gBrush.transition()
 				.call(brush)
 				.call(brush.event)
@@ -522,14 +527,14 @@
 		function brushStart () {
 		//	console.log("brushStart!"); // currently does nothing
 		};
-		
+
 
 		function brushUpdate() {
 			var extent = brush.extent();
 			timeFrame = extent;
 
 			redrawGraph();
-			
+
 		};
 
 		// The selected time frame. Set by the extent of the brush
@@ -579,11 +584,11 @@
 				if (date >= timeFrame[0] && date < timeFrame[1]) {
 					return true;
 				} else {
-					return false 
+					return false
 				};
-			} 
+			}
 		}
-	
+
 		// Now, actually create brush.
 		var brush = d3.svg.brush()
 						.x(timeScale)
@@ -602,7 +607,7 @@
 		function redrawGraph() {
 			filteredNodes = [];
 			filteredLinks = [];
-			filteredNodes = nodes.filter(inTimeFrame).filter(inSelectedUsers); 
+			filteredNodes = nodes.filter(inTimeFrame).filter(inSelectedUsers);
 			if (linkedNodesOnly) {
 				filteredNodes = filteredNodes.filter(isLinked);
 			}
@@ -610,7 +615,7 @@
 			start(filteredNodes, filteredLinks);
 		}
 
-		
+
 		// here's where the magic happens -- actually draws nodes and
 		// links to the svg.
 		function start(startNodes, startLinks) {
@@ -634,13 +639,13 @@
 				.remove()
 				;
 
-			
-				// bind data from settings to node. node is a g-element, not a 
+
+				// bind data from settings to node. node is a g-element, not a
 				// circle; circles are added to the node g-element below.
 				node = graph.select("#nodes").selectAll("g")
 							.data(startNodes, function(d) {return d.id;})
 							;
-				
+
 				// append a g element, put a circle in it.
 				node.enter().append("g")
 				.append("circle")
@@ -672,7 +677,7 @@
 					;
 
 				node.attr("class", function(d) { return d.data.itemType;} )
-					; 
+					;
 
 				var exitSelection = node.exit();
 
@@ -691,11 +696,11 @@
 				// only blogPosts are moveable -- document nodes are fixed.
 				graph.selectAll(".blog")
 					.call(force.drag);
-				
+
 				// aw, let's let 'em move biblio posts, too.
 				graph.selectAll(".biblio")
 					.call(force.drag);
-				
+
 				// _actually_ start the force diagram (finally!)
 				force.start();
 			}
@@ -704,18 +709,18 @@
 			// call to start() in brushUpdate().
 			brush.on('brushstart', function() { brushStart(); })
 				 .on('brush', function() { brushUpdate(); })
-				; 
+				;
 
 			// biblio nodes are arranged in a circle. this defines the
 			// position and radius of that circle. This is a
 			// non-elegant way of doing this, but my inner C
 			// programmer expressed itself here.  magic numbers
-			// arrived at through trial and error. 
-			
+			// arrived at through trial and error.
+
 			// TODO: rewrite this function to fix object constancy
 			// problems.
 			function arrangeDocuments() {
-				
+
 				var backgroundCx = width / 2;
 				var backgroundCy = height / 2 + 70;
 				var backgroundR = (height / 3) + 20;
@@ -730,7 +735,7 @@
 						if (nodes[i].data.itemType == "biblio") {
 							if (drawDocumentCircle)
 								nodes[i].fixed = true;
-							biblioCount++;	
+							biblioCount++;
 						}
 					}
 					// let's do some trigonometry.
@@ -759,8 +764,8 @@
 			// either way, redraw.
 			redrawGraph();
 		} // end arrangeDocuments()
-		
-			 
+
+
 
 			start(nodes, links); // start with all the nodes in, then
 								 // restart with only the

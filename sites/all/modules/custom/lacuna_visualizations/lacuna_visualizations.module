@@ -3,6 +3,10 @@
  * @file
  * Lacuna Stories module file. Displays a number of visualizations of
  * user data. Currently includes maps, journeys.
+ *
+ * Ben Allen <benallen@stanford.edu>
+ * Mike Widner <mikewidner@stanford.edu>
+ *
  */
 
 // to install maps:
@@ -249,24 +253,36 @@ function lacuna_visualizations_theme() {
  * Implements hook_menu().
  */
 function lacuna_visualizations_menu() {
-
-	$items['visualization/responses'] = array(
-	  'title' => 'Responses Map',
-	  'description' => 'Visualization showing links between student blog posts and primary sources',
-	  'access callback' => TRUE,
-	  'page callback' => 'lacuna_visualizations_mapview',
-	  'type' => MENU_NORMAL_ITEM,
-	  );
-
-	 $items['visualization/journey'] = array(
-	  'title' => 'Journey view',
-	  'description' => 'Visualization showing student movement
-	  through the site',
-	  'access callback' => TRUE,
-	  'page callback' => 'lacuna_visualizations_journeyview',
-	  'type' => MENU_NORMAL_ITEM,
-	);
-	return $items;
+	return array(
+    'visualization/responses' => array(
+  	  'title' => 'Responses Map',
+  	  'description' => 'Visualization showing links between responses and primary sources',
+  	  'access callback' => TRUE,
+  	  'page callback' => 'lacuna_visualizations_mapview',
+  	  'type' => MENU_NORMAL_ITEM,
+  	  ),
+    'visualization/journey' => array(
+  	  'title' => 'Journey view',
+  	  'description' => 'Visualization showing student movement through the site',
+  	  'access callback' => TRUE,
+  	  'page callback' => 'lacuna_visualizations_journeyview',
+  	  'type' => MENU_NORMAL_ITEM,
+  	),
+    'visualization/dashboard' => array(
+      'title' => 'Annotations Dashboard',
+      'description' => 'Visualization showing all annotations',
+      'access callback' => TRUE,
+      'page callback' => 'lacuna_visualizations_annotation_dashboard',
+      'type' => MENU_NORMAL_ITEM,
+    ),
+    'visualization/dashboard/data.json' => array(
+      'title' => 'Data for Annotations Dashboard',
+      'description' => 'The json-formatted data for the Annotations Dashboard',
+      'access callback' => TRUE,
+      'page callback' => 'lacuna_visualizations_annotation_dashboard_data',
+      'type' => MENU_CALLBACK,
+    ),
+  );
 }
 
 /**
@@ -444,9 +460,7 @@ function lacuna_visualizations_mapview() {
     if (!$dataArray['author']){
       $dataArray['author'] = "None";
     }
-
     $title = $item->title;
-
 		/* pull out data needed for biblio nodes and add it to
 		 * $dataArray */
 		if ($item->type == "biblio") {
@@ -478,7 +492,6 @@ function lacuna_visualizations_mapview() {
           }
         }
       } // end if($item->field_bibliographic_entry)
-
 
 /*			if($item->field_bibliographic_entry){
 				print_r($item->field_bibliographic_entry);
@@ -526,3 +539,52 @@ function lacuna_visualizations_mapview() {
   );
   return theme('graphapi_dispatch', array('graph' => $graph, 'config' => $options));
 }  // end function lacuna_visualizations_mapview()
+
+function lacuna_visualizations_annotation_dashboard() {
+  // Load the dashboard visualization
+  global $base_url;
+  // Needs to match the path callback for the data
+  // Find some way to get path dynamically?
+  drupal_add_js(array('annotation_dashboard_data_url' => $base_url + '/visualization/dashboard/data.json'), 'setting');
+}
+
+function lacuna_visualizations_annotation_dashboard_data() {
+  // Prepare the data for the dashboard, output as JSON
+  // First, query all annotations with no access checks
+  global $user;
+  $query = new EntityFieldQuery();
+  $annotations = $query->entityCondition('entity_type', 'node')
+      ->entityCondition('bundle', 'annotation')
+      ->addTag('DANGEROUS_ACCESS_CHECK_OPT_OUT')
+      ->execute();
+  $canReadAll = user_access('view any private annotations');
+  $documentNames = array(); // to cut down on db queries
+  foreach ($annotations as $annotation) {
+    $isPrivate = $annotation->private[$annotation->language][0]['value'];
+    if (!$canReadAll && $isPrivate && $annotation->uid != $user->uid) {
+      // Clear sensitive data
+      // Just preserve metadata
+      // TODO: Anonymize names?
+      $annotation->text[$annotation->language][0]['value'] = null;
+      $annotation->quote[$annotation->language][0]['value'] = null;
+    }
+    // For readability
+    $target_id = $annotation->annotation_reference[$annotation->language][0]['target_id'];
+    if (!array_key_exists($target_id, $documentNames)) {
+      $document = node_load($target_id);
+      // TODO: use Biblio reference short title instead
+      $documentNames[$target_id] = $document->title;
+    }
+    $annotation->documentTitle = $documentNames[$target_id];
+    // Convert from Drupal format to a simpler data format for viz
+    $annotation->text = $annotation->text[$annotation->language][0]['value'];
+    $annotation->quote = $annotation->quote[$annotation->language][0]['value'];
+    $annotation->private = $annotation->private[$annotation->language][0]['value'];
+    // TODO: add annotated document name
+    //       format time created/updated?
+    //       convert category term reference to string
+    //       serialize tags? Add tags to dashboard view
+  }
+  drupal_json_output($annotations);
+  drupal_exit();
+}
