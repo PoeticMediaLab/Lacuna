@@ -553,13 +553,15 @@ function lacuna_visualizations_annotation_dashboard_data() {
   // First, query all annotations with no access checks
   global $user;
   $query = new EntityFieldQuery();
-  $annotations = $query->entityCondition('entity_type', 'node')
+  $result = $query->entityCondition('entity_type', 'node')
       ->entityCondition('bundle', 'annotation')
       ->addTag('DANGEROUS_ACCESS_CHECK_OPT_OUT')
       ->execute();
   $canReadAll = user_access('view any private annotations');
   $documentNames = array(); // to cut down on db queries
-  foreach ($annotations as $annotation) {
+  $annotations = array();
+  foreach (array_keys($result['node']) as $nid) {
+    $annotation = node_load($nid);
     $isPrivate = $annotation->private[$annotation->language][0]['value'];
     if (!$canReadAll && $isPrivate && $annotation->uid != $user->uid) {
       // Clear sensitive data
@@ -584,6 +586,7 @@ function lacuna_visualizations_annotation_dashboard_data() {
     //       format time created/updated?
     //       convert category term reference to string
     //       serialize tags? Add tags to dashboard view
+    array_push($annotations, $annotation);
   }
   drupal_json_output($annotations);
   drupal_exit();
