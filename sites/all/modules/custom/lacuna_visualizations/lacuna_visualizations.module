@@ -560,12 +560,11 @@ function lacuna_visualizations_annotation_dashboard_data() {
   $canReadAll = user_access('view any private annotations');
   $documentNames = array(); // to cut down on db queries
   $annotations = array();
+  // Now check permissions, clear sensitive data, preserve metadata
   foreach (array_keys($result['node']) as $nid) {
     $annotation = node_load($nid);
     $isPrivate = $annotation->private[$annotation->language][0]['value'];
     if (!$canReadAll && $isPrivate && $annotation->uid != $user->uid) {
-      // Clear sensitive data
-      // Just preserve metadata
       // TODO: Anonymize names?
       $annotation->text[$annotation->language][0]['value'] = null;
       $annotation->quote[$annotation->language][0]['value'] = null;
@@ -577,16 +576,19 @@ function lacuna_visualizations_annotation_dashboard_data() {
       // TODO: use Biblio reference short title instead
       $documentNames[$target_id] = $document->title;
     }
-    $annotation->documentTitle = $documentNames[$target_id];
+    // Create new data object with only the fields we need
+    $data = new StdClass();
+    $data->id = $annotation->nid;
+    $data->documentTitle = $documentNames[$target_id];
     // Convert from Drupal format to a simpler data format for viz
-    $annotation->text = $annotation->text[$annotation->language][0]['value'];
-    $annotation->quote = $annotation->quote[$annotation->language][0]['value'];
-    $annotation->private = $annotation->private[$annotation->language][0]['value'];
-    // TODO: add annotated document name
+    $data->text = $annotation->text[$annotation->language][0]['value'];
+    $data->quote = $annotation->quote[$annotation->language][0]['value'];
+    $data->private = $annotation->private[$annotation->language][0]['value'];
+    // TODO:
     //       format time created/updated?
     //       convert category term reference to string
     //       serialize tags? Add tags to dashboard view
-    array_push($annotations, $annotation);
+    array_push($annotations, $data);
   }
   drupal_json_output($annotations);
   drupal_exit();
