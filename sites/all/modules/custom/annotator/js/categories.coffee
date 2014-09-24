@@ -66,7 +66,7 @@ class Annotator.Plugin.Categories extends Annotator.Plugin
       i++
     for annotation in annotations
       # check if category is empty
-      if !annotation.category.length
+      if !annotation.category? or !annotation.category.length
         annotation.category = @options.emptyCategory
       for highlight in annotation.highlights
         $(highlight).addClass(@options.categoryColorClasses[annotation.category])
