@@ -632,6 +632,7 @@ function lacuna_visualizations_annotation_dashboard_data() {
         $data->{$field} = $annotation->{$field}[$annotation->language][0]['value'];
       }
     }
+    $data->private ? $data->private = 'Public' : $data->private = 'Private';
     // TODO: Refactor "annotation_tags" to be "tags" -- must wait until 1.0
     // Not a good idea to change it for existing alpha or beta sites
     $fields = array('annotation_tags', 'category');
