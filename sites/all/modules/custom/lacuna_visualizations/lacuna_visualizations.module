@@ -552,6 +552,10 @@ function lacuna_visualizations_annotation_dashboard_data() {
   // Prepare the data for the dashboard, output as JSON
   // First, query all annotations with no access checks
   global $user;
+  if (!user_access('view published content')) {
+    drupal_access_denied();
+    return FALSE;
+  }
   $query = new EntityFieldQuery();
   $result = $query->entityCondition('entity_type', 'node')
       ->entityCondition('bundle', 'annotation')
@@ -577,17 +581,34 @@ function lacuna_visualizations_annotation_dashboard_data() {
       $documentNames[$target_id] = $document->title;
     }
     // Create new data object with only the fields we need
+    // Ensures no unintended data exposed
     $data = new StdClass();
     $data->id = $annotation->nid;
     $data->documentTitle = $documentNames[$target_id];
+    $data->created = $annotation->created;
+    $data->updated = $annotation->changed;
+
     // Convert from Drupal format to a simpler data format for viz
-    $data->text = $annotation->text[$annotation->language][0]['value'];
-    $data->quote = $annotation->quote[$annotation->language][0]['value'];
-    $data->private = $annotation->private[$annotation->language][0]['value'];
-    // TODO:
-    //       format time created/updated?
-    //       convert category term reference to string
-    //       serialize tags? Add tags to dashboard view
+    // TODO: Refactor these two into a single function
+    // Put function in a helper library for general use here and Annotation Store
+    $fields = array('text', 'quote', 'private');
+    foreach ($fields as $field) {
+      if (isset($annotation->{$field}[$annotation->language][0]['value'])) {
+        $data->{$field} = $annotation->{$field}[$annotation->language][0]['value'];
+      }
+    }
+    // TODO: Refactor "annotation_tags" to be "tags" -- must wait until 1.0
+    // Not a good idea to change it for existing alpha or beta sites
+    $fields = array('annotation_tags', 'category');
+    foreach ($fields as $field) {
+      $data->{$field} = array();
+      if (isset($annotation->{$field}[$annotation->language][0]['tid'])) {
+        foreach ($annotation->{$field}[$annotation->language] as $tag) {
+          $term = taxonomy_term_load($tag['tid']);
+          array_push($data->{$field}, $term->name);
+        }
+      }
+    }
     array_push($annotations, $data);
   }
   drupal_json_output($annotations);
