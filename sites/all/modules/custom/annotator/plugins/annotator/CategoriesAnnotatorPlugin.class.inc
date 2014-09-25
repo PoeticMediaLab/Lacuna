@@ -24,7 +24,7 @@ class CategoriesAnnotatorPlugin extends AnnotatorPlugin {
   public function setup() {
     $settings = $this->settings();
     // Sends the settings data to a global variable where JavaScript can access it. In JS console, type: Drupal.settings.category_list
-    drupal_add_js(array('category_settings' => (array) $settings), 'setting');
+    drupal_add_js(array('annotator_categories' => (array) $settings), 'setting');
 
     // CSS file for Categories
     drupal_add_css(drupal_get_path('module', 'annotator') . '/css/categories.css');

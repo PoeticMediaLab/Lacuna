@@ -55,7 +55,7 @@ function lacuna_visualizations_default_libraries() {
 	return array(
 		'd3.maps',
 		'd3.journeys',
-    'd3.annotations',
+    'd3.annotations_dashboard',
 		);
 }
 
@@ -208,7 +208,8 @@ function lacuna_visualizations_libraries_info_alter(&$libraries) {
   }
   // By default, the libraries module only checks the libraries folders.
   // We need to add this module's libraries path to the library info.
-  $path = drupal_get_path('module', 'lacuna_visualizations') . '/libraries/'; foreach (lacuna_visualizations_default_libraries() as $library_name) {
+  $path = drupal_get_path('module', 'lacuna_visualizations') . '/libraries/';
+  foreach (lacuna_visualizations_default_libraries() as $library_name) {
     // Change library path to path/to/module/d3/libraries
     $libraries[$library_name]['library path'] = $path . $library_name;
   }
@@ -533,21 +534,44 @@ function lacuna_visualizations_mapview() {
   return theme('graphapi_dispatch', array('graph' => $graph, 'config' => $options));
 }  // end function lacuna_visualizations_mapview()
 
+// Implements hook_library()
+// To load Crossfilter
+function lacuna_visualizations_library() {
+  return array(
+    'crossfilter' => array(
+      'title' => 'Crossfilter',
+      'website' => 'http://square.github.io/crossfilter/',
+      'version' => '1.3.10',
+      'js' => array(
+        drupal_get_path('module', 'lacuna_visualizations') . '/libraries/crossfilter/crossfilter.min.js' => array()
+      )
+    )
+  );
+}
+
 function lacuna_visualizations_annotation_dashboard() {
   // Load the dashboard visualization
   global $base_url;
-  // Needs to match the path callback for the data
-  // Find some way to get path dynamically?
-  drupal_add_js(array('annotation_dashboard_data_url' => $base_url + '/visualization/dashboard/data.json'), 'setting');
     // settings.config
-  $options = array(
-    'width' => 800,
-    'height' => 800,
-    'item-width' => 45,
-    'engine' => 'd3',
-    'library' => 'annotations',
+  $settings = array(
+    'config' => array(
+      'size' => array(
+        'graph' => array(
+          'width' => 800,
+          'height' => 5000,
+        ),
+      ),
+      'data_url' => $base_url . '/visualization/dashboard/data.json',
+    ),
+    'id' => 'annotations_dashboard',
+    'type' => 'annotations_dashboard',
   );
-  return theme('graphapi_dispatch', array('graph' => $graph, 'config' => $options));
+  drupal_add_js($settings, 'setting');
+  // Dashboard uses Crossfilter and DataTables
+  drupal_add_library('lacuna_visualizations', 'crossfilter', FALSE);
+  // We don't need the Graph API for this part, so go straight to d3
+  return d3_draw($settings);
+  // return theme('graphapi_dispatch', array('graph' => null, 'config' => $settings));
 }
 
 function lacuna_visualizations_annotation_dashboard_data() {
@@ -567,6 +591,7 @@ function lacuna_visualizations_annotation_dashboard_data() {
       ->execute();
   $canReadAll = user_access('view any private annotations');
   $documentNames = array(); // to cut down on db queries
+  $userNames = array();   // same as previous - only load users once
   $annotations = array();
   // Now check permissions, clear sensitive data, preserve metadata
   foreach (array_keys($result['node']) as $nid) {
@@ -591,6 +616,10 @@ function lacuna_visualizations_annotation_dashboard_data() {
     $data->documentTitle = $documentNames[$target_id];
     $data->created = $annotation->created;
     $data->updated = $annotation->changed;
+    if (!array_key_exists($annotation->uid, $userNames)) {
+      $userNames[$annotation->uid] = format_username(user_load($annotation->uid));
+    }
+    $data->username = $userNames[$annotation->uid];
 
     // Convert from Drupal format to a simpler data format for viz
     // TODO: Refactor these two into a single function

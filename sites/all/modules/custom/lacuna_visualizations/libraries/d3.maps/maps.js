@@ -22,7 +22,6 @@
 
 
  Drupal.d3.maps = function (select, settings) {
-
     var initialWidth  = (settings.config.width || 800),
         initialHeight = (settings.config.height || 800),
         nodes  = settings.nodes,

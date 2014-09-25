@@ -19,8 +19,17 @@
  */
 
 (function ($) {  // Namespace wrapper for Drupal
+Drupal.d3.annotations_dashboard = function (select, settings) {
 "use strict";
 
+console.log(settings, 'settings');
+d3.json(settings.config.data_url, function (error, data) {
+    if (error) {
+        console.error(error);
+    } else {
+        main(data);
+    }
+});
 /***************
  *
  * An object to manage the annotation filter stack
@@ -66,17 +75,8 @@ function Annotations(data) {
  * Global variables (I know, I know; it's all javascript's fault!)
  *
  ****************/
-var annotationsURL = Drupal.settings.annotation_dashboard_data_url;
 
 var annotations;
-d3.json(annotationsURL, function (error, data) {
-    if (error) {
-        console.log(error);
-    } else {
-        main(data);
-    }
-});
-
 // Fields in the annotations from which we'll create pie charts
 // All are added by pre-processing, not native to Annotator data structure
 var pie_types = ['category', 'text_length', 'privacy'];
@@ -117,13 +117,12 @@ function init_graph() {
 	var nodes_unique = Array();	// tracks unique nodes
 	var edges_unique = Array();	// tracks unique edges
 	annotations.current().forEach(function (a) {
-		var title;
 		// if (typeof a.title === "undefined") {
 		// 	title = a.uri.replace("http://annotate.lacunastories.com/documents/","");
 		// } else {
 		// 	title = a.title
 		// }
-		title = a.docTitle;
+		var title = a.docTitle;
 		// Add nodes into lookup table and the nodes array
 		// The "type" attribute is *very* important
 		var source = add_to_graph(nodes_unique, nodes, a.username, {type: "user"});
@@ -214,6 +213,7 @@ function main(data) {
 	 */
 	annotations = new Annotations(data);
 	// Define all our attributes
+	// TODO: override these with settings from module
 	var size = {
 				graph: {
 					width: 700,
@@ -242,6 +242,16 @@ function main(data) {
 				radius: 25,
 				column: {user: 100, doc: 400}	// X coords for the two columns
 				};
+	// TODO: loop through settings; overwrite matching variables
+	for (var key in settings) {
+		// console.log(key, 'settings key');
+	}
+	if (settings.config.size.graph.width) {
+		size.graph.width = settings.config.size.graph.width;
+	}
+	if (settings.config.size.graph.height) {
+		size.graph.height = settings.config.size.graph.height;
+	}
 	var colors = {
 				user: "steelblue",
 				doc: "yellowgreen",
@@ -961,4 +971,5 @@ function main(data) {
 	// Initial creation
 	update();
 } // end main()
+} // Drupal.d3.annotations
 })(jQuery);	// End of Drupal wrapper

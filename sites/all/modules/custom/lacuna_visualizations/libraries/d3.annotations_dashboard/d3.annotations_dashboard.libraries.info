@@ -1,4 +1,4 @@
 name = Annotations Dashboard
 description = Dashboard for exploring annotations
-files[js][] = dashboard.js
+files[js][] = annotations_dashboard.js
 version = .9

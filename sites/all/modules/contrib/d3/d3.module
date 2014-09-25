@@ -214,7 +214,6 @@ function d3_draw($vis) {
 
   // Form library name - convention is going to be d3.[library].
   $library_name = 'd3.' . $type;
-
   // Check for library instance / definition.
   if (libraries_detect($library_name)) {
     $vis['library'] = libraries_load($library_name);
@@ -368,7 +367,7 @@ function theme_d3_graphapi($vars) {
     return '';
   }
   $default_library = variable_get('d3_graphapi_default_library', 'forcedirected');
-  $library = empty($vars['config']['library']) ? $default_library : $vars['config']['library']; 
+  $library = empty($vars['config']['library']) ? $default_library : $vars['config']['library'];
   $graph = _d3_graphapi_format_graph_data($vars['graph']);
   $chart = array(
     'id' => $vars['config']['id'],
