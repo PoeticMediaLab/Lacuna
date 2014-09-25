@@ -55,6 +55,7 @@ function lacuna_visualizations_default_libraries() {
 	return array(
 		'd3.maps',
 		'd3.journeys',
+    'd3.annotations',
 		);
 }
 
@@ -74,10 +75,10 @@ function lacuna_visualizations_libraries_info_file_paths() {
   }
 
   // Load the directory where the d3 example libraries are.
-  $example_path = drupal_get_path('module', 'lacuna_visualizations') . '/libraries/';
+  $library_path = drupal_get_path('module', 'lacuna_visualizations') . '/libraries/';
   // Add these to the search directories for libraries.
-  foreach (lacuna_visualizations_default_libraries() as $example) {
-    $paths[] = $example_path . $example;
+  foreach (lacuna_visualizations_default_libraries() as $library) {
+    $paths[] = $library_path . $library;
   }
 
   return $paths;
@@ -298,84 +299,76 @@ function lacuna_visualizations_journeyview() {
     $blogQuery
         ->entityCondition('entity_type', 'node')
         ->entityCondition('bundle', array('biblio', 'blog'));
-    $result = $blogQuery->execute();
-    $nids = array_keys($result['node']);
-    $nodes = node_load_multiple($nids);
+  $result = $blogQuery->execute();
+  $nids = array_keys($result['node']);
+  $nodes = node_load_multiple($nids);
 
-    $graph = graphapi_new_graph();
-    foreach($nodes as $item){
+  $graph = graphapi_new_graph();
+  foreach ($nodes as $item) {
+  	$usersQuery = new EntityFieldQuery();
+  	$usersQuery->entityCondition('entity_type', 'user');
+  	$usersResult = $usersQuery->execute();
+  	$uids = array_keys($usersResult['user']);
+  	$users = user_load_multiple($uids);
 
-	$usersQuery = new EntityFieldQuery();
-  	$usersQuery
-		->entityCondition('entity_type', 'user');
-	$usersResult = $usersQuery->execute();
-	$uids = array_keys($usersResult['user']);
-	$users = user_load_multiple($uids);
+  	 // this array will eventually contain all relevant info about blogs and document: author, timestamp, etc.
+  	 // added to nodes before graphapi passes off to d3.
+    $dataArray = array(
+      'itemType' => $item->type,
+  		// author set below -- $item->name for blog posts, but
+  		// more complicated for biblio entries.
+  		'author'	=> ' ',
+      'title'     => $item->title,
+      'linksTitles'     => array(),
+      'thisURL'   => $GLOBALS['base_url'] . "/node/" . $item->nid,
+      'linksURL' => array(),
+  		'biblio' => array(),
+  		'document_abstract' => '',
+  		'date' => $item->created,
+    );
 
-	 // this array will eventually contain all relevant info about blogs and document: author, timestamp, etc.
-	 // added to nodes before graphapi passes off to d3.
-        $dataArray = array(
-            'itemType' => $item->type,
-			// author set below -- $item->name for blog posts, but
-			// more complicated for biblio entries.
-			'author'	=> ' ',
-            'title'     => $item->title,
-            'linksTitles'     => array(),
-            'thisURL'   => $GLOBALS['base_url'] . "/node/" . $item->nid,
-            'linksURL' => array(),
-			'biblio' => array(),
-			'document_abstract' => '',
-			'date' => $item->created,
-        );
+  		// added to all links before graphapi passes off to d3.
+  		// Currently only contains a date (the time that the source
+  		// node was created; currently assuming that all links are
+  		// created at the same time as the blog post they're
+  		// associated with.
+    if (!$dataArray['author']) {
+      $dataArray['author'] = "None";
+    }
 
-		// added to all links before graphapi passes off to d3.
-		// Currently only contains a date (the time that the source
-		// node was created; currently assuming that all links are
-		// created at the same time as the blog post they're
-		// associated with.
-        if (!$dataArray['author']){
-          $dataArray['author'] = "None";
+    $title = $item->title;
+
+  		/* pull out data needed for biblio nodes and add it to
+  		 * $dataArray */
+  	if ($item->type == "biblio") {
+  		$document_abstract = strip_tags($item->field_biblio_hover_abstract);
+  		$dataArray['document_abstract'] = $document_abstract;
+  		$author = ' ';
+  		if (isset($item->biblio_contributors[0])) {
+  			$count = count($item->biblio_contributors);
+  			for ($i = 0; $i < $count; $i++) {
+  				$author = $item->biblio_contributors[0]['name'];
+  				$dataArray['author'] .= $author . "\r\n";
+  			}
+  		}
+  	}
+    if ($item->type == "blog") {
+
+  		$dataArray['author'] = $users[$item->uid]->field_display_name->und[0].safe_value;
+
+  		// draw links based off of node's field_bibliographic_entry.
+      if ($item->field_bibliographic_entry) {
+        $linkArray = $item->field_bibliographic_entry;
+        for ($i = 0; $i < count($linkArray[LANGUAGE_NONE]); $i++) {
+          $linkedNid = $linkArray[LANGUAGE_NONE][$i]['target_id'];
+          if (array_key_exists($linkedNid, $nodes)) {
+            graphapi_add_link($graph, $title, $nodes[$linkedNid]->title);
+            array_push($dataArray['linksTitles'], $nodes[$linkedNid]->title);
+            array_push($dataArray['linksURL'], $GLOBALS['base_url'] . '/node/' . $linkedNid);
+  //			graphapi_set_link_data($graph, $title,	$nodes[$linkedNid]['title'], $item->created);
+          }
         }
-
-        $title = $item->title;
-
-		/* pull out data needed for biblio nodes and add it to
-		 * $dataArray */
-		if($item->type == "biblio")
-		{
-			$document_abstract = strip_tags($item->field_biblio_hover_abstract);
-			$dataArray['document_abstract'] = $document_abstract;
-				$author = ' ';
-			if(isset($item->biblio_contributors[0])){
-				$count = count($item->biblio_contributors);
-				for($i = 0; $i < $count; $i++) {
-					$author = $item->biblio_contributors[0]['name'];
-					$dataArray['author'] .= $author . "\r\n";
-				}
-			}
-
-		}
-        if($item->type == "blog")
-        {
-
-			$dataArray['author'] = $users[$item->uid]->field_display_name->und[0].safe_value;
-
-			// draw links based off of node's field_bibliographic_entry.
-            if($item->field_bibliographic_entry){
-               $linkArray = $item->field_bibliographic_entry;
-
-              for($i = 0; $i < count($linkArray[LANGUAGE_NONE]); $i++) {
-                 $linkedNid = $linkArray[LANGUAGE_NONE][$i]['target_id'];
-                 if(array_key_exists($linkedNid, $nodes)){
-                    graphapi_add_link($graph, $title, $nodes[$linkedNid]->title);
-                   array_push($dataArray['linksTitles'], $nodes[$linkedNid]->title);
-                    array_push($dataArray['linksURL'], $GLOBALS['base_url'] . '/node/' . $linkedNid);
-		//			graphapi_set_link_data($graph, $title,	$nodes[$linkedNid]['title'], $item->created);
-
-                 }
-              }
-            } // end if($item->field_bibliographic_entry)
-
+      } // end if($item->field_bibliographic_entry)
 
 /*			if($item->field_bibliographic_entry){
 				print_r($item->field_bibliographic_entry);
@@ -411,10 +404,10 @@ function lacuna_visualizations_journeyview() {
     'height' => 500,
     'item-width' => 45,
     'engine' => 'd3',
-	'library' => 'journeys',
-	'testString' => "TEST STRING",
-	'userList' => $users,
-	'drawDocumentCircle' => true,
+  	'library' => 'journeys',
+  	'testString' => "TEST STRING",
+  	'userList' => $users,
+  	'drawDocumentCircle' => true,
   );
   return theme('graphapi_dispatch', array('graph' => $graph, 'config' => $options));
 }  // end function lacuna_visualizations_journeyview()
@@ -546,16 +539,27 @@ function lacuna_visualizations_annotation_dashboard() {
   // Needs to match the path callback for the data
   // Find some way to get path dynamically?
   drupal_add_js(array('annotation_dashboard_data_url' => $base_url + '/visualization/dashboard/data.json'), 'setting');
+    // settings.config
+  $options = array(
+    'width' => 800,
+    'height' => 800,
+    'item-width' => 45,
+    'engine' => 'd3',
+    'library' => 'annotations',
+  );
+  return theme('graphapi_dispatch', array('graph' => $graph, 'config' => $options));
 }
 
 function lacuna_visualizations_annotation_dashboard_data() {
   // Prepare the data for the dashboard, output as JSON
-  // First, query all annotations with no access checks
   global $user;
+  // LS doesn't share published content with anonymous users
+  // TODO: Implement group content checks once plugin
   if (!user_access('view published content')) {
     drupal_access_denied();
     return FALSE;
   }
+  // Query all annotations with no access checks
   $query = new EntityFieldQuery();
   $result = $query->entityCondition('entity_type', 'node')
       ->entityCondition('bundle', 'annotation')
