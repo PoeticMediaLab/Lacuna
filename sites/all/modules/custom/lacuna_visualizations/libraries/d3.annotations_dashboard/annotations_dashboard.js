@@ -22,7 +22,6 @@
 Drupal.d3.annotations_dashboard = function (select, settings) {
 "use strict";
 
-console.log(settings, 'settings');
 d3.json(settings.config.data_url, function (error, data) {
     if (error) {
         console.error(error);
@@ -117,16 +116,10 @@ function init_graph() {
 	var nodes_unique = Array();	// tracks unique nodes
 	var edges_unique = Array();	// tracks unique edges
 	annotations.current().forEach(function (a) {
-		// if (typeof a.title === "undefined") {
-		// 	title = a.uri.replace("http://annotate.lacunastories.com/documents/","");
-		// } else {
-		// 	title = a.title
-		// }
-		var title = a.docTitle;
 		// Add nodes into lookup table and the nodes array
 		// The "type" attribute is *very* important
 		var source = add_to_graph(nodes_unique, nodes, a.username, {type: "user"});
-		var target = add_to_graph(nodes_unique, nodes, title, {type: "doc"});
+		var target = add_to_graph(nodes_unique, nodes, a.documentTitle, {type: "doc"});
 
 		// Add new edges, combine duplicate edges and increment weight & count
 		var edge_id = source.id + "," + target.id;
@@ -149,8 +142,8 @@ function gen_pie_nodes(attrib) {
 		if (typeof a[attrib] === "undefined") {
 			a[attrib] = pie_defaults[attrib];
 		}
-		if (typeof a.title === "undefined") {
-			a.title = a.uri;
+		if (typeof a.documentTitle === "undefined") {
+			a.documentTitle = a.uri;
 		}
 		if (typeof groups[a.username] === "undefined") {
 			groups[a.username] = {};
@@ -158,14 +151,14 @@ function gen_pie_nodes(attrib) {
 		if (typeof groups[a.username][a[attrib]] === "undefined") {
 			groups[a.username][a[attrib]] = 0;
 		}
-		if (typeof groups[a.title] === "undefined") {
-			groups[a.title] = {};
+		if (typeof groups[a.documentTitle] === "undefined") {
+			groups[a.documentTitle] = {};
 		}
-		if (typeof groups[a.title][a[attrib]] === "undefined") {
-			groups[a.title][a[attrib]] = 0;
+		if (typeof groups[a.documentTitle][a[attrib]] === "undefined") {
+			groups[a.documentTitle][a[attrib]] = 0;
 		}
 		groups[a.username][a[attrib]]++;
-		groups[a.title][a[attrib]]++;
+		groups[a.documentTitle][a[attrib]]++;
 		// Find the total number of slices for later fill of zero values
 		if (pie_slices[attrib].indexOf(a[attrib]) == -1) {
 			pie_slices[attrib].push(a[attrib]);
@@ -212,6 +205,20 @@ function main(data) {
 	 *
 	 */
 	annotations = new Annotations(data);
+	var text_length_scale = d3.scale.ordinal()
+		.domain([0,50,100,150])
+		.range(['Zero','Short','Medium','Long']);
+	// Format annotations for display
+	annotations.all.forEach(function (a) {
+		if (typeof a.text === 'undefined') {
+			a.text = "";
+		}
+		a.text_length = text_length_scale(a.text.length);
+		if (typeof a.category === 'undefined' || !a.category.length) {
+			a.category = Array('Highlight');
+		}
+		console.log(a);
+	})
 	// Define all our attributes
 	// TODO: override these with settings from module
 	var size = {
@@ -238,7 +245,7 @@ function main(data) {
 				},
 				node: {	max: .5,
 						min: .1 },
-				string: {length: 40},
+				string: { length: 40 },
 				radius: 25,
 				column: {user: 100, doc: 400}	// X coords for the two columns
 				};
@@ -364,7 +371,7 @@ function main(data) {
 		annotations.unfiltered().forEach(function (a) {
 			graph.edges.forEach(function (edge) {
 				if ((node.id == edge.source.id && node.id == a.username) ||
-					(node.id == edge.target.id && node.id == a.title))
+					(node.id == edge.target.id && node.id == a.documentTitle))
 				{
 					if (filter.indexOf(a) == -1) {
 						filter.push(a);
@@ -453,7 +460,7 @@ function main(data) {
 
 	// Show help text
 	// $('img.help').click(function() {
-	d3.selectAll('img.help')
+	d3.selectAll('div.help')
 		.on("mouseover", function() {
 			d3.select(this.parentNode)
 				.select('div.help_text')
@@ -769,7 +776,7 @@ function main(data) {
 		var cf = crossfilter(annotations.current());
 		var dim = cf.dimension(function(d) {
 			// time stored as Unix epoch time
-			return timeFormat(new Date(d.created["$date"]));
+			return timeFormat(new Date(d.created));
 		});
 		var g = dim.group();
 		var data = fill_empty_dates(g.all());
@@ -889,7 +896,7 @@ function main(data) {
 	    	// Filter our annotations by selected dates
 	    	var filter = Array();
 	    	annotations.current(true).forEach(function (a) {
-	    		var date = timeFormat(new Date(a.created["$date"]));
+	    		var date = timeFormat(new Date(a.created));
 	    		if (dates.indexOf(date) != -1 && filter.indexOf(a) == -1) {
 	    			filter.push(a);
 	    		}
@@ -930,12 +937,12 @@ function main(data) {
 	        "columns": [
 		        { "data": "username"},
 		        { "data": "category"},
-		        { "data": "title"},
+		        { "data": "documentTitle"},
 		        { "data": "text"},
 		        { "data": "quote"},
 		        { "data": "tags"},
 		        { "data": "privacy"},
-		        { "data": "created.$date",
+		        { "data": "created",
 		    	  "render": function (data, type, full, meta) {
 		    	  	var d = new Date(data);
 		    	  	return d.toDateString();
