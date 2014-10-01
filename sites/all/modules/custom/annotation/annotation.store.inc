@@ -404,6 +404,7 @@ function annotation_api_from_stdin() {
  */
 function annotation_api_entity_prepare($entity, $op) {
   $entity->id = $entity->nid; // Annotator wants our nid in the id field
+  global $user;
   switch($op) {
     case 'read':
       $account = user_load($entity->uid);
@@ -448,6 +449,13 @@ function annotation_api_entity_prepare($entity, $op) {
         else {
           $entity->permissions['read'][] = $account->uid;
         }
+      }
+      // Currently not implemented: sharing edit permission
+      $entity->permissions['update'][] = $account->uid;
+      $entity->permissions['delete'][] = $account->uid;
+      if (user_access('edit any annotations')) {
+        array_push($entity->permissions['update'], $user->uid);
+        array_push($entity->permissions['delete'], $user->uid);
       }
       $entity->links[] = array(
         'href' => url('node/' . $entity->nid),

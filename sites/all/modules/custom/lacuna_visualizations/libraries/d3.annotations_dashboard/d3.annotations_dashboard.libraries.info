@@ -1,0 +1,5 @@
+name = Annotations Dashboard
+description = Dashboard for exploring annotations
+files[js][] = annotations_dashboard.js
+files[css][] = annotations_dashboard.css
+version = .9

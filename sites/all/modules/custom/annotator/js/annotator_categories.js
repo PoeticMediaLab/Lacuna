@@ -6,7 +6,7 @@
   Drupal.behaviors.annotatorCategories = {
     attach: function (context, settings) {
       // settings defined in CategoriesAnnotatorPlugin.class.inc
-      Drupal.Annotator.annotator('addPlugin', 'Categories', Drupal.settings.category_settings);
+      Drupal.Annotator.annotator('addPlugin', 'Categories', Drupal.settings.annotator_categories);
     }
   };
 })(jQuery);
