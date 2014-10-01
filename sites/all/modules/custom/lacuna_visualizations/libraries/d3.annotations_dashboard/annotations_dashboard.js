@@ -78,11 +78,12 @@ function Annotations(data) {
 var annotations;
 // Fields in the annotations from which we'll create pie charts
 // All are added by pre-processing, not native to Annotator data structure
-var pie_types = ['category', 'text_length', 'private'];
-var pie_labels = {'category': 'Categories', 'text_length': 'Length of Annotation', 'private': 'Sharing'};	// yeah, yeah; see? it's already ugly code
+// TODO: Add tags
+var pie_types = ['category', 'text_length', 'private', 'tags'];
+var pie_labels = {'category': 'Categories', 'text_length': 'Length of Annotation', 'private': 'Sharing', 'tags': 'Tags'};	// yeah, yeah; see? it's already ugly code
 var pie_current = pie_types[0]; // Set the current pie-type selection
 // Default values if attribute missing from annotation data
-var pie_defaults = {'category': 'Highlight', 'length': 'Zero', 'private': 'Private'};
+var pie_defaults = {'category': 'Highlight', 'length': 'Zero', 'private': 'Private', 'tags': 'None'};
 var pie_slices = {};
 pie_types.forEach(function(pie_type) {
 	pie_slices[pie_type] = Array();
@@ -214,7 +215,7 @@ function main(data) {
 			a.text = "";
 		}
 		a.text_length = text_length_scale(a.text.length);
-		if (typeof a.category === 'undefined' || !a.category.length) {
+		if (typeof a.category === 'undefined' || a.category == null) {
 			a.category = Array('Highlight');
 		}
 	})

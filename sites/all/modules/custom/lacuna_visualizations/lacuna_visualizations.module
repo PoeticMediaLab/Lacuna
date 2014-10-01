@@ -581,7 +581,7 @@ function lacuna_visualizations_annotation_dashboard_data() {
   global $user;
   // LS doesn't share published content with anonymous users
   // TODO: Implement group content checks once plugin
-  if (!user_access('view published content')) {
+  if (!user_access('access content')) {
     drupal_access_denied();
     return FALSE;
   }
@@ -598,12 +598,32 @@ function lacuna_visualizations_annotation_dashboard_data() {
   // Now check permissions, clear sensitive data, preserve metadata
   foreach (array_keys($result['node']) as $nid) {
     $annotation = node_load($nid);
+    $data = new StdClass();
+
+    $data->id = $annotation->nid;
+    $data->documentTitle = $documentNames[$target_id];
+    $data->created = $annotation->created * 1000; // convert to milliseconds for d3
+    $data->updated = $annotation->changed * 1000;
+
     $isPrivate = $annotation->private[$annotation->language][0]['value'];
-    if (!$canReadAll && $isPrivate && $annotation->uid != $user->uid) {
-      // TODO: Anonymize names?
-      $annotation->text[$annotation->language][0]['value'] = null;
-      $annotation->quote[$annotation->language][0]['value'] = null;
+    if (!$canReadAll && $annotation->uid != $user->uid) {
+      if ($isPrivate) {
+        $annotation->text[$annotation->language][0]['value'] = null;
+        $annotation->quote[$annotation->language][0]['value'] = null;
+      }
+      if (!array_key_exists($annotation->uid, $userNames)) {
+        # anonymize with slight UID obfuscation
+        # should use a hash or something to make it harder to decipher
+        # but "view user profile" permissions *should* be limited anyway
+        $userNames[$annotation->uid] = "Student #1" . $annotation->uid;
+      }
     }
+    elseif ($canReadAll || $annotation->uid == $user->uid) {
+      if (!array_key_exists($annotation->uid, $userNames)) {
+        $userNames[$annotation->uid] = format_username(user_load($annotation->uid));
+      }
+    }
+    $data->username = $userNames[$annotation->uid];
     // For readability
     $target_id = $annotation->annotation_reference[$annotation->language][0]['target_id'];
     if (!array_key_exists($target_id, $documentNames)) {
@@ -613,15 +633,7 @@ function lacuna_visualizations_annotation_dashboard_data() {
     }
     // Create new data object with only the fields we need
     // Ensures no unintended data exposed
-    $data = new StdClass();
-    $data->id = $annotation->nid;
-    $data->documentTitle = $documentNames[$target_id];
-    $data->created = $annotation->created * 1000; // convert to milliseconds for d3
-    $data->updated = $annotation->changed * 1000;
-    if (!array_key_exists($annotation->uid, $userNames)) {
-      $userNames[$annotation->uid] = format_username(user_load($annotation->uid));
-    }
-    $data->username = $userNames[$annotation->uid];
+
 
     // Convert from Drupal format to a simpler data format for viz
     // TODO: Refactor these two into a single function
@@ -644,6 +656,9 @@ function lacuna_visualizations_annotation_dashboard_data() {
           array_push($data->{$field}, $term->name);
         }
       }
+    }
+    if ($data->category) {
+      $data->category = $data->category[0];
     }
     array_push($annotations, $data);
   }
