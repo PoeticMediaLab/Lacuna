@@ -8,6 +8,10 @@ body {
   line-height: 30px;
 }
 
+div#page {
+  min-height: 3000px !important;
+}
+
 div#charts {
   min-height: 1024px;
   margin-left: 24px;
