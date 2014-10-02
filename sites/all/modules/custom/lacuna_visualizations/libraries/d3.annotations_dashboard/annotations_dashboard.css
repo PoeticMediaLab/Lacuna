@@ -205,7 +205,7 @@ a.dashboard-button#reset_all {
 
 a.dashboard-button#reset_brush {
   position: relative;
-  visibility: hidden !important;
+  visibility: hidden;
 }
 
 a.dashboard-button#return_to_vis {

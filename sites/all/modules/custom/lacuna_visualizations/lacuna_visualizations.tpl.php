@@ -36,7 +36,7 @@ elseif (current_path() == 'visualization/dashboard') { ?>
   <div id="column_right">
   </div>
   <div class="section">
-    <div class="help fa fa-question-circle"></div>
+    <!-- <div class="help fa fa-question-circle"></div> -->
     <div id="time_brush"></div>
     <div class="help_text">
       <h2>Time Filter</h2>
@@ -46,7 +46,7 @@ elseif (current_path() == 'visualization/dashboard') { ?>
 
   <div class="section">
     <div id="pie_types"></div>
-    <div class="help fa fa-question-circle"></div>
+    <!-- <div class="help fa fa-question-circle"></div> -->
     <div class="help_text">
       <h2>Annotation Types</h2>
       <p>Hover over a pie chart to see a summary of student work. Click on any pie chart to change the graph below to show data according to the selected chart.</p>
@@ -61,7 +61,7 @@ elseif (current_path() == 'visualization/dashboard') { ?>
 
   <div class="section">
     <div id="network"></div>
-    <div class="help fa fa-question-circle"></div>
+    <!-- <div class="help fa fa-question-circle"></div> -->
     <div class="help_text">
       <h2>Student and Resource Data</h2>
       <p>Hover over a student or resource to view individual data. Click on a student or resource pie chart to filter data specific to that entry.</p>
