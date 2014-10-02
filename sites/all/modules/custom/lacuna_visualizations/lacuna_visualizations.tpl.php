@@ -53,10 +53,10 @@ elseif (current_path() == 'visualization/dashboard') { ?>
     </div>
   </div>
 
-  <div class="section" id="buttons">
-    <a href="#" class="lacuna-button" id="reset_all">Reset</a>
-    <a href="#" class="lacuna-button" id="reset_brush">Remove Time Filter</a>
-    <a href="#return_to_vis" class="lacuna-button" id="view_annotations"></a>
+  <div class="section" id="dashboard-buttons">
+    <a href="#" class="dashboard-button lacuna-button" id="reset_all">Reset</a>
+    <a href="#" class="dashboard-button lacuna-button" id="reset_brush">Remove Time Filter</a>
+    <a href="#return_to_vis" class="dashboard-button lacuna-button" id="view_annotations"></a>
   </div>
 
   <div class="section">

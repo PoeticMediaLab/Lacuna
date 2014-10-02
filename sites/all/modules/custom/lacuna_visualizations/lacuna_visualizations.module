@@ -598,10 +598,11 @@ function lacuna_visualizations_annotation_dashboard_data() {
   // Now check permissions, clear sensitive data, preserve metadata
   foreach (array_keys($result['node']) as $nid) {
     $annotation = node_load($nid);
-    $data = new StdClass();
 
+    // Create a new data object, populate only with necessary data
+    // Make it harder to leak unintended data
+    $data = new StdClass();
     $data->id = $annotation->nid;
-    $data->documentTitle = $documentNames[$target_id];
     $data->created = $annotation->created * 1000; // convert to milliseconds for d3
     $data->updated = $annotation->changed * 1000;
 
@@ -631,9 +632,7 @@ function lacuna_visualizations_annotation_dashboard_data() {
       // TODO: use Biblio reference short title instead
       $documentNames[$target_id] = $document->title;
     }
-    // Create new data object with only the fields we need
-    // Ensures no unintended data exposed
-
+    $data->documentTitle = $documentNames[$target_id];
 
     // Convert from Drupal format to a simpler data format for viz
     // TODO: Refactor these two into a single function
