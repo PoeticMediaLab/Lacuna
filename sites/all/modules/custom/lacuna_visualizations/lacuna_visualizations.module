@@ -588,14 +588,13 @@ function lacuna_visualizations_annotation_dashboard_data() {
       ->entityCondition('bundle', 'annotation')
       ->addTag('DANGEROUS_ACCESS_CHECK_OPT_OUT')
       ->execute();
-  $canReadAll = user_access('view any private annotations');
+  $canReadAll = user_access('access any private annotation');
   $documentNames = array(); // to cut down on db queries
   $userNames = array();   // same as previous - only load users once
   $annotations = array();
   // Now check permissions, clear sensitive data, preserve metadata
   foreach (array_keys($result['node']) as $nid) {
     $annotation = node_load($nid);
-
     // Create a new data object, populate only with necessary data
     // Make it harder to leak unintended data
     $data = new StdClass();
@@ -603,25 +602,6 @@ function lacuna_visualizations_annotation_dashboard_data() {
     $data->created = $annotation->created * 1000; // convert to milliseconds for d3
     $data->updated = $annotation->changed * 1000;
 
-    $isPrivate = $annotation->private[$annotation->language][0]['value'];
-    if (!$canReadAll && $annotation->uid != $user->uid) {
-      if ($isPrivate) {
-        $annotation->text[$annotation->language][0]['value'] = null;
-        $annotation->quote[$annotation->language][0]['value'] = null;
-      }
-      if (!array_key_exists($annotation->uid, $userNames)) {
-        # anonymize with slight UID obfuscation
-        # should use a hash or something to make it harder to decipher
-        # but "view user profile" permissions *should* be limited anyway
-        $userNames[$annotation->uid] = "Student #1" . $annotation->uid;
-      }
-    }
-    elseif ($canReadAll || $annotation->uid == $user->uid) {
-      if (!array_key_exists($annotation->uid, $userNames)) {
-        $userNames[$annotation->uid] = format_username(user_load($annotation->uid));
-      }
-    }
-    $data->username = $userNames[$annotation->uid];
     // For readability
     $target_id = $annotation->annotation_reference[$annotation->language][0]['target_id'];
     if (!array_key_exists($target_id, $documentNames)) {
@@ -632,7 +612,7 @@ function lacuna_visualizations_annotation_dashboard_data() {
     $data->documentTitle = $documentNames[$target_id];
 
     // Convert from Drupal format to a simpler data format for viz
-    // TODO: Refactor these two into a single function
+    // TODO: Refactor the next two loops into a single function
     // Put function in a helper library for general use here and Annotation Store
     $fields = array('text', 'quote', 'private');
     foreach ($fields as $field) {
@@ -640,7 +620,7 @@ function lacuna_visualizations_annotation_dashboard_data() {
         $data->{$field} = $annotation->{$field}[$annotation->language][0]['value'];
       }
     }
-    $data->private ? $data->private = 'Public' : $data->private = 'Private';
+    $data->private ? $data->private = 'Private' : $data->private = 'Public';
     // TODO: Refactor "annotation_tags" to be "tags" -- must wait until 1.0
     // Not a good idea to change it for existing alpha or beta sites
     $fields = array('annotation_tags', 'category');
@@ -656,6 +636,27 @@ function lacuna_visualizations_annotation_dashboard_data() {
     if ($data->category) {
       $data->category = $data->category[0];
     }
+    // Secure fields of private annotations, usernames, etc.
+    $isPrivate = $annotation->private[$annotation->language][0]['value'];
+    if (!$canReadAll && ($annotation->uid != $user->uid)) {
+      if ($isPrivate) {
+        $data->text = "";
+        $data->quote = "";
+        $data->annotation_tags = Array();
+      }
+      if (!array_key_exists($annotation->uid, $userNames)) {
+        # anonymize with slight UID obfuscation
+        # should use a hash or something to make it harder to decipher
+        # but "view user profile" permissions *should* be limited anyway
+        $userNames[$annotation->uid] = "Student #1" . $annotation->uid;
+      }
+    }
+    elseif ($canReadAll || $annotation->uid == $user->uid) {
+      if (!array_key_exists($annotation->uid, $userNames)) {
+        $userNames[$annotation->uid] = format_username(user_load($annotation->uid));
+      }
+    }
+    $data->username = $userNames[$annotation->uid];
     array_push($annotations, $data);
   }
   drupal_json_output($annotations);
