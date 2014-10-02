@@ -259,28 +259,28 @@ function lacuna_visualizations_menu() {
     'visualization/responses' => array(
   	  'title' => 'Responses Map',
   	  'description' => 'Visualization showing links between responses and primary sources',
-  	  'access callback' => TRUE,
+  	  'access callback' => 'access content',
   	  'page callback' => 'lacuna_visualizations_mapview',
   	  'type' => MENU_NORMAL_ITEM,
   	  ),
     'visualization/journey' => array(
   	  'title' => 'Journey view',
   	  'description' => 'Visualization showing student movement through the site',
-  	  'access callback' => TRUE,
+  	  'access callback' => 'access content',
   	  'page callback' => 'lacuna_visualizations_journeyview',
   	  'type' => MENU_NORMAL_ITEM,
   	),
     'visualization/dashboard' => array(
       'title' => 'Annotations Dashboard',
       'description' => 'Visualization showing all annotations',
-      'access callback' => TRUE,
+      'access callback' => 'access content',
       'page callback' => 'lacuna_visualizations_annotation_dashboard',
       'type' => MENU_NORMAL_ITEM,
     ),
     'visualization/dashboard/data.json' => array(
       'title' => 'Data for Annotations Dashboard',
       'description' => 'The json-formatted data for the Annotations Dashboard',
-      'access callback' => TRUE,
+      'access callback' => 'access content',
       'page callback' => 'lacuna_visualizations_annotation_dashboard_data',
       'type' => MENU_CALLBACK,
     ),
@@ -292,10 +292,7 @@ function lacuna_visualizations_menu() {
  * sources. (version I'm currently working on).
  */
 function lacuna_visualizations_journeyview() {
-  if (!user_access('access content')) {
-    drupal_access_denied();
-    return FALSE;
-  }
+
   // BJA uses EntityFieldQuery to pull all the 'blog' and 'document' nodes
   // BJA in the future, this should read from a view(?) rather than being
   // BJA hard-coded here.
@@ -422,10 +419,7 @@ function lacuna_visualizations_journeyview() {
  * sources.
  */
 function lacuna_visualizations_mapview() {
-  if (!user_access('access content')) {
-    drupal_access_denied();
-    return FALSE;
-  }
+
   $graph = graphapi_new_graph();
 
   $blogQuery = new EntityFieldQuery();
@@ -560,10 +554,6 @@ function lacuna_visualizations_library() {
 
 function lacuna_visualizations_annotation_dashboard() {
   // Load the dashboard visualization
-  if (!user_access('access content')) {
-    drupal_access_denied();
-    return FALSE;
-  }
   global $base_url;
     // settings.config
   $settings = array(
@@ -591,12 +581,7 @@ function lacuna_visualizations_annotation_dashboard() {
 function lacuna_visualizations_annotation_dashboard_data() {
   // Prepare the data for the dashboard, output as JSON
   global $user;
-  // LS doesn't share published content with anonymous users
-  // TODO: Implement group content checks once plugin
-  if (!user_access('access content')) {
-    drupal_access_denied();
-    return FALSE;
-  }
+
   // Query all annotations with no access checks
   $query = new EntityFieldQuery();
   $result = $query->entityCondition('entity_type', 'node')
