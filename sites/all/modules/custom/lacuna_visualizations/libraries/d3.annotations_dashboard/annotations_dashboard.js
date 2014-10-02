@@ -952,7 +952,7 @@ function main(data) {
 		        { "data": "text"},
 		        { "data": "quote"},
 		        { "data": "annotation_tags"},
-		        { "data": "privacy"},
+		        { "data": "private"},
 		        { "data": "created",
 		    	  "render": function (data, type, full, meta) {
 		    	  	var d = new Date(data);
