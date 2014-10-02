@@ -453,7 +453,8 @@ function annotation_api_entity_prepare($entity, $op) {
       // Currently not implemented: sharing edit permission
       $entity->permissions['update'][] = $account->uid;
       $entity->permissions['delete'][] = $account->uid;
-      if (user_access('edit any annotations')) {
+      // Check privileges, but don't duplicate uids
+      if (user_access('edit any annotations') && $user->uid != $account->uid) {
         array_push($entity->permissions['update'], $user->uid);
         array_push($entity->permissions['delete'], $user->uid);
       }

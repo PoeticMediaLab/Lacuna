@@ -13,11 +13,11 @@ div#charts {
   margin-left: 24px;
 }
 
-div#buttons {
+div#dashboard-buttons {
   position: absolute;
 	height: 65px;
-  top: 625px;
-  margin-left: 50px;
+  top: 420px;
+  margin-left: 25px;
   width: 45%;
 }
 
@@ -178,8 +178,8 @@ div.tooltip table {
   shape-rendering: crispEdges;
 }
 
-a.button {
-  color: gray;
+a.dashboard-button {
+/*  color: gray;
   font-size: small;
   background: #3498db;
   background-image: -webkit-linear-gradient(top, #3498db, #2980b9);
@@ -194,21 +194,21 @@ a.button {
   font-size: 12pt;
   padding: 2px 6px 2px 6px;
   text-decoration: none;
-  margin-top: 20px;
+  margin-top: 20px;*/
 }
 
-a.button#view_annotations {
+a.dashboard-button#view_annotations {
 }
 
-a.button#reset_all {
+a.dashboard-button#reset_all {
 }
 
-a.button#reset_brush {
+a.dashboard-button#reset_brush {
   position: relative;
   visibility: hidden;
 }
 
-a.button#return_to_vis {
+a.dashboard-button#return_to_vis {
   position: absolute;
   margin-left: 25px;
   font-size: 14pt;

@@ -36,7 +36,7 @@ elseif (current_path() == 'visualization/dashboard') { ?>
   <div id="column_right">
   </div>
   <div class="section">
-    <div class="help fa fa-question-circle"></div>
+    <!-- <div class="help fa fa-question-circle"></div> -->
     <div id="time_brush"></div>
     <div class="help_text">
       <h2>Time Filter</h2>
@@ -46,22 +46,22 @@ elseif (current_path() == 'visualization/dashboard') { ?>
 
   <div class="section">
     <div id="pie_types"></div>
-    <div class="help fa fa-question-circle"></div>
+    <!-- <div class="help fa fa-question-circle"></div> -->
     <div class="help_text">
       <h2>Annotation Types</h2>
       <p>Hover over a pie chart to see a summary of student work. Click on any pie chart to change the graph below to show data according to the selected chart.</p>
     </div>
   </div>
 
-  <div class="section" id="buttons">
-    <a href="#" class="lacuna-button" id="reset_all">Reset</a>
-    <a href="#" class="lacuna-button" id="reset_brush">Remove Time Filter</a>
-    <a href="#return_to_vis" class="lacuna-button" id="view_annotations"></a>
+  <div class="section" id="dashboard-buttons">
+    <a href="#" class="dashboard-button lacuna-button" id="reset_all">Reset</a>
+    <a href="#" class="dashboard-button lacuna-button" id="reset_brush">Remove Time Filter</a>
+    <a href="#return_to_vis" class="dashboard-button lacuna-button" id="view_annotations"></a>
   </div>
 
   <div class="section">
     <div id="network"></div>
-    <div class="help fa fa-question-circle"></div>
+    <!-- <div class="help fa fa-question-circle"></div> -->
     <div class="help_text">
       <h2>Student and Resource Data</h2>
       <p>Hover over a student or resource to view individual data. Click on a student or resource pie chart to filter data specific to that entry.</p>

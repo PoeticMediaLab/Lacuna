@@ -79,11 +79,13 @@ var annotations;
 // Fields in the annotations from which we'll create pie charts
 // All are added by pre-processing, not native to Annotator data structure
 // TODO: Add tags
-var pie_types = ['category', 'text_length', 'private', 'tags'];
-var pie_labels = {'category': 'Categories', 'text_length': 'Length of Annotation', 'private': 'Sharing', 'tags': 'Tags'};	// yeah, yeah; see? it's already ugly code
+// var pie_types = ['category', 'text_length', 'private', 'annotation_tags'];
+var pie_types = ['category', 'text_length', 'private'];
+
+var pie_labels = {'category': 'Categories', 'text_length': 'Length of Annotation', 'private': 'Sharing', 'annotation_tags': 'Tags'};	// yeah, yeah; see? it's already ugly code
 var pie_current = pie_types[0]; // Set the current pie-type selection
 // Default values if attribute missing from annotation data
-var pie_defaults = {'category': 'Highlight', 'length': 'Zero', 'private': 'Private', 'tags': 'None'};
+var pie_defaults = {'category': 'Highlight', 'length': 'Zero', 'private': 'Private', 'annotation_tags': 'None'};
 var pie_slices = {};
 pie_types.forEach(function(pie_type) {
 	pie_slices[pie_type] = Array();
@@ -189,7 +191,7 @@ function gen_pie_nodes(attrib) {
 			return 0;
 		});
 	}
-    return(data);
+  return(data);
 }
 
 /****************
@@ -206,6 +208,7 @@ function main(data) {
 	 *
 	 */
 	annotations = new Annotations(data);
+	// Clean up the data a bit
 	var text_length_scale = d3.scale.ordinal()
 		.domain([0,50,100,150])
 		.range(['Zero','Short','Medium','Long']);
@@ -215,8 +218,8 @@ function main(data) {
 			a.text = "";
 		}
 		a.text_length = text_length_scale(a.text.length);
-		if (typeof a.category === 'undefined' || a.category == null) {
-			a.category = Array('Highlight');
+		if (!a.category.length || typeof a.category === 'undefined' || a.category == null) {
+			a.category ='Highlight';
 		}
 	})
 	// Define all our attributes
@@ -250,9 +253,9 @@ function main(data) {
 				column: {user: 100, doc: 400}	// X coords for the two columns
 				};
 	// TODO: loop through settings; overwrite matching variables
-	for (var key in settings) {
-		// console.log(key, 'settings key');
-	}
+	// for (var key in settings) {
+	// 	// console.log(key, 'settings key');
+	// }
 	if (settings.config.size.graph.width) {
 		size.graph.width = settings.config.size.graph.width;
 	}
@@ -381,7 +384,7 @@ function main(data) {
 		});
 		annotations.addFilter(filter);
 		// Ego network removes time filter
-		// d3.select("a.button#reset_brush").style("visibility", "hidden");
+		// d3.select("a.dashboard-button#reset_brush").style("visibility", "hidden");
 		update();
 		draw_edge_weights();
 	}
@@ -418,7 +421,7 @@ function main(data) {
 	}
 
 	function brush_clear() {
-		d3.select("a.button#reset_brush").style("visibility", "hidden");
+		d3.select("a.dashboard-button#reset_brush").style("visibility", "hidden");
 		d3.selectAll("rect.extent").remove();
 		d3.selectAll("g.resize").remove();
 		brush.clear();
@@ -426,7 +429,7 @@ function main(data) {
 	}
 
 	// Remove time filter
-	$('a.button#reset_brush').click(function() {
+	$('a.dashboard-button#reset_brush').click(function() {
 		brush_clear();
    		update();
 		if (focused_on != null) {
@@ -443,15 +446,15 @@ function main(data) {
 	}
 
 	// Remove all filters
-	$('a.button#reset_all').click(function() {
+	$('a.dashboard-button#reset_all').click(function() {
 		reset_all();
 	});
 
 	// "View Annotations" button clicked; update data table
 	// We only update when this button is clicked because it's too slow to update all the time
-	$('a.button#view_annotations').click(update_annotations_table);
+	$('a.dashboard-button#view_annotations').click(update_annotations_table);
 
-	$('a.button#return_to_vis').click(function() {
+	$('a.dashboard-button#return_to_vis').click(function() {
 		// annotations_table.destroy();
 	    d3.select("#annotations_table_draw_wrapper").style("visibility", "hidden");
 	    d3.select("#annotations_table_draw").style("visibility", "hidden");
@@ -484,19 +487,18 @@ function main(data) {
 	 *
 	 ***/
 
-
 	d3.select("div#network")
 		.append("p")
 		.text("Students")
 		.style("font-size", "18pt")
 		.style("font-weight", "bold")
-		.style("padding-left", size.column.user - size.graph.padding)
+		.style("padding-left", (size.column.user - size.graph.padding) + 'px')
 		.append("p")
 		.text("Resources")
 		// .style("left", size.column.doc)
 		.style("font-size", "18pt")
 		.style("font-weight", "bold")
-		.style("padding-left", size.column.user + (size.graph.padding * 2))
+		.style("padding-left", (size.column.user + (size.graph.padding * 2)) + 'px')
 		.style("display", "inline")
 		;
 
@@ -536,9 +538,8 @@ function main(data) {
 			.on("mouseover", tooltip_on)
 			.on("mouseout", tooltip_off)
 			;
-
 		// update edges
-		var edge_scale = d3.scale.linear().range([.01,.2]);
+		var edge_scale = d3.scale.linear().range([.02,.15]);
 		edges.attr("id", function(d) { return d.id; })
 			.style("stroke-width", function(d) { return edge_scale(d.count); })
 			;
@@ -731,11 +732,21 @@ function main(data) {
 		annotations.current().forEach(function (a) {
 			if (typeof count[a[pie_type]] === "undefined") {
 				count[a[pie_type]] = 0;
-				pie_slice_keys[pie_type].push(a[pie_type]);
+				// BUG: This doesn't work right
+				if (pie_type == 'annotation_tags' && typeof a[pie_type] === 'array') {
+					// loop through tags array
+					console.log(a.annotation_tags, 'annotation_tags');
+					a.annotation_tags.forEach(function (tag) {
+						pie_slice_keys['annotation_tags'].push(tag);
+					})
+				} else {
+					pie_slice_keys[pie_type].push(a[pie_type]);
+				}
 			}
 			++count[a[pie_type]];
 		});
 		// zero-fill missing keys
+		// TODO: skip step for tags
 		pie_slice_keys[pie_type].forEach(function (key) {
 			if (typeof count[key] === "undefined") {
 				count[key] = 0;
@@ -881,7 +892,7 @@ function main(data) {
 	    	.attr("height", size.bar.height + 7);
 
 	    function brushed() {
-	    	d3.select("a.button#reset_brush").style("visibility", "visible");
+	    	d3.select("a.dashboard-button#reset_brush").style("visibility", "visible");
 	    	var extent = brush.extent();
 	    	var start = extent[0];
 	    	var end = extent[1];
@@ -940,8 +951,8 @@ function main(data) {
 		        { "data": "documentTitle"},
 		        { "data": "text"},
 		        { "data": "quote"},
-		        { "data": "tags"},
-		        { "data": "privacy"},
+		        { "data": "annotation_tags"},
+		        { "data": "private"},
 		        { "data": "created",
 		    	  "render": function (data, type, full, meta) {
 		    	  	var d = new Date(data);
