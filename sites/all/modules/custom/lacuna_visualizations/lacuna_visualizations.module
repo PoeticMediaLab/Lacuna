@@ -292,7 +292,10 @@ function lacuna_visualizations_menu() {
  * sources. (version I'm currently working on).
  */
 function lacuna_visualizations_journeyview() {
-
+  if (!user_access('access content')) {
+    drupal_access_denied();
+    return FALSE;
+  }
   // BJA uses EntityFieldQuery to pull all the 'blog' and 'document' nodes
   // BJA in the future, this should read from a view(?) rather than being
   // BJA hard-coded here.
@@ -419,6 +422,10 @@ function lacuna_visualizations_journeyview() {
  * sources.
  */
 function lacuna_visualizations_mapview() {
+  if (!user_access('access content')) {
+    drupal_access_denied();
+    return FALSE;
+  }
   $graph = graphapi_new_graph();
 
   $blogQuery = new EntityFieldQuery();
@@ -553,6 +560,10 @@ function lacuna_visualizations_library() {
 
 function lacuna_visualizations_annotation_dashboard() {
   // Load the dashboard visualization
+  if (!user_access('access content')) {
+    drupal_access_denied();
+    return FALSE;
+  }
   global $base_url;
     // settings.config
   $settings = array(
