@@ -2228,7 +2228,6 @@ ul#ui-id-1.ui-autocomplete {
 }
 
 /* line 8, ../sass/components/buttons.scss */
-.forum-add-node,
 .lacuna-button,
 .annotation-sidebar-button,
 .form-submit,
@@ -2261,8 +2260,7 @@ ul#ui-id-1.ui-autocomplete {
   margin-right: 5px;
 }
 
-/* line 43, ../sass/components/buttons.scss */
-.forum-add-node:hover,
+/* line 42, ../sass/components/buttons.scss */
 .lacuna-button:hover,
 .lacuna-button:focus,
 .form-submit:hover,
@@ -2276,38 +2274,37 @@ ul#ui-id-1.ui-autocomplete {
   transition: background-position 0.1s linear 0s;
 }
 
-/* line 50, ../sass/components/buttons.scss */
+/* line 49, ../sass/components/buttons.scss */
 .lacuna-button.lacuna-button-blue {
   background-color: #78cefd;
   background-image: linear-gradient(to bottom, #78cefd, #1588ba);
 }
 
-/* line 55, ../sass/components/buttons.scss */
+/* line 54, ../sass/components/buttons.scss */
 .lacuna-button.lacuna-button-blue:hover,
 .lacuna-button.lacuna-button-blue:focus {
   background-color: #1588ba;
 }
 
-/* line 59, ../sass/components/buttons.scss */
-.forum-add-node a,
+/* line 58, ../sass/components/buttons.scss */
 .lacuna-button a {
   color: #FFFFFF;
 }
 
-/* line 63, ../sass/components/buttons.scss */
+/* line 62, ../sass/components/buttons.scss */
 .form-submit,
 .annotation-sidebar-button {
   background-color: #92a6c4;
   background-image: linear-gradient(to bottom, #92a6c4, #39404a);
 }
 
-/* line 68, ../sass/components/buttons.scss */
+/* line 67, ../sass/components/buttons.scss */
 .form-submit:hover,
 .form-submit:focus {
   background-color: #39404a;
 }
 
-/* line 72, ../sass/components/buttons.scss */
+/* line 71, ../sass/components/buttons.scss */
 .view-documents #edit-reset.form-submit,
 .view-your-story #edit-reset.form-submit {
   margin-top: -40px;
@@ -2315,13 +2312,13 @@ ul#ui-id-1.ui-autocomplete {
   float: right;
 }
 
-/* line 79, ../sass/components/buttons.scss */
+/* line 78, ../sass/components/buttons.scss */
 #blog-node-form #edit-body-und-0-format,
 #comment-form #edit-comment-body-und-0-format {
   display: none;
 }
 
-/* line 83, ../sass/components/buttons.scss */
+/* line 82, ../sass/components/buttons.scss */
 .publish-button {
   display: block;
   margin-top: 5px;
