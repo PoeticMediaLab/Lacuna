@@ -1,7 +1,7 @@
 #edit-submit {
   width: 200px;
 }
-.forum-add-node,
+
 .lacuna-button,
 .annotation-sidebar-button,
 .form-submit,
@@ -34,7 +34,6 @@
   margin-right: 5px;
 }
 
-.forum-add-node:hover,
 .lacuna-button:hover,
 .lacuna-button:focus,
 .form-submit:hover,
@@ -55,8 +54,8 @@
 .lacuna-button.lacuna-button-blue:focus {
   background-color: #1588ba;
 }
-.forum-add-node a,
-.lacuna-button a{
+
+.lacuna-button a {
   color: #FFFFFF;
 }
 .form-submit,
