@@ -2227,11 +2227,12 @@ ul#ui-id-1.ui-autocomplete {
   width: 200px;
 }
 
-/* line 7, ../sass/components/buttons.scss */
+/* line 8, ../sass/components/buttons.scss */
 .forum-add-node,
 .lacuna-button,
 .annotation-sidebar-button,
-.form-submit {
+.form-submit,
+.af-button-large {
   background-color: #c4df2c;
   background-image: linear-gradient(to bottom, #c4df2c, #88b551);
   background-repeat: repeat-x;
@@ -2260,12 +2261,14 @@ ul#ui-id-1.ui-autocomplete {
   margin-right: 5px;
 }
 
-/* line 40, ../sass/components/buttons.scss */
+/* line 43, ../sass/components/buttons.scss */
 .forum-add-node:hover,
 .lacuna-button:hover,
 .lacuna-button:focus,
 .form-submit:hover,
-.form-submit:focus {
+.form-submit:focus,
+.af-button-large:hover,
+.af-button-large:focus {
   background-color: #88b551;
   color: #FFFFFF;
   background-position: 0 -15px;
@@ -2273,38 +2276,38 @@ ul#ui-id-1.ui-autocomplete {
   transition: background-position 0.1s linear 0s;
 }
 
-/* line 47, ../sass/components/buttons.scss */
+/* line 50, ../sass/components/buttons.scss */
 .lacuna-button.lacuna-button-blue {
   background-color: #78cefd;
   background-image: linear-gradient(to bottom, #78cefd, #1588ba);
 }
 
-/* line 52, ../sass/components/buttons.scss */
+/* line 55, ../sass/components/buttons.scss */
 .lacuna-button.lacuna-button-blue:hover,
 .lacuna-button.lacuna-button-blue:focus {
   background-color: #1588ba;
 }
 
-/* line 56, ../sass/components/buttons.scss */
+/* line 59, ../sass/components/buttons.scss */
 .forum-add-node a,
 .lacuna-button a {
   color: #FFFFFF;
 }
 
-/* line 60, ../sass/components/buttons.scss */
+/* line 63, ../sass/components/buttons.scss */
 .form-submit,
 .annotation-sidebar-button {
   background-color: #92a6c4;
   background-image: linear-gradient(to bottom, #92a6c4, #39404a);
 }
 
-/* line 65, ../sass/components/buttons.scss */
+/* line 68, ../sass/components/buttons.scss */
 .form-submit:hover,
 .form-submit:focus {
   background-color: #39404a;
 }
 
-/* line 69, ../sass/components/buttons.scss */
+/* line 72, ../sass/components/buttons.scss */
 .view-documents #edit-reset.form-submit,
 .view-your-story #edit-reset.form-submit {
   margin-top: -40px;
@@ -2312,13 +2315,13 @@ ul#ui-id-1.ui-autocomplete {
   float: right;
 }
 
-/* line 76, ../sass/components/buttons.scss */
+/* line 79, ../sass/components/buttons.scss */
 #blog-node-form #edit-body-und-0-format,
 #comment-form #edit-comment-body-und-0-format {
   display: none;
 }
 
-/* line 80, ../sass/components/buttons.scss */
+/* line 83, ../sass/components/buttons.scss */
 .publish-button {
   display: block;
   margin-top: 5px;
