@@ -37,7 +37,7 @@ d3.json(settings.config.data_url, function (error, data) {
  *
  **************/
 function Annotations(data) {
-	this.data = new Array();
+	this.data = Array();
 	this.data.push(data);
 	this.all = data;
 	this.timeFilter = null;	// because time filters are unique
