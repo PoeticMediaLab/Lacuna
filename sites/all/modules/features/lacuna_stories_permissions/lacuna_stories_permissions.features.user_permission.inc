@@ -155,6 +155,7 @@ function lacuna_stories_permissions_user_default_permissions() {
     'name' => 'access own webform results',
     'roles' => array(
       'administrator' => 'administrator',
+      'authenticated user' => 'authenticated user',
     ),
     'module' => 'webform',
   );
@@ -164,6 +165,7 @@ function lacuna_stories_permissions_user_default_permissions() {
     'name' => 'access own webform submissions',
     'roles' => array(
       'administrator' => 'administrator',
+      'authenticated user' => 'authenticated user',
     ),
     'module' => 'webform',
   );
@@ -1290,6 +1292,7 @@ function lacuna_stories_permissions_user_default_permissions() {
     'name' => 'delete own webform submissions',
     'roles' => array(
       'administrator' => 'administrator',
+      'authenticated user' => 'authenticated user',
     ),
     'module' => 'webform',
   );
@@ -1950,6 +1953,7 @@ function lacuna_stories_permissions_user_default_permissions() {
     'name' => 'edit own webform submissions',
     'roles' => array(
       'administrator' => 'administrator',
+      'authenticated user' => 'authenticated user',
     ),
     'module' => 'webform',
   );
@@ -2140,6 +2144,34 @@ function lacuna_stories_permissions_user_default_permissions() {
     'module' => 'comment',
   );
 
+  // Exported permission: 'publish any annotation content'.
+  $permissions['publish any annotation content'] = array(
+    'name' => 'publish any annotation content',
+    'roles' => array(),
+    'module' => 'publishcontent',
+  );
+
+  // Exported permission: 'publish any audio content'.
+  $permissions['publish any audio content'] = array(
+    'name' => 'publish any audio content',
+    'roles' => array(),
+    'module' => 'publishcontent',
+  );
+
+  // Exported permission: 'publish any biblio content'.
+  $permissions['publish any biblio content'] = array(
+    'name' => 'publish any biblio content',
+    'roles' => array(),
+    'module' => 'publishcontent',
+  );
+
+  // Exported permission: 'publish any blog content'.
+  $permissions['publish any blog content'] = array(
+    'name' => 'publish any blog content',
+    'roles' => array(),
+    'module' => 'publishcontent',
+  );
+
   // Exported permission: 'publish any content'.
   $permissions['publish any content'] = array(
     'name' => 'publish any content',
@@ -2147,6 +2179,83 @@ function lacuna_stories_permissions_user_default_permissions() {
       'Content Manager' => 'Content Manager',
       'administrator' => 'administrator',
     ),
+    'module' => 'publishcontent',
+  );
+
+  // Exported permission: 'publish any document content'.
+  $permissions['publish any document content'] = array(
+    'name' => 'publish any document content',
+    'roles' => array(),
+    'module' => 'publishcontent',
+  );
+
+  // Exported permission: 'publish any forum content'.
+  $permissions['publish any forum content'] = array(
+    'name' => 'publish any forum content',
+    'roles' => array(),
+    'module' => 'publishcontent',
+  );
+
+  // Exported permission: 'publish any image content'.
+  $permissions['publish any image content'] = array(
+    'name' => 'publish any image content',
+    'roles' => array(),
+    'module' => 'publishcontent',
+  );
+
+  // Exported permission: 'publish any music_video content'.
+  $permissions['publish any music_video content'] = array(
+    'name' => 'publish any music_video content',
+    'roles' => array(),
+    'module' => 'publishcontent',
+  );
+
+  // Exported permission: 'publish any page content'.
+  $permissions['publish any page content'] = array(
+    'name' => 'publish any page content',
+    'roles' => array(),
+    'module' => 'publishcontent',
+  );
+
+  // Exported permission: 'publish any thread content'.
+  $permissions['publish any thread content'] = array(
+    'name' => 'publish any thread content',
+    'roles' => array(),
+    'module' => 'publishcontent',
+  );
+
+  // Exported permission: 'publish any video content'.
+  $permissions['publish any video content'] = array(
+    'name' => 'publish any video content',
+    'roles' => array(),
+    'module' => 'publishcontent',
+  );
+
+  // Exported permission: 'publish editable annotation content'.
+  $permissions['publish editable annotation content'] = array(
+    'name' => 'publish editable annotation content',
+    'roles' => array(),
+    'module' => 'publishcontent',
+  );
+
+  // Exported permission: 'publish editable audio content'.
+  $permissions['publish editable audio content'] = array(
+    'name' => 'publish editable audio content',
+    'roles' => array(),
+    'module' => 'publishcontent',
+  );
+
+  // Exported permission: 'publish editable biblio content'.
+  $permissions['publish editable biblio content'] = array(
+    'name' => 'publish editable biblio content',
+    'roles' => array(),
+    'module' => 'publishcontent',
+  );
+
+  // Exported permission: 'publish editable blog content'.
+  $permissions['publish editable blog content'] = array(
+    'name' => 'publish editable blog content',
+    'roles' => array(),
     'module' => 'publishcontent',
   );
 
@@ -2159,6 +2268,132 @@ function lacuna_stories_permissions_user_default_permissions() {
       'Student' => 'Student',
       'administrator' => 'administrator',
     ),
+    'module' => 'publishcontent',
+  );
+
+  // Exported permission: 'publish editable document content'.
+  $permissions['publish editable document content'] = array(
+    'name' => 'publish editable document content',
+    'roles' => array(),
+    'module' => 'publishcontent',
+  );
+
+  // Exported permission: 'publish editable forum content'.
+  $permissions['publish editable forum content'] = array(
+    'name' => 'publish editable forum content',
+    'roles' => array(),
+    'module' => 'publishcontent',
+  );
+
+  // Exported permission: 'publish editable image content'.
+  $permissions['publish editable image content'] = array(
+    'name' => 'publish editable image content',
+    'roles' => array(),
+    'module' => 'publishcontent',
+  );
+
+  // Exported permission: 'publish editable music_video content'.
+  $permissions['publish editable music_video content'] = array(
+    'name' => 'publish editable music_video content',
+    'roles' => array(),
+    'module' => 'publishcontent',
+  );
+
+  // Exported permission: 'publish editable page content'.
+  $permissions['publish editable page content'] = array(
+    'name' => 'publish editable page content',
+    'roles' => array(),
+    'module' => 'publishcontent',
+  );
+
+  // Exported permission: 'publish editable thread content'.
+  $permissions['publish editable thread content'] = array(
+    'name' => 'publish editable thread content',
+    'roles' => array(),
+    'module' => 'publishcontent',
+  );
+
+  // Exported permission: 'publish editable video content'.
+  $permissions['publish editable video content'] = array(
+    'name' => 'publish editable video content',
+    'roles' => array(),
+    'module' => 'publishcontent',
+  );
+
+  // Exported permission: 'publish own annotation content'.
+  $permissions['publish own annotation content'] = array(
+    'name' => 'publish own annotation content',
+    'roles' => array(),
+    'module' => 'publishcontent',
+  );
+
+  // Exported permission: 'publish own audio content'.
+  $permissions['publish own audio content'] = array(
+    'name' => 'publish own audio content',
+    'roles' => array(),
+    'module' => 'publishcontent',
+  );
+
+  // Exported permission: 'publish own biblio content'.
+  $permissions['publish own biblio content'] = array(
+    'name' => 'publish own biblio content',
+    'roles' => array(),
+    'module' => 'publishcontent',
+  );
+
+  // Exported permission: 'publish own blog content'.
+  $permissions['publish own blog content'] = array(
+    'name' => 'publish own blog content',
+    'roles' => array(),
+    'module' => 'publishcontent',
+  );
+
+  // Exported permission: 'publish own document content'.
+  $permissions['publish own document content'] = array(
+    'name' => 'publish own document content',
+    'roles' => array(),
+    'module' => 'publishcontent',
+  );
+
+  // Exported permission: 'publish own forum content'.
+  $permissions['publish own forum content'] = array(
+    'name' => 'publish own forum content',
+    'roles' => array(),
+    'module' => 'publishcontent',
+  );
+
+  // Exported permission: 'publish own image content'.
+  $permissions['publish own image content'] = array(
+    'name' => 'publish own image content',
+    'roles' => array(),
+    'module' => 'publishcontent',
+  );
+
+  // Exported permission: 'publish own music_video content'.
+  $permissions['publish own music_video content'] = array(
+    'name' => 'publish own music_video content',
+    'roles' => array(),
+    'module' => 'publishcontent',
+  );
+
+  // Exported permission: 'publish own page content'.
+  $permissions['publish own page content'] = array(
+    'name' => 'publish own page content',
+    'roles' => array(),
+    'module' => 'publishcontent',
+  );
+
+  // Exported permission: 'publish own thread content'.
+  $permissions['publish own thread content'] = array(
+    'name' => 'publish own thread content',
+    'roles' => array(),
+    'module' => 'publishcontent',
+  );
+
+  // Exported permission: 'publish own video content'.
+  $permissions['publish own video content'] = array(
+    'name' => 'publish own video content',
+    'roles' => array(),
     'module' => 'publishcontent',
   );
 
@@ -2307,6 +2542,34 @@ function lacuna_stories_permissions_user_default_permissions() {
     'module' => 'shortcut',
   );
 
+  // Exported permission: 'unpublish any annotation content'.
+  $permissions['unpublish any annotation content'] = array(
+    'name' => 'unpublish any annotation content',
+    'roles' => array(),
+    'module' => 'publishcontent',
+  );
+
+  // Exported permission: 'unpublish any audio content'.
+  $permissions['unpublish any audio content'] = array(
+    'name' => 'unpublish any audio content',
+    'roles' => array(),
+    'module' => 'publishcontent',
+  );
+
+  // Exported permission: 'unpublish any biblio content'.
+  $permissions['unpublish any biblio content'] = array(
+    'name' => 'unpublish any biblio content',
+    'roles' => array(),
+    'module' => 'publishcontent',
+  );
+
+  // Exported permission: 'unpublish any blog content'.
+  $permissions['unpublish any blog content'] = array(
+    'name' => 'unpublish any blog content',
+    'roles' => array(),
+    'module' => 'publishcontent',
+  );
+
   // Exported permission: 'unpublish any content'.
   $permissions['unpublish any content'] = array(
     'name' => 'unpublish any content',
@@ -2314,6 +2577,83 @@ function lacuna_stories_permissions_user_default_permissions() {
       'Content Manager' => 'Content Manager',
       'administrator' => 'administrator',
     ),
+    'module' => 'publishcontent',
+  );
+
+  // Exported permission: 'unpublish any document content'.
+  $permissions['unpublish any document content'] = array(
+    'name' => 'unpublish any document content',
+    'roles' => array(),
+    'module' => 'publishcontent',
+  );
+
+  // Exported permission: 'unpublish any forum content'.
+  $permissions['unpublish any forum content'] = array(
+    'name' => 'unpublish any forum content',
+    'roles' => array(),
+    'module' => 'publishcontent',
+  );
+
+  // Exported permission: 'unpublish any image content'.
+  $permissions['unpublish any image content'] = array(
+    'name' => 'unpublish any image content',
+    'roles' => array(),
+    'module' => 'publishcontent',
+  );
+
+  // Exported permission: 'unpublish any music_video content'.
+  $permissions['unpublish any music_video content'] = array(
+    'name' => 'unpublish any music_video content',
+    'roles' => array(),
+    'module' => 'publishcontent',
+  );
+
+  // Exported permission: 'unpublish any page content'.
+  $permissions['unpublish any page content'] = array(
+    'name' => 'unpublish any page content',
+    'roles' => array(),
+    'module' => 'publishcontent',
+  );
+
+  // Exported permission: 'unpublish any thread content'.
+  $permissions['unpublish any thread content'] = array(
+    'name' => 'unpublish any thread content',
+    'roles' => array(),
+    'module' => 'publishcontent',
+  );
+
+  // Exported permission: 'unpublish any video content'.
+  $permissions['unpublish any video content'] = array(
+    'name' => 'unpublish any video content',
+    'roles' => array(),
+    'module' => 'publishcontent',
+  );
+
+  // Exported permission: 'unpublish editable annotation content'.
+  $permissions['unpublish editable annotation content'] = array(
+    'name' => 'unpublish editable annotation content',
+    'roles' => array(),
+    'module' => 'publishcontent',
+  );
+
+  // Exported permission: 'unpublish editable audio content'.
+  $permissions['unpublish editable audio content'] = array(
+    'name' => 'unpublish editable audio content',
+    'roles' => array(),
+    'module' => 'publishcontent',
+  );
+
+  // Exported permission: 'unpublish editable biblio content'.
+  $permissions['unpublish editable biblio content'] = array(
+    'name' => 'unpublish editable biblio content',
+    'roles' => array(),
+    'module' => 'publishcontent',
+  );
+
+  // Exported permission: 'unpublish editable blog content'.
+  $permissions['unpublish editable blog content'] = array(
+    'name' => 'unpublish editable blog content',
+    'roles' => array(),
     'module' => 'publishcontent',
   );
 
@@ -2326,6 +2666,132 @@ function lacuna_stories_permissions_user_default_permissions() {
       'Student' => 'Student',
       'administrator' => 'administrator',
     ),
+    'module' => 'publishcontent',
+  );
+
+  // Exported permission: 'unpublish editable document content'.
+  $permissions['unpublish editable document content'] = array(
+    'name' => 'unpublish editable document content',
+    'roles' => array(),
+    'module' => 'publishcontent',
+  );
+
+  // Exported permission: 'unpublish editable forum content'.
+  $permissions['unpublish editable forum content'] = array(
+    'name' => 'unpublish editable forum content',
+    'roles' => array(),
+    'module' => 'publishcontent',
+  );
+
+  // Exported permission: 'unpublish editable image content'.
+  $permissions['unpublish editable image content'] = array(
+    'name' => 'unpublish editable image content',
+    'roles' => array(),
+    'module' => 'publishcontent',
+  );
+
+  // Exported permission: 'unpublish editable music_video content'.
+  $permissions['unpublish editable music_video content'] = array(
+    'name' => 'unpublish editable music_video content',
+    'roles' => array(),
+    'module' => 'publishcontent',
+  );
+
+  // Exported permission: 'unpublish editable page content'.
+  $permissions['unpublish editable page content'] = array(
+    'name' => 'unpublish editable page content',
+    'roles' => array(),
+    'module' => 'publishcontent',
+  );
+
+  // Exported permission: 'unpublish editable thread content'.
+  $permissions['unpublish editable thread content'] = array(
+    'name' => 'unpublish editable thread content',
+    'roles' => array(),
+    'module' => 'publishcontent',
+  );
+
+  // Exported permission: 'unpublish editable video content'.
+  $permissions['unpublish editable video content'] = array(
+    'name' => 'unpublish editable video content',
+    'roles' => array(),
+    'module' => 'publishcontent',
+  );
+
+  // Exported permission: 'unpublish own annotation content'.
+  $permissions['unpublish own annotation content'] = array(
+    'name' => 'unpublish own annotation content',
+    'roles' => array(),
+    'module' => 'publishcontent',
+  );
+
+  // Exported permission: 'unpublish own audio content'.
+  $permissions['unpublish own audio content'] = array(
+    'name' => 'unpublish own audio content',
+    'roles' => array(),
+    'module' => 'publishcontent',
+  );
+
+  // Exported permission: 'unpublish own biblio content'.
+  $permissions['unpublish own biblio content'] = array(
+    'name' => 'unpublish own biblio content',
+    'roles' => array(),
+    'module' => 'publishcontent',
+  );
+
+  // Exported permission: 'unpublish own blog content'.
+  $permissions['unpublish own blog content'] = array(
+    'name' => 'unpublish own blog content',
+    'roles' => array(),
+    'module' => 'publishcontent',
+  );
+
+  // Exported permission: 'unpublish own document content'.
+  $permissions['unpublish own document content'] = array(
+    'name' => 'unpublish own document content',
+    'roles' => array(),
+    'module' => 'publishcontent',
+  );
+
+  // Exported permission: 'unpublish own forum content'.
+  $permissions['unpublish own forum content'] = array(
+    'name' => 'unpublish own forum content',
+    'roles' => array(),
+    'module' => 'publishcontent',
+  );
+
+  // Exported permission: 'unpublish own image content'.
+  $permissions['unpublish own image content'] = array(
+    'name' => 'unpublish own image content',
+    'roles' => array(),
+    'module' => 'publishcontent',
+  );
+
+  // Exported permission: 'unpublish own music_video content'.
+  $permissions['unpublish own music_video content'] = array(
+    'name' => 'unpublish own music_video content',
+    'roles' => array(),
+    'module' => 'publishcontent',
+  );
+
+  // Exported permission: 'unpublish own page content'.
+  $permissions['unpublish own page content'] = array(
+    'name' => 'unpublish own page content',
+    'roles' => array(),
+    'module' => 'publishcontent',
+  );
+
+  // Exported permission: 'unpublish own thread content'.
+  $permissions['unpublish own thread content'] = array(
+    'name' => 'unpublish own thread content',
+    'roles' => array(),
+    'module' => 'publishcontent',
+  );
+
+  // Exported permission: 'unpublish own video content'.
+  $permissions['unpublish own video content'] = array(
+    'name' => 'unpublish own video content',
+    'roles' => array(),
     'module' => 'publishcontent',
   );
 
