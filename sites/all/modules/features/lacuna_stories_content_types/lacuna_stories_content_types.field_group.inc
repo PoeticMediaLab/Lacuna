@@ -84,7 +84,7 @@ function lacuna_stories_content_types_field_group_info() {
     'weight' => '2',
     'children' => array(
       0 => 'field_genre',
-      1 => 'field_bibliographic_entry',
+      1 => 'og_group_ref',
       2 => 'field_topics',
       3 => 'field_tags',
     ),
