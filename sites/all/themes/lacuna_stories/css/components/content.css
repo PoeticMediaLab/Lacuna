@@ -40,3 +40,8 @@
 ul#ui-id-1.ui-autocomplete {
   padding-top: 50px;
 }
+
+/* line 37, ../../sass/components/content.scss */
+legend span.fieldset-legend {
+  font-weight: bold;
+}

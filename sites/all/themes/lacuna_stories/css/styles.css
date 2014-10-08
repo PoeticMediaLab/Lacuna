@@ -1974,7 +1974,7 @@ ul.tabs.primary a.active, ul.tabs.primary a:hover {
 
 /* Hide "Operations" text in Sewing Kit */
 /* line 2, ../sass/components/views.scss */
-legend .fieldset-legend {
+.vbo-views-form form div fieldset.container-inline legend span.fieldset-legend {
   display: none;
 }
 
@@ -2220,6 +2220,11 @@ table.views-table {
 /* line 32, ../sass/components/content.scss */
 ul#ui-id-1.ui-autocomplete {
   padding-top: 50px;
+}
+
+/* line 37, ../sass/components/content.scss */
+legend span.fieldset-legend {
+  font-weight: bold;
 }
 
 /* line 1, ../sass/components/buttons.scss */
