@@ -24,6 +24,7 @@ dependencies[] = mediaelement
 dependencies[] = og
 dependencies[] = og_ui
 dependencies[] = options
+dependencies[] = publishcontent
 dependencies[] = taxonomy
 dependencies[] = text
 dependencies[] = workflow

@@ -133,27 +133,6 @@ function lacuna_stories_menus_menu_default_menu_links() {
     'weight' => -50,
     'customized' => 1,
   );
-  // Exported menu link: main-menu_forums:forum
-  $menu_links['main-menu_forums:forum'] = array(
-    'menu_name' => 'main-menu',
-    'link_path' => 'forum',
-    'router_path' => 'forum',
-    'link_title' => 'Forums',
-    'options' => array(
-      'attributes' => array(
-        'title' => '',
-      ),
-      'identifier' => 'main-menu_forums:forum',
-    ),
-    'module' => 'menu',
-    'hidden' => 0,
-    'external' => 0,
-    'has_children' => 0,
-    'expanded' => 0,
-    'weight' => 0,
-    'customized' => 1,
-    'parent_identifier' => 'main-menu_connect:<nolink>',
-  );
   // Exported menu link: main-menu_help:contact
   $menu_links['main-menu_help:contact'] = array(
     'menu_name' => 'main-menu',
@@ -452,7 +431,6 @@ function lacuna_stories_menus_menu_default_menu_links() {
   t('Connect');
   t('Create');
   t('Explore');
-  t('Forums');
   t('Help');
   t('Logout');
   t('Materials');

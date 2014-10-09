@@ -1260,6 +1260,19 @@ function lacuna_stories_views_views_default_views() {
   $handler->display->display_options['fields']['biblio_short_title']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['biblio_short_title']['empty'] = '<a href="[path_1]">[title]</a>';
   $handler->display->display_options['fields']['biblio_short_title']['biblio_label'] = 0;
+  /* Field: Global: Popup */
+  $handler->display->display_options['fields']['popup']['id'] = 'popup';
+  $handler->display->display_options['fields']['popup']['table'] = 'popup_views_integration';
+  $handler->display->display_options['fields']['popup']['field'] = 'popup';
+  $handler->display->display_options['fields']['popup']['label'] = '';
+  $handler->display->display_options['fields']['popup']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['popup']['title'] = '(See abstract)';
+  $handler->display->display_options['fields']['popup']['text'] = '[field_biblio_hover_abstract]';
+  $handler->display->display_options['fields']['popup']['close'] = 0;
+  $handler->display->display_options['fields']['popup']['origin'] = 'top-left';
+  $handler->display->display_options['fields']['popup']['expand'] = 'top-right';
+  $handler->display->display_options['fields']['popup']['width'] = '200';
+  $handler->display->display_options['fields']['popup']['style'] = '0';
   /* Field: Biblio: Year of Publication */
   $handler->display->display_options['fields']['biblio_year']['id'] = 'biblio_year';
   $handler->display->display_options['fields']['biblio_year']['table'] = 'biblio';

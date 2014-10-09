@@ -272,16 +272,6 @@ function lacuna_stories_permissions_user_default_permissions() {
     'module' => 'system',
   );
 
-  // Exported permission: 'administer advanced forum'.
-  $permissions['administer advanced forum'] = array(
-    'name' => 'administer advanced forum',
-    'roles' => array(
-      'Content Manager' => 'Content Manager',
-      'administrator' => 'administrator',
-    ),
-    'module' => 'advanced_forum',
-  );
-
   // Exported permission: 'administer annotations'.
   $permissions['administer annotations'] = array(
     'name' => 'administer annotations',
@@ -390,17 +380,6 @@ function lacuna_stories_permissions_user_default_permissions() {
       'administrator' => 'administrator',
     ),
     'module' => 'flag',
-  );
-
-  // Exported permission: 'administer forums'.
-  $permissions['administer forums'] = array(
-    'name' => 'administer forums',
-    'roles' => array(
-      'Content Manager' => 'Content Manager',
-      'Instructor' => 'Instructor',
-      'administrator' => 'administrator',
-    ),
-    'module' => 'forum',
   );
 
   // Exported permission: 'administer group'.
@@ -861,18 +840,6 @@ function lacuna_stories_permissions_user_default_permissions() {
     'module' => 'field_permissions',
   );
 
-  // Exported permission: 'create forum content'.
-  $permissions['create forum content'] = array(
-    'name' => 'create forum content',
-    'roles' => array(
-      'Content Manager' => 'Content Manager',
-      'Instructor' => 'Instructor',
-      'Student' => 'Student',
-      'administrator' => 'administrator',
-    ),
-    'module' => 'node',
-  );
-
   // Exported permission: 'create image content'.
   $permissions['create image content'] = array(
     'name' => 'create image content',
@@ -1050,16 +1017,6 @@ function lacuna_stories_permissions_user_default_permissions() {
     'module' => 'node',
   );
 
-  // Exported permission: 'delete any forum content'.
-  $permissions['delete any forum content'] = array(
-    'name' => 'delete any forum content',
-    'roles' => array(
-      'Content Manager' => 'Content Manager',
-      'administrator' => 'administrator',
-    ),
-    'module' => 'node',
-  );
-
   // Exported permission: 'delete any image content'.
   $permissions['delete any image content'] = array(
     'name' => 'delete any image content',
@@ -1208,18 +1165,6 @@ function lacuna_stories_permissions_user_default_permissions() {
     'module' => 'node',
   );
 
-  // Exported permission: 'delete own forum content'.
-  $permissions['delete own forum content'] = array(
-    'name' => 'delete own forum content',
-    'roles' => array(
-      'Content Manager' => 'Content Manager',
-      'Instructor' => 'Instructor',
-      'Student' => 'Student',
-      'administrator' => 'administrator',
-    ),
-    'module' => 'node',
-  );
-
   // Exported permission: 'delete own image content'.
   $permissions['delete own image content'] = array(
     'name' => 'delete own image content',
@@ -1312,17 +1257,6 @@ function lacuna_stories_permissions_user_default_permissions() {
     'name' => 'delete terms in annotation_categories',
     'roles' => array(
       'Content Manager' => 'Content Manager',
-      'administrator' => 'administrator',
-    ),
-    'module' => 'taxonomy',
-  );
-
-  // Exported permission: 'delete terms in forums'.
-  $permissions['delete terms in forums'] = array(
-    'name' => 'delete terms in forums',
-    'roles' => array(
-      'Content Manager' => 'Content Manager',
-      'Instructor' => 'Instructor',
       'administrator' => 'administrator',
     ),
     'module' => 'taxonomy',
@@ -1479,16 +1413,6 @@ function lacuna_stories_permissions_user_default_permissions() {
   // Exported permission: 'edit any document content'.
   $permissions['edit any document content'] = array(
     'name' => 'edit any document content',
-    'roles' => array(
-      'Content Manager' => 'Content Manager',
-      'administrator' => 'administrator',
-    ),
-    'module' => 'node',
-  );
-
-  // Exported permission: 'edit any forum content'.
-  $permissions['edit any forum content'] = array(
-    'name' => 'edit any forum content',
     'roles' => array(
       'Content Manager' => 'Content Manager',
       'administrator' => 'administrator',
@@ -1857,18 +1781,6 @@ function lacuna_stories_permissions_user_default_permissions() {
     'module' => 'field_permissions',
   );
 
-  // Exported permission: 'edit own forum content'.
-  $permissions['edit own forum content'] = array(
-    'name' => 'edit own forum content',
-    'roles' => array(
-      'Content Manager' => 'Content Manager',
-      'Instructor' => 'Instructor',
-      'Student' => 'Student',
-      'administrator' => 'administrator',
-    ),
-    'module' => 'node',
-  );
-
   // Exported permission: 'edit own image content'.
   $permissions['edit own image content'] = array(
     'name' => 'edit own image content',
@@ -1963,17 +1875,6 @@ function lacuna_stories_permissions_user_default_permissions() {
     'name' => 'edit terms in annotation_categories',
     'roles' => array(
       'Content Manager' => 'Content Manager',
-      'administrator' => 'administrator',
-    ),
-    'module' => 'taxonomy',
-  );
-
-  // Exported permission: 'edit terms in forums'.
-  $permissions['edit terms in forums'] = array(
-    'name' => 'edit terms in forums',
-    'roles' => array(
-      'Content Manager' => 'Content Manager',
-      'Instructor' => 'Instructor',
       'administrator' => 'administrator',
     ),
     'module' => 'taxonomy',
@@ -2189,13 +2090,6 @@ function lacuna_stories_permissions_user_default_permissions() {
     'module' => 'publishcontent',
   );
 
-  // Exported permission: 'publish any forum content'.
-  $permissions['publish any forum content'] = array(
-    'name' => 'publish any forum content',
-    'roles' => array(),
-    'module' => 'publishcontent',
-  );
-
   // Exported permission: 'publish any image content'.
   $permissions['publish any image content'] = array(
     'name' => 'publish any image content',
@@ -2278,13 +2172,6 @@ function lacuna_stories_permissions_user_default_permissions() {
     'module' => 'publishcontent',
   );
 
-  // Exported permission: 'publish editable forum content'.
-  $permissions['publish editable forum content'] = array(
-    'name' => 'publish editable forum content',
-    'roles' => array(),
-    'module' => 'publishcontent',
-  );
-
   // Exported permission: 'publish editable image content'.
   $permissions['publish editable image content'] = array(
     'name' => 'publish editable image content',
@@ -2351,13 +2238,6 @@ function lacuna_stories_permissions_user_default_permissions() {
   // Exported permission: 'publish own document content'.
   $permissions['publish own document content'] = array(
     'name' => 'publish own document content',
-    'roles' => array(),
-    'module' => 'publishcontent',
-  );
-
-  // Exported permission: 'publish own forum content'.
-  $permissions['publish own forum content'] = array(
-    'name' => 'publish own forum content',
     'roles' => array(),
     'module' => 'publishcontent',
   );
@@ -2587,13 +2467,6 @@ function lacuna_stories_permissions_user_default_permissions() {
     'module' => 'publishcontent',
   );
 
-  // Exported permission: 'unpublish any forum content'.
-  $permissions['unpublish any forum content'] = array(
-    'name' => 'unpublish any forum content',
-    'roles' => array(),
-    'module' => 'publishcontent',
-  );
-
   // Exported permission: 'unpublish any image content'.
   $permissions['unpublish any image content'] = array(
     'name' => 'unpublish any image content',
@@ -2676,13 +2549,6 @@ function lacuna_stories_permissions_user_default_permissions() {
     'module' => 'publishcontent',
   );
 
-  // Exported permission: 'unpublish editable forum content'.
-  $permissions['unpublish editable forum content'] = array(
-    'name' => 'unpublish editable forum content',
-    'roles' => array(),
-    'module' => 'publishcontent',
-  );
-
   // Exported permission: 'unpublish editable image content'.
   $permissions['unpublish editable image content'] = array(
     'name' => 'unpublish editable image content',
@@ -2749,13 +2615,6 @@ function lacuna_stories_permissions_user_default_permissions() {
   // Exported permission: 'unpublish own document content'.
   $permissions['unpublish own document content'] = array(
     'name' => 'unpublish own document content',
-    'roles' => array(),
-    'module' => 'publishcontent',
-  );
-
-  // Exported permission: 'unpublish own forum content'.
-  $permissions['unpublish own forum content'] = array(
-    'name' => 'unpublish own forum content',
     'roles' => array(),
     'module' => 'publishcontent',
   );
@@ -2961,17 +2820,6 @@ function lacuna_stories_permissions_user_default_permissions() {
     'module' => 'field_permissions',
   );
 
-  // Exported permission: 'view forum statistics'.
-  $permissions['view forum statistics'] = array(
-    'name' => 'view forum statistics',
-    'roles' => array(
-      'Content Manager' => 'Content Manager',
-      'Instructor' => 'Instructor',
-      'administrator' => 'administrator',
-    ),
-    'module' => 'advanced_forum',
-  );
-
   // Exported permission: 'view full text'.
   $permissions['view full text'] = array(
     'name' => 'view full text',
@@ -2979,16 +2827,6 @@ function lacuna_stories_permissions_user_default_permissions() {
       'administrator' => 'administrator',
     ),
     'module' => 'biblio',
-  );
-
-  // Exported permission: 'view last edited notice'.
-  $permissions['view last edited notice'] = array(
-    'name' => 'view last edited notice',
-    'roles' => array(
-      'Content Manager' => 'Content Manager',
-      'administrator' => 'administrator',
-    ),
-    'module' => 'advanced_forum',
   );
 
   // Exported permission: 'view media'.
