@@ -198,7 +198,6 @@ features[node][] = thread
 features[node][] = video
 features[node][] = webform
 features[taxonomy][] = annotation_categories
-features[taxonomy][] = forums
 features[taxonomy][] = genre_blog_post
 features[taxonomy][] = genre_doc
 features[taxonomy][] = priority
