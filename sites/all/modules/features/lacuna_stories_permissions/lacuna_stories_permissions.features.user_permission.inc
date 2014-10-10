@@ -141,6 +141,18 @@ function lacuna_stories_permissions_user_default_permissions() {
     'module' => 'dashboard',
   );
 
+  // Exported permission: 'access notify'.
+  $permissions['access notify'] = array(
+    'name' => 'access notify',
+    'roles' => array(
+      'Content Manager' => 'Content Manager',
+      'Instructor' => 'Instructor',
+      'Student' => 'Student',
+      'administrator' => 'administrator',
+    ),
+    'module' => 'notify',
+  );
+
   // Exported permission: 'access own webform results'.
   $permissions['access own webform results'] = array(
     'name' => 'access own webform results',
@@ -436,6 +448,26 @@ function lacuna_stories_permissions_user_default_permissions() {
       'administrator' => 'administrator',
     ),
     'module' => 'node',
+  );
+
+  // Exported permission: 'administer notify'.
+  $permissions['administer notify'] = array(
+    'name' => 'administer notify',
+    'roles' => array(
+      'Content Manager' => 'Content Manager',
+      'administrator' => 'administrator',
+    ),
+    'module' => 'notify',
+  );
+
+  // Exported permission: 'administer notify queue'.
+  $permissions['administer notify queue'] = array(
+    'name' => 'administer notify queue',
+    'roles' => array(
+      'Content Manager' => 'Content Manager',
+      'administrator' => 'administrator',
+    ),
+    'module' => 'notify',
   );
 
   // Exported permission: 'administer pathauto'.
@@ -1945,6 +1977,15 @@ function lacuna_stories_permissions_user_default_permissions() {
     'module' => 'workflow',
   );
 
+  // Exported permission: 'flag irb_form_completed'.
+  $permissions['flag irb_form_completed'] = array(
+    'name' => 'flag irb_form_completed',
+    'roles' => array(
+      'administrator' => 'administrator',
+    ),
+    'module' => 'flag',
+  );
+
   // Exported permission: 'flush caches'.
   $permissions['flush caches'] = array(
     'name' => 'flush caches',
@@ -2411,6 +2452,15 @@ function lacuna_stories_permissions_user_default_permissions() {
       'administrator' => 'administrator',
     ),
     'module' => 'shortcut',
+  );
+
+  // Exported permission: 'unflag irb_form_completed'.
+  $permissions['unflag irb_form_completed'] = array(
+    'name' => 'unflag irb_form_completed',
+    'roles' => array(
+      'administrator' => 'administrator',
+    ),
+    'module' => 'flag',
   );
 
   // Exported permission: 'unpublish any annotation content'.
