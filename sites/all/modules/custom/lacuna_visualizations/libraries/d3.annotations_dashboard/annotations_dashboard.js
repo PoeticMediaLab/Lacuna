@@ -101,6 +101,9 @@ pie_types.forEach(function(pie_type) {
 // Add both edges and nodes to the graph array
 function add_to_graph(map, list, key, data) {
 	var item = data || {};
+	if (typeof key === "undefined" || !key) {
+		key = "Unknown";
+	}
 	if (typeof map[key] === "undefined") {
 		item.id = key;
 		item.count = 1;
@@ -589,7 +592,7 @@ function main(data) {
 	  	nodes.selectAll("text.node_label").remove();
 	  	var labels = nodes.append("text")
 	  		.attr("class", "node_label")
-			.text(function(d) { return d.id.substring(0, size.string.length); });
+				.text(function(d) { return d.id.substring(0, size.string.length); });
 
 	} // end update_graph()
 
