@@ -547,7 +547,6 @@ function lacuna_visualizations_library() {
         drupal_get_path('module', 'lacuna_visualizations') . '/libraries/crossfilter/crossfilter.min.js' => array(),
         '//cdn.datatables.net/1.10.2/js/jquery.dataTables.min.js' => array(
           'type' => 'external'),
-        drupal_get_path('module', 'lacuna_visualizations') . '/libraries/spin/spin.min.js' => array(),
       )
     )
   );
@@ -574,7 +573,6 @@ function lacuna_visualizations_annotation_dashboard() {
   // Dashboard uses Crossfilter and DataTables
   drupal_add_css('//cdn.datatables.net/1.10.2/css/jquery.dataTables.css', 'external');
   drupal_add_library('lacuna_visualizations', 'crossfilter', FALSE);
-  drupal_add_library('lacuna_visualizations', 'spin', FALSE);
   // We don't need the Graph API for this part, so go straight to d3
   return d3_draw($settings);
   // return theme('graphapi_dispatch', array('graph' => null, 'config' => $settings));

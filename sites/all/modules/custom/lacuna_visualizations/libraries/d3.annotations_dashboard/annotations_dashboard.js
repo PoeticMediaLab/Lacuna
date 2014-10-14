@@ -249,6 +249,14 @@ function main(data) {
 						left: 30
 					},
 				},
+				legend: {
+					height: 150,
+					width: 100,
+					square: {
+						height: 20,
+						width: 20,
+					},
+				},
 				node: {	max: .5,
 						min: .1 },
 				string: { length: 60 },
@@ -314,7 +322,7 @@ function main(data) {
 			.style("opacity", 1)
 			;
 		var type = this.getAttribute("class");
-		var text = "<h3>";
+		var text = "<h4>";
 		if (type == "node" || type == "pie_total") {
 			var total;
 			var data;
@@ -334,9 +342,9 @@ function main(data) {
 				}
 				var title = pie_labels[pie_type];
 				data = pie_data_aggregate[pie_type];
-				text += title + "</h3>";
+				text += title + "</h4>";
 			}
-			text += "</h3>";
+			text += "</h4>";
 			text += "<table>";
 			data.forEach(function (p,i) {
 				text += "<tr style='color:" + color_scale(i);
@@ -586,11 +594,13 @@ function main(data) {
 	  		.style("fill", function(d, i) { return color_scale(i); })
 	  		;
 
-	  	// Add node labels
-	  	nodes.selectAll("text.node_label").remove();
-	  	var labels = nodes.append("text")
-	  		.attr("class", "node_label")
-				.text(function(d) { return d.id.substring(0, size.string.length); });
+  	// Add node labels
+  	nodes.selectAll("text.node_label").remove();
+  	var labels = nodes.append("text")
+  		.attr("class", "node_label")
+			.text(function(d) {
+				return d.id.substring(0, size.string.length);
+			});
 
 	} // end update_graph()
 
@@ -633,6 +643,7 @@ function main(data) {
 			pie_current = pid;
 			update_graph();
 			update_summary_pies();
+			update_legend();
 			// window.scrollTo(0,400);
 		}
 	};
@@ -805,15 +816,15 @@ function main(data) {
 		    	.rangeRoundBands([size.bar.padding.left, size.bar.width - size.bar.padding.right - size.bar.padding.left], .1);
 
 			xAxis = d3.svg.axis()
-			    .scale(bar_x)
-			    .orient("bottom")
-			    // Only display every other label
-			    .tickValues(data.map(function (d,i) {
-			    	if (i % 7 === 0) { return d.x}
-			    }))
+		    .scale(bar_x)
+		    .orient("bottom")
+		    // Only display every other label
+		    .tickValues(data.map(function (d,i) {
+		    	if (i % 7 === 0) { return d.x}
+		    }))
 			;
 
-    		bar_chart.append("g")
+  		bar_chart.append("g")
 				.attr("class", "x axis")
 				.attr("transform", "translate(0," + size.bar.height + ")")
 				// .transition()
@@ -822,21 +833,21 @@ function main(data) {
 				.selectAll("text")
 				.style("text-anchor", "end")
 				.attr("transform", "rotate(-65)");
-	    }
+    }
 
-	    var bar_width = bar_x.rangeBand() - 1;
+    var bar_width = bar_x.rangeBand() - 1;
 
 		var bar_y = d3.scale.linear()
 			.domain([0, d3.max(data, function (d) { return d.y; })])
-		    .range([size.bar.height, size.bar.padding.top]);
+	    .range([size.bar.height, size.bar.padding.top]);
 
 		var yAxis = d3.svg.axis()
-		    .scale(bar_y)
-		    .orient("left")
-		    .tickFormat(d3.format("2i"))
-		    .ticks(7)
-		    // .attr("transform", "translate(-10,0)")
-		    ;
+	    .scale(bar_y)
+	    .orient("left")
+	    .tickFormat(d3.format("2i"))
+	    .ticks(7)
+	    // .attr("transform", "translate(-10,0)")
+	    ;
 
 		bar_chart.select("g.yAxis").remove();
 		bar_chart.append("g")
@@ -845,32 +856,32 @@ function main(data) {
 			.call(yAxis)
 			;
 
-	    var bars = bar_chart.selectAll("rect.bar").data(data);
+    var bars = bar_chart.selectAll("rect.bar").data(data);
 
-  		bars.enter()
+		bars.enter()
 			.append("rect")
-      		.attr("fill", "steelblue")
-      		.attr("class", "bar")
-    	;
+  		.attr("fill", "steelblue")
+  		.attr("class", "bar")
+  	;
 
-	    bars.exit().remove();
+    bars.exit().remove();
 
-      	bars.attr("width", bar_width)
-      		.attr("y", function (d) { return bar_y(d.y) })
-      		.attr("x", function (d) { return bar_x(d.x) })
-      		.attr("height", function (d) { return size.bar.height - bar_y(d.y) })
-      		;
+  	bars.attr("width", bar_width)
+  		.attr("y", function (d) { return bar_y(d.y) })
+  		.attr("x", function (d) { return bar_x(d.x) })
+  		.attr("height", function (d) { return size.bar.height - bar_y(d.y) })
+  		;
 
-      	var bar_labels = bar_chart.selectAll("text.bar_label").data(data);
-      	bar_labels.exit().remove();
-      	bar_labels.enter()
-      		.append("text")
-      		.attr("class", "bar_label")
-      		.attr("fill", "black")
-      		.attr("font-size", bar_width / 2 )
-      		.attr("text-anchor", "middle")
-      		.style("transform", "rotate(-90)")
-      	;
+  	var bar_labels = bar_chart.selectAll("text.bar_label").data(data);
+  	bar_labels.exit().remove();
+  	bar_labels.enter()
+  		.append("text")
+  		.attr("class", "bar_label")
+  		.attr("fill", "black")
+  		.attr("font-size", bar_width / 2 )
+  		.attr("text-anchor", "middle")
+  		.style("transform", "rotate(-90)")
+  	;
 
 		// Add the brush for filtering by time
 		brush = d3.svg.brush()
@@ -883,47 +894,47 @@ function main(data) {
 			.startAngle(0)
 			.endAngle(function (d,i) { return i ? -Math.PI : Math.PI; });
 
-	    var brushg = bar_chart
-	        .append("g")
-      		.attr("class", "brush")
-      		.call(brush);
+    var brushg = bar_chart
+        .append("g")
+    		.attr("class", "brush")
+    		.call(brush);
 
 		brushg.selectAll("rect")
 	    	.attr("height", size.bar.height);
 
-	    function brushed() {
-	    	d3.select("a.dashboard-button#reset_brush").style("visibility", "visible");
-	    	var extent = brush.extent();
-	    	var start = extent[0];
-	    	var end = extent[1];
-	    	var bar_width = bar_x.rangeBand() - 1;
-	    	var dates = Array();
-	    	d3.selectAll("rect.bar").each(function (d) {
-	    		var x = bar_x(d.x);
-	    		if ((x + bar_width) >= start && x <= end) {
-	    			dates.push(d.x);
-		    	}
-	    	});
-	    	// Filter our annotations by selected dates
-	    	var filter = Array();
-	    	annotations.current(true).forEach(function (a) {
-	    		var date = timeFormat(new Date(a.created));
-	    		if (dates.indexOf(date) != -1 && filter.indexOf(a) == -1) {
-	    			filter.push(a);
-	    		}
-	    	});
-	    	annotations.timeFilter = filter;
+    function brushed() {
+    	d3.select("a.dashboard-button#reset_brush").style("visibility", "visible");
+    	var extent = brush.extent();
+    	var start = extent[0];
+    	var end = extent[1];
+    	var bar_width = bar_x.rangeBand() - 1;
+    	var dates = Array();
+    	d3.selectAll("rect.bar").each(function (d) {
+    		var x = bar_x(d.x);
+    		if ((x + bar_width) >= start && x <= end) {
+    			dates.push(d.x);
+	    	}
+    	});
+    	// Filter our annotations by selected dates
+    	var filter = Array();
+    	annotations.current(true).forEach(function (a) {
+    		var date = timeFormat(new Date(a.created));
+    		if (dates.indexOf(date) != -1 && filter.indexOf(a) == -1) {
+    			filter.push(a);
+    		}
+    	});
+    	annotations.timeFilter = filter;
 
-	    	// Update the other parts of the display
-	    	// Call these updates here because we don't want to update the bar chart, too
-	    	update_graph();
-	    	update_summary_pies();
-	    	update_total();
-	    	// Are we focused on a node? If so, update the edge labels
-	    	if (focused_on !== null) {
-		    	draw_edge_weights();
-		    }
+    	// Update the other parts of the display
+    	// Call these updates here because we don't want to update the bar chart, too
+    	update_graph();
+    	update_summary_pies();
+    	update_total();
+    	// Are we focused on a node? If so, update the edge labels
+    	if (focused_on !== null) {
+	    	draw_edge_weights();
 	    }
+    }
 	}
 	/*************
 	 *
@@ -978,13 +989,49 @@ function main(data) {
     	total.text(str);
 	}
 
-    // update all graphs with the most recent filter
-    function update() {
-    	update_total();
-    	update_graph();
-    	update_timebrush();
-    	update_summary_pies();
-    }
+	// Provide a legend for the pie chart colors
+	// Called inside select_pie()
+	// Why? Because the legend is based on the current pie
+	var legend = d3.select('#legend')
+		.append("svg:svg")
+		.attr("id", "legend")
+		.attr("height", size.legend.height)
+		.attr("width", size.legend.width);
+
+	function update_legend() {
+		var item = legend.selectAll("g.legend_item")
+			.data(pie_data_aggregate[pie_current]);
+
+		item.exit().remove();
+		item.selectAll("text").remove();
+		item.enter()
+			.append("g")
+			.attr("class", "legend_item")
+			.attr("transform", function(d, i) { return "translate(0," + i * (size.legend.square.height + 2) + ")"; })
+			.append("rect")
+			.attr("x", 0)
+			.attr("width", size.legend.square.width)
+			.attr("height", size.legend.square.height)
+			.style("fill", function(d,i) { return color_scale(i) })
+			;
+
+		item.append("text")
+			.attr("x", size.legend.square.width + 10)
+			.attr("y", size.legend.square.height / 2)
+			.attr("dy", ".35em")
+			.style("text-anchor", "start")
+			.text(function(d) { return d.key; })
+			;
+	}
+
+  // update all graphs with the most recent filter
+  function update() {
+  	update_total();
+  	update_graph();
+  	update_timebrush();
+  	update_summary_pies();
+  	update_legend();
+  }
 
 	// Initial creation
 	update();

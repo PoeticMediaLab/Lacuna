@@ -34,7 +34,7 @@ div.help_text {
 
 div#piecharts {
   padding-top: 60px;
-  margin-left: 25px;
+  margin-left: 0px;
   width: 100%;
 }
 
@@ -42,7 +42,7 @@ div#pie_types {
   position: absolute;
   margin-top: 20px;
   width: 45%;
-  margin-left: 25px;
+  margin-left: 0px;
   margin-top: 25px;
   top: 500px;
 }
@@ -51,13 +51,19 @@ div#time_brush {
   position: absolute;
   width: 45%;
   height: 450px;
-  margin-left: 25px;
+  margin-left: 0px;
   margin-top: 25px;
 }
 
 div#network {
   position: absolute;
   left: 500px;
+}
+
+#legend {
+  position: absolute;
+  top: 295px;
+  left: 215px;
 }
 
 .axis path,
@@ -92,6 +98,11 @@ h1#title {
 
 h2#warning {
 	padding-bottom: 200px;
+}
+
+h2 {
+  display: inline-block;
+  width: 100%;
 }
 
 h3 {

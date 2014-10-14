@@ -57,6 +57,11 @@ elseif (current_path() == 'visualization/dashboard') { ?>
     </div>
   </div>
 
+  <div class="section">
+    <div id="legend">
+    </div>
+  </div>
+
   <div class="section" id="dashboard-buttons">
     <a href="#" class="dashboard-button lacuna-button" id="reset_all">Reset</a>
     <a href="#" class="dashboard-button lacuna-button" id="reset_brush">Remove Time Filter</a>
