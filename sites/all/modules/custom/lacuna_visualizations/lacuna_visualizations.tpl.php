@@ -36,20 +36,24 @@ elseif (current_path() == 'visualization/dashboard') { ?>
   <div id="column_right">
   </div>
   <div class="section">
-    <!-- <div class="help fa fa-question-circle"></div> -->
-    <div id="time_brush"></div>
-    <div class="help_text">
-      <h2>Time Filter</h2>
-      <p>To see how annotations change over time, draw a box over your desired time period. You can then click and drag that box to watch how annotations change over time. Click "Remove Time Filter" to return to viewing all annotations.</p>
+    <div id="time_brush"><h3>Filter by Time</h3>
+      <span class="help fa fa-question-circle">
+        <div class="help_text tooltip">
+          <h2>Time Filter</h2>
+          <p>To see how annotations change over time, draw a box over your desired time period. You can then click and drag that box to watch how annotations change over time. Click "Remove Time Filter" to return to viewing all annotations.</p>
+        </div>
+      </span>
     </div>
   </div>
 
   <div class="section">
-    <div id="pie_types"></div>
-    <!-- <div class="help fa fa-question-circle"></div> -->
-    <div class="help_text">
-      <h2>Annotation Types</h2>
-      <p>Hover over a pie chart to see a summary of student work. Click on any pie chart to change the graph below to show data according to the selected chart.</p>
+    <div id="pie_types"><h3>Annotation Types</h3>
+      <span class="help fa fa-question-circle">
+        <div class="help_text tooltip">
+          <h2>Annotation Types</h2>
+          <p>Hover over a pie chart to see a summary of student work. Click on any pie chart to change the graph below to show data according to the selected chart.</p>
+        </div>
+      </span>
     </div>
   </div>
 
@@ -60,13 +64,15 @@ elseif (current_path() == 'visualization/dashboard') { ?>
   </div>
 
   <div class="section">
-    <div id="network"></div>
-    <!-- <div class="help fa fa-question-circle"></div> -->
-    <div class="help_text">
-      <h2>Student and Resource Data</h2>
-      <p>Hover over a student or resource to view individual data. Click on a student or resource pie chart to filter data specific to that entry.</p>
-      <p>The lines between students and resources indicate the number of annotations made by the student on that resource.</p>
-      <p>At any time, click the "Reset" button to return to viewing all data.</p>
+    <div id="network"><h3>Network</h3>
+    <span class="help fa fa-question-circle">
+      <div class="help_text tooltip">
+        <h2>Student and Resource Data</h2>
+        <p>Hover over a student or resource to view individual data. Click on a student or resource pie chart to filter data specific to that entry.</p>
+        <p>The lines between students and resources indicate the number of annotations made by the student on that resource.</p>
+        <p>At any time, click the 'Reset' button to return to viewing all data.</p>
+      </div>
+    </span>
     </div>
   </div>
 

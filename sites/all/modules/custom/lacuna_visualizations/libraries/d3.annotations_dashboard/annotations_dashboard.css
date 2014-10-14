@@ -1,7 +1,6 @@
 body {
 	overflow-y: scroll;
   font-family:"Open Sans",arial,sans-serif;
-  /*color: #757575;*/
   color: black;
   background-color: white;
   margin: 0px;
@@ -20,16 +19,17 @@ div#charts {
 div#dashboard-buttons {
   position: absolute;
 	height: 65px;
-  top: 420px;
+  top: 450px;
   margin-left: 25px;
   width: 45%;
 }
 
 div.help_text {
 	width: 30%;
-	float: left;
 	padding-left: 20px;
   visibility: hidden;
+  float: right;
+  z-index: 100 !important;
 }
 
 div#piecharts {
@@ -84,34 +84,6 @@ div.bar {
 	background-color: blue;
 }
 
-img#logo {
-	padding-right: 15px;
-	vertical-align: middle;
-}
-
-img.help {
-/*  float: right;
-*/
-}
-
-img.help#time_brush {
-  position: absolute;
-  left: 45px;
-  top: 125px;
-}
-
-img.help#pie_types {
-  position: absolute;
-  left: 45px;
-  top: 500px;
-}
-
-img.help#network {
-  position: absolute;
-  left: 550px;
-  top: 200px;
-}
-
 h1#title {
 	text-align:center;
 	padding: 20px 5px 20px 15px;
@@ -125,19 +97,28 @@ h2#warning {
 h3 {
   padding-top: 0px;
   margin-top: 0px;
+  display: inline-block;
+  padding-left: 25%;
 }
 
-div.tooltip {
-    position: absolute;
+.help {
+  display: inline-block;
 }
 
-div.tooltip, div.help_text {
+.help_text {
+  visibility: hidden;
+  width: 100%;
+}
+
+.tooltip {
     padding: 5px 25px 5px 25px;
     font: 16px sans-serif;
     background-color: white;
     border: 1px solid steelblue;
     border-radius: 8px;
     pointer-events: none;
+    z-index: 100 !important;
+    position: absolute;
 }
 
 div.section#annotations_table {
@@ -180,31 +161,6 @@ div.tooltip table {
   stroke-width: 2px;
   fill-opacity: .1;
   shape-rendering: crispEdges;
-}
-
-a.dashboard-button {
-/*  color: gray;
-  font-size: small;
-  background: #3498db;
-  background-image: -webkit-linear-gradient(top, #3498db, #2980b9);
-  background-image: -moz-linear-gradient(top, #3498db, #2980b9);
-  background-image: -ms-linear-gradient(top, #3498db, #2980b9);
-  background-image: -o-linear-gradient(top, #3498db, #2980b9);
-  background-image: linear-gradient(to bottom, #3498db, #2980b9);
-  -webkit-border-radius: 8;
-  -moz-border-radius: 8;
-  border-radius: 8px;
-  color: #ffffff;
-  font-size: 12pt;
-  padding: 2px 6px 2px 6px;
-  text-decoration: none;
-  margin-top: 20px;*/
-}
-
-a.dashboard-button#view_annotations {
-}
-
-a.dashboard-button#reset_all {
 }
 
 a.dashboard-button#reset_brush {

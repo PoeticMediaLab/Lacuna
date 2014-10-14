@@ -224,7 +224,7 @@ function main(data) {
 		if (!a.category.length || typeof a.category === 'undefined' || a.category == null) {
 			a.category ='Highlight';
 		}
-	})
+	});
 	// Define all our attributes
 	// TODO: override these with settings from module
 	var size = {
@@ -246,12 +246,12 @@ function main(data) {
 						top: 40,
 						right: 20,
 						bottom: 160,
-						left: 20
+						left: 30
 					},
 				},
 				node: {	max: .5,
 						min: .1 },
-				string: { length: 40 },
+				string: { length: 60 },
 				radius: 25,
 				column: {user: 100, doc: 400}	// X coords for the two columns
 				};
@@ -465,24 +465,22 @@ function main(data) {
 	})
 
 	// Show help text
-	// $('img.help').click(function() {
-	d3.selectAll('div.help')
+	// Requires specific document structure
+	d3.selectAll('.help')
 		.on("mouseover", function() {
-			d3.select(this.parentNode)
-				.select('div.help_text')
+			d3.select(this)
+				.select('.help_text')
 				.style("visibility", "visible")
-				.style("position", "absolute"
-)				.style("left", (d3.event.pageX + 55) + "px")
-				.style("top", d3.event.pageY + "px")
+				.style("left", (d3.event.layerX) + "px")
+				.style("top", (d3.event.layerY) + "px")
 			;
 		})
 		.on("mouseout", function() {
-			d3.select(this.parentNode)
-				.select('div.help_text')
+			d3.select(this)
+				.select('.help_text')
 				.style("visibility", "hidden")
 			;
 		});
-
 
 	/***
 	 *
@@ -804,7 +802,7 @@ function main(data) {
 		if (bar_x === null) {
 			bar_x = d3.scale.ordinal()
 				.domain(data.map(function (d) { return d.x; }))
-		    	.rangeRoundBands([20, size.bar.width - size.bar.padding.right - size.bar.padding.left], .1);
+		    	.rangeRoundBands([size.bar.padding.left, size.bar.width - size.bar.padding.right - size.bar.padding.left], .1);
 
 			xAxis = d3.svg.axis()
 			    .scale(bar_x)
@@ -834,7 +832,7 @@ function main(data) {
 
 		var yAxis = d3.svg.axis()
 		    .scale(bar_y)
-		    .orient("right")
+		    .orient("left")
 		    .tickFormat(d3.format("2i"))
 		    .ticks(7)
 		    // .attr("transform", "translate(-10,0)")
@@ -891,8 +889,7 @@ function main(data) {
       		.call(brush);
 
 		brushg.selectAll("rect")
-      		.attr("y", -6)
-	    	.attr("height", size.bar.height + 7);
+	    	.attr("height", size.bar.height);
 
 	    function brushed() {
 	    	d3.select("a.dashboard-button#reset_brush").style("visibility", "visible");
