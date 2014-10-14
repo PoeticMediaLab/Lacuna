@@ -29,6 +29,7 @@ d3.json(settings.config.data_url, function (error, data) {
         main(data);
     }
 });
+
 /***************
  *
  * An object to manage the annotation filter stack
@@ -82,7 +83,7 @@ var annotations;
 // var pie_types = ['category', 'text_length', 'private', 'annotation_tags'];
 var pie_types = ['category', 'text_length', 'private'];
 
-var pie_labels = {'category': 'Categories', 'text_length': 'Length of Annotation', 'private': 'Sharing', 'annotation_tags': 'Tags'};	// yeah, yeah; see? it's already ugly code
+var pie_labels = {'category': 'Category', 'text_length': 'Length', 'private': 'Sharing', 'annotation_tags': 'Tags'};	// yeah, yeah; see? it's already ugly code
 var pie_current = pie_types[0]; // Set the current pie-type selection
 // Default values if attribute missing from annotation data
 var pie_defaults = {'category': 'Highlight', 'length': 'Zero', 'private': 'Private', 'annotation_tags': 'None'};
@@ -259,7 +260,7 @@ function main(data) {
 				},
 				node: {	max: .5,
 						min: .1 },
-				string: { length: 60 },
+				string: { length: 45 },
 				radius: 25,
 				column: {user: 100, doc: 400}	// X coords for the two columns
 				};
@@ -672,7 +673,7 @@ function main(data) {
 
 		var my_pie = d3.select('g#' + pie_type).selectAll("path")
 						.data(pie(pie_data_aggregate[pie_type]));
-	    my_pie.enter()
+    my_pie.enter()
 			.append("svg:path")
 			.attr("class", "pie_total")
 			.attr("transform", function (d) {
@@ -680,32 +681,37 @@ function main(data) {
 				var pie_x = size.summary_pie.radius * 2 * x + 55;
 				pie_x += size.summary_pie.padding * (x + 1) * 2;
 				str += pie_x + "," + size.summary_pie.radius + ")";
-				 // + radius * x * 2 + ",50)";
-				// var pad = radius * x * 2 + radius;
-				// 	// if (x > 0) {
-				// 		pad += x * size.summary_pie.padding;
-				// 	// }
-				// str += pad + ")";
 				return str;
 				})
 			.on("mouseover", tooltip_on)
 			.on("mouseout", tooltip_off)
 			.on("click", select_pie)
-			.text(pie_type);
-			;
+		;
 
 		my_pie.attr("d", arc)
-	  		.style("fill", function(d, i) { return color_scale(i); })
+  		.style("fill", function(d, i) { return color_scale(i); })
 			.style("opacity", 1)
 	  		;
 
-	  	if (pie_type !== pie_current) {
-	  		var color = my_pie.style("fill");
-	  		my_pie.style("fill", function (d,i) {
-	  			return d3.rgb(color_scale(i)).darker();
-	  		})
-	  			.style("opacity", .5);
-	  	}
+  	if (pie_type !== pie_current) {
+  		var color = my_pie.style("fill");
+  		my_pie.style("fill", function (d,i) {
+  			return d3.rgb(color_scale(i)).darker();
+  		}).style("opacity", .5);
+  	}
+	}
+
+	// Add labels below each summary pie chart
+	// Note: the positioning is tricky, done through trial and error
+	// Don't hate me.
+	function label_pie_charts() {
+		for (var i = 0; i < pie_types.length; i++) {
+		  pie_choices
+		  	.append("text")
+		  	.attr("transform", "translate(" + ((size.summary_pie.radius * (i + 1)) + (85 * i)) + ",125)")
+		  	.attr('font-size', '12pt')
+		  	.text(pie_labels[pie_types[i]]);
+		}
 	}
 
 	// Loops through the different pie types for the side bar summary view
@@ -827,8 +833,6 @@ function main(data) {
   		bar_chart.append("g")
 				.attr("class", "x axis")
 				.attr("transform", "translate(0," + size.bar.height + ")")
-				// .transition()
-				// .duration(duration.normal)
 				.call(xAxis)
 				.selectAll("text")
 				.style("text-anchor", "end")
@@ -846,14 +850,21 @@ function main(data) {
 	    .orient("left")
 	    .tickFormat(d3.format("2i"))
 	    .ticks(7)
-	    // .attr("transform", "translate(-10,0)")
 	    ;
 
 		bar_chart.select("g.yAxis").remove();
 		bar_chart.append("g")
-			.attr("class", "yAxis axis")
-			.attr("transform", "translate(" + size.bar.padding.left + ",0)")
-			.call(yAxis)
+				.attr("class", "yAxis axis")
+				.attr("transform", "translate(" + size.bar.padding.left + ",0)")
+				.call(yAxis)
+			.append("text")
+		  	.attr("class", "y axis")
+		  	.attr("transform", "rotate(-90)")
+		  	.style("text-anchor", "end")
+		  	.attr("y", 6)
+		  	.attr("x", -40)
+		  	.attr("dy", ".35em")
+		  	.text("Annotations")
 			;
 
     var bars = bar_chart.selectAll("rect.bar").data(data);
@@ -1035,6 +1046,7 @@ function main(data) {
 
 	// Initial creation
 	update();
+	label_pie_charts();	// only need to label them once
 } // end main()
 } // Drupal.d3.annotations
 })(jQuery);	// End of Drupal wrapper
