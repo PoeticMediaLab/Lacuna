@@ -5,13 +5,12 @@
  * Also provides a time brush for filtering by date
  * and pie chart summaries to select what kind of node pies to display
  *
- * Understanding some of the code requires knowledge of the Annotator data structure
- *
- * NB: "annotations" is a global variable set in global.js and contains all
- * initial annotations data
+ * Understanding the code requires knowledge of the Annotator data structure
+ * (and possibly some hair-pulling)
  *
  * Also: this entire script needs to be refactored to use dispatches
- * As is, the logic is pretty convoluted and fragile; too many updates need to be called
+ * As is, the logic is pretty convoluted and fragile:
+ * too many updates need to be called
  *
  * Mike Widner <mikewidner@stanford.edu>
  *
@@ -319,7 +318,7 @@ function main(data) {
 	function tooltip_on(d) {
 		// fade in our tooltips
 		tooltips.transition()
-			.duration(200)
+			.duration(1200)
 			.style("opacity", 1)
 			;
 		var type = this.getAttribute("class");

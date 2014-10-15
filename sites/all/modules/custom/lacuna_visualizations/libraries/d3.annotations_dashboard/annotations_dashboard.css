@@ -16,7 +16,7 @@ div#pie_types,
 div#time_brush {
   border: 1px solid gray;
   border-radius: 8px;
-  background-color: #eee;
+  background-color: rgba(250,250,250,.8);
 }
 
 div#dashboard-buttons {
