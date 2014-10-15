@@ -318,7 +318,7 @@ function main(data) {
 	function tooltip_on(d) {
 		// fade in our tooltips
 		tooltips.transition()
-			.duration(1200)
+			.duration(200)
 			.style("opacity", 1)
 			;
 		var type = this.getAttribute("class");
