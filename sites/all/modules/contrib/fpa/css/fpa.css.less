@@ -100,11 +100,18 @@ body.page-admin-people-permissions {
   border-left-width: 0;
 }
 
-.fpa-filter-form .form-item {
-  display: inline-block;
-  padding: 3px 10px;
-  vertical-align: top;
-  float: none;
+.fpa-filter-form {
+  .form-item {
+    display: inline-block;
+    padding: 3px 10px;
+    vertical-align: top;
+    float: none;
+  }
+  
+  .form-checkboxes .form-type-checkbox,
+  .form-radios .form-type-radio {
+    display: block;
+  }
 }
 
 .fpa-filter-form .clear-search {

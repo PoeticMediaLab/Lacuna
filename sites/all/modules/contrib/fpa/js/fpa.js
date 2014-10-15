@@ -25,14 +25,12 @@
     
     this.dom = {};
     
-    this.attr = settings.attr || {
-      permission: "fpa-permission",
-      module: "fpa-module",
-      role: "fpa-role"
-    };
+    this.attr = settings.attr;
     
     this.filter_timeout= null;
     this.filter_timeout_time = 0;
+    
+    this.module_match = '*=';
     
     this.filter_selector_cache = {
       '*=': {},
@@ -53,6 +51,43 @@
   
   Fpa.prototype.styles = {
     module_active_style: '{margin-right:-1px; background-color: white; border-right: solid 1px transparent;}'
+  };
+  
+  /**
+   * Select all elements that are used by FPA ahead of time and cache on 'Fpa' instance.
+   */
+  Fpa.prototype.select = function (context) {
+    
+    this.dom.context = $(context);
+    
+    this.dom.form = this.dom.context.find(this.selector.form);
+    
+    // Prevent anything else from running if the form is not found.
+    if (this.dom.form.length === 0) {
+      return false;
+    }
+    
+    this.dom.container = this.dom.form.find('.fpa-container');
+    
+    // Raw element since $().html(); does not work for <style /> elements.
+    this.dom.perm_style = this.dom.container.find('.fpa-perm-styles style').get(0);
+    this.dom.role_style = this.dom.container.find('.fpa-role-styles style').get(0);
+    
+    this.dom.section_left = this.dom.container.find('.fpa-left-section');
+    this.dom.section_right = this.dom.container.find('.fpa-right-section');
+    
+    this.dom.table_wrapper = this.dom.section_right.find('.fpa-table-wrapper');
+    this.dom.table = this.dom.table_wrapper.find(this.selector.table);
+    
+    this.dom.module_list = this.dom.section_left.find('ul');
+    
+    this.dom.filter_form = this.dom.container.find('.fpa-filter-form');
+    
+    this.dom.filter = this.dom.filter_form.find('input[type="text"]');
+    this.dom.role_select = this.dom.filter_form.find('select');
+    this.dom.checked_status = this.dom.filter_form.find('input[type="checkbox"]');
+    
+    return true;
   };
   
   /**
@@ -136,10 +171,12 @@
      * 
      * @see http://www.w3.org/TR/CSS2/selector.html#matching-attrs
      */
-    this.filter('~=');
+    this.module_match = '~=';
+    
+    this.filter();
   };
   
-  Fpa.prototype.build_filter_selectors = function (filter_string, module_match) {
+  Fpa.prototype.build_filter_selectors = function (filter_string) {
     
     // Extracts 'permissions@module', trimming leading and trailing whitespace.
     var matches = filter_string.match(/^\s*([^@]*)@?(.*?)\s*$/i);
@@ -148,36 +185,46 @@
     
     var safe_matches = $.map(matches, $.proxy(this.drupal_html_class, this));
     
-    this.filter_selector_cache[module_match][filter_string] = [
+    this.filter_selector_cache[this.module_match][filter_string] = [
       safe_matches[0].length > 0 ? '[' + this.attr.permission          + '*="' + safe_matches[0] + '"]' : '',
-      safe_matches[1].length > 0 ? '[' + this.attr.module + module_match + '"' + safe_matches[1] + '"]' : ''
+      safe_matches[1].length > 0 ? '[' + this.attr.module + this.module_match + '"' + safe_matches[1] + '"]' : ''
     ];
     
-    return this.filter_selector_cache[module_match][filter_string];
+    return this.filter_selector_cache[this.module_match][filter_string];
   };
   
-  Fpa.prototype.get_filter_selectors = function (filter_string, module_match) {
-    
-    module_match = module_match || '*=';
+  Fpa.prototype.get_filter_selectors = function (filter_string) {
     
     filter_string = filter_string || this.dom.filter.val();
     
-    return this.filter_selector_cache[module_match][filter_string] || this.build_filter_selectors(filter_string, module_match);
+    return this.filter_selector_cache[this.module_match][filter_string] || this.build_filter_selectors(filter_string);
   };
   
   Fpa.prototype.permission_grid_styles = function (filters) {
     
     filters = filters || this.get_filter_selectors();
     
-    return [
+    var checked_filters = this.build_checked_selectors();
+    
+    var styles = [
       this.selector.table_base_selector,
-      '{display: none;}',
+      '{display: none;}'
+    ];
+    
+    for (var i = 0; i < checked_filters.length; i++) {
       
-      this.selector.table_base_selector,
-      filters[0],
-      filters[1],
-      '{display: table-row;}'
-    ].join('');
+      styles = styles.concat([
+        this.selector.table_base_selector,
+        
+        checked_filters[i],
+        
+        filters[0],
+        filters[1],
+        '{display: table-row;}'
+      ]);
+    }
+    
+    return styles.join('');
     
   };
   
@@ -208,41 +255,16 @@
     
   };
   
-  /**
-   * Prevent the current filter from being cleared on form reset.
-   */
-  Fpa.prototype.save_filters = function () {
-    
-    /**
-     * element.defaultValue is what 'input' elements reset to.
-     * 
-     * @link http://www.w3.org/TR/REC-DOM-Level-1/level-one-html.html#ID-26091157
-     */
-    this.dom.filter.get(0).defaultValue = this.dom.filter.val();
-    
-    /**
-     * element.defaultSelected is what 'option' elements reset to.
-     * 
-     * @see http://www.w3.org/TR/REC-DOM-Level-1/level-one-html.html#ID-37770574
-     */
-    this.dom.role_select.find('option').each(function (index, element) {
-      element.defaultSelected = element.selected;
-    });
-  };
-  
-  Fpa.prototype.filter = function (module_match) {
-    
-    // Assign default value if undefined.
-    module_match = module_match || '*=';
+  Fpa.prototype.filter = function () {
     
     var perm = this.dom.filter.val();
     
     $.cookie('fpa_filter', perm, {path: '/'});
-    $.cookie('fpa_module_match', module_match, {path: '/'});
+    $.cookie('fpa_module_match', this.module_match, {path: '/'});
           
     this.save_filters();
     
-    var filter_selector = this.get_filter_selectors(perm, module_match);
+    var filter_selector = this.get_filter_selectors(perm);
     
     this.set_style(this.dom.perm_style, [
       
@@ -266,6 +288,40 @@
       selectors = $.map(roles, $.proxy(function (value, index) {
         
         return '[' + this.attr.role + '="' + value + '"]';
+        
+      }, this));
+    }
+    
+    return selectors;
+  };
+  
+  Fpa.prototype.build_checked_selectors = function (roles) {
+    
+    roles = roles || this.dom.role_select.val();
+    
+    var checked_boxes = $.map(this.dom.checked_status, function (element, index) {
+      return element.checked ? $(element).val() : null;
+    });
+    
+    var selectors = [''];
+    
+    if ($.inArray('*', roles) !== -1) {
+      roles = $.map(this.dom.role_select.find('option').not('[value="*"]'), $.proxy(function (element, index) {
+        
+        return $(element).attr('value');
+        
+      }, this));
+    }
+    
+    if (checked_boxes.length != this.dom.checked_status.length) {
+      
+      selectors = $.map(roles, $.proxy(function (value, index) {
+        
+        return $.map(checked_boxes, $.proxy(function (checked_attr, index) {
+          
+          return '[' + checked_attr + '~="' + value + '"]';
+          
+        }, this));
         
       }, this));
     }
@@ -308,38 +364,39 @@
     }
     
     this.set_style(this.dom.role_style, role_style_code.join(''));
+    
+    this.filter();
   };
   
-  Fpa.prototype.select = function (context) {
+  /**
+   * Prevent the current filter from being cleared on form reset.
+   */
+  Fpa.prototype.save_filters = function () {
     
-    this.dom.context = $(context);
+    /**
+     * element.defaultValue is what 'text' elements reset to.
+     * 
+     * @link http://www.w3.org/TR/REC-DOM-Level-1/level-one-html.html#ID-26091157
+     */
+    this.dom.filter.get(0).defaultValue = this.dom.filter.val();
     
-    this.dom.form = this.dom.context.find(this.selector.form);
+    /**
+     * element.defaultSelected is what 'option' elements reset to.
+     * 
+     * @see http://www.w3.org/TR/REC-DOM-Level-1/level-one-html.html#ID-37770574
+     */
+    this.dom.role_select.find('option').each(function (index, element) {
+      element.defaultSelected = element.selected;
+    });
     
-    // Prevent anything else from running if the form is not found.
-    if (this.dom.form.length === 0) {
-      return false;
-    }
-    
-    this.dom.container = this.dom.form.find('.fpa-container');
-    
-    // Raw element since $().html(); does not work for <style /> elements.
-    this.dom.perm_style = this.dom.container.find('.fpa-perm-styles style').get(0);
-    this.dom.role_style = this.dom.container.find('.fpa-role-styles style').get(0);
-    
-    this.dom.section_left = this.dom.container.find('.fpa-left-section');
-    this.dom.section_right = this.dom.container.find('.fpa-right-section');
-    
-    this.dom.table_wrapper = this.dom.section_right.find('.fpa-table-wrapper');
-    this.dom.table = this.dom.table_wrapper.find(this.selector.table);
-    
-    this.dom.module_list = this.dom.section_left.find('ul');
-    
-    this.dom.filter_form = this.dom.container.find('.fpa-filter-form');
-    this.dom.filter = this.dom.filter_form.find('input[type="text"]');
-    this.dom.role_select = this.dom.filter_form.find('select');
-    
-    return true;
+    /**
+     * element.defaultChecked is what 'checkbox' elements reset to.
+     * 
+     * @see http://www.w3.org/TR/REC-DOM-Level-1/level-one-html.html#ID-20509171
+     */
+    this.dom.checked_status.each(function (index, element) {
+      element.defaultChecked = element.checked;
+    });
   };
   
   Fpa.prototype.prepare = function () {
@@ -383,6 +440,8 @@
               .detach()
               .each($.proxy(function (index, element) {
                 
+                this.module_match = '*=';
+                
                 this.filter();
               }, this))
               .appendTo(this.dom.section_right)
@@ -408,6 +467,7 @@
       }, this))
     ;
     
+    // Handler for links that use #hash and can't be capture server side.
     if(window.location.hash.indexOf('module-') === 1) {
       
       this.dom.module_list
@@ -416,7 +476,11 @@
       ;
     }
     
-    // @todo should this be synchronous?
+    /**
+     * Reset authenticated role behavior when form resets.
+     * 
+     * @todo should this be synchronous? Would have to trigger reset on elements while detached.
+     */
     this.dom.form.bind('reset', $.proxy(function fpa_form_reset(e) {
       
       // Wait till after the form elements have been reset.
@@ -451,10 +515,16 @@
           .detach()
           .each($.proxy(function (index, element) {
             
+            var rid = $this.closest('[' + this.attr.role + ']').attr(this.attr.role);
+            
             $(element)
-              .find('tr' + filters.join('') + ' td.checkbox[' + this.attr.role + '="' + $this.closest('[' + this.attr.role + ']').attr(this.attr.role) + '"] input[type="checkbox"][name]')
+              .find([
+                'tr' + filters.join(''),
+                'td.checkbox[' + this.attr.role + '="' + rid + '"]',
+                'input[type="checkbox"][name]'
+              ].join(' ')) // Array is easier to read, separated for descendant selectors.
               
-              .attr('checked', $this.attr('checked') ? 'checked' : '')
+              .attr('checked', $this.attr('checked'))
               
               .filter('.rid-2') // Following only applies to "Authenticated User" role.
               .each(this.dummy_checkbox_behavior)
@@ -499,7 +569,7 @@
     
     // Clear contents of search field and reset visible permissions.
     this.dom.section_right
-      .delegate('.fpa-clear-search', 'click', $.proxy(function () {
+      .delegate('.fpa-clear-search', 'click', $.proxy(function (e) {
         
         this.dom.filter
           .val('')
@@ -514,6 +584,34 @@
       .bind('change blur', $.proxy(this.filter_roles, this))
     ;
     
+    this.dom.checked_status
+      .bind('change', $.proxy(function (e) {
+        
+        this.save_filters();
+        
+        this.filter();
+        
+      }, this))
+    ;
+
+    /**
+     * System name is not normally selectable because its a pseudo-element.
+     *
+     * This detects clicks directly on the TR, which happens when a click is on
+     * the pseudo-element, and displays a prompt() with the system name as the
+     * pre-populated value.
+     */
+    this.dom.table
+      .delegate('tr[' + this.attr.system_name + ']', 'click', $.proxy(function (e) {
+        var $target = $(e.target);
+
+        if ($target.is('tr[' + this.attr.system_name + ']')) {
+
+          window.prompt('You can grab the system name here', $target.attr(this.attr.system_name));
+        }
+      }, this))
+    ;
+    
     // Focus on element takes long time, bump after normal execution.
     window.setTimeout($.proxy(function fpa_filter_focus() {
       this.dom.filter.focus();
@@ -521,6 +619,11 @@
     
   };
   
+  /**
+   * Event handler/iterator.
+   * 
+   * Should not be $.proxy()'d.
+   */
   Fpa.prototype.dummy_checkbox_behavior = function () {
     // 'this' refers to the element, not the 'Fpa' instance.
     $(this).closest('tr').toggleClass('fpa-authenticated-role-behavior', this.checked);
@@ -534,8 +637,6 @@
         $(e.currentTarget).unbind('click.permissions');
       })
       .delegate('input[type=checkbox].rid-2', 'change.fpa_authenticated_role', this.dummy_checkbox_behavior)
-      .find('input[type=checkbox].rid-2:checked')
-      .each(this.dummy_checkbox_behavior)
     ;
   };
   

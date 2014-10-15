@@ -31,9 +31,14 @@ function _media_flickr_photo_remote_url($photo_id, $size) {
   $getsize = _media_flickr_sets_request('flickr.photos.getSizes', array('photo_id' => $photo_id));
 
   if ($getsize && ($getsize['@attributes']['stat'] != 'fail')) {
-    // For small images, there may not be the sizes 0..4 that
-    // media_flickr_guess_size assumes, so:
-    $size = min($size, count($getsize['sizes']['size'])-1);
+    // If no size was requested, or if a size was requested that doesn't exist
+    // (e.g. for small images, the sizes 0..4 that _media_flickr_guess_size
+    // assumes may not actually be there), use the largest size available,
+    // which is the original image.
+    $number_of_sizes = count($getsize['sizes']['size']);
+    if (!isset($size) || $size >= $number_of_sizes) {
+      $size = $number_of_sizes - 1;
+    }
 
     return $getsize['sizes']['size'][$size]['@attributes']['source'];
   }
@@ -103,10 +108,10 @@ function _media_flickr_guess_size($width = 0, $height = 0) {
   }
 
   // If we don't have width or height set, then get the original size.
-  return '5';
+  return NULL;
 }
 
-function _media_flickr_photo_url_from_size($photo_id, $size = 5) {
+function _media_flickr_photo_url_from_size($photo_id, $size = NULL) {
   // Check to make sure we have a valid photo code.
   if (is_numeric($photo_id)) {
     $filepath = _media_flickr_photo_remote_url($photo_id, $size);
@@ -213,6 +218,7 @@ function _media_flickr_media_parse($url, $options = array()) {
     '@flickr\.com/photos/([0-9A-Za-z\@\&\$_-]+)/([0-9]+)/in/photostream@i',
     '@flickr\.com/photos/([0-9A-Za-z\@\&\$_-]+)/([0-9]+)/in/set-([0-9]+)@i',
     '@flickr\.com/photos/([0-9A-Za-z\@\&\$_-]+)/([0-9]+)/?$@i',
+    '@flickr\.com/photos/([0-9A-Za-z\@\&\$_-]+)/([0-9]+)/in/pool-([0-9A-Za-z\@\&\$_-]+)@i',
   );
   foreach ($patterns as $pattern) {
     preg_match($pattern, $url, $matches);

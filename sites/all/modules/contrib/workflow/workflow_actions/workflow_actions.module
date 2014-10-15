@@ -1,7 +1,9 @@
 <?php
 /**
  * @file
- * Provide actions and triggers for workflows.
+ * Enables actions to be fired upon a Workflow State change.
+ *
+ * N.B. This module's name is incorrect. It provides Triggers, not Actions.
  *
  * Why it's own module? Some sites prefer rules, some prefer actions,
  * all prefer a lower code footprint and better performance.
@@ -87,55 +89,67 @@ function workflow_actions_entity_update($entity, $entity_type) {
 }
 
 /**
- * Implements hook_hook_info().
+ * Implements hook_trigger_info().
  *
  * Expose each transition as a hook.
  */
 function workflow_actions_trigger_info() {
   static $pseudohooks = array();
+
   if ($pseudohooks) {
-    return array(
-      'workflow' => $pseudohooks,
-    );
+    return $pseudohooks;
   }
 
+  // If we come from a specific workflow, only show triggers for that workflow.
+  // Removed: it is confusing.
+  $trigger_page = FALSE;
+  $wid = 0;
+/*
   if (drupal_substr($_GET['q'], 0, 32) == 'admin/structure/trigger/workflow') {
     $trigger_page = TRUE;
     $wid = arg(4);
   }
-  else {
-    $trigger_page = FALSE;
-    $wid = 0;
-  }
+ */
   $workflows = workflow_load_multiple($wid ? array($wid) : FALSE);
 
   // Get the mapping for Node API.
   // Build an array of Wid => array of types.
   $workflow_node_type_map = module_exists('workflownode') ? workflow_get_workflow_type_map() : array();
   foreach ($workflow_node_type_map as $type => $wid) {
-    $type_map[$wid][] = array('entity_type' => 'node', 'bundle' => $type);
+    $group = 'workflow';
+    $type_map[$wid][] = array('entity_type' => 'node', 'bundle' => $type, $group);
   }
 
+  // Get the mapping for Field API.
   $fields = _workflow_info_fields($entity = NULL, $entity_type = '');
   foreach ($fields as $field_name => $field) {
     if ($field['type'] == 'workflow') {
       foreach ($field['bundles'] as $entity_type => $bundles) {
         foreach ($bundles as $bundle) {
+          // Add the trigger to the approriate Tab on admin/structure/trigger.
+          switch ($entity_type) {
+            case 'node':          $group = $entity_type; break;
+            case 'taxonomy_term': $group = 'taxonomy';   break;
+            default:              $group = 'workflow';   break;
+          }
           $type_map[$field['settings']['wid']][] = array(
             'entity_type' => $entity_type,
             'bundle' => $bundle,
+            'group' => $group,
           );
         }
       }
     }
   }
 
+  // Initialize the Workflow tab on admin/structure/trigger/workflow.
+  $pseudohooks['workflow'] = array();
   // Create a trigger for each possible combination.
   foreach ($workflows as $wid => $workflow) {
     $states = $workflow->getStates('CREATION');
-    foreach ($workflow->getTransitions() as $transition) {
-      $state = $states[$transition->sid];
-      $target_state = $states[$transition->target_sid];
+    foreach ($workflow->getTransitions() as $config_transition) {
+      $state = $states[$config_transition->sid];
+      $target_state = $states[$config_transition->target_sid];
       if (!$state || !$target_state || !$state->isActive() || !$target_state->isActive()) {
         continue;
       }
@@ -143,15 +157,22 @@ function workflow_actions_trigger_info() {
       if (isset($type_map[$wid])) {
         $creation_flag = $state->isCreationState();
         foreach ($type_map[$wid] as $type_bundle) {
-          $label = t('When @entity_type %bundle moves from %state to %target_state',
+
+          // Add the trigger to the appropriate Tab on admin/structure/trigger.
+          $group = $type_bundle['group'];
+
+          $label = t('When @entity_type %bundle moves %workflow from %state to %target_state',
             array(
               '@entity_type' => $type_bundle['entity_type'],
               '%bundle' => $type_bundle['bundle'],
+              '%workflow' => $workflow->label(),
               '%state' => $state->label(),
               '%target_state' => $target_state->label(),
             )
           );
-          $pseudohooks['workflow-' . $type_bundle['entity_type'] . '-' . $type_bundle['bundle'] . '-' . $transition->tid] = array(
+          $pseudohooks[$group]['workflow-' . $type_bundle['entity_type'] 
+                                     . '-' . $type_bundle['bundle']
+                                     . '-' . $config_transition->tid] = array(
             'label' => $label,
             'workflow_creation_state' => $creation_flag,
           );
@@ -163,9 +184,7 @@ function workflow_actions_trigger_info() {
   // $pseudohooks will not be set if no workflows have been assigned
   // to node types.
   if ($pseudohooks) {
-    return array(
-      'workflow' => $pseudohooks,
-    );
+    return $pseudohooks;
   }
   elseif ($trigger_page) {
     drupal_set_message(t('Either no transitions have been set up or this
@@ -184,25 +203,26 @@ function workflow_actions_trigger_info() {
  * Implements hook_drupal_alter().
  */
 function workflow_actions_action_info_alter(&$info) {
-  $transitions = workflow_actions_trigger_info();
-  if (empty($transitions)) {
+  $triggers = workflow_actions_trigger_info();
+  if (empty($triggers)) {
     return;
   }
-  foreach ($transitions['workflow'] as $transition => $data) {
-    // Loop through all available node actions and add them as triggers.
-    // But not if this has been flagged as a creation state.
-    if ($data['workflow_creation_state'] != TRUE) {
+
+  // Loop through all available node actions and add them as triggers.
+  foreach ($triggers as $groups) {
+    foreach ($groups as $trigger_name => $data) {
       foreach (node_action_info() as $action => $data) {
-        $info[$action]['triggers'][] = $transition;
+        $info[$action]['triggers'][] = $trigger_name;
       }
     }
-    // Either way, unset the creation flag so we don't confuse anyone later.
-    unset($transitions['workflow'][$transition]['workflow_creation_state']);
   }
 }
 
 /**
  * Helper function, that triggers actions.
+ * 
+ * @param $transition.
+ *   A Workflow Transition object.
  */
 function _workflow_actions_do($transition) {
   $entity_type = $transition->entity_type;

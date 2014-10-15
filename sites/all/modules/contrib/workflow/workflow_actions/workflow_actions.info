@@ -1,13 +1,15 @@
-name = Workflow actions and triggers
-description = Provides actions and triggers for workflows.
+name = Workflow Trigger
+description = Enables actions to be fired upon a Workflow State change.
+
 dependencies[] = workflow
 dependencies[] = trigger
+
 package = Workflow
 core = 7.x
 
-; Information added by Drupal.org packaging script on 2014-09-15
-version = "7.x-2.4+23-dev"
+; Information added by Drupal.org packaging script on 2014-10-15
+version = "7.x-2.5-beta1+8-dev"
 core = "7.x"
 project = "workflow"
-datestamp = "1410812047"
+datestamp = "1413398251"
 

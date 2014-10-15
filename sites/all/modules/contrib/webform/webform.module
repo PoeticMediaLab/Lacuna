@@ -151,21 +151,19 @@ function webform_menu() {
     'type' => MENU_LOCAL_TASK,
   );
   $items['node/%webform_menu/webform/emails/%webform_menu_email'] = array(
-    'title' => 'Edit e-mail settings',
     'load arguments' => array(1),
     'page arguments' => array('webform_email_edit_form', 1, 4),
     'access callback' => 'node_access',
     'access arguments' => array('update', 1),
     'file' => 'includes/webform.emails.inc',
-    'type' => MENU_LOCAL_TASK,
+    'type' => MENU_CALLBACK,
   );
   $items['node/%webform_menu/webform/emails/%webform_menu_email/delete'] = array(
-    'title' => 'Delete e-mail settings',
     'load arguments' => array(1),
     'page arguments' => array('webform_email_delete_form', 1, 4),
     'access callback' => 'node_access',
     'access arguments' => array('update', 1),
-    'type' => MENU_LOCAL_TASK,
+    'type' => MENU_CALLBACK,
   );
 
   // Node component forms.
@@ -1010,6 +1008,7 @@ function webform_webform_submission_render_alter(&$renderable) {
   // are being displayed.
   $node = $renderable['#node'];
   $is_admin = webform_results_access($node);
+  module_load_include('inc', 'webform', 'includes/webform.components');
   if (empty($renderable['#email']) && !$is_admin) {
     // Find and hide the display of all hidden components.
     foreach ($node->webform['components'] as $cid => $component) {
@@ -2086,11 +2085,6 @@ function _webform_client_form_rule_check($node, $component, $page_num, $form_sta
     }
   }
 
-  // Private component?
-  if ($component['extra']['private']) {
-    $show_component = webform_results_access($node);
-  }
-
   return $show_component;
 }
 
@@ -2126,12 +2120,16 @@ function _webform_client_form_rule_check($node, $component, $page_num, $form_sta
  */
 function _webform_client_form_add_component($node, $component, $component_value, &$parent_fieldset, &$form, $form_state, $submission, $format = 'form', $page_num = 0, $filter = TRUE) {
   $cid = $component['cid'];
+  $component_access = empty($component['extra']['private']) || webform_results_access($node);
 
   // Load with submission information if necessary.
   if ($format != 'form') {
     // This component is display only.
     $data = empty($submission->data[$cid]['value']) ? NULL : $submission->data[$cid]['value'];
     if ($display_element = webform_component_invoke($component['type'], 'display', $component, $data, $format)) {
+      // Set access based on the private property.
+      $element['#access'] = $component_access;
+
       // Ensure the component is added as a property.
       $display_element['#webform_component'] = $component;
 
@@ -2159,6 +2157,9 @@ function _webform_client_form_add_component($node, $component, $component_value,
     // Add this user-defined field to the form (with all the values that are always available).
     $data = isset($submission->data[$cid]['value']) ? $submission->data[$cid]['value'] : NULL;
     if ($element = webform_component_invoke($component['type'], 'render', $component, $data, $filter)) {
+      // Set access based on the private property.
+      $element['#access'] = $component_access;
+
       // Ensure the component is added as a property.
       $element['#webform_component'] = $component;
 
@@ -2709,6 +2710,12 @@ function theme_webform_element($variables) {
   }
   $output = '<div class="' . implode(' ', $wrapper_classes) . '" id="webform-component-' . $parents . '">' . "\n";
 
+  // If #title_display is none, set it to invisible instead - none only used if
+  // we have no title at all to use.
+  if ($element['#title_display'] == 'none') {
+    $variables['element']['#title_display'] = 'invisible';
+    $element['#title_display'] = 'invisible';
+  }
   // If #title is not set, we don't display any label or required marker.
   if (!isset($element['#title'])) {
     $element['#title_display'] = 'none';
@@ -3359,6 +3366,7 @@ function webform_format_email_address($address, $name, $node = NULL, $submission
     if ($encode) {
       $name = mime_header_encode($name);
     }
+    $name = trim($name);
     return '"' . $name . '" <' . $address . '>';
   }
   else {
@@ -3769,13 +3777,20 @@ function webform_tt($name, $string, $langcode = NULL, $update = FALSE) {
 function webform_email_html_capable() {
   // TODO: Right now we only support MIME Mail and HTML Mail. Support others
   // if available through a hook?
-  if (module_exists('mimemail')) {
-    $mail_systems = variable_get('mail_system', array('default-system' => 'DefaultMailSystem'));
-    $enable = (!isset($mail_systems['webform']) || $mail_systems['webform'] == 'MimeMailSystem') ? 'MimeMailSystem' : FALSE;
-  }
-  elseif (module_exists('htmlmail')) {
-    $mail_systems = variable_get('mail_system', array('default-system' => 'DefaultMailSystem'));
-    $enable = (!isset($mail_systems['webform']) || $mail_systems['webform'] == 'HTMLMailSystem') ? 'HTMLMailSystem' : FALSE;
+  $supported_html_modules = array(
+    'mimemail' => 'MimeMailSystem',
+    'htmlmail' => 'HTMLMailSystem',
+  );
+  foreach ($supported_html_modules as $mail_module => $mail_system_name) {
+    if (module_exists($mail_module)) {
+      $mail_systems = variable_get('mail_system', array('default-system' => 'DefaultMailSystem'));
+      if (isset($mail_systems['webform'])) {
+        $enable = strpos($mail_systems['webform'], $mail_system_name) !== FALSE ? $mail_systems['webform'] : FALSE;
+      }
+      else {
+        $enable = $mail_system_name;
+      }
+    }
   }
   if (!empty($enable)) {
     // We assume that if a solution exists even if it's not specified we should

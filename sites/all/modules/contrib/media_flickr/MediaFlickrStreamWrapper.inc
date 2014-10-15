@@ -11,7 +11,7 @@
  *  $youtube = new ResourceYouTubeStreamWrapper('flickr://u/[user-code]/p/[photo-code]');
  */
 class MediaFlickrStreamWrapper extends MediaReadOnlyStreamWrapper {
-  protected $base_url = 'http://www.flickr.com/';
+  protected $base_url = 'https://www.flickr.com/';
 
   function interpolateUrl() {
     if (isset($this->parameters['p'])) {

@@ -7,6 +7,44 @@
  */
 
 /**
+ * Implements hook_menu().
+ */
+function d3_menu() {
+  $items['admin/config/d3'] = array(
+    'title' => 'D3',
+    'description' => 'Configuration for d3.',
+    'position' => 'right',
+    'weight' => 20,
+    'page callback' => 'system_admin_menu_block_page',
+    'access arguments' => array('access administration pages'),
+    'file path' => drupal_get_path('module', 'system'),
+    'file' => 'system.admin.inc',
+  );
+
+  $items['admin/config/d3/settings'] = array(
+    'title' => 'D3 Settings',
+    'description' => 'Configuration settings for D3',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('d3_config_form'),
+    'access arguments' => array('administer d3'),
+    'file' => 'd3.admin.inc',
+  );
+
+  return $items;
+}
+
+/**
+ * Implements hook_permission().
+ */
+function d3_permission() {
+  return array(
+    'administer d3' => array(
+      'title' => t('Administer d3'),
+    ),
+  );
+}
+
+/**
  * Implements hook_theme().
  */
 function d3_theme() {
@@ -122,6 +160,45 @@ function d3_libraries_info() {
     'version' => '1',
   );
 
+  $lib = variable_get('d3_library_source', 'lib');
+  if ($lib == 'cdn') {
+    $options = array(
+      'lines' => 4,
+      'file' => 'http://d3js.org/d3.v3.min.js',
+      'pattern' => '/version\:\"([0-9\.]*)\"/',
+    );
+
+    // Detect version from CDN.
+    $file = fopen($options['file'], 'r');
+    $version = '';
+    while ($line = fgets($file)) {
+      preg_match($options['pattern'], $line, $results);
+      if (!empty($results[1])) {
+        $version = $results[1];
+      }
+    }
+    fclose($file);
+
+    $libraries['d3'] = array(
+      'name' => 'D3',
+      'vendor url' => 'http://d3js.org/',
+      'download url' => 'http://d3js.org/',
+      // This will bypass the check for file_exists.
+      'installed' => TRUE,
+      // For easy reference later.
+      'cdn' => TRUE,
+      'library path' => 'http://d3js.org',
+      'files' => array(
+        'js' => array(
+          'data' => 'd3.v3.min.js',
+        ),
+      ),
+      'version' => $version,
+    );
+
+    return $libraries;
+  }
+
   // Path to library, (if installed).
   $path = libraries_get_path('d3');
 
@@ -170,7 +247,12 @@ function d3_libraries_info() {
           $file->filename,
         ),
       ),
-      'version' => $version,
+      'version arguments' => array(
+        'file' => 'd3.min.js',
+        'pattern' => '/version\:\"([0-9\.]*)\"/',
+        'lines' => 3,
+        'cols' => 40000,
+      ),
     );
   }
 
@@ -203,20 +285,33 @@ function d3_default_libraries() {
  *   Rendered chart html
  */
 function d3_draw($vis) {
+  // Ensure we have d3 installed, don't just show a blank screen.
+  $d3 = libraries_load('d3');
+  if (empty($d3['installed'])) {
+    drupal_set_message(t('The d3 library is not correctly installed'), 'error');
+    return;
+  }
+
+  // If user selected cdn, we need to load this manually.
+  // @see http://drupal.org/node/864376
+  if (!empty($d3['cdn'])) {
+    drupal_add_js($d3['library path'] . '/' . $d3['files']['js']['data']);
+  }
 
   // Type is required for correct processing.
   $type = isset($vis['type']) ? strtolower($vis['type']) : NULL;
 
   if (!$type) {
-    drupal_set_message(t('No chart type specified'));
-    return '';
+    drupal_set_message(t('No chart type specified'), 'error');
+    return;
   }
 
   // Form library name - convention is going to be d3.[library].
   $library_name = 'd3.' . $type;
+
   // Check for library instance / definition.
-  if (libraries_detect($library_name)) {
-    $vis['library'] = libraries_load($library_name);
+  if ($lib = libraries_load($library_name)) {
+    $vis['library'] = $lib;
     $vis['library']['library name'] = str_replace('.', '_', $library_name);
     // Enforce lowercase change.
     $vis['type'] = $type;
@@ -367,7 +462,7 @@ function theme_d3_graphapi($vars) {
     return '';
   }
   $default_library = variable_get('d3_graphapi_default_library', 'forcedirected');
-  $library = empty($vars['config']['library']) ? $default_library : $vars['config']['library'];
+  $library = empty($vars['config']['library']) ? $default_library : $vars['config']['library']; 
   $graph = _d3_graphapi_format_graph_data($vars['graph']);
   $chart = array(
     'id' => $vars['config']['id'],

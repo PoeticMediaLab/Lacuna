@@ -84,6 +84,7 @@ class WorkflowState extends Entity {
     if (!empty($values['is_new']) && $values['name'] == WORKFLOW_CREATION_STATE_NAME) {
       $values['sysid'] = WORKFLOW_CREATION;
       $values['weight'] = WORKFLOW_CREATION_DEFAULT_WEIGHT;
+      $values['name'] = '(creation)'; // machine_name;
     }
     parent::__construct($values, $entityType);
 

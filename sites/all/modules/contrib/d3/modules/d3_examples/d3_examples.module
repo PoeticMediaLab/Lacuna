@@ -7,12 +7,12 @@
 /**
  * Implements hook_menu().
  */
-function d3_example_menu() {
+function d3_examples_menu() {
 
   $items['examples'] = array(
     'title' => 'D3 examples',
     'description' => 'Different visualization examples using d3.',
-    'page callback' => 'd3_example_linegraph',
+    'page callback' => 'd3_examples_linegraph',
     'access callback' => TRUE,
   );
 
@@ -20,7 +20,7 @@ function d3_example_menu() {
     'title' => 'Line graph',
     'description' => 'Uses d3 module to create a sample line graph',
     'access callback' => TRUE,
-    'page callback' => 'd3_example_linegraph',
+    'page callback' => 'd3_examples_linegraph',
     'type' => MENU_DEFAULT_LOCAL_TASK,
   );
 
@@ -29,7 +29,7 @@ function d3_example_menu() {
       'title' => 'Force directed graph',
       'description' => 'Uses d3 module to create a sample force directed graph',
       'access callback' => TRUE,
-      'page callback' => 'd3_example_forcedirected',
+      'page callback' => 'd3_examples_forcedirected',
       'type' => MENU_LOCAL_TASK,
     );
   }
@@ -38,7 +38,7 @@ function d3_example_menu() {
     'title' => 'Column chart',
     'description' => 'Uses d3 module to create a sample column chart',
     'access callback' => TRUE,
-    'page callback' => 'd3_example_column',
+    'page callback' => 'd3_examples_column',
     'type' => MENU_LOCAL_TASK,
   );
 
@@ -46,7 +46,7 @@ function d3_example_menu() {
     'title' => 'Bar chart',
     'description' => 'Uses d3 module to create a sample bar chart',
     'access callback' => TRUE,
-    'page callback' => 'd3_example_bar',
+    'page callback' => 'd3_examples_bar',
     'type' => MENU_LOCAL_TASK,
   );
 
@@ -54,7 +54,7 @@ function d3_example_menu() {
     'title' => 'Pie chart',
     'description' => 'Uses d3 module to create a sample pie chart.',
     'access callback' => TRUE,
-    'page callback' => 'd3_example_pie',
+    'page callback' => 'd3_examples_pie',
     'type' => MENU_LOCAL_TASK,
   );
 
@@ -64,7 +64,7 @@ function d3_example_menu() {
 /**
  * Demonstrates how to create a line graph using the D3 API directly.
  */
-function d3_example_linegraph() {
+function d3_examples_linegraph() {
 
   $chart = array(
     'id' => 'visualization',
@@ -90,7 +90,7 @@ function d3_example_linegraph() {
 /**
  * Demonstrates a force directed graph using the Graph API module.
  */
-function d3_example_forcedirected() {
+function d3_examples_forcedirected() {
 
   $graph = graphapi_new_graph();
 
@@ -117,7 +117,7 @@ function d3_example_forcedirected() {
 /**
  * Demonstrates a column chart using the D3 API directly.
  */
-function d3_example_column() {
+function d3_examples_column() {
 
   $chart = array(
     'id' => 'visualization',
@@ -146,7 +146,7 @@ function d3_example_column() {
  * @return string
  *   HTML for the page content.
  */
-function d3_example_bar() {
+function d3_examples_bar() {
 
   // Temporary data until I get randomization working.
   $chart = array(
@@ -183,7 +183,7 @@ function d3_example_bar() {
  * @return string
  *   HTML for the page.
  */
-function d3_example_pie() {
+function d3_examples_pie() {
   $chart = array(
     'id' => 'visualization',
     'type' => 'PieChart',

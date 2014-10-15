@@ -33,5 +33,5 @@ See request put to core to make the change at:
   http://drupal.org/node/1062068
 
   Closed and told to have workflow make the table change ourselves. Given that changing
-  name lengths haphazardly would spread the bugs around even more this approach was
+  name lengths hazardly would spread the bugs around even more this approach was
   not followed.

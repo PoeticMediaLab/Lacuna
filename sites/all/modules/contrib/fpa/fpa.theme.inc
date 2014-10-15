@@ -135,6 +135,8 @@ function theme_fpa_user_admin_permissions($variables) {
       'title' => array(), // HTML attribute on table row tag.
       FPA_ATTR_MODULE => array(), // HTML attribute on table row tag.
       FPA_ATTR_PERMISSION => array(), // HTML attribute on table row tag.
+      FPA_ATTR_CHECKED => array(),
+      FPA_ATTR_NOT_CHECKED => array(),
     );
     
     // Determine if row is module or permission.
@@ -156,12 +158,12 @@ function theme_fpa_user_admin_permissions($variables) {
         'data' => drupal_render($form['permission'][$key]),
         'class' => array('module'),
         'id' => 'module-' . $form['permission'][$key]['#id'],
-        'colspan' => count($form['role_names']['#value']) + 2,
+        'colspan' => count($form['role_names']['#value']) + 1,
       );
       
       $row['title'] = array($form['permission'][$key]['#id']);
       
-      $row['fpa-system-name'] = $row[FPA_ATTR_MODULE][0];
+      $row[FPA_ATTR_SYSTEM_NAME] = $row[FPA_ATTR_MODULE][0];
       
       $row[FPA_ATTR_MODULE] = array_unique(array_map('drupal_html_class', $row[FPA_ATTR_MODULE]));
       
@@ -210,8 +212,22 @@ function theme_fpa_user_admin_permissions($variables) {
         // Filter permissions strips role id class from checkbox. Used by Drupal core functionality.
         $form['checkboxes'][$rid][$key]['#attributes']['class'][] = 'rid-' . $rid;
         
+        // Set authenticated role behavior class on page load.
+        if ($rid == 2 && $form['checkboxes'][$rid][$key]['#checked'] === TRUE) {
+          $row['class'][] = 'fpa-authenticated-role-behavior';
+        }
+        
+        // For all roles that inherit permissions from 'authenticated user' role, add in dummy checkbox for authenticated role behavior.
         if ($rid > 2) {
-          $form['checkboxes'][$rid][$key]['#field_suffix'] = $dummy_checkbox_output;
+          $form['checkboxes'][$rid][$key]['#suffix'] = $dummy_checkbox_output; // '#suffix' doesn't have wrapping HTML like '#field_suffix'.
+        }
+        
+        // Add rid's to row attribute for checked status filter.
+        if ($form['checkboxes'][$rid][$key]['#checked'] === TRUE) {
+          $row[FPA_ATTR_CHECKED][] = $rid;
+        }
+        else {
+          $row[FPA_ATTR_NOT_CHECKED][] = $rid;
         }
         
         $row['data'][] = array(
@@ -222,8 +238,9 @@ function theme_fpa_user_admin_permissions($variables) {
           'title' => array(
             $form['role_names'][$rid]['#markup'],
           ),
+          // For role filter
           FPA_ATTR_ROLE => array(
-            $roles_attr_values[$rid],
+            $rid,
           ),
         );
       }
@@ -233,7 +250,7 @@ function theme_fpa_user_admin_permissions($variables) {
           $form['checkboxes'][$rid][$key]['#return_value'],
         );
         
-        $row['fpa-system-name'] = array(
+        $row[FPA_ATTR_SYSTEM_NAME] = array(
           $form['checkboxes'][$rid][$key]['#return_value'],
         );
       }
@@ -253,6 +270,9 @@ function theme_fpa_user_admin_permissions($variables) {
       
       // Add current permission to current module row.
       $rows[$module][FPA_ATTR_PERMISSION] = array_merge($rows[$module][FPA_ATTR_PERMISSION], $row[FPA_ATTR_PERMISSION]);
+      
+      $rows[$module][FPA_ATTR_CHECKED] = array_unique(array_merge($rows[$module][FPA_ATTR_CHECKED], $row[FPA_ATTR_CHECKED]));
+      $rows[$module][FPA_ATTR_NOT_CHECKED] = array_unique(array_merge($rows[$module][FPA_ATTR_NOT_CHECKED], $row[FPA_ATTR_NOT_CHECKED]));
       
       $modules[$rows[$module][FPA_ATTR_MODULE][0]][FPA_ATTR_PERMISSION][] = $row[FPA_ATTR_PERMISSION];
     }
@@ -296,7 +316,7 @@ function theme_fpa_user_admin_permissions($variables) {
         $form['role_names'][$rid]['#markup'],
       ),
       FPA_ATTR_ROLE => array(
-        $roles_attr_values[$rid],
+        $rid,
       ),
     );
     $user_roles[$rid] = $form['role_names'][$rid]['#markup'];
@@ -340,14 +360,9 @@ function _fpa_wrapper($permissions_table, $modules, $user_roles, $actions_output
       'show' => t('Show system names'),
     ),
   );
-  
-  foreach ($hiders as $hide_class => $labels) {
-    
-    if (!isset($_COOKIE[$hide_class]) || !$same_page || ($same_page && $_COOKIE[$hide_class] == 'true')) {
-      $render['#attributes']['class'][] = $hide_class;
-    }
-  }
-  
+
+  $render['#attributes']['class'][] = 'fpa-hide-system-names';
+
   $hide_container = array(
     '#type' => 'container',
     '#attributes' => array(
@@ -357,25 +372,19 @@ function _fpa_wrapper($permissions_table, $modules, $user_roles, $actions_output
     ),
   );
   
-  $toggle_link_template = array(
-    '#type' => 'markup', // html_tag adds erroneous newlines, which mess with inline elements.
-    '#markup' => '',
-    '#prefix' => '<span class="fpa-toggle-link">',
-    '#suffix' => '</span>'
-  );
-  
   foreach ($hiders as $hide_class => $labels) {
     
     $hide_container[$hide_class] = array(
       '#theme' => 'link',
       '#text' => '',
-      '#path' => $_GET['q'],
+      '#path' => '',
       '#options' => array(
         'attributes' => array_merge($labels, array(
           'fpa-toggle-class' => $hide_class,
         )),
         'html' => TRUE,
         'fragment' => ' ',
+        'external' => TRUE, // Prevent base path from being added to link.
       ),
     );
   }
@@ -427,11 +436,6 @@ function _fpa_wrapper($permissions_table, $modules, $user_roles, $actions_output
    */
   $wrapper['perm_styles'] = $style_template;
   $wrapper['perm_styles']['#attributes']['class'][0] = 'fpa-perm-styles';
-  
-  /**
-   * @todo need to generate initial styles on server side for initial page load performance.
-   */
-  
   
   /**
    * Left section contains module list and form submission button.
@@ -660,7 +664,7 @@ function _fpa_wrapper($permissions_table, $modules, $user_roles, $actions_output
   );
   
   if (!empty($user_roles)) {
-    $options = array_merge($options, array_combine(array_map('drupal_html_class', $user_roles), $user_roles));
+    $options += $user_roles; // Preserves keys.
   }
   
   if (in_array('*', $cookie_roles)) {
@@ -692,12 +696,33 @@ function _fpa_wrapper($permissions_table, $modules, $user_roles, $actions_output
     foreach ($filter_form['role_filter']['#value'] as $value) {
       
       $role_styles[] = '.fpa-table-wrapper [' . FPA_ATTR_ROLE . '="' . $value . '"] {display: table-cell;}';
-      
     }
     
     $role_styles[] = '.fpa-table-wrapper [' . FPA_ATTR_ROLE . '="' . end($filter_form['role_filter']['#value']) . '"] {border-right: 1px solid #bebfb9;}';
     
     $wrapper['role_styles']['style']['#value'] = implode('', $role_styles);
+  }
+  
+  $checked_status = array(
+    '#type' => 'checkboxes',
+    '#title' => t('Display permissions that are:'),
+    '#options' => array(
+      FPA_ATTR_CHECKED => t('Checked'),
+      FPA_ATTR_NOT_CHECKED => t('Not Checked'),
+    ),
+    '#attributes' => array(),
+    '#title_display' => 'before',
+    '#description' => t('Applies to all visible roles.<br />Unsaved changes are not counted.<br />Most effective when a single role is visible.<br />Empty module rows sometimes display when used with permission filter.'),
+  );
+  
+  $checked_status_keys = array_keys($checked_status['#options']);
+  
+  $checked_status['#value'] = array_combine($checked_status_keys, $checked_status_keys);
+  
+  $filter_form['checked_status'] = form_process_checkboxes($checked_status);
+  
+  foreach (element_children($filter_form['checked_status']) as $key) {
+    $filter_form['checked_status'][$key]['#checked'] = TRUE;
   }
   
   $right_section['filter_form'] = $filter_form;
