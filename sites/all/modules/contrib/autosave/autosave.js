@@ -12,10 +12,10 @@ Drupal.behaviors.autosave.attach = function (context, settings) {
   }
 
   autosaveSettings = settings.autosave;
-  var $selector = $('input[name="form_id"][value="' + autosaveSettings.form_id + '"] ').parents('form').not('.autosave-processed');
-  $selector.addClass('autosave-processed').autosave({
+  var selector = $('input[name="form_id"][value="' + autosaveSettings.form_id + '"] ').parents('form').not('.autosave-processed');
+  selector.addClass('autosave-processed').autosave({
     // Autosave interval time in ms
-    interval: autosaveSettings.period * 1000, 
+    interval: autosaveSettings.period * 1000,
     url: autosaveSettings.url,
     setup: function (e, o) {
       // If there is a saved form for this user, let him know so he can reload it
@@ -30,10 +30,10 @@ Drupal.behaviors.autosave.attach = function (context, settings) {
           $('#autosave-status .ignore-link').click(function(e) {
             showingRestoreCommand = false;
             Drupal.behaviors.autosave.hideMessage();
-            // Remove the autosaved form from the database if settings 
+            // Remove the autosaved form from the database if settings
             // are such.
             if (autosaveSettings.ignoreBehavior) {
-              var path = Drupal.settings.basePath + 'autosave/remove/' + autosaveSettings.form_id + '/' + autosaveSettings.savedTimestamp + '/' + autosaveSettings.form_token; 
+              var path = Drupal.settings.basePath + 'autosave/remove/' + autosaveSettings.form_id + '/' + autosaveSettings.savedTimestamp + '/' + autosaveSettings.form_token;
               $.post(path, autosaveSettings);
             }
             return false;
@@ -44,11 +44,11 @@ Drupal.behaviors.autosave.attach = function (context, settings) {
           });
           Drupal.attachBehaviors(document);
         };
-        
+
         // Markup for the restore popup
         $.ajax({
           type: "POST",
-          url: Drupal.settings.basePath + 'autosave/popup/autosave_restore_popup', 
+          url: Drupal.settings.basePath + 'autosave/popup/autosave_restore_popup',
           data: autosaveSettings,
           success: restoreCallback
         });
@@ -85,7 +85,7 @@ Drupal.behaviors.autosave.attach = function (context, settings) {
         }, autosaveSettings.period * 1000);
       }
     },
-    
+
     save: function (e, o) {
       var savedCallback = function(html) {
         Drupal.behaviors.autosave.displayMessage(html,
@@ -94,7 +94,7 @@ Drupal.behaviors.autosave.attach = function (context, settings) {
       if (!autosaveSettings.hidden) {
         $.ajax({
           type: "POST",
-          url: Drupal.settings.basePath + 'autosave/popup/autosave_saved_popup', 
+          url: Drupal.settings.basePath + 'autosave/popup/autosave_saved_popup',
           data: autosaveSettings,
           success: savedCallback
         });
