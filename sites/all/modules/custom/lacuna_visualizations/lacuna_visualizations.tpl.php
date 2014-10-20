@@ -52,7 +52,7 @@ elseif (current_path() == 'visualization/dashboard') { ?>
         <span class="help fa fa-question-circle">
           <div class="help_text tooltip">
             <h2>Annotation Details</h2>
-            <p>Hover over a pie chart to see a summary of student work. Click on any pie chart to change the graph below to show data according to the selected chart.</p>
+            <p>Hover over a pie chart to see a summary of student work. Click on any pie chart to change the graph to show data according to the selected chart.</p>
           </div>
         </span>
       </div>
