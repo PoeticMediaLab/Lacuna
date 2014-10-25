@@ -3,9 +3,8 @@
   width: 200px;
 }
 
-/* line 8, ../../sass/components/buttons.scss */
+/* line 7, ../../sass/components/buttons.scss */
 .lacuna-button,
-.annotation-sidebar-button,
 .form-submit,
 .af-button-large {
   background-color: #c4df2c;
@@ -36,7 +35,7 @@
   margin-right: 5px;
 }
 
-/* line 42, ../../sass/components/buttons.scss */
+/* line 41, ../../sass/components/buttons.scss */
 .lacuna-button:hover,
 .lacuna-button:focus,
 .form-submit:hover,
@@ -50,37 +49,36 @@
   transition: background-position 0.1s linear 0s;
 }
 
-/* line 49, ../../sass/components/buttons.scss */
+/* line 48, ../../sass/components/buttons.scss */
 .lacuna-button.lacuna-button-blue {
   background-color: #78cefd;
   background-image: linear-gradient(to bottom, #78cefd, #1588ba);
 }
 
-/* line 54, ../../sass/components/buttons.scss */
+/* line 53, ../../sass/components/buttons.scss */
 .lacuna-button.lacuna-button-blue:hover,
 .lacuna-button.lacuna-button-blue:focus {
   background-color: #1588ba;
 }
 
-/* line 58, ../../sass/components/buttons.scss */
+/* line 57, ../../sass/components/buttons.scss */
 .lacuna-button a {
   color: #FFFFFF;
 }
 
-/* line 62, ../../sass/components/buttons.scss */
-.form-submit,
-.annotation-sidebar-button {
+/* line 60, ../../sass/components/buttons.scss */
+.form-submit {
   background-color: #92a6c4;
   background-image: linear-gradient(to bottom, #92a6c4, #39404a);
 }
 
-/* line 67, ../../sass/components/buttons.scss */
+/* line 65, ../../sass/components/buttons.scss */
 .form-submit:hover,
 .form-submit:focus {
   background-color: #39404a;
 }
 
-/* line 71, ../../sass/components/buttons.scss */
+/* line 69, ../../sass/components/buttons.scss */
 .view-documents #edit-reset.form-submit,
 .view-your-story #edit-reset.form-submit {
   margin-top: -40px;
@@ -88,13 +86,13 @@
   float: right;
 }
 
-/* line 78, ../../sass/components/buttons.scss */
+/* line 76, ../../sass/components/buttons.scss */
 #blog-node-form #edit-body-und-0-format,
 #comment-form #edit-comment-body-und-0-format {
   display: none;
 }
 
-/* line 82, ../../sass/components/buttons.scss */
+/* line 80, ../../sass/components/buttons.scss */
 .publish-button {
   display: block;
   margin-top: 5px;

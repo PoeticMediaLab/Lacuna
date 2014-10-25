@@ -1,14 +1,30 @@
 #annotation-filters-wrapper {
     position: relative;
+    font-size: 10pt;
 }
 
 #annotation-filters {
     position: fixed;
     width: 200px;
+    border: 1px solid rgb(200, 200, 200);
+    --moz-border-radius: 5px;
+    --webkit-border-radius: 5px;
+    border-radius: 5px;
+    padding: 2px;
 }
 
-.annotation-filters-hide-annotation {
-  background-color: transparent !important;
+#annotation-filters h2 {
+  text-align: center;
+  margin-top: 5px;
+  margin-bottom: 0px;
+}
+
+#annotation-filters input[type="checkbox"] {
+  margin: 0px 5px 10px 10px;
+}
+
+#active-filters {
+  text-align: center;
 }
 
 .region-sidebar-second div#block-block-1 {
@@ -22,27 +38,83 @@
 }
 
 .annotation-sidebar-button {
-  display: block;
-  width: 200px !important;
-  color: white;
-  padding: 5px;
-  margin-bottom: 15px;
+  cursor: pointer;
+  display: inline-block;
+  color: black;
+  padding: 0px;
+  margin: 0px 6px 15px 6px;
   text-align: center;
+  width: 51px;
+  --webkit-border-radius: 5px;
+  --moz-border-radius: 5px;
+  border-radius: 5px;
+  border: solid 1px gray;
 }
 
-/*.annotation-sidebar-button-active {
-  background-color: green;
-}*/
+.annotation-sidebar-button-active {
+  background-color: rgba(200, 200, 200, .8);
+}
+
+.annotation-sidebar-button#reset {
+  width: 90%;
+}
+
+.annotation-hide {
+  background-color: transparent !important;
+}
+
+#annotation-filters-user-buttons {
+}
 
 .annotation-filter-active {
   display: block;
   text-transform: capitalize;
   width: 100%;
+  padding-left: 10px;
 }
 
-label {
+.annotation-filter-wrapper {
+  white-space: nowrap;
+  width: 100%;
 }
 
-label:first-letter {
+#active-filters {
+  text-align: center;
+  font-weight: bold;
+  font-size: 12pt;
+}
+
+label.annotation-filter-label {
+  display: inline-block !important;
+  text-align: right;
+  width: 55px;
+  padding-right: 5px;
+  font-weight: normal;
+  font-size: 10pt;
+}
+
+label.annotation-filter-label:first-letter {
   text-transform: capitalize;
+}
+
+input.annotation-filter-input {
+  display: inline-block;
+  width: 125px;
+}
+
+#pager-wrapper {
+  margin-left: auto;
+  margin-right: auto;
+  width: 100px;
+}
+
+#pager-count {
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+i.pager {
+  cursor: pointer;
+  padding-left: 2px;
+  padding-right: 2px;
 }

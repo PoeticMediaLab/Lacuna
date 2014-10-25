@@ -9,14 +9,18 @@
 #######
 
 # BUG: overlapping, multi-user highlights
-
 class Annotator.Plugin.Filters extends Annotator.Plugin
-
+  ########
+  #
+  # Define variables for CSS, selectors, and data storage
+  #
+  ########
   events:
     'annotationsLoaded': 'setup'
     '.annotator-sidebar-filter click': 'changeFilterState'
     'annotationCreated': 'addAnnotation'
     'annotationUpdated': 'addAnnotation'
+    'annotationViewerShown': 'updatePager'
 
   options:
     filters: {}
@@ -24,22 +28,35 @@ class Annotator.Plugin.Filters extends Annotator.Plugin
     selector:
       sidebar: '#annotation-filters'   # where to draw the filters
       annotation: 'annotation-'          # how to find annotations
-      activeFilters: '#activeFilters'
+      activeFilters: 'active-filters'
+      userButtons: 'annotation-filters-user-buttons'
     class:
-      hiddenAnnotation: 'annotation-filters-hide-annotation'
+      hide: 'annotation-hide'
       button: 'annotation-sidebar-button'
       activeButton: 'annotation-sidebar-button-active'
       input: 'annotation-filter-input'
       activeFilter: 'annotation-filter-active'
       closeIcon: 'fa fa-times'
-      filterTitle: 'annotation-filters-title'
+      filterWrapper: 'annotation-filter-wrapper'
+      filterLabel: 'annotation-filter-label'
+      buttonType:
+          user: 'annotation-filter-button-user'
+          reset: 'annotation-filter-button-reset'
+      checkboxType:
+          highlights: 'annotation-filter-checkbox-highlights'
 
   data:
     annotations: {}
     filterValues: {}
     activeFilters: {}
-    filtered: {}
+    filtered: {'highlight': []}
+    currentIndex: 1
 
+  #########
+  #
+  # Routines to initialize the plugin
+  #
+  #########
   constructor: (element, options) ->
     super
     if options.current_user?
@@ -60,14 +77,21 @@ class Annotator.Plugin.Filters extends Annotator.Plugin
       @data.annotations[annotation.id] = annotation
       @storeFilterValues annotation
       @addAnnotationID annotation
-    @drawFilters()
+    @drawAllFilters()
 
   addAnnotationID: (annotation) ->
     # add an ID to the annotation
     for highlight in annotation.highlights
-      # we can't use an ID because we may have multiple spans for a single annotation
-      annotationHighlight = $(highlight).addClass(@options.selector.annotation + annotation.id)
+      # give ID for jumping to the first highlight span
+      $(highlight).first().attr('id', @options.selector.annotation + annotation.id)
+      # but add the class to all -- for hiding/showing
+      $(highlight).addClass(@options.selector.annotation + annotation.id)
 
+  #########
+  #
+  # Miscellaneous utility routines
+  #
+  #########
   addAnnotation: (annotation) ->
     # update internal data objects with new annotation
     @data.annotations[annotation.id] = annotation
@@ -80,10 +104,16 @@ class Annotator.Plugin.Filters extends Annotator.Plugin
       when 'user' then return annotation[key]['name']
       else return annotation[key]
 
+  ###########
+  #
+  # Manage filters, hide/show annotations
+  #
+  ###########
   storeFilterValues: (annotation) ->
+    # Create a list of unique strings for each filter
+    # Used for auto-complete boxes
     if @options.filters?
       for filterName in @options.filters
-        # Create a list of unique strings for each filter
         if not @data.filterValues[filterName]?
           @data.filterValues[filterName] = []
         if not @data.filtered[filterName]?
@@ -103,6 +133,29 @@ class Annotator.Plugin.Filters extends Annotator.Plugin
             if annotation[filterName]? and (annotation[filterName] not in @data.filterValues[filterName])
               @data.filterValues[filterName].push(annotation[filterName])
 
+  filterAnnotations: (filterName, matchValue, match = false) ->
+    # Hide all annotations that do (or do not) match the matchValue
+    # The option "match" variable determines if we want to hide
+    # everything that *does* match
+    if filterName == 'all'
+      @data.filtered['all'] = (id for id of @data.annotations)
+      @hideFilteredAnnotations()
+      return # no need to do anything else
+
+    for id of @data.annotations
+      value = @getValue(@data.annotations[id], filterName)
+      if !value then value = ''
+      if value instanceof Array
+        if (not match and matchValue not in value) or
+          (match and matchValue in value)
+            @data.filtered[filterName].push(id)
+      else if (not match and
+        value != matchValue) or
+        (match and (value == matchValue))
+          @data.filtered[filterName].push(id)
+    @data.activeFilters[filterName].push(matchValue)
+    @hideFilteredAnnotations()
+
   filterViewer: (Viewer) ->
     # if all hidden, hide
     for annotation in Viewer.annotations
@@ -116,113 +169,203 @@ class Annotator.Plugin.Filters extends Annotator.Plugin
           #       with one that isn't filtered
           Viewer.hide()
 
-  buttonClick: (event) =>
-    # Note the fat arrow: this is called in click events, so needed
-    # otherwise, we can't access @
-    buttonType = $(event.target).attr('id')
-    if buttonType == 'own-annotations'
-      @filterAnnotations @options.current_user, 'user'
-    else if buttonType == 'all-annotations'
-      @removeFilter 'user'
-    else if buttonType == 'remove-filters'
-      @removeAllFilters()
-    # else if buttonType == 'hide-all'
-    #   @hideAllAnnotations()
-
-  # hideAllAnnotations: ->
-  #   for annotationID, annotation of @data.annotations
-  #     @data.filtered[]
-
   hideFilteredAnnotations: ->
     for annotationID of @data.annotations
-      for filter in @options.filters
+      for filter of @data.filtered
         for id in @data.filtered[filter]
           if annotationID == id
-            $('.' + @options.selector.annotation + id).addClass(@options.class.hiddenAnnotation)
+            $('.' + @options.selector.annotation + id).addClass(@options.class.hide)
             @publish('hide', @data.annotations[annotationID])
             break
 
-  filterSelected: (event, ui) ->
-    matchValue = ui.item.value
-    filterName = event.target.name
-    @filterAnnotations matchValue, filterName
-    $(event.target).val('')
-    false # so autocomplete won't leave text in the input box
+  showAnnotation: (annotation) ->
+    $('.' + @options.selector.annotation + annotation.id)
+      .removeClass(@options.class.hide)
 
-  filterAnnotations: (matchValue, filterName) ->
-    for id of @data.annotations
-      value = @getValue(@data.annotations[id], filterName)
-      if value instanceof Array
-        if matchValue not in value
-          @data.filtered[filterName].push(id)
-      else if value != matchValue
-        @data.filtered[filterName].push(id)
-    @data.activeFilters[filterName].push(matchValue)
+  removeAllFilters: ->
+    # show all; reset all filters
+    for filter of @data.filtered
+      @removeFilter filter
+
+  removeFilter: (filterName, filterValue = null) ->
+    for id in @data.filtered[filterName]
+      @showAnnotation @data.annotations[id]
+    @data.filtered[filterName] = []
+
+  #########
+  #
+  # Draw UI elements
+  #
+  #########
+  drawButton: (id, text, type, selector = @options.selector.sidebar) ->
+    selector = $(selector)
+    classes = [@options.class.button, @options.class.buttonType[type]].join(' ')
+    selector.append($('<span>',
+      {id: id, class: classes})
+      .text(text)
+      .on("click", @buttonClick)
+    )
+
+  drawAllFilters: ->
+    # draw the filter elements in the sidebar
+    sidebar = $(@options.selector.sidebar)
+    sidebar.append('<h2>Annotation Filters</h2>')
+    @drawPager sidebar
+    sidebar.append('<div id="' + @options.selector.userButtons + '"></div>')
+    @drawButton 'no-annotations', 'None', 'user', '#' + @options.selector.userButtons
+    @drawButton 'own-annotations', 'Mine', 'user', '#' + @options.selector.userButtons
+    @drawButton 'all-annotations', 'All', 'user', '#' + @options.selector.userButtons
+    @drawCheckbox 'show-highlights', 'Show Highlights', 'highlights'
+
+    for filter, values of @data.filterValues
+      inputHTML = "<div class='#{@options.class.filterWrapper}'><label class='#{@options.class.filterLabel}' for='#{filter}'>#{filter}: </label><input name='#{filter}' class='#{@options.class.input}' /></div>"
+      sidebar.append(inputHTML)
+      $("input[name=#{filter}]").autocomplete
+        source: values
+        select: (event, ui) =>
+          @filterAutocomplete(event, ui)
+      # $("input[name=#{filter}]").on('hover', @hoverFilter)
+
+    @drawButton 'reset', 'Reset', 'reset' # redundant? does "All" mean the same thing?
+    sidebar.append("<div id='#{@options.selector.activeFilters}'>Active Filters</div>")
+
+    # Default on start is "Mine"
+    $('#own-annotations').addClass(@options.class.activeButton)
+    @filterAnnotations 'user', @options.current_user
+    @drawActiveFilter 'user', @options.current_user
+
+  drawActiveFilter: (filterName, matchValue) ->
     classes = [filterName, @options.class.activeFilter, @options.class.closeIcon].join(' ')
-    $(@options.selector.activeFilters).append(
+    $('#' + @options.selector.activeFilters).after(
       $('<div>',
         {id: matchValue,
         class: classes})
-      .text(filterName + ': ' + matchValue)
+      .text(' ' + filterName + ': ' + matchValue)
       .on("click", @removeFilterClick)
       )
-    @hideFilteredAnnotations()
 
+  drawCheckbox: (id, text, type, selector = @options.selector.sidebar) ->
+    selector = $(selector)
+    classes = [@options.class.checkbox, @options.class.checkboxType[type]].join(' ')
+    selector.append($("<input type='checkbox' name='#{id}' checked>",
+      {name: id})
+      .on("click", @checkboxToggle)
+    ).append("<span id='#{id}' class='#{classes}'>#{text}</span>")
+
+  drawPager: (selector) ->
+    first = 'fa fa-angle-double-left'
+    prev = 'fa fa-angle-left'
+    next = 'fa fa-angle-right'
+    last = 'fa fa-angle-double-right'
+    $(selector).append($("<i id='first' class='pager pager-arrow #{first}'/>")).on("click", 'i#first', @pagerClick)
+    $(selector).append($("<i id='prev' class='pager pager-arrow #{prev}'/>")).on("click", 'i#prev', @pagerClick)
+    $(selector).append($("<span id='pager-count' class='pager'>").text("1 of " + Object.keys(@data.annotations).length))
+    $(selector).append($("<i id='next' class='pager pager-arrow #{next}'/>")).on("click", 'i#next', @pagerClick)
+    $(selector).append($("<i id='last' class='pager pager-arrow #{last}'/>")).on("click", 'i#last', @pagerClick)
+    $('.pager').wrapAll('<div id="pager-wrapper"></div>')
+    return
+
+  redrawPager: () ->
+    $('#pager-count').text(@data.currentIndex + ' of ' + Object.keys(@data.annotations).length)
+
+  eraseFilter: (filterName) ->
+    $('.' + filterName + '.' + @options.class.activeFilter).remove()
+    if filterName == 'user'
+      $('.' + @options.class.activeButton + '.' + @options.class.buttonType.user).removeClass(@options.class.activeButton)
+
+  eraseAllFilters: () ->
+    $('.' + @options.class.hide).removeClass(@options.class.hide)
+    $('.' + @options.class.activeFilter).remove()
+
+  #########
+  #
+  # Handle user actions
+  #
+  ##########
   removeFilterClick: (event) =>
     item = $(event.target)
     filterValue = item.attr('id')
     for filterName in @options.filters
       if item.hasClass(filterName)
         @removeFilter filterName
+        @eraseFilter filterName
 
-  removeFilter: (filterName) ->
-    for id in @data.filtered[filterName]
-      @showAnnotation @data.annotations[id]
-    @data.filtered[filterName] = []
-    $('.' + filterName + '.' + @options.class.activeFilter).remove()
+  pagerClick: (event) =>
+    # update the annotations count and which one is active
+    last = Object.keys(@data.annotations).length
+    switch event.target.id
+      when 'first'
+        @data.currentIndex = 1
+      when 'prev'
+        @data.currentIndex -= 1
+        if @data.currentIndex < 1 then @data.currentIndex = last
+      when 'next'
+        @data.currentIndex += 1
+        if @data.currentIndex > last then @data.currentIndex = 1
+      when 'last'
+        @data.currentIndex = last
+    @redrawPager()
+    # Scroll to the annotation
+    id = Object.keys(this.data.annotations)[@data.currentIndex - 1]
+    highlight = $(@data.annotations[id].highlights[0])
+    $("html, body").animate({
+      scrollTop: highlight.offset().top - 20
+    }, 150)
+    # Would like to show the Viewer, too
+    # but that's quite hard. Annotator shows the Viewer based on mouse position
+    # hovering over a highlight
 
-  showAnnotation: (annotation) ->
-    $('.' + @options.selector.annotation + annotation.id)
-      .removeClass(@options.class.hiddenAnnotation)
+  # Annotations are ordered by ID, NOT by location in the text
+  # because Annotator uses XPath to locate items
+  # This is way too hard to change to order by location in document
+  # especially for such a small UX issue
+  updatePager: (Viewer) ->
+    # When the Annotator Viewer is shown, update the pager count
+    # There might be multiple annotations shown, so just choose the first one
+    id = Viewer.annotations[0].id
+    # Now update current pager index
+    @data.currentIndex = Object.keys(this.data.annotations).indexOf(id.toString()) + 1;
+    @redrawPager()
 
-  removeAllFilters: ->
-    # show all; reset all filters
-    for filter of @data.filtered
-      @data.filtered[filter] = []
-    $('.' + @options.class.hiddenAnnotation).removeClass(@options.class.hiddenAnnotation)
-    $('.' + @options.class.activeFilter).remove()
+  checkboxToggle: (event) =>
+    if event.target.name == 'show-highlights'
+      if event.target.checked
+        # BUG: clobbers *any* category filters, not just highlight
+        @removeFilter 'category', 'Highlight'
+      else
+        @filterAnnotations 'category', 'Highlight', true
 
-  makeButton: (id, text) ->
-    sidebar = $(@options.selector.sidebar)
-    sidebar.append($('<span>',
-      {id: id, class: @options.class.button})
-      .text(text)
-      .on("click", @buttonClick)
-    )
+  filterAutocomplete: (event, ui) ->
+    # For autocomplete values
+    matchValue = ui.item.value
+    filterName = event.target.name
+    @filterAnnotations filterName, matchValue
+    @drawActiveFilter filterName, matchValue
+    $(event.target).val('')
+    false # so autocomplete won't leave text in the input box
 
-  # hoverFilter: (event) =>
-  #   # When a filter field is hovered
-  #   console.log(event)
-  #   if (event.target.name == 'tags')
-  #     $(event.target).tagcloud()
-  #     # data = $(event.target).data()
-  #     # items = data.uiAutocomplete.options.source
-
-  drawFilters: ->
-    # draw the filter elements in the sidebar
-    sidebar = $(@options.selector.sidebar)
-    sidebar.append('<h2>Annotation Filters</h2>')
-    @makeButton 'own-annotations', 'My Annotations'
-    @makeButton 'all-annotations', "Everyone's Annotations"
-    # @makeButton 'hide-all', 'Hide All Annotations'
-    @makeButton 'remove-filters', 'Remove All Filters'
-    for filter, values of @data.filterValues
-      inputHTML = "<label>#{filter}: </label><input name='#{filter}' class='#{@options.class.input}' />"
-      sidebar.append(inputHTML)
-      $("input[name=#{filter}]").autocomplete
-        source: values
-        select: (event, ui) =>
-          @filterSelected(event, ui)
-      # $("input[name=#{filter}]").on('hover', @hoverFilter)
-
-    sidebar.append("<div id='activeFilters'></div>")
+  buttonClick: (event) =>
+    # Note the fat arrow: this is called in click events, so needed
+    # otherwise, we can't access @
+    buttonType = $(event.target).attr('id')
+    activeButton = $('.' + @options.class.activeButton)
+    activeButton.removeClass(@options.class.activeButton)
+    if buttonType == 'own-annotations'
+      @removeFilter 'user'
+      @removeFilter 'all'
+      @filterAnnotations 'user', @options.current_user
+      @drawActiveFilter 'user', @options.current_user
+    else if buttonType == 'all-annotations'
+      @removeFilter 'user'
+      @removeFilter 'all'
+      @eraseFilter 'user'
+    else if buttonType == 'no-annotations'
+      @removeFilter 'user'
+      @filterAnnotations 'all', null
+      @eraseFilter 'user'
+    else if buttonType == 'reset'
+      @removeAllFilters()
+      @eraseAllFilters()
+      $('#all-annotations').addClass(@options.class.activeButton)
+      return  # don't highlight the reset button - doesn't make sense
+    $(event.target).addClass(@options.class.activeButton) # active button

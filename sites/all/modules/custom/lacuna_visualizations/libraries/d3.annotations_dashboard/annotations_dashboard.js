@@ -33,7 +33,6 @@ d3.json(settings.config.data_url, function (error, data) {
  *
  * An object to manage the annotation filter stack
  * all functions assume they can access this
- * TODO: refactor to use Object.create and prototypes
  *
  **************/
 function Annotations(data) {

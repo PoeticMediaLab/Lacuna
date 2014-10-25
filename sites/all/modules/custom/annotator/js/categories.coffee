@@ -103,7 +103,7 @@ class Annotator.Plugin.Categories extends Annotator.Plugin
       # TODO: force a choice
       window.alert('You did not choose a category, so the default has been chosen.')
       annotation.category = @options.category[0]  # default is first category
-    if !annotation.category?
+    if !annotation.category? or !annotation.text
       annotation.category = @options.emptyCategory
     @changeHighlightColors([annotation])
 
