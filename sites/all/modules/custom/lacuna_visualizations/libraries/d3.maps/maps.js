@@ -54,7 +54,7 @@
 				// TODO: will crash if und[0].safe_value doesn't
 				// exist, and I'm not certain it's guaranteed to
 				// exist.
-				var safeName = field_display_name.und[0].safe_value;
+				var safeName = field_display_name.und[0].safe_value.trim();
 				// look for a node with an author matching safeName.
 				// If it exists, add safeName to the list of user
 				// names. If it doesn't, don't. (this keeps admin
@@ -545,13 +545,17 @@
 		// functions for filtering which nodes are displayed.
 
 		function isLinked(d) {
-			// first, get a list of the selected links.
 
-			var selectedLinks = links.filter(inTimeFrame).filter(inSelectedUsers);
+			if (d.data.itemType == 'biblio'){
+				return true;
+			}
+			
+			// first, get a list of the selected links.
+			var selectedLinks = links.filter(inSelectedUsersLink).filter(inTimeFrameLink);
 			// return only those nodes that are either the source
 			// or target of at least one link.
 			for (var i = 0; i < selectedLinks.length; i++) {
-				if (d.id == selectedLinks[i].source.id || d.id == selectedLinks[i].target.id) {
+				if (d.id == selectedLinks[i].source.id) {
 					return true;
 				}
 			}
@@ -588,6 +592,15 @@
 			}
 		}
 
+		function inSelectedUsersLink(d) {
+			return inSelectedUsers(d.source);
+		}
+
+		function inTimeFrameLink(d) {
+			return inTimeFrame(d.source);
+		}
+
+
 		// Now, actually create brush.
 		var brush = d3.svg.brush()
 						.x(timeScale)
@@ -610,7 +623,7 @@
 			if (linkedNodesOnly) {
 				filteredNodes = filteredNodes.filter(isLinked);
 			}
-			filteredLinks = links.filter(inTimeFrame).filter(inSelectedUsers);
+			filteredLinks = links.filter(inTimeFrameLink).filter(inSelectedUsersLink);
 			start(filteredNodes, filteredLinks);
 		}
 

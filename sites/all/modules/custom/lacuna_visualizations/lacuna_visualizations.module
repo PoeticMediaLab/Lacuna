@@ -452,9 +452,6 @@ function lacuna_visualizations_mapview() {
 		// node was created; currently assuming that all links are
 		// created at the same time as the blog post they're
 		// associated with.
-    if (!$dataArray['author']){
-      $dataArray['author'] = "None";
-    }
     $title = $item->title;
 		/* pull out data needed for biblio nodes and add it to
 		 * $dataArray */
@@ -462,18 +459,25 @@ function lacuna_visualizations_mapview() {
 			$document_abstract = strip_tags($item->biblio_abst_e);
 			$dataArray['document_abstract'] = $document_abstract;
 			$author = ' ';
+      var_dump($item);
 			if (isset($item->biblio_contributors[0])) {
 				$count = count($item->biblio_contributors);
 				for ($i = 0; $i < $count; $i++) {
-					$author = $item->biblio_contributors[0]['name'];
-					$dataArray['author'] .= $author . "\r\n";
+					$author = $item->biblio_contributors[$i]['name'];
+					$dataArray['author'] .= $author;
+          if ($i != $count-1) {
+             $dataArray['author'] .= ", ";
+          }
 				}
+			}
+			else {
+     				$dataArray['author'] = "None";
 			}
 		}
 
     if ($item->type == "blog") {
-			// $dataArray['author'] = $users[$item->uid]->realname;
-			$dataArray['author'] = format_username($users[$item->uid]);
+			$dataArray['author'] = $item->name;
+
 			// draw links based off of node's field_bibliographic_entry.
       if ($item->field_bibliographic_entry) {
         $linkArray = $item->field_bibliographic_entry;
@@ -483,7 +487,7 @@ function lacuna_visualizations_mapview() {
             graphapi_add_link($graph, $title, $nodes[$linkedNid]->title);
             array_push($dataArray['linksTitles'], $nodes[$linkedNid]->title);
             array_push($dataArray['linksURL'], $GLOBALS['base_url'] . '/node/' . $linkedNid);
-          //			graphapi_set_link_data($graph, $title,	$nodes[$linkedNid]['title'], $item->created);
+          	graphapi_set_link_data($graph, $title,	$nodes[$linkedNid]->title, $item->created);
           }
         }
       } // end if($item->field_bibliographic_entry)
