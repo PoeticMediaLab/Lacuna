@@ -459,7 +459,6 @@ function lacuna_visualizations_mapview() {
 			$document_abstract = strip_tags($item->biblio_abst_e);
 			$dataArray['document_abstract'] = $document_abstract;
 			$author = ' ';
-      var_dump($item);
 			if (isset($item->biblio_contributors[0])) {
 				$count = count($item->biblio_contributors);
 				for ($i = 0; $i < $count; $i++) {
