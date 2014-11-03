@@ -27,8 +27,8 @@
       },
       "class": {
         hide: 'annotation-hide',
-        button: 'annotation-sidebar-button',
-        activeButton: 'annotation-sidebar-button-active',
+        button: 'annotation-filters-button',
+        activeButton: 'annotation-filters-button-active',
         input: 'annotation-filter-input',
         activeFilter: 'annotation-filter-active',
         closeIcon: 'fa fa-times',
@@ -51,7 +51,7 @@
       filtered: {
         'highlight': []
       },
-      currentIndex: 1
+      currentIndex: 0
     };
 
     function Filters(element, options) {
@@ -85,6 +85,7 @@
         this.storeFilterValues(annotation);
         this.addAnnotationID(annotation);
       }
+      if (Object.keys(annotations).length) this.data.currentIndex = 1;
       return this.drawAllFilters();
     };
 
@@ -266,6 +267,7 @@
     Filters.prototype.removeFilter = function(filterName, filterValue) {
       var id, _i, _len, _ref;
       if (filterValue == null) filterValue = null;
+      if (!(this.data.filtered[filterName] != null)) return;
       _ref = this.data.filtered[filterName];
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         id = _ref[_i];
@@ -331,7 +333,7 @@
       classes = [this.options["class"].checkbox, this.options["class"].checkboxType[type]].join(' ');
       return selector.append($("<input type='checkbox' name='" + id + "' checked>", {
         name: id
-      }).on("click", this.checkboxToggle)).append("<span id='" + id + "' class='" + classes + "'>" + text + "</span>");
+      }).on("click", this.checkboxToggle)).append("<span id='" + id + "' class='" + classes + "'>" + text + "</span>").on("click", this.checkboxToggle);
     };
 
     Filters.prototype.drawPager = function(selector) {
@@ -403,10 +405,9 @@
       this.redrawPager();
       id = Object.keys(this.data.annotations)[this.data.currentIndex - 1];
       highlight = $(this.data.annotations[id].highlights[0]);
-      $("html, body").animate({
+      return $("html, body").animate({
         scrollTop: highlight.offset().top - 20
       }, 150);
-      return $('.annotator-viewer').removeClass('annotator-hide');
     };
 
     Filters.prototype.updatePager = function(Viewer) {
@@ -437,10 +438,11 @@
     };
 
     Filters.prototype.buttonClick = function(event) {
-      var activeButton, buttonType;
+      var activeButton, buttonType, prevActiveButton;
       buttonType = $(event.target).attr('id');
-      activeButton = $('.' + this.options["class"].activeButton);
-      activeButton.removeClass(this.options["class"].activeButton);
+      activeButton = $(event.target);
+      prevActiveButton = $('.' + this.options["class"].activeButton);
+      prevActiveButton.removeClass(this.options["class"].activeButton);
       if (buttonType === 'own-annotations') {
         this.removeFilter('user');
         this.removeFilter('all');
@@ -457,10 +459,11 @@
       } else if (buttonType === 'reset') {
         this.removeAllFilters();
         this.eraseAllFilters();
+        $("input[name='show-highlights'").attr('checked', true);
         $('#all-annotations').addClass(this.options["class"].activeButton);
         return;
       }
-      return $(event.target).addClass(this.options["class"].activeButton);
+      return activeButton.addClass(this.options["class"].activeButton);
     };
 
     return Filters;

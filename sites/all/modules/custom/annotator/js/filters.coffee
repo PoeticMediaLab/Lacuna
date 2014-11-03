@@ -32,8 +32,8 @@ class Annotator.Plugin.Filters extends Annotator.Plugin
       userButtons: 'annotation-filters-user-buttons'
     class:
       hide: 'annotation-hide'
-      button: 'annotation-sidebar-button'
-      activeButton: 'annotation-sidebar-button-active'
+      button: 'annotation-filters-button'
+      activeButton: 'annotation-filters-button-active'
       input: 'annotation-filter-input'
       activeFilter: 'annotation-filter-active'
       closeIcon: 'fa fa-times'
@@ -50,7 +50,8 @@ class Annotator.Plugin.Filters extends Annotator.Plugin
     filterValues: {}
     activeFilters: {}
     filtered: {'highlight': []}
-    currentIndex: 1
+    currentIndex: 0
+    currentTotal: 0
 
   #########
   #
@@ -77,6 +78,8 @@ class Annotator.Plugin.Filters extends Annotator.Plugin
       @data.annotations[annotation.id] = annotation
       @storeFilterValues annotation
       @addAnnotationID annotation
+    if Object.keys(annotations).length
+      @data.currentIndex = 1
     @drawAllFilters()
 
   addAnnotationID: (annotation) ->
@@ -188,6 +191,7 @@ class Annotator.Plugin.Filters extends Annotator.Plugin
       @removeFilter filter
 
   removeFilter: (filterName, filterValue = null) ->
+    if !@data.filtered[filterName]? then return
     for id in @data.filtered[filterName]
       @showAnnotation @data.annotations[id]
     @data.filtered[filterName] = []
@@ -251,6 +255,7 @@ class Annotator.Plugin.Filters extends Annotator.Plugin
       {name: id})
       .on("click", @checkboxToggle)
     ).append("<span id='#{id}' class='#{classes}'>#{text}</span>")
+      .on("click", @checkboxToggle)
 
   drawPager: (selector) ->
     first = 'fa fa-angle-double-left'
@@ -266,7 +271,13 @@ class Annotator.Plugin.Filters extends Annotator.Plugin
     return
 
   redrawPager: () ->
-    $('#pager-count').text(@data.currentIndex + ' of ' + Object.keys(@data.annotations).length)
+    # TODO: update by current filters
+    total = Object.keys(@data.annotations).length
+    if @data.activeFilters.length
+      total = 0
+    for filter of @data.activeFilters
+      total += @data.filters[filter].length
+    $('#pager-count').text(@data.currentIndex + ' of ' + total)
 
   eraseFilter: (filterName) ->
     $('.' + filterName + '.' + @options.class.activeFilter).remove()
@@ -292,20 +303,21 @@ class Annotator.Plugin.Filters extends Annotator.Plugin
 
   pagerClick: (event) =>
     # update the annotations count and which one is active
-    last = Object.keys(@data.annotations).length
+    # last = Object.keys(@data.annotations).length
     switch event.target.id
       when 'first'
         @data.currentIndex = 1
       when 'prev'
         @data.currentIndex -= 1
-        if @data.currentIndex < 1 then @data.currentIndex = last
+        if @data.currentIndex < 1 then @data.currentIndex = @data.currentTotal
       when 'next'
         @data.currentIndex += 1
-        if @data.currentIndex > last then @data.currentIndex = 1
+        if @data.currentIndex > @data.currentTotal then @data.currentIndex = 1
       when 'last'
-        @data.currentIndex = last
+        @data.currentIndex = @data.currentTotal
     @redrawPager()
     # Scroll to the annotation
+    # TODO: fix so that it's based on current filters, not total
     id = Object.keys(this.data.annotations)[@data.currentIndex - 1]
     highlight = $(@data.annotations[id].highlights[0])
     $("html, body").animate({
@@ -348,8 +360,10 @@ class Annotator.Plugin.Filters extends Annotator.Plugin
     # Note the fat arrow: this is called in click events, so needed
     # otherwise, we can't access @
     buttonType = $(event.target).attr('id')
-    activeButton = $('.' + @options.class.activeButton)
-    activeButton.removeClass(@options.class.activeButton)
+    activeButton = $(event.target)
+    prevActiveButton = $('.' + @options.class.activeButton)
+    prevActiveButton.removeClass(@options.class.activeButton)
+    @redrawPager()
     if buttonType == 'own-annotations'
       @removeFilter 'user'
       @removeFilter 'all'
@@ -366,6 +380,7 @@ class Annotator.Plugin.Filters extends Annotator.Plugin
     else if buttonType == 'reset'
       @removeAllFilters()
       @eraseAllFilters()
+      $("input[name='show-highlights'").attr('checked', true)
       $('#all-annotations').addClass(@options.class.activeButton)
       return  # don't highlight the reset button - doesn't make sense
-    $(event.target).addClass(@options.class.activeButton) # active button
+    activeButton.addClass(@options.class.activeButton) # active button
