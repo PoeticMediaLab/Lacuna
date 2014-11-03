@@ -50,6 +50,7 @@
 		var colorsCounter = 0;
 		for (userObject in userList) {
 			var field_display_name = userList[userObject].field_display_name;
+			var alternate_name = userList[userObject].name.trim();
 			if(field_display_name.length != 0){
 				// TODO: will crash if und[0].safe_value doesn't
 				// exist, and I'm not certain it's guaranteed to
@@ -60,11 +61,19 @@
 				// names. If it doesn't, don't. (this keeps admin
 				// accounts, etc. out of the user list).
 				for(var i = 0; i < nodes.length; i++){
-					if (nodes[i].data.author === safeName){
-						userNamesColors.push([safeName, color(colorsCounter % 20)]);
+
+					if (nodes[i].data.author === safeName || nodes[i].data.author === alternate_name){
+						var name;
+						if (nodes[i].data.author === safeName) {
+							name = safeName;
+						}
+						else {
+							name = alternate_name;
+						}
+						userNamesColors.push([name, color(colorsCounter % 20)]);
 						// for debugging purposes.
 						colorsCounter++;
-						selectedUsers.push(safeName);
+						selectedUsers.push(name);
 						break;
 					}
 				}
@@ -584,7 +593,7 @@
 				return true;
 			}
 			else {
-				if (date >= timeFrame[0] && date < timeFrame[1]) {
+				if (date >= timeFrame[0] && date <= timeFrame[1]) {
 					return true;
 				} else {
 					return false
@@ -621,7 +630,7 @@
 			filteredLinks = [];
 			filteredNodes = nodes.filter(inTimeFrame).filter(inSelectedUsers);
 			if (linkedNodesOnly) {
-				filteredNodes = filteredNodes.filter(isLinked);
+				filteredNodes = filteredNodes.filter(isLinked).filter(inSelectedUsers);
 			}
 			filteredLinks = links.filter(inTimeFrameLink).filter(inSelectedUsersLink);
 			start(filteredNodes, filteredLinks);
