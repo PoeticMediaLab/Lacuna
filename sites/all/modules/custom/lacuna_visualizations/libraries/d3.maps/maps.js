@@ -77,6 +77,7 @@
 	var width = initialWidth - margin.left - margin.right;
 	var height = initialHeight - margin.top - margin.bottom;
 
+	console.log(nodes);
 
 	// assign date for links as the date of creation for the source node.
 	if(links)
@@ -549,7 +550,7 @@
 			if (d.data.itemType == 'biblio'){
 				return true;
 			}
-			
+
 			// first, get a list of the selected links.
 			var selectedLinks = links.filter(inSelectedUsersLink).filter(inTimeFrameLink);
 			// return only those nodes that are either the source
