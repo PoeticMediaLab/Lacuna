@@ -132,9 +132,9 @@ input.annotation-filter-input {
 }
 
 #pager-wrapper {
-  margin-left: auto;
+  display: none;
+  margin-left: 17%;
   margin-right: auto;
-  width: 100px;
 }
 
 #pager-count {

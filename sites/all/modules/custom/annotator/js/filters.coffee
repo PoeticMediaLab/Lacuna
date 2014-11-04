@@ -287,6 +287,7 @@ class Annotator.Plugin.Filters extends Annotator.Plugin
     return
 
   redrawPager: () ->
+    return
     total = Object.keys(@data.annotations).length
     console.log(@data.filtered)
     if Object.keys(@data.activeFilters).length
