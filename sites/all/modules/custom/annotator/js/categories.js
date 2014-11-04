@@ -126,6 +126,14 @@
         categoryHTML += '</span>';
       }
       $(this.field).html(categoryHTML);
+      //Aggregator variable.
+      var totalWidth = 0;
+      //Set width of arbitrarily large to get true width of categories instead of multi-line stretches.
+      $('.annotator-widget').width(1000);
+      //Sum up widths of each category.
+      $('.annotator-category').each(function(index){totalWidth += parseInt($(this).outerWidth(),10);});
+      //Set widget width with a 5 pixel buffer width per category.
+      $('.annotator-widget').width(totalWidth+(5*_ref.length));
       return this.setSelectedCategory(annotation.category);
     };
 
