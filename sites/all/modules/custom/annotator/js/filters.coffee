@@ -4,6 +4,10 @@
 # Creates a sidebar of annotations with filters
 # Hides annotations not in current filter(s) from display in document
 #
+# TODO: Refactor so filters interface reflects current state
+# rather than being updated piece-meal based on user clicks,
+# which is not at all robust
+#
 # Mike Widner <mikewidner@stanford.edu>
 #
 #######
@@ -20,7 +24,7 @@ class Annotator.Plugin.Filters extends Annotator.Plugin
     '.annotator-sidebar-filter click': 'changeFilterState'
     'annotationCreated': 'addAnnotation'
     'annotationUpdated': 'addAnnotation'
-    'annotationViewerShown': 'updatePager'
+    'annotationViewerShown': 'updateCurrentIndex'
 
   options:
     filters: {}
@@ -49,7 +53,7 @@ class Annotator.Plugin.Filters extends Annotator.Plugin
     annotations: {}
     filterValues: {}
     activeFilters: {}
-    filtered: {'highlight': []}
+    filtered: {}
     currentIndex: 0
     currentTotal: 0
 
@@ -145,6 +149,11 @@ class Annotator.Plugin.Filters extends Annotator.Plugin
       @hideFilteredAnnotations()
       return # no need to do anything else
 
+    # Don't stack the same filter
+    if @data.activeFilters[filterName]?
+      @data.activeFilters[filterName] = []
+      @data.filtered[filterName] = []
+
     for id of @data.annotations
       value = @getValue(@data.annotations[id], filterName)
       if !value then value = ''
@@ -152,8 +161,7 @@ class Annotator.Plugin.Filters extends Annotator.Plugin
         if (not match and matchValue not in value) or
           (match and matchValue in value)
             @data.filtered[filterName].push(id)
-      else if (not match and
-        value != matchValue) or
+      else if (not match and value != matchValue) or
         (match and (value == matchValue))
           @data.filtered[filterName].push(id)
     @data.activeFilters[filterName].push(matchValue)
@@ -173,13 +181,10 @@ class Annotator.Plugin.Filters extends Annotator.Plugin
           Viewer.hide()
 
   hideFilteredAnnotations: ->
-    for annotationID of @data.annotations
-      for filter of @data.filtered
-        for id in @data.filtered[filter]
-          if annotationID == id
-            $('.' + @options.selector.annotation + id).addClass(@options.class.hide)
-            @publish('hide', @data.annotations[annotationID])
-            break
+    for filter of @data.filtered
+      for id in @data.filtered[filter]
+        $('.' + @options.selector.annotation + id).addClass(@options.class.hide)
+        @publish('hide', @data.annotations[id])
 
   showAnnotation: (annotation) ->
     $('.' + @options.selector.annotation + annotation.id)
@@ -190,11 +195,23 @@ class Annotator.Plugin.Filters extends Annotator.Plugin
     for filter of @data.filtered
       @removeFilter filter
 
-  removeFilter: (filterName, filterValue = null) ->
-    if !@data.filtered[filterName]? then return
+  removeFilter: (filterName) ->
+    filteredIDs = {}
+    # Compute which annotations are in multiple filters
+    for filter of @data.filtered
+      for id in @data.filtered[filter]
+        if !filteredIDs[id]?
+          filteredIDs[id] = 0
+        ++filteredIDs[id]
     for id in @data.filtered[filterName]
-      @showAnnotation @data.annotations[id]
+      --filteredIDs[id]
+      if filteredIDs[id] == 0
+        @showAnnotation @data.annotations[id]
     @data.filtered[filterName] = []
+    delete @data.activeFilters[filterName]
+    if filterName == 'category'
+      @changeShowHighlightsState('checked', true)
+      @changeShowHighlightsState('disabled', false)
 
   #########
   #
@@ -255,7 +272,6 @@ class Annotator.Plugin.Filters extends Annotator.Plugin
       {name: id})
       .on("click", @checkboxToggle)
     ).append("<span id='#{id}' class='#{classes}'>#{text}</span>")
-      .on("click", @checkboxToggle)
 
   drawPager: (selector) ->
     first = 'fa fa-angle-double-left'
@@ -271,15 +287,22 @@ class Annotator.Plugin.Filters extends Annotator.Plugin
     return
 
   redrawPager: () ->
-    # TODO: update by current filters
     total = Object.keys(@data.annotations).length
-    if @data.activeFilters.length
+    console.log(@data.filtered)
+    if Object.keys(@data.activeFilters).length
       total = 0
       @data.currentIndex = 0
-    for filter of @data.activeFilters
-      total += @data.filters[filter].length
+      uniqueIDs = []
+      for filter of @data.filtered
+        console.log(filter, 'filter')
+        for id in @data.filtered[filter]
+          console.log(id, 'id')
+          if id not in uniqueIDs
+            uniqueIDs.push(id)
+            console.log(uniqueIDs, 'uniqueIDs')
+      total = uniqueIDs.length
     if total > 0
-      @data.currentIndex = 1
+        @data.currentIndex = 1
     $('#pager-count').text(@data.currentIndex + ' of ' + total)
 
   eraseFilter: (filterName) ->
@@ -290,6 +313,9 @@ class Annotator.Plugin.Filters extends Annotator.Plugin
   eraseAllFilters: () ->
     $('.' + @options.class.hide).removeClass(@options.class.hide)
     $('.' + @options.class.activeFilter).remove()
+
+  changeShowHighlightsState: (attr, state) ->
+    $("input[name='show-highlights'").attr(attr, state)
 
   #########
   #
@@ -334,7 +360,7 @@ class Annotator.Plugin.Filters extends Annotator.Plugin
   # because Annotator uses XPath to locate items
   # This is way too hard to change to order by location in document
   # especially for such a small UX issue
-  updatePager: (Viewer) ->
+  updateCurrentIndex: (Viewer) ->
     # When the Annotator Viewer is shown, update the pager count
     # There might be multiple annotations shown, so just choose the first one
     id = Viewer.annotations[0].id
@@ -345,15 +371,20 @@ class Annotator.Plugin.Filters extends Annotator.Plugin
   checkboxToggle: (event) =>
     if event.target.name == 'show-highlights'
       if event.target.checked
-        # BUG: clobbers *any* category filters, not just highlight
+        # BUG: clobbers *any* filters, not just highlight
         @removeFilter 'category', 'Highlight'
       else
         @filterAnnotations 'category', 'Highlight', true
+      @redrawPager()
 
   filterAutocomplete: (event, ui) ->
     # For autocomplete values
     matchValue = ui.item.value
     filterName = event.target.name
+    if filterName == 'category'
+      # Highlights are a type of category
+      @changeShowHighlightsState('checked', false)
+      @changeShowHighlightsState('disabled', true)
     @filterAnnotations filterName, matchValue
     @drawActiveFilter filterName, matchValue
     $(event.target).val('')
@@ -365,6 +396,7 @@ class Annotator.Plugin.Filters extends Annotator.Plugin
     buttonType = $(event.target).attr('id')
     activeButton = $(event.target)
     prevActiveButton = $('.' + @options.class.activeButton)
+    if prevActiveButton.attr('id') == activeButton.attr('id') then return
     prevActiveButton.removeClass(@options.class.activeButton)
     @redrawPager()
     if buttonType == 'own-annotations'
@@ -383,7 +415,8 @@ class Annotator.Plugin.Filters extends Annotator.Plugin
     else if buttonType == 'reset'
       @removeAllFilters()
       @eraseAllFilters()
-      $("input[name='show-highlights'").attr('checked', true)
+      @changeShowHighlightsState('checked', true)
+      @changeShowHighlightsState('disabled', false)
       $('#all-annotations').addClass(@options.class.activeButton)
       return  # don't highlight the reset button - doesn't make sense
     activeButton.addClass(@options.class.activeButton) # active button

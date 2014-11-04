@@ -13,7 +13,7 @@
       '.annotator-sidebar-filter click': 'changeFilterState',
       'annotationCreated': 'addAnnotation',
       'annotationUpdated': 'addAnnotation',
-      'annotationViewerShown': 'updatePager'
+      'annotationViewerShown': 'updateCurrentIndex'
     };
 
     Filters.prototype.options = {
@@ -48,9 +48,7 @@
       annotations: {},
       filterValues: {},
       activeFilters: {},
-      filtered: {
-        'highlight': []
-      },
+      filtered: {},
       currentIndex: 0,
       currentTotal: 0
     };
@@ -184,6 +182,10 @@
         this.hideFilteredAnnotations();
         return;
       }
+      if (this.data.activeFilters[filterName] != null) {
+        this.data.activeFilters[filterName] = [];
+        this.data.filtered[filterName] = [];
+      }
       for (id in this.data.annotations) {
         value = this.getValue(this.data.annotations[id], filterName);
         if (!value) value = '';
@@ -222,29 +224,17 @@
     };
 
     Filters.prototype.hideFilteredAnnotations = function() {
-      var annotationID, filter, id, _results;
+      var filter, id, _results;
       _results = [];
-      for (annotationID in this.data.annotations) {
+      for (filter in this.data.filtered) {
         _results.push((function() {
-          var _results2;
+          var _i, _len, _ref, _results2;
+          _ref = this.data.filtered[filter];
           _results2 = [];
-          for (filter in this.data.filtered) {
-            _results2.push((function() {
-              var _i, _len, _ref, _results3;
-              _ref = this.data.filtered[filter];
-              _results3 = [];
-              for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-                id = _ref[_i];
-                if (annotationID === id) {
-                  $('.' + this.options.selector.annotation + id).addClass(this.options["class"].hide);
-                  this.publish('hide', this.data.annotations[annotationID]);
-                  break;
-                } else {
-                  _results3.push(void 0);
-                }
-              }
-              return _results3;
-            }).call(this));
+          for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+            id = _ref[_i];
+            $('.' + this.options.selector.annotation + id).addClass(this.options["class"].hide);
+            _results2.push(this.publish('hide', this.data.annotations[id]));
           }
           return _results2;
         }).call(this));
@@ -265,16 +255,29 @@
       return _results;
     };
 
-    Filters.prototype.removeFilter = function(filterName, filterValue) {
-      var id, _i, _len, _ref;
-      if (filterValue == null) filterValue = null;
-      if (!(this.data.filtered[filterName] != null)) return;
-      _ref = this.data.filtered[filterName];
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        id = _ref[_i];
-        this.showAnnotation(this.data.annotations[id]);
+    Filters.prototype.removeFilter = function(filterName) {
+      var filter, filteredIDs, id, _i, _j, _len, _len2, _ref, _ref2;
+      filteredIDs = {};
+      for (filter in this.data.filtered) {
+        _ref = this.data.filtered[filter];
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          id = _ref[_i];
+          if (!(filteredIDs[id] != null)) filteredIDs[id] = 0;
+          ++filteredIDs[id];
+        }
       }
-      return this.data.filtered[filterName] = [];
+      _ref2 = this.data.filtered[filterName];
+      for (_j = 0, _len2 = _ref2.length; _j < _len2; _j++) {
+        id = _ref2[_j];
+        --filteredIDs[id];
+        if (filteredIDs[id] === 0) this.showAnnotation(this.data.annotations[id]);
+      }
+      this.data.filtered[filterName] = [];
+      delete this.data.activeFilters[filterName];
+      if (filterName === 'category') {
+        this.changeShowHighlightsState('checked', true);
+        return this.changeShowHighlightsState('disabled', false);
+      }
     };
 
     Filters.prototype.drawButton = function(id, text, type, selector) {
@@ -334,7 +337,7 @@
       classes = [this.options["class"].checkbox, this.options["class"].checkboxType[type]].join(' ');
       return selector.append($("<input type='checkbox' name='" + id + "' checked>", {
         name: id
-      }).on("click", this.checkboxToggle)).append("<span id='" + id + "' class='" + classes + "'>" + text + "</span>").on("click", this.checkboxToggle);
+      }).on("click", this.checkboxToggle)).append("<span id='" + id + "' class='" + classes + "'>" + text + "</span>");
     };
 
     Filters.prototype.drawPager = function(selector) {
@@ -352,13 +355,28 @@
     };
 
     Filters.prototype.redrawPager = function() {
-      var filter, total;
-      return;
+      var filter, id, total, uniqueIDs, _i, _len, _ref;
       total = Object.keys(this.data.annotations).length;
-      if (this.data.activeFilters.length) total = 0;
-      for (filter in this.data.activeFilters) {
-        total += this.data.filters[filter].length;
+      console.log(this.data.filtered);
+      if (Object.keys(this.data.activeFilters).length) {
+        total = 0;
+        this.data.currentIndex = 0;
+        uniqueIDs = [];
+        for (filter in this.data.filtered) {
+          console.log(filter, 'filter');
+          _ref = this.data.filtered[filter];
+          for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+            id = _ref[_i];
+            console.log(id, 'id');
+            if (__indexOf.call(uniqueIDs, id) < 0) {
+              uniqueIDs.push(id);
+              console.log(uniqueIDs, 'uniqueIDs');
+            }
+          }
+        }
+        total = uniqueIDs.length;
       }
+      if (total > 0) this.data.currentIndex = 1;
       return $('#pager-count').text(this.data.currentIndex + ' of ' + total);
     };
 
@@ -372,6 +390,10 @@
     Filters.prototype.eraseAllFilters = function() {
       $('.' + this.options["class"].hide).removeClass(this.options["class"].hide);
       return $('.' + this.options["class"].activeFilter).remove();
+    };
+
+    Filters.prototype.changeShowHighlightsState = function(attr, state) {
+      return $("input[name='show-highlights'").attr(attr, state);
     };
 
     Filters.prototype.removeFilterClick = function(event) {
@@ -421,7 +443,7 @@
       }, 150);
     };
 
-    Filters.prototype.updatePager = function(Viewer) {
+    Filters.prototype.updateCurrentIndex = function(Viewer) {
       var id;
       id = Viewer.annotations[0].id;
       this.data.currentIndex = Object.keys(this.data.annotations).indexOf(id.toString()) + 1;
@@ -431,10 +453,11 @@
     Filters.prototype.checkboxToggle = function(event) {
       if (event.target.name === 'show-highlights') {
         if (event.target.checked) {
-          return this.removeFilter('category', 'Highlight');
+          this.removeFilter('category', 'Highlight');
         } else {
-          return this.filterAnnotations('category', 'Highlight', true);
+          this.filterAnnotations('category', 'Highlight', true);
         }
+        return this.redrawPager();
       }
     };
 
@@ -442,6 +465,10 @@
       var filterName, matchValue;
       matchValue = ui.item.value;
       filterName = event.target.name;
+      if (filterName === 'category') {
+        this.changeShowHighlightsState('checked', false);
+        this.changeShowHighlightsState('disabled', true);
+      }
       this.filterAnnotations(filterName, matchValue);
       this.drawActiveFilter(filterName, matchValue);
       $(event.target).val('');
@@ -453,6 +480,7 @@
       buttonType = $(event.target).attr('id');
       activeButton = $(event.target);
       prevActiveButton = $('.' + this.options["class"].activeButton);
+      if (prevActiveButton.attr('id') === activeButton.attr('id')) return;
       prevActiveButton.removeClass(this.options["class"].activeButton);
       this.redrawPager();
       if (buttonType === 'own-annotations') {
@@ -471,7 +499,8 @@
       } else if (buttonType === 'reset') {
         this.removeAllFilters();
         this.eraseAllFilters();
-        $("input[name='show-highlights'").attr('checked', true);
+        this.changeShowHighlightsState('checked', true);
+        this.changeShowHighlightsState('disabled', false);
         $('#all-annotations').addClass(this.options["class"].activeButton);
         return;
       }

@@ -1,6 +1,5 @@
 <?php
 
-/*Zhila's broken code at line 78. */
 /**
  * Annotator Store API
  * @see https://github.com/okfn/annotator/wiki/Storage

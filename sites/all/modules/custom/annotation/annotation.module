@@ -207,11 +207,11 @@ function annotation_node_grants($account, $op) {
 
   // If "access any private content" is allowed to the account,
   // grant view, update, or delete as necessary.
-  if ($op == 'view' && user_access('access any private content', $account)) {
+  if ($op == 'view' && user_access('access any private annotation', $account)) {
     $grants['annotation_view'] = array(ANNOTATION_GRANT_ACCESS_ALL);
   }
 
-  if (($op == 'update' || $op == 'delete') && user_access('edit any private content', $account)) {
+  if (($op == 'update' || $op == 'delete') && user_access('edit any private annotation', $account)) {
     $grants['annotation_edit'] = array(ANNOTATION_GRANT_ACCESS_ALL);
   }
 

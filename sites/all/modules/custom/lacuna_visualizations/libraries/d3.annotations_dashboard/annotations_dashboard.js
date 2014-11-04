@@ -706,7 +706,7 @@ function main(data) {
 		for (var i = 0; i < pie_types.length; i++) {
 		  pie_choices
 		  	.append("text")
-		  	.attr("transform", "translate(" + ((size.summary_pie.radius * (i + 1)) + (85 * i)) + ",125)")
+		  	.attr("transform", "translate(" + ((size.summary_pie.radius * (i + 1)) + ((size.summary_pie.radius + (size.summary_pie.padding * 2)) * i)) + ",125)")
 		  	.attr('font-size', '12pt')
 		  	.text(pie_labels[pie_types[i]]);
 		}
@@ -724,7 +724,6 @@ function main(data) {
 				}
 				pie_data_aggregate[pie_type].push({key: key, value: count[key]});
 			}
-			// TODO: add in zero-fill of data
 			// Must sort to keep colors consistent
 			// TODO: refactor into a single sort function called by all pies
 			pie_data_aggregate[pie_type].sort(function (a,b) {
