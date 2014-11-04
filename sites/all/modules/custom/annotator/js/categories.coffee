@@ -118,14 +118,14 @@ class Annotator.Plugin.Categories extends Annotator.Plugin
       categoryHTML += category
       categoryHTML += '</span>'
     $(@field).html(categoryHTML)
-    #Aggregator variable.
+    # Aggregator variable.
     totalWidth = 0
-    #Set width of arbitrarily large to get true width of categories instead of multi-line stretches.
+    # Set width of arbitrarily large to get true width of categories instead of multi-line stretches.
     $(".annotator-widget").width 1000
-    #Sum up widths of each category.
+    # Sum up widths of each category.
     $(".annotator-category").each (index) ->
       totalWidth += parseInt($(this).outerWidth(), 10)
       return
-    #Set widget width with a 5 pixel buffer width per category.
-    $(".annotator-widget").width totalWidth + (5 * _ref.length) 
+    # Set widget width with a 5 pixel buffer width per category.
+    $(".annotator-widget").width totalWidth
     @setSelectedCategory(annotation.category)

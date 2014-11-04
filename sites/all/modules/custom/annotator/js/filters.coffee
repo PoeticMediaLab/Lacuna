@@ -275,8 +275,11 @@ class Annotator.Plugin.Filters extends Annotator.Plugin
     total = Object.keys(@data.annotations).length
     if @data.activeFilters.length
       total = 0
+      @data.currentIndex = 0
     for filter of @data.activeFilters
       total += @data.filters[filter].length
+    if total > 0
+      @data.currentIndex = 1
     $('#pager-count').text(@data.currentIndex + ' of ' + total)
 
   eraseFilter: (filterName) ->

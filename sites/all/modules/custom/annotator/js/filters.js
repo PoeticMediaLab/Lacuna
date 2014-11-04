@@ -51,7 +51,8 @@
       filtered: {
         'highlight': []
       },
-      currentIndex: 0
+      currentIndex: 0,
+      currentTotal: 0
     };
 
     function Filters(element, options) {
@@ -351,7 +352,14 @@
     };
 
     Filters.prototype.redrawPager = function() {
-      return $('#pager-count').text(this.data.currentIndex + ' of ' + Object.keys(this.data.annotations).length);
+      var filter, total;
+      return;
+      total = Object.keys(this.data.annotations).length;
+      if (this.data.activeFilters.length) total = 0;
+      for (filter in this.data.activeFilters) {
+        total += this.data.filters[filter].length;
+      }
+      return $('#pager-count').text(this.data.currentIndex + ' of ' + total);
     };
 
     Filters.prototype.eraseFilter = function(filterName) {
@@ -385,22 +393,25 @@
     };
 
     Filters.prototype.pagerClick = function(event) {
-      var highlight, id, last;
-      last = Object.keys(this.data.annotations).length;
+      var highlight, id;
       switch (event.target.id) {
         case 'first':
           this.data.currentIndex = 1;
           break;
         case 'prev':
           this.data.currentIndex -= 1;
-          if (this.data.currentIndex < 1) this.data.currentIndex = last;
+          if (this.data.currentIndex < 1) {
+            this.data.currentIndex = this.data.currentTotal;
+          }
           break;
         case 'next':
           this.data.currentIndex += 1;
-          if (this.data.currentIndex > last) this.data.currentIndex = 1;
+          if (this.data.currentIndex > this.data.currentTotal) {
+            this.data.currentIndex = 1;
+          }
           break;
         case 'last':
-          this.data.currentIndex = last;
+          this.data.currentIndex = this.data.currentTotal;
       }
       this.redrawPager();
       id = Object.keys(this.data.annotations)[this.data.currentIndex - 1];
@@ -443,6 +454,7 @@
       activeButton = $(event.target);
       prevActiveButton = $('.' + this.options["class"].activeButton);
       prevActiveButton.removeClass(this.options["class"].activeButton);
+      this.redrawPager();
       if (buttonType === 'own-annotations') {
         this.removeFilter('user');
         this.removeFilter('all');
