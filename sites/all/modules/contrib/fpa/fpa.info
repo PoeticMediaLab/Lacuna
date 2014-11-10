@@ -2,9 +2,9 @@ name = "Fast Permissions Administration"
 description = "Fast filtering on permissions administration form."
 core = 7.x
 package = Administration
-; Information added by Drupal.org packaging script on 2014-04-24
-version = "7.x-2.5"
+; Information added by Drupal.org packaging script on 2014-08-22
+version = "7.x-2.6"
 core = "7.x"
 project = "fpa"
-datestamp = "1398371034"
+datestamp = "1408744435"
 

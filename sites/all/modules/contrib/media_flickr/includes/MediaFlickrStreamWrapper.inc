@@ -10,7 +10,7 @@
  *  $flickr = new MediaFlickrStreamWrapper('flickr://u/[user-code]/p/[photo-code]');
  */
 class MediaFlickrStreamWrapper extends MediaReadOnlyStreamWrapper {
-  protected $base_url = 'http://www.flickr.com/';
+  protected $base_url = 'https://www.flickr.com/';
   protected $parameters = array('u' => NULL, 'p' => NULL, 's' => NULL, 'search' => NULL);
 
   function interpolateUrl() {

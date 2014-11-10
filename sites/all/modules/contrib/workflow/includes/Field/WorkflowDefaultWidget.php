@@ -121,7 +121,7 @@ class WorkflowDefaultWidget extends WorkflowD7Base { // D8: extends WidgetBase {
 
       $options = workflow_get_workflow_state_names($wid, $grouped, $all = FALSE);
       $show_widget = TRUE;
-      $default_value = '0';
+      $default_value = isset($items[0]['value']) ? $items[0]['value'] : '0';
     }
     else {
       $force = FALSE;

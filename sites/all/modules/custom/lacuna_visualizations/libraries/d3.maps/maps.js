@@ -50,30 +50,29 @@
 		var colorsCounter = 0;
 		for (userObject in userList) {
 			var field_display_name = userList[userObject].field_display_name;
-			var alternate_name = userList[userObject].name.trim();
+			var username = userList[userObject].name.trim();
 			if(field_display_name.length != 0){
 				// TODO: will crash if und[0].safe_value doesn't
 				// exist, and I'm not certain it's guaranteed to
 				// exist.
-				var safeName = field_display_name.und[0].safe_value.trim();
+				// MLW: It will exist unless we start translating languages
+				// "und" is Drupal's LANGUAGE_NONE constant
+ 				var safeName = field_display_name.und[0].safe_value.trim();
 				// look for a node with an author matching safeName.
 				// If it exists, add safeName to the list of user
 				// names. If it doesn't, don't. (this keeps admin
 				// accounts, etc. out of the user list).
 				for(var i = 0; i < nodes.length; i++){
-
-					if (nodes[i].data.author === safeName || nodes[i].data.author === alternate_name){
-						var name;
-						if (nodes[i].data.author === safeName) {
-							name = safeName;
-						}
-						else {
-							name = alternate_name;
-						}
-						userNamesColors.push([name, color(colorsCounter % 20)]);
+					if (nodes[i].data.author == username) {
+						// Change "username" to "Display Name" as needed
+						// Allows students to control how their work appears to others
+						nodes[i].data.author = safeName;
+					}
+					if (nodes[i].data.author === safeName) {
+						userNamesColors.push([safeName, color(colorsCounter % 20)]);
 						// for debugging purposes.
 						colorsCounter++;
-						selectedUsers.push(name);
+						selectedUsers.push(safeName);
 						break;
 					}
 				}
@@ -85,7 +84,6 @@
 	// convention.
 	var width = initialWidth - margin.left - margin.right;
 	var height = initialHeight - margin.top - margin.bottom;
-
 
 	// assign date for links as the date of creation for the source node.
 	if(links)
@@ -558,7 +556,7 @@
 			if (d.data.itemType == 'biblio'){
 				return true;
 			}
-			
+
 			// first, get a list of the selected links.
 			var selectedLinks = links.filter(inSelectedUsersLink).filter(inTimeFrameLink);
 			// return only those nodes that are either the source

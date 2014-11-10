@@ -88,7 +88,8 @@ function _workflow_rules_node_check_transition($node, array $old_sids, array $ne
  *   An array of State IDs to meet the condition.
  */
 function _workflow_rules_node_check_state($node, array $sids) {
-  $sid = workflow_node_current_state($node, 'node', '');
+  $field_name = ''; // An explicit var is needed.
+  $sid = workflow_node_current_state($node, 'node', $field_name);
   return _workflow_rules_workflow_check_given_state($sid, $sids);
 }
 

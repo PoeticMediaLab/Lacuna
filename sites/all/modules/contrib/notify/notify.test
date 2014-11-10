@@ -1,0 +1,656 @@
+<?php
+
+/**
+* @file
+* Automated tests for notify.
+*
+*/
+
+class SharedTestFunctions extends DrupalWebTestCase {
+
+  protected function drupalCreateAdminUser(array $permissions = array()) {
+    $roles = user_roles();
+    $index = array_search('administrator', $roles);
+    $user = $this->drupalCreateUser($permissions);
+    $user->roles[$index] = 'administrator';
+    // Subscribe this user to notifications,
+    db_insert('notify')
+      ->fields(array(
+      'uid' => $user->uid,
+      'status' => 1,
+      'node' => 1,
+      'teasers' => 0,
+      'comment' => 1,
+      'attempts' => 0,
+    ))
+      ->execute();
+    return user_save($user);
+  }
+
+  protected function drupalCreateNotifyUsers($numb = 1, array $permissions = array()) {
+    for ($ii = 1; $ii <= $numb; $ii++) {
+      $user = $this->drupalCreateUser(array(
+        'access notify',
+        ));
+      // Subscribe this user to notifications,
+      db_insert('notify')
+        ->fields(array(
+        'uid' => $user->uid,
+        'status' => 1,
+        'node' => 1,
+        'teasers' => 0,
+        'comment' => 1,
+        'attempts' => 0,
+      ))
+        ->execute();
+    }
+    return user_save($user);
+  }
+
+  protected function createContent($numb = 1, $author = NULL, $published = TRUE, $date = NULL) {
+    for ($ii = 1; $ii <= $numb; $ii++) {
+      // Post an article.
+      $edit = array();
+      $edit['title'] = 'Art: ' . $this->randomName(8);
+      $edit['body[und][0][value]'] = $this->randomName(7) . ' ' . $this->randomName(9) . '.';
+      if ($date) {
+        $edit["date"] = $date;
+      }
+      if (isset($author)) {
+        $edit['name'] = $author;
+      }
+      if (!$published) {
+        $edit['status'] = FALSE;
+      }
+      $this->drupalPost('node/add/article', $edit, t('Save'));
+      $this->assertText(t('Article @title has been created.', array('@title' => $edit['title'])));
+    }  
+  }
+
+}
+
+class TestNotify extends SharedTestFunctions {
+  protected $user;
+
+  public static function getInfo() {
+    return array(
+      'name' => t('Test Notify single'),
+      'description' => t('Various notify test cases for a single run.'),
+      'group' => t('Notify'),
+    );
+  }
+
+  public function setUp() {
+    debug('DEBUG INIT: Test Notify single');
+
+    // Use testing mail system.
+    variable_set('mail_system', array('default-system' => 'TestingMailSystem'));
+
+    // Enable any modules required for the test. This should be an array of
+    // module names.
+    parent::setUp(array('notify'));
+    // Create and log in our admin user. Give permissions.
+    $admin = $this->drupalCreateAdminUser(array(
+      'access notify',
+      'administer notify',
+      'administer notify queue',
+      'administer nodes', 
+      'bypass node access', 
+      'create article content',
+      ));
+    $user = $this->drupalCreateNotifyUsers(2);
+    $this->user = $user;
+    // Login admin user
+    $this->drupalLogin($admin);
+
+  }
+
+  // Test notification when cron is set up to never send anything
+  public function testCronNever() {
+    // Set up notify environment.
+    variable_set('notify_attempts', 5);
+    variable_set('notify_include_updates', 0);
+    variable_set('notify_reg_default', 1);
+    variable_set('notify_period', -1);
+    variable_set('notify_send_hour',  9);
+    variable_set('notify_batchsize', 100);
+    $now = REQUEST_TIME;
+    variable_set('notify_send_start', 0);  // We haven't started
+    $tt = $now - 86400; variable_set('notify_send_last',  $tt); // Last was yesterday.
+    $tt = $now + 86400; variable_set('notify_cron_next',  $tt); // Next cron scheduled tomorrow.
+
+    $this->createContent(3);
+    $this->cronRun();
+    $mails = $this->drupalGetMails();
+    $howmany = count($mails);
+    $this->assertEqual($howmany, 0, 'No emails are sent.');
+  }
+
+  // Tests creation of three nodes to old to send.
+  // send_last yesterday
+  // send_start and send_cron reset to zero
+  // short cron
+  public function testOldArticlesShortCron() {
+    // Set up notify environment.
+    variable_set('notify_attempts', 5);
+    variable_set('notify_include_updates', 0);
+    variable_set('notify_reg_default', 1);
+    variable_set('notify_period', 600);  // every ten minutes
+    variable_set('notify_send_hour',  8);
+    variable_set('notify_batchsize', 100);
+
+    $now = REQUEST_TIME;
+    variable_set('notify_send_start', 0); // reset
+    $tt = $now - 86400; variable_set('notify_send_last',  $tt);
+    variable_set('notify_cron_next',  0); // reset
+    
+    // Content is old
+    $this->createContent(3, NULL, TRUE, '2014-01-01 01:00:00 +0100');
+    $this->cronRun();
+    $mails = $this->drupalGetMails();
+    $howmany = count($mails);
+    $this->assertEqual($howmany, 0, 'No emails are sent.');
+  }
+
+  // Tests creation of three nodes to old to send.
+  // send_last yesterday
+  // send_start and send_cron reset to zero
+  // long cron
+  public function testCreateOldArticlesLongCron() {
+    // Set up notify environment.
+    variable_set('notify_attempts', 5);
+    variable_set('notify_include_updates', 0);
+    variable_set('notify_reg_default', 1);
+    variable_set('notify_period', 86400);  // every 1 day
+    variable_set('notify_send_hour',  8);
+    variable_set('notify_batchsize', 100);
+
+    $now = REQUEST_TIME;
+    variable_set('notify_send_start', 0); // reset
+    $tt = $now - 86400; variable_set('notify_send_last',  $tt);
+    variable_set('notify_cron_next',  0); // reset
+    
+    // Content is old
+    $this->createContent(3, NULL, TRUE, '2014-01-01 01:00:00 +0100');
+    $this->cronRun();
+    $mails = $this->drupalGetMails();
+    $howmany = count($mails);
+    $this->assertEqual($howmany, 0, 'No emails are sent.');
+  }
+
+  // Tests notification about three unpublished nodes (only notify admin).
+  // Send on first cron.
+  public function testCreateOnlyUnpublishedArticles() {
+    // Set up notify environment.
+    variable_set('notify_attempts', 5);
+    variable_set('notify_include_updates', 0);
+    variable_set('notify_reg_default', 1);
+    variable_set('notify_period', 0);
+    variable_set('notify_send_hour',  9);
+    variable_set('notify_batchsize', 100);
+    $now = REQUEST_TIME;
+    variable_set('notify_send_start', 0);  // We haven't started
+    $tt = $now - 86400; variable_set('notify_send_last',  $tt); // Last was yesterday.
+    $tt = $now + 86400; variable_set('notify_cron_next',  $tt); // Next cron scheduled tomorrow.
+
+    $this->createContent(1, '', FALSE);
+    $this->createContent(1, $this->user->name, FALSE);
+    $this->createContent(1, NULL, FALSE);
+    $this->cronRun();
+    $mails = $this->drupalGetMails();
+    $howmany = count($mails);
+    $this->assertEqual($howmany, 1, 'One email are sent.');
+  }
+
+  // Test notification of some typical article nodes.
+  public function testCreateThreeOrdinaryArticles() {
+    // Set up notify environment.
+    variable_set('notify_attempts', 5);
+    variable_set('notify_include_updates', 0);
+    variable_set('notify_reg_default', 1);
+    variable_set('notify_period', 0);
+    variable_set('notify_send_hour',  9);
+    variable_set('notify_batchsize', 100);
+    $now = REQUEST_TIME;
+    variable_set('notify_send_start', 0);  // We haven't started
+    $tt = $now - 86400; variable_set('notify_send_last',  $tt); // Last was yesterday.
+    $tt = $now + 86400; variable_set('notify_cron_next',  $tt); // Next cron scheduled tomorrow.
+
+    $this->createContent(1, '', FALSE);
+    $this->createContent(1, $this->user->name);
+    $this->createContent(1, NULL);
+    $this->cronRun();
+    $mails = $this->drupalGetMails();
+    $howmany = count($mails);
+    $this->assertEqual($howmany, 3, 'Three emails are sent.');
+  }
+
+  // Tests creation of one very old node and two recent ones.
+  // send_last yesterday
+  // send_start and send_cron reset to zero
+  public function testOldAndNewArticles() {
+    // Set up notify environment.
+    variable_set('notify_attempts', 5);
+    variable_set('notify_include_updates', 0);
+    variable_set('notify_reg_default', 1);
+    variable_set('notify_period', 600);  // every ten minutes
+    variable_set('notify_send_hour',  8);
+    variable_set('notify_batchsize', 100);
+
+    $now = REQUEST_TIME;
+    variable_set('notify_send_start', 0); // reset
+    $tt = $now - 86400; variable_set('notify_send_last',  $tt); // yesterday
+    variable_set('notify_cron_next',  0); // reset
+    
+    // Content is: 1 x old, 2 x 5 hour old
+    $fivehoursago = format_date($now-18000, 'custom', 'Y-m-d H:i:s O');
+    $this->createContent(1, NULL, TRUE, '2014-01-01 01:00:00 +0100');
+    $this->createContent(2, NULL, TRUE, $fivehoursago);
+    $this->cronRun();
+    $mails = $this->drupalGetMails();
+    $howmany = count($mails);
+    $this->assertEqual($howmany, 3, 'Three emails are sent.');
+  }
+}
+
+class TestSendingHour extends SharedTestFunctions {
+  protected $user;
+
+  public static function getInfo() {
+    return array(
+      'name' => t('Test Notify sending hour'),
+      'description' => t('Various notify test cases for the sending hour being respected.'),
+      'group' => t('Notify'),
+    );
+  }
+
+  public function setUp() {
+    debug('DEBUG INIT: Test Notify sending hour');
+    // Use testing mail system.
+    variable_set('mail_system', array('default-system' => 'TestingMailSystem'));
+
+    // Enable any modules required for the test. This should be an array of
+    // module names.
+    parent::setUp(array('notify'));
+    // Create and log in our admin user. Give permissions.
+    $admin = $this->drupalCreateAdminUser(array(
+      'access notify',
+      'administer notify',
+      'administer notify queue',
+      'administer nodes', 
+      'bypass node access', 
+      'create article content',
+      ));
+    $user = $this->drupalCreateNotifyUsers(2);
+    $this->user = $user;
+    // Login admin user
+    $this->drupalLogin($admin);
+
+  }
+
+  // Tests whether sending time is respected.
+  // send_last yesterday
+  // send_hour two hours in the past
+  // send_start and send_cron reset to zero
+  public function testRespectSendingHour() {
+    debug('DEBUG START: testRespectSendingHour');
+    // Set up notify environment.
+    variable_set('notify_attempts', 5);
+    variable_set('notify_include_updates', 0);
+    variable_set('notify_reg_default', 1);
+    variable_set('notify_period', 172800);  // every 2 days 
+    $hour = date('G', REQUEST_TIME);
+    if ($hour < 3) {
+      return $this->assert('exception', 'Test "testRespectSendingHour" can only be run after 0300 hours.', 'Notify');
+    }
+    $hour = date('G', REQUEST_TIME-7200);  // Two hours ago
+    variable_set('notify_send_hour',  (int)$hour);
+    variable_set('notify_batchsize', 100);
+
+    // Set up some times.
+    $now = REQUEST_TIME;
+    $yesterday = $now - 87000;  // yesterday - 10 min
+    $hoursago1 = format_date($now-3600,  'custom', 'Y-m-d H:i:s O');
+    $hoursago5 = format_date($now-18000, 'custom', 'Y-m-d H:i:s O');
+
+    // Content is: 1 x old, 1 x 5 hour old, 1 x 1hour old
+    $this->createContent(1, NULL, TRUE, '2014-01-01 14:00:00 +0100');
+    $this->createContent(1, NULL, TRUE, $hoursago5);
+    $this->createContent(1, NULL, TRUE, $hoursago1);
+    $send_hour = variable_get('notify_send_hour',  8);
+    //debug($send_hour, 'notify_send_hour (about two hours ago)');
+
+    variable_set('notify_send_start', 0); // reset
+    variable_set('notify_send_last',  $yesterday);
+    //$cron_next = $now + 6000; // +1:40 (future)
+    //$_debug = format_date($cron_next, 'custom', 'Y-m-d H:i:s O');
+    //debug($_debug, 'notify_cron_next (string) #1');
+    debug('DEBUG: Not setting $cron_next.');
+
+    $this->cronRun();
+    $mails = $this->drupalGetMails();
+    $howmany = count($mails);
+    $this->assertEqual($howmany, 0, 'No emails are sent.');
+
+    $cron_next = $now - 6000; // -1:40 (past)
+    //$_debug = format_date($cron_next, 'custom', 'Y-m-d H:i:s O');
+    //debug($_debug, 'notify_cron_next (string) #2');
+
+    variable_set('notify_send_start', 0); // reset
+    variable_set('notify_send_last',  $yesterday);
+    variable_set('notify_cron_next',  $cron_next);
+
+    $this->cronRun();
+    $mails = $this->drupalGetMails();
+    $firstbatch = count($mails);
+    $this->assertEqual($firstbatch, 3, 'Three emails are sent.');
+
+    $cron_next = variable_get('notify_cron_next', 0);
+    //$_debug = format_date($cron_next, 'custom', 'Y-m-d H:i:s O');
+    //debug($_debug, 'notify_cron_next (string) #3');
+  }
+
+  // Tests whether sending time is respected.
+  // send_last yesterday
+  // send_hour two hours in the past
+  // send_start and send_cron reset to zero
+  public function testSendingHourNoneToSend() {
+    debug('DEBUG START: testSendingHourNoneToSend');
+    // Set up notify environment.
+    variable_set('notify_attempts', 5);
+    variable_set('notify_include_updates', 0);
+    variable_set('notify_reg_default', 1);
+    variable_set('notify_period', 172800);  // every 2 days 
+    $hour = date('G', REQUEST_TIME);
+    if ($hour < 3) {
+      return $this->assert('exception', 'Test "testRespectSendingHour" can only be run after 0300 hours.', 'Notify');
+    }
+    $hour = date('G', REQUEST_TIME-7200);  // Two hours ago
+    $hour = '1';
+    variable_set('notify_send_hour',  (int)$hour);
+    variable_set('notify_batchsize', 100);
+
+    // Set up some times.
+    $now = REQUEST_TIME;
+    $yesterday = $now - 87000;  // yesterday - 10 min
+    $hoursago1 = format_date($now-3600,  'custom', 'Y-m-d H:i:s O');
+    $hoursago5 = format_date($now-18000, 'custom', 'Y-m-d H:i:s O');
+
+    // Content is: 3 x 1hour old
+    $this->createContent(1, NULL, TRUE, $hoursago1);
+    $this->createContent(1, NULL, TRUE, $hoursago1);
+    $this->createContent(1, NULL, TRUE, $hoursago1);
+    $send_hour = variable_get('notify_send_hour',  8);
+    debug($send_hour, 'notify_send_hour (about two hours ago)');
+
+    $cron_next = $now + 173000; // More than two days in the future
+    $_debug = format_date($cron_next, 'custom', 'Y-m-d H:i:s O');
+    debug($_debug, 'notify_cron_next (string) #1');
+
+    variable_set('notify_send_start', 0); // reset
+    variable_set('notify_send_last',  $yesterday);
+    variable_set('notify_cron_next',  $cron_next);
+
+    $this->cronRun();
+    $mails = $this->drupalGetMails();
+    $howmany = count($mails);
+    $this->assertEqual($howmany, 0, 'No emails are sent.');
+
+
+    $cron_next = $now - 6000; // -1:40 (past)
+    $_debug = format_date($cron_next, 'custom', 'Y-m-d H:i:s O');
+    debug($_debug, 'notify_cron_next (string) #2');
+
+    variable_set('notify_send_start', 0); // reset
+    variable_set('notify_send_last',  $yesterday);
+    variable_set('notify_cron_next',  $cron_next);
+
+    $this->cronRun();
+    $mails = $this->drupalGetMails();
+    $firstbatch = count($mails);
+    $this->assertEqual($firstbatch, 3, 'Three emails are sent.');
+
+    $cron_next = variable_get('notify_cron_next', 0);
+    //$_debug = format_date($cron_next, 'custom', 'Y-m-d H:i:s O');
+    //debug($_debug, 'notify_cron_next (string) #3');
+  }
+
+}
+
+
+
+class TestNotifyVariables extends SharedTestFunctions {
+
+  public static function getInfo() {
+    return array(
+      'name' => t('Show Notify variables'),
+      'description' => t('Demonstrate that Notify variables has no default values.'),
+      'group' => t('Notify'),
+    );
+  }
+
+  public function setUp() {
+    debug('DEBUG INIT: Show Notify variables');
+    // Enable Notify.
+    parent::setUp(array('notify'));
+  }
+
+  // Test notification when cron is set up to never send anything
+  public function testVars() {
+    trigger_error('This will query all variables, and return -2 if it is not set.', E_USER_NOTICE);
+    $notify_attempts = variable_get('notify_attempts', -2);
+    $notify_include_updates = variable_get('notify_include_updates', -2);
+    $notify_reg_default = variable_get('notify_reg_default', -2);
+    $notify_period = variable_get('notify_period', -2);
+    $notify_batchsize = variable_get('notify_batchsize', -2);
+    $notify_send_hour = variable_get('notify_send_hour',  -2);
+    debug($notify_attempts, 'notify_attempts');
+    debug($notify_include_updates, 'notify_include_updates');
+    debug($notify_reg_default, 'notify_reg_default');
+    debug($notify_period, 'notify_period');
+    debug($notify_batchsize, 'notify_batchsize');
+    debug($notify_send_hour, 'notify_send_hour');
+  }
+}
+
+
+class TestNotifyBatch extends SharedTestFunctions {
+  protected $user;
+
+  public static function getInfo() {
+    return array(
+      'name' => t('Test Notify batch'),
+      'description' => t('Spread notification over several crons.'),
+      'group' => t('Notify'),
+    );
+  }
+
+  public function setUp() {
+    debug('DEBUG INIT: Show Notify batch');
+    // Use testing mail system.
+    variable_set('mail_system', array('default-system' => 'TestingMailSystem'));
+
+    // Enable any modules required for the test. This should be an array of
+    // module names.
+    parent::setUp(array('notify'));
+    // Create and log in our admin user. Give permissions.
+    $admin = $this->drupalCreateAdminUser(array(
+      'access notify',
+      'administer notify',
+      'administer notify queue',
+      'administer nodes', 
+      'bypass node access', 
+      'create article content',
+      ));
+    $user = $this->drupalCreateNotifyUsers(19);
+    $this->user = $user;
+    // Login admin user
+    $this->drupalLogin($admin);
+
+  }
+
+  // Test notification to 20 users
+  public function testBatchSizeHundred() {
+    // Set up notify environment.
+    variable_set('notify_attempts', 5);
+    variable_set('notify_include_updates', 0);
+    variable_set('notify_reg_default', 1);
+    variable_set('notify_period', 86400);
+    variable_set('notify_send_hour',  9);
+    variable_set('notify_batchsize', 100);
+    $now = REQUEST_TIME;
+    variable_set('notify_send_start', 0);  // We haven't started
+    $tt = $now - 86400; variable_set('notify_send_last',  $tt); // Last was yesterday.
+    variable_set('notify_cron_next',  0); // Cron reset
+
+    $this->createContent(3);
+    $this->cronRun();
+    $mails = $this->drupalGetMails();
+    $howmany = count($mails);
+    $this->assertEqual($howmany, 20, 'Twenty emails are sent.');
+  }
+
+  // Test notification of some typical article nodes.
+  public function testBatchSizeThree() {
+    // Set up notify environment.
+    variable_set('notify_attempts', 5);
+    variable_set('notify_include_updates', 0);
+    variable_set('notify_reg_default', 1);
+    variable_set('notify_period', 86400);
+    variable_set('notify_send_hour',  9);
+    variable_set('notify_batchsize', 3);
+    $now = REQUEST_TIME;
+    variable_set('notify_send_start', 0);  // We haven't started
+    $tt = $now - 86400; variable_set('notify_send_last',  $tt); // Last was yesterday.
+    variable_set('notify_cron_next',  0); // Cron reset
+    $this->createContent(3);
+
+    $this->cronRun(); //  3
+    // Create a race condition, new post during cron.
+    sleep(5);
+    $this->createContent(1);
+    $this->cronRun(); //  6
+    $this->cronRun(); //  9
+    $this->cronRun(); // 12
+    $this->cronRun(); // 15
+    $this->cronRun(); // 18
+    $this->cronRun(); // 20
+    $this->cronRun(); // 20
+    $this->cronRun(); // 20
+    $mails = $this->drupalGetMails();
+    $howmany = count($mails);
+    $this->assertEqual($howmany, 20, 'Twenty emails are sent.');
+    variable_set('notify_period', 0);
+    $this->cronRun(); // 20
+
+    $mails = $this->drupalGetMails();
+    /*
+    if ($mails) {
+      debug($mails[0], '$mail[0]');
+      debug($mails[19], '$mail[19]');
+      debug($mails[20], '$mail[20]');
+    }
+    */
+    $howmany = count($mails);
+    $this->assertEqual($howmany, 23, 'Twentythree emails are sent.');
+  }
+}
+
+class TestNotifyPeriods extends SharedTestFunctions {
+  protected $user;
+
+  public static function getInfo() {
+    return array(
+      'name' => t('Test Notify periods'),
+      'description' => t('Test notification with different periods.'),
+      'group' => t('Notify'),
+    );
+  }
+
+  public function setUp() {
+    // Use testing mail system.
+    variable_set('mail_system', array('default-system' => 'TestingMailSystem'));
+
+    // Enable any modules required for the test. This should be an array of
+    // module names.
+    parent::setUp(array('notify'));
+    // Create and log in our admin user. Give permissions.
+    $admin = $this->drupalCreateAdminUser(array(
+      'access notify',
+      'administer notify',
+      'administer notify queue',
+      'administer nodes', 
+      'bypass node access', 
+      'create article content',
+      ));
+    $user = $this->drupalCreateNotifyUsers(2);
+    $this->user = $user;
+    // Login admin user
+    $this->drupalLogin($admin);
+
+  }
+
+  // Test notification when period is next cron, last is reset.
+  public function testPeriodNextCron() {
+    // Set up notify environment.
+    variable_set('notify_attempts', 1);
+    variable_set('notify_include_updates', 0);
+    variable_set('notify_reg_default', 1);
+    variable_set('notify_period', 0);
+    variable_set('notify_send_hour',  9);
+    variable_set('notify_batchsize', 100);
+    // $now = REQUEST_TIME; $tt = $now - 86400; 
+    variable_set('notify_send_start', 0); // We haven't started
+    variable_set('notify_send_last',  0); // Last reset
+    variable_set('notify_cron_next',  0); // Cron reset
+
+    $this->createContent(3);
+    $this->cronRun();
+    $mails = $this->drupalGetMails();
+    $howmany = count($mails);
+    $this->assertEqual($howmany, 3, 'Three emails are sent.');
+  }
+
+  // Test notification when period is next cron, last yesterday.
+  public function testPeriodNextCronLastYd() {
+    // Set up notify environment.
+    variable_set('notify_attempts', 1);
+    variable_set('notify_include_updates', 0);
+    variable_set('notify_reg_default', 1);
+    variable_set('notify_period', 0);
+    variable_set('notify_send_hour',  9);
+    variable_set('notify_batchsize', 100);
+    $yd = REQUEST_TIME - 86400; 
+    variable_set('notify_send_start', 0);  // We haven't started
+    variable_set('notify_send_last', $yd); // Last reset
+    variable_set('notify_cron_next',  0);  // Cron reset
+
+    $this->createContent(3);
+    $this->cronRun();
+    $mails = $this->drupalGetMails();
+    $howmany = count($mails);
+    $this->assertEqual($howmany, 3, 'Three emails are sent.');
+  }
+
+  // Test notification when period is 1 hour cron, last is reset.
+  public function testPeriodOneHour() {
+    // Set up notify environment.
+    variable_set('notify_attempts', 1);
+    variable_set('notify_include_updates', 0);
+    variable_set('notify_reg_default', 1);
+    variable_set('notify_period', 3600);
+    variable_set('notify_send_hour',  9);
+    variable_set('notify_batchsize', 100);
+    // $now = REQUEST_TIME; $tt = $now - 86400; 
+    variable_set('notify_send_start', 0); // We haven't started
+    variable_set('notify_send_last',  0); // Last reset
+    variable_set('notify_cron_next',  0); // Cron reset
+
+    $this->createContent(3);
+    $this->cronRun();
+    $mails = $this->drupalGetMails();
+    $howmany = count($mails);
+    $this->assertEqual($howmany, 3, 'Three emails are sent.');
+  }
+
+}

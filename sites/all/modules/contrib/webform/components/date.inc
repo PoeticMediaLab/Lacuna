@@ -166,6 +166,10 @@ function webform_expand_date($element) {
     $timestring = webform_strtodate('c', $element['#default_value'], $timezone);
     $element['#default_value'] = webform_date_array($timestring, 'date');
   }
+  // Prevent an error in PHP 5.4 caused by core's treatment of the #value.
+  if (isset($element['#value'])) {
+    unset($element['#value']);
+  }
 
   // Set defaults according to existing #default_value (set by Form API)
   if (isset($element['#default_value']['month']) || isset($element['#default_value']['day']) || isset($element['#default_value']['year'])) {

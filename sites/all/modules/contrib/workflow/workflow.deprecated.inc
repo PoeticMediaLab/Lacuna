@@ -192,7 +192,8 @@ function workflow_field_choices($node, $force = FALSE, $state = NULL) {
   }
   else {
     // This is used in Node API.
-    $current_sid = workflow_node_current_state($node, 'node', '');
+    $field_name = ''; // An explicit var is needed.
+    $current_sid = workflow_node_current_state($node, 'node', $field_name);
     $state = workflow_state_load_single($current_sid);
   }
   return $state->getOptions('node', $node, '', $user, $force);

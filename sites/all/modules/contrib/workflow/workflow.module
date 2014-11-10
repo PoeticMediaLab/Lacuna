@@ -24,6 +24,21 @@ module_load_include('inc', 'workflow', 'workflow.entity');
 module_load_include('inc', 'workflow', 'workflow.node.type_map');
 
 /**
+ * Implements hook_help().
+ */
+function workflow_help($path, $arg) {
+  switch ($path) {
+    case 'admin/help#workflow':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('The Workflow module adds a field to Entities to
+        store field values as Workflow states. You can control "state transitions"
+        and add action to specific transitions.') . '</p>';
+      return $output;
+  }
+}
+
+/**
  * Implements hook_permission().
  */
 function workflow_permission() {
@@ -611,7 +626,8 @@ function workflow_transition_form_submit($form, &$form_state) {
 
   // Retrieve the data from the form.
   if (isset($form_state['values']['workflow_field'])) {
-    // We are on a Entity View page or Workflow History Tab page.
+    // If $entity filled: We are on a Entity View page or Workflow History Tab page.
+    // If $entity empty: We are on an Advanced Action page.
     $field = $form_state['values']['workflow_field'];
     $instance = $form_state['values']['workflow_instance'];
     $entity_type = $form_state['values']['workflow_entity_type'];
@@ -638,7 +654,9 @@ function workflow_transition_form_submit($form, &$form_state) {
   // Set language. Multi-language is not supported for Workflow Node.
   $langcode = _workflow_metadata_workflow_get_properties($entity, array(), 'langcode', $entity_type, $field_name);
 
-  if ($field_name) {
+  if (!$entity) {
+  }
+  elseif ($field_name) {
     // Save the entity, but only if we were not in edit mode.
     // Perhaps there is a better way, but for now we use 'changed' property.
     // Caveat: Some entities do not have 'changed' property set.
@@ -730,7 +748,7 @@ function _workflow_transition_form_validate_buttons($form, &$form_state) {
  *
  * Serves as a wrapper function to hide differences between Node API and Field API.
  * Use workflow_execute_transition($transition) to start a State Change from outside an entity.
- * Use $transition->execute() to start a Staet Change from within an enetity.
+ * Use $transition->execute() to start a State Change from within an enetity.
  *
  * @param string $entity_type
  *   Entity type of target entity.
@@ -884,53 +902,52 @@ function workflow_get_sid_label($sid) {
  *   The name of the field of the entity to check.
  *   If NULL, the field_name is determined on the spot. This must be avoided,
  *     making multiple workflow per entity unpredictable. 
+ *     The found field_name will be returned in the param.
  *   If '', we have a workflow_node mode.
  *
  * @return mixed $sid
  *   The ID of the current state.
  */
-function workflow_node_current_state($entity, $entity_type = 'node', $field_name = NULL) {
+function workflow_node_current_state($entity, $entity_type = 'node', &$field_name = NULL) {
   $sid = FALSE;
+  $langcode = LANGUAGE_NONE;
 
   if (!$entity) {
     return $sid;
   }
 
-  // Wrap the entity into a entity metadata wrapper.
-  // This creates support for a.o. multilingual nodes.
-  if (!($entity instanceof EntityDrupalWrapper)) {
-    $entity = entity_metadata_wrapper($entity_type, $entity);
-  }
-
   if ($field_name === '') {
     // Workflow Node API: Get current/previous state for a Workflow Node.
+    // Multi-language not supported.
     // N.B. Do not use a page cache. This gives problems with Rules.
-    $sid = isset($entity->value()->workflow) ? $entity->value()->workflow : FALSE;
-    $langcode = LANGUAGE_NONE; // multi-language not supported.
+    $sid = isset($entity->workflow) ? $entity->workflow : FALSE;
   }
   else {
-    $langcode = LANGUAGE_NONE;
     // Workflow Field API: if $field_name is not known, yet, determine it.
     if ($field_name === NULL) {
-      $fields = _workflow_info_fields($entity);
+      $fields = _workflow_info_fields($entity, $entity_type);
       if (count($fields)) {
         $field = reset($fields);
         $field_name = $field['field_name'];
-        $langcode = $entity->{$field_name}->language;
       }
     }
-    // At this point, we may have redetermined the field_name.
-    if ($field_name && $entity->is_new->value() == FALSE) {
-      // Get State ID for new nodes (A new node has no sid - will be fetched later.)
+
+    // At this point, we may have redetermined and altered the field_name.
+    if (!$sid && $field_name !== NULL) {
+      $wrapper = entity_metadata_wrapper($entity_type, $entity);
+      // Get State ID for existing nodes (A new node has no sid - will be fetched later.)
       // and normal node, on Node view page / Workflow history tab.
-      $sid = $entity->{$field_name}->value();
+      $sid = $wrapper->{$field_name}->value();
+      // Get languagecode. May be empty if 'und'.
+      if (!$langcode = $wrapper->{$field_name}->getPropertyLanguage()) {
+        $langcode = LANGUAGE_NONE;
+      }
     }
   }
 
   // No current state. Use creation state.
-  if (!$sid) {
-    // Unwrap the entity_wrapper into entity_type and entity.
-    $sid = _workflow_get_workflow_creation_sid($entity->type(), $entity->value(), $field_name);
+  if (!$sid && $field_name !== NULL) {
+    $sid = _workflow_get_workflow_creation_sid($entity_type, $entity, $field_name);
   }
 
   return $sid;
@@ -941,61 +958,64 @@ function workflow_node_current_state($entity, $entity_type = 'node', $field_name
  */
 function workflow_node_previous_state($entity, $entity_type, $field_name) {
   $sid = FALSE;
+  $langcode = LANGUAGE_NONE;
 
-  // Wrap the entity into a entity metadata wrapper.
-  // This creates support for a.o. multilingual nodes.
-  if (!($entity instanceof EntityDrupalWrapper)) {
-    $entity = entity_metadata_wrapper($entity_type, $entity);
+  if (!$entity) {
+    return $sid;
   }
 
   if ($field_name === '') {
     // Workflow Node API: Get current/previous state for a Workflow Node.
+    // Multi-language not supported.
     // N.B. Do not use a page cache. This gives problems with Rules.
-    $sid = isset($entity->value()->workflow) ? $entity->value()->workflow : FALSE;
-    $langcode = LANGUAGE_NONE; // multi-language not supported for Workflow Node.
+    $sid = isset($entity->workflow) ? $entity->workflow : FALSE;
   }
   else {
-    $langcode = LANGUAGE_NONE;
     if ($field_name === NULL) {
       // Workflow Field API: If $field_name is not known, yet, determine it get the 1st one.)
-      $fields = _workflow_info_fields($entity);
+      $fields = _workflow_info_fields($entity, $entity_type);
       if (count($fields)) {
         $field = reset($fields);
         $field_name = $field['field_name'];
-        $langcode = $entity->{$field_name}->language;
       }
     }
 
-    if ($field_name && isset($entity->value()->original)) {
+    // At this point, we may have redetermined and altered the field_name.
+    if ($field_name !== NULL && isset($entity->original)) {
       // A changed node.
-      $original = $entity->value()->original;
-      $original_wrapper = entity_metadata_wrapper($entity_type, $original);
-
-      $sid = $original_wrapper->{$field_name}->value();
+      $original = $entity->original;
+      $wrapper = entity_metadata_wrapper($entity_type, $original);
+      $sid = $wrapper->{$field_name}->value();
+      // Get languagecode. May be empty if 'und'.
+      if (!$langcode = $wrapper->{$field_name}->getPropertyLanguage()) {
+        $langcode = LANGUAGE_NONE;
+      }
     }
   }
 
-  if (!$sid && $entity->is_new->value() == TRUE) {
-    // A new Node. $is_new is not set when saving terms, etc.
-    $sid = _workflow_get_workflow_creation_sid($entity->type(), $entity->value(), $field_name);
-  }
+  // A node may not have a Workflow attached.
+  if (!$sid && $field_name !== NULL) {
+    if (!empty($entity->is_new)) {
+      // A new Node. $is_new is not set when saving terms, etc.
+      $sid = _workflow_get_workflow_creation_sid($entity_type, $entity, $field_name);
+    }
 
-  // Get Id. Is empty when creating a node.
-  $entity_id = 0;
-  if (!$sid) {
-    $entity_id = entity_id($entity_type, $entity);
-  }
-  if (!$sid && $entity_id) {
-    // Read the history.
-    if ($last_transition = workflow_transition_load_single($entity_type, $entity_id, $field_name, $langcode)) {
-      $sid = $last_transition->new_sid;
+    // Get Id. Is empty when creating a node.
+    $entity_id = 0;
+    if (!$sid) {
+      $entity_id = entity_id($entity_type, $entity);
+    }
+    if (!$sid && $entity_id) {
+      // Read the history.
+      if ($last_transition = workflow_transition_load_single($entity_type, $entity_id, $field_name, $langcode)) {
+        $sid = $last_transition->new_sid;
+      }
     }
   }
 
-  if (!$sid) {
+  if (!$sid && $field_name !== NULL) {
     // No history found on an existing entity.
-    // Unwrap the entity_wrapper into entity_type and entity.
-    $sid = _workflow_get_workflow_creation_sid($entity->type(), $entity->value(), $field_name);
+    $sid = _workflow_get_workflow_creation_sid($entity_type, $entity, $field_name);
   }
 
   return $sid;
@@ -1032,29 +1052,28 @@ function workflow_node_previous_state($entity, $entity_type, $field_name) {
  */
 function workflow_get_workflows_by_type($entity_bundle, $entity_type = 'node') {
   static $map = array();
-  $wid = 0;
 
-  if (!isset($map[$entity_type]) && !isset($map[$entity_type][$entity_bundle])) {
-    $workflow_id = FALSE;
+  if (!isset($map[$entity_type][$entity_bundle])) {
+    $wid = FALSE;
     $map[$entity_type][$entity_bundle] = FALSE;
 
     // Check the Node API first: Get $wid.
     if (module_exists('workflownode') && $type_map = workflow_get_workflow_type_map_by_type($entity_bundle)) {
       // Get the workflow by wid.
-      $workflow_id = $type_map->wid;
+      $wid = $type_map->wid;
     }
 
     // If $entity_type is set, we must check Field API. Data is already cached by core.
     if (!$wid && isset($entity_type)) {
       foreach (_workflow_info_fields(NULL, $entity_type, $entity_bundle) as $field_name => $field_info) {
-        $workflow_id = $field_info['settings']['wid'];
+        $wid = $field_info['settings']['wid'];
       }
     }
 
     // Set the cache with a workflow object.
-    if ($workflow_id) {
-      // $workflow_id can be numeric or named.
-      $workflow = workflow_load_single($workflow_id);
+    if ($wid) {
+      // $wid can be numeric or named.
+      $workflow = workflow_load_single($wid);
       $map[$entity_type][$entity_bundle] = $workflow;
     }
   }

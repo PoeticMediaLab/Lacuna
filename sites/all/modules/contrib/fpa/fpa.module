@@ -5,32 +5,18 @@
  * Main module file for FPA.
  */
 
-define('FPA_ATTR_PERMISSION', 'fpa-permission');
-define('FPA_ATTR_MODULE',     'fpa-module');
-define('FPA_ATTR_ROLE',       'fpa-role');
+define('FPA_ATTR_PERMISSION',  'fpa-permission');
+define('FPA_ATTR_MODULE',      'fpa-module');
+define('FPA_ATTR_ROLE',        'fpa-role');
 
-/**
- * Implements hook_hook_info().
- */
-function fpa_hook_info() {
-  $hooks = array();
-  
-  $hooks['theme'] = array(
-    'group' => 'theme',
-  );
-  
-  $hooks['form_node_type_form_alter'] = array(
-    'group' => 'form_alter',
-  );
-  $hooks['form_user_admin_permissions_alter'] = array(
-    'group' => 'form_alter',
-  );
-  $hooks['form_filter_perms_admin_perm_filter_alter'] = array(
-    'group' => 'form_alter',
-  );
-  
-  return $hooks;
-}
+define('FPA_ATTR_CHECKED',     'fpa-checked');
+define('FPA_ATTR_NOT_CHECKED', 'fpa-not-checked');
+
+define('FPA_ATTR_SYSTEM_NAME', 'fpa-system-name');
+
+// Replacement for improper use of hook_hook_info().
+require_once dirname(__FILE__) . '/fpa.theme.inc';
+require_once dirname(__FILE__) . '/fpa.form_alter.inc';
 
 /**
  * Implements hook_menu().
@@ -68,7 +54,7 @@ function fpa_help($path, $arg) {
     
     $output .= '<p>' . t('Permissions and Module names will match on the readable or system name. The system name is provided as a togglable column.') . '</p>';
     
-    $output .= '<p>' . t('Enter in the format of "permission@module", <br>e.g. admin@system will show only permissions with<br>the text "admin" in modules with the text "system".') . '</p>';
+    $output .= '<p>' . t('Enter in the format of "permission@module", e.g. "admin@system" will show only permissions with the text "admin" in modules with the text "system".') . '</p>';
     
     return $output;
   }

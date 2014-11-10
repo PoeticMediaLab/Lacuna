@@ -1974,7 +1974,7 @@ ul.tabs.primary a.active, ul.tabs.primary a:hover {
 
 /* Hide "Operations" text in Sewing Kit */
 /* line 2, ../sass/components/views.scss */
-legend .fieldset-legend {
+.vbo-views-form form div fieldset.container-inline legend span.fieldset-legend {
   display: none;
 }
 
@@ -2222,16 +2222,20 @@ ul#ui-id-1.ui-autocomplete {
   padding-top: 50px;
 }
 
+/* line 37, ../sass/components/content.scss */
+legend span.fieldset-legend {
+  font-weight: bold;
+}
+
 /* line 1, ../sass/components/buttons.scss */
 #edit-submit {
   width: 200px;
 }
 
 /* line 7, ../sass/components/buttons.scss */
-.forum-add-node,
 .lacuna-button,
-.annotation-sidebar-button,
-.form-submit {
+.form-submit,
+.af-button-large {
   background-color: #c4df2c;
   background-image: linear-gradient(to bottom, #c4df2c, #88b551);
   background-repeat: repeat-x;
@@ -2260,12 +2264,13 @@ ul#ui-id-1.ui-autocomplete {
   margin-right: 5px;
 }
 
-/* line 40, ../sass/components/buttons.scss */
-.forum-add-node:hover,
+/* line 41, ../sass/components/buttons.scss */
 .lacuna-button:hover,
 .lacuna-button:focus,
 .form-submit:hover,
-.form-submit:focus {
+.form-submit:focus,
+.af-button-large:hover,
+.af-button-large:focus {
   background-color: #88b551;
   color: #FFFFFF;
   background-position: 0 -15px;
@@ -2273,27 +2278,25 @@ ul#ui-id-1.ui-autocomplete {
   transition: background-position 0.1s linear 0s;
 }
 
-/* line 47, ../sass/components/buttons.scss */
+/* line 48, ../sass/components/buttons.scss */
 .lacuna-button.lacuna-button-blue {
   background-color: #78cefd;
   background-image: linear-gradient(to bottom, #78cefd, #1588ba);
 }
 
-/* line 52, ../sass/components/buttons.scss */
+/* line 53, ../sass/components/buttons.scss */
 .lacuna-button.lacuna-button-blue:hover,
 .lacuna-button.lacuna-button-blue:focus {
   background-color: #1588ba;
 }
 
-/* line 56, ../sass/components/buttons.scss */
-.forum-add-node a,
+/* line 57, ../sass/components/buttons.scss */
 .lacuna-button a {
   color: #FFFFFF;
 }
 
 /* line 60, ../sass/components/buttons.scss */
-.form-submit,
-.annotation-sidebar-button {
+.form-submit {
   background-color: #92a6c4;
   background-image: linear-gradient(to bottom, #92a6c4, #39404a);
 }

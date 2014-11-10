@@ -4,7 +4,10 @@ sites/*/settings*.php
 # Ignore paths that contain user-generated content.
 sites/*/files
 sites/*/private
+
+# Ignore some other stuff
 .DS_Store
-sites/all/modules/contrib/devel/*
-sites/all/modules/contrib/devel*
-*.swp
+*/.DS_Store
+sites/all/modules/contrib/devel
+sites/all/modules/contrib/devel_debug_log
+

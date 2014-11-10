@@ -1,0 +1,289 @@
+<?php
+/**
+ * @file
+ * Install, update and uninstall functions for the notify module.
+ */
+
+
+/**
+ * Implements hook_schema().
+ */
+function notify_schema() {
+  $schema['notify'] = array(
+    'fields' => array(
+      'uid' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+        'disp-width' => '10',
+      ),
+      'status' => array(
+        'type' => 'int',
+        'size' => 'tiny',
+        'not null' => TRUE,
+        'default' => 0,
+        'disp-width' => '2',
+      ),
+      'node' => array(
+        'type' => 'int',
+        'size' => 'tiny',
+        'not null' => TRUE,
+        'default' => 0,
+        'disp-width' => '2',
+      ),
+      'comment' => array(
+        'type' => 'int',
+        'size' => 'tiny',
+        'not null' => TRUE,
+        'default' => 0,
+        'disp-width' => '2',
+      ),
+      'attempts' => array(
+        'type' => 'int',
+        'size' => 'tiny',
+        'not null' => TRUE,
+        'default' => 0,
+        'disp-width' => '4',
+      ),
+      'teasers' => array(
+        'type' => 'int',
+        'size' => 'tiny',
+        'not null' => TRUE,
+        'default' => 0,
+        'disp-width' => '4',
+      ),
+    ),
+    'primary key' => array('uid'),
+  );
+
+  $schema['notify_bytecount'] = array(
+    'description' => 'Stores a some signature used to determine if node has really changed.',
+    'fields' => array(
+      'id' => array(
+        'description' => 'primary key',
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'nid' => array(
+        'description' => '{node}.nid of the node the byte count is associated with.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'bytes' => array(
+        'description' => 'number of bytes it held last time we notified about it.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+    ),
+    'primary key' => array('id'),
+  );
+
+  $schema['notify_subscriptions'] = array(
+    'description' => 'Stores custom subscriptions to content types.',
+    'fields' => array(
+      'id' => array(
+        'description' => 'primary key',
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'uid' => array(
+        'description' => '{users}.uid that subscribes to this type.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'nid' => array(
+        'description' => '{node}.nid of the subscribed node.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'type' => array(
+        'description' => 'machine-readable name of the subscribed type',
+        'type' => 'varchar',
+        'length' => 32,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+    ),
+    'primary key' => array('id'),
+  );
+
+  $schema['notify_unpublished_queue'] = array(
+    'description' => 'Stores list of unpublished contents to determine what content have been published since last notification.',
+    'fields' => array(
+      'id' => array(
+        'description' => 'primary key',
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'cid' => array(
+        'description' => '{comment}.cid of the unpublished comment, or 0 if it is a node.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'nid' => array(
+        'description' => '{node}.nid of the uinpublished node, or {node}.nid to the node which the comment is a reply.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+    ),
+    'primary key' => array('id'),
+  );
+
+  return $schema;
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function notify_uninstall() {
+  // Delete my variables.
+  global $conf;
+  db_delete('variable')
+  ->condition('name', 'notify_%', 'LIKE')
+  ->execute();
+  cache_clear_all('variables', 'cache');
+  unset($conf);
+}
+
+/**
+ * Add notify_bytecount table.  Add notify_subscriptions table.
+ */
+function notify_update_7003() {
+
+  $schema['notify_bytecount'] = array(
+    'description' => 'Stores a some signature used to determine if node has really changed.',
+    'fields' => array(
+      'id' => array(
+        'description' => 'primary key',
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'nid' => array(
+        'description' => '{node}.nid of the node the byte count is associated with.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'bytes' => array(
+        'description' => 'number of bytes it held last time we notified about it.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+    ),
+    'primary key' => array('id'),
+  );
+
+  $schema['notify_subscriptions'] = array(
+    'description' => 'Stores custom subscriptions to content types.',
+    'fields' => array(
+      'id' => array(
+        'description' => 'primary key',
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'uid' => array(
+        'description' => '{users}.uid that subscribes to this type.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'nid' => array(
+        'description' => '{node}.nid of the subscribed node.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'type' => array(
+        'description' => 'machine-readable name of the subscribed type',
+        'type' => 'varchar',
+        'length' => 32,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+    ),
+    'primary key' => array('id'),
+  );
+
+  db_create_table('notify_bytecount', $schema['notify_bytecount']);
+  db_create_table('notify_subscriptions', $schema['notify_subscriptions']);
+
+}
+
+/**
+ * Add notify_unpublished_queue table.
+ * Drop notify_unpublished_comments_queue table.
+ */
+function notify_update_7002() {
+  $schema['notify_unpublished_queue'] = array(
+    'description' => 'Stores list of unpublished contents to determine what content have been published since last notification.',
+    'fields' => array(
+      'id' => array(
+        'description' => 'primary key',
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'cid' => array(
+        'description' => 'The {comment}.cid of the unpublished comment, or 0 if it is a node.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'nid' => array(
+        'description' => 'The {node}.nid of the uinpublished node, or {node}.nid to the node which the comment is a reply.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+    ),
+    'primary key' => array('id'),
+  );
+
+  db_create_table('notify_unpublished_queue', $schema['notify_unpublished_queue']);
+  db_drop_table('notify_unpublished_comments_queue');
+}
+
+/**
+ * Add notify_unpublished_comments_queue table.
+ */
+function notify_update_7001() {
+  $schema['notify_unpublished_comments_queue'] = array(
+    'description' => 'Stores list of unpublished comments to determine which comments have since been published when sending out notifications.',
+    'fields' => array(
+      'cid' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'The {comment}.cid of the unpublished comment.',
+      ),
+      'nid' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'The {node}.nid to which this comment is a reply.',
+      ),
+    ),
+    'primary key' => array('cid'),
+  );
+
+  db_create_table('notify_unpublished_comments_queue', $schema['notify_unpublished_comments_queue']);
+}

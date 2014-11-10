@@ -3,7 +3,7 @@
 /**
  *  @file
  *  Media: Flickr provides a stream wrapper and formatters for photos provided
- *  by Flickr, available at http://flickr.com/.
+ *  by Flickr, available at https://flickr.com/.
  */
 
 // A registry of variable_get defaults.

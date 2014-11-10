@@ -1,6 +1,6 @@
 /* Hide "Operations" text in Sewing Kit */
 /* line 2, ../../sass/components/views.scss */
-legend .fieldset-legend {
+.vbo-views-form form div fieldset.container-inline legend span.fieldset-legend {
   display: none;
 }
 

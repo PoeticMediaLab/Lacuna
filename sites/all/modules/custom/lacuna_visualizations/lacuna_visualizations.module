@@ -539,7 +539,7 @@ function lacuna_visualizations_mapview() {
 }  // end function lacuna_visualizations_mapview()
 
 // Implements hook_library()
-// To load Crossfilter
+// To load our vis-specific libraries
 function lacuna_visualizations_library() {
   return array(
     'crossfilter' => array(
@@ -609,6 +609,7 @@ function lacuna_visualizations_annotation_dashboard_data() {
     if (!array_key_exists($target_id, $documentNames)) {
       $document = node_load($target_id);
       // TODO: use Biblio reference short title instead
+      // TODO: check that something is returned
       $documentNames[$target_id] = $document->title;
     }
     $data->documentTitle = $documentNames[$target_id];

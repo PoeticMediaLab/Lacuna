@@ -21,8 +21,9 @@ function workflow_search_api_entity_property_info_alter(&$info) {
 /**
  * Getter callback for workflow state defined in workflow_search_api_entity_property_info_alter.
  */
-function workflow_search_api_property_workflow_state_getter_callback($item) {
+function workflow_search_api_property_workflow_state_getter_callback($node) {
   // Get text value of workflow state. Only for Workflow Node.
-  $sid = workflow_node_current_state($item, 'node', $field_name = '');
+  $field_name = ''; // An explicit var is needed.
+  $sid = workflow_node_current_state($node, 'node', $field_name);
   return workflow_get_sid_label($sid);
 }

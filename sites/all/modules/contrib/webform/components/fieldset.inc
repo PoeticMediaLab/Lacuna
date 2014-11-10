@@ -74,7 +74,7 @@ function _webform_render_fieldset($component, $value = NULL, $filter = TRUE) {
  * Pre-render function to set a fieldset ID.
  */
 function webform_fieldset_prerender($element) {
-  $element['#id'] = drupal_html_id('webform-component-' . str_replace('_', '-', implode('--', array_slice($element['#parents'], 1))));
+  $element['#id'] = 'webform-component-' . str_replace('_', '-', implode('--', array_slice($element['#parents'], 1)));
   return $element;
 }
 

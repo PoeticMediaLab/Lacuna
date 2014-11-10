@@ -1,0 +1,198 @@
+<?php
+/**
+ * @file
+ * D3 Example module file.
+ */
+
+/**
+ * Implements hook_menu().
+ */
+function d3_examples_menu() {
+
+  $items['examples'] = array(
+    'title' => 'D3 examples',
+    'description' => 'Different visualization examples using d3.',
+    'page callback' => 'd3_examples_linegraph',
+    'access callback' => TRUE,
+  );
+
+  $items['examples/line'] = array(
+    'title' => 'Line graph',
+    'description' => 'Uses d3 module to create a sample line graph',
+    'access callback' => TRUE,
+    'page callback' => 'd3_examples_linegraph',
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+  );
+
+  if (module_exists('graphapi')) {
+    $items['examples/forcedirected'] = array(
+      'title' => 'Force directed graph',
+      'description' => 'Uses d3 module to create a sample force directed graph',
+      'access callback' => TRUE,
+      'page callback' => 'd3_examples_forcedirected',
+      'type' => MENU_LOCAL_TASK,
+    );
+  }
+
+  $items['examples/column'] = array(
+    'title' => 'Column chart',
+    'description' => 'Uses d3 module to create a sample column chart',
+    'access callback' => TRUE,
+    'page callback' => 'd3_examples_column',
+    'type' => MENU_LOCAL_TASK,
+  );
+
+  $items['examples/bar'] = array(
+    'title' => 'Bar chart',
+    'description' => 'Uses d3 module to create a sample bar chart',
+    'access callback' => TRUE,
+    'page callback' => 'd3_examples_bar',
+    'type' => MENU_LOCAL_TASK,
+  );
+
+  $items['examples/pie'] = array(
+    'title' => 'Pie chart',
+    'description' => 'Uses d3 module to create a sample pie chart.',
+    'access callback' => TRUE,
+    'page callback' => 'd3_examples_pie',
+    'type' => MENU_LOCAL_TASK,
+  );
+
+  return $items;
+}
+
+/**
+ * Demonstrates how to create a line graph using the D3 API directly.
+ */
+function d3_examples_linegraph() {
+
+  $chart = array(
+    'id' => 'visualization',
+    'type' => 'LineGraph',
+    'legend' => array(
+      'Development',
+      'QA',
+      'Strategy',
+      'Design',
+    ),
+    'rows' => array(
+      array('1st Quarter 2011',10,20,26,35),
+      array('2nd Quarter 2011',20,26,27,37),
+      array('3rd Quarter 2011',10,50,28,50),
+      array('4th Quarter 2011',15,76,49,51),
+      array('1st Quarter 2012',20,100,50,52),
+    ),
+  );
+
+  return d3_draw($chart);
+}
+
+/**
+ * Demonstrates a force directed graph using the Graph API module.
+ */
+function d3_examples_forcedirected() {
+
+  $graph = graphapi_new_graph();
+
+  graphapi_add_link($graph, "graphapi_relation", "relation");
+  graphapi_add_link($graph, "graphapi_relation", "graphapi");
+  graphapi_add_link($graph, "graphapi", "views");
+  graphapi_add_link($graph, "php", "graphapi");
+  graphapi_add_link($graph, "graphapi", "graph_phyz");
+  graphapi_add_link($graph, "graphapi", "graphviz_filter");
+  graphapi_add_link($graph, "graphapi", "thejit");
+  graphapi_add_link($graph, "thejit", "thejit_spacetree");
+  graphapi_add_link($graph, "thejit", "thejit_forcedirected");
+  graphapi_add_link($graph, "thejit", "thejit_x");
+
+  $options = array(
+    'width' => 400,
+    'height' => 400,
+    'item-width' => 45,
+    'engine' => 'd3',
+  );
+  return theme('graphapi_dispatch', array('graph' => $graph, 'config' => $options));
+}
+
+/**
+ * Demonstrates a column chart using the D3 API directly.
+ */
+function d3_examples_column() {
+
+  $chart = array(
+    'id' => 'visualization',
+    'type' => 'ColumnChart',
+    'legend' => array(
+      'Development',
+      'QA',
+      'Strategy',
+      'Design',
+    ),
+    'rows' => array(
+      array('1st Quarter 2011',10,20,26,35),
+      array('2nd Quarter 2011',20,26,27,37),
+      array('3rd Quarter 2011',10,50,28,50),
+      array('4th Quarter 2011',15,76,49,51),
+      array('1st Quarter 2012',20,100,50,52),
+      array('2nd Quarter 2012',4,1,110,40),
+    ),
+  );
+
+  return d3_draw($chart);
+}
+
+/**
+ * Generates a random example bar graph.
+ * @return string
+ *   HTML for the page content.
+ */
+function d3_examples_bar() {
+
+  // Temporary data until I get randomization working.
+  $chart = array(
+    'id' => 'visualization',
+    'type' => 'BarChart',
+    'legend' => array(
+      'Development',
+      'QA',
+      'Strategy',
+      'Design',
+    ),
+    'rows' => array(
+      array('2010 - (Data only available after 3rd quarter)'),
+      array('1st Quarter 2011'),
+      array('2nd Quarter 2011'),
+      array('3rd Quarter 2011'),
+      array('4th Quarter 2011'),
+      array('1st Quarter 2012'),
+    ),
+  );
+
+  for ($i = 0; $i < count($chart['rows']); $i++) {
+    for ($j = 0; $j < 4; $j++) {
+      array_push($chart['rows'][$i], rand(1, 70) * rand(1, 70));
+    }
+  }
+
+  return d3_draw($chart);
+}
+
+/**
+ * Generates a random pie chart example.
+ *
+ * @return string
+ *   HTML for the page.
+ */
+function d3_examples_pie() {
+  $chart = array(
+    'id' => 'visualization',
+    'type' => 'PieChart',
+    'rows' => array(
+      array('Development', 500),
+      array('Strategy', 50),
+      array('Design', 100),
+      array('QA', 160),
+    ),
+  );
+  return d3_draw($chart);
+}

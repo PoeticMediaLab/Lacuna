@@ -1,7 +1,9 @@
 <?php
 /**
  * @file
- * Provide workflow actions for VBO.
+ * Provides actions that can be associated to triggers, or used as VBO-action.
+ *
+ * N.B. This module's name is incorrect. It is not dependent on VBO.
  *
  * Each action is defined in its own file.
  * @see https://drupal.org/node/2052067
