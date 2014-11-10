@@ -421,7 +421,7 @@
 	var brushSvgHeight = 100;
 
     var brushSvg = d3.select('#' + settings.id).append("svg")
-        .attr("width", width)
+        .attr("width", width+120) //Moved over to account for rotated labels.
         .attr("height", brushSvgHeight)
 		;
 
@@ -486,7 +486,7 @@
 	brushSvg.append("g")
 		.classed("axis", true)
 		// move to bottom of graph.
-		.attr("transform", "translate(0," + (brushSvgHeight - margin.bottom * 0.7) + ")")
+		.attr("transform", "translate(40," + (brushSvgHeight - margin.bottom * 0.7) + ")")
 		.call(xAxis)
 		// rotate the labels
 		.selectAll("text")
@@ -620,6 +620,7 @@
 						.call(brush)
 						.call(brush.event)
 						;
+		gBrush.attr("transform", "translate(40,0)");
 		gBrush.selectAll("rect")
 						.attr("height", 25 )
 						.attr("y", brushSvgHeight - 60  * 1.5)
