@@ -37,13 +37,14 @@
   font-weight: bold;
 }
 
-.annotation-filters-button {
+.button-filter {
   cursor: pointer;
   display: inline-block;
   color: black;
   padding: 0px;
   margin: 0px 6px 15px 6px;
   text-align: center;
+  font-variant: small-caps;
   width: 25%;
   background-repeat: repeat-x;
   border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
@@ -67,11 +68,11 @@
   margin-right: 5px;
 }
 
-.annotation-filters-button:hover {
+.button-filter:hover {
   background-color: #39404a;
 }
 
-.annotation-filters-button-active:hover {
+.button-filter-active:hover {
   background-color: #88b551;
   color: #FFFFFF;
   background-position: 0 -15px;
@@ -132,8 +133,7 @@ input.annotation-filter-input {
 }
 
 #pager-wrapper {
-  display: none;
-  margin-left: 17%;
+  margin-left: 20%;
   margin-right: auto;
 }
 

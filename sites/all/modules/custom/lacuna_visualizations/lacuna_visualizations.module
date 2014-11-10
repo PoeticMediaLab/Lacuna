@@ -523,7 +523,10 @@ function lacuna_visualizations_mapview() {
   $usersQuery->entityCondition('entity_type', 'user');
   $usersResult = $usersQuery->execute();
   $uids = array_keys($usersResult['user']);
-  $users = user_load_multiple($uids);
+  $users = array();
+  if (!empty($uids)) {
+    $users = user_load_multiple($uids);
+  }
 	// settings.config
   $options = array(
     'width' => 800,
@@ -531,7 +534,6 @@ function lacuna_visualizations_mapview() {
     'item-width' => 45,
     'engine' => 'd3',
   	'library' => 'maps',
-  	'testString' => "TEST STRING",
   	'userList' => $users,
   	'drawDocumentCircle' => true,
   );

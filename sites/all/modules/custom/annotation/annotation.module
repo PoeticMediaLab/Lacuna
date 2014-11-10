@@ -205,7 +205,7 @@ function annotation_node_grants($account, $op) {
     $grants['annotation_author'] = array($account->uid);
   }
 
-  // If "access any private content" is allowed to the account,
+  // If "access any private annotation" is allowed to the account,
   // grant view, update, or delete as necessary.
   if ($op == 'view' && user_access('access any private annotation', $account)) {
     $grants['annotation_view'] = array(ANNOTATION_GRANT_ACCESS_ALL);
