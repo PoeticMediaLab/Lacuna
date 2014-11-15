@@ -16,14 +16,14 @@
 #annotation-filters h2 {
   text-align: center;
   margin-top: 5px;
-  margin-bottom: 0px;
+  margin-bottom: 5px;
 }
 
 #annotation-filters input[type="checkbox"] {
-  margin: 0px 5px 10px 10px;
+  margin: 10% 5% 10% 20%;
 }
 
-#active-filters {
+#af-active {
   text-align: center;
 }
 
@@ -32,12 +32,12 @@
   border: none;
 }
 
-.annotation-filters-title {
+.af-title {
   margin-left: 50px;
   font-weight: bold;
 }
 
-.button-filter {
+.af-button {
   cursor: pointer;
   display: inline-block;
   color: black;
@@ -68,11 +68,11 @@
   margin-right: 5px;
 }
 
-.button-filter:hover {
+.af-button:hover {
   background-color: #39404a;
 }
 
-.button-filter-active:hover {
+.af-button-active:hover {
   background-color: #88b551;
   color: #FFFFFF;
   background-position: 0 -15px;
@@ -80,69 +80,74 @@
   transition: background-position 0.1s linear 0s;
 }
 
-.annotation-filters-button-active {
+.af-button-active {
   background-color: #c4df2c;
   background-image: linear-gradient(to bottom, #c4df2c, #88b551);
 }
 
-.annotation-filters-button#reset {
+#af-button-reset {
   width: 90%;
+  margin-bottom: 5%;
+  margin-left: auto;
+  margin-right: auto;
+  display: block;
 }
 
-.annotation-hide {
+.af-annotation-hide {
   background-color: transparent !important;
 }
 
-#annotation-filters-user-buttons {
+#af-button-user {
 }
 
-.annotation-filter-active {
+.af-filter-active {
   display: block;
   text-transform: capitalize;
   width: 100%;
-  padding-left: 10px;
+  padding-left: 10%;
+  cursor: pointer;
 }
 
-.annotation-filter-wrapper {
+.af-wrapper {
   white-space: nowrap;
   width: 100%;
 }
 
-#active-filters {
+#af-filter-active {
   text-align: center;
   font-weight: bold;
   font-size: 12pt;
 }
 
-label.annotation-filter-label {
+label.af-autocomplete-label {
   display: inline-block !important;
   text-align: right;
-  width: 55px;
+  width: 35%;
   padding-right: 5px;
   font-weight: normal;
   font-size: 10pt;
 }
 
-label.annotation-filter-label:first-letter {
+label.af-autocomplete-label:first-letter {
   text-transform: capitalize;
 }
 
-input.annotation-filter-input {
+input.af-autocomplete.ui-autocomplete-input {
   display: inline-block;
-  width: 100px;
+  width: 60%;
 }
 
-#pager-wrapper {
+#af-pager-wrapper {
   margin-left: 20%;
   margin-right: auto;
 }
 
-#pager-count {
+#af-pager-count {
   padding-left: 10px;
   padding-right: 10px;
 }
 
-i.pager {
+i.af-pager {
   cursor: pointer;
   padding-left: 2px;
   padding-right: 2px;
