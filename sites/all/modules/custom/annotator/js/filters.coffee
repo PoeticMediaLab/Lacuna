@@ -80,7 +80,8 @@ class Annotator.Plugin.Filters extends Annotator.Plugin
         $(highlight).addClass(select.annotation + annotation.id)
     @Model.filterAnnotations('user', @Model.get('currentUser'))
     @View.drawFilter('user', @Model.get('currentUser'))
-    @View.hideAnnotations(@Model.getFilteredIDs())
+    @View.drawActiveButton(select.button.mine)
+    @View.drawAnnotations()
 
   # Note the double arrows below:
   # methods called in click events need access to @
@@ -93,10 +94,10 @@ class Annotator.Plugin.Filters extends Annotator.Plugin
     if not @Model.filterIsActive(filter, value)
       if filter == 'category'
         # Highlights are a special case of category
-        # @View.checkboxUncheck('highlights')
+        # Clicking the box doesn't make sense now
         @View.checkboxDisable('highlights')
       @Model.filterAnnotations(filter, value)
-      @View.hideAnnotations(@Model.getFilteredIDs())
+      @View.drawAnnotations()
       @View.drawFilter(filter, value)
       # Jump to first annotation now available
       @View.scrollTo(@Model.annotation())
@@ -104,51 +105,52 @@ class Annotator.Plugin.Filters extends Annotator.Plugin
     return false # so autocomplete won't fill in the text box
 
   buttonClick: (event) =>
+    # Manage mutually exclusive buttons
+    # Almost entirely focused on which users' annotations shown
     type = $(event.target).attr('id')
     active = $(event.target)
     previous = $('.' + select.button.active)
     if previous.attr('id') == active.attr('id') then return
-    previous.removeClass(select.button.active)
+    @Model.removeFilter 'user'
+    @Model.removeFilter 'none'
     if type == select.button.mine
-      @Model.removeFilter 'user'
-      @Model.removeFilter 'all'
       @Model.filterAnnotations 'user', @Model.get('currentUser')
       @View.drawFilter 'user', @Model.get('currentUser')
     else if type == select.button.all
-      @Model.removeFilter 'user'
-      @Model.removeFilter 'all'
-      @View.eraseFilter 'user'
+      @View.eraseFilter 'user', @Model.get('currentUser')
     else if type == select.button.none
-      @Model.removeFilter 'user'
-      @Model.filterAnnotations 'all', null
-      @View.eraseFilter 'user'
+      @Model.filterAnnotations 'none', 'none'
+      @View.eraseAllFilters()
     else if type == select.button.reset
+      # Return to starting state
+      # Currently: only the current user's annotations
+      # with highlights shown
       @Model.removeAllFilters()
       @View.eraseAllFilters()
       @View.checkboxCheck('highlights')
       @View.checkboxEnable('highlights')
-      $(select.button.all).addClass(select.button.active)
-      return  # don't highlight the reset button - doesn't make sense
-    active.addClass(select.button.active) # active button
+      @Model.filterAnnotations 'user', @Model.get('currentUser')
+      @View.drawFilter 'user', @Model.get('currentUser')
+      type = select.button.mine
+    @View.drawActiveButton(type)
+    @View.drawAnnotations()
     return
 
   checkboxToggle: (event) =>
-    id = event.target.name
-    if id == 'highlights'
+    if event.target.name == 'highlights'
       if @Model.toggleHighlights()
         # We don't know that all highlights should be shown again
-        @View.showAnnotations(@Model.getUnfilteredIDs())
+        @View.drawAnnotations()
       else
-        @View.hideAnnotations(@Model.getFilteredIDs())
+        @View.drawAnnotations()
     return
 
   removeFilterClick: (event) =>
     id = event.target.id
     value = event.target.dataset.value
     @View.eraseFilter(id, value)
-    ids = @Model.removeFilter(id, value)
-    console.log(ids)
-    @View.showAnnotations(ids)
+    @Model.removeFilter(id, value)
+    @View.drawAnnotations()
 
   pagerClick: (event) =>
     index = @Model.get('index')
@@ -166,18 +168,20 @@ class Annotator.Plugin.Filters extends Annotator.Plugin
         index = total
     @Model.set('index', index)
     # Update to reflect pager values change
-    @View.drawPagerCount(index, total)
+    @View.drawPagerCount()
     # Scroll to the current annotation
     @View.scrollTo(@Model.annotation())
 
 class Model
   state:
-    mode: 'intersection'  # or 'union'
-    highlights: true      # show highlights
-    highlightIDs: []
-    annotations: []
-    annotationsFiltered: {}
-    total: 0
+    highlights: true    # show highlights
+    ids:                # just IDs for quick hide/show
+      all: []
+      highlights: []
+      hidden: []
+      shown: []
+    annotations: []     # the full data
+    total: 0            # can be ids.shown.length now
     index: 0
     currentUser: null
     filters: {}  # {'name': {'values': [values],
@@ -189,8 +193,9 @@ class Model
     @state.total = annotations.length
     if @state.total then @state.index = 1
     for annotation in annotations
-      if annotation.category == 'Highlight'
-        @state.highlightIDs.push(annotation.id)
+      @state.ids.all.push(annotation.id)
+      if annotation.category.toLowerCase() == 'highlight'
+        @state.ids.highlights.push(annotation.id)
       for filter of @state.filters
         # Store the values available for filters
         if annotation[filter]?
@@ -210,8 +215,7 @@ class Model
     @state[attr] = value
 
   currentID: () ->
-    ids = @getUnfilteredIDs()
-    return ids[@state.index - 1]
+    return @state.ids.shown[@state.index - 1]
 
   annotation: (id = null) ->
     # Return annotation for a given id
@@ -222,19 +226,19 @@ class Model
       if annotation.id == id
         return annotation
 
-  toggleMode: () ->
-    return
-
   toggleHighlights: () ->
     # Toggle highlights
-    # Return true if highlights can be shown
+    # Return true if highlights should be shown
+    # Note: they have their own filter type
+    # Otherwise, they'll collide with the "real" categories
     @state.highlights = !@state.highlights
     if @state.highlights
-      for id in @state.highlightIDs
-        @filterDecrement(id)
+      @removeFilter('highlights', 'highlights')
     else
-      for id in @state.highlightIDs
-        @filterIncrement(id)
+      @activateFilter('highlights', 'highlights')
+      for id in @state.ids.highlights
+        @addToFilter('highlights', 'highlights', id)
+    @computeFilters()
     return @state.highlights
 
   addFilterValue: (filter, value) ->
@@ -245,7 +249,7 @@ class Model
     # Register an autocomplete filter
     @state.filters[filter] = {}
     @state.filters[filter].values = []
-    @state.filters[filter].active = []
+    @state.filters[filter].active = {}
     return
 
   activateFilter: (filter, value) ->
@@ -258,10 +262,6 @@ class Model
     # Return true if given filter is active
     return value of @state.filters[filter].active
 
-  getFilters: () ->
-    # Return entire filter object
-    return @state.filters
-
   getFilterValues: () ->
     # Return filter names plus available values
     ret = {}
@@ -269,81 +269,97 @@ class Model
       ret[filter] = @state.filters[filter].values
     return ret
 
-  removeAllFilters: () ->
-    return
-
-  getFilteredIDs: () ->
+  getHidden: () ->
     # Return array of all ids currently filtered
-    return Object.keys(@state.annotationsFiltered)
+    return @state.ids.hidden
 
-  getUnfilteredIDs: () ->
+  getShown: () ->
     # Return array of all ids that are NOT filtered
-    ids = []
-    for annotation in @state.annotations
-      unless @state.annotationsFiltered[annotation.id]
-        ids.push(annotation.id)
-    return ids
+    return @state.ids.shown
+
+  removeAllFilters: () ->
+    for filter of @state.filters
+      for value of @state.filters[filter].active
+        @removeFilter(filter, value)
 
   removeFilter: (filter, value) ->
-    # Clear a filter
-    # Return list of ids now available to show
-    unfilteredIDs = []
-    for id in @state.filters[filter].active[value]
-      if @filterDecrement(id) <= 0
-        unfilteredIDs.push(id)
-    delete @state.filters[filter].active[value]
-    return unfilteredIDs
+    if filter of @state.filters
+      if value of @state.filters[filter].active
+        delete @state.filters[filter].active[value]
+      else
+        @state.filters[filter].active = {}
+      @computeFilters()
 
-  filterIncrement: (id) ->
-    # Add 1 to the times this id has been filtered
-    # When the count reaches zero, can be shown safely
-    if !@state.annotationsFiltered[id]?
-      @state.annotationsFiltered[id] = 0
-      --@state.total  # only the first time
-    ++@state.annotationsFiltered[id]
-    if @state.total <= 0
-      @state.index = 0
-      @state.total = 0
-    return @state.annotationsFiltered[id]
+  _intersect: (a, b) ->
+    # We know our arrays are made of unique integers
+    result = []
+    if not b.length
+      return a
+    if not a.length
+      return b
+    for item in a
+      result.push(item) if item in b
+    return result
 
-  filterDecrement: (id) ->
-    # Subtract 1 from times id is filtered
-    # Remove from list once at zero
-    if @state.annotationsFiltered[id]
-      --@state.annotationsFiltered[id]
-    if @state.annotationsFiltered[id] <= 0
-      ++@state.total
-      if @state.total == 1
-        @state.index = 1
-      delete @state.annotationsFiltered[id]
-      return 0
-    return @state.annotationsFiltered[id]
+  intersection: (arrays) ->
+    # Return the intersection of given arrays
+    result = []
+    if arrays.length == 0
+      return result
+    if arrays.length == 1
+      return arrays.pop()
+    for arr in arrays
+      result = @_intersect(result, arr)
+    return result
+
+  union: (arrays) ->
+    # Return the union of given arrays
+    result = []
+    for arr in arrays
+      for item in arr
+        if item not in result
+          result.push(item)
+    return result
+
+  # runs an intersection on same filter types by value
+  # then a union on those results
+  computeFilters: () ->
+    @state.ids.hidden = []
+    @state.ids.shown = []
+    ids = []
+    arrays = []
+    for filter of @state.filters
+      for value of @state.filters[filter].active
+        if @state.filters[filter].active[value].length
+          arrays.push(@state.filters[filter].active[value])
+      ids.push(@intersection(arrays))
+    @state.ids.hidden = @union(ids)
+    for id in @state.ids.all
+      unless id in @state.ids.hidden
+        @state.ids.shown.push(id)
+    @state.total = @state.ids.shown.length
+    @state.index = 0
+    if @state.total
+      @state.index = 1
 
   addToFilter: (filter, value, id) ->
-    @filterIncrement(id)
     if !@state.filters[filter].active[value]?
       @state.filters[filter].active[value] = []
     @state.filters[filter].active[value].push(id)
 
   removeFromFilter: (filter, value, id) ->
-    @filterDecrement(id)
     i = @state.filters[filter].active[value].indexOf(id)
     @state.filters[filter].active[value].splice(i, 1)
 
-  filterAnnotations: (filter, value, match = false) ->
+  filterAnnotations: (filter, value) ->
     # Look for matches of filter type
     # Update list of filters
-    # Return ids of annotations to be filtered
-    # The option "match" variable determines if we want to hide
-    # everything that *does* match
-    # TODO: calculate union of annotations in same type of filter
-    # but for different values
+    @activateFilter(filter, value)
     if filter == 'none'
-      @activateFilter('none')
       for annotation in @state.annotations
-        @addToFilter(filter, null, annotation.id)
+        # Filter ALL THE THINGS!
+        @addToFilter(filter, filter, annotation.id)
     else
-      @activateFilter(filter, value)
       for annotation in @state.annotations
         if filter == 'user'
           currentValue = annotation[filter].name
@@ -355,6 +371,8 @@ class Model
             @addToFilter(filter, value, annotation.id)
         else if currentValue != value
           @addToFilter(filter, value, annotation.id)
+    @computeFilters()
+
 
 ### View methods ###
 class View
@@ -369,7 +387,6 @@ class View
     @drawButton(select.button.default, 'none', 'user')
     @drawButton(select.button.default, 'mine', 'user')
     @drawButton(select.button.default, 'all', 'user')
-    @drawActiveButton('mine')
     @drawCheckbox('highlights', 'Show Highlights')
     for filter, values of @Model.getFilterValues()
       @drawAutocomplete(filter, values)
@@ -390,7 +407,8 @@ class View
       .on('click', @Controller.buttonClick))
 
   drawActiveButton: (id) ->
-    $('#' + select.button[id]).addClass(select.button.active)
+    $('.' + select.button.active).removeClass(select.button.active)
+    $('#' + id).addClass(select.button.active)
     return
 
   checkboxStateChange: (id, attr, state) ->
@@ -435,13 +453,13 @@ class View
     $('.' + p.default).wrapAll("<div id='#{p.wrapper}'></div>")
     return
 
-  drawPagerCount: (first = 1, last = null) ->
-    if !last?
-      last = @Model.get('total')
-    $('#' + select.pager.count).text(first + ' of ' + last)
+  drawPagerCount: () ->
+    $('#' + select.pager.count).text(@Model.get('index') + ' of ' + @Model.get('total'))
 
   drawFilter: (id, value) ->
     # Add to list of "Active Filters"
+    if not value
+      value = ''
     classes = [select.filters.default, select.filters.active, select.filters.delete, select.filters[id]].join(' ')
     $('#' + select.filters.active).after(
       $('<div>',
@@ -452,8 +470,11 @@ class View
       .on("click", @Controller.removeFilterClick)
       )
 
+  eraseAllFilters: () ->
+    $('.' + select.filters.active).remove()
+
   eraseFilter: (id, value) ->
-    $('#' + id + '.' + select.filters.active).remove()
+    $('#' + id + '.' + select.filters.active + "[data-value='#{value}'").remove()
     if id == 'user'
       $('.' + select.button.active + '.' + select.button.user).removeClass(select.button.active)
     if id == 'category'
@@ -469,9 +490,20 @@ class View
       $('.' + select.annotation + id).addClass(select.hide)
     @drawPagerCount()
 
-  viewerShown: (viewer) =>
-    # if !@viewer?
-    #   @viewer = viewer
+  drawAnnotations: () ->
+    @showAnnotations(@Model.getShown())
+    @hideAnnotations(@Model.getHidden())
+
+  viewerShown: (Viewer) =>
+    # TODO: intercept viewer
+    # Hide it
+    # Check with model for annotations in viewer
+    # that should be hidden
+    # then show viewer with new list
+    # Create Model.dropFilteredIDs() to check a list
+    # Viewer.hide()
+    # annotations = @Model.dropFiltered(Viewer.annotations)
+    # $(Drupal.settings.annotator.element).annotator().annotator('showViewer', annotations, Viewer.position())
 
   scrollTo: (annotation) ->
     # Jump to selected annotation

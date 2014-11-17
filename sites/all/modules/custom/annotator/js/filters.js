@@ -105,7 +105,8 @@
       }
       this.Model.filterAnnotations('user', this.Model.get('currentUser'));
       this.View.drawFilter('user', this.Model.get('currentUser'));
-      return this.View.hideAnnotations(this.Model.getFilteredIDs());
+      this.View.drawActiveButton(select.button.mine);
+      return this.View.drawAnnotations();
     };
 
     Filters.prototype.filterSelected = function(event, ui) {
@@ -115,7 +116,7 @@
       if (!this.Model.filterIsActive(filter, value)) {
         if (filter === 'category') this.View.checkboxDisable('highlights');
         this.Model.filterAnnotations(filter, value);
-        this.View.hideAnnotations(this.Model.getFilteredIDs());
+        this.View.drawAnnotations();
         this.View.drawFilter(filter, value);
         this.View.scrollTo(this.Model.annotation());
       }
@@ -129,51 +130,46 @@
       active = $(event.target);
       previous = $('.' + select.button.active);
       if (previous.attr('id') === active.attr('id')) return;
-      previous.removeClass(select.button.active);
+      this.Model.removeFilter('user');
+      this.Model.removeFilter('none');
       if (type === select.button.mine) {
-        this.Model.removeFilter('user');
-        this.Model.removeFilter('all');
         this.Model.filterAnnotations('user', this.Model.get('currentUser'));
         this.View.drawFilter('user', this.Model.get('currentUser'));
       } else if (type === select.button.all) {
-        this.Model.removeFilter('user');
-        this.Model.removeFilter('all');
-        this.View.eraseFilter('user');
+        this.View.eraseFilter('user', this.Model.get('currentUser'));
       } else if (type === select.button.none) {
-        this.Model.removeFilter('user');
-        this.Model.filterAnnotations('all', null);
-        this.View.eraseFilter('user');
+        this.Model.filterAnnotations('none', 'none');
+        this.View.eraseAllFilters();
       } else if (type === select.button.reset) {
         this.Model.removeAllFilters();
         this.View.eraseAllFilters();
         this.View.checkboxCheck('highlights');
         this.View.checkboxEnable('highlights');
-        $(select.button.all).addClass(select.button.active);
-        return;
+        this.Model.filterAnnotations('user', this.Model.get('currentUser'));
+        this.View.drawFilter('user', this.Model.get('currentUser'));
+        type = select.button.mine;
       }
-      active.addClass(select.button.active);
+      this.View.drawActiveButton(type);
+      this.View.drawAnnotations();
     };
 
     Filters.prototype.checkboxToggle = function(event) {
-      var id;
-      id = event.target.name;
-      if (id === 'highlights') {
+      if (event.target.name === 'highlights') {
         if (this.Model.toggleHighlights()) {
-          this.View.showAnnotations(this.Model.getUnfilteredIDs());
+          this.View.drawAnnotations();
         } else {
-          this.View.hideAnnotations(this.Model.getFilteredIDs());
+          this.View.drawAnnotations();
         }
       }
     };
 
     Filters.prototype.removeFilterClick = function(event) {
-      var id, ids, value;
+      var id, value;
       id = event.target.id;
       value = event.target.dataset.value;
       this.View.eraseFilter(id, value);
-      ids = this.Model.removeFilter(id, value);
-      console.log(ids);
-      return this.View.showAnnotations(ids);
+      this.Model.removeFilter(id, value);
+      return this.View.drawAnnotations();
     };
 
     Filters.prototype.pagerClick = function(event) {
@@ -196,7 +192,7 @@
           index = total;
       }
       this.Model.set('index', index);
-      this.View.drawPagerCount(index, total);
+      this.View.drawPagerCount();
       return this.View.scrollTo(this.Model.annotation());
     };
 
@@ -209,11 +205,14 @@
     function Model() {}
 
     Model.prototype.state = {
-      mode: 'intersection',
       highlights: true,
-      highlightIDs: [],
+      ids: {
+        all: [],
+        highlights: [],
+        hidden: [],
+        shown: []
+      },
       annotations: [],
-      annotationsFiltered: {},
       total: 0,
       index: 0,
       currentUser: null,
@@ -228,8 +227,9 @@
       _results = [];
       for (_i = 0, _len = annotations.length; _i < _len; _i++) {
         annotation = annotations[_i];
-        if (annotation.category === 'Highlight') {
-          this.state.highlightIDs.push(annotation.id);
+        this.state.ids.all.push(annotation.id);
+        if (annotation.category.toLowerCase() === 'highlight') {
+          this.state.ids.highlights.push(annotation.id);
         }
         _results.push((function() {
           var _results2;
@@ -274,9 +274,7 @@
     };
 
     Model.prototype.currentID = function() {
-      var ids;
-      ids = this.getUnfilteredIDs();
-      return ids[this.state.index - 1];
+      return this.state.ids.shown[this.state.index - 1];
     };
 
     Model.prototype.annotation = function(id) {
@@ -290,24 +288,20 @@
       }
     };
 
-    Model.prototype.toggleMode = function() {};
-
     Model.prototype.toggleHighlights = function() {
-      var id, _i, _j, _len, _len2, _ref, _ref2;
+      var id, _i, _len, _ref;
       this.state.highlights = !this.state.highlights;
       if (this.state.highlights) {
-        _ref = this.state.highlightIDs;
+        this.removeFilter('highlights', 'highlights');
+      } else {
+        this.activateFilter('highlights', 'highlights');
+        _ref = this.state.ids.highlights;
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
           id = _ref[_i];
-          this.filterDecrement(id);
-        }
-      } else {
-        _ref2 = this.state.highlightIDs;
-        for (_j = 0, _len2 = _ref2.length; _j < _len2; _j++) {
-          id = _ref2[_j];
-          this.filterIncrement(id);
+          this.addToFilter('highlights', 'highlights', id);
         }
       }
+      this.computeFilters();
       return this.state.highlights;
     };
 
@@ -320,7 +314,7 @@
     Model.prototype.registerFilter = function(filter) {
       this.state.filters[filter] = {};
       this.state.filters[filter].values = [];
-      this.state.filters[filter].active = [];
+      this.state.filters[filter].active = {};
     };
 
     Model.prototype.activateFilter = function(filter, value) {
@@ -334,10 +328,6 @@
       return value in this.state.filters[filter].active;
     };
 
-    Model.prototype.getFilters = function() {
-      return this.state.filters;
-    };
-
     Model.prototype.getFilterValues = function() {
       var filter, ret;
       ret = {};
@@ -347,63 +337,106 @@
       return ret;
     };
 
-    Model.prototype.removeAllFilters = function() {};
-
-    Model.prototype.getFilteredIDs = function() {
-      return Object.keys(this.state.annotationsFiltered);
+    Model.prototype.getHidden = function() {
+      return this.state.ids.hidden;
     };
 
-    Model.prototype.getUnfilteredIDs = function() {
-      var annotation, ids, _i, _len, _ref;
-      ids = [];
-      _ref = this.state.annotations;
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        annotation = _ref[_i];
-        if (!this.state.annotationsFiltered[annotation.id]) {
-          ids.push(annotation.id);
-        }
+    Model.prototype.getShown = function() {
+      return this.state.ids.shown;
+    };
+
+    Model.prototype.removeAllFilters = function() {
+      var filter, value, _results;
+      _results = [];
+      for (filter in this.state.filters) {
+        _results.push((function() {
+          var _results2;
+          _results2 = [];
+          for (value in this.state.filters[filter].active) {
+            _results2.push(this.removeFilter(filter, value));
+          }
+          return _results2;
+        }).call(this));
       }
-      return ids;
+      return _results;
     };
 
     Model.prototype.removeFilter = function(filter, value) {
-      var id, unfilteredIDs, _i, _len, _ref;
-      unfilteredIDs = [];
-      _ref = this.state.filters[filter].active[value];
+      if (filter in this.state.filters) {
+        if (value in this.state.filters[filter].active) {
+          delete this.state.filters[filter].active[value];
+        } else {
+          this.state.filters[filter].active = {};
+        }
+        return this.computeFilters();
+      }
+    };
+
+    Model.prototype._intersect = function(a, b) {
+      var item, result, _i, _len;
+      result = [];
+      if (!b.length) return a;
+      if (!a.length) return b;
+      for (_i = 0, _len = a.length; _i < _len; _i++) {
+        item = a[_i];
+        if (__indexOf.call(b, item) >= 0) result.push(item);
+      }
+      return result;
+    };
+
+    Model.prototype.intersection = function(arrays) {
+      var arr, result, _i, _len;
+      result = [];
+      if (arrays.length === 0) return result;
+      if (arrays.length === 1) return arrays.pop();
+      for (_i = 0, _len = arrays.length; _i < _len; _i++) {
+        arr = arrays[_i];
+        result = this._intersect(result, arr);
+      }
+      return result;
+    };
+
+    Model.prototype.union = function(arrays) {
+      var arr, item, result, _i, _j, _len, _len2;
+      result = [];
+      for (_i = 0, _len = arrays.length; _i < _len; _i++) {
+        arr = arrays[_i];
+        for (_j = 0, _len2 = arr.length; _j < _len2; _j++) {
+          item = arr[_j];
+          if (__indexOf.call(result, item) < 0) result.push(item);
+        }
+      }
+      return result;
+    };
+
+    Model.prototype.computeFilters = function() {
+      var arrays, filter, id, ids, value, _i, _len, _ref;
+      this.state.ids.hidden = [];
+      this.state.ids.shown = [];
+      ids = [];
+      arrays = [];
+      for (filter in this.state.filters) {
+        for (value in this.state.filters[filter].active) {
+          if (this.state.filters[filter].active[value].length) {
+            arrays.push(this.state.filters[filter].active[value]);
+          }
+        }
+        ids.push(this.intersection(arrays));
+      }
+      this.state.ids.hidden = this.union(ids);
+      _ref = this.state.ids.all;
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         id = _ref[_i];
-        if (this.filterDecrement(id) <= 0) unfilteredIDs.push(id);
+        if (__indexOf.call(this.state.ids.hidden, id) < 0) {
+          this.state.ids.shown.push(id);
+        }
       }
-      delete this.state.filters[filter].active[value];
-      return unfilteredIDs;
-    };
-
-    Model.prototype.filterIncrement = function(id) {
-      if (!(this.state.annotationsFiltered[id] != null)) {
-        this.state.annotationsFiltered[id] = 0;
-        --this.state.total;
-      }
-      ++this.state.annotationsFiltered[id];
-      if (this.state.total <= 0) {
-        this.state.index = 0;
-        this.state.total = 0;
-      }
-      return this.state.annotationsFiltered[id];
-    };
-
-    Model.prototype.filterDecrement = function(id) {
-      if (this.state.annotationsFiltered[id]) --this.state.annotationsFiltered[id];
-      if (this.state.annotationsFiltered[id] <= 0) {
-        ++this.state.total;
-        if (this.state.total === 1) this.state.index = 1;
-        delete this.state.annotationsFiltered[id];
-        return 0;
-      }
-      return this.state.annotationsFiltered[id];
+      this.state.total = this.state.ids.shown.length;
+      this.state.index = 0;
+      if (this.state.total) return this.state.index = 1;
     };
 
     Model.prototype.addToFilter = function(filter, value, id) {
-      this.filterIncrement(id);
       if (!(this.state.filters[filter].active[value] != null)) {
         this.state.filters[filter].active[value] = [];
       }
@@ -412,27 +445,21 @@
 
     Model.prototype.removeFromFilter = function(filter, value, id) {
       var i;
-      this.filterDecrement(id);
       i = this.state.filters[filter].active[value].indexOf(id);
       return this.state.filters[filter].active[value].splice(i, 1);
     };
 
-    Model.prototype.filterAnnotations = function(filter, value, match) {
-      var annotation, currentValue, _i, _j, _len, _len2, _ref, _ref2, _results, _results2;
-      if (match == null) match = false;
+    Model.prototype.filterAnnotations = function(filter, value) {
+      var annotation, currentValue, _i, _j, _len, _len2, _ref, _ref2;
+      this.activateFilter(filter, value);
       if (filter === 'none') {
-        this.activateFilter('none');
         _ref = this.state.annotations;
-        _results = [];
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
           annotation = _ref[_i];
-          _results.push(this.addToFilter(filter, null, annotation.id));
+          this.addToFilter(filter, filter, annotation.id);
         }
-        return _results;
       } else {
-        this.activateFilter(filter, value);
         _ref2 = this.state.annotations;
-        _results2 = [];
         for (_j = 0, _len2 = _ref2.length; _j < _len2; _j++) {
           annotation = _ref2[_j];
           if (filter === 'user') {
@@ -443,18 +470,14 @@
           if (!currentValue) currentValue = '';
           if (currentValue instanceof Array) {
             if (__indexOf.call(currentValue, value) < 0) {
-              _results2.push(this.addToFilter(filter, value, annotation.id));
-            } else {
-              _results2.push(void 0);
+              this.addToFilter(filter, value, annotation.id);
             }
           } else if (currentValue !== value) {
-            _results2.push(this.addToFilter(filter, value, annotation.id));
-          } else {
-            _results2.push(void 0);
+            this.addToFilter(filter, value, annotation.id);
           }
         }
-        return _results2;
       }
+      return this.computeFilters();
     };
 
     return Model;
@@ -483,7 +506,6 @@
       this.drawButton(select.button["default"], 'none', 'user');
       this.drawButton(select.button["default"], 'mine', 'user');
       this.drawButton(select.button["default"], 'all', 'user');
-      this.drawActiveButton('mine');
       this.drawCheckbox('highlights', 'Show Highlights');
       _ref = this.Model.getFilterValues();
       for (filter in _ref) {
@@ -507,7 +529,8 @@
     };
 
     View.prototype.drawActiveButton = function(id) {
-      $('#' + select.button[id]).addClass(select.button.active);
+      $('.' + select.button.active).removeClass(select.button.active);
+      $('#' + id).addClass(select.button.active);
     };
 
     View.prototype.checkboxStateChange = function(id, attr, state) {
@@ -562,15 +585,13 @@
       $('.' + p["default"]).wrapAll("<div id='" + p.wrapper + "'></div>");
     };
 
-    View.prototype.drawPagerCount = function(first, last) {
-      if (first == null) first = 1;
-      if (last == null) last = null;
-      if (!(last != null)) last = this.Model.get('total');
-      return $('#' + select.pager.count).text(first + ' of ' + last);
+    View.prototype.drawPagerCount = function() {
+      return $('#' + select.pager.count).text(this.Model.get('index') + ' of ' + this.Model.get('total'));
     };
 
     View.prototype.drawFilter = function(id, value) {
       var classes;
+      if (!value) value = '';
       classes = [select.filters["default"], select.filters.active, select.filters["delete"], select.filters[id]].join(' ');
       return $('#' + select.filters.active).after($('<div>', {
         id: id,
@@ -579,8 +600,12 @@
       }).text(' ' + id + ': ' + value).on("click", this.Controller.removeFilterClick));
     };
 
+    View.prototype.eraseAllFilters = function() {
+      return $('.' + select.filters.active).remove();
+    };
+
     View.prototype.eraseFilter = function(id, value) {
-      $('#' + id + '.' + select.filters.active).remove();
+      $('#' + id + '.' + select.filters.active + ("[data-value='" + value + "'")).remove();
       if (id === 'user') {
         $('.' + select.button.active + '.' + select.button.user).removeClass(select.button.active);
       }
@@ -605,7 +630,12 @@
       return this.drawPagerCount();
     };
 
-    View.prototype.viewerShown = function(viewer) {};
+    View.prototype.drawAnnotations = function() {
+      this.showAnnotations(this.Model.getShown());
+      return this.hideAnnotations(this.Model.getHidden());
+    };
+
+    View.prototype.viewerShown = function(Viewer) {};
 
     View.prototype.scrollTo = function(annotation) {
       var highlight;
