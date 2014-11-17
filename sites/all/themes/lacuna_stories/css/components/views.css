@@ -215,7 +215,13 @@ div.views-row-last span.views-field-field-image div.topic_image {
   padding-top: 25px;
 }
 
-/* line 143, ../../sass/components/views.scss */
+/* line 142, ../../sass/components/views.scss */
+.view-icon {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* line 147, ../../sass/components/views.scss */
 table.views-table {
   width: 100%;
 }

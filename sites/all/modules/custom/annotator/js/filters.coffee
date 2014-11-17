@@ -87,12 +87,14 @@ class Annotator.Plugin.Filters extends Annotator.Plugin
       for highlight in annotation.highlights
         $(highlight).first().attr('id', select.annotation + annotation.id)
         $(highlight).addClass(select.annotation + annotation.id)
-    @Model.filterAnnotations('user', @Model.get('currentUser'))
-    @View.drawFilter('user', @Model.get('currentUser'))
-    @View.drawActiveButton(select.button.mine)
     @View.drawAnnotations()
     if @scrollTo?
       @View.scrollTo(@Model.annotation(@scrollTo))
+    else
+      # Filter only if we're not scrolling to
+      @Model.filterAnnotations('user', @Model.get('currentUser'))
+      @View.drawFilter('user', @Model.get('currentUser'))
+      @View.drawActiveButton(select.button.mine)
 
   # Note the double arrows below:
   # methods called in click events need access to @
