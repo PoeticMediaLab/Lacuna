@@ -55,8 +55,17 @@ class Annotator.Plugin.Filters extends Annotator.Plugin
 
   constructor: (element, options) ->
     super
+    # Check if asked to jump to an annotation
+    if window.location.search
+      query = window.location.search.substring(1)
+      for item in query.split('&')
+        pair = item.split('=')
+        if pair[0] == 'scrollTo'
+          # Store for after full plugin initialization
+          @scrollTo = pair[1]
     @Model = new Model
     @View = new View
+    @View.element = element # For finding the annotator
     if options.current_user?
       @Model.set('currentUser', options.current_user)
     if options.filters?
@@ -82,6 +91,8 @@ class Annotator.Plugin.Filters extends Annotator.Plugin
     @View.drawFilter('user', @Model.get('currentUser'))
     @View.drawActiveButton(select.button.mine)
     @View.drawAnnotations()
+    if @scrollTo?
+      @View.scrollTo(@Model.annotation(@scrollTo))
 
   # Note the double arrows below:
   # methods called in click events need access to @
@@ -515,4 +526,4 @@ class View
     $("html, body").animate({
       scrollTop: highlight.offset().top - 300
     }, 150)
-    $(Drupal.settings.annotator.element).annotator().annotator('showViewer', [annotation], highlight.position());
+    $(@element).annotator().annotator('showViewer', [annotation], highlight.position());

@@ -61,17 +61,27 @@
       this.checkboxToggle = __bind(this.checkboxToggle, this);
       this.buttonClick = __bind(this.buttonClick, this);
       this.filterSelected = __bind(this.filterSelected, this);
-      var filter, _i, _len, _ref;
+      var filter, item, pair, query, _i, _j, _len, _len2, _ref, _ref2;
       Filters.__super__.constructor.apply(this, arguments);
+      if (window.location.search) {
+        query = window.location.search.substring(1);
+        _ref = query.split('&');
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          item = _ref[_i];
+          pair = item.split('=');
+          if (pair[0] === 'scrollTo') this.scrollTo = pair[1];
+        }
+      }
       this.Model = new Model;
       this.View = new View;
+      this.View.element = element;
       if (options.current_user != null) {
         this.Model.set('currentUser', options.current_user);
       }
       if (options.filters != null) {
-        _ref = options.filters;
-        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-          filter = _ref[_i];
+        _ref2 = options.filters;
+        for (_j = 0, _len2 = _ref2.length; _j < _len2; _j++) {
+          filter = _ref2[_j];
           this.Model.registerFilter(filter);
         }
       }
@@ -106,7 +116,10 @@
       this.Model.filterAnnotations('user', this.Model.get('currentUser'));
       this.View.drawFilter('user', this.Model.get('currentUser'));
       this.View.drawActiveButton(select.button.mine);
-      return this.View.drawAnnotations();
+      this.View.drawAnnotations();
+      if (this.scrollTo != null) {
+        return this.View.scrollTo(this.Model.annotation(this.scrollTo));
+      }
     };
 
     Filters.prototype.filterSelected = function(event, ui) {
@@ -643,7 +656,7 @@
       $("html, body").animate({
         scrollTop: highlight.offset().top - 300
       }, 150);
-      return $(Drupal.settings.annotator.element).annotator().annotator('showViewer', [annotation], highlight.position());
+      return $(this.element).annotator().annotator('showViewer', [annotation], highlight.position());
     };
 
     return View;
