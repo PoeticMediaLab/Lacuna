@@ -107,14 +107,14 @@
           $(highlight).addClass(select.annotation + annotation.id);
         }
       }
-      this.View.drawAnnotations();
       if (this.scrollTo != null) {
-        return this.View.scrollTo(this.Model.annotation(this.scrollTo));
+        this.View.scrollTo(this.Model.annotation(this.scrollTo));
       } else {
         this.Model.filterAnnotations('user', this.Model.get('currentUser'));
         this.View.drawFilter('user', this.Model.get('currentUser'));
-        return this.View.drawActiveButton(select.button.mine);
+        this.View.drawActiveButton(select.button.mine);
       }
+      return this.View.drawAnnotations();
     };
 
     Filters.prototype.filterSelected = function(event, ui) {
@@ -163,11 +163,8 @@
 
     Filters.prototype.checkboxToggle = function(event) {
       if (event.target.name === 'highlights') {
-        if (this.Model.toggleHighlights()) {
-          this.View.drawAnnotations();
-        } else {
-          this.View.drawAnnotations();
-        }
+        this.Model.toggleHighlights();
+        this.View.drawAnnotations();
       }
     };
 
@@ -177,6 +174,9 @@
       value = event.target.dataset.value;
       this.View.eraseFilter(id, value);
       this.Model.removeFilter(id, value);
+      if (id === 'category' && !this.Model.filterIsActive('category')) {
+        this.View.checkboxEnable('highlights');
+      }
       return this.View.drawAnnotations();
     };
 
@@ -213,7 +213,7 @@
     function Model() {}
 
     Model.prototype.state = {
-      highlights: true,
+      showHighlights: true,
       ids: {
         all: [],
         highlights: [],
@@ -310,8 +310,8 @@
 
     Model.prototype.toggleHighlights = function() {
       var id, _i, _len, _ref;
-      this.state.highlights = !this.state.highlights;
-      if (this.state.highlights) {
+      this.state.showHighlights = !this.state.showHighlights;
+      if (this.state.showHighlights) {
         this.removeFilter('highlights', 'highlights');
       } else {
         this.activateFilter('highlights', 'highlights');
@@ -322,7 +322,7 @@
         }
       }
       this.computeFilters();
-      return this.state.highlights;
+      return this.state.showHighlights;
     };
 
     Model.prototype.addFilterValue = function(filter, value) {
@@ -345,6 +345,7 @@
     };
 
     Model.prototype.filterIsActive = function(filter, value) {
+      if (!value) return Object.keys(this.state.filters[filter].active).length > 0;
       return value in this.state.filters[filter].active;
     };
 
@@ -392,38 +393,41 @@
       }
     };
 
-    Model.prototype._intersect = function(a, b) {
-      var item, result, _i, _len;
+    Model.prototype.intersection = function(a, b) {
+      var id, result, _i, _len;
       result = [];
       if (!b.length) return a;
       if (!a.length) return b;
       for (_i = 0, _len = a.length; _i < _len; _i++) {
-        item = a[_i];
-        if (__indexOf.call(b, item) >= 0) result.push(item);
+        id = a[_i];
+        if (__indexOf.call(b, id) >= 0) result.push(id);
       }
       return result;
     };
 
-    Model.prototype.intersection = function(arrays) {
-      var arr, result, _i, _len;
+    Model.prototype.intersectAll = function(lists) {
+      var list, result, _i, _len;
       result = [];
-      if (arrays.length === 0) return result;
-      if (arrays.length === 1) return arrays.pop();
-      for (_i = 0, _len = arrays.length; _i < _len; _i++) {
-        arr = arrays[_i];
-        result = this._intersect(result, arr);
+      if (!lists || lists.length === 0) {
+        return result;
+      } else {
+        if (lists.length === 1) return lists[0];
+      }
+      for (_i = 0, _len = lists.length; _i < _len; _i++) {
+        list = lists[_i];
+        result = this.intersection(result, list);
       }
       return result;
     };
 
     Model.prototype.union = function(arrays) {
-      var arr, item, result, _i, _j, _len, _len2;
+      var arr, id, result, _i, _j, _len, _len2;
       result = [];
       for (_i = 0, _len = arrays.length; _i < _len; _i++) {
         arr = arrays[_i];
         for (_j = 0, _len2 = arr.length; _j < _len2; _j++) {
-          item = arr[_j];
-          if (__indexOf.call(result, item) < 0) result.push(item);
+          id = arr[_j];
+          if (__indexOf.call(result, id) < 0) result.push(id);
         }
       }
       return result;
@@ -434,14 +438,14 @@
       this.state.ids.hidden = [];
       this.state.ids.shown = [];
       ids = [];
-      arrays = [];
       for (filter in this.state.filters) {
+        arrays = [];
         for (value in this.state.filters[filter].active) {
           if (this.state.filters[filter].active[value].length) {
             arrays.push(this.state.filters[filter].active[value]);
           }
         }
-        ids.push(this.intersection(arrays));
+        ids.push(this.intersectAll(arrays));
       }
       this.state.ids.hidden = this.union(ids);
       _ref = this.state.ids.all;
@@ -461,12 +465,6 @@
         this.state.filters[filter].active[value] = [];
       }
       return this.state.filters[filter].active[value].push(id);
-    };
-
-    Model.prototype.removeFromFilter = function(filter, value, id) {
-      var i;
-      i = this.state.filters[filter].active[value].indexOf(id);
-      return this.state.filters[filter].active[value].splice(i, 1);
     };
 
     Model.prototype.filterAnnotations = function(filter, value) {
@@ -627,38 +625,41 @@
     View.prototype.eraseFilter = function(id, value) {
       $('#' + id + '.' + select.filters.active + ("[data-value='" + value + "'")).remove();
       if (id === 'user') {
-        $('.' + select.button.active + '.' + select.button.user).removeClass(select.button.active);
+        return $('.' + select.button.active + '.' + select.button.user).removeClass(select.button.active);
       }
-      if (id === 'category') return this.checkboxEnable('highlights');
     };
 
     View.prototype.showAnnotations = function(ids) {
-      var id, _i, _len;
+      var id, _i, _len, _results;
+      _results = [];
       for (_i = 0, _len = ids.length; _i < _len; _i++) {
         id = ids[_i];
-        $('.' + select.annotation + id).removeClass(select.hide);
+        _results.push($('.' + select.annotation + id).removeClass(select.hide));
       }
-      return this.drawPagerCount();
+      return _results;
     };
 
     View.prototype.hideAnnotations = function(ids) {
-      var id, _i, _len;
+      var id, _i, _len, _results;
+      _results = [];
       for (_i = 0, _len = ids.length; _i < _len; _i++) {
         id = ids[_i];
-        $('.' + select.annotation + id).addClass(select.hide);
+        _results.push($('.' + select.annotation + id).addClass(select.hide));
       }
-      return this.drawPagerCount();
+      return _results;
     };
 
     View.prototype.drawAnnotations = function() {
       this.showAnnotations(this.Model.getShown());
-      return this.hideAnnotations(this.Model.getHidden());
+      this.hideAnnotations(this.Model.getHidden());
+      return this.drawPagerCount();
     };
 
     View.prototype.viewerShown = function(Viewer) {};
 
     View.prototype.scrollTo = function(annotation) {
       var highlight;
+      if (!annotation) return;
       highlight = $(annotation.highlights[0]);
       $("html, body").animate({
         scrollTop: highlight.offset().top - 300

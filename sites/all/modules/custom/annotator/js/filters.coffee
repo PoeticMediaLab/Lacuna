@@ -87,7 +87,6 @@ class Annotator.Plugin.Filters extends Annotator.Plugin
       for highlight in annotation.highlights
         $(highlight).first().attr('id', select.annotation + annotation.id)
         $(highlight).addClass(select.annotation + annotation.id)
-    @View.drawAnnotations()
     if @scrollTo?
       @View.scrollTo(@Model.annotation(@scrollTo))
     else
@@ -95,6 +94,7 @@ class Annotator.Plugin.Filters extends Annotator.Plugin
       @Model.filterAnnotations('user', @Model.get('currentUser'))
       @View.drawFilter('user', @Model.get('currentUser'))
       @View.drawActiveButton(select.button.mine)
+    @View.drawAnnotations()
 
   # Note the double arrows below:
   # methods called in click events need access to @
@@ -151,11 +151,8 @@ class Annotator.Plugin.Filters extends Annotator.Plugin
 
   checkboxToggle: (event) =>
     if event.target.name == 'highlights'
-      if @Model.toggleHighlights()
-        # We don't know that all highlights should be shown again
-        @View.drawAnnotations()
-      else
-        @View.drawAnnotations()
+      @Model.toggleHighlights()
+      @View.drawAnnotations()
     return
 
   removeFilterClick: (event) =>
@@ -163,6 +160,8 @@ class Annotator.Plugin.Filters extends Annotator.Plugin
     value = event.target.dataset.value
     @View.eraseFilter(id, value)
     @Model.removeFilter(id, value)
+    if id == 'category' and not @Model.filterIsActive('category')
+      @View.checkboxEnable('highlights')
     @View.drawAnnotations()
 
   pagerClick: (event) =>
@@ -187,7 +186,7 @@ class Annotator.Plugin.Filters extends Annotator.Plugin
 
 class Model
   state:
-    highlights: true    # show highlights
+    showHighlights: true
     ids:                # just IDs for quick hide/show
       all: []
       highlights: []
@@ -258,15 +257,15 @@ class Model
     # Return true if highlights should be shown
     # Note: they have their own filter type
     # Otherwise, they'll collide with the "real" categories
-    @state.highlights = !@state.highlights
-    if @state.highlights
+    @state.showHighlights = !@state.showHighlights
+    if @state.showHighlights
       @removeFilter('highlights', 'highlights')
     else
       @activateFilter('highlights', 'highlights')
       for id in @state.ids.highlights
         @addToFilter('highlights', 'highlights', id)
     @computeFilters()
-    return @state.highlights
+    return @state.showHighlights
 
   addFilterValue: (filter, value) ->
     if value not in @state.filters[filter].values
@@ -287,6 +286,8 @@ class Model
 
   filterIsActive: (filter, value) ->
     # Return true if given filter is active
+    if not value
+      return Object.keys(@state.filters[filter].active).length > 0
     return value of @state.filters[filter].active
 
   getFilterValues: () ->
@@ -317,49 +318,49 @@ class Model
         @state.filters[filter].active = {}
       @computeFilters()
 
-  _intersect: (a, b) ->
-    # We know our arrays are made of unique integers
+  intersection: (a, b) ->
     result = []
     if not b.length
       return a
     if not a.length
       return b
-    for item in a
-      result.push(item) if item in b
+    for id in a
+      # We know our arrays are made of unique integers
+      result.push(id) if id in b
     return result
 
-  intersection: (arrays) ->
+  intersectAll: (lists) ->
     # Return the intersection of given arrays
     result = []
-    if arrays.length == 0
+    if not lists or lists.length is 0
       return result
-    if arrays.length == 1
-      return arrays.pop()
-    for arr in arrays
-      result = @_intersect(result, arr)
+    else return lists[0] if lists.length is 1
+    for list in lists
+      result = @intersection(result, list)
     return result
 
   union: (arrays) ->
     # Return the union of given arrays
     result = []
     for arr in arrays
-      for item in arr
-        if item not in result
-          result.push(item)
+      for id in arr
+        if id not in result
+          result.push(id)
     return result
 
-  # runs an intersection on same filter types by value
-  # then a union on those results
   computeFilters: () ->
+    # Run an intersection on filter types w/ multiple values
+    # then a union on the results
+    # Logic: ('User A' OR 'User B') AND 'Tag C'
     @state.ids.hidden = []
     @state.ids.shown = []
     ids = []
-    arrays = []
     for filter of @state.filters
+      arrays = []
       for value of @state.filters[filter].active
         if @state.filters[filter].active[value].length
           arrays.push(@state.filters[filter].active[value])
-      ids.push(@intersection(arrays))
+      ids.push(@intersectAll(arrays))
     @state.ids.hidden = @union(ids)
     for id in @state.ids.all
       unless id in @state.ids.hidden
@@ -373,10 +374,6 @@ class Model
     if !@state.filters[filter].active[value]?
       @state.filters[filter].active[value] = []
     @state.filters[filter].active[value].push(id)
-
-  removeFromFilter: (filter, value, id) ->
-    i = @state.filters[filter].active[value].indexOf(id)
-    @state.filters[filter].active[value].splice(i, 1)
 
   filterAnnotations: (filter, value) ->
     # Look for matches of filter type
@@ -504,22 +501,19 @@ class View
     $('#' + id + '.' + select.filters.active + "[data-value='#{value}'").remove()
     if id == 'user'
       $('.' + select.button.active + '.' + select.button.user).removeClass(select.button.active)
-    if id == 'category'
-      @checkboxEnable('highlights')
 
   showAnnotations: (ids) ->
     for id in ids
       $('.' + select.annotation + id).removeClass(select.hide)
-    @drawPagerCount()
 
   hideAnnotations: (ids) ->
     for id in ids
       $('.' + select.annotation + id).addClass(select.hide)
-    @drawPagerCount()
 
   drawAnnotations: () ->
     @showAnnotations(@Model.getShown())
     @hideAnnotations(@Model.getHidden())
+    @drawPagerCount()
 
   viewerShown: (Viewer) =>
     # TODO: intercept viewer
@@ -538,6 +532,7 @@ class View
     # TODO: adjust viewer positioning so it more closely
     # matches user expectations; top/left values are not
     # exactly aligned with how one typically uses the Viewer
+    return if not annotation
     highlight = $(annotation.highlights[0])
     $("html, body").animate({
       scrollTop: highlight.offset().top - 300
