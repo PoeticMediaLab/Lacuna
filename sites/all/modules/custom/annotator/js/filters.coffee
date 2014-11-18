@@ -74,8 +74,8 @@ class Annotator.Plugin.Filters extends Annotator.Plugin
 
   pluginInit: ->
     @annotator.subscribe("annotationViewerShown", (Viewer) => @View.viewerShown(Viewer))
-    @annotator.subscribe("annotationCreated", (annotation) => @Model.addAnnotation(annotation))
-    @annotator.subscribe("annotationUpdated", (annotation) => @Model.updateAnnotation(annotation))
+    # @annotator.subscribe("annotationCreated", (annotation) => @Model.addAnnotation(annotation))
+    # @annotator.subscribe("annotationUpdated", (annotation) => @Model.updateAnnotation(annotation))
     return
 
   setup: (annotations) ->
@@ -204,6 +204,14 @@ class Model
   setup: (annotations) ->
     @state.annotations = annotations
     @state.total = annotations.length
+    annotations.sort (a,b) ->
+      # Order annotations by location in text, not creation time
+      rangeA = new Range()
+      rangeA.selectNodeContents(a.highlights[0])
+      rangeB = new Range()
+      rangeB.selectNodeContents(b.highlights[0])
+      return rangeA.compareBoundaryPoints(Range.START_TO_START, rangeB)
+
     if @state.total then @state.index = 1
     for annotation in annotations
       @state.ids.all.push(annotation.id)
@@ -229,6 +237,12 @@ class Model
 
   currentID: () ->
     return @state.ids.shown[@state.index - 1]
+
+  addAnnotation: (annotation) ->
+    return
+
+  updateAnnotation: (annotation) ->
+    return
 
   annotation: (id = null) ->
     # Return annotation for a given id

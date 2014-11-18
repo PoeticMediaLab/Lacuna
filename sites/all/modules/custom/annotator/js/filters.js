@@ -92,12 +92,6 @@
       this.annotator.subscribe("annotationViewerShown", function(Viewer) {
         return _this.View.viewerShown(Viewer);
       });
-      this.annotator.subscribe("annotationCreated", function(annotation) {
-        return _this.Model.addAnnotation(annotation);
-      });
-      this.annotator.subscribe("annotationUpdated", function(annotation) {
-        return _this.Model.updateAnnotation(annotation);
-      });
     };
 
     Filters.prototype.setup = function(annotations) {
@@ -113,12 +107,13 @@
           $(highlight).addClass(select.annotation + annotation.id);
         }
       }
-      this.Model.filterAnnotations('user', this.Model.get('currentUser'));
-      this.View.drawFilter('user', this.Model.get('currentUser'));
-      this.View.drawActiveButton(select.button.mine);
       this.View.drawAnnotations();
       if (this.scrollTo != null) {
         return this.View.scrollTo(this.Model.annotation(this.scrollTo));
+      } else {
+        this.Model.filterAnnotations('user', this.Model.get('currentUser'));
+        this.View.drawFilter('user', this.Model.get('currentUser'));
+        return this.View.drawActiveButton(select.button.mine);
       }
     };
 
@@ -236,6 +231,14 @@
       var annotation, filter, tag, _i, _len, _results;
       this.state.annotations = annotations;
       this.state.total = annotations.length;
+      annotations.sort(function(a, b) {
+        var rangeA, rangeB;
+        rangeA = new Range();
+        rangeA.selectNodeContents(a.highlights[0]);
+        rangeB = new Range();
+        rangeB.selectNodeContents(b.highlights[0]);
+        return rangeA.compareBoundaryPoints(Range.START_TO_START, rangeB);
+      });
       if (this.state.total) this.state.index = 1;
       _results = [];
       for (_i = 0, _len = annotations.length; _i < _len; _i++) {
@@ -289,6 +292,10 @@
     Model.prototype.currentID = function() {
       return this.state.ids.shown[this.state.index - 1];
     };
+
+    Model.prototype.addAnnotation = function(annotation) {};
+
+    Model.prototype.updateAnnotation = function(annotation) {};
 
     Model.prototype.annotation = function(id) {
       var annotation, _i, _len, _ref;
