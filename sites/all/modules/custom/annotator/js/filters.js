@@ -657,14 +657,26 @@
 
     View.prototype.viewerShown = function(Viewer) {};
 
+    View.prototype.getViewerPosition = function(annotation) {
+      var pos, range;
+      pos = $(annotation.highlights[0]).position();
+      range = annotation.ranges[0].toObject();
+      if (range.endOffset > range.startOffset) {
+        pos.left += range.endOffset - range.startOffset;
+      } else {
+        pos.left += range.startOffset;
+      }
+      return pos;
+    };
+
     View.prototype.scrollTo = function(annotation) {
       var highlight;
       if (!annotation) return;
       highlight = $(annotation.highlights[0]);
       $("html, body").animate({
-        scrollTop: highlight.offset().top - 300
+        scrollTop: highlight.offset().top - 500
       }, 150);
-      return $(this.element).annotator().annotator('showViewer', [annotation], highlight.position());
+      return $(this.element).annotator().annotator('showViewer', [annotation], this.getViewerPosition(annotation));
     };
 
     return View;

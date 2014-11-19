@@ -526,15 +526,21 @@ class View
     # annotations = @Model.dropFiltered(Viewer.annotations)
     # $(Drupal.settings.annotator.element).annotator().annotator('showViewer', annotations, Viewer.position())
 
+  getViewerPosition: (annotation) ->
+    pos = $(annotation.highlights[0]).position()
+    range = annotation.ranges[0].toObject()
+    if range.endOffset > range.startOffset
+      pos.left += range.endOffset - range.startOffset
+    else
+      pos.left += range.startOffset
+    return pos
+
   scrollTo: (annotation) ->
     # Jump to selected annotation
     # Load annotation viewer
-    # TODO: adjust viewer positioning so it more closely
-    # matches user expectations; top/left values are not
-    # exactly aligned with how one typically uses the Viewer
     return if not annotation
     highlight = $(annotation.highlights[0])
     $("html, body").animate({
-      scrollTop: highlight.offset().top - 300
+      scrollTop: highlight.offset().top - 500
     }, 150)
-    $(@element).annotator().annotator('showViewer', [annotation], highlight.position());
+    $(@element).annotator().annotator('showViewer', [annotation], @getViewerPosition(annotation));
