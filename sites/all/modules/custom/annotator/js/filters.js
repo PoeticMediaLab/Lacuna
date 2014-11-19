@@ -69,7 +69,7 @@
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
           item = _ref[_i];
           pair = item.split('=');
-          if (pair[0] === 'scrollTo') this.scrollTo = pair[1];
+          if (pair[0] === 'id') this.scrollToID = pair[1];
         }
       }
       this.Model = new Model;
@@ -107,8 +107,8 @@
           $(highlight).addClass(select.annotation + annotation.id);
         }
       }
-      if (this.scrollTo != null) {
-        this.View.scrollTo(this.Model.annotation(this.scrollTo));
+      if (this.scrollToID != null) {
+        this.View.scrollTo(this.Model.annotation(this.scrollToID));
       } else {
         this.Model.filterAnnotations('user', this.Model.get('currentUser'));
         this.View.drawFilter('user', this.Model.get('currentUser'));
@@ -364,6 +364,18 @@
 
     Model.prototype.getShown = function() {
       return this.state.ids.shown;
+    };
+
+    Model.prototype.dropHidden = function(annotations) {
+      var annotation, shown, _i, _len, _ref;
+      shown = [];
+      for (_i = 0, _len = annotations.length; _i < _len; _i++) {
+        annotation = annotations[_i];
+        if (_ref = annotation.id, __indexOf.call(this.state.ids.hidden, _ref) < 0) {
+          shown.push(annotation);
+        }
+      }
+      return shown;
     };
 
     Model.prototype.removeAllFilters = function() {
@@ -655,7 +667,15 @@
       return this.drawPagerCount();
     };
 
-    View.prototype.viewerShown = function(Viewer) {};
+    View.prototype.viewerShown = function(Viewer) {
+      var annotations;
+      Viewer.hide();
+      annotations = this.Model.dropHidden(Viewer.annotations);
+      if (annotations.length) {
+        Viewer.load(annotations);
+        return Viewer.show();
+      }
+    };
 
     View.prototype.getViewerPosition = function(annotation) {
       var pos, range;

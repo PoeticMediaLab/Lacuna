@@ -60,9 +60,9 @@ class Annotator.Plugin.Filters extends Annotator.Plugin
       query = window.location.search.substring(1)
       for item in query.split('&')
         pair = item.split('=')
-        if pair[0] == 'scrollTo'
+        if pair[0] == 'id'
           # Store for after full plugin initialization
-          @scrollTo = pair[1]
+          @scrollToID = pair[1]
     @Model = new Model
     @View = new View
     @View.element = element # For finding the annotator
@@ -87,8 +87,8 @@ class Annotator.Plugin.Filters extends Annotator.Plugin
       for highlight in annotation.highlights
         $(highlight).first().attr('id', select.annotation + annotation.id)
         $(highlight).addClass(select.annotation + annotation.id)
-    if @scrollTo?
-      @View.scrollTo(@Model.annotation(@scrollTo))
+    if @scrollToID?
+      @View.scrollTo(@Model.annotation(@scrollToID))
     else
       # Filter only if we're not scrolling to
       @Model.filterAnnotations('user', @Model.get('currentUser'))
@@ -305,6 +305,14 @@ class Model
     # Return array of all ids that are NOT filtered
     return @state.ids.shown
 
+  dropHidden: (annotations) ->
+    # Remove all annotations from array that are currently hidden
+    shown = []
+    for annotation in annotations
+      unless annotation.id in @state.ids.hidden
+        shown.push(annotation)
+    return shown
+
   removeAllFilters: () ->
     for filter of @state.filters
       for value of @state.filters[filter].active
@@ -516,15 +524,12 @@ class View
     @drawPagerCount()
 
   viewerShown: (Viewer) =>
-    # TODO: intercept viewer
-    # Hide it
-    # Check with model for annotations in viewer
-    # that should be hidden
-    # then show viewer with new list
-    # Create Model.dropFilteredIDs() to check a list
-    # Viewer.hide()
-    # annotations = @Model.dropFiltered(Viewer.annotations)
-    # $(Drupal.settings.annotator.element).annotator().annotator('showViewer', annotations, Viewer.position())
+    # Only display Viewer for annotations that aren't hidden
+    Viewer.hide()
+    annotations = @Model.dropHidden(Viewer.annotations)
+    if annotations.length
+      Viewer.load(annotations)
+      Viewer.show()
 
   getViewerPosition: (annotation) ->
     pos = $(annotation.highlights[0]).position()
