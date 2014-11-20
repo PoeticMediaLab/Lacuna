@@ -20,5 +20,6 @@ features[views_view][] = my_content
 features[views_view][] = responses
 features[views_view][] = sewing-kit
 features[views_view][] = stitchings
-mtime = 1416440605
+features[views_view][] = threads
+mtime = 1416453798
 project path = sites/all/modules/features
