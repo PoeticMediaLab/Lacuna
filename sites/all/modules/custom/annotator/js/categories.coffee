@@ -23,6 +23,7 @@ class Annotator.Plugin.Categories extends Annotator.Plugin
 
   events:
     '.annotator-category click' : "changeSelectedCategory"
+    '.annotator-category tap' : "changeSelectedCategory"
     'annotationEditorSubmit'    : "saveCategory"
     'annotationEditorShown'     : "highlightSelectedCategory"
     'annotationsLoaded'         : 'changeHighlightColors'
