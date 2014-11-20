@@ -2190,14 +2190,46 @@ div.views-row-last span.views-field-field-image div.topic_image {
 }
 
 /* line 142, ../sass/components/views.scss */
-.view-icon {
-  margin-left: auto;
-  margin-right: auto;
-}
-
-/* line 147, ../sass/components/views.scss */
 table.views-table {
   width: 100%;
+}
+
+/* line 151, ../sass/components/views.scss */
+.view-sewing-kit th.views-field-category,
+.view-sewing-kit th.views-field-text,
+.view-sewing-kit th.views-field-quote,
+.view-sewing-kit th.view-field-tags,
+.view-stitchings th.views-field-category,
+.view-stitchings th.views-field-text,
+.view-stitchings th.views-field-quote,
+.view-stitchings th.view-field-tags {
+  text-align: center;
+}
+/* line 154, ../sass/components/views.scss */
+.view-sewing-kit th,
+.view-stitchings th {
+  width: 2%;
+  max-width: 5%;
+}
+/* line 159, ../sass/components/views.scss */
+.view-sewing-kit th.views-field-text,
+.view-sewing-kit th.views-field-quote,
+.view-stitchings th.views-field-text,
+.view-stitchings th.views-field-quote {
+  width: 10% !important;
+  min-width: 100px;
+}
+/* line 164, ../sass/components/views.scss */
+.view-sewing-kit th.views-field-views-bulk-operations,
+.view-sewing-kit th.views-field-nothing,
+.view-stitchings th.views-field-views-bulk-operations,
+.view-stitchings th.views-field-nothing {
+  width: 1% !important;
+}
+/* line 167, ../sass/components/views.scss */
+.view-sewing-kit td.views-field-category,
+.view-stitchings td.views-field-category {
+  text-align: center;
 }
 
 /* line 3, ../sass/components/content.scss */

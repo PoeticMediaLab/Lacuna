@@ -5,9 +5,9 @@ core = 7.x
 
 dependencies[] = workflow
 
-; Information added by Drupal.org packaging script on 2014-10-15
-version = "7.x-2.5-beta1+8-dev"
+; Information added by Drupal.org packaging script on 2014-11-10
+version = "7.x-2.5-beta1+9-dev"
 core = "7.x"
 project = "workflow"
-datestamp = "1413398251"
+datestamp = "1415652235"
 

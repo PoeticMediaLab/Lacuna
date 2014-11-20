@@ -193,24 +193,6 @@ function lacuna_stories_menus_menu_default_menu_links() {
     'customized' => 1,
     'parent_identifier' => 'main-menu_explore:<nolink>',
   );
-  // Exported menu link: main-menu_my-annotations:my-annotations
-  $menu_links['main-menu_my-annotations:my-annotations'] = array(
-    'menu_name' => 'main-menu',
-    'link_path' => 'my-annotations',
-    'router_path' => 'my-annotations',
-    'link_title' => 'My Annotations',
-    'options' => array(
-      'identifier' => 'main-menu_my-annotations:my-annotations',
-    ),
-    'module' => 'system',
-    'hidden' => 0,
-    'external' => 0,
-    'has_children' => 0,
-    'expanded' => 0,
-    'weight' => -50,
-    'customized' => 1,
-    'parent_identifier' => 'main-menu_reflect:<nolink>',
-  );
   // Exported menu link: main-menu_my-profile:user
   $menu_links['main-menu_my-profile:user'] = array(
     'menu_name' => 'main-menu',
@@ -232,24 +214,6 @@ function lacuna_stories_menus_menu_default_menu_links() {
     'customized' => 1,
     'parent_identifier' => 'main-menu_account:<nolink>',
   );
-  // Exported menu link: main-menu_my-threads:my-threads
-  $menu_links['main-menu_my-threads:my-threads'] = array(
-    'menu_name' => 'main-menu',
-    'link_path' => 'my-threads',
-    'router_path' => 'my-threads',
-    'link_title' => 'My Threads',
-    'options' => array(
-      'identifier' => 'main-menu_my-threads:my-threads',
-    ),
-    'module' => 'system',
-    'hidden' => 0,
-    'external' => 0,
-    'has_children' => 0,
-    'expanded' => 0,
-    'weight' => -49,
-    'customized' => 1,
-    'parent_identifier' => 'main-menu_connect:<nolink>',
-  );
   // Exported menu link: main-menu_my-writing:my-writing
   $menu_links['main-menu_my-writing:my-writing'] = array(
     'menu_name' => 'main-menu',
@@ -266,7 +230,7 @@ function lacuna_stories_menus_menu_default_menu_links() {
     'expanded' => 0,
     'weight' => -49,
     'customized' => 1,
-    'parent_identifier' => 'main-menu_reflect:<nolink>',
+    'parent_identifier' => 'main-menu_create:<nolink>',
   );
   // Exported menu link: main-menu_reflect:<nolink>
   $menu_links['main-menu_reflect:<nolink>'] = array(
@@ -364,7 +328,7 @@ function lacuna_stories_menus_menu_default_menu_links() {
     'expanded' => 0,
     'weight' => -50,
     'customized' => 1,
-    'parent_identifier' => 'main-menu_create:<nolink>',
+    'parent_identifier' => 'main-menu_connect:<nolink>',
   );
   // Exported menu link: main-menu_syllabus:syllabus
   $menu_links['main-menu_syllabus:syllabus'] = array(
@@ -381,24 +345,6 @@ function lacuna_stories_menus_menu_default_menu_links() {
     'has_children' => 0,
     'expanded' => 0,
     'weight' => -47,
-    'customized' => 1,
-    'parent_identifier' => 'main-menu_explore:<nolink>',
-  );
-  // Exported menu link: main-menu_topics:topics
-  $menu_links['main-menu_topics:topics'] = array(
-    'menu_name' => 'main-menu',
-    'link_path' => 'topics',
-    'router_path' => 'topics',
-    'link_title' => 'Topics',
-    'options' => array(
-      'identifier' => 'main-menu_topics:topics',
-    ),
-    'module' => 'system',
-    'hidden' => 0,
-    'external' => 0,
-    'has_children' => 0,
-    'expanded' => 0,
-    'weight' => -48,
     'customized' => 1,
     'parent_identifier' => 'main-menu_explore:<nolink>',
   );
@@ -419,7 +365,7 @@ function lacuna_stories_menus_menu_default_menu_links() {
     'external' => 0,
     'has_children' => 0,
     'expanded' => 0,
-    'weight' => -49,
+    'weight' => -50,
     'customized' => 1,
     'parent_identifier' => 'main-menu_create:<nolink>',
   );
@@ -434,9 +380,7 @@ function lacuna_stories_menus_menu_default_menu_links() {
   t('Help');
   t('Logout');
   t('Materials');
-  t('My Annotations');
   t('My Profile');
-  t('My Threads');
   t('My Writing');
   t('Reflect');
   t('Research Consent');
@@ -444,7 +388,6 @@ function lacuna_stories_menus_menu_default_menu_links() {
   t('Responses Map');
   t('Sewing Kit');
   t('Syllabus');
-  t('Topics');
   t('Write a Response');
 
 

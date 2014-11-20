@@ -483,6 +483,8 @@ class WorkflowTransition extends Entity {
    *   The entity, that is added to the Transition.
    */
   public function getEntity() {
+    $info = entity_get_info($this->entity_type);
+
     // A correct call, return the $entity.
     if (empty($this->entity)) {
       $entity_type = $this->entity_type;
@@ -490,9 +492,11 @@ class WorkflowTransition extends Entity {
       $this->entity = entity_load_single($entity_type, $entity_id);
     }
 
-    // Make sure the vid of Entity and Transition are equal.
-    // Especially for Scheduled Transition, that do not have this set, yet.
-    $this->revision_id = $this->entity->vid;
+    if ($revision_key = ($info['entity keys']['revision'] && isset($entity->{$info['entity keys']['revision']})) ? $entity->{$info['entity keys']['revision']} : NULL) {
+      // Make sure the vid of Entity and Transition are equal.
+      // Especially for Scheduled Transition, that do not have this set, yet.
+      $this->revision_id = $this->entity->{$revision_key};
+    }
 
     return $this->entity;
   }

@@ -15,7 +15,7 @@ function lacuna_stories_content_types_context_default_contexts() {
   $context->api_version = 3;
   $context->name = 'annotation_filters';
   $context->description = 'Annotation Filters';
-  $context->tag = '';
+  $context->tag = 'materials';
   $context->conditions = array(
     'node' => array(
       'values' => array(
@@ -47,6 +47,7 @@ function lacuna_stories_content_types_context_default_contexts() {
   // Translatables
   // Included for use with string extractors like potx.
   t('Annotation Filters');
+  t('materials');
   $export['annotation_filters'] = $context;
 
   return $export;

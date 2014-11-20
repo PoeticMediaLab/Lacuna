@@ -139,11 +139,32 @@ $views-link-hover-color: #1588BA;
   }
 }
 
-.view-icon {
-  margin-left: auto;
-  margin-right: auto;
-}
-
 table.views-table {
   width: 100%;
+}
+
+.view-sewing-kit,
+.view-stitchings {
+  th.views-field-category,
+  th.views-field-text,
+  th.views-field-quote,
+  th.view-field-tags {
+    text-align: center;
+  }
+  th {
+    width: 2%;
+    max-width: 5%;
+  }
+  th.views-field-text,
+  th.views-field-quote {
+      width: 10% !important;
+      min-width: 100px;
+  }
+  th.views-field-views-bulk-operations,
+  th.views-field-nothing {
+    width: 1% !important;
+  }
+  td.views-field-category {
+    text-align: center;
+  }
 }

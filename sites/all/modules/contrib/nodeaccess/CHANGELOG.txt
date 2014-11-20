@@ -1,0 +1,41 @@
+Nodeaccess 7.x-1.x
+===================
+
+Nodeaccess 7.x-1.4
+===================
+Issue #436918: Aliases are not being saved for disabled roles, port to D7.
+Issue #2187571 by e.escribano, jshirkey: Fix node type grant tab choice.
+
+Nodeaccess 7.x-1.3
+===================
+Issue #2173497: Remove undefined variable rows.
+
+
+Nodeaccess 7.x-1.2
+===================
+Issue #2173497: remove undefined variable rid.
+
+Nodeaccess 7.x-1.1
+===================
+Issue #2146209: Show localized role names in Grant tab.
+Issue #306541: Strange behavior about anonymous content management.
+Issues #2033711 and #2075033: Anonymous access for existing nodes
+(fix by k4v and Blackice2999).
+Issues #2040967 and #2037225: Unpublished access ignore set. User
+reference access fix.
+
+Nodeaccess 7.x-1.0
+===================
+A number of bug fixes, including:
+Issue #1414256 by rv0: enable 'Keep?' for new users (fix by rv0).
+Issue #1444040 by natuk: Access to unpublished nodes.
+Code cleanup. Remove nodeaccess_node_insert(), it's handled by node_access now.
+Issue #306541 by gianfrasoft: Strange behavior anonymous content management.
+Issue #1496280 by rv0: Don't enforce default "View" access setting.
+------------------------------------------------------------------------------
+Issue #1088920 by Peasoup: Undefined offset fix (fix by rv0).
+Issue #1200556 by xjm: D7 IA standards, use admin/config/people path.
+Issue #1846786 by jcmc: Correct the admin path in info file.
+Issue #1285150 by jmart: Undefined index: keys in nodeaccess_grants_form().
+Issue #1082262 by aquaseal: Undefined $rows in nodeaccess_grants_form().
+Issue #1155706 by tristanmatthews: Undefined index in nodeaccess_access().
