@@ -26,7 +26,6 @@ class Annotator.Plugin.Categories extends Annotator.Plugin
 
   events:
     '.annotator-category click' : "changeSelectedCategory"
-    '.annotator-category tap'   : "changeSelectedCategory"
     'annotationEditorSubmit'    : "saveCategory"
     'annotationEditorShown'     : "highlightSelectedCategory"
     'annotationsLoaded'         : 'changeHighlightColors'
@@ -48,6 +47,9 @@ class Annotator.Plugin.Categories extends Annotator.Plugin
       label: Annotator._t('Category')
       options: @options
     })
+
+    # Add support for touch devices
+    $(document).delegate(".annotator-category", "tap", preventDefault: false, @changeSelectedCategory)
 
     @annotator.viewer.addField({
       load: @updateViewer

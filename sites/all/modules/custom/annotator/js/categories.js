@@ -21,7 +21,6 @@
 
     Categories.prototype.events = {
       '.annotator-category click': "changeSelectedCategory",
-      '.annotator-category tap': "changeSelectedCategory",
       'annotationEditorSubmit': "saveCategory",
       'annotationEditorShown': "highlightSelectedCategory",
       'annotationsLoaded': 'changeHighlightColors'
@@ -38,6 +37,9 @@
         label: Annotator._t('Category'),
         options: this.options
       });
+      $(document).delegate(".annotator-category", "tap", {
+        preventDefault: false
+      }, this.changeSelectedCategory);
       this.annotator.viewer.addField({
         load: this.updateViewer,
         options: this.options
