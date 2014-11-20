@@ -12,6 +12,9 @@
 # Mike Widner <mikewidner@stanford.edu>
 # Based on earlier plugin by Adi Singh
 #
+
+$ = jQuery;
+
 class Annotator.Plugin.Categories extends Annotator.Plugin
   options:
     categories: []
@@ -23,7 +26,7 @@ class Annotator.Plugin.Categories extends Annotator.Plugin
 
   events:
     '.annotator-category click' : "changeSelectedCategory"
-    # '.annotator-category tap'   : "changeSelectedCategory"
+    '.annotator-category tap'   : "changeSelectedCategory"
     'annotationEditorSubmit'    : "saveCategory"
     'annotationEditorShown'     : "highlightSelectedCategory"
     'annotationsLoaded'         : 'changeHighlightColors'
