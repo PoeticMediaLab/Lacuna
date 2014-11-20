@@ -1077,6 +1077,23 @@ function lacuna_stories_views_views_default_views() {
   $handler->display->display_options['fields']['type']['id'] = 'type';
   $handler->display->display_options['fields']['type']['table'] = 'node';
   $handler->display->display_options['fields']['type']['field'] = 'type';
+  /* Field: Content: Body */
+  $handler->display->display_options['fields']['body']['id'] = 'body';
+  $handler->display->display_options['fields']['body']['table'] = 'field_data_body';
+  $handler->display->display_options['fields']['body']['field'] = 'body';
+  $handler->display->display_options['fields']['body']['label'] = '';
+  $handler->display->display_options['fields']['body']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['body']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['body']['hide_empty'] = TRUE;
+  /* Field: Content: Description */
+  $handler->display->display_options['fields']['thread_description']['id'] = 'thread_description';
+  $handler->display->display_options['fields']['thread_description']['table'] = 'field_data_thread_description';
+  $handler->display->display_options['fields']['thread_description']['field'] = 'thread_description';
+  $handler->display->display_options['fields']['thread_description']['alter']['alter_text'] = TRUE;
+  $handler->display->display_options['fields']['thread_description']['alter']['text'] = '[thread_description][body]';
+  $handler->display->display_options['fields']['thread_description']['alter']['max_length'] = '300';
+  $handler->display->display_options['fields']['thread_description']['alter']['trim'] = TRUE;
+  $handler->display->display_options['fields']['thread_description']['element_label_colon'] = FALSE;
   /* Field: Content: Post date */
   $handler->display->display_options['fields']['created']['id'] = 'created';
   $handler->display->display_options['fields']['created']['table'] = 'node';
@@ -1113,7 +1130,6 @@ function lacuna_stories_views_views_default_views() {
   $handler->display->display_options['filters']['type']['table'] = 'node';
   $handler->display->display_options['filters']['type']['field'] = 'type';
   $handler->display->display_options['filters']['type']['value'] = array(
-    'annotation' => 'annotation',
     'blog' => 'blog',
     'thread' => 'thread',
   );
@@ -1132,6 +1148,14 @@ function lacuna_stories_views_views_default_views() {
     6 => 0,
   );
   $handler->display->display_options['filters']['type']['expose']['reduce'] = TRUE;
+  /* Filter criterion: Content: Type */
+  $handler->display->display_options['filters']['type_1']['id'] = 'type_1';
+  $handler->display->display_options['filters']['type_1']['table'] = 'node';
+  $handler->display->display_options['filters']['type_1']['field'] = 'type';
+  $handler->display->display_options['filters']['type_1']['value'] = array(
+    'blog' => 'blog',
+    'thread' => 'thread',
+  );
 
   /* Display: Page */
   $handler = $view->new_display('page', 'Page', 'page');
