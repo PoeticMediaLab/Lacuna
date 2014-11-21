@@ -2172,13 +2172,13 @@ div.views-row-last span.views-field-field-image div.topic_image {
   display: inline;
 }
 /* line 126, ../sass/components/views.scss */
-.view-documents .views-widget input[name=field_tags_tid],
-.view-responses .views-widget input[name=field_tags_tid],
-.view-my-threads .views-widget input[name=field_tags_tid],
-.view-sewing-kit .views-widget input[name=field_tags_tid],
-.view-my-content .views-widget input[name=field_tags_tid],
-.view-all-annotations .views-widget input[name=field_tags_tid] {
-  width: 150px;
+.view-documents .views-widget input[type=text],
+.view-responses .views-widget input[type=text],
+.view-my-threads .views-widget input[type=text],
+.view-sewing-kit .views-widget input[type=text],
+.view-my-content .views-widget input[type=text],
+.view-all-annotations .views-widget input[type=text] {
+  width: 20%;
 }
 /* line 130, ../sass/components/views.scss */
 .view-documents .form-type-bef-checkbox,
@@ -2279,18 +2279,24 @@ table.views-table {
   margin-bottom: 20px;
 }
 
+/* line 26, ../sass/components/content.scss */
+#signup {
+  background-image: none;
+  text-align: center;
+}
+
 /***
  * Styling for jQuery autocomplete drop-downs in Annotator window only
  * A bit fragile because it relies on the Tags autocomplete being the first
  * of those UI elements to be added to the page
  * Unsure how to add a unique id to the element that we set - MLW
  ****/
-/* line 32, ../sass/components/content.scss */
+/* line 37, ../sass/components/content.scss */
 ul#ui-id-1.ui-autocomplete {
   padding-top: 50px;
 }
 
-/* line 37, ../sass/components/content.scss */
+/* line 42, ../sass/components/content.scss */
 legend span.fieldset-legend {
   font-weight: bold;
 }
@@ -2369,18 +2375,24 @@ legend span.fieldset-legend {
 }
 
 /* line 64, ../sass/components/buttons.scss */
+.lacuna-button-short {
+  width: auto !important;
+  font-size: default !important;
+}
+
+/* line 69, ../sass/components/buttons.scss */
 .form-submit {
   background-color: #92a6c4;
   background-image: linear-gradient(to bottom, #92a6c4, #39404a);
 }
 
-/* line 69, ../sass/components/buttons.scss */
+/* line 74, ../sass/components/buttons.scss */
 .form-submit:hover,
 .form-submit:focus {
   background-color: #39404a;
 }
 
-/* line 73, ../sass/components/buttons.scss */
+/* line 78, ../sass/components/buttons.scss */
 .view-documents #edit-reset.form-submit,
 .view-your-story #edit-reset.form-submit {
   margin-top: -40px;
@@ -2388,13 +2400,13 @@ legend span.fieldset-legend {
   float: right;
 }
 
-/* line 80, ../sass/components/buttons.scss */
+/* line 85, ../sass/components/buttons.scss */
 #blog-node-form #edit-body-und-0-format,
 #comment-form #edit-comment-body-und-0-format {
   display: none;
 }
 
-/* line 84, ../sass/components/buttons.scss */
+/* line 89, ../sass/components/buttons.scss */
 .publish-button {
   display: block;
   margin-top: 5px;

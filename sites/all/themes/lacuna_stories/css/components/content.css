@@ -30,18 +30,24 @@
   margin-bottom: 20px;
 }
 
+/* line 26, ../../sass/components/content.scss */
+#signup {
+  background-image: none;
+  text-align: center;
+}
+
 /***
  * Styling for jQuery autocomplete drop-downs in Annotator window only
  * A bit fragile because it relies on the Tags autocomplete being the first
  * of those UI elements to be added to the page
  * Unsure how to add a unique id to the element that we set - MLW
  ****/
-/* line 32, ../../sass/components/content.scss */
+/* line 37, ../../sass/components/content.scss */
 ul#ui-id-1.ui-autocomplete {
   padding-top: 50px;
 }
 
-/* line 37, ../../sass/components/content.scss */
+/* line 42, ../../sass/components/content.scss */
 legend span.fieldset-legend {
   font-weight: bold;
 }

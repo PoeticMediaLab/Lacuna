@@ -198,13 +198,13 @@ div.views-row-last span.views-field-field-image div.topic_image {
   display: inline;
 }
 /* line 126, ../../sass/components/views.scss */
-.view-documents .views-widget input[name=field_tags_tid],
-.view-responses .views-widget input[name=field_tags_tid],
-.view-my-threads .views-widget input[name=field_tags_tid],
-.view-sewing-kit .views-widget input[name=field_tags_tid],
-.view-my-content .views-widget input[name=field_tags_tid],
-.view-all-annotations .views-widget input[name=field_tags_tid] {
-  width: 150px;
+.view-documents .views-widget input[type=text],
+.view-responses .views-widget input[type=text],
+.view-my-threads .views-widget input[type=text],
+.view-sewing-kit .views-widget input[type=text],
+.view-my-content .views-widget input[type=text],
+.view-all-annotations .views-widget input[type=text] {
+  width: 20%;
 }
 /* line 130, ../../sass/components/views.scss */
 .view-documents .form-type-bef-checkbox,

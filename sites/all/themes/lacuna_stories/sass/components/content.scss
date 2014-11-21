@@ -23,6 +23,11 @@
   margin-bottom: 20px;
 }
 
+#signup {
+  background-image: none;
+  text-align: center;
+}
+
 /***
  * Styling for jQuery autocomplete drop-downs in Annotator window only
  * A bit fragile because it relies on the Tags autocomplete being the first

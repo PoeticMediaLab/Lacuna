@@ -123,8 +123,8 @@ $views-link-hover-color: #1588BA;
   }
   .views-widget {
     display: inline;
-    input[name=field_tags_tid] {
-      width: 150px;
+    input[type=text] {
+      width: 20%;
     }
   }
   .form-type-bef-checkbox {

@@ -21,10 +21,10 @@
       'wrapper': 'af-pager-wrapper',
       'count': 'af-pager-count',
       'arrow': 'af-pager-arrow',
-      'first': 'fa fa-angle-double-left',
-      'prev': 'fa fa-angle-left',
-      'next': 'fa fa-angle-right',
-      'last': 'fa fa-angle-double-right'
+      'first': 'fa fa-angle-double-left fa-lg',
+      'prev': 'fa fa-angle-left fa-lg',
+      'next': 'fa fa-angle-right fa-lg',
+      'last': 'fa fa-angle-double-right fa-lg'
     },
     'button': {
       'default': 'af-button',
