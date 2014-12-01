@@ -52,7 +52,8 @@
 
     Filters.prototype.events = {
       'annotationsLoaded': 'setup',
-      '.annotation-filter click': 'filterSelect'
+      '.annotation-filter click': 'filterSelect',
+      '.annotation-filter tap': 'filterSelect'
     };
 
     function Filters(element, options) {
@@ -159,6 +160,7 @@
       }
       this.View.drawActiveButton(type);
       this.View.drawAnnotations();
+      return null;
     };
 
     Filters.prototype.checkboxToggle = function(event) {
@@ -555,7 +557,7 @@
       return $('#' + loc).append($('<span>', {
         id: select.button[id],
         "class": classes
-      }).text(id).on('click', this.Controller.buttonClick));
+      }).text(id).on('tap click', this.Controller.buttonClick));
     };
 
     View.prototype.drawActiveButton = function(id) {
@@ -588,7 +590,7 @@
       classes = [select.checkbox["default"], select.checkbox[id]].join(' ');
       return $(select.interface).append($("<input type='checkbox' name='" + id + "' checked>", {
         name: id
-      }).on("click", this.Controller.checkboxToggle)).append("<span id='" + id + "' class='" + classes + "'>" + value + "</span>");
+      }).on("tap click", this.Controller.checkboxToggle)).append("<span id='" + id + "' class='" + classes + "'>" + value + "</span>");
     };
 
     View.prototype.drawAutocomplete = function(id, values) {
@@ -607,11 +609,11 @@
     View.prototype.drawPager = function(first, last) {
       var p;
       p = select.pager;
-      this.i.append($("<i id='first' class='" + p["default"] + " " + p.arrow + " " + p.first + "'/>")).on("click", 'i#first', this.Controller.pagerClick);
-      this.i.append($("<i id='prev' class='" + p["default"] + " " + p.arrow + " " + p.prev + "'/>")).on("click", 'i#prev', this.Controller.pagerClick);
+      this.i.append($("<i id='first' class='" + p["default"] + " " + p.arrow + " " + p.first + "'/>")).on("tap click", 'i#first', this.Controller.pagerClick);
+      this.i.append($("<i id='prev' class='" + p["default"] + " " + p.arrow + " " + p.prev + "'/>")).on("tap click", 'i#prev', this.Controller.pagerClick);
       this.i.append($("<span id='" + p.count + "' class='" + p["default"] + "'>").text(first + ' of ' + last));
-      this.i.append($("<i id='next' class='" + p["default"] + " " + p.arrow + " " + p.next + "'/>")).on("click", 'i#next', this.Controller.pagerClick);
-      this.i.append($("<i id='last' class='" + p["default"] + " " + p.arrow + " " + p.last + "'/>")).on("click", 'i#last', this.Controller.pagerClick);
+      this.i.append($("<i id='next' class='" + p["default"] + " " + p.arrow + " " + p.next + "'/>")).on("tap click", 'i#next', this.Controller.pagerClick);
+      this.i.append($("<i id='last' class='" + p["default"] + " " + p.arrow + " " + p.last + "'/>")).on("tap click", 'i#last', this.Controller.pagerClick);
       $('.' + p["default"]).wrapAll("<div id='" + p.wrapper + "'></div>");
     };
 
@@ -627,7 +629,7 @@
         id: id,
         "class": classes,
         'data-value': value
-      }).text(' ' + id + ': ' + value).on("click", this.Controller.removeFilterClick));
+      }).text(' ' + id + ': ' + value).on("tap click", this.Controller.removeFilterClick));
     };
 
     View.prototype.eraseAllFilters = function() {

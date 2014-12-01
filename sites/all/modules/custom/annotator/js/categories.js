@@ -20,6 +20,7 @@
     };
 
     Categories.prototype.events = {
+      '.annotator-category tap': "changeSelectedCategory",
       '.annotator-category click': "changeSelectedCategory",
       'annotationEditorSubmit': "saveCategory",
       'annotationEditorShown': "highlightSelectedCategory",
@@ -133,9 +134,8 @@
       }
       $(this.field).html(categoryHTML);
       totalWidth = 0;
-      $(".annotator-widget").width(1000);
       $(".annotator-category").each(function(index) {
-        totalWidth += parseInt($(this).outerWidth(), 10);
+        totalWidth += parseInt($(this).width(), 10);
       });
       $(".annotator-widget").width(totalWidth);
       return this.setSelectedCategory(annotation.category);

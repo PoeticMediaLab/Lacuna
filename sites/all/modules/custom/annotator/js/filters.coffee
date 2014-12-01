@@ -52,6 +52,7 @@ class Annotator.Plugin.Filters extends Annotator.Plugin
   events:
     'annotationsLoaded': 'setup'
     '.annotation-filter click': 'filterSelect'
+    '.annotation-filter tap': 'filterSelect'
 
   constructor: (element, options) ->
     super
@@ -147,7 +148,7 @@ class Annotator.Plugin.Filters extends Annotator.Plugin
       type = select.button.mine
     @View.drawActiveButton(type)
     @View.drawAnnotations()
-    return
+    return null
 
   checkboxToggle: (event) =>
     if event.target.name == 'highlights'
@@ -436,7 +437,7 @@ class View
     $('#' + loc).append($('<span>',
       {id: select.button[id], class: classes})
       .text(id)
-      .on('click', @Controller.buttonClick))
+      .on('tap click', @Controller.buttonClick))
 
   drawActiveButton: (id) ->
     $('.' + select.button.active).removeClass(select.button.active)
@@ -463,7 +464,7 @@ class View
     classes = [select.checkbox.default, select.checkbox[id]].join(' ')
     $(select.interface).append($("<input type='checkbox' name='#{id}' checked>",
       {name: id})
-      .on("click", @Controller.checkboxToggle)
+      .on("tap click", @Controller.checkboxToggle)
     ).append("<span id='#{id}' class='#{classes}'>#{value}</span>")
 
   drawAutocomplete: (id, values) ->
@@ -477,11 +478,11 @@ class View
 
   drawPager: (first, last) ->
     p = select.pager
-    @i.append($("<i id='first' class='#{p.default} #{p.arrow} #{p.first}'/>")).on("click", 'i#first', @Controller.pagerClick)
-    @i.append($("<i id='prev' class='#{p.default} #{p.arrow} #{p.prev}'/>")).on("click", 'i#prev', @Controller.pagerClick)
+    @i.append($("<i id='first' class='#{p.default} #{p.arrow} #{p.first}'/>")).on("tap click", 'i#first', @Controller.pagerClick)
+    @i.append($("<i id='prev' class='#{p.default} #{p.arrow} #{p.prev}'/>")).on("tap click", 'i#prev', @Controller.pagerClick)
     @i.append($("<span id='#{p.count}' class='#{p.default}'>").text(first + ' of ' + last))
-    @i.append($("<i id='next' class='#{p.default} #{p.arrow} #{p.next}'/>")).on("click", 'i#next', @Controller.pagerClick)
-    @i.append($("<i id='last' class='#{p.default} #{p.arrow} #{p.last}'/>")).on("click", 'i#last', @Controller.pagerClick)
+    @i.append($("<i id='next' class='#{p.default} #{p.arrow} #{p.next}'/>")).on("tap click", 'i#next', @Controller.pagerClick)
+    @i.append($("<i id='last' class='#{p.default} #{p.arrow} #{p.last}'/>")).on("tap click", 'i#last', @Controller.pagerClick)
     $('.' + p.default).wrapAll("<div id='#{p.wrapper}'></div>")
     return
 
@@ -499,7 +500,7 @@ class View
         class: classes,
         'data-value': value})
       .text(' ' + id + ': ' + value)
-      .on("click", @Controller.removeFilterClick)
+      .on("tap click", @Controller.removeFilterClick)
       )
 
   eraseAllFilters: () ->

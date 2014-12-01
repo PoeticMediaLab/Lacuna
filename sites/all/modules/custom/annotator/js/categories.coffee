@@ -25,6 +25,7 @@ class Annotator.Plugin.Categories extends Annotator.Plugin
     annotatorHighlight: 'span.annotator-hl'
 
   events:
+    '.annotator-category tap' : "changeSelectedCategory"
     '.annotator-category click' : "changeSelectedCategory"
     'annotationEditorSubmit'    : "saveCategory"
     'annotationEditorShown'     : "highlightSelectedCategory"
@@ -126,12 +127,10 @@ class Annotator.Plugin.Categories extends Annotator.Plugin
     $(@field).html(categoryHTML)
     # Aggregator variable.
     totalWidth = 0
-    # Set width of arbitrarily large to get true width of categories instead of multi-line stretches.
-    $(".annotator-widget").width 1000
     # Sum up widths of each category.
     $(".annotator-category").each (index) ->
-      totalWidth += parseInt($(this).outerWidth(), 10)
+      totalWidth += parseInt($(this).width(), 10)
       return
-    # Set widget width with a 5 pixel buffer width per category.
+    # Set widget width
     $(".annotator-widget").width totalWidth
     @setSelectedCategory(annotation.category)
