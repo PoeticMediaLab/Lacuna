@@ -7,3 +7,4 @@ sites/*/private
 sites/*.lacunastories.com
 .DS_Store
 */.DS_Store
+sites/all/modules/contrib/coder
