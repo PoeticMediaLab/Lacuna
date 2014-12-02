@@ -65,13 +65,18 @@ function lacuna_stories_rules_default_rules_configuration() {
             "type" : { "value" : { "blog" : "blog", "thread" : "thread" } }
           }
         },
-        { "NOT data_is" : { "data" : [ "node:private" ], "value" : 1 } }
+        { "NOT data_is" : { "data" : [ "node:private" ], "value" : 1 } },
+        { "NOT data_is" : {
+            "data" : [ "node:author" ],
+            "value" : [ "node:annotation-reference:author" ]
+          }
+        }
       ],
       "DO" : [
         { "mail" : {
             "to" : [ "node:annotation-reference:author:mail" ],
             "subject" : "New annotation of [node:annotation-reference:title] on Lacuna Stories: [site:name]",
-            "message" : "Dear [node:annotation-reference:author:field-display-name],\\r\\n\\r\\nYour [node:annotation-reference:type] on Lacuna Stories: [site:name], \\u0022[node:annotation-reference:title]\\u0022 has been annotated by [node:author:field-display-name]:\\r\\n\\r\\n[node:text]\\r\\n\\r\\nTo view this annotation, visit the following link:\\r\\n\\r\\nhttp:\\/\\/[node:annotation-reference:url]?scrollTo=[node:nid]\\r\\n\\r\\nSincerely,\\r\\n\\r\\nThe Lacuna Stories Team",
+            "message" : "Dear [node:annotation-reference:author:field-display-name],\\r\\n\\r\\nYour post on Lacuna Stories: [site:name], \\u0022[node:annotation-reference:title]\\u0022 has been annotated by [node:author:field-display-name]:\\r\\n\\r\\n[node:text]\\r\\n\\r\\nTo view this annotation, visit the following link:\\r\\n\\r\\n[node:annotation-reference:url]?scrollTo=[node:nid]\\r\\n\\r\\nSincerely,\\r\\n\\r\\nThe Lacuna Stories Team",
             "language" : [ "" ]
           }
         }
