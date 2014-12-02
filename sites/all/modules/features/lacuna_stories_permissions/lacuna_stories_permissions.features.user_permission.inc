@@ -833,6 +833,7 @@ function lacuna_stories_permissions_user_default_permissions() {
     'roles' => array(
       'Content Manager' => 'Content Manager',
       'Instructor' => 'Instructor',
+      'Student' => 'Student',
       'administrator' => 'administrator',
     ),
     'module' => 'field_permissions',
@@ -1775,6 +1776,7 @@ function lacuna_stories_permissions_user_default_permissions() {
     'roles' => array(
       'Content Manager' => 'Content Manager',
       'Instructor' => 'Instructor',
+      'Student' => 'Student',
       'administrator' => 'administrator',
     ),
     'module' => 'field_permissions',
@@ -2112,6 +2114,13 @@ function lacuna_stories_permissions_user_default_permissions() {
     'module' => 'comment',
   );
 
+  // Exported permission: 'publish any annotation content'.
+  $permissions['publish any annotation content'] = array(
+    'name' => 'publish any annotation content',
+    'roles' => array(),
+    'module' => 'publishcontent',
+  );
+
   // Exported permission: 'publish any blog content'.
   $permissions['publish any blog content'] = array(
     'name' => 'publish any blog content',
@@ -2126,6 +2135,20 @@ function lacuna_stories_permissions_user_default_permissions() {
       'Content Manager' => 'Content Manager',
       'administrator' => 'administrator',
     ),
+    'module' => 'publishcontent',
+  );
+
+  // Exported permission: 'publish any thread content'.
+  $permissions['publish any thread content'] = array(
+    'name' => 'publish any thread content',
+    'roles' => array(),
+    'module' => 'publishcontent',
+  );
+
+  // Exported permission: 'publish editable annotation content'.
+  $permissions['publish editable annotation content'] = array(
+    'name' => 'publish editable annotation content',
+    'roles' => array(),
     'module' => 'publishcontent',
   );
 
@@ -2148,9 +2171,30 @@ function lacuna_stories_permissions_user_default_permissions() {
     'module' => 'publishcontent',
   );
 
+  // Exported permission: 'publish editable thread content'.
+  $permissions['publish editable thread content'] = array(
+    'name' => 'publish editable thread content',
+    'roles' => array(),
+    'module' => 'publishcontent',
+  );
+
+  // Exported permission: 'publish own annotation content'.
+  $permissions['publish own annotation content'] = array(
+    'name' => 'publish own annotation content',
+    'roles' => array(),
+    'module' => 'publishcontent',
+  );
+
   // Exported permission: 'publish own blog content'.
   $permissions['publish own blog content'] = array(
     'name' => 'publish own blog content',
+    'roles' => array(),
+    'module' => 'publishcontent',
+  );
+
+  // Exported permission: 'publish own thread content'.
+  $permissions['publish own thread content'] = array(
+    'name' => 'publish own thread content',
     'roles' => array(),
     'module' => 'publishcontent',
   );
@@ -2309,6 +2353,13 @@ function lacuna_stories_permissions_user_default_permissions() {
     'module' => 'flag',
   );
 
+  // Exported permission: 'unpublish any annotation content'.
+  $permissions['unpublish any annotation content'] = array(
+    'name' => 'unpublish any annotation content',
+    'roles' => array(),
+    'module' => 'publishcontent',
+  );
+
   // Exported permission: 'unpublish any blog content'.
   $permissions['unpublish any blog content'] = array(
     'name' => 'unpublish any blog content',
@@ -2323,6 +2374,20 @@ function lacuna_stories_permissions_user_default_permissions() {
       'Content Manager' => 'Content Manager',
       'administrator' => 'administrator',
     ),
+    'module' => 'publishcontent',
+  );
+
+  // Exported permission: 'unpublish any thread content'.
+  $permissions['unpublish any thread content'] = array(
+    'name' => 'unpublish any thread content',
+    'roles' => array(),
+    'module' => 'publishcontent',
+  );
+
+  // Exported permission: 'unpublish editable annotation content'.
+  $permissions['unpublish editable annotation content'] = array(
+    'name' => 'unpublish editable annotation content',
+    'roles' => array(),
     'module' => 'publishcontent',
   );
 
@@ -2345,9 +2410,30 @@ function lacuna_stories_permissions_user_default_permissions() {
     'module' => 'publishcontent',
   );
 
+  // Exported permission: 'unpublish editable thread content'.
+  $permissions['unpublish editable thread content'] = array(
+    'name' => 'unpublish editable thread content',
+    'roles' => array(),
+    'module' => 'publishcontent',
+  );
+
+  // Exported permission: 'unpublish own annotation content'.
+  $permissions['unpublish own annotation content'] = array(
+    'name' => 'unpublish own annotation content',
+    'roles' => array(),
+    'module' => 'publishcontent',
+  );
+
   // Exported permission: 'unpublish own blog content'.
   $permissions['unpublish own blog content'] = array(
     'name' => 'unpublish own blog content',
+    'roles' => array(),
+    'module' => 'publishcontent',
+  );
+
+  // Exported permission: 'unpublish own thread content'.
+  $permissions['unpublish own thread content'] = array(
+    'name' => 'unpublish own thread content',
     'roles' => array(),
     'module' => 'publishcontent',
   );
@@ -2604,6 +2690,7 @@ function lacuna_stories_permissions_user_default_permissions() {
     'roles' => array(
       'Content Manager' => 'Content Manager',
       'Instructor' => 'Instructor',
+      'Student' => 'Student',
       'administrator' => 'administrator',
     ),
     'module' => 'field_permissions',

@@ -22,10 +22,10 @@ function lacuna_stories_content_types_default_Workflow() {
     },
     "transitions" : {
       "1" : {"tid":"1","sid":"1","target_sid":"2","roles":{"-1":-1,"3":3,"4":4,"5":5},"wid":"1","name":"1_2","label":"","rdf_mapping":[]},
-      "2" : {"tid":"2","sid":"2","target_sid":"2","roles":{"-1":-1,"3":3,"4":4,"5":5},"wid":"1","name":"2_2","label":"","rdf_mapping":[]},
+      "2" : {"tid":"2","sid":"2","target_sid":"2","roles":{"-1":-1,"3":3,"4":4,"5":5,"6":6},"wid":"1","name":"2_2","label":"","rdf_mapping":[]},
       "3" : {"tid":"3","sid":"2","target_sid":"3","roles":{"-1":-1,"3":3,"4":4,"5":5},"wid":"1","name":"2_3","label":"Mark this document as ready for annotation. Cannot be reversed.","rdf_mapping":[]},
-      "4" : {"tid":"4","sid":"3","target_sid":"2","roles":{"3":3,"4":4},"wid":"1","name":"3_2","label":"","rdf_mapping":[]},
-      "5" : {"tid":"5","sid":"3","target_sid":"3","roles":{"-1":-1,"3":3,"4":4,"5":5},"wid":"1","name":"3_3","label":"","rdf_mapping":[]}
+      "4" : {"tid":"4","sid":"3","target_sid":"2","roles":{"-1":-1,"3":3,"4":4},"wid":"1","name":"3_2","label":"","rdf_mapping":[]},
+      "5" : {"tid":"5","sid":"3","target_sid":"3","roles":{"-1":-1,"3":3,"4":4,"5":5,"6":6},"wid":"1","name":"3_3","label":"","rdf_mapping":[]}
     },
     "label" : "Materials Publication States",
     "typeMap" : [],

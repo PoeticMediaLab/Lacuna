@@ -129,7 +129,7 @@ class Annotator.Plugin.Categories extends Annotator.Plugin
     totalWidth = 0
     # Sum up widths of each category.
     $(".annotator-category").each (index) ->
-      totalWidth += parseInt($(this).width(), 10)
+      totalWidth += parseInt($(this).outerWidth(), 10)
       return
     # Set widget width
     $(".annotator-widget").width totalWidth
