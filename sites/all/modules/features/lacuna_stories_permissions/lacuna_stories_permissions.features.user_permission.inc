@@ -436,15 +436,6 @@ function lacuna_stories_permissions_user_default_permissions() {
     'module' => 'system',
   );
 
-  // Exported permission: 'administer nodeaccess'.
-  $permissions['administer nodeaccess'] = array(
-    'name' => 'administer nodeaccess',
-    'roles' => array(
-      'administrator' => 'administrator',
-    ),
-    'module' => 'nodeaccess',
-  );
-
   // Exported permission: 'administer nodes'.
   $permissions['administer nodes'] = array(
     'name' => 'administer nodes',
@@ -2006,40 +1997,24 @@ function lacuna_stories_permissions_user_default_permissions() {
     'module' => 'features',
   );
 
-  // Exported permission: 'grant deletable node permissions'.
-  $permissions['grant deletable node permissions'] = array(
-    'name' => 'grant deletable node permissions',
+  // Exported permission: 'grant content access'.
+  $permissions['grant content access'] = array(
+    'name' => 'grant content access',
     'roles' => array(
+      'Content Manager' => 'Content Manager',
       'administrator' => 'administrator',
     ),
-    'module' => 'nodeaccess',
+    'module' => 'content_access',
   );
 
-  // Exported permission: 'grant editable node permissions'.
-  $permissions['grant editable node permissions'] = array(
-    'name' => 'grant editable node permissions',
+  // Exported permission: 'grant own content access'.
+  $permissions['grant own content access'] = array(
+    'name' => 'grant own content access',
     'roles' => array(
+      'Content Manager' => 'Content Manager',
       'administrator' => 'administrator',
     ),
-    'module' => 'nodeaccess',
-  );
-
-  // Exported permission: 'grant node permissions'.
-  $permissions['grant node permissions'] = array(
-    'name' => 'grant node permissions',
-    'roles' => array(
-      'administrator' => 'administrator',
-    ),
-    'module' => 'nodeaccess',
-  );
-
-  // Exported permission: 'grant own node permissions'.
-  $permissions['grant own node permissions'] = array(
-    'name' => 'grant own node permissions',
-    'roles' => array(
-      'administrator' => 'administrator',
-    ),
-    'module' => 'nodeaccess',
+    'module' => 'content_access',
   );
 
   // Exported permission: 'import from file'.

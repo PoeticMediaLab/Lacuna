@@ -142,6 +142,14 @@ function lacuna_stories_content_types_node_info() {
       'title_label' => t('Title'),
       'help' => '',
     ),
+    'page' => array(
+      'name' => t('Basic page'),
+      'base' => 'node_content',
+      'description' => t('Use <em>basic pages</em> for your static content, such as an \'About us\' page.'),
+      'has_title' => '1',
+      'title_label' => t('Title'),
+      'help' => '',
+    ),
     'thread' => array(
       'name' => t('Thread'),
       'base' => 'node_content',
