@@ -42,6 +42,10 @@ of notifications to send out per cron run.</p>
 <p>When setting how often notifications are sent, note that e-mail
 updates can only happen as frequently as the cron is set to run.</p>
 
+<p>To reset the count of failed sends to zero, look at the
+notification settings in the user's profile and save it press
+&#8220;Save settings&#8221; (there is no need to change anything).</p>
+
 <p>If you check &#8220;Include updated posts in notifications&#8221;, any change to a
 node or content will cause it to be included in the next notification.
 Note that even minor changes, such as correcting a trivial typo or
@@ -56,22 +60,13 @@ about unpublished content.  This is mainly to make the module useful
 to manage moderation queues.  Note that notifications about
 unpublished content are only sent once.</p>
 
-<h3>Defaults</h3>
+<p>The &#8220;Watchdog log level&#8221; setting lets you specify how much to log.  The
+setting &#8220;All&#8221; will make a log record of every notification mail sent.
+The setting &#8220;Failures+Summary&#8221; will only log failed notification
+attempts. It will also insert a summary of how many sent and how many
+failures at the end of each batch.  The &#8220;Failures&#8221; setting will omit the
+summary.  The &#8220;Nothing&#8221; setting will turn of logging for <em>Notify</em>.
 
-<p>The checkbox under &#8220;Notification default for new users&#8221; is used as the
-default value for the notification master switch on the new user
-registration.  Note that this setting has no effect unless you grant
-the anonymous user the right to access notify.</p>
-
-<p>The &#8220;Initial settings panel&#8221; let you set up the initial settings that
-will apply to new users registering, and to users that are enrolled in
-notifications with batch subscription. These settings have no effect
-on users that already have the master switch set to &#8220;Enabled&#8221;.</p>
-
-<p>The final section under the <strong>Settings</strong> tab let you
-set up notification subscriptions by node type.  Having nothing
-checked defaults to making all content types available for
-subscription.</p>
 
 <h3>Queue</h3>
 
@@ -100,8 +95,29 @@ non-blocked users that do not already subscribe to notifications will
 be subscribed with the initial settings set under the deafult tab.</p>
 
 
+<h3>Defaults</h3>
+
+<p>The checkbox under &#8220;Notification default for new users&#8221; is used as the
+default value for the notification master switch on the new user
+registration.  Note that this setting has no effect unless you grant
+the anonymous user the right to access notify.</p>
+
+<p>The &#8220;Initial settings panel&#8221; let you set up the initial settings that
+will apply to new users registering, and to users that are enrolled in
+notifications with batch subscription. These settings have no effect
+on users that already have the master switch set to &#8220;Enabled&#8221;.</p>
+
+<p>The final section under the <strong>Settings</strong> tab let you
+set up notification subscriptions by node type.  Having nothing
+checked defaults to making all content types available for
+subscription.</p>
+
 <h3>Users</h3>
 
 <p>The <strong>Users</strong> tab is to review and alter per-user settings for those users
 that have the master switch for notifications set to <em>Enabled</em>.</p>
+
+<p>If you tick the box &#8220;Bulk subscribe all users&#8221;, all
+non-blocked users that do not already subscribe to notifications will
+be subscribed with the initial settings set under the deafult tab.</p>
 

@@ -268,6 +268,32 @@ function nodeaccess_admin_form($form, $form_state) {
     );
   }
 
+  // Grant tab to node types.
+  $form['nodeaccess']['tabs'] = array(
+    '#type' => 'fieldset',
+    '#collapsible' => TRUE,
+    '#collapsed' => TRUE,
+    '#title' => t('Content Type Grant Tab Access'),
+    '#tree' => TRUE,
+    '#description' => t('Show grant tab for the following node types.'),
+  );
+
+  $options = array();
+  foreach (node_type_get_types() as $type => $bundle) {
+    $options[$type] = array(
+      'content_type' => check_plain($bundle->name),
+    );
+  }
+  $form['nodeaccess']['tabs']['show'] = array(
+    '#type' => 'tableselect',
+    '#header' => array(
+      'content_type' => t('Content type'),
+    ),
+    '#options' => $options,
+    '#default_value' => $show,
+    '#empty' => t('No content types to add a grant tab.'),
+  );
+
   // Generate fieldsets for each node type.
   foreach (node_type_get_types() as $type => $bundle) {
     $form['nodeaccess'][$type] = array(
@@ -277,12 +303,6 @@ function nodeaccess_admin_form($form, $form_state) {
       '#title' => check_plain($bundle->name),
       '#tree' => TRUE,
       '#theme' => 'nodeaccess_admin_form_types',
-    );
-
-    $form['nodeaccess'][$type]['show'] = array(
-      '#type' => 'checkbox',
-      '#title' => t('Show grant tab for this node type'),
-      '#default_value' => isset($show[$type]) ? $show[$type] : 0,
     );
 
     // Set default author permissions for node type.
@@ -421,12 +441,6 @@ function nodeaccess_admin_form_submit($form, $form_state) {
       );
     }
     variable_set('nodeaccess_' . $type, $grants);
-    if ($form_values[$type]['show']) {
-      $allowed_types[$type] = 1;
-    }
-    else {
-      $allowed_types[$type] = 0;
-    }
     $author_prefs[$type] = $form_values[$type]['author'];
     // Also save userreference default permissions if enabled.
     if (module_exists('user_reference') && isset($form_values[$type]['user_reference'])) {
@@ -444,8 +458,14 @@ function nodeaccess_admin_form_submit($form, $form_state) {
     }
   }
   variable_set('nodeaccess_authors', $author_prefs);
-  // Save allowed node types.
+
+  // Save allowed node type grant tab.
+  $allowed_types = array();
+  foreach ($form_values['tabs']['show'] as $type => $value) {
+    $allowed_types[$type] = (bool) $value;
+  }
   variable_set('nodeaccess-types', $allowed_types);
+
   node_access_needs_rebuild(TRUE);
   drupal_set_message(t('Grants saved.'));
 }
@@ -601,11 +621,10 @@ function nodeaccess_grants_form($form, &$form_state, $node) {
       $sql = "SELECT uid, name FROM {users} WHERE name LIKE :name";
       $name = preg_replace('!\*+!', '%', $form_values['keys']);
       $params[':name'] = $name;
-      $users = '';
-      if (isset($form_values['uid']) && is_array($form_values['uid'])) {
+
+      if (isset($form_values['uid']) && count($form_values['uid'])) {
         $sql .= ' AND uid NOT IN (:uid)';
-        $users = implode(',', array_keys($form_values['uid']));
-        $params[':uid'] = $users;
+        $params[':uid'] = array_keys($form_values['uid']);
       }
 
       $result = db_query($sql, $params);
@@ -1078,27 +1097,6 @@ function nodeaccess_node_access_records($node) {
     // Node has no own grants, use defaults if published.
     if ($node->status) {
       $grants = $default;
-    }
-    else {
-      // Otherwise, check access to unpublished content for authenticated and
-      // anonymous users.
-      $role_perms = user_role_permissions(array(
-        DRUPAL_ANONYMOUS_RID => DRUPAL_ANONYMOUS_RID,
-        DRUPAL_AUTHENTICATED_RID => DRUPAL_AUTHENTICATED_RID,
-      ));
-      // Anonymous user setting.
-      $grants = array();
-      $grants[] = array(
-        'gid' => DRUPAL_ANONYMOUS_RID,
-        'grant_view' => isset($role_perms[DRUPAL_ANONYMOUS_RID]['bypass node access']) ?
-          intval($role_perms[DRUPAL_ANONYMOUS_RID]['bypass node access']) : 0,
-      );
-      // Authenticated user setting.
-      $grants[] = array(
-        'gid' => DRUPAL_AUTHENTICATED_RID,
-        'grant_view' => isset($role_perms[DRUPAL_AUTHENTICATED_RID]['bypass node access']) ?
-          intval($role_perms[DRUPAL_AUTHENTICATED_RID]['bypass node access']) : 0,
-      );
     }
   }
   else {

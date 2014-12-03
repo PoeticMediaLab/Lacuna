@@ -4,9 +4,9 @@ package = Mail
 core = 7.x
 dependencies[] = views
 dependencies[] = notify
-; Information added by Drupal.org packaging script on 2014-08-13
-version = "7.x-1.1"
+; Information added by Drupal.org packaging script on 2014-11-20
+version = "7.x-1.2"
 core = "7.x"
 project = "notify"
-datestamp = "1407948664"
+datestamp = "1416466983"
 

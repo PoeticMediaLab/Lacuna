@@ -1,6 +1,12 @@
 Nodeaccess 7.x-1.x
 ===================
 
+Nodeaccess 7.x-1.5
+===================
+Issue #2228713 by willzyx: Unpublished nodes are visible.
+Issue #2140819 by justdave: "Preserve hidden grants" setting ignored.
+Issue #2364463 by nathanweeks, vlad.pavlovic: Incorrect SQL list quoting causes PostgreSQL error
+
 Nodeaccess 7.x-1.4
 ===================
 Issue #436918: Aliases are not being saved for disabled roles, port to D7.

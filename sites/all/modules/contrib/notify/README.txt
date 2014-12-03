@@ -104,12 +104,32 @@ of notifications to send out per cron run.
 When setting how often notifications are sent, note that e-mail
 updates can only happen as frequently as the cron is set to run.
 
+To reset the count of failed sends to zero, look at the notification
+settings in the user's profile and save it press "Save settings"
+(there is no need to change anything).
+
 If you check "Include updated posts in notifications", any change to a
 node or content will cause it to be included in the next notification.
 Note that even minor changes, such as correcting a trivial typo or
 setting or unsetting the "sticky" attribute for the node will flag it
 as updated, so use this option with caution in order to avoid excess
 notificatons.
+
+If you check "Exclude contents from unverified authors from user
+notifications", notify will not notify about postings from unverified
+(i.e. anonymous) authors.  You need only care about this setting if
+you you permit postings from anonymous authors.  Even if you have spam
+protection in the shape of CAPTCHA or other measures, you may
+experience that some spammers still manage to post contents on your
+site.  By checking this setting, you will at least save your
+subscribers from being notified about spam.  As with most of these
+settings, it doesn't apply to administrators. Even when checked
+administrators will be notified, in order to intervene and delete the
+spam before it gets much exposure.  Note that if you check this
+settings, there is currently no keeping track of the content that is
+excluded due this setting.  If you use it, your users will never
+receive any notification email about new content from unverified
+authors.  That's not a bug, it is a feature.
 
 If you check "Administrators shall be notified about unpublished
 content", users belonging to roles with the "administer nodes" and
@@ -118,22 +138,33 @@ about unpublished content.  This is mainly to make the module useful
 to manage moderation queues.  Note that notifications about
 unpublished content are only sent once.
 
+If you've set up a multilingual site, there should also be three radio
+buttons that allow you to filter notifications about new nodes against
+the user's language setting (may be set by editing the user profile).
+The first setting ("All contents") will notify a user about all new
+content on the site. If a piece of contents exists in more than one
+language, all versions will be notified about.  The setting "Contents
+in the user's preferred language + contents not yet translated" will
+notify about content in the user's preferred language and also about
+content that is in some other language if no translation of it
+exists. The last setting, "Only contents in the user's preferred
+language ", will only notify about new contents in the user's
+preferred language.  However, please note that new contents that are
+marked as "language neutral" will always be included in notifications.
+The multilingual settings do not apply to administrators.
+Administrators will always be notified about all new contents.  Note
+that if you use the second setting, contents that is not in the user's
+preferred language will be excluded from the notification if some
+translation of exists, even if that translation is not to the user's
+preferred language.
 
-Defaults
-
-The checkbox under "Notification default for new users" is used as the
-default value for the notification master switch on the new user
-registration.  Note that this setting has no effect unless you grant
-the anonymous user the right to access notify.
-
-The "Initial settings panel" let you set up the initial settings that
-will apply to new users registering, and to users that are enrolled in
-notifications with batch subscription. These settings have no effect
-on users that already have the master switch set to "Enabled".
-
-The final panel under the Settings tab let you set up notification
-subscriptions by node type.  Having nothing checked defaults to making
-all content types available for subscription.
+The "Watchdog log level" setting lets you specify how much to log.
+The setting "All" will make a log record of every notification mail
+sent.  The setting "Failures+Summary" will only log failed
+notification attempts. It will also insert a summary of how many sent
+and how many failures at the end of each batch.  The "Failures"
+setting will omit the summary.  The "Nothing" setting will turn of
+logging for Notify.
 
 
 Queue
@@ -155,6 +186,23 @@ the following meanings:
 
 The status panel gives the administrator a rough overview of the
 current state of the notification queue.
+
+
+Defaults
+
+The checkbox under "Notification default for new users" is used as the
+default value for the notification master switch on the new user
+registration.  Note that this setting has no effect unless you grant
+the anonymous user the right to access notify.
+
+The "Initial settings panel" let you set up the initial settings that
+will apply to new users registering, and to users that are enrolled in
+notifications with batch subscription. These settings have no effect
+on users that already have the master switch set to "Enabled".
+
+The final panel under the Settings tab let you set up notification
+subscriptions by node type.  Having nothing checked defaults to making
+all content types available for subscription.
 
 
 Users

@@ -124,11 +124,36 @@ function notify_admin_settings($form, &$form_state) {
     '#default_value' => variable_get('notify_include_updates', 0),
   );
 
+  $form['notify_settings']['notify_unverified'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Exclude contents from unverified authors from user notifications.'),
+    '#return_value' => 1,
+    '#default_value' => variable_get('notify_unverified', 0),
+  );
+
   $form['notify_settings']['notify_unpublished'] = array(
     '#type' => 'checkbox',
-   '#title' => t('Administrators shall be notified about unpublished content of tracked types.'),
+    '#title' => t('Administrators shall be notified about unpublished content of tracked types.'),
     '#return_value' => 1,
     '#default_value' => variable_get('notify_unpublished', 1),
+  );
+
+  if (drupal_multilingual()) {
+    $form['notify_settings']['notify_multilingual'] = array(
+      '#type' => 'radios',
+      '#title' => t('Multilingual setting &ndash; new contents to include:'),
+      '#default_value' => variable_get('notify_multilingual', 1),
+      '#options' => array(t('All contents'), t("Contents in the user's preferred language + contents not yet translated"), t("Only contents in the user's preferred language")),
+      '#description' => t('This setting lets you specfy what to include in user notifications on a multilingual site.  (Please note that new contents that are marked as "language neutral" will always be included, and that administrators will always be notified about all new contents.)'),
+    );
+  }
+
+  $form['notify_settings']['notify_watchdog'] = array(
+    '#type' => 'radios',
+    '#title' => t('Watchdog log level'),
+    '#default_value' => variable_get('notify_watchdog', 1),
+    '#options' => array(t('All'), t('Failures+Summary'), t('Failures'), t('Nothing')),
+    '#description' => t('This setting lets you specify how much to log.'),
   );
 
   $form['submit'] = array(
@@ -149,12 +174,16 @@ function notify_admin_settings_submit($form, &$form_state) {
   variable_set('notify_send_hour', $form_state['values']['notify_send_hour']);
   variable_set('notify_attempts', $form_state['values']['notify_attempts']);
   variable_set('notify_include_updates', $form_state['values']['notify_include_updates']);
+  variable_set('notify_unverified', $form_state['values']['notify_unverified']);
   variable_set('notify_unpublished', $form_state['values']['notify_unpublished']);
+  if (isset($form_state['values']['notify_multilingual'])) {
+    variable_set('notify_multilingual', $form_state['values']['notify_multilingual']);
+  }
+  variable_set('notify_watchdog', $form_state['values']['notify_watchdog']);
 
   variable_set('notify_cron_next', 0); // Force reset.
   drupal_set_message(t('Notify admin settings saved.'));
 }
-
 
 function _notify_cron_next($next_time_to_send) {
   $send_hour  = variable_get('notify_send_hour',  9);
@@ -162,7 +191,6 @@ function _notify_cron_next($next_time_to_send) {
   $cron_next = strtotime(date('Y-m-d ', $next_time_to_send) . $send_hour . ':00:00');
   return $cron_next;
 }
-
 
 /**
  * Compute the next time a notification shall be sent by adding to
@@ -468,10 +496,15 @@ function notify_user_settings_form($form, &$form_state, $arg) {
     $notify->teasers = 0;
     $notify->comment = 0;
   }
-  $output = theme('advanced_help_topic', array(
-    'module' => 'notify',
-    'topic' => 'users',
-  ));
+  if (module_exists('advanced_help')) {
+    $output = theme('advanced_help_topic', array(
+      'module' => 'notify',
+      'topic' => 'users',
+    ));
+  }
+  else {
+    $output = '';
+  }
 
   $form['notify_page_master']['status'] = array(
     '#type' => 'radios',
@@ -539,11 +572,11 @@ function notify_user_settings_form($form, &$form_state, $arg) {
     }
   }
 
-  $exists = _notify_user_has_subscriptions($user->uid);
+  $exists = _notify_user_has_subscriptions($account->uid);
   if ($exists) {
     // Custom subscriptions exists, use those.
     foreach ($enatypes as $type) {
-      $field = db_query('SELECT uid FROM {notify_subscriptions} WHERE (uid = :uid) AND (type = :type)', array(':uid' => $user->uid, ':type' => $type[0]))->fetchObject();
+      $field = db_query('SELECT uid FROM {notify_subscriptions} WHERE (uid = :uid) AND (type = :type)', array(':uid' => $account->uid, ':type' => $type[0]))->fetchObject();
       $default = $field ? TRUE : FALSE;
       $form[$set][NOTIFY_NODE_TYPE . $type[0]] = array(
         '#type' => 'checkbox',
@@ -885,6 +918,7 @@ function notify_admin_queue($form, &$form_state) {
 function notify_admin_queue_submit($form, &$form_state) {
   unset($form);
 
+  $watchdog_level = variable_get('notify_watchdog', 0);
   if (0 == $form_state['values']['process']) { // flush
     list($num_sent, $num_fail) = _notify_send();
 
@@ -895,12 +929,19 @@ function notify_admin_queue_submit($form, &$form_state) {
           '!fail' => $num_fail, '!emfail' =>  format_plural($num_fail, 'notification', 'notifications'),
         )
       ), 'error');
+      $watchdog_status = WATCHDOG_ERROR;
     }
     elseif ($num_sent > 0) {
       drupal_set_message(t('!count pending notification !emails have been sent in this pass.', array('!count' => $num_sent, '!emails' =>  format_plural($num_sent, 'e-mail', 'e-mails'))));
+      $watchdog_status = WATCHDOG_INFO;
     }
-    if (($num_sent + $num_fail) == 0) {
+    if (0 == ($num_sent + $num_fail)) {
       drupal_set_message(t('No notifications needed to be sent in this pass.'));
+    }
+    else {
+      if ($watchdog_level <= 1) {
+        watchdog('notify', 'Notifications sent: !sent, failures: !fail.', array('!sent' => $num_sent, '!fail' => $num_fail), $watchdog_status);
+      }
     }
     $num_sent += variable_get('notify_num_sent', 0);
     $num_fail += variable_get('notify_num_failed', 0);
@@ -920,6 +961,9 @@ function notify_admin_queue_submit($form, &$form_state) {
     variable_set('notify_cron_next', 0); // Force reset
     variable_set('notify_users', array());
     drupal_set_message(t('The notification queue has been truncated. No e-mail were sent.'));
+    if ($watchdog_level <= 1) {
+      watchdog('notify', 'Notification queue truncated.', NULL, WATCHDOG_INFO);
+    }
     return;
   }
 }
@@ -1372,6 +1416,8 @@ function _notify_send() {
     $batchlimit = variable_get('notify_batchsize', 100);
     $batchcount = 0;
 
+    //$s1 = t('Never', array(), array('langcode' => 'nb'));
+
     // Allow to safely impersonate the recipient so that the node is rendered
     // with correct field permissions.
     $original_user = $user;
@@ -1386,6 +1432,7 @@ function _notify_send() {
 
       // Intentionally replacing the Global $user.
       $user = $userobj;
+      $upl = user_preferred_language($user, 'en');
 
       $node_body = $comment_body = '';
 
@@ -1421,6 +1468,23 @@ function _notify_send() {
 	    }
           }
 
+          $ml_level = variable_get('notify_multilingual', 1);
+          if (!user_access('administer notify')) {
+            if ($ml_level && $node->tnid) {
+	      if ($node->language != $upl->language) {
+	        continue;
+              }
+	    }
+	    if ((2 == $ml_level) && (0 == $node->tnid) && ('und' != $node->language)) {
+	      continue;
+            }
+	    $ignore_unverified = variable_get('notify_unverified', 0);
+  	    if ($ignore_unverified && !$node->uid) {
+	      continue;
+ 	    }
+	  }
+          
+
           $node_revs_list = node_revision_list($node);
           $nrl_vals = array_values($node_revs_list);
           $vers = array_shift($nrl_vals);
@@ -1432,13 +1496,13 @@ function _notify_send() {
           if (count($node_revs_list) > 1) {
             $update = '(' . t('last updated by !author', array(
               '!author' => (format_username($vers) ? format_username($vers) : variable_get('anonymous', 'Anonymous')),
-            )) . ') ';
+            ), array('langcode' => $upl->language)) . ') ';
           }
           else {
             $update = '';
           }
           if (user_access('administer nodes', $userobj)) {
-            $status = $node->status == NODE_PUBLISHED ? t('[Published]') : t('[Unpublished]');
+            $status = $node->status == NODE_PUBLISHED ? t('[Published]', array(), array('langcode' => $upl->language)) : t('[Unpublished]', array(), array('langcode' => $upl->language));
           }
           else {
             $status = '';
@@ -1448,11 +1512,15 @@ function _notify_send() {
             '!author' => (format_username($node) ? format_username($node) : variable_get('anonymous', 'Anonymous')),
             '!update' => $update,
             '!status' => $status,
-          )) . "\n";
+          ), array('langcode' => $upl->language)) . "\n";
 
-          $node_body .= '   [ ' . url('node/' . $node->nid, array(
+	  $alias = drupal_multilingual() ? TRUE : FALSE;
+	  $node_body .= '   [ ' . url('node/' . $node->nid, array(
             'absolute' => TRUE,
-          )) . " ]\n";
+            'alias' => $alias,
+	    'language' => (object)array('language' => FALSE),
+          )) . " ]\n"; 
+
           $node_body .= _notify_content($node, NULL, $userrow['teasers']) . "\n";
         }
 
@@ -1460,11 +1528,10 @@ function _notify_send() {
         // least one node.
         if ($node_count > 0) {
           $node_body = $separator . t('Recent nodes - !count', array(
-            '!count' => format_plural($node_count, '1 new post', '@count new posts'),
-          )) . "\n" . $separator . $node_body;
+            '!count' => format_plural($node_count, '1 new post', '@count new posts', array(), array('langcode' => $upl->language)),
+          ), array('langcode' => $upl->language)) . "\n" . $separator . $node_body;
         }
       }
-
       // Consider new comments if user has permissions and comments are ready.
       // $userrow['comment']: user subscribes to nodes.
       // user_access('access comments', $userobj): user allowed to view published
@@ -1499,7 +1566,7 @@ function _notify_send() {
             }
             // Determine whether to show comment status.
             if (user_access('administer comments', $userobj)) {
-              $status = $commobj->status == COMMENT_PUBLISHED ? t('[Published]') : t('[Unpublished]');
+              $status = $commobj->status == COMMENT_PUBLISHED ? t('[Published]', array(), array('langcode' => $upl->language)) : t('[Unpublished]', array(), array('langcode' => $upl->language));
             }
             else {
               $status = '';
@@ -1508,7 +1575,7 @@ function _notify_send() {
               '!title' => $commobj->subject,
               '!author' => (format_username($commobj) ? format_username($commobj) : variable_get('anonymous', 'Anonymous')),
               '!status' => $status,
-            )) . "\n"
+            ), array('langcode' => $upl->language)) . "\n"
               . '      [ ' . url('node/' . $nid, array('fragment' => 'comment-' . $commobj->cid, 'absolute' => TRUE)) . " ]\n\n";
 
             $total_comment_count++;
@@ -1524,14 +1591,14 @@ function _notify_send() {
               '!title' => $node->title,
               '!type'  => node_type_get_name($node),
               '!author' => format_username($node) ? format_username($node) : variable_get('anonymous', 'Anonymous'),
-            )) . "\n\n" . $onecomment;
+            ), array('langcode' => $upl->language)) . "\n\n" . $onecomment;
           }
         }
 
         if ($total_comment_count > 0) {
           $comment_body = $separator . t('Recent comments - !count', array(
             '!count' => format_plural($total_comment_count, '1 new comment', '@count new comments'),
-          )) . "\n" . $separator . $comment_body;
+          ), array('langcode' => $upl->language)) . "\n" . $separator . $comment_body;
         }
       }
 
@@ -1541,17 +1608,22 @@ function _notify_send() {
 
       // If there was anything new, send mail.
       if ($body) {
+        $watchdog_level = variable_get('notify_watchdog', 0);
         if (drupal_mail('notify', 'send', $userrow['mail'], user_preferred_language($userrow), array('content' => $body, 'user' => $userobj, 'viewmode' => $userrow['teasers']))) {
-          watchdog('notify', 'User %name (%mail) notified successfully.', array('%name' => $userrow['name'], '%mail' => $userrow['mail']), WATCHDOG_INFO);
+          if ($watchdog_level == 0) {
+            watchdog('notify', 'User %name (%mail) notified successfully.', array('%name' => $userrow['name'], '%mail' => $userrow['mail']), WATCHDOG_INFO);
+          }
 	  $num_sent++;
         }
         else {
           $num_fail++;
           db_update('notify')
           ->expression('attempts', 'attempts + 1')
-          ->condition('uid', $userrow->uid)
+          ->condition('uid', $userrow['uid'])
           ->execute();
-          watchdog('notify', 'User %name (%mail) could not be notified. Mail error.', array('%name' => $userrow['name'], '%mail' => $userrow['mail']), WATCHDOG_ERROR);
+          if ($watchdog_level <= 2) {
+            watchdog('notify', 'User %name (%mail) could not be notified. Mail error.', array('%name' => $userrow['name'], '%mail' => $userrow['mail']), WATCHDOG_ERROR);
+          }
         }
       }
       unset($uresult[$index]);
@@ -1588,34 +1660,35 @@ function notify_mail($key, &$message, $params) {
   $useruid = $params['user']->uid;
   $viewmode = $params['viewmode'];
   $sitename = variable_get('site_name', 'Drupal');
+  $upl = user_preferred_language($params['user'], 'en');
 
   $message['headers']['MIME-Version'] = '1.0';
   $message['headers']['Content-Type'] = 'text/plain;charset=utf-8';
   $message['subject'] = t('New content notification for !username from !sitename', array(
     '!username' => $username,
     '!sitename' => $sitename,
-  ));
+      ), array('langcode' => $upl->language));
   $message['body'][] = t('Greetings !user, this is a notification about new content from !sitename.', array(
     '!user' => $username,
     '!sitename' => $sitename,
-  ));
-  $fulltext = t('Click on the links below to see the whole node/comment.');
+  ), array('langcode' => $upl->language));
+  $fulltext = t('Click on the links below to see the whole node/comment.', array(), array('langcode' => $upl->language));
   if (0 == $viewmode) {
-    $message['body'][] = t('This e-mail only lists the titles.') . ' ' . $fulltext;
+    $message['body'][] = t('This e-mail only lists the titles.', array(), array('langcode' => $upl->language)) . ' ' . $fulltext;
   }
   elseif (1 == $viewmode) {
-    $message['body'][] = t('This e-mail may only shows excerpts.') . ' ' . $fulltext;
+    $message['body'][] = t('This e-mail may only shows excerpts.', array(), array('langcode' => $upl->language)) . ' ' . $fulltext;
   }
   else {
-    $message['body'][] = t('The full text is included in this e-mail, but to see the original node, you can click on the links below.');
+    $message['body'][] = t('The full text is included in this e-mail, but to see the original node, you can click on the links below.', array(), array('langcode' => $upl->language));
   }
   $message['body'][] = $params['content'];
   $message['body'][] = "-- \n" .
     t('This is an automatic e-mail from !sitename.',
-      array('!sitename' => variable_get('site_name', 'Drupal'))) . "\n" .
+      array('!sitename' => variable_get('site_name', 'Drupal')), array('langcode' => $upl->language)) . "\n" .
     t('To stop receiving these e-mails, change your notification preferences at !notify-url', array(
       '!notify-url' => url('user/' . $useruid . '/notify', array('absolute' => TRUE)),
-    ));
+    ), array('langcode' => $upl->language));
 }
 
 
