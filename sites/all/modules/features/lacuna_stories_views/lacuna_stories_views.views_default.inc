@@ -566,6 +566,8 @@ function lacuna_stories_views_views_default_views() {
   $handler->display->display_options['fields']['biblio_abst_e']['exclude'] = TRUE;
   $handler->display->display_options['fields']['biblio_abst_e']['alter']['max_length'] = '600';
   $handler->display->display_options['fields']['biblio_abst_e']['alter']['trim'] = TRUE;
+  $handler->display->display_options['fields']['biblio_abst_e']['empty'] = 'No Abstract Provided';
+  $handler->display->display_options['fields']['biblio_abst_e']['hide_empty'] = TRUE;
   /* Field: Content: Hover Abstract */
   $handler->display->display_options['fields']['field_biblio_hover_abstract']['id'] = 'field_biblio_hover_abstract';
   $handler->display->display_options['fields']['field_biblio_hover_abstract']['table'] = 'field_data_field_biblio_hover_abstract';
@@ -575,6 +577,7 @@ function lacuna_stories_views_views_default_views() {
   $handler->display->display_options['fields']['field_biblio_hover_abstract']['exclude'] = TRUE;
   $handler->display->display_options['fields']['field_biblio_hover_abstract']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['field_biblio_hover_abstract']['empty'] = '[biblio_abst_e]';
+  $handler->display->display_options['fields']['field_biblio_hover_abstract']['hide_empty'] = TRUE;
   $handler->display->display_options['fields']['field_biblio_hover_abstract']['hide_alter_empty'] = FALSE;
   $handler->display->display_options['fields']['field_biblio_hover_abstract']['settings'] = array(
     'trim_length' => '600',
@@ -585,6 +588,7 @@ function lacuna_stories_views_views_default_views() {
   $handler->display->display_options['fields']['popup']['field'] = 'popup';
   $handler->display->display_options['fields']['popup']['label'] = '';
   $handler->display->display_options['fields']['popup']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['popup']['hide_empty'] = TRUE;
   $handler->display->display_options['fields']['popup']['title'] = '(See abstract)';
   $handler->display->display_options['fields']['popup']['text'] = '[field_biblio_hover_abstract] ';
   $handler->display->display_options['fields']['popup']['close'] = 0;
