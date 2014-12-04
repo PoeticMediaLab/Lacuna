@@ -42,3 +42,8 @@ ul#ui-id-1.ui-autocomplete {
 legend span.fieldset-legend {
   font-weight: bold;
 }
+
+// Hide the "Username's blog" text on responses
+li.blog_usernames_blog {
+  display: none !important;
+}

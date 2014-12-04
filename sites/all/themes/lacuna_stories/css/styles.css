@@ -2301,6 +2301,11 @@ legend span.fieldset-legend {
   font-weight: bold;
 }
 
+/* line 47, ../sass/components/content.scss */
+li.blog_usernames_blog {
+  display: none !important;
+}
+
 /* line 1, ../sass/components/buttons.scss */
 #edit-submit {
   width: 200px;

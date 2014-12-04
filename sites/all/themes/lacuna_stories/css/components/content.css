@@ -51,3 +51,8 @@ ul#ui-id-1.ui-autocomplete {
 legend span.fieldset-legend {
   font-weight: bold;
 }
+
+/* line 47, ../../sass/components/content.scss */
+li.blog_usernames_blog {
+  display: none !important;
+}
