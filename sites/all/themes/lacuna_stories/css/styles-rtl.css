@@ -17,7 +17,7 @@ dd {
 }
 
 /* Address paddings set differently in IE 6/7. */
-/* line 16, ../sass/_normalize-rtl.scss */
+/* line 14, ../sass/_normalize-rtl.scss */
 menu,
 ol,
 ul {
@@ -53,16 +53,16 @@ ul {
   /* line 88, ../sass/layouts/_responsive.scss */
   .sidebar-first #content {
     float: right;
-    width: 66.66667%;
-    margin-right: 33.33333%;
-    margin-left: -100%;
+    width: 200%;
+    margin-right: 100%;
+    margin-left: -300%;
   }
   /* line 93, ../sass/layouts/_responsive.scss */
   .sidebar-first .region-sidebar-first {
     float: right;
-    width: 33.33333%;
+    width: 100%;
     margin-right: 0%;
-    margin-left: -33.33333%;
+    margin-left: -100%;
   }
 
   /**
@@ -76,16 +76,16 @@ ul {
   /* line 103, ../sass/layouts/_responsive.scss */
   .sidebar-second #content {
     float: right;
-    width: 66.66667%;
+    width: 200%;
     margin-right: 0%;
-    margin-left: -66.66667%;
+    margin-left: -200%;
   }
   /* line 108, ../sass/layouts/_responsive.scss */
   .sidebar-second .region-sidebar-second {
     float: right;
-    width: 33.33333%;
-    margin-right: 66.66667%;
-    margin-left: -100%;
+    width: 100%;
+    margin-right: 200%;
+    margin-left: -300%;
   }
 
   /**
@@ -100,23 +100,23 @@ ul {
   /* line 118, ../sass/layouts/_responsive.scss */
   .two-sidebars #content {
     float: right;
-    width: 66.66667%;
-    margin-right: 33.33333%;
-    margin-left: -100%;
+    width: 200%;
+    margin-right: 100%;
+    margin-left: -300%;
   }
   /* line 123, ../sass/layouts/_responsive.scss */
   .two-sidebars .region-sidebar-first {
     float: right;
-    width: 33.33333%;
+    width: 100%;
     margin-right: 0%;
-    margin-left: -33.33333%;
+    margin-left: -100%;
   }
   /* line 128, ../sass/layouts/_responsive.scss */
   .two-sidebars .region-sidebar-second {
     float: right;
-    width: 100%;
+    width: 300%;
     margin-right: 0%;
-    margin-left: -100%;
+    margin-left: -300%;
     padding-left: 0;
     padding-right: 0;
     clear: right;
@@ -138,24 +138,24 @@ ul {
   /* line 138, ../sass/layouts/_responsive.scss */
   .two-sidebars .region-sidebar-second .block:nth-child(3n+1) {
     float: right;
-    width: 33.33333%;
+    width: 100%;
     margin-right: 0%;
-    margin-left: -33.33333%;
+    margin-left: -100%;
     clear: right;
   }
   /* line 143, ../sass/layouts/_responsive.scss */
   .two-sidebars .region-sidebar-second .block:nth-child(3n+2) {
     float: right;
-    width: 33.33333%;
-    margin-right: 33.33333%;
-    margin-left: -66.66667%;
+    width: 100%;
+    margin-right: 100%;
+    margin-left: -200%;
   }
   /* line 147, ../sass/layouts/_responsive.scss */
   .two-sidebars .region-sidebar-second .block:nth-child(3n) {
     float: right;
-    width: 33.33333%;
-    margin-right: 66.66667%;
-    margin-left: -100%;
+    width: 100%;
+    margin-right: 200%;
+    margin-left: -300%;
   }
 }
 /**
@@ -173,16 +173,16 @@ ul {
   /* line 166, ../sass/layouts/_responsive.scss */
   .sidebar-first #content {
     float: right;
-    width: 80%;
-    margin-right: 20%;
-    margin-left: -100%;
+    width: 400%;
+    margin-right: 100%;
+    margin-left: -500%;
   }
   /* line 171, ../sass/layouts/_responsive.scss */
   .sidebar-first .region-sidebar-first {
     float: right;
-    width: 20%;
+    width: 100%;
     margin-right: 0%;
-    margin-left: -20%;
+    margin-left: -100%;
   }
 
   /**
@@ -196,16 +196,16 @@ ul {
   /* line 181, ../sass/layouts/_responsive.scss */
   .sidebar-second #content {
     float: right;
-    width: 80%;
+    width: 400%;
     margin-right: 0%;
-    margin-left: -80%;
+    margin-left: -400%;
   }
   /* line 186, ../sass/layouts/_responsive.scss */
   .sidebar-second .region-sidebar-second {
     float: right;
-    width: 20%;
-    margin-right: 80%;
-    margin-left: -100%;
+    width: 100%;
+    margin-right: 400%;
+    margin-left: -500%;
   }
 
   /**
@@ -220,23 +220,23 @@ ul {
   /* line 196, ../sass/layouts/_responsive.scss */
   .two-sidebars #content {
     float: right;
-    width: 60%;
-    margin-right: 20%;
-    margin-left: -80%;
+    width: 300%;
+    margin-right: 100%;
+    margin-left: -400%;
   }
   /* line 201, ../sass/layouts/_responsive.scss */
   .two-sidebars .region-sidebar-first {
     float: right;
-    width: 20%;
+    width: 100%;
     margin-right: 0%;
-    margin-left: -20%;
+    margin-left: -100%;
   }
   /* line 206, ../sass/layouts/_responsive.scss */
   .two-sidebars .region-sidebar-second {
     float: right;
-    width: 20%;
-    margin-right: 80%;
-    margin-left: -100%;
+    width: 100%;
+    margin-right: 400%;
+    margin-left: -500%;
   }
 }
 /* Component (SMACSS module) rules */
@@ -263,7 +263,7 @@ ul {
  * Navigation bar.
  */
 /* Main menu and secondary menu links and menu block links. */
-/* line 27, ../sass/components/_misc-rtl.scss */
+/* line 26, ../sass/components/_misc-rtl.scss */
 #navigation .links,
 #navigation .menu {
   text-align: right;
@@ -357,7 +357,7 @@ span.field-label {
   text-align: right;
 }
 
-/* line 132, ../sass/components/_misc-rtl.scss */
+/* line 131, ../sass/components/_misc-rtl.scss */
 html.js #user-login-form li.openid-link,
 #user-login-form li.openid-link {
   /* Un-do some of the padding on the ul list. */

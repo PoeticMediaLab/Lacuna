@@ -65,7 +65,7 @@ stylesheets[all][] = css/styles.css
 
 ; Optionally add some JavaScripts to your theme.
 
-;scripts[] = js/script.js
+scripts[] = js/script.js
 
 
 

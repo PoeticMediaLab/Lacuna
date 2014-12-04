@@ -84,7 +84,7 @@ div.views-row-last span.views-field-field-image div.topic_image {
 }
 
 /* View-specific theming, for Materials, Responses, Threads */
-/* line 81, ../../sass/components/views.scss */
+/* line 80, ../../sass/components/views.scss */
 .view-documents .views-submit-button,
 .view-documents .views-widget-sort-order,
 .view-responses .views-submit-button,
@@ -108,7 +108,7 @@ div.views-row-last span.views-field-field-image div.topic_image {
 .view-responses .views-widget-sort-by .form-type-bef-link a,
 .view-my-threads .views-widget-sort-by .form-type-bef-link a,
 .view-sewing-kit .views-widget-sort-by .form-type-bef-link a {
-  color: gray;
+  color: #808080;
   font-weight: bold;
   font-size: 15px;
 }
@@ -117,14 +117,14 @@ div.views-row-last span.views-field-field-image div.topic_image {
 .view-responses .views-widget-sort-by .form-type-bef-link a:hover,
 .view-my-threads .views-widget-sort-by .form-type-bef-link a:hover,
 .view-sewing-kit .views-widget-sort-by .form-type-bef-link a:hover {
-  color: #1588ba;
+  color: #1588BA;
 }
 /* line 97, ../../sass/components/views.scss */
 .view-documents .views-widget-sort-by .form-type-bef-link.selected a,
 .view-responses .views-widget-sort-by .form-type-bef-link.selected a,
 .view-my-threads .views-widget-sort-by .form-type-bef-link.selected a,
 .view-sewing-kit .views-widget-sort-by .form-type-bef-link.selected a {
-  color: #1588ba;
+  color: #1588BA;
 }
 /* line 101, ../../sass/components/views.scss */
 .view-documents img,
@@ -137,17 +137,17 @@ div.views-row-last span.views-field-field-image div.topic_image {
   max-height: 100%;
   box-shadow: 0px 0px 10px #888888;
 }
-/* line 108, ../../sass/components/views.scss */
+/* line 109, ../../sass/components/views.scss */
 .view-documents .views-row,
 .view-responses .views-row,
 .view-my-threads .views-row,
 .view-sewing-kit .views-row {
   float: left;
   width: 150px;
-  margin: 20px 20px 65px 20px;
+  margin: 0px 0px 0px 0px;
   height: 350px;
 }
-/* line 114, ../../sass/components/views.scss */
+/* line 115, ../../sass/components/views.scss */
 .view-documents .views-exposed-widget,
 .view-responses .views-exposed-widget,
 .view-my-threads .views-exposed-widget,
@@ -166,21 +166,21 @@ div.views-row-last span.views-field-field-image div.topic_image {
   float: left;
   margin-right: 10px;
 }
-/* line 122, ../../sass/components/views.scss */
+/* line 123, ../../sass/components/views.scss */
 .view-documents .views-widget,
 .view-responses .views-widget,
 .view-my-threads .views-widget,
 .view-sewing-kit .views-widget {
   display: inline;
 }
-/* line 124, ../../sass/components/views.scss */
+/* line 125, ../../sass/components/views.scss */
 .view-documents .views-widget input[name=field_tags_tid],
 .view-responses .views-widget input[name=field_tags_tid],
 .view-my-threads .views-widget input[name=field_tags_tid],
 .view-sewing-kit .views-widget input[name=field_tags_tid] {
   width: 150px;
 }
-/* line 128, ../../sass/components/views.scss */
+/* line 129, ../../sass/components/views.scss */
 .view-documents .form-type-bef-checkbox,
 .view-responses .form-type-bef-checkbox,
 .view-my-threads .form-type-bef-checkbox,
@@ -190,7 +190,7 @@ div.views-row-last span.views-field-field-image div.topic_image {
   font-size: 0.95em;
   color: grey;
 }
-/* line 134, ../../sass/components/views.scss */
+/* line 135, ../../sass/components/views.scss */
 .view-documents .view-content h3,
 .view-responses .view-content h3,
 .view-my-threads .view-content h3,
@@ -200,7 +200,7 @@ div.views-row-last span.views-field-field-image div.topic_image {
   padding-top: 25px;
 }
 
-/* line 142, ../../sass/components/views.scss */
+/* line 143, ../../sass/components/views.scss */
 table.views-table {
   width: 100%;
 }
