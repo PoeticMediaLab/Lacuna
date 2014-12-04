@@ -1313,7 +1313,7 @@ function lacuna_stories_views_views_default_views() {
   $handler->display->display_options['filters']['field_genre_tid']['field'] = 'field_genre_tid';
   $handler->display->display_options['filters']['field_genre_tid']['exposed'] = TRUE;
   $handler->display->display_options['filters']['field_genre_tid']['expose']['operator_id'] = 'field_genre_tid_op';
-  $handler->display->display_options['filters']['field_genre_tid']['expose']['label'] = 'Genre';
+  $handler->display->display_options['filters']['field_genre_tid']['expose']['label'] = 'Limit by Genre';
   $handler->display->display_options['filters']['field_genre_tid']['expose']['operator'] = 'field_genre_tid_op';
   $handler->display->display_options['filters']['field_genre_tid']['expose']['identifier'] = 'field_genre_tid';
   $handler->display->display_options['filters']['field_genre_tid']['expose']['remember'] = TRUE;
@@ -1336,7 +1336,7 @@ function lacuna_stories_views_views_default_views() {
   $handler->display->display_options['filters']['field_topics_tid']['field'] = 'field_topics_tid';
   $handler->display->display_options['filters']['field_topics_tid']['exposed'] = TRUE;
   $handler->display->display_options['filters']['field_topics_tid']['expose']['operator_id'] = 'field_topics_tid_op';
-  $handler->display->display_options['filters']['field_topics_tid']['expose']['label'] = 'Topics';
+  $handler->display->display_options['filters']['field_topics_tid']['expose']['label'] = 'Limit by Topic';
   $handler->display->display_options['filters']['field_topics_tid']['expose']['operator'] = 'field_topics_tid_op';
   $handler->display->display_options['filters']['field_topics_tid']['expose']['identifier'] = 'field_topics_tid';
   $handler->display->display_options['filters']['field_topics_tid']['expose']['remember'] = TRUE;
@@ -1353,6 +1353,31 @@ function lacuna_stories_views_views_default_views() {
   $handler->display->display_options['filters']['field_topics_tid']['type'] = 'select';
   $handler->display->display_options['filters']['field_topics_tid']['vocabulary'] = 'topics';
   $handler->display->display_options['filters']['field_topics_tid']['error_message'] = FALSE;
+  /* Filter criterion: User: Display Name (field_display_name) */
+  $handler->display->display_options['filters']['field_display_name_value']['id'] = 'field_display_name_value';
+  $handler->display->display_options['filters']['field_display_name_value']['table'] = 'field_data_field_display_name';
+  $handler->display->display_options['filters']['field_display_name_value']['field'] = 'field_display_name_value';
+  $handler->display->display_options['filters']['field_display_name_value']['relationship'] = 'uid';
+  $handler->display->display_options['filters']['field_display_name_value']['operator'] = 'contains';
+  $handler->display->display_options['filters']['field_display_name_value']['exposed'] = TRUE;
+  $handler->display->display_options['filters']['field_display_name_value']['expose']['operator_id'] = 'field_display_name_value_op';
+  $handler->display->display_options['filters']['field_display_name_value']['expose']['label'] = 'Limit by Author';
+  $handler->display->display_options['filters']['field_display_name_value']['expose']['operator'] = 'field_display_name_value_op';
+  $handler->display->display_options['filters']['field_display_name_value']['expose']['identifier'] = 'field_display_name_value';
+  $handler->display->display_options['filters']['field_display_name_value']['expose']['remember_roles'] = array(
+    2 => '2',
+    1 => 0,
+    3 => 0,
+    4 => 0,
+    5 => 0,
+    6 => 0,
+  );
+  $handler->display->display_options['filters']['field_display_name_value']['expose']['autocomplete_items'] = '10';
+  $handler->display->display_options['filters']['field_display_name_value']['expose']['autocomplete_min_chars'] = '0';
+  $handler->display->display_options['filters']['field_display_name_value']['expose']['autocomplete_field'] = 'field_display_name';
+  $handler->display->display_options['filters']['field_display_name_value']['expose']['autocomplete_raw_suggestion'] = 1;
+  $handler->display->display_options['filters']['field_display_name_value']['expose']['autocomplete_raw_dropdown'] = 1;
+  $handler->display->display_options['filters']['field_display_name_value']['expose']['autocomplete_dependent'] = 0;
 
   /* Display: Page */
   $handler = $view->new_display('page', 'Page', 'page');
