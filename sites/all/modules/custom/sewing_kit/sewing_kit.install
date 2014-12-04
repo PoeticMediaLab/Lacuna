@@ -19,7 +19,7 @@ function sewing_kit_node_info() {
     'thread' => array(
       'name' => t('Thread'),
       'base' => 'node_content',
-      'description' => t('This content type stitches together items in a Sewing Kit.'),
+      'description' => t('Stitch annotations together into a thread.'),
       'title_label' => t('Title'),
       'has_title' => TRUE,
       'locked' => TRUE
@@ -81,7 +81,14 @@ function _thread_install_instances() {
       'description' => t('Describe why these pieces are stitched together'),
       'type' => 'text_long',
       'required' => TRUE,
-      'weight' => 0
+      'weight' => 0,
+      'widget' => array(
+        'type' => 'text_textarea',
+        'format' => 'full_html'
+      ),
+      'settings' => array(
+        'text_processing' => '1'
+      ),
     ),
     'thread_reference' => array(
       'field_name'  => 'thread_reference',
@@ -89,7 +96,12 @@ function _thread_install_instances() {
       'description' => t('References to the content stitched together'),
       'type' => 'entityreference',
       'required' => TRUE,
-      'weight' => 1
+      'weight' => 1,
+      'display' => array(
+        'default' => array(
+          'type' => 'hidden',
+        )
+      )
     )
   );
 }

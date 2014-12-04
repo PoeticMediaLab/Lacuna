@@ -96,13 +96,12 @@ function lacuna_stories_content_types_field_default_field_instances() {
     'entity_type' => 'comment',
     'field_name' => 'comment_body',
     'label' => 'Comment',
-    'required' => 1,
+    'required' => TRUE,
     'settings' => array(
       'text_processing' => 1,
       'user_register_form' => FALSE,
     ),
     'widget' => array(
-      'active' => 1,
       'module' => 'text',
       'settings' => array(
         'rows' => 5,
@@ -2725,178 +2724,6 @@ function lacuna_stories_content_types_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-thread-field_image'
-  $field_instances['node-thread-field_image'] = array(
-    'bundle' => 'thread',
-    'deleted' => 0,
-    'description' => '',
-    'display' => array(
-      'default' => array(
-        'label' => 'hidden',
-        'module' => 'image',
-        'settings' => array(
-          'image_link' => '',
-          'image_style' => '',
-        ),
-        'type' => 'image',
-        'weight' => 0,
-      ),
-      'teaser' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
-      ),
-    ),
-    'entity_type' => 'node',
-    'field_name' => 'field_image',
-    'label' => 'Image',
-    'required' => 0,
-    'settings' => array(
-      'alt_field' => 0,
-      'default_image' => 109,
-      'file_directory' => '',
-      'file_extensions' => 'png gif jpg jpeg',
-      'max_filesize' => '',
-      'max_resolution' => '',
-      'min_resolution' => '',
-      'title_field' => 0,
-      'user_register_form' => FALSE,
-    ),
-    'widget' => array(
-      'active' => 1,
-      'module' => 'image',
-      'settings' => array(
-        'preview_image_style' => 'thumbnail',
-        'progress_indicator' => 'throbber',
-      ),
-      'type' => 'image_image',
-      'weight' => 2,
-    ),
-  );
-
-  // Exported field_instance: 'node-thread-field_tags'
-  $field_instances['node-thread-field_tags'] = array(
-    'bundle' => 'thread',
-    'default_value' => NULL,
-    'deleted' => 0,
-    'description' => '',
-    'display' => array(
-      'default' => array(
-        'label' => 'above',
-        'module' => 'taxonomy',
-        'settings' => array(),
-        'type' => 'taxonomy_term_reference_link',
-        'weight' => 2,
-      ),
-      'teaser' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
-      ),
-    ),
-    'entity_type' => 'node',
-    'field_name' => 'field_tags',
-    'label' => 'Tags',
-    'required' => 0,
-    'settings' => array(
-      'user_register_form' => FALSE,
-    ),
-    'widget' => array(
-      'active' => 0,
-      'module' => 'taxonomy',
-      'settings' => array(
-        'autocomplete_path' => 'taxonomy/autocomplete',
-        'size' => 60,
-      ),
-      'type' => 'taxonomy_autocomplete',
-      'weight' => 5,
-    ),
-  );
-
-  // Exported field_instance: 'node-thread-thread_description'
-  $field_instances['node-thread-thread_description'] = array(
-    'bundle' => 'thread',
-    'default_value' => NULL,
-    'deleted' => 0,
-    'description' => 'Describe why these pieces are stitched together',
-    'display' => array(
-      'default' => array(
-        'label' => 'hidden',
-        'module' => 'text',
-        'settings' => array(),
-        'type' => 'text_default',
-        'weight' => 1,
-      ),
-      'teaser' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
-      ),
-    ),
-    'entity_type' => 'node',
-    'field_name' => 'thread_description',
-    'label' => 'Description',
-    'required' => TRUE,
-    'settings' => array(
-      'text_processing' => 0,
-      'user_register_form' => FALSE,
-    ),
-    'type' => 'text_long',
-    'weight' => 0,
-    'widget' => array(
-      'module' => 'text',
-      'settings' => array(
-        'rows' => 5,
-      ),
-      'type' => 'text_textarea',
-      'weight' => 3,
-    ),
-  );
-
-  // Exported field_instance: 'node-thread-thread_reference'
-  $field_instances['node-thread-thread_reference'] = array(
-    'bundle' => 'thread',
-    'default_value' => NULL,
-    'deleted' => 0,
-    'description' => 'References to the content stitched together',
-    'display' => array(
-      'default' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 3,
-      ),
-      'teaser' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
-      ),
-    ),
-    'entity_type' => 'node',
-    'field_name' => 'thread_reference',
-    'label' => 'Stitchings',
-    'required' => TRUE,
-    'settings' => array(
-      'user_register_form' => FALSE,
-    ),
-    'type' => 'entityreference',
-    'weight' => 1,
-    'widget' => array(
-      'module' => 'entityreference',
-      'settings' => array(
-        'match_operator' => 'CONTAINS',
-        'path' => '',
-        'size' => 60,
-      ),
-      'type' => 'entityreference_autocomplete',
-      'weight' => 4,
-    ),
-  );
-
   // Exported field_instance: 'node-video-field_bibliographic_entry'
   $field_instances['node-video-field_bibliographic_entry'] = array(
     'bundle' => 'video',
@@ -3694,8 +3521,6 @@ function lacuna_stories_content_types_field_default_field_instances() {
   t('Cover Image');
   t('Date of Birth');
   t('Decide if this annotation is private or not');
-  t('Describe why these pieces are stitched together');
-  t('Description');
   t('Determine if this is an OG group.');
   t('Display Name');
   t('Education');
@@ -3716,10 +3541,8 @@ function lacuna_stories_content_types_field_default_field_instances() {
   t('Private');
   t('Quote');
   t('Ranges');
-  t('References to the content stitched together');
   t('Start typing the name of materials on Lacuna Stories here, and they will autofill. Add everything that gets referenced or mentioned in your post. By using this feature, your writing will be linked with other materials on the site, and the networked thinking you do will be represented in the site\'s visualizations.');
   t('Status');
-  t('Stitchings');
   t('Syllabus File');
   t('Tags');
   t('Tags for an annotation');

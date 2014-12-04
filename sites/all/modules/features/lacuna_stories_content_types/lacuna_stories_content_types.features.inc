@@ -55,6 +55,9 @@ function lacuna_stories_content_types_ctools_plugin_api($module = NULL, $api = N
   if ($module == "field_group" && $api == "field_group") {
     return array("version" => "1");
   }
+  if ($module == "strongarm" && $api == "strongarm") {
+    return array("version" => "1");
+  }
 }
 
 /**
@@ -148,14 +151,6 @@ function lacuna_stories_content_types_node_info() {
       'description' => t('Use <em>basic pages</em> for your static content, such as an \'About us\' page.'),
       'has_title' => '1',
       'title_label' => t('Title'),
-      'help' => '',
-    ),
-    'thread' => array(
-      'name' => t('Thread'),
-      'base' => 'node_content',
-      'description' => t('This content type stitches together items in a Sewing Kit.'),
-      'has_title' => '1',
-      'title_label' => t('Title of My Thread'),
       'help' => '',
     ),
     'video' => array(

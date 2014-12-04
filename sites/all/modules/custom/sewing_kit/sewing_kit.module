@@ -12,7 +12,7 @@
 define('NEW_THREAD', -1);
 /***
  *
- * Implement a VBO action for user-facing Sewing Kit functionality 
+ * Implement a VBO action for user-facing Sewing Kit functionality
  *
  ***/
 function sewing_kit_action_info() {
@@ -27,35 +27,35 @@ function sewing_kit_action_info() {
   );
 }
 
-global $sewing_thread;  // cuz $thread seems a dangerous name
+global $_sewing_kit_thread;  // cuz $thread seems a dangerous name
 // Create a new Thread; populate with references to all selected nodes
 function sewing_kit_stitch(&$node, $context) {
     global $user;
-    global $sewing_thread;
+    global $_sewing_kit_thread;
 
     if ($context['progress']['current'] == 1) {
       if (!$context['thread_new']) {
         // Add to existing thread; we pass the node id in the select form
-        $sewing_thread = node_load($context['thread_add']);
-      } 
+        $_sewing_kit_thread = node_load($context['thread_add']);
+      }
       else {
-        $sewing_thread = new stdClass();
-        $sewing_thread->title = $context['thread_new'];
-        $sewing_thread->type = 'thread';
-        node_object_prepare($sewing_thread);
-        $sewing_thread->language = $node->language;
-        $sewing_thread->uid = $user->uid;
-        $sewing_thread->status = 1; // (1 or 0): published or not
-        $sewing_thread->promote = 0; // (1 or 0): promoted to front page
-        $sewing_thread->comment = 1; // allow commenting
-        $sewing_thread->thread_description[$node->language][]['value'] = $context['thread_description'];
-        $sewing_thread->thread_reference[$node->language] = array();
+        $_sewing_kit_thread = new stdClass();
+        $_sewing_kit_thread->title = $context['thread_new'];
+        $_sewing_kit_thread->type = 'thread';
+        node_object_prepare($_sewing_kit_thread);
+        $_sewing_kit_thread->language = $node->language;
+        $_sewing_kit_thread->uid = $user->uid;
+        $_sewing_kit_thread->status = 1; // (1 or 0): published or not
+        $_sewing_kit_thread->promote = 0; // (1 or 0): promoted to front page
+        $_sewing_kit_thread->comment = 1; // allow commenting
+        $_sewing_kit_thread->thread_description[$node->language][]['value'] = $context['thread_description'];
+        $_sewing_kit_thread->thread_reference[$node->language] = array();
       }
     }
 
     // Don't duplicate references, only add new ones
-    if (!array_key_exists($node->nid, $sewing_thread->thread_reference[$node->language])) {
-      $sewing_thread->thread_reference[$node->language][] = array(
+    if (!array_key_exists($node->nid, $_sewing_kit_thread->thread_reference[$node->language])) {
+      $_sewing_kit_thread->thread_reference[$node->language][] = array(
           'target_id' => $node->nid,
           'target_type' => 'node'
       );
@@ -63,11 +63,11 @@ function sewing_kit_stitch(&$node, $context) {
 
     if ($context['progress']['current'] == $context['progress']['total']) {
       // We're done; save
-      $sewing_thread = node_submit($sewing_thread);
-      node_save($sewing_thread);
-      drupal_set_message('Your thread ' . l($sewing_thread->title, 'node/' . $sewing_thread->nid) .  ' has been saved.');
+      $_sewing_kit_thread = node_submit($_sewing_kit_thread);
+      node_save($_sewing_kit_thread);
+      drupal_set_message('Your thread ' . l($_sewing_kit_thread->title, 'node/' . $_sewing_kit_thread->nid) .  ' has been saved.');
       // drupal_goto() breaks the AJAX here
-      // drupal_goto('node/' . $sewing_thread->nid);
+      // drupal_goto('node/' . $_sewing_kit_thread->nid);
     }
 }
 
@@ -83,7 +83,7 @@ function sewing_kit_stitch_form($settings) {
     ->propertyCondition('status', 1)
     ->propertyCondition('uid', $user->uid);
   $result = $query->execute();
- 
+
   if ($result) {
     $nids = array_keys($result['node']);
     foreach ($nids as $nid) {
@@ -114,7 +114,9 @@ function sewing_kit_stitch_form($settings) {
   );
 
   $form['thread_description'] = array(
-    '#type' => 'textarea',
+    '#type' => 'text_format',
+    '#base_type' => 'textarea',
+    '#format' => 'full_html',
     '#title' => t('Description'),
     '#default_value' => 'Enter a description here',
     '#rows' => 5,
