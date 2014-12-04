@@ -47,7 +47,7 @@ function sewing_kit_stitch(&$node, $context) {
         $_sewing_kit_thread->uid = $user->uid;
         $_sewing_kit_thread->status = 1; // (1 or 0): published or not
         $_sewing_kit_thread->promote = 0; // (1 or 0): promoted to front page
-        $_sewing_kit_thread->comment = 1; // allow commenting
+        $_sewing_kit_thread->comment = 2; // allow commenting
         $_sewing_kit_thread->thread_description[$node->language][]['value'] = $context['thread_description'];
         $_sewing_kit_thread->thread_reference[$node->language] = array();
       }
@@ -134,7 +134,7 @@ function sewing_kit_stitch_form($settings) {
 function sewing_kit_stitch_submit($form, $form_state) {
   $return = array();
   $return['thread_new'] = $form_state['values']['thread_new'];
-  $return['thread_description'] = $form_state['values']['thread_description_value'];
+  $return['thread_description']['value'] = $form_state['values']['thread_description']['value'];
   if ($form_state['values']['thread_add'] == NEW_THREAD) {
     $return['thread_add'] = FALSE;
   }
