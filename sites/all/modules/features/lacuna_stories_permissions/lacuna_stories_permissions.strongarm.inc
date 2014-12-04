@@ -144,24 +144,6 @@ function lacuna_stories_permissions_strongarm() {
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
-  $strongarm->name = 'content_access_thread';
-  $strongarm->value = array(
-    'view_own' => array(
-      0 => 2,
-      1 => 3,
-      2 => 4,
-    ),
-    'view' => array(
-      0 => 2,
-      1 => 3,
-      2 => 4,
-    ),
-  );
-  $export['content_access_thread'] = $strongarm;
-
-  $strongarm = new stdClass();
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
   $strongarm->name = 'content_access_video';
   $strongarm->value = array(
     'view_own' => array(

@@ -2724,6 +2724,89 @@ function lacuna_stories_content_types_field_default_field_instances() {
     ),
   );
 
+  // Exported field_instance: 'node-thread-thread_description'
+  $field_instances['node-thread-thread_description'] = array(
+    'bundle' => 'thread',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => 'Describe why these pieces are stitched together',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'text',
+        'settings' => array(),
+        'type' => 'text_default',
+        'weight' => 0,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'thread_description',
+    'label' => 'Description of My Thread',
+    'required' => TRUE,
+    'settings' => array(
+      'text_processing' => 1,
+      'user_register_form' => FALSE,
+    ),
+    'type' => 'text_long',
+    'weight' => 0,
+    'widget' => array(
+      'format' => 'full_html',
+      'module' => 'text',
+      'settings' => array(
+        'rows' => 5,
+      ),
+      'type' => 'text_textarea',
+      'weight' => 0,
+    ),
+  );
+
+  // Exported field_instance: 'node-thread-thread_reference'
+  $field_instances['node-thread-thread_reference'] = array(
+    'bundle' => 'thread',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => 'References to the content stitched together',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 1,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'thread_reference',
+    'label' => 'My Stitchings',
+    'required' => TRUE,
+    'settings' => array(
+      'user_register_form' => FALSE,
+    ),
+    'type' => 'entityreference',
+    'weight' => 1,
+    'widget' => array(
+      'module' => 'entityreference',
+      'settings' => array(
+        'match_operator' => 'CONTAINS',
+        'path' => '',
+        'size' => 60,
+      ),
+      'type' => 'entityreference_autocomplete',
+      'weight' => 1,
+    ),
+  );
+
   // Exported field_instance: 'node-video-field_bibliographic_entry'
   $field_instances['node-video-field_bibliographic_entry'] = array(
     'bundle' => 'video',
@@ -3521,6 +3604,8 @@ function lacuna_stories_content_types_field_default_field_instances() {
   t('Cover Image');
   t('Date of Birth');
   t('Decide if this annotation is private or not');
+  t('Describe why these pieces are stitched together');
+  t('Description of My Thread');
   t('Determine if this is an OG group.');
   t('Display Name');
   t('Education');
@@ -3535,12 +3620,14 @@ function lacuna_stories_content_types_field_default_field_instances() {
   t('Image');
   t('Major/Degree');
   t('Media');
+  t('My Stitchings');
   t('Page Numbers');
   t('Post Icon');
   t('Priority');
   t('Private');
   t('Quote');
   t('Ranges');
+  t('References to the content stitched together');
   t('Start typing the name of materials on Lacuna Stories here, and they will autofill. Add everything that gets referenced or mentioned in your post. By using this feature, your writing will be linked with other materials on the site, and the networked thinking you do will be represented in the site\'s visualizations.');
   t('Status');
   t('Syllabus File');

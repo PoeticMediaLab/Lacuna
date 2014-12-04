@@ -153,6 +153,14 @@ function lacuna_stories_content_types_node_info() {
       'title_label' => t('Title'),
       'help' => '',
     ),
+    'thread' => array(
+      'name' => t('Thread'),
+      'base' => 'node_content',
+      'description' => t('Stitch annotations together into a thread.'),
+      'has_title' => '1',
+      'title_label' => t('Title'),
+      'help' => '',
+    ),
     'video' => array(
       'name' => t('Video'),
       'base' => 'node_content',

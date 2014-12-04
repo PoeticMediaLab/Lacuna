@@ -1085,10 +1085,11 @@ function lacuna_stories_views_views_default_views() {
   $handler->display->display_options['fields']['body']['exclude'] = TRUE;
   $handler->display->display_options['fields']['body']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['body']['hide_empty'] = TRUE;
-  /* Field: Content: Description */
+  /* Field: Content: Description of My Thread */
   $handler->display->display_options['fields']['thread_description']['id'] = 'thread_description';
   $handler->display->display_options['fields']['thread_description']['table'] = 'field_data_thread_description';
   $handler->display->display_options['fields']['thread_description']['field'] = 'thread_description';
+  $handler->display->display_options['fields']['thread_description']['label'] = 'Description';
   $handler->display->display_options['fields']['thread_description']['alter']['alter_text'] = TRUE;
   $handler->display->display_options['fields']['thread_description']['alter']['text'] = '[thread_description][body]';
   $handler->display->display_options['fields']['thread_description']['alter']['max_length'] = '300';
@@ -2059,10 +2060,11 @@ function lacuna_stories_views_views_default_views() {
   $handler->display->display_options['fields']['nid']['group_type'] = 'count_distinct';
   $handler->display->display_options['fields']['nid']['label'] = 'Stitchings';
   $handler->display->display_options['fields']['nid']['exclude'] = TRUE;
-  /* Field: Content: Description */
+  /* Field: Content: Description of My Thread */
   $handler->display->display_options['fields']['thread_description']['id'] = 'thread_description';
   $handler->display->display_options['fields']['thread_description']['table'] = 'field_data_thread_description';
   $handler->display->display_options['fields']['thread_description']['field'] = 'thread_description';
+  $handler->display->display_options['fields']['thread_description']['label'] = 'Description';
   $handler->display->display_options['fields']['thread_description']['alter']['alter_text'] = TRUE;
   $handler->display->display_options['fields']['thread_description']['alter']['text'] = '[thread_description] ([nid] stitchings)';
   $handler->display->display_options['fields']['thread_description']['alter']['max_length'] = '300';

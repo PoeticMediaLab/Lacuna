@@ -50,5 +50,41 @@ function lacuna_stories_content_types_context_default_contexts() {
   t('materials');
   $export['annotation_filters'] = $context;
 
+  $context = new stdClass();
+  $context->disabled = FALSE; /* Edit this to true to make a default context disabled initially */
+  $context->api_version = 3;
+  $context->name = 'stitchings_edit';
+  $context->description = 'Show stitchings for a thread, on edit form';
+  $context->tag = 'thread';
+  $context->conditions = array(
+    'node' => array(
+      'values' => array(
+        'thread' => 'thread',
+      ),
+      'options' => array(
+        'node_form' => '2',
+      ),
+    ),
+  );
+  $context->reactions = array(
+    'block' => array(
+      'blocks' => array(
+        'views-stitchings-block' => array(
+          'module' => 'views',
+          'delta' => 'stitchings-block',
+          'region' => 'help',
+          'weight' => '-10',
+        ),
+      ),
+    ),
+  );
+  $context->condition_mode = 0;
+
+  // Translatables
+  // Included for use with string extractors like potx.
+  t('Show stitchings for a thread, on edit form');
+  t('thread');
+  $export['stitchings_edit'] = $context;
+
   return $export;
 }
