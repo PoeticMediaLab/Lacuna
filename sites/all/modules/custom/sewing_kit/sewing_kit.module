@@ -134,7 +134,7 @@ function sewing_kit_stitch_form($settings) {
 function sewing_kit_stitch_submit($form, $form_state) {
   $return = array();
   $return['thread_new'] = $form_state['values']['thread_new'];
-  $return['thread_description'] = $form_state['values']['thread_description'];
+  $return['thread_description'] = $form_state['values']['thread_description_value'];
   if ($form_state['values']['thread_add'] == NEW_THREAD) {
     $return['thread_add'] = FALSE;
   }
