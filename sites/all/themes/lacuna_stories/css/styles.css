@@ -2306,6 +2306,11 @@ li.blog_usernames_blog {
   display: none !important;
 }
 
+/* line 52, ../sass/components/content.scss */
+fieldset#edit-thread-description-format {
+  display: none;
+}
+
 /* line 1, ../sass/components/buttons.scss */
 #edit-submit {
   width: 200px;

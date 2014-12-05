@@ -56,3 +56,8 @@ legend span.fieldset-legend {
 li.blog_usernames_blog {
   display: none !important;
 }
+
+/* line 52, ../../sass/components/content.scss */
+fieldset#edit-thread-description-format {
+  display: none;
+}
