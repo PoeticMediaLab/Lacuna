@@ -164,7 +164,6 @@
     };
 
     Filters.prototype.checkboxToggle = function(event) {
-      console.log(event);
       if (event.target.name === 'highlights') {
         this.Model.toggleHighlights();
         this.View.drawAnnotations();
@@ -591,7 +590,7 @@
       classes = [select.checkbox["default"], select.checkbox[id]].join(' ');
       return $(select.interface).append($("<input type='checkbox' name='" + id + "' checked>", {
         name: id
-      }).on("tap click", this.Controller.checkboxToggle)).append("<span id='" + id + "' class='" + classes + "'>" + value + "</span>");
+      }).on("click", this.Controller.checkboxToggle)).append("<span id='" + id + "' class='" + classes + "'>" + value + "</span>");
     };
 
     View.prototype.drawAutocomplete = function(id, values) {
