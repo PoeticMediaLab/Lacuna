@@ -1,36 +1,41 @@
-/* line 3, ../../sass/components/content.scss */
+/* line 1, ../../sass/components/content.scss */
+#content {
+  width: 85%;
+}
+
+/* line 5, ../../sass/components/content.scss */
 .field {
   margin-bottom: 30px;
 }
 
-/* line 6, ../../sass/components/content.scss */
+/* line 8, ../../sass/components/content.scss */
 .field-label {
   margin-bottom: 10px;
 }
 
-/* line 9, ../../sass/components/content.scss */
+/* line 11, ../../sass/components/content.scss */
 .submitted {
   font-style: italic;
   font-size: 0.9em;
 }
 
-/* line 14, ../../sass/components/content.scss */
+/* line 16, ../../sass/components/content.scss */
 #comments {
   margin-top: 40px;
 }
 
-/* line 17, ../../sass/components/content.scss */
+/* line 19, ../../sass/components/content.scss */
 #comments .title {
   margin-top: 40px;
 }
 
-/* line 21, ../../sass/components/content.scss */
+/* line 23, ../../sass/components/content.scss */
 .node div.content {
   margin-top: 20px;
   margin-bottom: 20px;
 }
 
-/* line 26, ../../sass/components/content.scss */
+/* line 28, ../../sass/components/content.scss */
 #signup {
   background-image: none;
   text-align: center;
@@ -42,22 +47,22 @@
  * of those UI elements to be added to the page
  * Unsure how to add a unique id to the element that we set - MLW
  ****/
-/* line 37, ../../sass/components/content.scss */
+/* line 39, ../../sass/components/content.scss */
 ul#ui-id-1.ui-autocomplete {
   padding-top: 50px;
 }
 
-/* line 42, ../../sass/components/content.scss */
+/* line 44, ../../sass/components/content.scss */
 legend span.fieldset-legend {
   font-weight: bold;
 }
 
-/* line 47, ../../sass/components/content.scss */
+/* line 49, ../../sass/components/content.scss */
 li.blog_usernames_blog {
   display: none !important;
 }
 
-/* line 52, ../../sass/components/content.scss */
+/* line 54, ../../sass/components/content.scss */
 fieldset#edit-thread-description-format {
   display: none;
 }

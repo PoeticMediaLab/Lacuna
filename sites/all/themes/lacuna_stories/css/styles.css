@@ -653,7 +653,7 @@ table {
   }
 }
 /**
- * Use 3 grid columns for smaller screens.
+ * Use 4 grid columns for smaller screens.
  */
 @media all and (min-width: 480px) and (max-width: 959px) {
   /**
@@ -661,22 +661,22 @@ table {
    */
   /* line 86, ../sass/layouts/_responsive.scss */
   .sidebar-first {
-    /* Span 2 columns, starting in 2nd column from left. */
+    /* Span 3 columns, starting in 2nd column from left. */
     /* Span 1 column, starting in 1st column from left. */
   }
   /* line 88, ../sass/layouts/_responsive.scss */
   .sidebar-first #content {
     float: left;
-    width: 66.66667%;
-    margin-left: 33.33333%;
+    width: 75%;
+    margin-left: 25%;
     margin-right: -100%;
   }
   /* line 93, ../sass/layouts/_responsive.scss */
   .sidebar-first .region-sidebar-first {
     float: left;
-    width: 33.33333%;
+    width: 25%;
     margin-left: 0%;
-    margin-right: -33.33333%;
+    margin-right: -25%;
   }
 
   /**
@@ -684,21 +684,21 @@ table {
    */
   /* line 101, ../sass/layouts/_responsive.scss */
   .sidebar-second {
-    /* Span 2 columns, starting in 1st column from left. */
-    /* Span 1 column, starting in 3rd column from left. */
+    /* Span 3 columns, starting in 1st column from left. */
+    /* Span 1 column, starting in 4th column from left. */
   }
   /* line 103, ../sass/layouts/_responsive.scss */
   .sidebar-second #content {
     float: left;
-    width: 66.66667%;
+    width: 75%;
     margin-left: 0%;
-    margin-right: -66.66667%;
+    margin-right: -75%;
   }
   /* line 108, ../sass/layouts/_responsive.scss */
   .sidebar-second .region-sidebar-second {
     float: left;
-    width: 33.33333%;
-    margin-left: 66.66667%;
+    width: 25%;
+    margin-left: 75%;
     margin-right: -100%;
   }
 
@@ -714,23 +714,23 @@ table {
   /* line 118, ../sass/layouts/_responsive.scss */
   .two-sidebars #content {
     float: left;
-    width: 66.66667%;
-    margin-left: 33.33333%;
-    margin-right: -100%;
+    width: 50%;
+    margin-left: 25%;
+    margin-right: -75%;
   }
   /* line 123, ../sass/layouts/_responsive.scss */
   .two-sidebars .region-sidebar-first {
     float: left;
-    width: 33.33333%;
+    width: 25%;
     margin-left: 0%;
-    margin-right: -33.33333%;
+    margin-right: -25%;
   }
   /* line 128, ../sass/layouts/_responsive.scss */
   .two-sidebars .region-sidebar-second {
     float: left;
-    width: 100%;
+    width: 75%;
     margin-left: 0%;
-    margin-right: -100%;
+    margin-right: -75%;
     padding-left: 0;
     padding-right: 0;
     clear: left;
@@ -752,104 +752,106 @@ table {
   /* line 138, ../sass/layouts/_responsive.scss */
   .two-sidebars .region-sidebar-second .block:nth-child(3n+1) {
     float: left;
-    width: 33.33333%;
+    width: 25%;
     margin-left: 0%;
-    margin-right: -33.33333%;
+    margin-right: -25%;
     clear: left;
   }
   /* line 143, ../sass/layouts/_responsive.scss */
   .two-sidebars .region-sidebar-second .block:nth-child(3n+2) {
     float: left;
-    width: 33.33333%;
-    margin-left: 33.33333%;
-    margin-right: -66.66667%;
+    width: 25%;
+    margin-left: 25%;
+    margin-right: -50%;
   }
   /* line 147, ../sass/layouts/_responsive.scss */
   .two-sidebars .region-sidebar-second .block:nth-child(3n) {
     float: left;
-    width: 33.33333%;
-    margin-left: 66.66667%;
-    margin-right: -100%;
+    width: 25%;
+    margin-left: 50%;
+    margin-right: -75%;
   }
 }
 /**
- * Use 5 grid columns for larger screens.
+ * Use 6 grid columns for larger screens.
+ * Changed from 5 by MLW
+ * Did not target all cases, so probably needs fixing
  */
 @media all and (min-width: 960px) {
   /**
    * The layout when there is only one sidebar, the left one.
    */
-  /* line 164, ../sass/layouts/_responsive.scss */
+  /* line 166, ../sass/layouts/_responsive.scss */
   .sidebar-first {
-    /* Span 4 columns, starting in 2nd column from left. */
+    /* Span 5 columns, starting in 2nd column from left. */
     /* Span 1 column, starting in 1st column from left. */
   }
-  /* line 166, ../sass/layouts/_responsive.scss */
+  /* line 168, ../sass/layouts/_responsive.scss */
   .sidebar-first #content {
     float: left;
-    width: 80%;
-    margin-left: 20%;
+    width: 83.33333%;
+    margin-left: 16.66667%;
     margin-right: -100%;
   }
-  /* line 171, ../sass/layouts/_responsive.scss */
+  /* line 173, ../sass/layouts/_responsive.scss */
   .sidebar-first .region-sidebar-first {
     float: left;
-    width: 20%;
+    width: 16.66667%;
     margin-left: 0%;
-    margin-right: -20%;
+    margin-right: -16.66667%;
   }
 
   /**
    * The layout when there is only one sidebar, the right one.
    */
-  /* line 179, ../sass/layouts/_responsive.scss */
-  .sidebar-second {
-    /* Span 4 columns, starting in 1st column from left. */
-    /* Span 1 column, starting in 5th column from left. */
-  }
   /* line 181, ../sass/layouts/_responsive.scss */
+  .sidebar-second {
+    /* Span 5 columns, starting in 1st column from left. */
+    /* Span 1 column, starting in 6th column from left. */
+  }
+  /* line 183, ../sass/layouts/_responsive.scss */
   .sidebar-second #content {
     float: left;
-    width: 80%;
+    width: 83.33333%;
     margin-left: 0%;
-    margin-right: -80%;
+    margin-right: -83.33333%;
   }
-  /* line 186, ../sass/layouts/_responsive.scss */
+  /* line 188, ../sass/layouts/_responsive.scss */
   .sidebar-second .region-sidebar-second {
     float: left;
-    width: 20%;
-    margin-left: 80%;
+    width: 16.66667%;
+    margin-left: 83.33333%;
     margin-right: -100%;
   }
 
   /**
    * The layout when there are two sidebars.
    */
-  /* line 194, ../sass/layouts/_responsive.scss */
+  /* line 196, ../sass/layouts/_responsive.scss */
   .two-sidebars {
     /* Span 3 columns, starting in 2nd column from left. */
     /* Span 1 column, starting in 1st column from left. */
     /* Span 1 column, starting in 5th column from left. */
   }
-  /* line 196, ../sass/layouts/_responsive.scss */
+  /* line 198, ../sass/layouts/_responsive.scss */
   .two-sidebars #content {
     float: left;
-    width: 60%;
-    margin-left: 20%;
-    margin-right: -80%;
+    width: 50%;
+    margin-left: 16.66667%;
+    margin-right: -66.66667%;
   }
-  /* line 201, ../sass/layouts/_responsive.scss */
+  /* line 203, ../sass/layouts/_responsive.scss */
   .two-sidebars .region-sidebar-first {
     float: left;
-    width: 20%;
+    width: 16.66667%;
     margin-left: 0%;
-    margin-right: -20%;
+    margin-right: -16.66667%;
   }
-  /* line 206, ../sass/layouts/_responsive.scss */
+  /* line 208, ../sass/layouts/_responsive.scss */
   .two-sidebars .region-sidebar-second {
     float: left;
-    width: 20%;
-    margin-left: 80%;
+    width: 16.66667%;
+    margin-left: 83.33333%;
     margin-right: -100%;
   }
 }
@@ -2247,39 +2249,44 @@ table.views-table {
   text-align: center;
 }
 
-/* line 3, ../sass/components/content.scss */
+/* line 1, ../sass/components/content.scss */
+#content {
+  width: 85%;
+}
+
+/* line 5, ../sass/components/content.scss */
 .field {
   margin-bottom: 30px;
 }
 
-/* line 6, ../sass/components/content.scss */
+/* line 8, ../sass/components/content.scss */
 .field-label {
   margin-bottom: 10px;
 }
 
-/* line 9, ../sass/components/content.scss */
+/* line 11, ../sass/components/content.scss */
 .submitted {
   font-style: italic;
   font-size: 0.9em;
 }
 
-/* line 14, ../sass/components/content.scss */
+/* line 16, ../sass/components/content.scss */
 #comments {
   margin-top: 40px;
 }
 
-/* line 17, ../sass/components/content.scss */
+/* line 19, ../sass/components/content.scss */
 #comments .title {
   margin-top: 40px;
 }
 
-/* line 21, ../sass/components/content.scss */
+/* line 23, ../sass/components/content.scss */
 .node div.content {
   margin-top: 20px;
   margin-bottom: 20px;
 }
 
-/* line 26, ../sass/components/content.scss */
+/* line 28, ../sass/components/content.scss */
 #signup {
   background-image: none;
   text-align: center;
@@ -2291,22 +2298,22 @@ table.views-table {
  * of those UI elements to be added to the page
  * Unsure how to add a unique id to the element that we set - MLW
  ****/
-/* line 37, ../sass/components/content.scss */
+/* line 39, ../sass/components/content.scss */
 ul#ui-id-1.ui-autocomplete {
   padding-top: 50px;
 }
 
-/* line 42, ../sass/components/content.scss */
+/* line 44, ../sass/components/content.scss */
 legend span.fieldset-legend {
   font-weight: bold;
 }
 
-/* line 47, ../sass/components/content.scss */
+/* line 49, ../sass/components/content.scss */
 li.blog_usernames_blog {
   display: none !important;
 }
 
-/* line 52, ../sass/components/content.scss */
+/* line 54, ../sass/components/content.scss */
 fieldset#edit-thread-description-format {
   display: none;
 }

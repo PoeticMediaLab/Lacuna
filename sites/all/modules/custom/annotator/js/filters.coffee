@@ -151,7 +151,6 @@ class Annotator.Plugin.Filters extends Annotator.Plugin
     return null
 
   checkboxToggle: (event) =>
-    console.log(event)
     if event.target.name == 'highlights'
       @Model.toggleHighlights()
       @View.drawAnnotations()
@@ -465,7 +464,7 @@ class View
     classes = [select.checkbox.default, select.checkbox[id]].join(' ')
     $(select.interface).append($("<input type='checkbox' name='#{id}' checked>",
       {name: id})
-      .on("tap click", @Controller.checkboxToggle)
+      .on("click", @Controller.checkboxToggle)
     ).append("<span id='#{id}' class='#{classes}'>#{value}</span>")
 
   drawAutocomplete: (id, values) ->

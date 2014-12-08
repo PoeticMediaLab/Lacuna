@@ -5,12 +5,29 @@
 
 #annotation-filters {
     position: fixed;
-    width: 175px;
     border: 1px solid rgb(200, 200, 200);
     --moz-border-radius: 5px;
     --webkit-border-radius: 5px;
     border-radius: 5px;
     padding: 2px;
+}
+
+@media (max-width: 959px) {
+  #annotation-filters {
+    width: 20%;
+  }
+}
+
+@media (min-width: 960px) and (max-width: 1099px) {
+  #annotation-filters {
+    width: 15%;
+  }
+}
+
+@media (min-width: 1100px) {
+  #annotation-filters {
+    width: 13%;
+  }
 }
 
 #annotation-filters h2 {
@@ -125,7 +142,7 @@ label.af-autocomplete-label {
   width: 35%;
   padding-right: 5px;
   font-weight: normal;
-  font-size: 10pt;
+  font-size: 9pt;
 }
 
 label.af-autocomplete-label:first-letter {
