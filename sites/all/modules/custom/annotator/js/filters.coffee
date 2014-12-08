@@ -151,6 +151,7 @@ class Annotator.Plugin.Filters extends Annotator.Plugin
     return null
 
   checkboxToggle: (event) =>
+    console.log(event)
     if event.target.name == 'highlights'
       @Model.toggleHighlights()
       @View.drawAnnotations()

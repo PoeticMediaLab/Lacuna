@@ -164,6 +164,7 @@
     };
 
     Filters.prototype.checkboxToggle = function(event) {
+      console.log(event);
       if (event.target.name === 'highlights') {
         this.Model.toggleHighlights();
         this.View.drawAnnotations();
