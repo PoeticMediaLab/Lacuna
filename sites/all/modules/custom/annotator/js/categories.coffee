@@ -97,7 +97,7 @@ class Annotator.Plugin.Categories extends Annotator.Plugin
       if annotation.category in @options.category
         field.addClass(@options.categoryColorClasses[annotation.category])
 
-  changeSelectedCategory: (event) ->
+  changeSelectedCategory: (event) =>
     # HTML contains the string with the name of the category
     category = $(event.target).html()
     @setSelectedCategory category
