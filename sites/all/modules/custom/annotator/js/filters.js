@@ -235,9 +235,9 @@
       this.state.total = annotations.length;
       annotations.sort(function(a, b) {
         var rangeA, rangeB;
-        rangeA = new Range();
+        rangeA = document.createRange();
         rangeA.selectNodeContents(a.highlights[0]);
-        rangeB = new Range();
+        rangeB = document.createRange();
         rangeB.selectNodeContents(b.highlights[0]);
         return rangeA.compareBoundaryPoints(Range.START_TO_START, rangeB);
       });

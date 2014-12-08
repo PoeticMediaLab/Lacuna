@@ -48,7 +48,8 @@ function sewing_kit_stitch(&$node, $context) {
         $_sewing_kit_thread->status = 1; // (1 or 0): published or not
         $_sewing_kit_thread->promote = 0; // (1 or 0): promoted to front page
         $_sewing_kit_thread->comment = 2; // allow commenting
-        $_sewing_kit_thread->thread_description[$node->language][]['value'] = $context['thread_description'];
+        $_sewing_kit_thread->thread_description[$node->language][0]['value'] = $context['thread_description']['value'];
+        $_sewing_kit_thread->thread_description[$node->language][0]['format'] = 'full_html';
         $_sewing_kit_thread->thread_reference[$node->language] = array();
       }
     }

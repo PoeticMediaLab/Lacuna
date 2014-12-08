@@ -206,9 +206,9 @@ class Model
     @state.total = annotations.length
     annotations.sort (a,b) ->
       # Order annotations by location in text, not creation time
-      rangeA = new Range()
+      rangeA = document.createRange()
       rangeA.selectNodeContents(a.highlights[0])
-      rangeB = new Range()
+      rangeB = document.createRange()
       rangeB.selectNodeContents(b.highlights[0])
       return rangeA.compareBoundaryPoints(Range.START_TO_START, rangeB)
 
