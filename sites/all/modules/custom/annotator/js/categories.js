@@ -21,7 +21,6 @@
     };
 
     Categories.prototype.events = {
-      '.annotator-category tap': "changeSelectedCategory",
       '.annotator-category click': "changeSelectedCategory",
       'annotationEditorSubmit': "saveCategory",
       'annotationEditorShown': "highlightSelectedCategory",
