@@ -46,7 +46,7 @@ function annotation_node_type_insert($content_type) {
 
       // Create a field
       $field = array(
-        'field_name' => 'name',
+        'field_name' => 'label',
         'type' => 'text',
       );
 
@@ -54,7 +54,7 @@ function annotation_node_type_insert($content_type) {
 
       // Attach the field to our taxonomy entity
       $instance = array(
-          'field_name' => 'name',
+          'field_name' => 'label',
           'entity_type' => 'taxonomy_term',
           'bundle' => ANNOTATION_CATEGORY_TAXONOMY,
           'description' => $t('Name of the category'),
