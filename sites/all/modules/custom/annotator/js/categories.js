@@ -31,6 +31,8 @@
 
     Categories.prototype.input = null;
 
+    Categories.prototype.widthSet = false;
+
     Categories.prototype.pluginInit = function() {
       if (!Annotator.supported()) return;
       this.options.categoryColorClasses[this.options.emptyCategory] = this.options.categoryClass + '-none';
@@ -133,11 +135,14 @@
         categoryHTML += '</span>';
       }
       $(this.field).html(categoryHTML);
-      totalWidth = 0;
-      $(".annotator-category").each(function(index) {
-        totalWidth += parseInt($(this).outerWidth(), 10);
-      });
-      $(".annotator-widget").width(totalWidth);
+      if (!this.widthSet) {
+        this.widthSet = true;
+        totalWidth = 0;
+        $(".annotator-category").each(function(index) {
+          totalWidth += parseInt($(this).outerWidth(true), 10);
+        });
+        $(".annotator-editor .annotator-widget").width(totalWidth);
+      }
       return this.setSelectedCategory(annotation.category);
     };
 

@@ -4,11 +4,6 @@
 # initialized. In Drupal, we get these values from our admin settings page
 # @see Annotator module
 #
-# Note: when compiling to javascript, this will not work in Drupal
-# until changes are made
-# Namely: last line .call(this) -> (jQuery)
-# first line: function() -> function($)
-#
 # Mike Widner <mikewidner@stanford.edu>
 # Based on earlier plugin by Adi Singh
 #
@@ -37,6 +32,8 @@ class Annotator.Plugin.Categories extends Annotator.Plugin
   # The input element added to the Annotator.Editor wrapped in jQuery. Cached to
   # save having to recreate it everytime the editor is displayed.
   input: null
+
+  widthSet: false
 
   # Public: Initialises the plugin and adds categories field wrapper to annotator wrapper (editor and viewer)
   # Returns nothing.
@@ -117,6 +114,7 @@ class Annotator.Plugin.Categories extends Annotator.Plugin
     # when editor first shown
     if !annotation.category?
       annotation.category = @options.emptyCategory
+
     categoryHTML = ""
     for category in @options.category
       categoryHTML += '<span class="' + @options.categoryClass
@@ -124,12 +122,16 @@ class Annotator.Plugin.Categories extends Annotator.Plugin
       categoryHTML += category
       categoryHTML += '</span>'
     $(@field).html(categoryHTML)
-    # Aggregator variable.
-    totalWidth = 0
-    # Sum up widths of each category.
-    $(".annotator-category").each (index) ->
-      totalWidth += parseInt($(this).outerWidth(), 10)
-      return
-    # Set widget width
-    $(".annotator-widget").width totalWidth
+
+    if not @widthSet
+      # Only set the width once
+      @widthSet = true
+      totalWidth = 0
+      # Sum up widths of each category.
+      $(".annotator-category").each (index) ->
+        totalWidth += parseInt($(this).outerWidth(true), 10)
+        return
+      # Set widget width
+      $(".annotator-editor .annotator-widget").width totalWidth
+
     @setSelectedCategory(annotation.category)
