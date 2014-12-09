@@ -1235,7 +1235,10 @@
       for (_k = 0, _len2 = _ref1.length; _k < _len2; _k++) {
         range = _ref1[_k];
         container = range.commonAncestor;
-        if ($(container).hasClass('annotator-hl')) {
+        // MLW - Changed "if" to "while" to deal with attempts
+        // to highlight a section with multiple highlights already
+        // there. See issue: https://github.com/openannotation/annotator/issues/466
+        while ($(container).hasClass('annotator-hl')) {
           container = $(container).parents('[class!=annotator-hl]')[0];
         }
         if (this.isAnnotator(container)) {
