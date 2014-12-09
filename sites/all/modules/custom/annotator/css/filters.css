@@ -16,11 +16,23 @@
   #annotation-filters {
     width: 20%;
   }
+  #af-pager-controls {
+    font-size: xx-large;
+  }
+  i.af-pager {
+    padding-right: 10% !important;
+  }
 }
 
 @media (min-width: 960px) and (max-width: 1099px) {
   #annotation-filters {
     width: 15%;
+  }
+  #af-pager-controls {
+    font-size: x-large;
+  }
+  i.af-pager {
+    padding-right: 14% !important;
   }
 }
 
@@ -155,17 +167,22 @@ input.af-autocomplete.ui-autocomplete-input {
 }
 
 #af-pager-wrapper {
-  margin-left: 20%;
+  width: 100%;
+  margin-left: auto;
   margin-right: auto;
+  display: block;
+}
+
+#af-pager-controls {
+  padding-left: 10%;
 }
 
 #af-pager-count {
-  padding-left: 10px;
-  padding-right: 10px;
+  text-align: center;
+  display: block;
 }
 
 i.af-pager {
   cursor: pointer;
-  padding-left: 2px;
-  padding-right: 2px;
+  padding-right: 15%;
 }

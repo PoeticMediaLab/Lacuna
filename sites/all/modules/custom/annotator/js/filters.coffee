@@ -25,6 +25,7 @@ select = {
             'pager':
               'default': 'af-pager'
               'wrapper': 'af-pager-wrapper'
+              'controls': 'af-pager-controls'
               'count':   'af-pager-count'
               'arrow':   'af-pager-arrow'
               'first':   'fa fa-angle-double-left fa-lg'
@@ -480,10 +481,11 @@ class View
     p = select.pager
     @i.append($("<i id='first' class='#{p.default} #{p.arrow} #{p.first}'/>")).on("tap click", 'i#first', @Controller.pagerClick)
     @i.append($("<i id='prev' class='#{p.default} #{p.arrow} #{p.prev}'/>")).on("tap click", 'i#prev', @Controller.pagerClick)
-    @i.append($("<span id='#{p.count}' class='#{p.default}'>").text(first + ' of ' + last))
     @i.append($("<i id='next' class='#{p.default} #{p.arrow} #{p.next}'/>")).on("tap click", 'i#next', @Controller.pagerClick)
     @i.append($("<i id='last' class='#{p.default} #{p.arrow} #{p.last}'/>")).on("tap click", 'i#last', @Controller.pagerClick)
+    @i.append($("<span id='#{p.count}' class='#{p.default}'>").text(first + ' of ' + last))
     $('.' + p.default).wrapAll("<div id='#{p.wrapper}'></div>")
+    $('.' + p.arrow).wrapAll("<div id='#{p.controls}'></div>")
     return
 
   drawPagerCount: () ->
