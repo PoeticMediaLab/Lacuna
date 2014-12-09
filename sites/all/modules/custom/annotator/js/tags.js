@@ -22,11 +22,9 @@
         string = $.trim(string);
         tags = [];
         if (string) tags = string.split(/,/);
-        console.log(tags);
         return tags;
       },
       stringifyTags: function(array) {
-        console.log(array);
         return array.join(",");
       }
     };
@@ -67,7 +65,6 @@
       var value;
       value = '';
       if (annotation.tags) value = this.stringifyTags(annotation.tags);
-      console.log(annotation.tags);
       return this.input.val(value);
     };
 
@@ -98,7 +95,6 @@
     if (tags == null) tags = [];
     matches = 0;
     keywords = [];
-    console.log(input, 'filterCallback');
     if (input) {
       keywords = input.split(/,/g);
       for (_i = 0, _len = keywords.length; _i < _len; _i++) {

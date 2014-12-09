@@ -174,7 +174,8 @@ input.af-autocomplete.ui-autocomplete-input {
 }
 
 #af-pager-controls {
-  padding-left: 10%;
+  padding-left: 20px;
+  width: 100%;
 }
 
 #af-pager-count {
