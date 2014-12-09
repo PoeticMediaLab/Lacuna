@@ -697,6 +697,7 @@
       var highlight;
       if (!annotation) return;
       highlight = $(annotation.highlights[0]);
+      console.log(highlight);
       $("html, body").animate({
         scrollTop: highlight.offset().top - 500
       }, 150);
