@@ -237,9 +237,9 @@
       annotations.sort(function(a, b) {
         var rangeA, rangeB;
         rangeA = document.createRange();
-        rangeA.selectNodeContents(a.highlights[0]);
+        if (a.highlights[0] != null) rangeA.selectNodeContents(a.highlights[0]);
         rangeB = document.createRange();
-        rangeB.selectNodeContents(b.highlights[0]);
+        if (b.highlights[0] != null) rangeB.selectNodeContents(b.highlights[0]);
         return rangeA.compareBoundaryPoints(Range.START_TO_START, rangeB);
       });
       if (this.state.total) this.state.index = 1;

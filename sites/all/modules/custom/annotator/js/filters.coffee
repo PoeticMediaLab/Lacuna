@@ -208,9 +208,11 @@ class Model
     annotations.sort (a,b) ->
       # Order annotations by location in text, not creation time
       rangeA = document.createRange()
-      rangeA.selectNodeContents(a.highlights[0])
+      if a.highlights[0]?
+        rangeA.selectNodeContents(a.highlights[0])
       rangeB = document.createRange()
-      rangeB.selectNodeContents(b.highlights[0])
+      if b.highlights[0]?
+        rangeB.selectNodeContents(b.highlights[0])
       return rangeA.compareBoundaryPoints(Range.START_TO_START, rangeB)
 
     if @state.total then @state.index = 1
