@@ -126,7 +126,7 @@ class Annotator.Plugin.Categories extends Annotator.Plugin
     if not @widthSet
       # Only set the width once
       @widthSet = true
-      totalWidth = 0
+      totalWidth = 5  # for a tiny bit of extra padding
       # Sum up widths of each category.
       $(".annotator-category").each (index) ->
         totalWidth += parseInt($(this).outerWidth(true), 10)

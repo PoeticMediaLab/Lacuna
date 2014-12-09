@@ -39,7 +39,7 @@ class Tags
     return unless Annotator.supported()
 
     @field = @annotator.editor.addField({
-      label: Annotator._t('Add some tags here') + '\u2026'
+      label: Annotator._t('Add tags here, separate with commas') + '\u2026'
       load: this.updateField
       submit: this.setAnnotationTags
     })

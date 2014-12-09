@@ -137,7 +137,7 @@
       $(this.field).html(categoryHTML);
       if (!this.widthSet) {
         this.widthSet = true;
-        totalWidth = 0;
+        totalWidth = 5;
         $(".annotator-category").each(function(index) {
           totalWidth += parseInt($(this).outerWidth(true), 10);
         });
