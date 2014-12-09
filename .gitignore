@@ -11,3 +11,4 @@ sites/all/modules/contrib/coder
 sites/all/modules/contrib/examples
 sites/all/modules/contrib/devel
 sites/all/modules/contrib/devel_debug_log
+sites/all/modules/contrib/profiler_builder
