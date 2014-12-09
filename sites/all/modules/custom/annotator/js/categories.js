@@ -138,7 +138,7 @@
       if (!this.widthSet) {
         this.widthSet = true;
         totalWidth = 5;
-        $(".annotator-category").each(function(index) {
+        $("span.annotator-category").each(function(index) {
           totalWidth += parseInt($(this).outerWidth(true), 10);
         });
         $(".annotator-editor .annotator-widget").width(totalWidth);

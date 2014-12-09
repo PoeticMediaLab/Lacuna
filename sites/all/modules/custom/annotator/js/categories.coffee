@@ -128,7 +128,7 @@ class Annotator.Plugin.Categories extends Annotator.Plugin
       @widthSet = true
       totalWidth = 5  # for a tiny bit of extra padding
       # Sum up widths of each category.
-      $(".annotator-category").each (index) ->
+      $("span.annotator-category").each (index) ->
         totalWidth += parseInt($(this).outerWidth(true), 10)
         return
       # Set widget width
