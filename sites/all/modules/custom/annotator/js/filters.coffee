@@ -158,6 +158,7 @@ class Annotator.Plugin.Filters extends Annotator.Plugin
     return
 
   removeFilterClick: (event) =>
+    console.log(event)
     id = event.target.id
     value = event.target.dataset.value
     @View.eraseFilter(id, value)
@@ -504,7 +505,7 @@ class View
         class: classes,
         'data-value': value})
       .text(' ' + id + ': ' + value)
-      .on("tap click", @Controller.removeFilterClick)
+      .on("click", @Controller.removeFilterClick)
       )
 
   eraseAllFilters: () ->

@@ -173,6 +173,7 @@
 
     Filters.prototype.removeFilterClick = function(event) {
       var id, value;
+      console.log(event);
       id = event.target.id;
       value = event.target.dataset.value;
       this.View.eraseFilter(id, value);
@@ -631,7 +632,7 @@
         id: id,
         "class": classes,
         'data-value': value
-      }).text(' ' + id + ': ' + value).on("tap click", this.Controller.removeFilterClick));
+      }).text(' ' + id + ': ' + value).on("click", this.Controller.removeFilterClick));
     };
 
     View.prototype.eraseAllFilters = function() {
