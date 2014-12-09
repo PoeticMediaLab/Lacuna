@@ -29,10 +29,15 @@
     width: 15%;
   }
   #af-pager-controls {
-    font-size: x-large;
+    font-size: large;
   }
   i.af-pager {
-    padding-right: 14% !important;
+  }
+}
+
+@media (max-height: 768px) {
+  #annotation-filters {
+    top: 20%;
   }
 }
 
