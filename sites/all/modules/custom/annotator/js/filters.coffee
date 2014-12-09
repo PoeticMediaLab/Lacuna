@@ -51,9 +51,9 @@ select = {
 
 class Annotator.Plugin.Filters extends Annotator.Plugin
   events:
-    'annotationsLoaded': 'setup'
+    'annotationsLoaded'       : 'setup'
     '.annotation-filter click': 'filterSelect'
-    '.annotation-filter tap': 'filterSelect'
+    '.annotation-filter tap'  : 'filterSelect'
 
   constructor: (element, options) ->
     super
