@@ -1,16 +1,19 @@
 (function() {
-  var $, Annotator, Tags,
-    __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
+  var $,
+    __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+    __hasProp = Object.prototype.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
 
-  Annotator = require('annotator');
+  $ = jQuery;
 
-  $ = Annotator.Util.$;
+  Annotator.Plugin.Tags = (function(_super) {
 
-  Tags = (function() {
+    __extends(Tags, _super);
 
     function Tags() {
       this.setAnnotationTags = __bind(this.setAnnotationTags, this);
       this.updateField = __bind(this.updateField, this);
+      Tags.__super__.constructor.apply(this, arguments);
     }
 
     Tags.prototype.options = {
@@ -18,11 +21,13 @@
         var tags;
         string = $.trim(string);
         tags = [];
-        if (string) tags = string.split(/\s+/);
+        if (string) tags = string.split(/,/);
+        console.log(tags);
         return tags;
       },
       stringifyTags: function(array) {
-        return array.join(" ");
+        console.log(array);
+        return array.join(",");
       }
     };
 
@@ -62,6 +67,7 @@
       var value;
       value = '';
       if (annotation.tags) value = this.stringifyTags(annotation.tags);
+      console.log(annotation.tags);
       return this.input.val(value);
     };
 
@@ -85,15 +91,16 @@
 
     return Tags;
 
-  })();
+  })(Annotator.Plugin);
 
-  Tags.filterCallback = function(input, tags) {
+  Annotator.Plugin.Tags.filterCallback = function(input, tags) {
     var keyword, keywords, matches, tag, _i, _j, _len, _len2;
     if (tags == null) tags = [];
     matches = 0;
     keywords = [];
+    console.log(input, 'filterCallback');
     if (input) {
-      keywords = input.split(/\s+/g);
+      keywords = input.split(/,/g);
       for (_i = 0, _len = keywords.length; _i < _len; _i++) {
         keyword = keywords[_i];
         if (tags.length) {
@@ -106,9 +113,5 @@
     }
     return matches === keywords.length;
   };
-
-  Annotator.Plugin.register('Tags', Tags);
-
-  module.exports = Tags;
 
 }).call(this);

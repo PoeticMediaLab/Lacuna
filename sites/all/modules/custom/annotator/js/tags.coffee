@@ -1,10 +1,13 @@
-Annotator = require('annotator')
-$ = Annotator.Util.$
+# NOTE: Tags is a core Annotator plugin
+# This version has been modified for use in Drupal
+# and to allow for comma-separated tags -MLW
+
+$ = jQuery
 
 
 # Public: Tags plugin allows users to tag thier annotations with metadata
 # stored in an Array on the annotation as tags.
-class Tags
+class Annotator.Plugin.Tags extends Annotator.Plugin
 
   options:
     # Configurable function which accepts a string (the contents)
@@ -14,13 +17,13 @@ class Tags
       string = $.trim(string)
 
       tags = []
-      tags = string.split(/\s+/) if string
+      tags = string.split(/,/) if string
       tags
 
     # Configurable function which accepts an array of tags and
     # returns a string which will be used to fill the tags input.
     stringifyTags: (array) ->
-      array.join(" ")
+      array.join(",")
 
   # The field element added to the Annotator.Editor wrapped in jQuery. Cached to
   # save having to recreate it everytime the editor is displayed.
@@ -99,7 +102,6 @@ class Tags
   updateField: (field, annotation) =>
     value = ''
     value = this.stringifyTags(annotation.tags) if annotation.tags
-
     @input.val(value)
 
   # Annotator.Editor callback function. Updates the annotation field with the
@@ -160,16 +162,16 @@ class Tags
 #   Tags.filterCallback('cat dog', ['cat']) //=> false
 #
 # Returns true if the input keywords match all tags.
-Tags.filterCallback = (input, tags = []) ->
+Annotator.Plugin.Tags.filterCallback = (input, tags = []) ->
   matches  = 0
   keywords = []
   if input
-    keywords = input.split(/\s+/g)
+    keywords = input.split(/,/g)
     for keyword in keywords when tags.length
       matches += 1 for tag in tags when tag.indexOf(keyword) != -1
 
   matches == keywords.length
 
-Annotator.Plugin.register('Tags', Tags)
+# Annotator.Plugin.register('Tags', Tags)
 
-module.exports = Tags
+# module.exports = Tags

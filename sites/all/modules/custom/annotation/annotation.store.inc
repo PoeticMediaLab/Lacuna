@@ -105,21 +105,23 @@ function annotation_format_tags(&$entity) {
   // Load, create, and format taxonomy term references
   $taxonomy = taxonomy_vocabulary_machine_name_load(ANNOTATION_TAXONOMY_NAME);
   $entity->annotation_tags = array(); // we'll be re-adding terms if they already exist
-  foreach (array_values($entity->tags) as $tag) { // Annotator passes them as array
+  foreach (array_values($entity->tags) as $raw_tag) { // Annotator passes them as array
     $tid = NULL;
-    $tag = trim($tag);
-    $tag = str_replace(",", "", $tag); // strip commas; needs an explode here
-    // just in case users try to separate tags like "tag1,tag2"
-    $tid = get_term_id($tag, ANNOTATION_TAXONOMY_NAME);
-    if (!$tid) {
-      // add new term to taxonomy
-      $term = new stdClass();
-      $term->name = $tag;
-      $term->vid = $taxonomy->vid;
-      taxonomy_term_save($term);
-      $tid = $term->tid;
+    // Expect comma-separated values
+    $tags = explode(',', $raw_tag);
+    foreach (array_values($tags) as $tag) {
+      $tag = trim($tag);
+      $tid = get_term_id($tag, ANNOTATION_TAXONOMY_NAME);
+      if (!$tid) {
+        // add new term to taxonomy
+        $term = new stdClass();
+        $term->name = $tag;
+        $term->vid = $taxonomy->vid;
+        taxonomy_term_save($term);
+        $tid = $term->tid;
+      }
+      $entity->annotation_tags[$entity->language][]['tid'] = $tid;
     }
-    $entity->annotation_tags[$entity->language][]['tid'] = $tid;
   }
 }
 
