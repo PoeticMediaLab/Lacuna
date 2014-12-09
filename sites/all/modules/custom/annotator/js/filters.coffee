@@ -550,7 +550,6 @@ class View
     # Load annotation viewer
     return if not annotation
     highlight = $(annotation.highlights[0])
-    console.log(highlight, annotation)
     $("html, body").animate({
       scrollTop: highlight.offset().top - 500
     }, 150)
