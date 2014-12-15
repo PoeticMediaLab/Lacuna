@@ -1,41 +1,36 @@
 /* line 1, ../../sass/components/content.scss */
-#content {
-  width: 85%;
-}
-
-/* line 5, ../../sass/components/content.scss */
 .field {
   margin-bottom: 30px;
 }
 
-/* line 8, ../../sass/components/content.scss */
+/* line 4, ../../sass/components/content.scss */
 .field-label {
   margin-bottom: 10px;
 }
 
-/* line 11, ../../sass/components/content.scss */
+/* line 7, ../../sass/components/content.scss */
 .submitted {
   font-style: italic;
   font-size: 0.9em;
 }
 
-/* line 16, ../../sass/components/content.scss */
+/* line 12, ../../sass/components/content.scss */
 #comments {
   margin-top: 40px;
 }
 
-/* line 19, ../../sass/components/content.scss */
+/* line 15, ../../sass/components/content.scss */
 #comments .title {
   margin-top: 40px;
 }
 
-/* line 23, ../../sass/components/content.scss */
+/* line 19, ../../sass/components/content.scss */
 .node div.content {
   margin-top: 20px;
   margin-bottom: 20px;
 }
 
-/* line 28, ../../sass/components/content.scss */
+/* line 24, ../../sass/components/content.scss */
 #signup {
   background-image: none;
   text-align: center;
@@ -47,22 +42,22 @@
  * of those UI elements to be added to the page
  * Unsure how to add a unique id to the element that we set - MLW
  ****/
-/* line 39, ../../sass/components/content.scss */
+/* line 35, ../../sass/components/content.scss */
 ul#ui-id-1.ui-autocomplete {
   padding-top: 50px;
 }
 
-/* line 44, ../../sass/components/content.scss */
+/* line 40, ../../sass/components/content.scss */
 legend span.fieldset-legend {
   font-weight: bold;
 }
 
-/* line 49, ../../sass/components/content.scss */
+/* line 45, ../../sass/components/content.scss */
 li.blog_usernames_blog {
   display: none !important;
 }
 
-/* line 54, ../../sass/components/content.scss */
+/* line 50, ../../sass/components/content.scss */
 fieldset#edit-thread-description-format {
   display: none;
 }

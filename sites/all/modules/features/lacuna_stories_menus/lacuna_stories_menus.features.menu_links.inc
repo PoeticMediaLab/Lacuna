@@ -48,6 +48,42 @@ function lacuna_stories_menus_menu_default_menu_links() {
     'weight' => -46,
     'customized' => 1,
   );
+  // Exported menu link: main-menu_all-content:all-content
+  $menu_links['main-menu_all-content:all-content'] = array(
+    'menu_name' => 'main-menu',
+    'link_path' => 'all-content',
+    'router_path' => 'all-content',
+    'link_title' => 'All Content',
+    'options' => array(
+      'identifier' => 'main-menu_all-content:all-content',
+    ),
+    'module' => 'system',
+    'hidden' => 0,
+    'external' => 0,
+    'has_children' => 0,
+    'expanded' => 0,
+    'weight' => -50,
+    'customized' => 1,
+    'parent_identifier' => 'main-menu_manage:<nolink>',
+  );
+  // Exported menu link: main-menu_all-emails:all-emails
+  $menu_links['main-menu_all-emails:all-emails'] = array(
+    'menu_name' => 'main-menu',
+    'link_path' => 'all-emails',
+    'router_path' => 'all-emails',
+    'link_title' => 'All Emails',
+    'options' => array(
+      'identifier' => 'main-menu_all-emails:all-emails',
+    ),
+    'module' => 'system',
+    'hidden' => 0,
+    'external' => 0,
+    'has_children' => 0,
+    'expanded' => 0,
+    'weight' => -49,
+    'customized' => 1,
+    'parent_identifier' => 'main-menu_manage:<nolink>',
+  );
   // Exported menu link: main-menu_annotations-dashboard:visualization/dashboard
   $menu_links['main-menu_annotations-dashboard:visualization/dashboard'] = array(
     'menu_name' => 'main-menu',
@@ -192,6 +228,26 @@ function lacuna_stories_menus_menu_default_menu_links() {
     'weight' => -47,
     'customized' => 1,
     'parent_identifier' => 'main-menu_account:<nolink>',
+  );
+  // Exported menu link: main-menu_manage:<nolink>
+  $menu_links['main-menu_manage:<nolink>'] = array(
+    'menu_name' => 'main-menu',
+    'link_path' => '<nolink>',
+    'router_path' => '<nolink>',
+    'link_title' => 'Manage',
+    'options' => array(
+      'attributes' => array(
+        'title' => '',
+      ),
+      'identifier' => 'main-menu_manage:<nolink>',
+    ),
+    'module' => 'menu',
+    'hidden' => 0,
+    'external' => 0,
+    'has_children' => 1,
+    'expanded' => 0,
+    'weight' => 0,
+    'customized' => 1,
   );
   // Exported menu link: main-menu_materials:materials
   $menu_links['main-menu_materials:materials'] = array(
@@ -409,6 +465,8 @@ function lacuna_stories_menus_menu_default_menu_links() {
   // Included for use with string extractors like potx.
   t('About this Course');
   t('Account');
+  t('All Content');
+  t('All Emails');
   t('Annotations Dashboard');
   t('Bibliography');
   t('Connect');
@@ -416,6 +474,7 @@ function lacuna_stories_menus_menu_default_menu_links() {
   t('Explore');
   t('Help');
   t('Logout');
+  t('Manage');
   t('Materials');
   t('My Profile');
   t('My Writing');

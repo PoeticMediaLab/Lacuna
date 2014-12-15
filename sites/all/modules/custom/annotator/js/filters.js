@@ -173,7 +173,6 @@
 
     Filters.prototype.removeFilterClick = function(event) {
       var id, value;
-      console.log(event);
       id = event.target.id;
       value = event.target.dataset.value;
       this.View.eraseFilter(id, value);
@@ -186,6 +185,7 @@
 
     Filters.prototype.pagerClick = function(event) {
       var index, total;
+      console.log('pagerClick', event);
       index = this.Model.get('index');
       total = this.Model.get('total');
       switch (event.target.id) {
@@ -611,10 +611,10 @@
     View.prototype.drawPager = function(first, last) {
       var p;
       p = select.pager;
-      this.i.append($("<i id='first' class='" + p["default"] + " " + p.arrow + " " + p.first + "'/>")).on("tap click", 'i#first', this.Controller.pagerClick);
-      this.i.append($("<i id='prev' class='" + p["default"] + " " + p.arrow + " " + p.prev + "'/>")).on("tap click", 'i#prev', this.Controller.pagerClick);
-      this.i.append($("<i id='next' class='" + p["default"] + " " + p.arrow + " " + p.next + "'/>")).on("tap click", 'i#next', this.Controller.pagerClick);
-      this.i.append($("<i id='last' class='" + p["default"] + " " + p.arrow + " " + p.last + "'/>")).on("tap click", 'i#last', this.Controller.pagerClick);
+      this.i.append($("<i id='first' class='" + p["default"] + " " + p.arrow + " " + p.first + "'/>")).on("click", 'i#first', this.Controller.pagerClick);
+      this.i.append($("<i id='prev' class='" + p["default"] + " " + p.arrow + " " + p.prev + "'/>")).on("click", 'i#prev', this.Controller.pagerClick);
+      this.i.append($("<i id='next' class='" + p["default"] + " " + p.arrow + " " + p.next + "'/>")).on("click", 'i#next', this.Controller.pagerClick);
+      this.i.append($("<i id='last' class='" + p["default"] + " " + p.arrow + " " + p.last + "'/>")).on("click", 'i#last', this.Controller.pagerClick);
       this.i.append($("<span id='" + p.count + "' class='" + p["default"] + "'>").text(first + ' of ' + last));
       $('.' + p["default"]).wrapAll("<div id='" + p.wrapper + "'></div>");
       $('.' + p.arrow).wrapAll("<div id='" + p.controls + "'></div>");

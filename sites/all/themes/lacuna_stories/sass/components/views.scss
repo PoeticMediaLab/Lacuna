@@ -78,6 +78,7 @@ $views-link-hover-color: #1588BA;
 .view-my-threads,
 .view-sewing-kit,
 .view-my-content,
+.view-all-content,
 .view-all-annotations {
   .views-submit-button,
   .views-widget-sort-order {
@@ -142,6 +143,10 @@ $views-link-hover-color: #1588BA;
 
 table.views-table {
   width: 100%;
+}
+
+.views-table tr {
+  text-align: left;
 }
 
 .view-sewing-kit,
