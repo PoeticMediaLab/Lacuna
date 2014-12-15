@@ -1884,11 +1884,6 @@ function lacuna_stories_views_views_default_views() {
   $handler->display->display_options['fields']['category']['field'] = 'category';
   $handler->display->display_options['fields']['category']['empty'] = 'Highlight';
   $handler->display->display_options['fields']['category']['type'] = 'taxonomy_term_reference_plain';
-  /* Field: Content: Tags */
-  $handler->display->display_options['fields']['annotation_tags']['id'] = 'annotation_tags';
-  $handler->display->display_options['fields']['annotation_tags']['table'] = 'field_data_annotation_tags';
-  $handler->display->display_options['fields']['annotation_tags']['field'] = 'annotation_tags';
-  $handler->display->display_options['fields']['annotation_tags']['delta_offset'] = '0';
   /* Field: Content: Quote */
   $handler->display->display_options['fields']['quote']['id'] = 'quote';
   $handler->display->display_options['fields']['quote']['table'] = 'field_data_quote';
