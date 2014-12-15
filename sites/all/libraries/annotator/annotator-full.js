@@ -2611,11 +2611,17 @@
     };
 
     Permissions.prototype.updateViewer = function(field, annotation, controls) {
-      var user, username;
+      var baseString, user, username;
       field = $(field);
       username = this.options.userString(annotation.user);
       if (annotation.user && username && typeof username === 'string') {
-        user = Annotator.Util.escape(this.options.userString(annotation.user));
+        baseString = this.options.userString(annotation.user);
+        if (annotation.permissions['read'].length > 0) {
+          baseString += " | Private";
+        } else {
+          baseString += " | Public";
+        }
+        user = Annotator.Util.escape(baseString);
         field.html(user).addClass('annotator-user');
       } else {
         field.remove();
