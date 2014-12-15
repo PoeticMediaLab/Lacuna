@@ -167,7 +167,6 @@ class Annotator.Plugin.Filters extends Annotator.Plugin
     @View.drawAnnotations()
 
   pagerClick: (event) =>
-    console.log('pagerClick', event)
     index = @Model.get('index')
     total = @Model.get('total')
     switch event.target.id
