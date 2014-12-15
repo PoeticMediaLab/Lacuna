@@ -167,6 +167,7 @@ class Annotator.Plugin.Filters extends Annotator.Plugin
     @View.drawAnnotations()
 
   pagerClick: (event) =>
+    console.log('pagerClick', event)
     index = @Model.get('index')
     total = @Model.get('total')
     switch event.target.id
@@ -481,10 +482,10 @@ class View
 
   drawPager: (first, last) ->
     p = select.pager
-    @i.append($("<i id='first' class='#{p.default} #{p.arrow} #{p.first}'/>")).on("tap click", 'i#first', @Controller.pagerClick)
-    @i.append($("<i id='prev' class='#{p.default} #{p.arrow} #{p.prev}'/>")).on("tap click", 'i#prev', @Controller.pagerClick)
-    @i.append($("<i id='next' class='#{p.default} #{p.arrow} #{p.next}'/>")).on("tap click", 'i#next', @Controller.pagerClick)
-    @i.append($("<i id='last' class='#{p.default} #{p.arrow} #{p.last}'/>")).on("tap click", 'i#last', @Controller.pagerClick)
+    @i.append($("<i id='first' class='#{p.default} #{p.arrow} #{p.first}'/>")).on("click", 'i#first', @Controller.pagerClick)
+    @i.append($("<i id='prev' class='#{p.default} #{p.arrow} #{p.prev}'/>")).on("click", 'i#prev', @Controller.pagerClick)
+    @i.append($("<i id='next' class='#{p.default} #{p.arrow} #{p.next}'/>")).on("click", 'i#next', @Controller.pagerClick)
+    @i.append($("<i id='last' class='#{p.default} #{p.arrow} #{p.last}'/>")).on("click", 'i#last', @Controller.pagerClick)
     @i.append($("<span id='#{p.count}' class='#{p.default}'>").text(first + ' of ' + last))
     $('.' + p.default).wrapAll("<div id='#{p.wrapper}'></div>")
     $('.' + p.arrow).wrapAll("<div id='#{p.controls}'></div>")
