@@ -84,7 +84,7 @@ div.views-row-last span.views-field-field-image div.topic_image {
 }
 
 /* View-specific theming, for Materials, Responses, Threads */
-/* line 83, ../../sass/components/views.scss */
+/* line 84, ../../sass/components/views.scss */
 .view-documents .views-submit-button,
 .view-documents .views-widget-sort-order,
 .view-responses .views-submit-button,
@@ -95,55 +95,62 @@ div.views-row-last span.views-field-field-image div.topic_image {
 .view-sewing-kit .views-widget-sort-order,
 .view-my-content .views-submit-button,
 .view-my-content .views-widget-sort-order,
+.view-all-content .views-submit-button,
+.view-all-content .views-widget-sort-order,
 .view-all-annotations .views-submit-button,
 .view-all-annotations .views-widget-sort-order {
   display: none;
 }
-/* line 87, ../../sass/components/views.scss */
+/* line 88, ../../sass/components/views.scss */
 .view-documents .views-widget-sort-by .form-type-bef-link,
 .view-responses .views-widget-sort-by .form-type-bef-link,
 .view-my-threads .views-widget-sort-by .form-type-bef-link,
 .view-sewing-kit .views-widget-sort-by .form-type-bef-link,
 .view-my-content .views-widget-sort-by .form-type-bef-link,
+.view-all-content .views-widget-sort-by .form-type-bef-link,
 .view-all-annotations .views-widget-sort-by .form-type-bef-link {
   float: left;
   margin: 0 10px 0 15px;
 }
-/* line 90, ../../sass/components/views.scss */
+/* line 91, ../../sass/components/views.scss */
 .view-documents .views-widget-sort-by .form-type-bef-link a,
 .view-responses .views-widget-sort-by .form-type-bef-link a,
 .view-my-threads .views-widget-sort-by .form-type-bef-link a,
 .view-sewing-kit .views-widget-sort-by .form-type-bef-link a,
 .view-my-content .views-widget-sort-by .form-type-bef-link a,
+.view-all-content .views-widget-sort-by .form-type-bef-link a,
 .view-all-annotations .views-widget-sort-by .form-type-bef-link a {
   color: gray;
   font-weight: bold;
   font-size: 15px;
 }
-/* line 95, ../../sass/components/views.scss */
+/* line 96, ../../sass/components/views.scss */
 .view-documents .views-widget-sort-by .form-type-bef-link a:hover,
 .view-responses .views-widget-sort-by .form-type-bef-link a:hover,
 .view-my-threads .views-widget-sort-by .form-type-bef-link a:hover,
 .view-sewing-kit .views-widget-sort-by .form-type-bef-link a:hover,
 .view-my-content .views-widget-sort-by .form-type-bef-link a:hover,
+.view-all-content .views-widget-sort-by .form-type-bef-link a:hover,
 .view-all-annotations .views-widget-sort-by .form-type-bef-link a:hover {
   color: #1588ba;
 }
-/* line 99, ../../sass/components/views.scss */
+/* line 100, ../../sass/components/views.scss */
 .view-documents .views-widget-sort-by .form-type-bef-link.selected a,
 .view-responses .views-widget-sort-by .form-type-bef-link.selected a,
 .view-my-threads .views-widget-sort-by .form-type-bef-link.selected a,
 .view-sewing-kit .views-widget-sort-by .form-type-bef-link.selected a,
 .view-my-content .views-widget-sort-by .form-type-bef-link.selected a,
+.view-all-content .views-widget-sort-by .form-type-bef-link.selected a,
 .view-all-annotations .views-widget-sort-by .form-type-bef-link.selected a {
   color: #1588ba;
 }
-/* line 103, ../../sass/components/views.scss */
+/* line 104, ../../sass/components/views.scss */
 .view-documents img,
 .view-responses img,
 .view-my-threads img,
 .view-sewing-kit img,
 .view-my-content img,
+.view-all-content img,
 .view-all-annotations img {
   width: auto;
   height: auto;
@@ -151,28 +158,30 @@ div.views-row-last span.views-field-field-image div.topic_image {
   max-height: 100%;
   box-shadow: 0px 0px 10px #888888;
 }
-/* line 110, ../../sass/components/views.scss */
+/* line 111, ../../sass/components/views.scss */
 .view-documents .views-row,
 .view-responses .views-row,
 .view-my-threads .views-row,
 .view-sewing-kit .views-row,
 .view-my-content .views-row,
+.view-all-content .views-row,
 .view-all-annotations .views-row {
   float: left;
   width: 150px;
   margin: 20px 20px 65px 20px;
   height: 350px;
 }
-/* line 116, ../../sass/components/views.scss */
+/* line 117, ../../sass/components/views.scss */
 .view-documents .views-exposed-widget,
 .view-responses .views-exposed-widget,
 .view-my-threads .views-exposed-widget,
 .view-sewing-kit .views-exposed-widget,
 .view-my-content .views-exposed-widget,
+.view-all-content .views-exposed-widget,
 .view-all-annotations .views-exposed-widget {
   margin-top: 0px;
 }
-/* line 120, ../../sass/components/views.scss */
+/* line 121, ../../sass/components/views.scss */
 .view-documents .views-exposed-widget > label,
 .view-documents .form-item-sort-by > label,
 .view-responses .views-exposed-widget > label,
@@ -183,59 +192,70 @@ div.views-row-last span.views-field-field-image div.topic_image {
 .view-sewing-kit .form-item-sort-by > label,
 .view-my-content .views-exposed-widget > label,
 .view-my-content .form-item-sort-by > label,
+.view-all-content .views-exposed-widget > label,
+.view-all-content .form-item-sort-by > label,
 .view-all-annotations .views-exposed-widget > label,
 .view-all-annotations .form-item-sort-by > label {
   float: left;
   margin-right: 10px;
 }
-/* line 124, ../../sass/components/views.scss */
+/* line 125, ../../sass/components/views.scss */
 .view-documents .views-widget,
 .view-responses .views-widget,
 .view-my-threads .views-widget,
 .view-sewing-kit .views-widget,
 .view-my-content .views-widget,
+.view-all-content .views-widget,
 .view-all-annotations .views-widget {
   display: inline;
 }
-/* line 126, ../../sass/components/views.scss */
+/* line 127, ../../sass/components/views.scss */
 .view-documents .views-widget input[type=text],
 .view-responses .views-widget input[type=text],
 .view-my-threads .views-widget input[type=text],
 .view-sewing-kit .views-widget input[type=text],
 .view-my-content .views-widget input[type=text],
+.view-all-content .views-widget input[type=text],
 .view-all-annotations .views-widget input[type=text] {
   width: 20%;
 }
-/* line 130, ../../sass/components/views.scss */
+/* line 131, ../../sass/components/views.scss */
 .view-documents .form-type-bef-checkbox,
 .view-responses .form-type-bef-checkbox,
 .view-my-threads .form-type-bef-checkbox,
 .view-sewing-kit .form-type-bef-checkbox,
 .view-my-content .form-type-bef-checkbox,
+.view-all-content .form-type-bef-checkbox,
 .view-all-annotations .form-type-bef-checkbox {
   float: left;
   margin: 0px 5px 0px 10px;
   font-size: 0.95em;
   color: grey;
 }
-/* line 136, ../../sass/components/views.scss */
+/* line 137, ../../sass/components/views.scss */
 .view-documents .view-content h3,
 .view-responses .view-content h3,
 .view-my-threads .view-content h3,
 .view-sewing-kit .view-content h3,
 .view-my-content .view-content h3,
+.view-all-content .view-content h3,
 .view-all-annotations .view-content h3 {
   display: inline-block;
   width: 100%;
   padding-top: 25px;
 }
 
-/* line 143, ../../sass/components/views.scss */
+/* line 144, ../../sass/components/views.scss */
 table.views-table {
   width: 100%;
 }
 
-/* line 152, ../../sass/components/views.scss */
+/* line 148, ../../sass/components/views.scss */
+.views-table tr {
+  text-align: left;
+}
+
+/* line 157, ../../sass/components/views.scss */
 .view-sewing-kit th.views-field-category,
 .view-sewing-kit th.views-field-text,
 .view-sewing-kit th.views-field-quote,
@@ -246,13 +266,13 @@ table.views-table {
 .view-stitchings th.view-field-tags {
   text-align: center;
 }
-/* line 155, ../../sass/components/views.scss */
+/* line 160, ../../sass/components/views.scss */
 .view-sewing-kit th,
 .view-stitchings th {
   width: 2%;
   max-width: 5%;
 }
-/* line 160, ../../sass/components/views.scss */
+/* line 165, ../../sass/components/views.scss */
 .view-sewing-kit th.views-field-text,
 .view-sewing-kit th.views-field-quote,
 .view-stitchings th.views-field-text,
@@ -260,14 +280,14 @@ table.views-table {
   width: 10% !important;
   min-width: 100px;
 }
-/* line 165, ../../sass/components/views.scss */
+/* line 170, ../../sass/components/views.scss */
 .view-sewing-kit th.views-field-views-bulk-operations,
 .view-sewing-kit th.views-field-nothing,
 .view-stitchings th.views-field-views-bulk-operations,
 .view-stitchings th.views-field-nothing {
   width: 1% !important;
 }
-/* line 168, ../../sass/components/views.scss */
+/* line 173, ../../sass/components/views.scss */
 .view-sewing-kit td.views-field-category,
 .view-stitchings td.views-field-category {
   text-align: center;
