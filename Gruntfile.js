@@ -13,7 +13,10 @@ module.exports = function(grunt) {
   	},
     watch: {
       files: ['sites/all/modules/custom/**/*.coffee'],
-      tasks: ['newer:coffee']
+      tasks: ['newer:coffee:compile'],
+      options: {
+        livereload: true
+      }
     }
   });
 
