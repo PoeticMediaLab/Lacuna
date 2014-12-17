@@ -10,24 +10,6 @@
 function lacuna_stories_menus_menu_default_menu_links() {
   $menu_links = array();
 
-  // Exported menu link: main-menu_about-this-course:node/248
-  $menu_links['main-menu_about-this-course:node/248'] = array(
-    'menu_name' => 'main-menu',
-    'link_path' => 'node/248',
-    'router_path' => 'node/%',
-    'link_title' => 'About this Course',
-    'options' => array(
-      'identifier' => 'main-menu_about-this-course:node/248',
-    ),
-    'module' => 'menu',
-    'hidden' => 0,
-    'external' => 0,
-    'has_children' => 0,
-    'expanded' => 0,
-    'weight' => 0,
-    'customized' => 0,
-    'parent_identifier' => 'main-menu_explore:<nolink>',
-  );
   // Exported menu link: main-menu_account:<nolink>
   $menu_links['main-menu_account:<nolink>'] = array(
     'menu_name' => 'main-menu',
@@ -326,27 +308,6 @@ function lacuna_stories_menus_menu_default_menu_links() {
     'weight' => -47,
     'customized' => 1,
   );
-  // Exported menu link: main-menu_research-consent:node/225
-  $menu_links['main-menu_research-consent:node/225'] = array(
-    'menu_name' => 'main-menu',
-    'link_path' => 'node/225',
-    'router_path' => 'node/%',
-    'link_title' => 'Research Consent',
-    'options' => array(
-      'attributes' => array(
-        'title' => '',
-      ),
-      'identifier' => 'main-menu_research-consent:node/225',
-    ),
-    'module' => 'menu',
-    'hidden' => 0,
-    'external' => 0,
-    'has_children' => 0,
-    'expanded' => 0,
-    'weight' => -49,
-    'customized' => 1,
-    'parent_identifier' => 'main-menu_account:<nolink>',
-  );
   // Exported menu link: main-menu_responses-map:visualization/responses
   $menu_links['main-menu_responses-map:visualization/responses'] = array(
     'menu_name' => 'main-menu',
@@ -463,7 +424,6 @@ function lacuna_stories_menus_menu_default_menu_links() {
   );
   // Translatables
   // Included for use with string extractors like potx.
-  t('About this Course');
   t('Account');
   t('All Content');
   t('All Emails');
@@ -479,7 +439,6 @@ function lacuna_stories_menus_menu_default_menu_links() {
   t('My Profile');
   t('My Writing');
   t('Reflect');
-  t('Research Consent');
   t('Responses');
   t('Responses Map');
   t('Sewing Kit');

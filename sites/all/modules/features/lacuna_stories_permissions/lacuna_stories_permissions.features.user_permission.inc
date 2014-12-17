@@ -218,6 +218,15 @@ function lacuna_stories_permissions_user_default_permissions() {
     'module' => 'contact',
   );
 
+  // Exported permission: 'access statistics'.
+  $permissions['access statistics'] = array(
+    'name' => 'access statistics',
+    'roles' => array(
+      'administrator' => 'administrator',
+    ),
+    'module' => 'statistics',
+  );
+
   // Exported permission: 'access user contact forms'.
   $permissions['access user contact forms'] = array(
     'name' => 'access user contact forms',
@@ -539,6 +548,15 @@ function lacuna_stories_permissions_user_default_permissions() {
       'administrator' => 'administrator',
     ),
     'module' => 'system',
+  );
+
+  // Exported permission: 'administer statistics'.
+  $permissions['administer statistics'] = array(
+    'name' => 'administer statistics',
+    'roles' => array(
+      'administrator' => 'administrator',
+    ),
+    'module' => 'statistics',
   );
 
   // Exported permission: 'administer superfish'.
@@ -1276,9 +1294,9 @@ function lacuna_stories_permissions_user_default_permissions() {
     'module' => 'taxonomy',
   );
 
-  // Exported permission: 'delete terms in genre_blog_post'.
-  $permissions['delete terms in genre_blog_post'] = array(
-    'name' => 'delete terms in genre_blog_post',
+  // Exported permission: 'delete terms in genre_doc'.
+  $permissions['delete terms in genre_doc'] = array(
+    'name' => 'delete terms in genre_doc',
     'roles' => array(
       'Content Manager' => 'Content Manager',
       'administrator' => 'administrator',
@@ -1286,9 +1304,9 @@ function lacuna_stories_permissions_user_default_permissions() {
     'module' => 'taxonomy',
   );
 
-  // Exported permission: 'delete terms in genre_doc'.
-  $permissions['delete terms in genre_doc'] = array(
-    'name' => 'delete terms in genre_doc',
+  // Exported permission: 'delete terms in genre_response'.
+  $permissions['delete terms in genre_response'] = array(
+    'name' => 'delete terms in genre_response',
     'roles' => array(
       'Content Manager' => 'Content Manager',
       'administrator' => 'administrator',
@@ -1895,9 +1913,9 @@ function lacuna_stories_permissions_user_default_permissions() {
     'module' => 'taxonomy',
   );
 
-  // Exported permission: 'edit terms in genre_blog_post'.
-  $permissions['edit terms in genre_blog_post'] = array(
-    'name' => 'edit terms in genre_blog_post',
+  // Exported permission: 'edit terms in genre_doc'.
+  $permissions['edit terms in genre_doc'] = array(
+    'name' => 'edit terms in genre_doc',
     'roles' => array(
       'Content Manager' => 'Content Manager',
       'administrator' => 'administrator',
@@ -1905,9 +1923,9 @@ function lacuna_stories_permissions_user_default_permissions() {
     'module' => 'taxonomy',
   );
 
-  // Exported permission: 'edit terms in genre_doc'.
-  $permissions['edit terms in genre_doc'] = array(
-    'name' => 'edit terms in genre_doc',
+  // Exported permission: 'edit terms in genre_response'.
+  $permissions['edit terms in genre_response'] = array(
+    'name' => 'edit terms in genre_response',
     'roles' => array(
       'Content Manager' => 'Content Manager',
       'administrator' => 'administrator',
@@ -2716,6 +2734,15 @@ function lacuna_stories_permissions_user_default_permissions() {
       'administrator' => 'administrator',
     ),
     'module' => 'node',
+  );
+
+  // Exported permission: 'view post access counter'.
+  $permissions['view post access counter'] = array(
+    'name' => 'view post access counter',
+    'roles' => array(
+      'administrator' => 'administrator',
+    ),
+    'module' => 'statistics',
   );
 
   // Exported permission: 'view revisions'.
