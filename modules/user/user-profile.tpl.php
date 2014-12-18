@@ -34,6 +34,54 @@
  * @ingroup themeable
  */
 ?>
-<div class="profile"<?php print $attributes; ?>>
+<!--div class="profile"<?php print $attributes; ?>>
   <?php print render($user_profile); ?>
-</div>
+</div-->
+
+<section id="user-profile-main">
+	<div class="column left-part">
+		<div id="user-avatar-space" class="profile-section">
+			<div id="user-command-buttons">
+				<i class="fa fa-edit fa-2x"></i>
+				<i class="fa fa-bell-o fa-2x"></i>
+				<i class="fa fa-cog fa-2x"></i>
+			</div>
+			<?php print $user_profile["user_picture"]["#markup"]; ?>
+		</div>
+		<div id="how-I-Learn-space" class="profile-section">
+			<span class="caption">How I Learn</span>
+			<div class="field-wrapper">
+			</div>			
+		</div>
+	</div>
+
+	<div class="column right-part">
+		<div id="user-bio-space" class="profile-section">
+			<div class="field-wrapper">
+				<p>Today's Bio Bit: Brian's hometown is Big Sandy, MT</p>
+			</div>
+		</div>
+		<div id="user-about-space" class="profile-section">
+			<span class="caption">About</span>
+			<div class="field-wrapper">				
+			</div>
+		</div>
+		<div id="user-contributions-space" class="profile-section">
+			<span class="caption">Recent Contributions</span>
+			<div class="field-wrapper">
+				<p>Responses</p>
+			</div>
+			<div class="field-wrapper">
+				<p>Comments</p>
+			</div>
+			<div class="field-wrapper">
+				<p>Annotations</p>
+			</div>			
+		</div>
+		<div id="user-learning-goals-space" class="profile-section">
+			<span class="caption">Learning Goals</span>
+			<div class="field-wrapper">
+			</div>			
+		</div>
+	</div>	
+</section>
