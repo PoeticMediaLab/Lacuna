@@ -231,8 +231,9 @@
 	var controlPanelFontSize = 20;
 	var userSelectorSvg = d3.select(".controlPanelDiv").append("svg")
 		.attr("id", "userSelectorSvg")
-		.attr("height", "80%")
+		.attr("height", initialHeight)
 		.attr("width", "200px")
+		.attr("overflow", "scroll")
 		;
 
 
