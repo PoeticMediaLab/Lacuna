@@ -422,7 +422,10 @@ function get_document_id_for_biblio($nid) {
     ->fieldCondition('field_bibliographic_entry', 'target_id', $nid, '=');
   $docResult = $docQuery->execute();
   if (count($docResult['node'])>0){
-    return array_keys($docResult['node'])[0];
+    $results = array_keys($docResult['node']);
+    // PHP on the server doesn't like indexing
+    // the array_keys() call directly for some reason
+    return $results[0];
   }
   else {
     return null;
@@ -505,7 +508,7 @@ function lacuna_visualizations_mapview() {
              $dataArray['author'] .= "; ";
           }
           else {
-            $dataArray['author'] .= " (" . $item->biblio_year . ")"; 
+            $dataArray['author'] .= " (" . $item->biblio_year . ")";
           }
 				}
 			}
