@@ -13,8 +13,9 @@
 
 <?php if (current_path() != 'visualization/dashboard') { ?>
   	<div id="maps-tooltip" class="hidden">
-  		<p><strong>author: </strong> <span id="author"></span></p>
-  		<p><strong>title: </strong> <a id="title">document title</a></p>
+      <span id="image"></span><br/>
+      <a id="title">document title</a><br/>
+  		<span id="author"></span><br/>
   		<p class="hidden" id="links"><strong>links to: </strong> <span id="links"></span></p>
   		<p class="hidden" id="abstract"><strong>abstract: </strong><span id="abstract"></span></p>
 

@@ -110,16 +110,21 @@
 		.style("left", xPos + 30 + "px")
 		.style("top", yPos + 70 + "px")
 			;
-			d3.select("#maps-tooltip")
-			.select("#author")
-			.text(d.data.author)
-			;
 		d3.select("#maps-tooltip")
 			.select("#title")
 			.text(d.data.title)
 			.attr("href", d.data.thisURL)
 			;
-
+		d3.select("#maps-tooltip")
+			.select("#author")
+			.text(d.data.author)
+			;
+		if (d.data.image.length > 0) {
+			d3.select("#maps-tooltip")
+			.select("#image")
+			.html(d.data.image)
+			;
+		}
 		if(d.data.document_abstract){
 			d3.select("#maps-tooltip")
 				.select("#abstract")
@@ -192,6 +197,13 @@
 					.classed("hidden", true);
 					;
 			});
+
+		// For bottom half of circle, show tooltip above mouse rather than below.
+		if (yPos > initialHeight/2) {
+			var height = $("#maps-tooltip").outerHeight();
+			console.log(height);
+			d3.select("#maps-tooltip").style("top", (yPos + 80 - height) + "px");
+		}
   }; // end displayTooltip
 
      // additional settings for the advanced force directed graphs
