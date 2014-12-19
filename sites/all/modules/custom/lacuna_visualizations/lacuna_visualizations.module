@@ -438,6 +438,17 @@ function get_link_url($docId, $nid) {
   }
 }
 
+function get_image($docId) {
+  if ($docId != null) {
+    $node = node_load($docId);
+    // var_dump($node->field_image);
+    return theme('image_style', array('style_name' => 'thumbnails_for_browsing', 'path' => $node->field_image[LANGUAGE_NONE][0]['uri']));
+  }
+  else {
+    return "";
+  }
+}
+
 /**
  * Visualization showing links between student blog posts and primary
  * sources.
@@ -466,6 +477,7 @@ function lacuna_visualizations_mapview() {
       'title' => $item->title,
       'linksTitles' => array(),
       'thisURL' => get_link_url($docId),
+      'image' => get_image($docId),
       'linksURL' => array(),
       'biblio' => array(),
       'document_abstract' => null,
@@ -490,7 +502,10 @@ function lacuna_visualizations_mapview() {
 					$author = $item->biblio_contributors[$i]['name'];
 					$dataArray['author'] .= $author;
           if ($i != $count-1) {
-             $dataArray['author'] .= ", ";
+             $dataArray['author'] .= "; ";
+          }
+          else {
+            $dataArray['author'] .= " (" . $item->biblio_year . ")"; 
           }
 				}
 			}
