@@ -15,4 +15,5 @@ function user_account_menu_alter(&$items)
   $items['user/%user/track']['type'] = MENU_CALLBACK;
   $items['user/%user/shortcuts']['type'] = MENU_CALLBACK;
   $items['user/%user/contact']['type'] = MENU_CALLBACK;
+  $items['user/%user/notify']['type'] = MENU_CALLBACK;
 }
