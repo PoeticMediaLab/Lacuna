@@ -62,11 +62,12 @@
 #user-profile-main div.field-wrapper
 {
 	border: 1px solid #000000;
+	padding: 10px;
 }
 
 #user-profile-main #how-I-Learn-space div.field-wrapper
 {
-	height: 490px;
+	height: 530px;	
 }
 
 #user-profile-main #user-contributions-space div.field-wrapper
@@ -77,17 +78,18 @@
 
 #user-profile-main #user-bio-space div.field-wrapper
 {
-	height: 50px
+	height: 30px
 }
 
 #user-profile-main #user-about-space div.field-wrapper, 
 #user-profile-main #user-learning-goals-space div.field-wrapper
 {
-	height: 140px;
+	height: 120px;
 }
+
 #user-profile-main div.field-wrapper p
 {
-	margin: 10px 0 0 10px;
+	margin: 0;
 	font-size: 16px;
 	font-style: italic;
 }
