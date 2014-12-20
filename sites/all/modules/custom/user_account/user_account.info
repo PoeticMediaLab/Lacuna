@@ -1,0 +1,7 @@
+name = User Account
+description = adds/removes tabs from user account
+package = Lacuna Stories
+core = 7.x
+version = "7.x-1.0-alpha"
+stylesheets[all][] = ./user_account.css
+stylesheets[all][] = ./font-awesome-4.2.0/css
