@@ -70,12 +70,18 @@
 			<span class="caption">Recent Contributions</span>
 			<div class="field-wrapper">
 				<p>Responses</p>
+				<?php $block = block_load("views", "user_s_responses-block");
+				$render_array = _block_get_renderable_array(_block_render_blocks(array($block)));
+				print render($render_array); ?>
 			</div>
 			<div class="field-wrapper">
 				<p>Comments</p>
 			</div>
 			<div class="field-wrapper">
 				<p>Annotations</p>
+				<?php $block = block_load("views", "my_annotations_view-block");
+				$render_array = _block_get_renderable_array(_block_render_blocks(array($block)));
+				print render($render_array); ?>			
 			</div>			
 		</div>
 		<div id="user-learning-goals-space" class="profile-section">
