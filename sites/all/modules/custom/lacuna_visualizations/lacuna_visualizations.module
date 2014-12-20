@@ -413,6 +413,44 @@ function lacuna_visualizations_journeyview() {
   return theme('graphapi_dispatch', array('graph' => $graph, 'config' => $options));
 }  // end function lacuna_visualizations_journeyview()
 
+function get_document_id_for_biblio($nid) {
+  //Find appropriate material for that biblio entry.
+  $docQuery = new EntityFieldQuery();
+  $docQuery
+    ->entityCondition('entity_type', 'node')
+    ->entityCondition('bundle', 'document')
+    ->fieldCondition('field_bibliographic_entry', 'target_id', $nid, '=');
+  $docResult = $docQuery->execute();
+  if (count($docResult['node'])>0){
+    $results = array_keys($docResult['node']);
+    // PHP on the server doesn't like indexing
+    // the array_keys() call directly for some reason
+    return $results[0];
+  }
+  else {
+    return null;
+  }
+}
+
+function get_link_url($docId, $nid) {
+  if ($docId != null){
+    return $GLOBALS['base_url'] . '/node/' . $docId;
+  }
+  else {
+    return $GLOBALS['base_url'] . '/node/' . $nid;
+  }
+}
+
+function get_image($docId) {
+  if ($docId != null) {
+    $node = node_load($docId);
+    // var_dump($node->field_image);
+    return theme('image_style', array('style_name' => 'thumbnails_for_browsing', 'path' => $node->field_image[LANGUAGE_NONE][0]['uri']));
+  }
+  else {
+    return "";
+  }
+}
 
 /**
  * Visualization showing links between student blog posts and primary
@@ -433,6 +471,7 @@ function lacuna_visualizations_mapview() {
   foreach ($nodes as $item) {
 	 // this array will eventually contain all relevant info about blogs and document: author, timestamp, etc.
 	 // added to nodes before graphapi passes off to d3.
+    $docId = get_document_id_for_biblio($item->nid);
     $dataArray = array(
       'itemType' => $item->type,
       // author set below -- $item->name for blog posts, but
@@ -440,7 +479,8 @@ function lacuna_visualizations_mapview() {
       'author'=> null,
       'title' => $item->title,
       'linksTitles' => array(),
-      'thisURL' => $GLOBALS['base_url'] . "/node/" . $item->nid,
+      'thisURL' => get_link_url($docId),
+      'image' => get_image($docId),
       'linksURL' => array(),
       'biblio' => array(),
       'document_abstract' => null,
@@ -465,7 +505,10 @@ function lacuna_visualizations_mapview() {
 					$author = $item->biblio_contributors[$i]['name'];
 					$dataArray['author'] .= $author;
           if ($i != $count-1) {
-             $dataArray['author'] .= ", ";
+             $dataArray['author'] .= "; ";
+          }
+          else {
+            $dataArray['author'] .= " (" . $item->biblio_year . ")";
           }
 				}
 			}
@@ -490,31 +533,6 @@ function lacuna_visualizations_mapview() {
           }
         }
       } // end if($item->field_bibliographic_entry)
-
-/*			if($item->field_bibliographic_entry){
-				print_r($item->field_bibliographic_entry);
-			//	echo "<br />";
-              for($i = 0; $i < count($item->field_bibliographic_entry[LANGUAGE_NONE]); $i++) {
-
-				  // so this is the nid of the bibliographic reference.
-				  // print_r($item->field_bibliographic_entry[LANGUAGE_NONE][$i]['target_id']);
-				  $bibnid = $item->field_bibliographic_entry[LANGUAGE_NONE][$i]['target_id'];
-				  // echo "<br />";
-				  // print_r($bibnid);
-				  if(array_key_exists($bibnid, $nodes))
-					  // RESTART HERE
-					  // This is the title of the bibliographic
-					  // reference, which (should be) the same as the
-					  // title of the node that we're actually linking
-					  // to.
-
-					  // wait.
-					  // we should link to the bibliographic reference
-					  // rather than to the actual document. duh.
-					  print_r($nodes[$bibnid]);
-					  echo "<br />";
-				  }
-			  } */
     }	// end if($item->type == "blog")
     graphapi_set_node_data($graph, $title, $dataArray);
   }
