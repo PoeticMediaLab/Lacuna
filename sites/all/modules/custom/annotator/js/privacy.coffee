@@ -3,15 +3,21 @@ $ = jQuery;
 
 class Annotator.Plugin.Privacy extends Annotator.Plugin
 
-	events:
-		'annotationViewerShown' : "updateViewer"
+	options:
+	  privacyClass: "annotator-privacy"
+	  publicClass: "annotator-privacy-public"
+	  privateClass: "annotator-privacy-private"
 
-	updateViewer: (event, annotations) =>
-		annotation = annotations[0]
+	pluginInit: ->
+    	return unless Annotator.supported()
+    	@annotator.viewer.addField({
+    	  load: @updateViewer
+    	})
+
+	updateViewer: (field, annotation) =>
+		field = $(field)
+		field.addClass(@options.privacyClass)
 		if annotation.permissions["read"].length > 0
-		  toAppend = " | Private"
+			field.addClass(@options.privateClass).html(Annotator.Util.escape("Private"))
 		else
-		  toAppend = " | Public"
-		privacyStr = Annotator.Util.escape(toAppend)
-		$('.annotator-user').append privacyStr
-		  	
+		 	field.addClass(@options.publicClass).html(Annotator.Util.escape("Public"))		  	

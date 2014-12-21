@@ -14,20 +14,29 @@ Annotator.Plugin.Privacy = (function(_super) {
     return Privacy.__super__.constructor.apply(this, arguments);
   }
 
-  Privacy.prototype.events = {
-    'annotationViewerShown': "updateViewer"
+  Privacy.prototype.options = {
+    privacyClass: "annotator-privacy",
+    publicClass: "annotator-privacy-public",
+    privateClass: "annotator-privacy-private"
   };
 
-  Privacy.prototype.updateViewer = function(event, annotations) {
-    var annotation, privacyStr, toAppend;
-    annotation = annotations[0];
-    if (annotation.permissions["read"].length > 0) {
-      toAppend = " | Private";
-    } else {
-      toAppend = " | Public";
+  Privacy.prototype.pluginInit = function() {
+    if (!Annotator.supported()) {
+      return;
     }
-    privacyStr = Annotator.Util.escape(toAppend);
-    return $('.annotator-user').append(privacyStr);
+    return this.annotator.viewer.addField({
+      load: this.updateViewer
+    });
+  };
+
+  Privacy.prototype.updateViewer = function(field, annotation) {
+    field = $(field);
+    field.addClass(this.options.privacyClass);
+    if (annotation.permissions["read"].length > 0) {
+      return field.addClass(this.options.privateClass).html(Annotator.Util.escape("Private"));
+    } else {
+      return field.addClass(this.options.publicClass).html(Annotator.Util.escape("Public"));
+    }
   };
 
   return Privacy;

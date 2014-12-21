@@ -1,0 +1,14 @@
+/***
+ * Annotator Privacy Plugin CSS.
+ *
+ ***/
+
+ .annotator-privacy-public {
+ 	/*Currently empty because we want default annotator gray.*/
+ }
+
+
+
+ .annotator-privacy-private {
+ 	color: deepskyblue;
+ }
