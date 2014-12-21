@@ -446,11 +446,11 @@ function get_image($item, $docId) {
     if ($docId != null) {
       $node = node_load($docId);
       // var_dump($node->field_image);
-      return theme('image_style', array('style_name' => 'thumbnails_for_browsing', 'path' => $node->field_image[LANGUAGE_NONE][0]['uri'])).'<br/>';
+      return '<center>'.theme('image_style', array('style_name' => 'thumbnails_for_browsing', 'path' => $node->field_image[LANGUAGE_NONE][0]['uri'])).'</center>';
     }
   }
   else if ($item->type == "blog") {
-    return theme('image_style', array('style_name' => 'thumbnails_for_browsing', 'path' => $item->field_image[LANGUAGE_NONE][0]['uri'])).'<br/>';
+    return '<center>'.theme('image_style', array('style_name' => 'thumbnails_for_browsing', 'path' => $item->field_image[LANGUAGE_NONE][0]['uri'])).'</center>';
   }
   return "";
 }
