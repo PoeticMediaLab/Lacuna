@@ -119,12 +119,10 @@
 			.select("#author")
 			.text(d.data.author)
 			;
-		if (d.data.image.length > 0) {
-			d3.select("#maps-tooltip")
-			.select("#image")
-			.html(d.data.image)
-			;
-		}
+		d3.select("#maps-tooltip")
+		.select("#image")
+		.html(d.data.image)
+		;
 		if(d.data.document_abstract){
 			d3.select("#maps-tooltip")
 				.select("#abstract")
@@ -201,7 +199,6 @@
 		// For bottom half of circle, show tooltip above mouse rather than below.
 		if (yPos > initialHeight/2) {
 			var height = $("#maps-tooltip").outerHeight();
-			console.log(height);
 			d3.select("#maps-tooltip").style("top", (yPos + 80 - height) + "px");
 		}
   }; // end displayTooltip
