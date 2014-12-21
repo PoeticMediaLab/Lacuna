@@ -15,6 +15,7 @@ files[] = plugins/annotator/UnsupportedAnnotatorPlugin.class.inc
 files[] = plugins/annotator/CategoriesAnnotatorPlugin.class.inc
 files[] = plugins/annotator/FiltersAnnotatorPlugin.class.inc
 files[] = plugins/annotator/TouchAnnotatorPlugin.class.inc
+files[] = plugins/annotator/CommentAnnotatorPlugin.class.inc
 
 dependencies[] = ctools
 dependencies[] = jquery_update
