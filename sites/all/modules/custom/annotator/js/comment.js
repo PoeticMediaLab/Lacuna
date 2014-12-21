@@ -29,12 +29,14 @@ Annotator.Plugin.Comment = (function(_super) {
   };
 
   Comment.prototype.updateViewer = function(field, annotation) {
+    var link;
     field = $(field);
     field.addClass(this.options.commentClass);
+    link = this.options.base_url + annotation.links[0].href;
     if (annotation.comment_count !== "0") {
-      return field.html('<a href="' + this.options.base_url + annotation.links[0].href + '#comments">' + annotation.comment_count + " Comments</a>");
+      return field.html('<a href="' + link + '#comments">' + annotation.comment_count + ' Comments</a><a href="' + link + '#comment-form" class="annotator-new-comment-button" title="New Comment">&nbsp;&nbsp;&nbsp;&nbsp;</a>');
     } else {
-      return field.html(annotation.comment_count + ' Comments');
+      return field.html(annotation.comment_count + ' Comments<a href="' + link + '#comment-form" class="annotator-new-comment-button" title="New Comment">&nbsp;&nbsp;&nbsp;&nbsp;</a>');
     }
   };
 

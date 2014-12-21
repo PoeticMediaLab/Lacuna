@@ -17,6 +17,7 @@ class CommentAnnotatorPlugin extends AnnotatorPlugin {
 		// Sends the settings data to a global variable where JavaScript can access it.
 		drupal_add_js(array('annotator_comment' => (array) $settings), 'setting');
 
+		drupal_add_css(drupal_get_path('module', 'annotator') . '/css/comment.css');
 		drupal_add_js(drupal_get_path('module', 'annotator') . '/js/annotator_comment.js');
 		drupal_add_js(drupal_get_path('module', 'annotator') . '/js/comment.js');
 	}
