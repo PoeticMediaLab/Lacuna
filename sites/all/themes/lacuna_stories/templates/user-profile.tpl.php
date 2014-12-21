@@ -34,59 +34,78 @@
  * @ingroup themeable
  */
 ?>
-<!--div class="profile"<?php print $attributes; ?>>
-  <?php print render($user_profile); ?>
-</div-->
 
 <section id="user-profile-main">
 	<div class="column left-part">
 		<div id="user-avatar-space" class="profile-section">
-			<div id="user-command-buttons">
-				<i class="fa fa-edit fa-2x"></i>
-				<i class="fa fa-bell-o fa-2x"></i>
-				<i class="fa fa-cog fa-2x"></i>
-			</div>
+            <?php $userInView = menu_get_object('user');
+            if($userInView->uid === $user->uid):?>
+                <div id="user-command-buttons">
+                    <a href="#"><i class="fa fa-edit fa-2x"></i></a>
+                    <a href="#"><i class="fa fa-bell-o fa-2x"></i></a>
+                    <a href="#"><i class="fa fa-cog fa-2x"></i></a>
+                </div>
+            <?php endif; ?>
 			<?php print $user_profile["user_picture"]["#markup"]; ?>
 		</div>
 		<div id="how-I-Learn-space" class="profile-section">
 			<span class="caption">How I Learn</span>
 			<div class="field-wrapper">
+                <?php   if(isset($field_how_i_learn)) print "<p>{$field_how_i_learn[0]["value"]} </p>";
+                        else print "<p>Empty</p>"
+                ?>
 			</div>			
 		</div>
 	</div>
 
 	<div class="column right-part">
-		<div id="user-bio-space" class="profile-section">
-			<div class="field-wrapper">
-				<p>Today's Bio Bit: Brian's hometown is Big Sandy, MT</p>
-			</div>
-		</div>
 		<div id="user-about-space" class="profile-section">
 			<span class="caption">About</span>
-			<div class="field-wrapper">				
+			<div class="field-wrapper">
+                <?php   if(isset($field_about_me)) print "<p>{$field_about_me[0]["value"]} </p>";
+                        else print "<p>Empty</p>"
+                ?>
 			</div>
 		</div>
 		<div id="user-contributions-space" class="profile-section">
 			<span class="caption">Recent Contributions</span>
 			<div class="field-wrapper">
-				<p>Responses</p>
-				<?php $block = block_load("views", "user_s_responses-block");
-				$render_array = _block_get_renderable_array(_block_render_blocks(array($block)));
-				print render($render_array); ?>
+				<p class="title">Responses</p>
+                <?php   $block = block_load("views", "user_s_responses-block");
+                        $blocks_to_render = _block_render_blocks(array($block));
+                        if(count($blocks_to_render) > 0)
+                        {
+                            $render_array = _block_get_renderable_array($blocks_to_render);
+                            print render($render_array);
+                        }
+                        else print "<p class='no-results'>{$field_display_name[0]['value']} has not written any responses</p>";
+                ?>
 			</div>
 			<div class="field-wrapper">
-				<p>Comments</p>
+                <p class="title">Comments</p>
 			</div>
 			<div class="field-wrapper">
-				<p>Annotations</p>
-				<?php $block = block_load("views", "my_annotations_view-block");
-				$render_array = _block_get_renderable_array(_block_render_blocks(array($block)));
-				print render($render_array); ?>			
-			</div>			
+                <p class="title">Annotations</p>
+                <?php   $block = block_load("views", "my_annotations_view-block");
+                $blocks_to_render = _block_render_blocks(array($block));
+                if(count($blocks_to_render) > 0)
+                {
+                    $render_array = _block_get_renderable_array($blocks_to_render);
+                    print render($render_array);
+                }
+                else print "<p class='no-results'>{$field_display_name[0]['value']} has not made any annotations</p>";
+                ?>
+			</div>
 		</div>
 		<div id="user-learning-goals-space" class="profile-section">
 			<span class="caption">Learning Goals</span>
-			<div class="field-wrapper">
+            <div class="field-wrapper">
+                <?php   if(isset($field_learning_goals))
+                {
+                    foreach($field_learning_goals as $goal) print "<p>{$goal["value"]}</p>";
+                }
+                else print "<p>Empty</p>"
+                ?>
 			</div>			
 		</div>
 	</div>	
