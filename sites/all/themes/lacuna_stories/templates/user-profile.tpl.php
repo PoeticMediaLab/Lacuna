@@ -39,11 +39,12 @@
 	<div class="column left-part">
 		<div id="user-avatar-space" class="profile-section">
             <?php $userInView = menu_get_object('user');
+            $basePath = base_path();
             if($userInView->uid === $user->uid):?>
                 <div id="user-command-buttons">
-                    <a href="#"><i class="fa fa-edit fa-2x"></i></a>
-                    <a href="#"><i class="fa fa-bell-o fa-2x"></i></a>
-                    <a href="#"><i class="fa fa-cog fa-2x"></i></a>
+                    <a href="<?php print $basePath."user/".$user->uid."/edit"?>"><i class="fa fa-edit fa-2x"></i></a>
+                    <a href="<?php print $basePath."user/".$user->uid."/notify"?>"><i class="fa fa-bell-o fa-2x"></i></a>
+                    <a href="<?php print $basePath."user/".$user->uid."/contact"?>"><i class="fa fa-cog fa-2x"></i></a>
                 </div>
             <?php endif; ?>
 			<?php print $user_profile["user_picture"]["#markup"]; ?>
