@@ -35,6 +35,27 @@
  */
 ?>
 
+<?php
+
+/*
+ * Function customPrintViewsBlock()
+ * returns true if block with name $blockName is not empty and returns true;
+ * otherwise returns false and does not print anything
+ */
+function customPrintViewsBlock($blockName)
+{
+    $block = block_load("views", $blockName);
+    $blocks_to_render = _block_render_blocks(array($block));
+    if(count($blocks_to_render) > 0)
+    {
+        $render_array = _block_get_renderable_array($blocks_to_render);
+        print render($render_array);
+        return true;
+    }
+    return false;
+}
+?>
+
 <section id="user-profile-main">
 	<div class="column left-part">
 		<div id="user-avatar-space" class="profile-section">
@@ -72,30 +93,24 @@
 			<span class="caption">Recent Contributions</span>
 			<div class="field-wrapper">
 				<p class="title">Responses</p>
-                <?php   $block = block_load("views", "user_s_responses-block");
-                        $blocks_to_render = _block_render_blocks(array($block));
-                        if(count($blocks_to_render) > 0)
-                        {
-                            $render_array = _block_get_renderable_array($blocks_to_render);
-                            print render($render_array);
-                        }
-                        else print "<p class='no-results'>{$field_display_name[0]['value']} has not written any responses</p>";
-                ?>
+                <?php if(!customPrintViewsBlock("user_s_responses-block"))
+                    {
+                        print "<p class='no-results'>{$field_display_name[0]['value']} has not written any responses</p>";
+                    } ?>
 			</div>
 			<div class="field-wrapper">
                 <p class="title">Comments</p>
+                <?php if(!customPrintViewsBlock("my_annotations_view-block_comments"))
+                    {
+                        print "<p class='no-results'>{$field_display_name[0]['value']} has not made any comments</p>";
+                    } ?>
 			</div>
 			<div class="field-wrapper">
                 <p class="title">Annotations</p>
-                <?php   $block = block_load("views", "my_annotations_view-block");
-                $blocks_to_render = _block_render_blocks(array($block));
-                if(count($blocks_to_render) > 0)
-                {
-                    $render_array = _block_get_renderable_array($blocks_to_render);
-                    print render($render_array);
-                }
-                else print "<p class='no-results'>{$field_display_name[0]['value']} has not made any annotations</p>";
-                ?>
+                <?php if(!customPrintViewsBlock("my_annotations_view-block"))
+                    {
+                        print "<p class='no-results'>{$field_display_name[0]['value']} has not made any annotations</p>";
+                    } ?>
 			</div>
 		</div>
 		<div id="user-learning-goals-space" class="profile-section">
