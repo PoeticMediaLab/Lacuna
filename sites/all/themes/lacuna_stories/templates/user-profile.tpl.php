@@ -124,5 +124,38 @@ function customPrintViewsBlock($blockName)
                 ?>
 			</div>			
 		</div>
-	</div>	
+	</div>
+    <div class="profile-section" id="user-learning">
+        <?php
+            $themePath = base_path() . path_to_theme();
+            $anVisImgURL = $themePath . "/images/user-profile-images/annotation_visualization_logo.png";
+            $anImgURL = $themePath . "/images/user-profile-images/annotation_logo.png";
+            $resMapImgURL = $themePath . "/images/user-profile-images/responses_map_logo.png";
+        ?>
+        <span class="caption">My Learning</span>
+        <div class="field-wrapper">
+            <table>
+                <tr>
+                    <td>
+                        <div>
+                            <a href="#"><img id="annotation-visual-logo" src="<?php print $anVisImgURL?>"/></a>
+                            <p>Annotation Visualization</p>
+                        </div>
+                    </td>
+                    <td>
+                        <div>
+                            <a href="#"><img id="annotation-view-logo" src="<?php print $anImgURL?>"/></a>
+                            <p><?php print $field_display_name[0]['value'] ?>'s Annotations</p>
+                        </div>
+                    </td>
+                    <td>
+                        <div>
+                            <a href="#"><img id="response-map-logo" src="<?php print $resMapImgURL?>"/></a>
+                            <p><?php print $field_display_name[0]['value'] ?>'s Response Map</p>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
 </section>

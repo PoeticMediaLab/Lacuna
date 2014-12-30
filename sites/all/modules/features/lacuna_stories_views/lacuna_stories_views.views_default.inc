@@ -1504,7 +1504,7 @@ function lacuna_stories_views_views_default_views() {
     'path' => 'path',
     'nid' => 'nid',
     'nothing' => 'nothing',
-    'annotation_reference' => 'annotation_reference',
+    'text' => 'text',
   );
   $handler->display->display_options['defaults']['row_options'] = FALSE;
   $handler->display->display_options['defaults']['fields'] = FALSE;
@@ -1531,15 +1531,15 @@ function lacuna_stories_views_views_default_views() {
   $handler->display->display_options['fields']['nothing']['alter']['absolute'] = TRUE;
   $handler->display->display_options['fields']['nothing']['alter']['target'] = '_blank';
   $handler->display->display_options['fields']['nothing']['element_label_colon'] = FALSE;
-  /* Field: Content: Annotated Content */
-  $handler->display->display_options['fields']['annotation_reference']['id'] = 'annotation_reference';
-  $handler->display->display_options['fields']['annotation_reference']['table'] = 'field_data_annotation_reference';
-  $handler->display->display_options['fields']['annotation_reference']['field'] = 'annotation_reference';
-  $handler->display->display_options['fields']['annotation_reference']['label'] = '';
-  $handler->display->display_options['fields']['annotation_reference']['element_label_colon'] = FALSE;
-  $handler->display->display_options['fields']['annotation_reference']['element_default_classes'] = FALSE;
-  $handler->display->display_options['fields']['annotation_reference']['settings'] = array(
-    'link' => 1,
+  /* Field: Content: Annotation Text */
+  $handler->display->display_options['fields']['text']['id'] = 'text';
+  $handler->display->display_options['fields']['text']['table'] = 'field_data_text';
+  $handler->display->display_options['fields']['text']['field'] = 'text';
+  $handler->display->display_options['fields']['text']['label'] = '';
+  $handler->display->display_options['fields']['text']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['text']['type'] = 'text_trimmed';
+  $handler->display->display_options['fields']['text']['settings'] = array(
+    'trim_length' => '140',
   );
   $handler->display->display_options['defaults']['arguments'] = FALSE;
   /* Contextual filter: Content: Author uid */
@@ -1603,6 +1603,7 @@ function lacuna_stories_views_views_default_views() {
     'nid' => 'nid',
     'nothing' => 'nothing',
     'annotation_reference' => 'annotation_reference',
+    'text' => 'text',
   );
   $handler->display->display_options['defaults']['row_options'] = FALSE;
   $handler->display->display_options['defaults']['fields'] = FALSE;
@@ -1629,15 +1630,15 @@ function lacuna_stories_views_views_default_views() {
   $handler->display->display_options['fields']['nothing']['alter']['absolute'] = TRUE;
   $handler->display->display_options['fields']['nothing']['alter']['target'] = '_blank';
   $handler->display->display_options['fields']['nothing']['element_label_colon'] = FALSE;
-  /* Field: Content: Annotated Content */
-  $handler->display->display_options['fields']['annotation_reference']['id'] = 'annotation_reference';
-  $handler->display->display_options['fields']['annotation_reference']['table'] = 'field_data_annotation_reference';
-  $handler->display->display_options['fields']['annotation_reference']['field'] = 'annotation_reference';
-  $handler->display->display_options['fields']['annotation_reference']['label'] = '';
-  $handler->display->display_options['fields']['annotation_reference']['element_label_colon'] = FALSE;
-  $handler->display->display_options['fields']['annotation_reference']['element_default_classes'] = FALSE;
-  $handler->display->display_options['fields']['annotation_reference']['settings'] = array(
-    'link' => 1,
+  /* Field: Content: Annotation Text */
+  $handler->display->display_options['fields']['text']['id'] = 'text';
+  $handler->display->display_options['fields']['text']['table'] = 'field_data_text';
+  $handler->display->display_options['fields']['text']['field'] = 'text';
+  $handler->display->display_options['fields']['text']['label'] = '';
+  $handler->display->display_options['fields']['text']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['text']['type'] = 'text_trimmed';
+  $handler->display->display_options['fields']['text']['settings'] = array(
+    'trim_length' => '140',
   );
   $handler->display->display_options['defaults']['arguments'] = FALSE;
   /* Contextual filter: Content: Author uid */
