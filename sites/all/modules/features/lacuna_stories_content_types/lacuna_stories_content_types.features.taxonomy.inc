@@ -15,7 +15,7 @@ function lacuna_stories_content_types_taxonomy_default_vocabularies() {
       'description' => 'Categories for annotations',
       'hierarchy' => 0,
       'module' => 'annotation',
-      'weight' => -10,
+      'weight' => 1,
       'rdf_mapping' => array(
         'rdftype' => array(
           0 => 'skos:ConceptScheme',
@@ -38,30 +38,7 @@ function lacuna_stories_content_types_taxonomy_default_vocabularies() {
       'description' => 'Genre of course materials',
       'hierarchy' => 0,
       'module' => 'taxonomy',
-      'weight' => -9,
-      'rdf_mapping' => array(
-        'rdftype' => array(
-          0 => 'skos:ConceptScheme',
-        ),
-        'name' => array(
-          'predicates' => array(
-            0 => 'dc:title',
-          ),
-        ),
-        'description' => array(
-          'predicates' => array(
-            0 => 'rdfs:comment',
-          ),
-        ),
-      ),
-    ),
-    'genre_response' => array(
-      'name' => 'Genre - Responses',
-      'machine_name' => 'genre_response',
-      'description' => 'The genre of a response post',
-      'hierarchy' => 0,
-      'module' => 'taxonomy',
-      'weight' => -8,
+      'weight' => 0,
       'rdf_mapping' => array(
         'rdftype' => array(
           0 => 'skos:ConceptScheme',
@@ -84,7 +61,7 @@ function lacuna_stories_content_types_taxonomy_default_vocabularies() {
       'description' => 'Is this material required, optional, something else?',
       'hierarchy' => 0,
       'module' => 'taxonomy',
-      'weight' => -7,
+      'weight' => 0,
       'rdf_mapping' => array(
         'rdftype' => array(
           0 => 'skos:ConceptScheme',
@@ -107,7 +84,7 @@ function lacuna_stories_content_types_taxonomy_default_vocabularies() {
       'description' => 'Use tags to group articles on similar topics into categories.',
       'hierarchy' => 0,
       'module' => 'taxonomy',
-      'weight' => -6,
+      'weight' => 0,
       'rdf_mapping' => array(
         'rdftype' => array(
           0 => 'skos:ConceptScheme',
@@ -130,7 +107,7 @@ function lacuna_stories_content_types_taxonomy_default_vocabularies() {
       'description' => 'Themes or sub-topics to organize content',
       'hierarchy' => 0,
       'module' => 'taxonomy',
-      'weight' => -5,
+      'weight' => 0,
       'rdf_mapping' => array(
         'rdftype' => array(
           0 => 'skos:ConceptScheme',
@@ -153,7 +130,7 @@ function lacuna_stories_content_types_taxonomy_default_vocabularies() {
       'description' => 'Organize content by units in the syllabus',
       'hierarchy' => 0,
       'module' => 'taxonomy',
-      'weight' => -4,
+      'weight' => 0,
       'rdf_mapping' => array(
         'rdftype' => array(
           0 => 'skos:ConceptScheme',
