@@ -1,0 +1,19 @@
+<?php
+/**
+ *
+ * Adding hook_menu_alter to override and change tabs present in user account
+ *
+ * Hayk Tepanyan <tehayk@stanford.edu>
+ *
+ */
+
+
+// implement hook_menu_alter
+function user_account_menu_alter(&$items) 
+{
+  $items['user/%user/edit']['type'] = MENU_CALLBACK;
+  $items['user/%user/track']['type'] = MENU_CALLBACK;
+  $items['user/%user/shortcuts']['type'] = MENU_CALLBACK;
+  $items['user/%user/contact']['type'] = MENU_CALLBACK;
+  $items['user/%user/notify']['type'] = MENU_CALLBACK;
+}
