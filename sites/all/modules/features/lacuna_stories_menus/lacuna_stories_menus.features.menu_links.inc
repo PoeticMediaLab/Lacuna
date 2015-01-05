@@ -10,6 +10,24 @@
 function lacuna_stories_menus_menu_default_menu_links() {
   $menu_links = array();
 
+  // Exported menu link: main-menu_about-this-course:node/12
+  $menu_links['main-menu_about-this-course:node/12'] = array(
+    'menu_name' => 'main-menu',
+    'link_path' => 'node/12',
+    'router_path' => 'node/%',
+    'link_title' => 'About This Course',
+    'options' => array(
+      'identifier' => 'main-menu_about-this-course:node/12',
+    ),
+    'module' => 'menu',
+    'hidden' => 0,
+    'external' => 0,
+    'has_children' => 0,
+    'expanded' => 0,
+    'weight' => 5,
+    'customized' => 0,
+    'parent_identifier' => 'main-menu_explore:<nolink>',
+  );
   // Exported menu link: main-menu_account:<nolink>
   $menu_links['main-menu_account:<nolink>'] = array(
     'menu_name' => 'main-menu',
@@ -129,6 +147,27 @@ function lacuna_stories_menus_menu_default_menu_links() {
     'weight' => -48,
     'customized' => 1,
   );
+  // Exported menu link: main-menu_contact:contact
+  $menu_links['main-menu_contact:contact'] = array(
+    'menu_name' => 'main-menu',
+    'link_path' => 'contact',
+    'router_path' => 'contact',
+    'link_title' => 'Contact',
+    'options' => array(
+      'attributes' => array(
+        'title' => '',
+      ),
+      'identifier' => 'main-menu_contact:contact',
+    ),
+    'module' => 'menu',
+    'hidden' => 0,
+    'external' => 0,
+    'has_children' => 0,
+    'expanded' => 0,
+    'weight' => -47,
+    'customized' => 1,
+    'parent_identifier' => 'main-menu_help:<nolink>',
+  );
   // Exported menu link: main-menu_create:<nolink>
   $menu_links['main-menu_create:<nolink>'] = array(
     'menu_name' => 'main-menu',
@@ -169,17 +208,52 @@ function lacuna_stories_menus_menu_default_menu_links() {
     'weight' => -50,
     'customized' => 1,
   );
-  // Exported menu link: main-menu_help:contact
-  $menu_links['main-menu_help:contact'] = array(
+  // Exported menu link: main-menu_faq:node/14
+  $menu_links['main-menu_faq:node/14'] = array(
     'menu_name' => 'main-menu',
-    'link_path' => 'contact',
-    'router_path' => 'contact',
+    'link_path' => 'node/14',
+    'router_path' => 'node/%',
+    'link_title' => 'FAQ',
+    'options' => array(
+      'identifier' => 'main-menu_faq:node/14',
+    ),
+    'module' => 'menu',
+    'hidden' => 0,
+    'external' => 0,
+    'has_children' => 0,
+    'expanded' => 0,
+    'weight' => -50,
+    'customized' => 1,
+    'parent_identifier' => 'main-menu_help:<nolink>',
+  );
+  // Exported menu link: main-menu_help:<nolink>
+  $menu_links['main-menu_help:<nolink>'] = array(
+    'menu_name' => 'main-menu',
+    'link_path' => '<nolink>',
+    'router_path' => '<nolink>',
     'link_title' => 'Help',
     'options' => array(
       'attributes' => array(
         'title' => '',
       ),
-      'identifier' => 'main-menu_help:contact',
+      'identifier' => 'main-menu_help:<nolink>',
+    ),
+    'module' => 'menu',
+    'hidden' => 0,
+    'external' => 0,
+    'has_children' => 1,
+    'expanded' => 0,
+    'weight' => 5,
+    'customized' => 1,
+  );
+  // Exported menu link: main-menu_instructor-guide:node/13
+  $menu_links['main-menu_instructor-guide:node/13'] = array(
+    'menu_name' => 'main-menu',
+    'link_path' => 'node/13',
+    'router_path' => 'node/%',
+    'link_title' => 'Instructor Guide',
+    'options' => array(
+      'identifier' => 'main-menu_instructor-guide:node/13',
     ),
     'module' => 'menu',
     'hidden' => 0,
@@ -188,7 +262,7 @@ function lacuna_stories_menus_menu_default_menu_links() {
     'expanded' => 0,
     'weight' => -48,
     'customized' => 1,
-    'parent_identifier' => 'main-menu_account:<nolink>',
+    'parent_identifier' => 'main-menu_help:<nolink>',
   );
   // Exported menu link: main-menu_logout:user/logout
   $menu_links['main-menu_logout:user/logout'] = array(
@@ -207,7 +281,7 @@ function lacuna_stories_menus_menu_default_menu_links() {
     'external' => 0,
     'has_children' => 0,
     'expanded' => 0,
-    'weight' => -47,
+    'weight' => -48,
     'customized' => 1,
     'parent_identifier' => 'main-menu_account:<nolink>',
   );
@@ -228,8 +302,9 @@ function lacuna_stories_menus_menu_default_menu_links() {
     'external' => 0,
     'has_children' => 1,
     'expanded' => 0,
-    'weight' => 0,
+    'weight' => -49,
     'customized' => 1,
+    'parent_identifier' => 'main-menu_account:<nolink>',
   );
   // Exported menu link: main-menu_materials:materials
   $menu_links['main-menu_materials:materials'] = array(
@@ -365,6 +440,24 @@ function lacuna_stories_menus_menu_default_menu_links() {
     'customized' => 1,
     'parent_identifier' => 'main-menu_connect:<nolink>',
   );
+  // Exported menu link: main-menu_student-user-guide:node/15
+  $menu_links['main-menu_student-user-guide:node/15'] = array(
+    'menu_name' => 'main-menu',
+    'link_path' => 'node/15',
+    'router_path' => 'node/%',
+    'link_title' => 'Student User Guide',
+    'options' => array(
+      'identifier' => 'main-menu_student-user-guide:node/15',
+    ),
+    'module' => 'menu',
+    'hidden' => 0,
+    'external' => 0,
+    'has_children' => 0,
+    'expanded' => 0,
+    'weight' => -49,
+    'customized' => 1,
+    'parent_identifier' => 'main-menu_help:<nolink>',
+  );
   // Exported menu link: main-menu_syllabus:syllabus
   $menu_links['main-menu_syllabus:syllabus'] = array(
     'menu_name' => 'main-menu',
@@ -424,15 +517,19 @@ function lacuna_stories_menus_menu_default_menu_links() {
   );
   // Translatables
   // Included for use with string extractors like potx.
+  t('About This Course');
   t('Account');
   t('All Content');
   t('All Emails');
   t('Annotations Dashboard');
   t('Bibliography');
   t('Connect');
+  t('Contact');
   t('Create');
   t('Explore');
+  t('FAQ');
   t('Help');
+  t('Instructor Guide');
   t('Logout');
   t('Manage');
   t('Materials');
@@ -442,6 +539,7 @@ function lacuna_stories_menus_menu_default_menu_links() {
   t('Responses');
   t('Responses Map');
   t('Sewing Kit');
+  t('Student User Guide');
   t('Syllabus');
   t('Threads');
   t('Write a Response');
