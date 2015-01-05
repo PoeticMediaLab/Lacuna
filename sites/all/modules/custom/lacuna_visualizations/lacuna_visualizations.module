@@ -423,8 +423,7 @@ function get_document_id_for_biblio($nid) {
   $docResult = $docQuery->execute();
   if (count($docResult['node'])>0){
     $results = array_keys($docResult['node']);
-    // PHP on the server doesn't like indexing
-    // the array_keys() call directly for some reason
+    // PHP 5.3 won't dereference arrays from functions directly
     return $results[0];
   }
   else {

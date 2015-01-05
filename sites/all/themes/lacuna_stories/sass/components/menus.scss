@@ -2,6 +2,12 @@ $menu-color: transparent;
 $tabs-color: rgb(245,245,245);
 $menu-active-color: #eee;
 
+a.nolink {
+  text-decoration: none;
+  color: black;
+}
+
+
 #block-superfish-1 {
   float: right;
   padding-right: 50px;
@@ -20,6 +26,11 @@ $menu-active-color: #eee;
   li {
     list-style-type: none;
     list-style-image: none;
+    padding: 10px 15px 10px 15px;
+    margin: 0px;
+  }
+  span.sf-depth-2 {
+    display: block;
     padding: 10px 15px 10px 15px;
     margin: 0px;
   }
@@ -54,11 +65,6 @@ $menu-active-color: #eee;
 
 .sf-depth-2 {
   width: 80% !important;
-}
-
-a.nolink {
-  text-decoration: none;
-  color: black;
 }
 
 ul.menu {
