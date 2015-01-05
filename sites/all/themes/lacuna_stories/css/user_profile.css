@@ -15,10 +15,17 @@
 	margin-bottom: 10px;
 }
 
-#user-profile-main #user-command-buttons i:not(:first-child)
+#user-profile-main #user-command-buttons a, 
+#user-profile-main #user-command-buttons a:visited,
+#user-profile-main #user-command-buttons a:hover,
+#user-profile-main #user-command-buttons a:active
+{
+	color: inherit;
+}
+
+#user-profile-main #user-command-buttons a:not(:first-child)
 {
 	margin-left: 20px;
-	cursor: pointer;
 }
 
 #user-profile-main #user-avatar-space img
@@ -67,12 +74,16 @@
 
 #user-profile-main #how-I-Learn-space div.field-wrapper
 {
-	height: 530px;	
+	height: 460px;	
 }
 
 #user-profile-main #user-contributions-space div.field-wrapper
 {
-	height: 100px;
+	height: 100px;	
+}
+
+#user-profile-main #user-contributions-space div.field-wrapper:not(:first-child)
+{
 	margin-top: -1px;	/*	to avoid double-tick borders*/	
 }
 
@@ -91,5 +102,36 @@
 {
 	margin: 0;
 	font-size: 16px;
+}
+#user-profile-main div.field-wrapper p.title
+{
 	font-style: italic;
+}
+#user-profile-main div.field-wrapper p.no-results
+{
+	margin-top: 10px;
+	font-size: 20px;
+}
+
+#user-profile-main #user-learning table
+{
+    width: 100%;
+    margin: 0;
+}
+
+#user-profile-main #user-learning table td
+{
+    text-align: center;
+}
+#user-profile-main #user-learning table td p
+{
+    font-style: italic;
+}
+
+#user-profile-main #user-learning table td img
+{
+    border: 1px solid #000;
+    border-radius: 8px;
+    width: 120px;
+    height: 120px;
 }
