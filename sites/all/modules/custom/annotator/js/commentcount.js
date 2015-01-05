@@ -6,20 +6,20 @@ var $,
 
 $ = jQuery;
 
-Annotator.Plugin.Comment = (function(_super) {
-  __extends(Comment, _super);
+Annotator.Plugin.CommentCount = (function(_super) {
+  __extends(CommentCount, _super);
 
-  function Comment() {
+  function CommentCount() {
     this.updateViewer = __bind(this.updateViewer, this);
-    return Comment.__super__.constructor.apply(this, arguments);
+    return CommentCount.__super__.constructor.apply(this, arguments);
   }
 
-  Comment.prototype.options = {
-    commentClass: "annotator-comment",
+  CommentCount.prototype.options = {
+    commentClass: "annotator-comment-count",
     base_url: "drupal7.dev"
   };
 
-  Comment.prototype.pluginInit = function() {
+  CommentCount.prototype.pluginInit = function() {
     if (!Annotator.supported()) {
       return;
     }
@@ -28,18 +28,18 @@ Annotator.Plugin.Comment = (function(_super) {
     });
   };
 
-  Comment.prototype.updateViewer = function(field, annotation) {
+  CommentCount.prototype.updateViewer = function(field, annotation) {
     var link;
     field = $(field);
     field.addClass(this.options.commentClass);
     link = this.options.base_url + annotation.links[0].href;
     if (annotation.comment_count !== "0") {
-      return field.html('<a href="' + link + '#comments">' + annotation.comment_count + ' Comments</a><a href="' + link + '#comment-form" class="annotator-new-comment-button" title="New Comment">&nbsp;&nbsp;&nbsp;&nbsp;</a>');
+      return field.html('<a href="' + link + '#comments">' + annotation.comment_count + ' Comments</a><a href="' + link + '#comment-form" class="annotator-new-comment-count-button" title="New Comment">&nbsp;&nbsp;&nbsp;&nbsp;</a>');
     } else {
-      return field.html(annotation.comment_count + ' Comments<a href="' + link + '#comment-form" class="annotator-new-comment-button" title="New Comment">&nbsp;&nbsp;&nbsp;&nbsp;</a>');
+      return field.html(annotation.comment_count + ' Comments<a href="' + link + '#comment-form" class="annotator-new-comment-count-button" title="New Comment">&nbsp;&nbsp;&nbsp;&nbsp;</a>');
     }
   };
 
-  return Comment;
+  return CommentCount;
 
 })(Annotator.Plugin);
