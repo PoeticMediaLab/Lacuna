@@ -13,7 +13,7 @@
 /**
  * Define the default file extension list that should be tracked as download.
  */
-define('GOOGLEANALYTICS_TRACKFILES_EXTENSIONS', '7z|aac|arc|arj|asf|asx|avi|bin|csv|doc|exe|flv|gif|gz|gzip|hqx|jar|jpe?g|js|mp(2|3|4|e?g)|mov(ie)?|msi|msp|pdf|phps|png|ppt|qtm?|ra(m|r)?|sea|sit|tar|tgz|torrent|txt|wav|wma|wmv|wpd|xls|xml|z|zip');
+define('GOOGLEANALYTICS_TRACKFILES_EXTENSIONS', '7z|aac|arc|arj|asf|asx|avi|bin|csv|doc(x|m)?|dot(x|m)?|exe|flv|gif|gz|gzip|hqx|jar|jpe?g|js|mp(2|3|4|e?g)|mov(ie)?|msi|msp|pdf|phps|png|ppt(x|m)?|pot(x|m)?|pps(x|m)?|ppam|sld(x|m)?|thmx|qtm?|ra(m|r)?|sea|sit|tar|tgz|torrent|txt|wav|wma|wmv|wpd|xls(x|m|b)?|xlt(x|m)|xlam|xml|z|zip');
 
 /**
  * Define default path exclusion list to remove tracking from admin pages,
@@ -204,25 +204,38 @@ function googleanalytics_page_alter(&$page) {
     $custom_var = '';
     foreach (array('dimension', 'metric') as $googleanalytics_custom_type) {
       $googleanalytics_custom_vars = variable_get('googleanalytics_custom_' . $googleanalytics_custom_type, array());
-      for ($i = 1; $i <= 20; $i++) {
-        $custom_var_value = !empty($googleanalytics_custom_vars['indexes'][$i]['value']) ? $googleanalytics_custom_vars['indexes'][$i]['value'] : '';
-        if (!empty($custom_var_value)) {
+      // Are there dimensions or metrics configured?
+      if (!empty($googleanalytics_custom_vars)) {
+        // Add all the configured variables to the content.
+        foreach ($googleanalytics_custom_vars as $googleanalytics_custom_var) {
+          // Replace tokens in values.
           $types = array();
           $node = menu_get_object();
           if (is_object($node)) {
             $types += array('node' => $node);
           }
-          $custom_var_value = token_replace($custom_var_value, $types, array('clear' => TRUE));
-          // Suppress empty custom names and/or variables.
-          if (!drupal_strlen(trim($custom_var_value))) {
+          $googleanalytics_custom_var['value'] = token_replace($googleanalytics_custom_var['value'], $types, array('clear' => TRUE));
+
+          // Suppress empty values.
+          if (!drupal_strlen(trim($googleanalytics_custom_var['value']))) {
             continue;
+          }
+
+          // Per documentation the max length of a dimension is 150 bytes.
+          // A metric has no length limitation. It's not documented if this
+          // limit means 150 bytes after url encoding or before.
+          // See https://developers.google.com/analytics/devguides/collection/analyticsjs/field-reference#customs
+          if ($googleanalytics_custom_type == 'dimension' && drupal_strlen($googleanalytics_custom_var['value']) > 150) {
+            $googleanalytics_custom_var['value'] = substr($googleanalytics_custom_var['value'], 0, 150);
           }
 
           // Cast metric values for json_encode to data type numeric.
           if ($googleanalytics_custom_type == 'metric') {
-            settype($custom_var_value, 'float');
+            settype($googleanalytics_custom_var['value'], 'float');
           };
-          $custom_var .= 'ga("set", ' . drupal_json_encode($googleanalytics_custom_type . $i) . ', ' . drupal_json_encode($custom_var_value) . ');';
+
+          // Add variables to tracker.
+          $custom_var .= 'ga("set", ' . drupal_json_encode($googleanalytics_custom_type . $googleanalytics_custom_var['index']) . ', ' . drupal_json_encode($googleanalytics_custom_var['value']) . ');';
         }
       }
     }
@@ -259,7 +272,7 @@ function googleanalytics_page_alter(&$page) {
     $codesnippet_after = variable_get('googleanalytics_codesnippet_after', '');
 
     // Build the create only fields list.
-    $create_only_fields = array();
+    $create_only_fields = array('cookieDomain' => 'auto');
     $create_only_fields = array_merge($create_only_fields, $codesnippet_create);
 
     // Domain tracking type.
@@ -279,16 +292,15 @@ function googleanalytics_page_alter(&$page) {
       $googleanalytics_adsense_script .= 'window.google_analytics_domain_name = "none";';
     }
 
-    // Track logged in users accross all devices.
+    // Track logged in users across all devices.
     if (variable_get('googleanalytics_trackuserid', 0) && user_is_logged_in()) {
       // The USER_ID value should be a unique, persistent, and non-personally
       // identifiable string identifier that represents a user or signed-in
       // account across devices.
-      $create_only_fields['userId'] = drupal_base64_encode(drupal_get_hash_salt() . $user->uid);
+      $create_only_fields['userId'] = drupal_hmac_base64($user->uid, drupal_get_private_key() . drupal_get_hash_salt());
     }
 
     // Create a tracker.
-    $create_only_fields = empty($create_only_fields) ? 'auto' : $create_only_fields;
     $script .= 'ga("create", ' . drupal_json_encode($id) . ', ' . drupal_json_encode($create_only_fields) .');';
 
     // Prepare Adsense tracking.
@@ -439,11 +451,13 @@ function googleanalytics_cron() {
  * Collects and adds the number of search results to the head.
  */
 function googleanalytics_preprocess_search_results(&$variables) {
-  // There is no search result $variable available that hold the number of items
-  // found. But the pager item mumber can tell the number of search results.
-  global $pager_total_items;
+  if (variable_get('googleanalytics_site_search', FALSE)) {
+    // There is no search result $variable available that hold the number of items
+    // found. But the pager item mumber can tell the number of search results.
+    global $pager_total_items;
 
-  drupal_add_js('window.googleanalytics_search_results = ' . intval($pager_total_items[0]) . ';', array('type' => 'inline', 'group' => JS_LIBRARY-1));
+    drupal_add_js('window.googleanalytics_search_results = ' . intval($pager_total_items[0]) . ';', array('type' => 'inline', 'group' => JS_LIBRARY-1));
+  }
 }
 
 /**

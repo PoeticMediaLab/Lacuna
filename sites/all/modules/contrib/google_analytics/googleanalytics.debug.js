@@ -30,7 +30,7 @@ $(document).ready(function() {
         else if (Drupal.googleanalytics.isInternalSpecial(this.href)) {
           // Keep the internal URL for Google Analytics website overlay intact.
           console.info("Click on internal special link '%s' has been tracked.", Drupal.googleanalytics.getPageUrl(this.href));
-          ga("send", "pageview", { page: Drupal.googleanalytics.getPageUrl(this.href) });
+          ga("send", "pageview", { "page": Drupal.googleanalytics.getPageUrl(this.href) });
         }
         else {
           // e.g. anchor in same page or other internal page link
@@ -44,7 +44,7 @@ $(document).ready(function() {
           ga("send", "event", "Mails", "Click", this.href.substring(7));
         }
         else if (Drupal.settings.googleanalytics.trackOutbound && this.href.match(/^\w+:\/\//i)) {
-          if (Drupal.settings.googleanalytics.trackDomainMode != 2 && !Drupal.googleanalytics.isCrossDomain(this.hostname, Drupal.settings.googleanalytics.trackCrossDomains)) {
+          if (Drupal.settings.googleanalytics.trackDomainMode != 2 || (Drupal.settings.googleanalytics.trackDomainMode == 2 && !Drupal.googleanalytics.isCrossDomain(this.hostname, Drupal.settings.googleanalytics.trackCrossDomains))) {
             // External link clicked / No top-level cross domain clicked.
             console.info("Outbound link '%s' has been tracked.", this.href);
             ga("send", "event", "Outbound links", "Click", this.href);
@@ -73,7 +73,7 @@ $(document).ready(function() {
     var href = $.colorbox.element().attr("href");
     if (href) {
       console.info("Colorbox transition to url '%s' has been tracked.", Drupal.googleanalytics.getPageUrl(href));
-      ga("send", "pageview", { page: Drupal.googleanalytics.getPageUrl(href) });
+      ga("send", "pageview", { "page": Drupal.googleanalytics.getPageUrl(href) });
     }
   });
 
@@ -103,7 +103,7 @@ Drupal.googleanalytics.isCrossDomain = function (hostname, crossDomains) {
   else {
     return $.inArray(hostname, crossDomains) > -1 ? true : false;
   }
-}
+};
 
 /**
  * Check whether this is a download URL or not.
@@ -116,7 +116,7 @@ Drupal.googleanalytics.isCrossDomain = function (hostname, crossDomains) {
 Drupal.googleanalytics.isDownload = function (url) {
   var isDownload = new RegExp("\\.(" + Drupal.settings.googleanalytics.trackDownloadExtensions + ")([\?#].*)?$", "i");
   return isDownload.test(url);
-}
+};
 
 /**
  * Check whether this is an absolute internal URL or not.
@@ -129,7 +129,7 @@ Drupal.googleanalytics.isDownload = function (url) {
 Drupal.googleanalytics.isInternal = function (url) {
   var isInternal = new RegExp("^(https?):\/\/" + window.location.host, "i");
   return isInternal.test(url);
-}
+};
 
 /**
  * Check whether this is a special URL or not.
@@ -145,7 +145,7 @@ Drupal.googleanalytics.isInternal = function (url) {
 Drupal.googleanalytics.isInternalSpecial = function (url) {
   var isInternalSpecial = new RegExp("(\/go\/.*)$", "i");
   return isInternalSpecial.test(url);
-}
+};
 
 /**
  * Extract the relative internal URL from an absolute internal URL.
@@ -163,7 +163,7 @@ Drupal.googleanalytics.isInternalSpecial = function (url) {
 Drupal.googleanalytics.getPageUrl = function (url) {
   var extractInternalUrl = new RegExp("^(https?):\/\/" + window.location.host, "i");
   return url.replace(extractInternalUrl, '');
-}
+};
 
 /**
  * Extract the download file extension from the URL.
@@ -178,6 +178,6 @@ Drupal.googleanalytics.getDownloadExtension = function (url) {
   var extractDownloadextension = new RegExp("\\.(" + Drupal.settings.googleanalytics.trackDownloadExtensions + ")([\?#].*)?$", "i");
   var extension = extractDownloadextension.exec(url);
   return (extension === null) ? '' : extension[1];
-}
+};
 
 })(jQuery);

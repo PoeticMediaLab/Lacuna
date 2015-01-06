@@ -135,7 +135,10 @@ function workflow_entity_info() {
 /**
  * Implements hook_entity_property_info_alter().
  *
- * P.S. When adding a new property here, you might delete code from workflow_tokens().
+ * N.B. Keep the following functions aligned when changing properties:
+ * - workflow_tokens()
+ * - workflow_entity_property_info_alter()
+ * - workflow_views_views_data_alter()
  */
 function workflow_entity_property_info_alter(&$info) {
 
@@ -193,9 +196,11 @@ function workflow_entity_property_info_alter(&$info) {
     'getter callback' => '_workflow_metadata_workflow_get_properties',
     'entity token' => FALSE,
   );
-  // Unify to old_state, new_state.
-  unset($info['WorkflowConfigTransition']['properties']['sid']);
-  unset($info['WorkflowConfigTransition']['properties']['target_sid']);
+  // @todo: Unify ID's to old_sid, new_sid.
+  $info['WorkflowConfigTransition']['properties']['sid']['description'] = 'The ID of old state.';
+  $info['WorkflowConfigTransition']['properties']['target_sid']['description'] = 'The ID of new state.';
+
+  // Unify objects to old_state, new_state.
   $info['WorkflowConfigTransition']['properties']['old_state'] = array(
     'type' => 'WorkflowState',
     'label' => t('Old state'),
@@ -217,32 +222,36 @@ function workflow_entity_property_info_alter(&$info) {
   $info['WorkflowTransition']['properties']['label'] = $info['WorkflowConfigTransition']['properties']['label'];
   $info['WorkflowTransition']['properties']['workflow'] = $info['WorkflowConfigTransition']['properties']['workflow'];
   $info['WorkflowTransition']['properties']['hid']['label'] = 'Transition ID';
-  // Unify to old_state, new_state.
-  unset($info['WorkflowTransition']['properties']['old_sid']);
-  unset($info['WorkflowTransition']['properties']['sid']);
-  unset($info['WorkflowTransition']['properties']['stamp']);
+
+  // @todo: Unify ID's to old_sid, new_sid.
+  $info['WorkflowTransition']['properties']['old_sid']['description'] = 'The ID of old state.';
+  $info['WorkflowTransition']['properties']['sid']['description'] = 'The ID of new state.';
+  // Unify objects to old_state, new_state.
   $info['WorkflowTransition']['properties']['old_state'] = $info['WorkflowConfigTransition']['properties']['old_state'];
   $info['WorkflowTransition']['properties']['new_state'] = $info['WorkflowConfigTransition']['properties']['new_state'];
+
   $info['WorkflowTransition']['properties']['user'] = array(
     'type' => 'user',
     'label' => t('User'),
-    'description' => t('The user that triggered the transition.'),
     'schema field' => 'uid',
+    'description' => t('The user who triggered the transition.'),
   );
+
+  unset($info['WorkflowTransition']['properties']['stamp']);
   $info['WorkflowTransition']['properties']['timestamp'] = array(
     'type' => 'date',
     'label' => t('Timestamp'),
-    'description' => t('The date, time the transition was executed.'),
     'schema field' => 'stamp',
+    'description' => t('The date, time the transition was executed.'),
   );
 
   // Properties for WorkflowScheduledTransition.
   $info['WorkflowScheduledTransition']['properties']['scheduled']['type'] = 'date';
   $info['WorkflowScheduledTransition']['properties']['workflow'] = $info['WorkflowTransition']['properties']['workflow'];
-  // Unify to old_state, new_state.
-  // unset($info['WorkflowScheduledTransition']['properties']['old_sid']);
-  // unset($info['WorkflowScheduledTransition']['properties']['sid']);
-  // unset($info['WorkflowScheduledTransition']['properties']['uid']);
+  // @todo: Unify ID's to old_sid, new_sid.
+  $info['WorkflowScheduledTransition']['properties']['old_sid']['description'] = 'The ID of old state.';
+  $info['WorkflowScheduledTransition']['properties']['sid']['description'] = 'The ID of new state.';
+  // Unify objects to old_state, new_state.
   $info['WorkflowScheduledTransition']['properties']['old_state'] = $info['WorkflowTransition']['properties']['old_state'];
   $info['WorkflowScheduledTransition']['properties']['old_state']['schema field'] = 'old_sid';
   $info['WorkflowScheduledTransition']['properties']['new_state'] = $info['WorkflowTransition']['properties']['new_state'];
@@ -289,12 +298,20 @@ function _workflow_metadata_workflow_get_properties($entity, array $options, $na
       // Gets the language code of a Workflow Field, hence its State, Transitions.
       // '$property' is $field_name.
       $langcode = LANGUAGE_NONE;
-    
-      if ($property) {
-        // getPropertyLanguage() may return NULL if no language is set.
+
+      if (!$property) {
+        // Workflow_node. Translations are not supported.
+      }
+      else {
+        // Get language code for a field or property.
+        // getPropertyLanguage() may return NULL if no language is set,
+        // or may not exist on properties.
         $wrapper = entity_metadata_wrapper($entity_type, $entity);
-        if (!$langcode = $wrapper->{$property}->getPropertyLanguage()) {
-          $langcode = LANGUAGE_NONE;
+        // Get languagecode. May be empty if 'und'.
+        if (method_exists($wrapper->{$property}, 'getPropertyLanguage')) {
+          if (!$langcode = $wrapper->{$property}->getPropertyLanguage()) {
+            $langcode = LANGUAGE_NONE;
+          }
         }
       }
       return $langcode;

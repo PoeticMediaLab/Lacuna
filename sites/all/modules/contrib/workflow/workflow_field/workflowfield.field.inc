@@ -207,6 +207,34 @@ function workflowfield_field_update($entity_type, $entity, array $field, $instan
 }
 
 /**
+ * Implements hook_field_prepare_view().
+ *
+ * This hook is needed in the following case:
+ * - Edit a node with Workflow Field;
+ * - Change the value of the widget;
+ * - Click [Preview] button;
+ * See the "Notice: Undefined index: value in list_field_formatter_view() (line 467+472 of \modules\field\modules\list\list.module)."
+ * This is because in the Workflow Widget, the data is stored in a 'workflow'
+ * structure, not a 'value' value.
+ *
+ * However, it is a pity that we run this hook in every view :-(
+ */
+function workflowfield_field_prepare_view($entity_type, $entities, $field, $instances, $langcode, &$items) {
+  // I guess Preview mode is only with 1 entity at a time.
+  if (count ( $items ) !== 1) {
+    return;
+  }
+
+  foreach ($items as $id => &$item_array) {
+    foreach ($item_array as $index => &$item) {
+      if (!isset($item['value']) && isset($item['workflow']['workflow_sid'])) {
+        $item['value'] = $item['workflow']['workflow_sid'];
+      }
+    }
+  }
+}
+
+/**
  * Implements hook_field_delete().
  *
  * @todo: implement

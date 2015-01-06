@@ -43,8 +43,18 @@ function workflowfield_field_widget_form(&$form, &$form_state, $field, $instance
 
   if (isset($element['#entity_type'])) {
     // We are on an Entity add/edit page.
-    $entity_type = $element['#entity_type'];
-    $entity = $element['#entity'];
+    if (empty($field['settings']['widget']['hide'])) {
+      // Show the widget.
+      $entity_type = $element['#entity_type'];
+      $entity = $element['#entity'];
+    }
+    else {
+      // But we want the widget to be hidden, because states are only to be
+      // changed via Workflow History tab.
+      // This is needed, because D7 does not have a <hidden> widget.
+      // @todo D8: remove this, since hidden widgets are available.
+      return $element;
+    }
   }
   else {
     // Not used: On an Entity View page, the widget is shown via

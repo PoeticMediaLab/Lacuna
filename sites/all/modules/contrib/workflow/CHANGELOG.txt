@@ -599,3 +599,17 @@ Issue #2354649: Reorganized submodules workflow_vbo and workflow_actions.
 Issue #2355085: Fixed Error "Workflow 0 cannot be loaded" when operating on node without Workflow.
 Issue #2355093: Fixed machine_name of '(creation)' should not be translated.
 Issue #2356605 by pianomansam: Fixed warnings when calling workflow_node_current_state()
+Issue #2371061: Fixed Notice: Undefined property: FieldCollectionItemEntity:: in WorkflowTransition->getEntity()
+Issue #2361051 by minorOffense: Fixed Call to undefined method EntityValueWrapper::getPropertyLanguage()
+Issue #2361051 by gstout: Call to undefined method EntityValueWrapper::getPropertyLanguage()
+Issue #2382377: Fatal error after disabling workflow_access: Call to undefined function workflow_access() in /entity/entity.module
+Issue #2369435: Fixed Notice: Undefined index: group in workflow_actions_trigger_info() (Line 162 of workflow_actions/workflow_actions.module)
+Issue #2260971: Updated documentation in workflow.api.php
+Issue #843568: Fixed undefined var when saving revisions.
+Issue #2304875: Fixed Status Report Tokens Warning when entity_token not enabled.
+Issue #2385439: Added Field setting to remove Workflow widget from entity edit forms.
+Issue #2228325: Moved documentation from Workflow_extensions module's README.txt to Workflow's README.txt
+Issue #2374587 by Karsa: Workflow node doesn't set the state of a newly created node
+Issue #2373103: Fixed Notice 'Undefined index' in list_field_formatter_view() when previewing a node.
+Issue #2308677: Fixed regression: 'Workflow current: Current state' is missing when creating a contextual filter
+Issue #2400211: Added Views support for non-node entity types

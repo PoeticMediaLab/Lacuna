@@ -21,7 +21,7 @@ Drupal.googleanalytics.test.assertSame = function (value1, value2, message) {
   else {
     console.error(message);
   }
-}
+};
 
 Drupal.googleanalytics.test.assertNotSame = function (value1, value2, message) {
   if (value1 !== value2) {
@@ -30,7 +30,7 @@ Drupal.googleanalytics.test.assertNotSame = function (value1, value2, message) {
   else {
     console.error(message);
   }
-}
+};
 
 Drupal.googleanalytics.test.assertTrue = function (value1, message) {
   if (value1 === true) {
@@ -39,7 +39,7 @@ Drupal.googleanalytics.test.assertTrue = function (value1, message) {
   else {
     console.error(message);
   }
-}
+};
 
 Drupal.googleanalytics.test.assertFalse = function (value1, message) {
   if (value1 === false) {
@@ -48,7 +48,7 @@ Drupal.googleanalytics.test.assertFalse = function (value1, message) {
   else {
     console.error(message);
   }
-}
+};
 
 // Run after the documented is ready or Drupal.settings is undefined.
 $(document).ready(function() {
@@ -86,8 +86,8 @@ $(document).ready(function() {
   console.groupEnd();
 
   console.group("Test 'getPageUrl':");
-  Drupal.googleanalytics.test.assertSame(base_path + 'node/1', Drupal.googleanalytics.getPageUrl(base_url + Drupal.settings.basePath + 'node/1'), "Absolute internal URL '" +  Drupal.settings.basePath + "node/1' has been extracted from full qualified url '" + base_url + base_path + "node/1'.");
-  Drupal.googleanalytics.test.assertSame(base_path + 'node/1', Drupal.googleanalytics.getPageUrl(Drupal.settings.basePath + 'node/1'), "Absolute internal URL '" +  Drupal.settings.basePath + "node/1' has been extracted from absolute url '" +  base_path + "node/1'.");
+  Drupal.googleanalytics.test.assertSame(base_path, Drupal.googleanalytics.getPageUrl(base_url + Drupal.settings.basePath + 'node/1'), "Absolute internal URL '" +  Drupal.settings.basePath + "node/1' has been extracted from full qualified url '" + base_url + base_path + "'.");
+  Drupal.googleanalytics.test.assertSame(base_path, Drupal.googleanalytics.getPageUrl(Drupal.settings.basePath + 'node/1'), "Absolute internal URL '" +  Drupal.settings.basePath + "node/1' has been extracted from absolute url '" +  base_path + "'.");
   Drupal.googleanalytics.test.assertSame('http://example.com/node/2', Drupal.googleanalytics.getPageUrl('http://example.com/node/2'), "Full qualified external url 'http://example.com/node/2' has been extracted.");
   Drupal.googleanalytics.test.assertSame('//example.com/node/2', Drupal.googleanalytics.getPageUrl('//example.com/node/2'), "Full qualified external url '//example.com/node/2' has been extracted.");
   console.groupEnd();

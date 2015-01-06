@@ -37,8 +37,8 @@
 function hook_workflow($op, $id, $new_sid, $entity, $force, $entity_type = '', $field_name = '', $transition = NULL, $user = NULL) {
   switch ($op) {
     case 'transition permitted':
-      // This operation is called in the following situations:
-      // 1. when the widget with list of available transitions is built;
+      // This is called in the following situations:
+      // 1. when building a workflow widget with list of available transitions;
       // 2. when executing a transition, just before the 'transition pre';
       // 3. when showing a 'revert state' link in a Views display.
       // Your module's implementation may return FALSE here and disallow
@@ -50,14 +50,16 @@ function hook_workflow($op, $id, $new_sid, $entity, $force, $entity_type = '', $
 
     case 'transition pre':
       // The workflow module does nothing during this operation.
-      // But your module's implementation of the workflow hook could
-      // return FALSE here and veto the transition.
+      // Implement this hook if you need to change/do something BEFORE anything
+      // is saved to the database.
+      // If you return FALSE here, you will veto the transition.
       break;
 
     case 'transition post':
       // This is called by Workflow Node during update of the state, directly
       // after updating {workflow_node}. Workflow Field does not call this,
-      // since you can call an Entity event after saving the entity.
+      // since you can call a hook_entity_* event after saving the entity.
+      // @see https://api.drupal.org/api/drupal/includes%21module.inc/group/hooks/7
       break;
 
     case 'transition delete':

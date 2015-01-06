@@ -938,10 +938,6 @@ function workflow_node_current_state($entity, $entity_type = 'node', &$field_nam
       // Get State ID for existing nodes (A new node has no sid - will be fetched later.)
       // and normal node, on Node view page / Workflow history tab.
       $sid = $wrapper->{$field_name}->value();
-      // Get languagecode. May be empty if 'und'.
-      if (!$langcode = $wrapper->{$field_name}->getPropertyLanguage()) {
-        $langcode = LANGUAGE_NONE;
-      }
     }
   }
 
@@ -983,13 +979,12 @@ function workflow_node_previous_state($entity, $entity_type, $field_name) {
     // At this point, we may have redetermined and altered the field_name.
     if ($field_name !== NULL && isset($entity->original)) {
       // A changed node.
-      $original = $entity->original;
-      $wrapper = entity_metadata_wrapper($entity_type, $original);
+
+      $wrapper = entity_metadata_wrapper($entity_type, $entity->original);
       $sid = $wrapper->{$field_name}->value();
-      // Get languagecode. May be empty if 'und'.
-      if (!$langcode = $wrapper->{$field_name}->getPropertyLanguage()) {
-        $langcode = LANGUAGE_NONE;
-      }
+
+      // Get language. Multi-language is not supported for Workflow Node.
+      $langcode = _workflow_metadata_workflow_get_properties($entity->original, array(), 'langcode', $entity_type, $field_name);
     }
   }
 
@@ -1006,7 +1001,7 @@ function workflow_node_previous_state($entity, $entity_type, $field_name) {
       $entity_id = entity_id($entity_type, $entity);
     }
     if (!$sid && $entity_id) {
-      // Read the history.
+      // Read the history with an explicit langcode.
       if ($last_transition = workflow_transition_load_single($entity_type, $entity_id, $field_name, $langcode)) {
         $sid = $last_transition->new_sid;
       }

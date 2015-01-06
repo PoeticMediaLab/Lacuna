@@ -233,13 +233,15 @@ class WorkflowTransition extends Entity {
     $user = $this->getUser();
     $old_sid = $this->old_sid;
     $new_sid = $this->new_sid;
-    $entity_type = $this->entity_type;
-    $entity_id = $this->entity_id;
-    $field_name = $this->field_name;
 
     // Load the entity, if not already loaded.
     // This also sets the (empty) $revision_id in Scheduled Transitions.
     $entity = $this->getEntity();
+    // Only after getEntity(), the following are surely set.
+    $entity_type = $this->entity_type;
+    $entity_id = $this->entity_id;
+    $field_name = $this->field_name;
+
 
     // Make sure $force is set in the transition, too.
     if ($force) {
@@ -452,9 +454,9 @@ class WorkflowTransition extends Entity {
   public function post_execute($force = FALSE) {
     $old_sid = $this->old_sid;
     $new_sid = $this->new_sid;
+    $entity = $this->getEntity(); // Entity may not be loaded, yet.
     $entity_type = $this->entity_type;
     // $entity_id = $this->entity_id;
-    $entity = $this->getEntity(); // Entity may not be loaded, yet.
     $field_name = $this->field_name;
 
     $state_changed = ($old_sid != $new_sid);
@@ -483,19 +485,20 @@ class WorkflowTransition extends Entity {
    *   The entity, that is added to the Transition.
    */
   public function getEntity() {
-    $info = entity_get_info($this->entity_type);
-
-    // A correct call, return the $entity.
     if (empty($this->entity)) {
       $entity_type = $this->entity_type;
       $entity_id = $this->entity_id;
-      $this->entity = entity_load_single($entity_type, $entity_id);
-    }
+      $entity = entity_load_single($entity_type, $entity_id);
 
-    if ($revision_key = ($info['entity keys']['revision'] && isset($entity->{$info['entity keys']['revision']})) ? $entity->{$info['entity keys']['revision']} : NULL) {
+      // Set the entity cache.
+      $this->entity = $entity;
+
       // Make sure the vid of Entity and Transition are equal.
-      // Especially for Scheduled Transition, that do not have this set, yet.
-      $this->revision_id = $this->entity->{$revision_key};
+      // Especially for Scheduled Transition, that do not have this set, yet,
+      // or may have an outdated revision ID.
+      $info = entity_get_info($entity_type);
+      $revision_key = $info['entity keys']['revision'];
+      $this->revision_id = (isset($entity->{$revision_key})) ? $entity->{$revision_key} : NULL;
     }
 
     return $this->entity;

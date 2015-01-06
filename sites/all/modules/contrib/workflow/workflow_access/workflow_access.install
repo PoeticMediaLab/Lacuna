@@ -53,6 +53,13 @@ function workflow_access_schema() {
 }
 
 /**
+ * Force rebuild of node access.
+ */
+function workflow_access_disable() {
+  node_access_needs_rebuild(TRUE);
+}
+
+/**
  * Correct field type of field 'sid' in workflow_access table.
  */
 function workflow_access_update_7001() {

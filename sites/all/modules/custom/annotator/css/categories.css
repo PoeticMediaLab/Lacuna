@@ -42,20 +42,17 @@
 .annotator-category-none {
 
 }
-.annotator-category-0 {
-    background-color: rgba(0, 200, 0, .4);
-}
 
-.annotator-category-1 {
-    background-color: rgba(200, 0, 0, .4);
-}
-
-.annotator-category-2 {
-    background-color: rgba(0, 0, 200, .4);
-}
-
-.annotator-category-3 {
-    background-color: rgba(150, 0, 150, .4);
+.annotator-category-0,
+.annotator-category-1,
+.annotator-category-2,
+.annotator-category-3,
+.annotator-category-4,
+.annotator-category-5,
+.annotator-category-6,
+.annotator-category-7
+{
+    background-color: rgba(22,147,165, .4);
 }
 
 .annotator-viewer .categorize-text{

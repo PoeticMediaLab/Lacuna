@@ -7,9 +7,9 @@ dependencies[] = d3
 
 files[] = views/plugins/d3_views_plugin_style_d3.inc
 
-; Information added by Drupal.org packaging script on 2014-10-14
+; Information added by Drupal.org packaging script on 2014-12-03
 version = "7.x-1.x-dev"
 core = "7.x"
 project = "d3"
-datestamp = "1413252830"
+datestamp = "1417584783"
 

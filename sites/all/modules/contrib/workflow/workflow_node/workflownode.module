@@ -144,6 +144,25 @@ function workflow_node_view($node, $view_mode, $langcode) {
  * We cannot use hook_node_presave, because workflow_execute_transition() needs the nid.
  */
 function workflow_node_insert($node) {
+  global $user;
+  if (!isset($node->workflow_field)) {
+    // Initializing the state of the node in case no widget on Node form.
+    if ($workflow = workflow_get_workflows_by_type($node->type, 'node')) {
+      $comment = t('Set to initial state.');
+      $force = TRUE;
+      $creation_sid = $workflow->getCreationSid();
+
+      // Get the initial state for this node.
+      // Due to permissions, it might be different for each user.
+      $new_sid = $workflow->getFirstSid('node', $node, null, $user, $force);
+
+      $transition = new WorkflowTransition();
+      $transition->setValues('node', $node, null, $creation_sid, $new_sid, $user->uid, REQUEST_TIME, $comment);
+
+      // Force it to transition to the first state and get a history record.
+      workflow_execute_transition('node', $node, null, $transition, $force);
+    }
+  }
   return workflow_node_update($node);
 }
 

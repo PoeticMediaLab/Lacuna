@@ -159,7 +159,7 @@ function workflow_actions_trigger_info() {
         foreach ($type_map[$wid] as $type_bundle) {
 
           // Add the trigger to the appropriate Tab on admin/structure/trigger.
-          $group = $type_bundle['group'];
+          $group = isset($type_bundle['group']) ? $type_bundle['group'] : 'workflow';
 
           $label = t('When @entity_type %bundle moves %workflow from %state to %target_state',
             array(

@@ -50,7 +50,7 @@ function workflow_token_info_alter(&$data) {
 
     // High-jack the fields (they do not have sub-tokens, yet).
     foreach ($tokens as &$token) {
-      // Caveat: the following agorithm is just a guess.
+      // Caveat: the following algorithm is just a guess.
       if (isset($token['module']) && $token['module'] == 'token') {
         if (isset($token['description']) && 0 == substr_compare($token['description'], 'Workflow', 0, 8)) {
           $token['type'] = 'WorkflowTransition';
@@ -64,13 +64,19 @@ function workflow_token_info_alter(&$data) {
 /**
  * Implements hook_token_info().
  *
- * Adds tokens and token types, from field to transition to workflow and state.
- * Using the names of the entities from Workflow module.
- * Lot of tokens are already defined via entity_properties.
+ * Adds tokens and token types, for Field, Workflow, State and Transition,
+ * using the names of the entities from Workflow module.
+ * Lots of tokens are already defined via entity_properties.
+ * D7: a dependency on entity_token exists.
  *
  * @see workflow_entity_property_info_alter()
  */
 function workflow_token_info() {
+
+  if (!module_exists('entity_token')) {
+    return array();
+  }
+
   /*
    * Token types.
    */
@@ -133,6 +139,11 @@ function workflow_token_info() {
 
 /**
  * Implements hook_tokens().
+ *
+ * N.B. Keep the following functions aligned when changing properties:
+ * - workflow_tokens()
+ * - workflow_entity_property_info_alter()
+ * - workflow_views_views_data_alter()
  */
 function workflow_tokens($type, $tokens, array $data = array(), array $options = array()) {
   $replacements = array();
