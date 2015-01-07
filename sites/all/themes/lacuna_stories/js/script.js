@@ -16,20 +16,11 @@ Drupal.behaviors.my_custom_behavior = {
   attach: function(context, settings) {
 
 $(document).ready(function() {
-	// Tooltip only Text
-	// $('.views-field-field-display-name').hide();
-	// $('.views-field-title').hide();
-
     $('<span class="text-content"></span>')
     .appendTo('.views-field-field-image .field-content a');
 
 	$('img').hover(function(event){
         // Hover over code
-		// console.log(event.target.nodeName); 
-		console.log(event.target.parentNode);
-		// console.log($(this));
-        // $('<span class="views-field-text"></span>')
-        // .appendTo(event.target.parentNode);
 		});
 
 	});

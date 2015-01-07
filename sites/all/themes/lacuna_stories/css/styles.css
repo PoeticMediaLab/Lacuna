@@ -2054,7 +2054,7 @@ div.views-row-last span.views-field-field-image div.topic_image {
 }
 
 /* View-specific theming, for Materials, Responses, Threads */
-/* line 85, ../sass/components/views.scss */
+/* line 83, ../sass/components/views.scss */
 .view-documents .views-submit-button,
 .view-documents .views-widget-sort-order,
 .view-responses .views-submit-button,
@@ -2065,7 +2065,7 @@ div.views-row-last span.views-field-field-image div.topic_image {
 .view-sewing-kit .views-widget-sort-order {
   display: none;
 }
-/* line 90, ../sass/components/views.scss */
+/* line 88, ../sass/components/views.scss */
 .view-documents .views-widget-sort-by .form-type-bef-link,
 .view-responses .views-widget-sort-by .form-type-bef-link,
 .view-my-threads .views-widget-sort-by .form-type-bef-link,
@@ -2073,30 +2073,30 @@ div.views-row-last span.views-field-field-image div.topic_image {
   float: left;
   margin: 0 10px 0 15px;
 }
-/* line 93, ../sass/components/views.scss */
+/* line 91, ../sass/components/views.scss */
 .view-documents .views-widget-sort-by .form-type-bef-link a,
 .view-responses .views-widget-sort-by .form-type-bef-link a,
 .view-my-threads .views-widget-sort-by .form-type-bef-link a,
 .view-sewing-kit .views-widget-sort-by .form-type-bef-link a {
-  color: whitesmoke;
+  color: #808080;
   font-weight: bold;
   font-size: 15px;
 }
-/* line 98, ../sass/components/views.scss */
+/* line 96, ../sass/components/views.scss */
 .view-documents .views-widget-sort-by .form-type-bef-link a:hover,
 .view-responses .views-widget-sort-by .form-type-bef-link a:hover,
 .view-my-threads .views-widget-sort-by .form-type-bef-link a:hover,
 .view-sewing-kit .views-widget-sort-by .form-type-bef-link a:hover {
-  color: whitesmoke;
+  color: #1588BA;
 }
-/* line 102, ../sass/components/views.scss */
+/* line 100, ../sass/components/views.scss */
 .view-documents .views-widget-sort-by .form-type-bef-link.selected a,
 .view-responses .views-widget-sort-by .form-type-bef-link.selected a,
 .view-my-threads .views-widget-sort-by .form-type-bef-link.selected a,
 .view-sewing-kit .views-widget-sort-by .form-type-bef-link.selected a {
-  color: whitesmoke;
+  color: #1588BA;
 }
-/* line 106, ../sass/components/views.scss */
+/* line 104, ../sass/components/views.scss */
 .view-documents img,
 .view-responses img,
 .view-my-threads img,
@@ -2108,7 +2108,7 @@ div.views-row-last span.views-field-field-image div.topic_image {
   box-shadow: 0px 0px 10px #888888;
   z-index: -1;
 }
-/* line 115, ../sass/components/views.scss */
+/* line 113, ../sass/components/views.scss */
 .view-documents .views-row,
 .view-responses .views-row,
 .view-my-threads .views-row,
@@ -2118,10 +2118,11 @@ div.views-row-last span.views-field-field-image div.topic_image {
   width: 300px;
   height: 200px;
   border: 10px;
+  border-bottom: 40px;
   border-style: solid;
   border-color: white;
 }
-/* line 126, ../sass/components/views.scss */
+/* line 123, ../sass/components/views.scss */
 .view-documents .views-row span.text-content,
 .view-responses .views-row span.text-content,
 .view-my-threads .views-row span.text-content,
@@ -2138,7 +2139,7 @@ div.views-row-last span.views-field-field-image div.topic_image {
   -o-transition: opacity 500ms;
   transition: opacity 500ms;
 }
-/* line 140, ../sass/components/views.scss */
+/* line 137, ../sass/components/views.scss */
 .view-documents .views-row .views-field-title,
 .view-documents .views-row .views-field-field-display-name,
 .view-documents .views-row .views-field-created,
@@ -2160,7 +2161,7 @@ div.views-row-last span.views-field-field-image div.topic_image {
   top: -200px;
   opacity: 0;
 }
-/* line 152, ../sass/components/views.scss */
+/* line 149, ../sass/components/views.scss */
 .view-documents .views-row:hover .views-field-title,
 .view-documents .views-row:hover .views-field-field-display-name,
 .view-documents .views-row:hover .views-field-created,
@@ -2180,21 +2181,21 @@ div.views-row-last span.views-field-field-image div.topic_image {
   opacity: 1;
   color: white;
 }
-/* line 159, ../sass/components/views.scss */
+/* line 156, ../sass/components/views.scss */
 .view-documents .views-row:hover .views-field-field-image span.text-content,
 .view-responses .views-row:hover .views-field-field-image span.text-content,
 .view-my-threads .views-row:hover .views-field-field-image span.text-content,
 .view-sewing-kit .views-row:hover .views-field-field-image span.text-content {
   opacity: 1;
 }
-/* line 164, ../sass/components/views.scss */
+/* line 161, ../sass/components/views.scss */
 .view-documents .views-exposed-widget,
 .view-responses .views-exposed-widget,
 .view-my-threads .views-exposed-widget,
 .view-sewing-kit .views-exposed-widget {
   margin-top: 0px;
 }
-/* line 167, ../sass/components/views.scss */
+/* line 164, ../sass/components/views.scss */
 .view-documents .views-exposed-widget > label,
 .view-documents .form-item-sort-by > label,
 .view-responses .views-exposed-widget > label,
@@ -2206,21 +2207,21 @@ div.views-row-last span.views-field-field-image div.topic_image {
   float: left;
   margin-right: 10px;
 }
-/* line 172, ../sass/components/views.scss */
+/* line 169, ../sass/components/views.scss */
 .view-documents .views-widget,
 .view-responses .views-widget,
 .view-my-threads .views-widget,
 .view-sewing-kit .views-widget {
   display: inline;
 }
-/* line 174, ../sass/components/views.scss */
+/* line 171, ../sass/components/views.scss */
 .view-documents .views-widget input[name=field_tags_tid],
 .view-responses .views-widget input[name=field_tags_tid],
 .view-my-threads .views-widget input[name=field_tags_tid],
 .view-sewing-kit .views-widget input[name=field_tags_tid] {
   width: 150px;
 }
-/* line 178, ../sass/components/views.scss */
+/* line 175, ../sass/components/views.scss */
 .view-documents .form-type-bef-checkbox,
 .view-responses .form-type-bef-checkbox,
 .view-my-threads .form-type-bef-checkbox,
@@ -2231,7 +2232,7 @@ div.views-row-last span.views-field-field-image div.topic_image {
   color: grey;
 }
 
-/* line 192, ../sass/components/views.scss */
+/* line 184, ../sass/components/views.scss */
 table.views-table {
   width: 100%;
 }

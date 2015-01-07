@@ -73,10 +73,8 @@ div.views-row-last span.views-field-field-image div.topic_image  {
 }
 
 /* View-specific theming, for Materials, Responses, Threads */
-// $views-link-color: #808080;
-// $views-link-hover-color: #1588BA;
-$views-link-color: whitesmoke;
-$views-link-hover-color: whitesmoke;
+$views-link-color: #808080;
+$views-link-hover-color: #1588BA;
 
 .view-documents,
 .view-responses,
@@ -114,12 +112,11 @@ $views-link-hover-color: whitesmoke;
 
   .views-row {
     position: relative;
-    // background-color: #000000;
     float: left;
     width: 300px;
     height: 200px;
-    // margin: 10px;
     border: 10px;
+    border-bottom: 40px;
     border-style: solid;
     border-color: white;
 
@@ -181,11 +178,6 @@ $views-link-hover-color: whitesmoke;
     font-size: 0.95em;
     color: grey;
   }
-  // .view-content h3 {
-  //   display: inline-block;
-  //   width: 50%;
-  //   padding-top: 25px;
-  // }
 }
 
 
