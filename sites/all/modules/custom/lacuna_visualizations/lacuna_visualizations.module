@@ -604,6 +604,7 @@ function lacuna_visualizations_annotation_dashboard() {
   // return theme('graphapi_dispatch', array('graph' => null, 'config' => $settings));
 }
 
+// TODO: Improve performance - this function is really slow
 function lacuna_visualizations_annotation_dashboard_data() {
   // Prepare the data for the dashboard, output as JSON
   global $user;
