@@ -440,15 +440,18 @@ function get_link_url($docId, $nid) {
   }
 }
 
-function get_image($docId) {
-  if ($docId != null) {
-    $node = node_load($docId);
-    // var_dump($node->field_image);
-    return theme('image_style', array('style_name' => 'thumbnails_for_browsing', 'path' => $node->field_image[LANGUAGE_NONE][0]['uri']));
+function get_image($item, $docId) {
+  if ($item->type == "biblio") {
+    if ($docId != null) {
+      $node = node_load($docId);
+      // var_dump($node->field_image);
+      return '<center>'.theme('image_style', array('style_name' => 'thumbnails_for_browsing', 'path' => $node->field_image[LANGUAGE_NONE][0]['uri'])).'</center>';
+    }
   }
-  else {
-    return "";
+  else if ($item->type == "blog") {
+    return '<center>'.theme('image_style', array('style_name' => 'thumbnails_for_browsing', 'path' => $item->field_image[LANGUAGE_NONE][0]['uri'])).'</center>';
   }
+  return "";
 }
 
 /**
@@ -471,6 +474,7 @@ function lacuna_visualizations_mapview() {
 	 // this array will eventually contain all relevant info about blogs and document: author, timestamp, etc.
 	 // added to nodes before graphapi passes off to d3.
     $docId = get_document_id_for_biblio($item->nid);
+    var_dump($docId);
     $dataArray = array(
       'itemType' => $item->type,
       // author set below -- $item->name for blog posts, but
@@ -478,8 +482,8 @@ function lacuna_visualizations_mapview() {
       'author'=> null,
       'title' => $item->title,
       'linksTitles' => array(),
-      'thisURL' => get_link_url($docId),
-      'image' => get_image($docId),
+      'thisURL' => get_link_url($docId, $item->nid),
+      'image' => get_image($item, $docId),
       'linksURL' => array(),
       'biblio' => array(),
       'document_abstract' => null,
