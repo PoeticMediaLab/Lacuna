@@ -13,7 +13,7 @@
 
 <?php if (current_path() != 'visualization/dashboard') { ?>
   	<div id="maps-tooltip" class="hidden">
-      <span id="image"></span><br/>
+      <span id="image"></span>
       <a id="title">document title</a><br/>
   		<span id="author"></span><br/>
   		<p class="hidden" id="links"><strong>links to: </strong> <span id="links"></span></p>
