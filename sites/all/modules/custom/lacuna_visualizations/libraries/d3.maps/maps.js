@@ -488,7 +488,7 @@
 	xAxis.scale(timeScale)
 			.orient("bottom")
 			// one tick a day -- subject to change.
-			.ticks(d3.time.day)
+			.ticks(d3.time.week)
 			.tickFormat(d3.time.format("%B %e"))
 			;
 	brushSvg.append("g")
