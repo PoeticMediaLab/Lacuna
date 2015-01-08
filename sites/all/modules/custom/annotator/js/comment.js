@@ -16,8 +16,7 @@
     }
 
     Comment.prototype.options = {
-      commentClass: "annotator-comment-count fa fa-reply",
-      base_url: 'Drupal.settings.annotator_comment.base_url'
+      commentClass: "annotator-comment-count fa fa-reply"
     };
 
     Comment.prototype.pluginInit = function() {
@@ -31,13 +30,8 @@
       var link;
       field = $(field);
       field.addClass(this.options.commentClass);
-      console.log(annotation.links);
       link = Drupal.settings.annotator_comment.base_root + annotation.links[0].href;
-      if (annotation.comment_count !== "0") {
-        return field.html('<a href="' + link + '#comments">' + annotation.comment_count + ' Comments</a><a href="' + link + '#comment-form" class="annotator-new-comment-count-button" title="New Comment">&nbsp;&nbsp;&nbsp;&nbsp;</a>');
-      } else {
-        return field.html(annotation.comment_count + ' Comments<a href="' + link + '#comment-form" class="annotator-new-comment-count-button" title="New Comment">&nbsp;&nbsp;&nbsp;&nbsp;</a>');
-      }
+      return field.html('&nbsp;<a href="' + link + '#comments" target="_blank">' + annotation.comment_count + ' Comment' + (annotation.comment_count !== "1" ? 's' : '') + '</a>');
     };
 
     return Comment;
