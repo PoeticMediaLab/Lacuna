@@ -140,6 +140,10 @@ p.hidden {
   shape-rendering: crispEdges;
 }
 
+.bar {
+	fill: #88b551;
+}
+
 
 /* TODO: simplify all of this; there don't need to be so many unique
  * classes, because these buttons behave more or less the same way. */

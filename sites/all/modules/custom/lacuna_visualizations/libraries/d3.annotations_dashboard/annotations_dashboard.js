@@ -23,9 +23,9 @@ Drupal.d3.annotations_dashboard = function (select, settings) {
 
 d3.json(settings.config.data_url, function (error, data) {
     if (error) {
-        console.error(error);
+    	console.error(error);
     } else {
-        main(data);
+      main(data);
     }
 });
 
@@ -209,6 +209,7 @@ function main(data) {
 	 * Definitions of variables and helper functions for the graph
 	 *
 	 */
+	d3.select('.fa-spinner').remove();
 	annotations = new Annotations(data);
 	// Clean up the data a bit
 	var text_length_scale = d3.scale.ordinal()
@@ -224,6 +225,7 @@ function main(data) {
 			a.category ='Highlight';
 		}
 	});
+
 	// Define all our attributes
 	// TODO: override these with settings from module
 	var size = {
@@ -234,7 +236,7 @@ function main(data) {
 				},
 				summary_pie: {
 					padding: 15,
-					height: 200,
+					height: 150,
 					width: 600,
 					radius: 50
 				},
@@ -534,6 +536,7 @@ function main(data) {
 	// TODO: Fix update so that paths are always drawn first
 	function update_graph() {
 		graph = init_graph();
+		network.attr("height", calculate_height(graph));
 		pie_node_data = gen_pie_nodes(pie_current);
 		y_coords = {};	// clear our positions, if set
 		var edges = network.selectAll("path.edge").data(graph.edges);
@@ -1040,6 +1043,15 @@ function main(data) {
   	update_timebrush();
   	update_summary_pies();
   	update_legend();
+  }
+
+  // calcualte height of the network graph based on nodes number and node radius
+  function calculate_height(graph)
+  {
+  	if(!(graph && graph.nodes && size && size.radius))	return 0;
+  	var counts = {user : 0, doc : 0};
+  	graph.nodes.forEach(function(node){		counts[node.type]++;	});
+  	return 3 * size.radius * (1 + Math.max(counts.user, counts.doc));			//adding 1 for padding
   }
 
 	// Initial creation

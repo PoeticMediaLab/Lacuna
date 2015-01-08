@@ -119,12 +119,10 @@
 			.select("#author")
 			.text(d.data.author)
 			;
-		if (d.data.image.length > 0) {
-			d3.select("#maps-tooltip")
-			.select("#image")
-			.html(d.data.image)
-			;
-		}
+		d3.select("#maps-tooltip")
+		.select("#image")
+		.html(d.data.image)
+		;
 		if(d.data.document_abstract){
 			d3.select("#maps-tooltip")
 				.select("#abstract")
@@ -201,7 +199,6 @@
 		// For bottom half of circle, show tooltip above mouse rather than below.
 		if (yPos > initialHeight/2) {
 			var height = $("#maps-tooltip").outerHeight();
-			console.log(height);
 			d3.select("#maps-tooltip").style("top", (yPos + 80 - height) + "px");
 		}
   }; // end displayTooltip
@@ -430,6 +427,7 @@
 	d3.select("#" + settings.id).append("br");
 
 	var brushSvgHeight = 100;
+	var timeRectHeight = 25;
 
     var brushSvg = d3.select('#' + settings.id).append("svg")
         .attr("width", width+120) //Moved over to account for rotated labels.
@@ -480,20 +478,46 @@
 	//console.log(startDate);
 	//console.log(endDate);
 
+	var dateList = nodes.filter(function(d) {return d.data.itemType != 'biblio';})
+						.map(function(d) {return new Date(d.data.date*1000);});
+
 	// create time scale used by xAxis
 	var timeScale = d3.time.scale()
 						.domain([startDate, endDate])
 						.range([0 + margin.left, width - margin.right])
 					;
-	// create axis using time scale and draw it at the bottom of the
+	var ticks = timeScale.ticks(d3.time.day);
+	var data = d3.layout.histogram()
+	    .bins(ticks)
+	    (dateList);
+
+	var y = d3.scale.linear()
+	    .domain([0, d3.max(data, function(d) { return d.y; })])
+	    .range([timeRectHeight, 0]);
+
+	var tickDist = 	timeScale(ticks[1])-timeScale(ticks[0]);
+
+	var bar = brushSvg.selectAll(".bar")
+	    .data(data)
+	  .enter().append("g")
+	    .attr("class", "bar")
+	    .attr("transform", function(d) { return "translate(" + (timeScale(d.x)+40) + "," + (y(d.y)+10) + ")"; });
+
+	bar.append("rect")
+	    .attr("x", 1)
+	    .attr("width", tickDist)
+	    .attr("height", function(d) { return timeRectHeight - y(d.y); });
+
+	 // create axis using time scale and draw it at the bottom of the
 	// graph.
 	var xAxis = d3.svg.axis();
 	xAxis.scale(timeScale)
 			.orient("bottom")
 			// one tick a day -- subject to change.
-			.ticks(d3.time.day)
+			.ticks(d3.time.week)
 			.tickFormat(d3.time.format("%B %e"))
 			;
+
 	brushSvg.append("g")
 		.classed("axis", true)
 		// move to bottom of graph.
@@ -633,7 +657,7 @@
 						;
 		gBrush.attr("transform", "translate(40,0)");
 		gBrush.selectAll("rect")
-						.attr("height", 25 )
+						.attr("height", timeRectHeight )
 						.attr("y", brushSvgHeight - 60  * 1.5)
 						;
 
