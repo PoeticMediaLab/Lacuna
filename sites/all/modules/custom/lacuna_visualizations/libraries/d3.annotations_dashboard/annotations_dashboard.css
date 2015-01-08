@@ -7,6 +7,12 @@ body {
   line-height: 30px;
 }
 
+.fa-spinner {
+  position: absolute;
+  top: 10%;
+  left: 45%;
+}
+
 div#page {
 }
 
@@ -140,6 +146,7 @@ h3 {
 }
 
 div.section#annotations_table {
+  margin-top: 2000px;
 }
 
 table#annotations_table_draw, div#annotations_table_draw_wrapper {
@@ -214,7 +221,7 @@ td.value {
 }
 #dashboard #visual-content, #dashboard #visual-content tr
 {
-  width: 100%;  
+  width: 100%;
 }
 
 #dashboard #visual-content td

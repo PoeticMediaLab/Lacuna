@@ -37,7 +37,7 @@ elseif (current_path() == 'visualization/dashboard') { ?>
     </div>
     <div id="column_right">
     </div>
-    
+
     <table id="visual-content">
       <tr>
         <td id="left">
@@ -55,7 +55,7 @@ elseif (current_path() == 'visualization/dashboard') { ?>
                 <a href="#" class="dashboard-button lacuna-button" id="reset_all">Reset</a>
                 <a href="#" class="dashboard-button lacuna-button" id="reset_brush">Remove Time Filter</a>
                 <a href="#return_to_vis" class="dashboard-button lacuna-button" id="view_annotations"></a>
-              </div>        
+              </div>
             </div>
 
             <div class="section">
@@ -68,10 +68,11 @@ elseif (current_path() == 'visualization/dashboard') { ?>
                 </span>
               </div>
               <div id="legend">
-              </div>        
+              </div>
             </div>
           </div>
         </td>
+
         <td id="right">
           <div class="column right-part">
             <div class="section">
@@ -85,11 +86,12 @@ elseif (current_path() == 'visualization/dashboard') { ?>
                 </div>
               </span>
               </div>
-            </div>    
+            </div>
           </div>
         </td>
       </tr>
     </table>
+    <i class="fa fa-spinner fa-5x fa-spin"></i>
 
     <div class="section" id="annotations_table">
       <a class="lacuna-button" id="return_to_vis" href="#top">Return to visualization</a>
@@ -121,6 +123,6 @@ elseif (current_path() == 'visualization/dashboard') { ?>
           </tfoot>
       </table>
       <a class="lacuna-button" id="return_to_vis" href="#top">Return to visualization</a>
-    </div>   
-  </div> 
+    </div>
+  </div>
 <?php }
