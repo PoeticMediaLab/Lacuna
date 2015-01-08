@@ -474,7 +474,7 @@ function lacuna_visualizations_mapview() {
 	 // this array will eventually contain all relevant info about blogs and document: author, timestamp, etc.
 	 // added to nodes before graphapi passes off to d3.
     $docId = get_document_id_for_biblio($item->nid);
-    var_dump($docId);
+    // var_dump($docId);
     $dataArray = array(
       'itemType' => $item->type,
       // author set below -- $item->name for blog posts, but

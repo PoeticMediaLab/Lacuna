@@ -209,12 +209,15 @@ function main(data) {
 	 * Definitions of variables and helper functions for the graph
 	 *
 	 */
+ console.time('annotations');
 	annotations = new Annotations(data);
+	console.timeEnd('annotations');
 	// Clean up the data a bit
 	var text_length_scale = d3.scale.ordinal()
 		.domain([0,50,100,150])
 		.range(['Zero','Short','Medium','Long']);
 	// Format annotations for display
+	console.time('filling');
 	annotations.all.forEach(function (a) {
 		if (typeof a.text === 'undefined') {
 			a.text = "";
@@ -224,6 +227,8 @@ function main(data) {
 			a.category ='Highlight';
 		}
 	});
+console.timeEnd('filling');
+
 	// Define all our attributes
 	// TODO: override these with settings from module
 	var size = {
