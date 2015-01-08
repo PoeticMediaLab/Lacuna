@@ -234,7 +234,7 @@ function main(data) {
 				},
 				summary_pie: {
 					padding: 15,
-					height: 200,
+					height: 150,
 					width: 600,
 					radius: 50
 				},

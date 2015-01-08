@@ -19,9 +19,9 @@ div#time_brush {
 }
 
 div#dashboard-buttons {
-  position: absolute;
-	height: 65px;
-  top: 550px;
+  position: relative;
+	height: 0; /* for not taking up space */
+  top: -60px;
   margin-left: 25px;
 }
 
@@ -40,7 +40,6 @@ div#piecharts {
 }
 
 div#pie_types {
-  margin-top: 20px;
   width: 520px;
   margin-left: 0px;
   margin-top: 25px;
@@ -59,14 +58,20 @@ div#time_brush svg
 
 div#network {
   width: 625px;
-  min-height: 702px;   /* for nicely alliging with left column */
+  min-height: 703px;   /* for nicely alliging with left column */
 }
 
 div#legend {
-  position: absolute;
-  top: 704px;
+  position: relative;
+  top: -164px;
   left: 430px;
+  height: 0;
 }
+div#legend svg
+{
+  position: absolute;
+}
+
 
 .axis path,
 .axis line {
@@ -197,7 +202,16 @@ td.value {
   text-align: right;
   padding-left: 15px;
 }
-
+#dashboard a.dashboard-button
+{
+  min-height: 20px;
+  min-width: 135px;
+  width: auto;
+}
+#dashboard #visual-content
+{
+  margin-bottom: 25px;
+}
 #dashboard #visual-content, #dashboard #visual-content tr
 {
   width: 100%;  
