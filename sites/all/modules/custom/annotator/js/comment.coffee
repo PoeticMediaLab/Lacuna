@@ -4,7 +4,7 @@ $ = jQuery;
 class Annotator.Plugin.Comment extends Annotator.Plugin
 
 	options:
-   commentClass: "annotator-comment-count fa fa-reply"
+   commentClass: "annotator-comment fa fa-reply"
 
   pluginInit: ->
     return unless Annotator.supported()

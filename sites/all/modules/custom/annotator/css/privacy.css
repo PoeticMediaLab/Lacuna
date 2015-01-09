@@ -4,12 +4,11 @@
  ***/
 
  .annotator-privacy-public {
- 	/*Currently empty because we want default annotator gray.*/
   color: green;
+  display: block !important;
  }
-
-
 
  .annotator-privacy-private {
  	color: firebrick;
+  display: block !important;
  }

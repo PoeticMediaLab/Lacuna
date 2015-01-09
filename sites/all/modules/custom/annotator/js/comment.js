@@ -16,7 +16,7 @@
     }
 
     Comment.prototype.options = {
-      commentClass: "annotator-comment-count fa fa-reply"
+      commentClass: "annotator-comment fa fa-reply"
     };
 
     Comment.prototype.pluginInit = function() {
