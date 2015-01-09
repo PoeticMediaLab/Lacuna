@@ -31,7 +31,7 @@
       field = $(field);
       field.addClass(this.options.commentClass);
       link = Drupal.settings.annotator_comment.base_root + annotation.links[0].href;
-      return field.html('&nbsp;<a href="' + link + '#comments" target="_blank">' + annotation.comment_count + ' Comment' + (annotation.comment_count !== "1" ? 's' : '') + '</a>');
+      return field.html(' <a href="' + link + '#comments" target="_blank">' + annotation.comment_count + ' Repl' + (annotation.comment_count !== "1" ? 'ies' : 'y') + '</a>');
     };
 
     return Comment;
