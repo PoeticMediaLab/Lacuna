@@ -5,10 +5,11 @@
 
  .annotator-privacy-public {
  	/*Currently empty because we want default annotator gray.*/
+  color: green;
  }
 
 
 
  .annotator-privacy-private {
- 	color: deepskyblue;
+ 	color: firebrick;
  }
