@@ -10,14 +10,14 @@
 function lacuna_stories_menus_menu_default_menu_links() {
   $menu_links = array();
 
-  // Exported menu link: main-menu_about-this-course:node/13
-  $menu_links['main-menu_about-this-course:content/about-course'] = array(
+  // Exported menu link: main-menu_about-this-course:node/27
+  $menu_links['main-menu_about-this-course:node/27'] = array(
     'menu_name' => 'main-menu',
-    'link_path' => 'content/about-course',
+    'link_path' => 'node/27',
     'router_path' => 'node/%',
     'link_title' => 'About This Course',
     'options' => array(
-      'identifier' => 'main-menu_about-this-course:content/about-course',
+      'identifier' => 'main-menu_about-this-course:node/27',
       'attributes' => array(
         'title' => '',
       ),
@@ -211,14 +211,14 @@ function lacuna_stories_menus_menu_default_menu_links() {
     'weight' => -50,
     'customized' => 1,
   );
-  // Exported menu link: main-menu_faq:node/16
-  $menu_links['main-menu_faq:content/faq'] = array(
+  // Exported menu link: main-menu_faq:node/28
+  $menu_links['main-menu_faq:node/28'] = array(
     'menu_name' => 'main-menu',
-    'link_path' => 'content/faq',
+    'link_path' => 'node/28',
     'router_path' => 'node/%',
     'link_title' => 'FAQ',
     'options' => array(
-      'identifier' => 'main-menu_faq:content/faq',
+      'identifier' => 'main-menu_faq:node/28',
       'attributes' => array(
         'title' => '',
       ),
@@ -252,17 +252,14 @@ function lacuna_stories_menus_menu_default_menu_links() {
     'weight' => 5,
     'customized' => 1,
   );
-  // Exported menu link: main-menu_instructor-guide:node/14
-  $menu_links['main-menu_instructor-guide:node/14'] = array(
+  // Exported menu link: main-menu_instructors-guide:node/29
+  $menu_links['main-menu_instructors-guide:node/29'] = array(
     'menu_name' => 'main-menu',
-    'link_path' => 'node/14',
+    'link_path' => 'node/29',
     'router_path' => 'node/%',
-    'link_title' => 'Instructor Guide',
+    'link_title' => 'Instructor\'s Guide',
     'options' => array(
-      'identifier' => 'main-menu_instructor-guide:node/14',
-      'attributes' => array(
-        'title' => '',
-      ),
+      'identifier' => 'main-menu_instructors-guide:node/29',
     ),
     'module' => 'menu',
     'hidden' => 0,
@@ -290,7 +287,7 @@ function lacuna_stories_menus_menu_default_menu_links() {
     'external' => 0,
     'has_children' => 0,
     'expanded' => 0,
-    'weight' => -47,
+    'weight' => -48,
     'customized' => 1,
     'parent_identifier' => 'main-menu_account:<nolink>',
   );
@@ -311,7 +308,7 @@ function lacuna_stories_menus_menu_default_menu_links() {
     'external' => 0,
     'has_children' => 1,
     'expanded' => 0,
-    'weight' => -48,
+    'weight' => -49,
     'customized' => 1,
     'parent_identifier' => 'main-menu_account:<nolink>',
   );
@@ -372,6 +369,27 @@ function lacuna_stories_menus_menu_default_menu_links() {
     'customized' => 1,
     'parent_identifier' => 'main-menu_create:<nolink>',
   );
+  // Exported menu link: main-menu_reading-schedule:syllabus
+  $menu_links['main-menu_reading-schedule:syllabus'] = array(
+    'menu_name' => 'main-menu',
+    'link_path' => 'syllabus',
+    'router_path' => 'syllabus',
+    'link_title' => 'Reading Schedule',
+    'options' => array(
+      'identifier' => 'main-menu_reading-schedule:syllabus',
+      'attributes' => array(
+        'title' => '',
+      ),
+    ),
+    'module' => 'system',
+    'hidden' => 0,
+    'external' => 0,
+    'has_children' => 0,
+    'expanded' => 0,
+    'weight' => -47,
+    'customized' => 1,
+    'parent_identifier' => 'main-menu_explore:<nolink>',
+  );
   // Exported menu link: main-menu_reflect:<nolink>
   $menu_links['main-menu_reflect:<nolink>'] = array(
     'menu_name' => 'main-menu',
@@ -392,25 +410,22 @@ function lacuna_stories_menus_menu_default_menu_links() {
     'weight' => -47,
     'customized' => 1,
   );
-  // Exported menu link: main-menu_research-consent:node/21
-  $menu_links['main-menu_research-consent:node/21'] = array(
+  // Exported menu link: main-menu_research-consent:node/67
+  $menu_links['main-menu_research-consent:node/67'] = array(
     'menu_name' => 'main-menu',
-    'link_path' => 'node/21',
+    'link_path' => 'node/67',
     'router_path' => 'node/%',
     'link_title' => 'Research Consent',
     'options' => array(
-      'attributes' => array(
-        'title' => '',
-      ),
-      'identifier' => 'main-menu_research-consent:node/21',
+      'identifier' => 'main-menu_research-consent:node/67',
     ),
     'module' => 'menu',
     'hidden' => 0,
     'external' => 0,
     'has_children' => 0,
     'expanded' => 0,
-    'weight' => -49,
-    'customized' => 1,
+    'weight' => 0,
+    'customized' => 0,
     'parent_identifier' => 'main-menu_account:<nolink>',
   );
   // Exported menu link: main-menu_responses-map:visualization/responses
@@ -470,14 +485,15 @@ function lacuna_stories_menus_menu_default_menu_links() {
     'customized' => 1,
     'parent_identifier' => 'main-menu_connect:<nolink>',
   );
-  // Exported menu link: main-menu_student-user-guide:node/15
-  $menu_links['main-menu_student-user-guide:node/15'] = array(
+  // Exported menu link: main-menu_student-user-guide:node/30
+  $menu_links['main-menu_student-user-guide:node/30'] = array(
     'menu_name' => 'main-menu',
-    'link_path' => 'node/15',
+    'link_path' => 'node/30',
     'router_path' => 'node/%',
     'link_title' => 'Student User Guide',
     'options' => array(
-      'identifier' => 'main-menu_student-user-guide:node/15',
+      'identifier' => 'main-menu_student-user-guide:node/30',
+      'attributes' => array(),
     ),
     'module' => 'menu',
     'hidden' => 0,
@@ -487,24 +503,6 @@ function lacuna_stories_menus_menu_default_menu_links() {
     'weight' => -49,
     'customized' => 1,
     'parent_identifier' => 'main-menu_help:<nolink>',
-  );
-  // Exported menu link: main-menu_syllabus:syllabus
-  $menu_links['main-menu_syllabus:syllabus'] = array(
-    'menu_name' => 'main-menu',
-    'link_path' => 'syllabus',
-    'router_path' => 'syllabus',
-    'link_title' => 'Syllabus',
-    'options' => array(
-      'identifier' => 'main-menu_syllabus:syllabus',
-    ),
-    'module' => 'system',
-    'hidden' => 0,
-    'external' => 0,
-    'has_children' => 0,
-    'expanded' => 0,
-    'weight' => -47,
-    'customized' => 1,
-    'parent_identifier' => 'main-menu_explore:<nolink>',
   );
   // Exported menu link: main-menu_threads:threads
   $menu_links['main-menu_threads:threads'] = array(
@@ -559,19 +557,19 @@ function lacuna_stories_menus_menu_default_menu_links() {
   t('Explore');
   t('FAQ');
   t('Help');
-  t('Instructor Guide');
+  t('Instructor\'s Guide');
   t('Logout');
   t('Manage');
   t('Materials');
   t('My Profile');
   t('My Writing');
+  t('Reading Schedule');
   t('Reflect');
   t('Research Consent');
   t('Responses');
   t('Responses Map');
   t('Sewing Kit');
   t('Student User Guide');
-  t('Syllabus');
   t('Threads');
   t('Write a Response');
 
