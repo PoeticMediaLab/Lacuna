@@ -1416,7 +1416,7 @@ function lacuna_stories_views_views_default_views() {
   $view->description = '';
   $view->tag = 'default';
   $view->base_table = 'node';
-  $view->human_name = 'user\'s annotations view';
+  $view->human_name = 'User Profile - Annotations';
   $view->core = 7;
   $view->api_version = '3.0';
   $view->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
@@ -2713,7 +2713,7 @@ function lacuna_stories_views_views_default_views() {
   $handler->display->display_options['fields']['nid']['group_type'] = 'count_distinct';
   $handler->display->display_options['fields']['nid']['label'] = 'Stitchings';
   $handler->display->display_options['fields']['nid']['exclude'] = TRUE;
-  /* Field: Content: Description */
+  /* Field: Content: Description of My Thread */
   $handler->display->display_options['fields']['thread_description']['id'] = 'thread_description';
   $handler->display->display_options['fields']['thread_description']['table'] = 'field_data_thread_description';
   $handler->display->display_options['fields']['thread_description']['field'] = 'thread_description';
@@ -2721,6 +2721,7 @@ function lacuna_stories_views_views_default_views() {
   $handler->display->display_options['fields']['thread_description']['alter']['text'] = '[thread_description] ([nid] stitchings)';
   $handler->display->display_options['fields']['thread_description']['alter']['max_length'] = '300';
   $handler->display->display_options['fields']['thread_description']['alter']['trim'] = TRUE;
+  $handler->display->display_options['fields']['thread_description']['type'] = 'text_plain';
   /* Field: User: Display Name */
   $handler->display->display_options['fields']['field_display_name']['id'] = 'field_display_name';
   $handler->display->display_options['fields']['field_display_name']['table'] = 'field_data_field_display_name';
@@ -2785,7 +2786,7 @@ function lacuna_stories_views_views_default_views() {
   $view->description = '';
   $view->tag = 'default';
   $view->base_table = 'comment';
-  $view->human_name = 'user\'s comments';
+  $view->human_name = 'User Profile - Comments';
   $view->core = 7;
   $view->api_version = '3.0';
   $view->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
@@ -2867,7 +2868,7 @@ function lacuna_stories_views_views_default_views() {
   $view->description = '';
   $view->tag = 'default';
   $view->base_table = 'node';
-  $view->human_name = 'user\'s responses';
+  $view->human_name = 'User Profile - Responses';
   $view->core = 7;
   $view->api_version = '3.0';
   $view->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
