@@ -100,7 +100,7 @@ function customPrintViewsBlock($blockName)
 			</div>
 			<div class="field-wrapper">
                 <p class="title">Comments</p>
-                <?php if(!customPrintViewsBlock("my_annotations_view-block_comments"))
+                <?php if(!customPrintViewsBlock("user_s_comments-block"))
                     {
                         print "<p class='no-results'>{$field_display_name[0]['value']} has not made any comments</p>";
                     } ?>

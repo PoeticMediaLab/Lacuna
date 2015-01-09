@@ -2682,8 +2682,8 @@ function lacuna_stories_content_types_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-page-field_syllabus_pdf'
-  $field_instances['node-page-field_syllabus_pdf'] = array(
+  // Exported field_instance: 'node-page-field_syllabus_file'
+  $field_instances['node-page-field_syllabus_file'] = array(
     'bundle' => 'page',
     'deleted' => 0,
     'description' => '',
@@ -2703,8 +2703,8 @@ function lacuna_stories_content_types_field_default_field_instances() {
       ),
     ),
     'entity_type' => 'node',
-    'field_name' => 'field_syllabus_pdf',
-    'label' => 'Syllabus PDF',
+    'field_name' => 'field_syllabus_file',
+    'label' => 'Syllabus File',
     'required' => 0,
     'settings' => array(
       'description_field' => 0,
@@ -2721,96 +2721,6 @@ function lacuna_stories_content_types_field_default_field_instances() {
       ),
       'type' => 'file_generic',
       'weight' => 31,
-    ),
-  );
-
-  // Exported field_instance: 'node-thread-field_image'
-  $field_instances['node-thread-field_image'] = array(
-    'bundle' => 'thread',
-    'deleted' => 0,
-    'description' => '',
-    'display' => array(
-      'default' => array(
-        'label' => 'hidden',
-        'module' => 'image',
-        'settings' => array(
-          'image_link' => '',
-          'image_style' => '',
-        ),
-        'type' => 'image',
-        'weight' => 0,
-      ),
-      'teaser' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
-      ),
-    ),
-    'entity_type' => 'node',
-    'field_name' => 'field_image',
-    'label' => 'Image',
-    'required' => 0,
-    'settings' => array(
-      'alt_field' => 0,
-      'default_image' => 109,
-      'file_directory' => '',
-      'file_extensions' => 'png gif jpg jpeg',
-      'max_filesize' => '',
-      'max_resolution' => '',
-      'min_resolution' => '',
-      'title_field' => 0,
-      'user_register_form' => FALSE,
-    ),
-    'widget' => array(
-      'active' => 1,
-      'module' => 'image',
-      'settings' => array(
-        'preview_image_style' => 'thumbnail',
-        'progress_indicator' => 'throbber',
-      ),
-      'type' => 'image_image',
-      'weight' => 2,
-    ),
-  );
-
-  // Exported field_instance: 'node-thread-field_tags'
-  $field_instances['node-thread-field_tags'] = array(
-    'bundle' => 'thread',
-    'default_value' => NULL,
-    'deleted' => 0,
-    'description' => '',
-    'display' => array(
-      'default' => array(
-        'label' => 'above',
-        'module' => 'taxonomy',
-        'settings' => array(),
-        'type' => 'taxonomy_term_reference_link',
-        'weight' => 3,
-      ),
-      'teaser' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
-      ),
-    ),
-    'entity_type' => 'node',
-    'field_name' => 'field_tags',
-    'label' => 'Tags',
-    'required' => 0,
-    'settings' => array(
-      'user_register_form' => FALSE,
-    ),
-    'widget' => array(
-      'active' => 0,
-      'module' => 'taxonomy',
-      'settings' => array(
-        'autocomplete_path' => 'taxonomy/autocomplete',
-        'size' => 60,
-      ),
-      'type' => 'taxonomy_autocomplete',
-      'weight' => 5,
     ),
   );
 
@@ -3402,40 +3312,6 @@ function lacuna_stories_content_types_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'user-user-field_about_me'
-  $field_instances['user-user-field_about_me'] = array(
-    'bundle' => 'user',
-    'default_value' => NULL,
-    'deleted' => 0,
-    'description' => '',
-    'display' => array(
-      'default' => array(
-        'label' => 'above',
-        'module' => 'text',
-        'settings' => array(),
-        'type' => 'text_default',
-        'weight' => 9,
-      ),
-    ),
-    'entity_type' => 'user',
-    'field_name' => 'field_about_me',
-    'label' => 'About Me',
-    'required' => 0,
-    'settings' => array(
-      'text_processing' => 1,
-      'user_register_form' => 1,
-    ),
-    'widget' => array(
-      'active' => 1,
-      'module' => 'text',
-      'settings' => array(
-        'rows' => 5,
-      ),
-      'type' => 'text_textarea',
-      'weight' => 8,
-    ),
-  );
-
   // Exported field_instance: 'user-user-field_date_of_birth'
   $field_instances['user-user-field_date_of_birth'] = array(
     'bundle' => 'user',
@@ -3479,7 +3355,7 @@ function lacuna_stories_content_types_field_default_field_instances() {
         'year_range' => '-3:+3',
       ),
       'type' => 'date_text',
-      'weight' => 3,
+      'weight' => 4,
     ),
   );
 
@@ -3513,7 +3389,7 @@ function lacuna_stories_content_types_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 2,
+      'weight' => 3,
     ),
   );
 
@@ -3544,7 +3420,7 @@ function lacuna_stories_content_types_field_default_field_instances() {
       'module' => 'options',
       'settings' => array(),
       'type' => 'options_select',
-      'weight' => 5,
+      'weight' => 6,
     ),
   );
 
@@ -3578,75 +3454,7 @@ function lacuna_stories_content_types_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 4,
-    ),
-  );
-
-  // Exported field_instance: 'user-user-field_how_i_learn'
-  $field_instances['user-user-field_how_i_learn'] = array(
-    'bundle' => 'user',
-    'default_value' => NULL,
-    'deleted' => 0,
-    'description' => '',
-    'display' => array(
-      'default' => array(
-        'label' => 'above',
-        'module' => 'text',
-        'settings' => array(),
-        'type' => 'text_default',
-        'weight' => 7,
-      ),
-    ),
-    'entity_type' => 'user',
-    'field_name' => 'field_how_i_learn',
-    'label' => 'How I Learn',
-    'required' => 0,
-    'settings' => array(
-      'text_processing' => 1,
-      'user_register_form' => 1,
-    ),
-    'widget' => array(
-      'active' => 1,
-      'module' => 'text',
-      'settings' => array(
-        'rows' => 5,
-      ),
-      'type' => 'text_textarea',
-      'weight' => 9,
-    ),
-  );
-
-  // Exported field_instance: 'user-user-field_learning_goals'
-  $field_instances['user-user-field_learning_goals'] = array(
-    'bundle' => 'user',
-    'default_value' => NULL,
-    'deleted' => 0,
-    'description' => '',
-    'display' => array(
-      'default' => array(
-        'label' => 'above',
-        'module' => 'text',
-        'settings' => array(),
-        'type' => 'text_default',
-        'weight' => 8,
-      ),
-    ),
-    'entity_type' => 'user',
-    'field_name' => 'field_learning_goals',
-    'label' => 'Learning Goals',
-    'required' => 0,
-    'settings' => array(
-      'text_processing' => 0,
-      'user_register_form' => 1,
-    ),
-    'widget' => array(
-      'active' => 1,
-      'module' => 'text',
-      'settings' => array(
-        'size' => 60,
-      ),
-      'type' => 'text_textfield',
-      'weight' => 10,
+      'weight' => 5,
     ),
   );
 
@@ -3680,7 +3488,7 @@ function lacuna_stories_content_types_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 6,
+      'weight' => 7,
     ),
   );
 
@@ -3714,7 +3522,7 @@ function lacuna_stories_content_types_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 7,
+      'weight' => 8,
     ),
   );
 
@@ -3769,7 +3577,7 @@ function lacuna_stories_content_types_field_default_field_instances() {
       'module' => 'og',
       'settings' => array(),
       'type' => 'og_complex',
-      'weight' => 13,
+      'weight' => 9,
     ),
   );
 
@@ -3778,7 +3586,6 @@ function lacuna_stories_content_types_field_default_field_instances() {
   t('A reference to the annotated content');
   t('A transcription of the audio.');
   t('A unit might be "Week One", "January 1st", "Section Two: Why Monkeys Like Bananas", or another method of chronologically ordering your syllabus.');
-  t('About Me');
   t('Add as many media files as necessary');
   t('Annotated Content');
   t('Annotation Text');
@@ -3809,10 +3616,8 @@ function lacuna_stories_content_types_field_default_field_instances() {
   t('Group');
   t('Group visibility');
   t('Hover Abstract');
-  t('How I Learn');
   t('If there is a PDF or other file version of this document, attach it here.');
   t('Image');
-  t('Learning Goals');
   t('Major/Degree');
   t('Media');
   t('My Stitchings');
@@ -3825,7 +3630,7 @@ function lacuna_stories_content_types_field_default_field_instances() {
   t('References to the content stitched together');
   t('Start typing the name of materials on Lacuna Stories here, and they will autofill. Add everything that gets referenced or mentioned in your post. By using this feature, your writing will be linked with other materials on the site, and the networked thinking you do will be represented in the site\'s visualizations.');
   t('Status');
-  t('Syllabus PDF');
+  t('Syllabus File');
   t('Tags');
   t('Tags for an annotation');
   t('Text');

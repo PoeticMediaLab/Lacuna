@@ -371,7 +371,7 @@ function lacuna_stories_content_types_strongarm() {
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'comment_page';
-  $strongarm->value = '0';
+  $strongarm->value = 0;
   $export['comment_page'] = $strongarm;
 
   $strongarm = new stdClass();
@@ -657,7 +657,7 @@ function lacuna_stories_content_types_strongarm() {
           'weight' => '0',
         ),
         'path' => array(
-          'weight' => '9',
+          'weight' => '10',
         ),
       ),
       'display' => array(),
@@ -1098,6 +1098,7 @@ function lacuna_stories_content_types_strongarm() {
   $strongarm->value = array(
     0 => 'status',
     1 => 'promote',
+    2 => 'revision',
   );
   $export['node_options_blog'] = $strongarm;
 
@@ -1308,7 +1309,7 @@ function lacuna_stories_content_types_strongarm() {
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'node_submitted_page';
-  $strongarm->value = 0;
+  $strongarm->value = FALSE;
   $export['node_submitted_page'] = $strongarm;
 
   $strongarm = new stdClass();

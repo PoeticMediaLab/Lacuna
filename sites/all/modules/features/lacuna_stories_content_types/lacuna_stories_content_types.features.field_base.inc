@@ -871,13 +871,13 @@ function lacuna_stories_content_types_field_default_field_bases() {
     'type' => 'workflow',
   );
 
-  // Exported field_base: 'field_syllabus_pdf'
-  $field_bases['field_syllabus_pdf'] = array(
+  // Exported field_base: 'field_syllabus_file'
+  $field_bases['field_syllabus_file'] = array(
     'active' => 1,
     'cardinality' => 1,
     'deleted' => 0,
     'entity_types' => array(),
-    'field_name' => 'field_syllabus_pdf',
+    'field_name' => 'field_syllabus_file',
     'field_permissions' => array(
       'type' => 0,
     ),
