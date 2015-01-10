@@ -3,6 +3,9 @@
  *
  ***/
 
+.annotator-privacy {
+  opacity: .5;
+}
  .annotator-privacy-public {
   color: green;
   display: block !important;
