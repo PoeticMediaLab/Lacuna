@@ -131,6 +131,7 @@ function customPrintViewsBlock($blockName)
             $anVisImgURL = $themePath . "/images/user-profile-images/annotation_visualization_logo.png";
             $anImgURL = $themePath . "/images/user-profile-images/annotation_logo.png";
             $resMapImgURL = $themePath . "/images/user-profile-images/responses_map_logo.png";
+            $annotationsURL = base_path() . "/sewing-kit"."?field_display_name_value={$field_display_name[0]['value']}";
         ?>
         <span class="caption">My Learning</span>
         <div class="field-wrapper">
@@ -144,7 +145,7 @@ function customPrintViewsBlock($blockName)
                     </td>
                     <td>
                         <div>
-                            <a href="#"><img id="annotation-view-logo" src="<?php print $anImgURL?>"/></a>
+                            <a href="<?php print $annotationsURL?>"><img id="annotation-view-logo" src="<?php print $anImgURL?>"/></a>
                             <p><?php print $field_display_name[0]['value'] ?>'s Annotations</p>
                         </div>
                     </td>
