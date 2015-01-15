@@ -127,12 +127,14 @@ function customPrintViewsBlock($blockName)
 	</div>
     <div class="profile-section" id="user-learning">
         <?php
-            $themePath = base_path() . path_to_theme();
+            $bPath = base_path();
+            $themePath = $bPath . path_to_theme();
             $anVisImgURL = $themePath . "/images/user-profile-images/annotation_visualization_logo.png";
             $anImgURL = $themePath . "/images/user-profile-images/annotation_logo.png";
             $resMapImgURL = $themePath . "/images/user-profile-images/responses_map_logo.png";
-            $annotationsURL = base_path() . "/sewing-kit"."?field_display_name_value={$field_display_name[0]['value']}";
-            $anVisualizationURL = base_path() . "visualization/dashboard?u_id={$user->uid}";
+            $annotationsURL = $bPath . "sewing-kit"."?field_display_name_value={$field_display_name[0]['value']}";
+            $anVisualizationURL = $bPath . "visualization/dashboard?u_id={$user->uid}";
+            $responsesMapURL = $bPath . "visualization/responses?u_id={$user->uid}";
         ?>
         <span class="caption">My Learning</span>
         <div class="field-wrapper">
@@ -152,7 +154,7 @@ function customPrintViewsBlock($blockName)
                     </td>
                     <td>
                         <div>
-                            <a href="#"><img id="response-map-logo" src="<?php print $resMapImgURL?>"/></a>
+                            <a href="<?php print $responsesMapURL?>"><img id="response-map-logo" src="<?php print $resMapImgURL?>"/></a>
                             <p><?php print $field_display_name[0]['value'] ?>'s Response Map</p>
                         </div>
                     </td>

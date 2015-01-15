@@ -480,6 +480,7 @@ function lacuna_visualizations_mapview() {
       // author set below -- $item->name for blog posts, but
       // more complicated for biblio entries.
       'author'=> null,
+      'u_id' => $item->uid,
       'title' => $item->title,
       'linksTitles' => array(),
       'thisURL' => get_link_url($docId, $item->nid),

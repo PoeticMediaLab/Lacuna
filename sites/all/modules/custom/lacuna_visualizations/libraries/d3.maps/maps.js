@@ -69,10 +69,10 @@
 						nodes[i].data.author = safeName;
 					}
 					if (nodes[i].data.author === safeName) {
-						userNamesColors.push([safeName, color(colorsCounter % 20)]);
+						userNamesColors.push([safeName, color(colorsCounter % 20), nodes[i].data.u_id]);
 						// for debugging purposes.
 						colorsCounter++;
-						selectedUsers.push(safeName);
+						selectedUsers.push(nodes[i].data.u_id);
 						break;
 					}
 				}
@@ -338,7 +338,6 @@
 		.enter()
 		;
 
-	var foundUserFlag = false;
 	// remember that each entry in userNamesColors is an array
 	// containing the name at [0] and the associated color at [1]
 	var userSelectionGroup = userSelectionEnterSelection.append("g")
@@ -348,32 +347,29 @@
 			.classed("unSelected", false)
 			// stripping spaces, lest we accidentally assign two ids
 			// instead of one.
-			.attr("id", function(d) { return d[0].replace(/\s+/g, '')});
+			.attr("id", function(d) { return "user"+d[2];});
 
 		userSelectionGroup.on("click", function(d) {
-			foundUserFlag = false;
+			var foundUserFlag = false;
 			for (var i = 0; i < selectedUsers.length; i++){
 				// unselect if already selected
-				if (selectedUsers[i] == d[0])  {
+				if (selectedUsers[i] == d[2])  {
 					selectedUsers.splice(i, 1);
 					foundUserFlag = true;
-					d3.select("#" + d[0].replace(/\s+/g, ''))
+					d3.select("#" + "user" + d[2])
 						.classed("unSelected", true);
 					break;
 				}
 			}
 			// not found, select.
 			if (!foundUserFlag){
-				selectedUsers.push(d[0]);
-				d3.select("#" + d[0].replace(/\s+/g, ''))
+				selectedUsers.push(d[2]);
+				d3.select("#" + "user" + d[2])
 					.classed("unSelected", false);
 			}
 			// either way, update the force diagram to reflect newly
 			// selected/unselected user.
-
 			redrawGraph();
-
-
 		})
 		.attr("transform", function(d, i) {
 			return ("translate(0," + (100 + (i * (controlPanelFontSize * 2))) + ")");
@@ -614,7 +610,7 @@
 			// okay, it's not a biblio node. see if the author is in
 			// selectedUsers; if so, render it.
 			for (var i = 0; i < selectedUsers.length; i++) {
-				if (d.data.author == selectedUsers[i]) {
+				if (d.data.u_id == selectedUsers[i]) {
 					return true;
 				}
 			}	// didn't find it.
@@ -844,13 +840,35 @@
 			// filteredLinks, places biblio nodes in arrangement (if
 			// drawDocumentCircle)
 			arrangeDocuments();
+			manageURLQuery();
 
+	function manageURLQuery()
+	{
+		var params = getURLVars();
+		if(params["u_id"] && !isNaN(params["u_id"]))
+		{
+			var userToFilter = 	d3.select("#" + "user" + params["u_id"]);
+			if(userToFilter.empty())	return;
+			d3.selectAll(".userListItem").classed("unSelected", true);
+			userToFilter.classed("unSelected", false);
+			selectedUsers = [params["u_id"]];
+			redrawGraph();
+		}
+	}
 
-
-
-
-
-	  }
+	function getURLVars()
+	{
+		var vars = [], hash;
+		var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+		for(var i = 0; i < hashes.length; i++)
+		{
+			hash = hashes[i].split('=');
+			vars.push(hash[0]);
+			vars[hash[0]] = hash[1];
+		}
+		return vars;
+	}
+}
 
 })(jQuery);
 
