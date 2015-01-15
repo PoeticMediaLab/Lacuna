@@ -559,7 +559,7 @@ function main(data) {
 		var nodes = network.selectAll("g").data(graph.nodes);
 	  	nodes.exit().remove();
 		nodes.enter()
-			.append("g", function(d) { return d.uid; })	// d.uid is set in Annotation Studio
+			.append("g")
 			.attr("class","node")
 			.on("mouseover", tooltip_on)
 			.on("mouseout", tooltip_off)
@@ -1063,7 +1063,7 @@ function main(data) {
 		if(params[id] && !isNaN(params[id]))
 		{
 			var node = findNodeById(params[id], typeMap[id]);
-			focus_toggle(node);
+			if(node) focus_toggle(node);
 		}
 	}
   }
@@ -1075,6 +1075,7 @@ function main(data) {
   	{
   		if(graph.nodes[i].type == type && graph.nodes[i][idMap[type]] == id) return graph.nodes[i];
   	}
+  	return false;
   }
 
   function getURLVars()
