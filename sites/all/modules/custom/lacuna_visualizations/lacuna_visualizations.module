@@ -627,9 +627,11 @@ function lacuna_visualizations_annotation_dashboard_data() {
     $data->id = $annotation->nid;
     $data->created = $annotation->created * 1000; // convert to milliseconds for d3
     $data->updated = $annotation->changed * 1000;
+    $data->u_id = $annotation->uid;
 
     // For readability
     $target_id = $annotation->annotation_reference[$annotation->language][0]['target_id'];
+    $data->doc_id = $target_id;
     if (!array_key_exists($target_id, $documentNames)) {
       $document = node_load($target_id);
       // TODO: use Biblio reference short title instead

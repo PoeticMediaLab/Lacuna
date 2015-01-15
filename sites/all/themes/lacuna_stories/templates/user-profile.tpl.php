@@ -132,6 +132,7 @@ function customPrintViewsBlock($blockName)
             $anImgURL = $themePath . "/images/user-profile-images/annotation_logo.png";
             $resMapImgURL = $themePath . "/images/user-profile-images/responses_map_logo.png";
             $annotationsURL = base_path() . "/sewing-kit"."?field_display_name_value={$field_display_name[0]['value']}";
+            $anVisualizationURL = base_path() . "visualization/dashboard?u_id={$user->uid}";
         ?>
         <span class="caption">My Learning</span>
         <div class="field-wrapper">
@@ -139,7 +140,7 @@ function customPrintViewsBlock($blockName)
                 <tr>
                     <td>
                         <div>
-                            <a href="#"><img id="annotation-visual-logo" src="<?php print $anVisImgURL?>"/></a>
+                            <a href="<?php print $anVisualizationURL?>"><img id="annotation-visual-logo" src="<?php print $anVisImgURL?>"/></a>
                             <p>Annotation Visualization</p>
                         </div>
                     </td>

@@ -123,8 +123,8 @@ function init_graph() {
 	annotations.current().forEach(function (a) {
 		// Add nodes into lookup table and the nodes array
 		// The "type" attribute is *very* important
-		var source = add_to_graph(nodes_unique, nodes, a.username, {type: "user"});
-		var target = add_to_graph(nodes_unique, nodes, a.documentTitle, {type: "doc"});
+		var source = add_to_graph(nodes_unique, nodes, a.username, {type: "user", u_id : a.u_id});
+		var target = add_to_graph(nodes_unique, nodes, a.documentTitle, {type: "doc", doc_id : a.doc_id});
 
 		// Add new edges, combine duplicate edges and increment weight & count
 		var edge_id = source.id + "," + target.id;
@@ -404,9 +404,9 @@ function main(data) {
 
 	var focused_on = null;
 	function focus_toggle(d) {
-		if (focused_on != this) {
+		if (focused_on != d) {
 			focus_on(d);
-			focused_on = this;
+			focused_on = d;
 			window.scrollTo(0,0);
 		}
 	}
@@ -1054,9 +1054,46 @@ function main(data) {
   	return 3 * size.radius * (1 + Math.max(counts.user, counts.doc));			//adding 1 for padding
   }
 
+  function manageURLQuery()
+  {
+	var params = getURLVars();
+	var typeMap = { doc_id : "doc", u_id : "user" };
+	for(var id in typeMap)
+	{
+		if(params[id] && !isNaN(params[id]))
+		{
+			var node = findNodeById(params[id], typeMap[id]);
+			focus_toggle(node);
+		}
+	}
+  }
+
+  function findNodeById(id, type)
+  {
+  	var idMap = {	user : "u_id", doc : "doc_id"};
+  	for(var i = 0; i < graph.nodes.length; ++i)
+  	{
+  		if(graph.nodes[i].type == type && graph.nodes[i][idMap[type]] == id) return graph.nodes[i];
+  	}
+  }
+
+  function getURLVars()
+  {
+      var vars = [], hash;
+      var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+      for(var i = 0; i < hashes.length; i++)
+      {
+          hash = hashes[i].split('=');
+          vars.push(hash[0]);
+          vars[hash[0]] = hash[1];
+      }
+      return vars;
+  }  
+
 	// Initial creation
 	update();
 	label_pie_charts();	// only need to label them once
+	manageURLQuery();
 } // end main()
 } // Drupal.d3.annotations
 })(jQuery);	// End of Drupal wrapper
