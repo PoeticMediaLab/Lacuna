@@ -145,7 +145,14 @@ function lacuna_stories_permissions_user_default_permissions() {
   // Exported permission: 'access notify'.
   $permissions['access notify'] = array(
     'name' => 'access notify',
-    'roles' => array(),
+    'roles' => array(
+      'Content Manager' => 'Content Manager',
+      'Instructor' => 'Instructor',
+      'Student' => 'Student',
+      'administrator' => 'administrator',
+      'anonymous user' => 'anonymous user',
+      'authenticated user' => 'authenticated user',
+    ),
     'module' => 'notify',
   );
 

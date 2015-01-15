@@ -872,7 +872,7 @@ function main(data) {
 
 		bars.enter()
 			.append("rect")
-  		.attr("fill", "steelblue")
+  		// .attr("fill", "steelblue")
   		.attr("class", "bar")
   	;
 
