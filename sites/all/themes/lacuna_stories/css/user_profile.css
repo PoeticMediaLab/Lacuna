@@ -124,6 +124,7 @@
 #user-profile-main #user-learning div.user-link-item.is-empty a
 {
     cursor: default;
+    pointer-events: none;
 }
 
 #user-profile-main #user-learning div.user-link-item.is-empty

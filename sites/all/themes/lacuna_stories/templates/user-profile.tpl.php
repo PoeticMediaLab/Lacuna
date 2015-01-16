@@ -135,9 +135,9 @@ function customPrintViewsBlock($blockName)
             $anVisImgURL = $themePath . "/images/user-profile-images/annotation_visualization_logo.png";
             $anImgURL = $themePath . "/images/user-profile-images/annotation_logo.png";
             $resMapImgURL = $themePath . "/images/user-profile-images/responses_map_logo.png";
-            $annotationsURL = $bPath . "sewing-kit"."?field_display_name_value={$field_display_name[0]['value']}";
-            $anVisualizationURL = $bPath . "visualization/dashboard?u_id={$userInView->uid}";
-            $responsesMapURL = $bPath . "visualization/responses?u_id={$userInView->uid}";
+            $annotationsURL = $annotationsIsEmpty ? "#" : $bPath . "sewing-kit"."?field_display_name_value={$field_display_name[0]['value']}";
+            $anVisualizationURL = $annotationsIsEmpty ? "#" : $bPath . "visualization/dashboard?u_id={$userInView->uid}";
+            $responsesMapURL = $responsesIsEmpty ? "#" : $bPath . "visualization/responses?u_id={$userInView->uid}";
         ?>
         <span class="caption">My Learning</span>
         <div class="field-wrapper">
