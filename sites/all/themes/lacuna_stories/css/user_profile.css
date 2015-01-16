@@ -121,6 +121,16 @@
     margin: 0;
 }
 
+#user-profile-main #user-learning div.user-link-item.is-empty a
+{
+    cursor: default;
+}
+
+#user-profile-main #user-learning div.user-link-item.is-empty
+{
+    opacity: 0.4;
+}
+
 #user-profile-main #user-learning table td
 {
     text-align: center;

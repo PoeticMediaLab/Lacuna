@@ -93,21 +93,24 @@ function customPrintViewsBlock($blockName)
 			<span class="caption">Recent Contributions</span>
 			<div class="field-wrapper">
 				<p class="title">Responses</p>
-                <?php if(!customPrintViewsBlock("user_s_responses-block"))
+                <?php $responsesIsEmpty = !customPrintViewsBlock("user_s_responses-block");
+                    if($responsesIsEmpty)
                     {
                         print "<p class='no-results'>{$field_display_name[0]['value']} has not written any responses</p>";
                     } ?>
 			</div>
 			<div class="field-wrapper">
                 <p class="title">Comments</p>
-                <?php if(!customPrintViewsBlock("user_s_comments-block"))
+                <?php $commentsIsEmpty = !customPrintViewsBlock("user_s_comments-block");
+                    if($commentsIsEmpty)
                     {
                         print "<p class='no-results'>{$field_display_name[0]['value']} has not made any comments</p>";
                     } ?>
 			</div>
 			<div class="field-wrapper">
                 <p class="title">Annotations</p>
-                <?php if(!customPrintViewsBlock("my_annotations_view-block"))
+                <?php $annotationsIsEmpty = !customPrintViewsBlock("my_annotations_view-block");
+                    if($annotationsIsEmpty)
                     {
                         print "<p class='no-results'>{$field_display_name[0]['value']} has not made any annotations</p>";
                     } ?>
@@ -141,19 +144,19 @@ function customPrintViewsBlock($blockName)
             <table>
                 <tr>
                     <td>
-                        <div>
+                        <div class="user-link-item <?php print $annotationsIsEmpty ? 'is-empty' : '' ?>">
                             <a href="<?php print $anVisualizationURL?>"><img id="annotation-visual-logo" src="<?php print $anVisImgURL?>"/></a>
                             <p>Annotation Visualization</p>
                         </div>
                     </td>
                     <td>
-                        <div>
+                        <div class="user-link-item <?php print $annotationsIsEmpty ? 'is-empty' : '' ?>">
                             <a href="<?php print $annotationsURL?>"><img id="annotation-view-logo" src="<?php print $anImgURL?>"/></a>
                             <p><?php print $field_display_name[0]['value'] ?>'s Annotations</p>
                         </div>
                     </td>
                     <td>
-                        <div>
+                        <div class="user-link-item <?php print $responsesIsEmpty ? 'is-empty' : '' ?>">
                             <a href="<?php print $responsesMapURL?>"><img id="response-map-logo" src="<?php print $resMapImgURL?>"/></a>
                             <p><?php print $field_display_name[0]['value'] ?>'s Response Map</p>
                         </div>
