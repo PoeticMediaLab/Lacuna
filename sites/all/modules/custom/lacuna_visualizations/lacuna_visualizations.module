@@ -619,8 +619,10 @@ function lacuna_visualizations_annotation_dashboard_data() {
   $documentNames = array(); // to cut down on db queries
   $userNames = array();   // same as previous - only load users once
   $annotations = array();
-  foreach (array_keys($result['node']) as $nid) {
-    $annotation = node_load($nid);
+  $allNodes = node_load_multiple(array_keys($result['node']));  // instead of loading one by one, do a batch load
+//  foreach (array_keys($result['node']) as $nid) {
+//    $annotation = node_load($nid);
+    foreach($allNodes as $annotation){
     // Create a new data object, populate only with necessary data
     // Make it harder to leak unintended data
     $data = new StdClass();
