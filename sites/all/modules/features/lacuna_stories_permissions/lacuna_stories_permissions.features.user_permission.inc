@@ -150,8 +150,11 @@ function lacuna_stories_permissions_user_default_permissions() {
       'Instructor' => 'Instructor',
       'Student' => 'Student',
       'administrator' => 'administrator',
+<<<<<<< HEAD
       'anonymous user' => 'anonymous user',
       'authenticated user' => 'authenticated user',
+=======
+>>>>>>> 5e5df9c9e74621d9cb565d55657c0e1360648888
     ),
     'module' => 'notify',
   );
@@ -228,9 +231,7 @@ function lacuna_stories_permissions_user_default_permissions() {
   // Exported permission: 'access statistics'.
   $permissions['access statistics'] = array(
     'name' => 'access statistics',
-    'roles' => array(
-      'administrator' => 'administrator',
-    ),
+    'roles' => array(),
     'module' => 'statistics',
   );
 
@@ -465,14 +466,20 @@ function lacuna_stories_permissions_user_default_permissions() {
   // Exported permission: 'administer notify'.
   $permissions['administer notify'] = array(
     'name' => 'administer notify',
-    'roles' => array(),
+    'roles' => array(
+      'Content Manager' => 'Content Manager',
+      'administrator' => 'administrator',
+    ),
     'module' => 'notify',
   );
 
   // Exported permission: 'administer notify queue'.
   $permissions['administer notify queue'] = array(
     'name' => 'administer notify queue',
-    'roles' => array(),
+    'roles' => array(
+      'Content Manager' => 'Content Manager',
+      'administrator' => 'administrator',
+    ),
     'module' => 'notify',
   );
 
@@ -560,9 +567,7 @@ function lacuna_stories_permissions_user_default_permissions() {
   // Exported permission: 'administer statistics'.
   $permissions['administer statistics'] = array(
     'name' => 'administer statistics',
-    'roles' => array(
-      'administrator' => 'administrator',
-    ),
+    'roles' => array(),
     'module' => 'statistics',
   );
 
@@ -849,7 +854,6 @@ function lacuna_stories_permissions_user_default_permissions() {
     'roles' => array(
       'Content Manager' => 'Content Manager',
       'Instructor' => 'Instructor',
-      'Student' => 'Student',
       'administrator' => 'administrator',
     ),
     'module' => 'field_permissions',
@@ -1314,10 +1318,7 @@ function lacuna_stories_permissions_user_default_permissions() {
   // Exported permission: 'delete terms in genre_response'.
   $permissions['delete terms in genre_response'] = array(
     'name' => 'delete terms in genre_response',
-    'roles' => array(
-      'Content Manager' => 'Content Manager',
-      'administrator' => 'administrator',
-    ),
+    'roles' => array(),
     'module' => 'taxonomy',
   );
 
@@ -1792,7 +1793,6 @@ function lacuna_stories_permissions_user_default_permissions() {
     'roles' => array(
       'Content Manager' => 'Content Manager',
       'Instructor' => 'Instructor',
-      'Student' => 'Student',
       'administrator' => 'administrator',
     ),
     'module' => 'field_permissions',
@@ -1933,10 +1933,7 @@ function lacuna_stories_permissions_user_default_permissions() {
   // Exported permission: 'edit terms in genre_response'.
   $permissions['edit terms in genre_response'] = array(
     'name' => 'edit terms in genre_response',
-    'roles' => array(
-      'Content Manager' => 'Content Manager',
-      'administrator' => 'administrator',
-    ),
+    'roles' => array(),
     'module' => 'taxonomy',
   );
 
@@ -2025,20 +2022,14 @@ function lacuna_stories_permissions_user_default_permissions() {
   // Exported permission: 'grant content access'.
   $permissions['grant content access'] = array(
     'name' => 'grant content access',
-    'roles' => array(
-      'Content Manager' => 'Content Manager',
-      'administrator' => 'administrator',
-    ),
+    'roles' => array(),
     'module' => 'content_access',
   );
 
   // Exported permission: 'grant own content access'.
   $permissions['grant own content access'] = array(
     'name' => 'grant own content access',
-    'roles' => array(
-      'Content Manager' => 'Content Manager',
-      'administrator' => 'administrator',
-    ),
+    'roles' => array(),
     'module' => 'content_access',
   );
 
@@ -2465,15 +2456,6 @@ function lacuna_stories_permissions_user_default_permissions() {
     'module' => 'flag',
   );
 
-  // Exported permission: 'use text format filtered_html'.
-  $permissions['use text format filtered_html'] = array(
-    'name' => 'use text format filtered_html',
-    'roles' => array(
-      'administrator' => 'administrator',
-    ),
-    'module' => 'filter',
-  );
-
   // Exported permission: 'use text format full_html'.
   $permissions['use text format full_html'] = array(
     'name' => 'use text format full_html',
@@ -2690,7 +2672,6 @@ function lacuna_stories_permissions_user_default_permissions() {
     'roles' => array(
       'Content Manager' => 'Content Manager',
       'Instructor' => 'Instructor',
-      'Student' => 'Student',
       'administrator' => 'administrator',
     ),
     'module' => 'field_permissions',
@@ -2746,9 +2727,7 @@ function lacuna_stories_permissions_user_default_permissions() {
   // Exported permission: 'view post access counter'.
   $permissions['view post access counter'] = array(
     'name' => 'view post access counter',
-    'roles' => array(
-      'administrator' => 'administrator',
-    ),
+    'roles' => array(),
     'module' => 'statistics',
   );
 
