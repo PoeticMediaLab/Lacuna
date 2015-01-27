@@ -34,8 +34,10 @@
     Categories.prototype.widthSet = false;
 
     Categories.prototype.pluginInit = function() {
+      window.myCat = this;
       if (!Annotator.supported()) return;
       this.options.categoryColorClasses[this.options.emptyCategory] = this.options.categoryClass + '-none';
+      window.myCat = this;
       this.field = this.annotator.editor.addField({
         label: Annotator._t('Category'),
         options: this.options
@@ -134,7 +136,9 @@
         categoryHTML += category;
         categoryHTML += '</span>';
       }
+
       $(this.field).html(categoryHTML);
+      $(".annotator-item.annotator-checkbox input[type=checkbox]").attr("checked", "checked");
       if (!this.widthSet) {
         this.widthSet = true;
         totalWidth = 5;
