@@ -52,3 +52,7 @@
 .annotator-category-selected {
     background-color: rgba(196,223,44,1) !important;
 }
+
+.annotator-category-label{
+    padding: 0 6px;
+}
