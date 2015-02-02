@@ -21,11 +21,12 @@ function lacuna_stories_content_types_default_Workflow() {
       "3" : {"sid":"3","wid":"1","weight":"-19","sysid":"0","state":"Ready for Annotation","status":"1","name":"ready_for_annotation"}
     },
     "transitions" : {
-      "6" : {"tid":"6","sid":"1","target_sid":"2","roles":{"-1":-1,"3":"3","4":"4","5":"5"},"wid":"1","name":"1_2","label":"","rdf_mapping":[]},
-      "7" : {"tid":"7","sid":"2","target_sid":"2","roles":{"-1":-1,"3":"3","4":"4","5":"5","6":"6"},"wid":"1","name":"2_2","label":"","rdf_mapping":[]},
-      "8" : {"tid":"8","sid":"2","target_sid":"3","roles":{"-1":-1,"3":"3","4":"4","5":"5"},"wid":"1","name":"2_3","label":"Mark this document as ready for annotation. Cannot be reversed.","rdf_mapping":[]},
-      "9" : {"tid":"9","sid":"3","target_sid":"2","roles":{"-1":-1,"3":"3","4":"4"},"wid":"1","name":"3_2","label":"","rdf_mapping":[]},
-      "10" : {"tid":"10","sid":"3","target_sid":"3","roles":{"-1":-1,"3":"3","4":"4","5":"5","6":"6"},"wid":"1","name":"3_3","label":"","rdf_mapping":[]}
+      "17" : {"tid":"17","sid":"1","target_sid":"2","roles":{"-1":-1,"3":3,"4":4,"5":5},"wid":"1","name":"1_2","label":"","rdf_mapping":[]},
+      "18" : {"tid":"18","sid":"1","target_sid":"3","roles":{"3":3},"wid":"1","name":"1_3","label":"","rdf_mapping":[]},
+      "19" : {"tid":"19","sid":"2","target_sid":"2","roles":{"-1":-1,"3":3,"4":4,"5":5,"6":6},"wid":"1","name":"2_2","label":"","rdf_mapping":[]},
+      "20" : {"tid":"20","sid":"2","target_sid":"3","roles":{"-1":-1,"3":3,"4":4,"5":5},"wid":"1","name":"2_3","label":"","rdf_mapping":[]},
+      "21" : {"tid":"21","sid":"3","target_sid":"2","roles":{"3":3,"4":4},"wid":"1","name":"3_2","label":"","rdf_mapping":[]},
+      "22" : {"tid":"22","sid":"3","target_sid":"3","roles":{"-1":-1,"3":3,"4":4,"5":5,"6":6},"wid":"1","name":"3_3","label":"","rdf_mapping":[]}
     },
     "label" : "Materials Publication States",
     "typeMap" : [],
@@ -141,14 +142,6 @@ function lacuna_stories_content_types_node_info() {
       'name' => t('Music Video'),
       'base' => 'node_content',
       'description' => t('For music videos. Rock on.'),
-      'has_title' => '1',
-      'title_label' => t('Title'),
-      'help' => '',
-    ),
-    'page' => array(
-      'name' => t('Basic page'),
-      'base' => 'node_content',
-      'description' => t('Use <em>basic pages</em> for your static content, such as an \'About us\' page.'),
       'has_title' => '1',
       'title_label' => t('Title'),
       'help' => '',
