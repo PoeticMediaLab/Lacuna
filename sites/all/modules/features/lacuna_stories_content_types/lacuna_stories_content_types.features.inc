@@ -5,6 +5,48 @@
  */
 
 /**
+ * Implements hook_default_Workflow().
+ */
+function lacuna_stories_content_types_default_Workflow() {
+  $workflows = array();
+
+  // Exported workflow: 'materials_publication_states'
+  $workflows['materials_publication_states'] = entity_import('Workflow', '{
+    "name" : "materials_publication_states",
+    "tab_roles" : [],
+    "options" : [],
+    "states" : {
+      "1" : {"sid":"1","wid":"1","weight":"-50","sysid":"1","state":"(creation)","status":"1","name":"(creation)"},
+      "2" : {"sid":"2","wid":"1","weight":"-20","sysid":"0","state":"Draft","status":"1","name":"draft"},
+      "3" : {"sid":"3","wid":"1","weight":"-19","sysid":"0","state":"Ready for Annotation","status":"1","name":"ready_for_annotation"}
+    },
+    "transitions" : {
+      "17" : {"tid":"17","sid":"1","target_sid":"2","roles":{"-1":-1,"3":3,"4":4,"5":5},"wid":"1","name":"1_2","label":"","rdf_mapping":[]},
+      "18" : {"tid":"18","sid":"1","target_sid":"3","roles":{"3":3},"wid":"1","name":"1_3","label":"","rdf_mapping":[]},
+      "19" : {"tid":"19","sid":"2","target_sid":"2","roles":{"-1":-1,"3":3,"4":4,"5":5,"6":6},"wid":"1","name":"2_2","label":"","rdf_mapping":[]},
+      "20" : {"tid":"20","sid":"2","target_sid":"3","roles":{"-1":-1,"3":3,"4":4,"5":5},"wid":"1","name":"2_3","label":"","rdf_mapping":[]},
+      "21" : {"tid":"21","sid":"3","target_sid":"2","roles":{"3":3,"4":4},"wid":"1","name":"3_2","label":"","rdf_mapping":[]},
+      "22" : {"tid":"22","sid":"3","target_sid":"3","roles":{"-1":-1,"3":3,"4":4,"5":5,"6":6},"wid":"1","name":"3_3","label":"","rdf_mapping":[]}
+    },
+    "label" : "Materials Publication States",
+    "typeMap" : [],
+    "rdf_mapping" : [],
+    "wid_original" : "1",
+    "system_roles" : {
+      "-1" : "(author)",
+      "1" : "anonymous user",
+      "2" : "authenticated user",
+      "3" : "administrator",
+      "4" : "Content Manager",
+      "5" : "Instructor",
+      "6" : "Student"
+    }
+  }');
+
+  return $workflows;
+}
+
+/**
  * Implements hook_ctools_plugin_api().
  */
 function lacuna_stories_content_types_ctools_plugin_api($module = NULL, $api = NULL) {
@@ -100,14 +142,6 @@ function lacuna_stories_content_types_node_info() {
       'name' => t('Music Video'),
       'base' => 'node_content',
       'description' => t('For music videos. Rock on.'),
-      'has_title' => '1',
-      'title_label' => t('Title'),
-      'help' => '',
-    ),
-    'page' => array(
-      'name' => t('Basic page'),
-      'base' => 'node_content',
-      'description' => t('Use <em>basic pages</em> for your static content, such as an \'About us\' page.'),
       'has_title' => '1',
       'title_label' => t('Title'),
       'help' => '',
