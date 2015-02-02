@@ -5,47 +5,6 @@
  */
 
 /**
- * Implements hook_default_Workflow().
- */
-function lacuna_stories_content_types_default_Workflow() {
-  $workflows = array();
-
-  // Exported workflow: 'materials_publication_states'
-  $workflows['materials_publication_states'] = entity_import('Workflow', '{
-    "name" : "materials_publication_states",
-    "tab_roles" : [],
-    "options" : [],
-    "states" : {
-      "1" : {"sid":"1","wid":"1","weight":"-50","sysid":"1","state":"(creation)","status":"1","name":"(creation)"},
-      "2" : {"sid":"2","wid":"1","weight":"-20","sysid":"0","state":"Draft","status":"1","name":"draft"},
-      "3" : {"sid":"3","wid":"1","weight":"-19","sysid":"0","state":"Ready for Annotation","status":"1","name":"ready_for_annotation"}
-    },
-    "transitions" : {
-      "6" : {"tid":"6","sid":"1","target_sid":"2","roles":{"-1":-1,"3":"3","4":"4","5":"5"},"wid":"1","name":"1_2","label":"","rdf_mapping":[]},
-      "7" : {"tid":"7","sid":"2","target_sid":"2","roles":{"-1":-1,"3":"3","4":"4","5":"5","6":"6"},"wid":"1","name":"2_2","label":"","rdf_mapping":[]},
-      "8" : {"tid":"8","sid":"2","target_sid":"3","roles":{"-1":-1,"3":"3","4":"4","5":"5"},"wid":"1","name":"2_3","label":"Mark this document as ready for annotation. Cannot be reversed.","rdf_mapping":[]},
-      "9" : {"tid":"9","sid":"3","target_sid":"2","roles":{"-1":-1,"3":"3","4":"4"},"wid":"1","name":"3_2","label":"","rdf_mapping":[]},
-      "10" : {"tid":"10","sid":"3","target_sid":"3","roles":{"-1":-1,"3":"3","4":"4","5":"5","6":"6"},"wid":"1","name":"3_3","label":"","rdf_mapping":[]}
-    },
-    "label" : "Materials Publication States",
-    "typeMap" : [],
-    "rdf_mapping" : [],
-    "wid_original" : "1",
-    "system_roles" : {
-      "-1" : "(author)",
-      "1" : "anonymous user",
-      "2" : "authenticated user",
-      "3" : "administrator",
-      "4" : "Content Manager",
-      "5" : "Instructor",
-      "6" : "Student"
-    }
-  }');
-
-  return $workflows;
-}
-
-/**
  * Implements hook_ctools_plugin_api().
  */
 function lacuna_stories_content_types_ctools_plugin_api($module = NULL, $api = NULL) {
