@@ -347,9 +347,4 @@ features_exclude[dependencies][workflow_admin_ui] = workflow_admin_ui
 features_exclude[dependencies][publishcontent] = publishcontent
 features_exclude[dependencies][notify] = notify
 features_exclude[dependencies][nodeaccess] = nodeaccess
-<<<<<<< HEAD
-mtime = 1418854881
-=======
-mtime = 1420860046
->>>>>>> 5e5df9c9e74621d9cb565d55657c0e1360648888
 project path = sites/all/modules/features
