@@ -21,6 +21,10 @@
       privateClass: "annotator-privacy-private fa fa-lock"
     };
 
+    Privacy.prototype.events = {
+      'annotationEditorShown': "onAnnotationEditorShown"
+    };
+
     Privacy.prototype.pluginInit = function() {
       if (!Annotator.supported()) return;
       return this.annotator.viewer.addField({
@@ -36,6 +40,10 @@
       } else {
         return field.addClass(this.options.publicClass).html(Annotator.Util.escape(" Public"));
       }
+    };
+
+    Privacy.prototype.onAnnotationEditorShown = function() {
+      return $(".annotator-item.annotator-checkbox input[type=checkbox]").attr("checked", "checked");
     };
 
     return Privacy;
