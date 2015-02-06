@@ -150,11 +150,8 @@ function lacuna_stories_permissions_user_default_permissions() {
       'Instructor' => 'Instructor',
       'Student' => 'Student',
       'administrator' => 'administrator',
-<<<<<<< HEAD
       'anonymous user' => 'anonymous user',
       'authenticated user' => 'authenticated user',
-=======
->>>>>>> 5e5df9c9e74621d9cb565d55657c0e1360648888
     ),
     'module' => 'notify',
   );
