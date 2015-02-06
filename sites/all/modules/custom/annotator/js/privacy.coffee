@@ -8,11 +8,14 @@ class Annotator.Plugin.Privacy extends Annotator.Plugin
 	  publicClass: "annotator-privacy-public fa fa-unlock"
 	  privateClass: "annotator-privacy-private fa fa-lock"
 
+	events:
+	 'annotationEditorShown'     : "onAnnotationEditorShown"
+
 	pluginInit: ->
     	return unless Annotator.supported()
     	@annotator.viewer.addField({
     	  load: @updateViewer
-    	})
+    	})    
 
 	updateViewer: (field, annotation) =>
 		field = $(field)
@@ -21,3 +24,6 @@ class Annotator.Plugin.Privacy extends Annotator.Plugin
 			field.addClass(@options.privateClass).html(Annotator.Util.escape(" Private"))
 		else
 		 	field.addClass(@options.publicClass).html(Annotator.Util.escape(" Public"))
+
+	onAnnotationEditorShown: ->
+		$(".annotator-item.annotator-checkbox input[type=checkbox]").attr("checked", "checked")
