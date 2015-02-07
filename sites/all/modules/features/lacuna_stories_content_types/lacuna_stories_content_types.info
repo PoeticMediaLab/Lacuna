@@ -358,6 +358,6 @@ features[variable][] = node_submitted_page
 features[variable][] = node_submitted_thread
 features[variable][] = node_submitted_video
 features[variable][] = node_submitted_webform
+features[variable][] = user_picture_default
 features[wysiwyg][] = full_html
-mtime = 1422911494
 project path = sites/all/modules/features

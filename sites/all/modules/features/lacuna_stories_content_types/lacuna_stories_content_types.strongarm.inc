@@ -1333,5 +1333,12 @@ function lacuna_stories_content_types_strongarm() {
   $strongarm->value = 0;
   $export['node_submitted_webform'] = $strongarm;
 
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'user_picture_default';
+  $strongarm->value = 'sites/all/themes/lacuna_stories/images/default-avatar.png';
+  $export['user_picture_default'] = $strongarm;
+
   return $export;
 }
