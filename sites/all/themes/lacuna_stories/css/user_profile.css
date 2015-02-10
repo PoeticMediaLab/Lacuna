@@ -28,12 +28,24 @@
 	margin-left: 20px;
 }
 
-#user-profile-main #user-avatar-space img
+#user-profile-main #user-avatar-space .user-picture
 {
 	width: 200px;
 	height: 200px;
 	border: 1px solid #000000;
 	border-radius: 100px;
+	display: inline-block;
+	overflow: hidden;
+}
+
+#user-profile-main #user-avatar-space .user-picture img
+{
+	min-width: 200px;
+	min-height: 200px;
+	max-width: none;
+	position: relative;
+	margin-left: 100px;			
+	transform: translateX(-50%); 	/* this along with margin will position img centrally*/
 }
 
 #user-profile-main div.column
