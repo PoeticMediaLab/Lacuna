@@ -42,6 +42,10 @@
 {
 	min-width: 200px;
 	min-height: 200px;
+	max-width: none;
+	position: relative;
+	margin-left: 100px;			
+	transform: translateX(-50%); 	/* this along with margin will position img centrally*/
 }
 
 #user-profile-main div.column
