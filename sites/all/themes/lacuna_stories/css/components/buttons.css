@@ -92,7 +92,7 @@
 /* line 78, ../../sass/components/buttons.scss */
 .view-documents #edit-reset.form-submit,
 .view-your-story #edit-reset.form-submit {
-  margin-top: -40px;
+  margin-top: 0px;
   margin-right: 80px;
   float: right;
 }
