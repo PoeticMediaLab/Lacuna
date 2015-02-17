@@ -16,22 +16,22 @@ function lacuna_stories_content_types_default_Workflow() {
     "tab_roles" : [],
     "options" : [],
     "states" : {
-      "16" : {"sid":"16","wid":"6","weight":"-50","sysid":"1","state":"(creation)","status":"1","name":"(creation)"},
-      "17" : {"sid":"17","wid":"6","weight":"-20","sysid":"0","state":"Draft","status":"1","name":"draft"},
-      "18" : {"sid":"18","wid":"6","weight":"-19","sysid":"0","state":"Ready for Annotation","status":"1","name":"ready_for_annotation"}
+      "1" : {"sid":"1","wid":"1","weight":"-50","sysid":"1","state":"(creation)","status":"1","name":"(creation)"},
+      "2" : {"sid":"2","wid":"1","weight":"-20","sysid":"0","state":"Draft","status":"1","name":"draft"},
+      "3" : {"sid":"3","wid":"1","weight":"-19","sysid":"0","state":"Ready for Annotation","status":"1","name":"ready_for_annotation"}
     },
     "transitions" : {
-      "31" : {"tid":"31","sid":"16","target_sid":"17","roles":{"-1":-1,"3":"3","4":"4","5":"5"},"wid":"6","name":"1_2","label":"","rdf_mapping":[]},
-      "32" : {"tid":"32","sid":"16","target_sid":"18","roles":{"3":"3"},"wid":"6","name":"1_3","label":"","rdf_mapping":[]},
-      "33" : {"tid":"33","sid":"17","target_sid":"17","roles":{"-1":-1,"3":"3","4":"4","5":"5","6":"6"},"wid":"6","name":"2_2","label":"","rdf_mapping":[]},
-      "34" : {"tid":"34","sid":"17","target_sid":"18","roles":{"-1":-1,"3":"3","4":"4","5":"5"},"wid":"6","name":"2_3","label":"","rdf_mapping":[]},
-      "35" : {"tid":"35","sid":"18","target_sid":"17","roles":{"3":"3","4":"4"},"wid":"6","name":"3_2","label":"","rdf_mapping":[]},
-      "36" : {"tid":"36","sid":"18","target_sid":"18","roles":{"-1":-1,"3":"3","4":"4","5":"5","6":"6"},"wid":"6","name":"3_3","label":"","rdf_mapping":[]}
+      "17" : {"tid":"17","sid":"1","target_sid":"2","roles":{"-1":-1,"3":3,"4":4,"5":5},"wid":"1","name":"1_2","label":"","rdf_mapping":[]},
+      "18" : {"tid":"18","sid":"1","target_sid":"3","roles":{"3":3},"wid":"1","name":"1_3","label":"","rdf_mapping":[]},
+      "19" : {"tid":"19","sid":"2","target_sid":"2","roles":{"-1":-1,"3":3,"4":4,"5":5,"6":6},"wid":"1","name":"2_2","label":"","rdf_mapping":[]},
+      "20" : {"tid":"20","sid":"2","target_sid":"3","roles":{"-1":-1,"3":3,"4":4,"5":5},"wid":"1","name":"2_3","label":"","rdf_mapping":[]},
+      "21" : {"tid":"21","sid":"3","target_sid":"2","roles":{"3":3,"4":4},"wid":"1","name":"3_2","label":"","rdf_mapping":[]},
+      "22" : {"tid":"22","sid":"3","target_sid":"3","roles":{"-1":-1,"3":3,"4":4,"5":5,"6":6},"wid":"1","name":"3_3","label":"","rdf_mapping":[]}
     },
     "label" : "Materials Publication States",
     "typeMap" : [],
     "rdf_mapping" : [],
-    "wid_original" : "6",
+    "wid_original" : "1",
     "system_roles" : {
       "-1" : "(author)",
       "1" : "anonymous user",
