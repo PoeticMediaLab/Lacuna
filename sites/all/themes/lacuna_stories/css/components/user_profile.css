@@ -1,0 +1,150 @@
+/* line 1, ../../sass/components/user_profile.scss */
+#user-profile-main {
+  width: 100%;
+  font-family: serif;
+}
+
+/* line 7, ../../sass/components/user_profile.scss */
+#user-profile-main #user-avatar-space {
+  height: 240px;
+  vertical-align: bottom;
+  text-align: center;
+}
+
+/* line 13, ../../sass/components/user_profile.scss */
+#user-profile-main #user-command-buttons {
+  margin-bottom: 10px;
+}
+
+/* line 18, ../../sass/components/user_profile.scss */
+#user-profile-main #user-command-buttons a,
+#user-profile-main #user-command-buttons a:visited,
+#user-profile-main #user-command-buttons a:hover,
+#user-profile-main #user-command-buttons a:active {
+  color: inherit;
+}
+
+/* line 26, ../../sass/components/user_profile.scss */
+#user-profile-main #user-command-buttons a:not(:first-child) {
+  margin-left: 20px;
+}
+
+/* line 31, ../../sass/components/user_profile.scss */
+#user-profile-main #user-avatar-space img {
+  width: 200px;
+  height: 200px;
+  border: 1px solid #000000;
+  border-radius: 100px;
+}
+
+/* line 39, ../../sass/components/user_profile.scss */
+#user-profile-main div.column {
+  display: inline-block;
+}
+
+/* line 44, ../../sass/components/user_profile.scss */
+#user-profile-main .profile-section {
+  margin-bottom: 20px;
+}
+
+/* line 49, ../../sass/components/user_profile.scss */
+#user-profile-main div.left-part {
+  margin-right: 10px;
+  vertical-align: top;
+  width: 22%;
+}
+
+/* line 55, ../../sass/components/user_profile.scss */
+#user-profile-main div.right-part {
+  vertical-align: top;
+  width: 75%;
+  float: right;
+}
+
+/* line 63, ../../sass/components/user_profile.scss */
+#user-profile-main span.caption {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+/* line 69, ../../sass/components/user_profile.scss */
+#user-profile-main div.field-wrapper {
+  border: 1px solid #000000;
+  padding: 10px;
+}
+
+/* line 75, ../../sass/components/user_profile.scss */
+#user-profile-main #how-I-Learn-space div.field-wrapper {
+  height: 428px;
+}
+
+/* line 80, ../../sass/components/user_profile.scss */
+#user-profile-main #user-contributions-space div.field-wrapper {
+  height: 100px;
+  padding-right: 0;
+  padding-bottom: 0;
+}
+
+/* line 87, ../../sass/components/user_profile.scss */
+#user-profile-main #user-contributions-space div.field-wrapper:not(:first-child) {
+  margin-top: -1px;
+  /*	to avoid double-tick borders*/
+}
+
+/* line 92, ../../sass/components/user_profile.scss */
+#user-profile-main #user-bio-space div.field-wrapper {
+  height: 30px;
+}
+
+/* line 97, ../../sass/components/user_profile.scss */
+#user-profile-main #user-about-space div.field-wrapper,
+#user-profile-main #user-learning-goals-space div.field-wrapper {
+  height: 120px;
+}
+
+/* line 103, ../../sass/components/user_profile.scss */
+#user-profile-main div.field-wrapper p {
+  margin: 0;
+  font-size: 16px;
+}
+
+/* line 108, ../../sass/components/user_profile.scss */
+#user-profile-main div.field-wrapper p.title {
+  font-style: italic;
+}
+
+/* line 112, ../../sass/components/user_profile.scss */
+#user-profile-main div.field-wrapper p.no-results {
+  margin-top: 10px;
+  font-size: 20px;
+}
+
+/* line 118, ../../sass/components/user_profile.scss */
+#user-profile-main #user-learning table {
+  width: 100%;
+  margin: 0;
+}
+
+/* line 124, ../../sass/components/user_profile.scss */
+#user-profile-main #user-learning table td {
+  text-align: center;
+}
+
+/* line 128, ../../sass/components/user_profile.scss */
+#user-profile-main #user-learning table td p {
+  font-style: italic;
+}
+
+/* line 133, ../../sass/components/user_profile.scss */
+#user-profile-main #user-learning table td img {
+  border: 1px solid #000;
+  border-radius: 8px;
+  width: 120px;
+  height: 120px;
+}
+
+/* line 141, ../../sass/components/user_profile.scss */
+#user-profile-main #user-contributions-space div.field-wrapper .block {
+  overflow-y: scroll;
+  height: 75px;
+}

@@ -28,24 +28,12 @@
 	margin-left: 20px;
 }
 
-#user-profile-main #user-avatar-space .user-picture
+#user-profile-main #user-avatar-space img
 {
 	width: 200px;
 	height: 200px;
 	border: 1px solid #000000;
 	border-radius: 100px;
-	display: inline-block;
-	overflow: hidden;
-}
-
-#user-profile-main #user-avatar-space .user-picture img
-{
-	min-width: 200px;
-	min-height: 200px;
-	max-width: none;
-	position: relative;
-	margin-left: 100px;			
-	transform: translateX(-50%); 	/* this along with margin will position img centrally*/
 }
 
 #user-profile-main div.column
@@ -133,17 +121,6 @@
     margin: 0;
 }
 
-#user-profile-main #user-learning div.user-link-item.is-empty a
-{
-    cursor: default;
-    pointer-events: none;
-}
-
-#user-profile-main #user-learning div.user-link-item.is-empty
-{
-    opacity: 0.4;
-}
-
 #user-profile-main #user-learning table td
 {
     text-align: center;
@@ -166,5 +143,3 @@
 	overflow-y: scroll;
 	height: 75px;
 }
-
-
