@@ -1,0 +1,17 @@
+<?php
+/*
+ * manages the form(quesitions and options) for adding new document
+ *
+ * Hayk Tepanyan <tehayk@stanford.edu>
+ *
+ */
+
+
+// implements hook_install
+function user_account_install() 
+{
+  db_update('system')
+    ->fields(array('weight' => 1000))
+    ->condition('name', 'document_add_form', '=')
+    ->execute();
+}

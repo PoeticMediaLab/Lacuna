@@ -1,0 +1,19 @@
+<?php
+/**
+ *
+ * Adding hook_menu_alter to override and change tabs present in user account
+ *
+ * Hayk Tepanyan <tehayk@stanford.edu>
+ *
+ */
+
+
+// implement hook_page_alter
+function document_add_form_page_alter(&$page)
+{
+    if(arg(0) == "node" && arg(1) == "add" && arg(2) == "document")
+    {
+        $page["content"]["system_main"]["title"]["#title"] = "What is the Title of your artifact?"; //need to use t() in future
+
+    }
+}

@@ -1,0 +1,5 @@
+name = Document Add Form
+description = manages the form(quesitions and options) for adding new document
+package = Lacuna Stories
+core = 7.x
+version = "7.x-1.0-alpha"
