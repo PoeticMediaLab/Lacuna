@@ -63,9 +63,9 @@ function customPrintViewsBlock($blockName)
             $basePath = base_path();
             if($userInView->uid === $user->uid):?>
                 <div id="user-command-buttons">
-                    <a href="<?php print $basePath."user/".$user->uid."/edit"?>"><i class="fa fa-edit fa-2x"></i></a>
+                    <a href="<?php print $basePath."user/".$user->uid."/edit"?>"><i class="fa fa-cog fa-2x"></i></a>
                     <a href="<?php print $basePath."user/".$user->uid."/notify"?>"><i class="fa fa-bell-o fa-2x"></i></a>
-                    <a href="<?php print $basePath."user/".$user->uid."/contact"?>"><i class="fa fa-cog fa-2x"></i></a>
+                    <a href="<?php print $basePath."user/".$user->uid."/contact"?>"><i class="fa fa-comment-o fa-2x"></i></a>
                 </div>
             <?php endif; ?>
 			<?php print $user_profile["user_picture"]["#markup"]; ?>
@@ -76,7 +76,7 @@ function customPrintViewsBlock($blockName)
                 <?php   if(isset($field_how_i_learn)) print "<p>{$field_how_i_learn[0]["value"]} </p>";
                         else print "<p>Empty</p>"
                 ?>
-			</div>			
+			</div>
 		</div>
 	</div>
 
@@ -93,21 +93,24 @@ function customPrintViewsBlock($blockName)
 			<span class="caption">Recent Contributions</span>
 			<div class="field-wrapper">
 				<p class="title">Responses</p>
-                <?php if(!customPrintViewsBlock("user_s_responses-block"))
+                <?php $responsesIsEmpty = !customPrintViewsBlock("user_s_responses-block");
+                    if($responsesIsEmpty)
                     {
                         print "<p class='no-results'>{$field_display_name[0]['value']} has not written any responses</p>";
                     } ?>
 			</div>
 			<div class="field-wrapper">
                 <p class="title">Comments</p>
-                <?php if(!customPrintViewsBlock("my_annotations_view-block_comments"))
+                <?php $commentsIsEmpty = !customPrintViewsBlock("user_s_comments-block");
+                    if($commentsIsEmpty)
                     {
                         print "<p class='no-results'>{$field_display_name[0]['value']} has not made any comments</p>";
                     } ?>
 			</div>
 			<div class="field-wrapper">
                 <p class="title">Annotations</p>
-                <?php if(!customPrintViewsBlock("my_annotations_view-block"))
+                <?php $annotationsIsEmpty = !customPrintViewsBlock("my_annotations_view-block");
+                    if($annotationsIsEmpty)
                     {
                         print "<p class='no-results'>{$field_display_name[0]['value']} has not made any annotations</p>";
                     } ?>
@@ -122,35 +125,39 @@ function customPrintViewsBlock($blockName)
                 }
                 else print "<p>Empty</p>"
                 ?>
-			</div>			
+			</div>
 		</div>
 	</div>
     <div class="profile-section" id="user-learning">
         <?php
-            $themePath = base_path() . path_to_theme();
+            $bPath = base_path();
+            $themePath = $bPath . path_to_theme();
             $anVisImgURL = $themePath . "/images/user-profile-images/annotation_visualization_logo.png";
             $anImgURL = $themePath . "/images/user-profile-images/annotation_logo.png";
             $resMapImgURL = $themePath . "/images/user-profile-images/responses_map_logo.png";
+            $annotationsURL = $annotationsIsEmpty ? "#" : $bPath . "sewing-kit"."?field_display_name_value={$field_display_name[0]['value']}";
+            $anVisualizationURL = $annotationsIsEmpty ? "#" : $bPath . "visualization/dashboard?u_id={$userInView->uid}";
+            $responsesMapURL = $responsesIsEmpty ? "#" : $bPath . "visualization/responses?u_id={$userInView->uid}";
         ?>
         <span class="caption">My Learning</span>
         <div class="field-wrapper">
             <table>
                 <tr>
                     <td>
-                        <div>
-                            <a href="#"><img id="annotation-visual-logo" src="<?php print $anVisImgURL?>"/></a>
+                        <div class="user-link-item <?php print $annotationsIsEmpty ? 'is-empty' : '' ?>">
+                            <a href="<?php print $anVisualizationURL?>"><img id="annotation-visual-logo" src="<?php print $anVisImgURL?>"/></a>
                             <p>Annotation Visualization</p>
                         </div>
                     </td>
                     <td>
-                        <div>
-                            <a href="#"><img id="annotation-view-logo" src="<?php print $anImgURL?>"/></a>
+                        <div class="user-link-item <?php print $annotationsIsEmpty ? 'is-empty' : '' ?>">
+                            <a href="<?php print $annotationsURL?>"><img id="annotation-view-logo" src="<?php print $anImgURL?>"/></a>
                             <p><?php print $field_display_name[0]['value'] ?>'s Annotations</p>
                         </div>
                     </td>
                     <td>
-                        <div>
-                            <a href="#"><img id="response-map-logo" src="<?php print $resMapImgURL?>"/></a>
+                        <div class="user-link-item <?php print $responsesIsEmpty ? 'is-empty' : '' ?>">
+                            <a href="<?php print $responsesMapURL?>"><img id="response-map-logo" src="<?php print $resMapImgURL?>"/></a>
                             <p><?php print $field_display_name[0]['value'] ?>'s Response Map</p>
                         </div>
                     </td>

@@ -7,8 +7,13 @@ body {
   line-height: 30px;
 }
 
+.fa-spinner {
+  position: absolute;
+  top: 10%;
+  left: 45%;
+}
+
 div#page {
-  min-height: 3000px !important;
 }
 
 div#network,
@@ -20,11 +25,10 @@ div#time_brush {
 }
 
 div#dashboard-buttons {
-  position: absolute;
-	height: 65px;
-  top: 450px;
+  position: relative;
+	height: 0; /* for not taking up space */
+  top: -60px;
   margin-left: 25px;
-  width: 45%;
 }
 
 div.help_text {
@@ -42,35 +46,38 @@ div#piecharts {
 }
 
 div#pie_types {
-  position: absolute;
-  margin-top: 20px;
-  width: 550px;
+  width: 520px;
   margin-left: 0px;
   margin-top: 25px;
-  top: 500px;
   height: 225px;
 }
 
 div#time_brush {
-  position: absolute;
   height: 450px;
-  margin-left: 0px;
-  margin-top: 0px;
-  width: 550px;
+  width: 520px;
+}
+
+div#time_brush svg
+{
+  margin-left: 25px;
 }
 
 div#network {
-  position: absolute;
-  left: 575px;
   width: 625px;
-  max-height: 2000px;
+  min-height: 703px;   /* for nicely alliging with left column */
 }
 
-#legend {
-  position: absolute;
-  top: 295px;
-  left: 215px;
+div#legend {
+  position: relative;
+  top: -164px;
+  left: 430px;
+  height: 0;
 }
+div#legend svg
+{
+  position: absolute;
+}
+
 
 .axis path,
 .axis line {
@@ -139,8 +146,7 @@ h3 {
 }
 
 div.section#annotations_table {
-  position: absolute;
-  top: 5000px;
+  margin-top: 2000px;
 }
 
 table#annotations_table_draw, div#annotations_table_draw_wrapper {
@@ -202,4 +208,37 @@ a.dashboard-button#return_to_vis {
 td.value {
   text-align: right;
   padding-left: 15px;
+}
+#dashboard a.dashboard-button
+{
+  min-height: 20px;
+  min-width: 135px;
+  width: auto;
+}
+#dashboard #visual-content
+{
+  margin-bottom: 25px;
+}
+#dashboard #visual-content, #dashboard #visual-content tr
+{
+  width: 100%;
+}
+
+#dashboard #visual-content td
+{
+  vertical-align: top;
+}
+
+#dashboard #visual-content td#right
+{
+  text-align: right;
+}
+#dashboard #visual-content td#right div.right-part
+{
+  text-align: left;
+}
+
+#dashboard div.column
+{
+  display: inline-block;
 }

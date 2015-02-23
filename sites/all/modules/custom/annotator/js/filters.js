@@ -148,6 +148,7 @@
       } else if (type === select.button.all) {
         this.View.eraseFilter('user', this.Model.get('currentUser'));
       } else if (type === select.button.none) {
+        this.Model.removeAllFilters();
         this.Model.filterAnnotations('none', 'none');
         this.View.eraseAllFilters();
       } else if (type === select.button.reset) {

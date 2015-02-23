@@ -134,6 +134,7 @@ class Annotator.Plugin.Filters extends Annotator.Plugin
     else if type == select.button.all
       @View.eraseFilter 'user', @Model.get('currentUser')
     else if type == select.button.none
+      @Model.removeAllFilters()
       @Model.filterAnnotations 'none', 'none'
       @View.eraseAllFilters()
     else if type == select.button.reset

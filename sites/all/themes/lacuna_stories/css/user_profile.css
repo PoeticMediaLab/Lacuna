@@ -28,12 +28,24 @@
 	margin-left: 20px;
 }
 
-#user-profile-main #user-avatar-space img
+#user-profile-main #user-avatar-space .user-picture
 {
 	width: 200px;
 	height: 200px;
 	border: 1px solid #000000;
 	border-radius: 100px;
+	display: inline-block;
+	overflow: hidden;
+}
+
+#user-profile-main #user-avatar-space .user-picture img
+{
+	min-width: 200px;
+	min-height: 200px;
+	max-width: none;
+	position: relative;
+	margin-left: 100px;			
+	transform: translateX(-50%); 	/* this along with margin will position img centrally*/
 }
 
 #user-profile-main div.column
@@ -79,7 +91,9 @@
 
 #user-profile-main #user-contributions-space div.field-wrapper
 {
-	height: 100px;	
+	height: 100px;
+	padding-right: 0;
+	padding-bottom: 0;
 }
 
 #user-profile-main #user-contributions-space div.field-wrapper:not(:first-child)
@@ -119,6 +133,17 @@
     margin: 0;
 }
 
+#user-profile-main #user-learning div.user-link-item.is-empty a
+{
+    cursor: default;
+    pointer-events: none;
+}
+
+#user-profile-main #user-learning div.user-link-item.is-empty
+{
+    opacity: 0.4;
+}
+
 #user-profile-main #user-learning table td
 {
     text-align: center;
@@ -135,3 +160,11 @@
     width: 120px;
     height: 120px;
 }
+
+#user-profile-main #user-contributions-space div.field-wrapper .block
+{
+	overflow-y: scroll;
+	height: 75px;
+}
+
+

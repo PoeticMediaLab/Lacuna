@@ -24,19 +24,13 @@
 
 .annotator-category {
     padding: 7px;
-    opacity: .7;
     margin: 1px 1px 0px;
     -webkit-border-radius: 6px 6px 6px 6px;
     -moz-border-radius: 6px 6px 6px 6px;
     border-radius: 6px 6px 6px 6px;
     color: black;
-    background-color: rgba(255, 255, 10, 0.5);
     display: inline-block;
-}
-
-.annotator-category-selected {
-    opacity: 1;
-    font-style: italic;
+    background-color: rgba(255, 255, 10, .3);
 }
 
 .annotator-category-none {
@@ -52,37 +46,9 @@
 .annotator-category-6,
 .annotator-category-7
 {
-    background-color: rgba(22,147,165, .4);
+    background-color: rgba(22,147,165, .2);
 }
 
-.annotator-viewer .categorize-text{
-    border: none;
-    padding: 0 !important;
-    margin-bottom: 5px;
+.annotator-category-selected {
+    background-color: rgba(196,223,44,1) !important;
 }
-
-.categorize-text .text-category{
-    margin-right: 5px;
-    background-color: rgb(230, 230, 230);
-    border-radius: 8px 0 0 8px;
-    padding:2px 4px;
-}
-
-.category-colors {
-    display: block;
-}
-
-.category-colors span.category-color {
-    width: 13px;
-    height: 13px;
-    margin-bottom: 3px;
-    -webkit-border-radius: 4px;
-    -moz-border-radius: 4px;
-    border-radius: 4px;
-    float: left;
-}
-
-/*.annotation-sidebar-button {
-    width: 80% !important;
-    margin-bottom: 10px !important;
-}*/

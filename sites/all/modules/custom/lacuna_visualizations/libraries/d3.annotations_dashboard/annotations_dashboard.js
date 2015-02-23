@@ -23,9 +23,9 @@ Drupal.d3.annotations_dashboard = function (select, settings) {
 
 d3.json(settings.config.data_url, function (error, data) {
     if (error) {
-        console.error(error);
+    	console.error(error);
     } else {
-        main(data);
+      main(data);
     }
 });
 
@@ -123,8 +123,8 @@ function init_graph() {
 	annotations.current().forEach(function (a) {
 		// Add nodes into lookup table and the nodes array
 		// The "type" attribute is *very* important
-		var source = add_to_graph(nodes_unique, nodes, a.username, {type: "user"});
-		var target = add_to_graph(nodes_unique, nodes, a.documentTitle, {type: "doc"});
+		var source = add_to_graph(nodes_unique, nodes, a.username, {type: "user", u_id : a.u_id});
+		var target = add_to_graph(nodes_unique, nodes, a.documentTitle, {type: "doc", doc_id : a.doc_id});
 
 		// Add new edges, combine duplicate edges and increment weight & count
 		var edge_id = source.id + "," + target.id;
@@ -209,6 +209,7 @@ function main(data) {
 	 * Definitions of variables and helper functions for the graph
 	 *
 	 */
+	d3.select('.fa-spinner').remove();
 	annotations = new Annotations(data);
 	// Clean up the data a bit
 	var text_length_scale = d3.scale.ordinal()
@@ -224,6 +225,7 @@ function main(data) {
 			a.category ='Highlight';
 		}
 	});
+
 	// Define all our attributes
 	// TODO: override these with settings from module
 	var size = {
@@ -234,7 +236,7 @@ function main(data) {
 				},
 				summary_pie: {
 					padding: 15,
-					height: 200,
+					height: 150,
 					width: 600,
 					radius: 50
 				},
@@ -402,9 +404,9 @@ function main(data) {
 
 	var focused_on = null;
 	function focus_toggle(d) {
-		if (focused_on != this) {
+		if (focused_on != d) {
 			focus_on(d);
-			focused_on = this;
+			focused_on = d;
 			window.scrollTo(0,0);
 		}
 	}
@@ -534,6 +536,7 @@ function main(data) {
 	// TODO: Fix update so that paths are always drawn first
 	function update_graph() {
 		graph = init_graph();
+		network.attr("height", calculate_height(graph));
 		pie_node_data = gen_pie_nodes(pie_current);
 		y_coords = {};	// clear our positions, if set
 		var edges = network.selectAll("path.edge").data(graph.edges);
@@ -556,7 +559,7 @@ function main(data) {
 		var nodes = network.selectAll("g").data(graph.nodes);
 	  	nodes.exit().remove();
 		nodes.enter()
-			.append("g", function(d) { return d.uid; })	// d.uid is set in Annotation Studio
+			.append("g")
 			.attr("class","node")
 			.on("mouseover", tooltip_on)
 			.on("mouseout", tooltip_off)
@@ -869,7 +872,7 @@ function main(data) {
 
 		bars.enter()
 			.append("rect")
-  		.attr("fill", "steelblue")
+  		// .attr("fill", "steelblue")
   		.attr("class", "bar")
   	;
 
@@ -1042,9 +1045,56 @@ function main(data) {
   	update_legend();
   }
 
+  // calcualte height of the network graph based on nodes number and node radius
+  function calculate_height(graph)
+  {
+  	if(!(graph && graph.nodes && size && size.radius))	return 0;
+  	var counts = {user : 0, doc : 0};
+  	graph.nodes.forEach(function(node){		counts[node.type]++;	});
+  	return 3 * size.radius * (1 + Math.max(counts.user, counts.doc));			//adding 1 for padding
+  }
+
+  function manageURLQuery()
+  {
+	var params = getURLVars();
+	var typeMap = { doc_id : "doc", u_id : "user" };
+	for(var id in typeMap)
+	{
+		if(params[id] && !isNaN(params[id]))
+		{
+			var node = findNodeById(params[id], typeMap[id]);
+			if(node) focus_toggle(node);
+		}
+	}
+  }
+
+  function findNodeById(id, type)
+  {
+  	var idMap = {	user : "u_id", doc : "doc_id"};
+  	for(var i = 0; i < graph.nodes.length; ++i)
+  	{
+  		if(graph.nodes[i].type == type && graph.nodes[i][idMap[type]] == id) return graph.nodes[i];
+  	}
+  	return false;
+  }
+
+  function getURLVars()
+  {
+      var vars = [], hash;
+      var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+      for(var i = 0; i < hashes.length; i++)
+      {
+          hash = hashes[i].split('=');
+          vars.push(hash[0]);
+          vars[hash[0]] = hash[1];
+      }
+      return vars;
+  }  
+
 	// Initial creation
 	update();
 	label_pie_charts();	// only need to label them once
+	manageURLQuery();
 } // end main()
 } // Drupal.d3.annotations
 })(jQuery);	// End of Drupal wrapper

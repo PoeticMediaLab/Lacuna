@@ -69,10 +69,10 @@
 						nodes[i].data.author = safeName;
 					}
 					if (nodes[i].data.author === safeName) {
-						userNamesColors.push([safeName, color(colorsCounter % 20)]);
+						userNamesColors.push([safeName, color(colorsCounter % 20), nodes[i].data.u_id]);
 						// for debugging purposes.
 						colorsCounter++;
-						selectedUsers.push(safeName);
+						selectedUsers.push(nodes[i].data.u_id);
 						break;
 					}
 				}
@@ -119,12 +119,10 @@
 			.select("#author")
 			.text(d.data.author)
 			;
-		if (d.data.image.length > 0) {
-			d3.select("#maps-tooltip")
-			.select("#image")
-			.html(d.data.image)
-			;
-		}
+		d3.select("#maps-tooltip")
+		.select("#image")
+		.html(d.data.image)
+		;
 		if(d.data.document_abstract){
 			d3.select("#maps-tooltip")
 				.select("#abstract")
@@ -201,7 +199,6 @@
 		// For bottom half of circle, show tooltip above mouse rather than below.
 		if (yPos > initialHeight/2) {
 			var height = $("#maps-tooltip").outerHeight();
-			console.log(height);
 			d3.select("#maps-tooltip").style("top", (yPos + 80 - height) + "px");
 		}
   }; // end displayTooltip
@@ -341,7 +338,6 @@
 		.enter()
 		;
 
-	var foundUserFlag = false;
 	// remember that each entry in userNamesColors is an array
 	// containing the name at [0] and the associated color at [1]
 	var userSelectionGroup = userSelectionEnterSelection.append("g")
@@ -351,32 +347,29 @@
 			.classed("unSelected", false)
 			// stripping spaces, lest we accidentally assign two ids
 			// instead of one.
-			.attr("id", function(d) { return d[0].replace(/\s+/g, '')});
+			.attr("id", function(d) { return "user"+d[2];});
 
 		userSelectionGroup.on("click", function(d) {
-			foundUserFlag = false;
+			var foundUserFlag = false;
 			for (var i = 0; i < selectedUsers.length; i++){
 				// unselect if already selected
-				if (selectedUsers[i] == d[0])  {
+				if (selectedUsers[i] == d[2])  {
 					selectedUsers.splice(i, 1);
 					foundUserFlag = true;
-					d3.select("#" + d[0].replace(/\s+/g, ''))
+					d3.select("#" + "user" + d[2])
 						.classed("unSelected", true);
 					break;
 				}
 			}
 			// not found, select.
 			if (!foundUserFlag){
-				selectedUsers.push(d[0]);
-				d3.select("#" + d[0].replace(/\s+/g, ''))
+				selectedUsers.push(d[2]);
+				d3.select("#" + "user" + d[2])
 					.classed("unSelected", false);
 			}
 			// either way, update the force diagram to reflect newly
 			// selected/unselected user.
-
 			redrawGraph();
-
-
 		})
 		.attr("transform", function(d, i) {
 			return ("translate(0," + (100 + (i * (controlPanelFontSize * 2))) + ")");
@@ -430,6 +423,7 @@
 	d3.select("#" + settings.id).append("br");
 
 	var brushSvgHeight = 100;
+	var timeRectHeight = 25;
 
     var brushSvg = d3.select('#' + settings.id).append("svg")
         .attr("width", width+120) //Moved over to account for rotated labels.
@@ -480,20 +474,46 @@
 	//console.log(startDate);
 	//console.log(endDate);
 
+	var dateList = nodes.filter(function(d) {return d.data.itemType != 'biblio';})
+						.map(function(d) {return new Date(d.data.date*1000);});
+
 	// create time scale used by xAxis
 	var timeScale = d3.time.scale()
 						.domain([startDate, endDate])
 						.range([0 + margin.left, width - margin.right])
 					;
-	// create axis using time scale and draw it at the bottom of the
+	var ticks = timeScale.ticks(d3.time.day);
+	var data = d3.layout.histogram()
+	    .bins(ticks)
+	    (dateList);
+
+	var y = d3.scale.linear()
+	    .domain([0, d3.max(data, function(d) { return d.y; })])
+	    .range([timeRectHeight, 0]);
+
+	var tickDist = 	timeScale(ticks[1])-timeScale(ticks[0]);
+
+	var bar = brushSvg.selectAll(".bar")
+	    .data(data)
+	  .enter().append("g")
+	    .attr("class", "bar")
+	    .attr("transform", function(d) { return "translate(" + (timeScale(d.x)+40) + "," + (y(d.y)+10) + ")"; });
+
+	bar.append("rect")
+	    .attr("x", 1)
+	    .attr("width", tickDist)
+	    .attr("height", function(d) { return timeRectHeight - y(d.y); });
+
+	 // create axis using time scale and draw it at the bottom of the
 	// graph.
 	var xAxis = d3.svg.axis();
 	xAxis.scale(timeScale)
 			.orient("bottom")
 			// one tick a day -- subject to change.
-			.ticks(d3.time.day)
+			.ticks(d3.time.week)
 			.tickFormat(d3.time.format("%B %e"))
 			;
+
 	brushSvg.append("g")
 		.classed("axis", true)
 		// move to bottom of graph.
@@ -590,7 +610,7 @@
 			// okay, it's not a biblio node. see if the author is in
 			// selectedUsers; if so, render it.
 			for (var i = 0; i < selectedUsers.length; i++) {
-				if (d.data.author == selectedUsers[i]) {
+				if (d.data.u_id == selectedUsers[i]) {
 					return true;
 				}
 			}	// didn't find it.
@@ -633,7 +653,7 @@
 						;
 		gBrush.attr("transform", "translate(40,0)");
 		gBrush.selectAll("rect")
-						.attr("height", 25 )
+						.attr("height", timeRectHeight )
 						.attr("y", brushSvgHeight - 60  * 1.5)
 						;
 
@@ -820,13 +840,35 @@
 			// filteredLinks, places biblio nodes in arrangement (if
 			// drawDocumentCircle)
 			arrangeDocuments();
+			manageURLQuery();
 
+	function manageURLQuery()
+	{
+		var params = getURLVars();
+		if(params["u_id"] && !isNaN(params["u_id"]))
+		{
+			var userToFilter = 	d3.select("#" + "user" + params["u_id"]);
+			if(userToFilter.empty())	return;
+			d3.selectAll(".userListItem").classed("unSelected", true);
+			userToFilter.classed("unSelected", false);
+			selectedUsers = [params["u_id"]];
+			redrawGraph();
+		}
+	}
 
-
-
-
-
-	  }
+	function getURLVars()
+	{
+		var vars = [], hash;
+		var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+		for(var i = 0; i < hashes.length; i++)
+		{
+			hash = hashes[i].split('=');
+			vars.push(hash[0]);
+			vars[hash[0]] = hash[1];
+		}
+		return vars;
+	}
+}
 
 })(jQuery);
 
