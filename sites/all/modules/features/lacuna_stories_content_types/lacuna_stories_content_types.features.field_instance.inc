@@ -1693,51 +1693,6 @@ function lacuna_stories_content_types_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-document-field_doc_attachment'
-  $field_instances['node-document-field_doc_attachment'] = array(
-    'bundle' => 'document',
-    'deleted' => 0,
-    'description' => 'If there is a PDF or other file version of this document, attach it here.',
-    'display' => array(
-      'default' => array(
-        'label' => 'above',
-        'module' => 'file_entity',
-        'settings' => array(
-          'file_view_mode' => 'default',
-        ),
-        'type' => 'file_rendered',
-        'weight' => 1,
-      ),
-      'teaser' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
-      ),
-    ),
-    'entity_type' => 'node',
-    'field_name' => 'field_doc_attachment',
-    'label' => 'Attachments',
-    'required' => 0,
-    'settings' => array(
-      'description_field' => 0,
-      'file_directory' => 'documents',
-      'file_extensions' => 'txt pdf docx doc odt rtf',
-      'max_filesize' => '',
-      'media_library_include_in_library' => FALSE,
-      'user_register_form' => FALSE,
-    ),
-    'widget' => array(
-      'active' => 1,
-      'module' => 'file',
-      'settings' => array(
-        'progress_indicator' => 'throbber',
-      ),
-      'type' => 'file_generic',
-      'weight' => 17,
-    ),
-  );
-
   // Exported field_instance: 'node-document-field_doc_genre'
   $field_instances['node-document-field_doc_genre'] = array(
     'bundle' => 'document',
@@ -1772,46 +1727,6 @@ function lacuna_stories_content_types_field_default_field_instances() {
       'settings' => array(),
       'type' => 'options_select',
       'weight' => 6,
-    ),
-  );
-
-  // Exported field_instance: 'node-document-field_doc_pages'
-  $field_instances['node-document-field_doc_pages'] = array(
-    'bundle' => 'document',
-    'default_value' => NULL,
-    'deleted' => 0,
-    'description' => 'The page range or number of pages of this document.',
-    'display' => array(
-      'default' => array(
-        'label' => 'above',
-        'module' => 'text',
-        'settings' => array(),
-        'type' => 'text_default',
-        'weight' => 2,
-      ),
-      'teaser' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
-      ),
-    ),
-    'entity_type' => 'node',
-    'field_name' => 'field_doc_pages',
-    'label' => 'Page Numbers',
-    'required' => 1,
-    'settings' => array(
-      'text_processing' => 0,
-      'user_register_form' => FALSE,
-    ),
-    'widget' => array(
-      'active' => 1,
-      'module' => 'text',
-      'settings' => array(
-        'size' => 60,
-      ),
-      'type' => 'text_textfield',
-      'weight' => 16,
     ),
   );
 
@@ -2059,43 +1974,6 @@ function lacuna_stories_content_types_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-document-field_priority'
-  $field_instances['node-document-field_priority'] = array(
-    'bundle' => 'document',
-    'default_value' => NULL,
-    'deleted' => 0,
-    'description' => '',
-    'display' => array(
-      'default' => array(
-        'label' => 'inline',
-        'module' => 'taxonomy',
-        'settings' => array(),
-        'type' => 'taxonomy_term_reference_plain',
-        'weight' => 5,
-      ),
-      'teaser' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
-      ),
-    ),
-    'entity_type' => 'node',
-    'field_name' => 'field_priority',
-    'label' => 'Priority',
-    'required' => 1,
-    'settings' => array(
-      'user_register_form' => FALSE,
-    ),
-    'widget' => array(
-      'active' => 1,
-      'module' => 'options',
-      'settings' => array(),
-      'type' => 'options_buttons',
-      'weight' => 4,
-    ),
-  );
-
   // Exported field_instance: 'node-document-field_privacy_level'
   $field_instances['node-document-field_privacy_level'] = array(
     'bundle' => 'document',
@@ -2130,159 +2008,6 @@ function lacuna_stories_content_types_field_default_field_instances() {
       'settings' => array(),
       'type' => 'options_buttons',
       'weight' => 9,
-    ),
-  );
-
-  // Exported field_instance: 'node-document-field_status'
-  $field_instances['node-document-field_status'] = array(
-    'bundle' => 'document',
-    'default_value' => NULL,
-    'deleted' => 0,
-    'description' => '',
-    'display' => array(
-      'default' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 4,
-      ),
-      'teaser' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
-      ),
-    ),
-    'entity_type' => 'node',
-    'field_name' => 'field_status',
-    'label' => 'Status',
-    'required' => 1,
-    'settings' => array(
-      'user_register_form' => FALSE,
-    ),
-    'widget' => array(
-      'active' => 1,
-      'module' => 'options',
-      'settings' => array(
-        'comment' => 1,
-        'name_as_title' => 1,
-      ),
-      'type' => 'options_buttons',
-      'weight' => 1,
-    ),
-  );
-
-  // Exported field_instance: 'node-document-field_tags'
-  $field_instances['node-document-field_tags'] = array(
-    'bundle' => 'document',
-    'default_value' => NULL,
-    'deleted' => 0,
-    'description' => '',
-    'display' => array(
-      'default' => array(
-        'label' => 'above',
-        'module' => 'taxonomy',
-        'settings' => array(),
-        'type' => 'taxonomy_term_reference_link',
-        'weight' => 5,
-      ),
-      'teaser' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
-      ),
-    ),
-    'entity_type' => 'node',
-    'field_name' => 'field_tags',
-    'label' => 'Tags',
-    'required' => 0,
-    'settings' => array(
-      'user_register_form' => FALSE,
-    ),
-    'widget' => array(
-      'active' => 0,
-      'module' => 'taxonomy',
-      'settings' => array(
-        'autocomplete_path' => 'taxonomy/autocomplete',
-        'size' => 60,
-      ),
-      'type' => 'taxonomy_autocomplete',
-      'weight' => 5,
-    ),
-  );
-
-  // Exported field_instance: 'node-document-field_topics'
-  $field_instances['node-document-field_topics'] = array(
-    'bundle' => 'document',
-    'default_value' => NULL,
-    'deleted' => 0,
-    'description' => 'The topics with which this document engages.',
-    'display' => array(
-      'default' => array(
-        'label' => 'above',
-        'module' => 'taxonomy',
-        'settings' => array(),
-        'type' => 'taxonomy_term_reference_plain',
-        'weight' => 3,
-      ),
-      'teaser' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
-      ),
-    ),
-    'entity_type' => 'node',
-    'field_name' => 'field_topics',
-    'label' => 'Topics',
-    'required' => 1,
-    'settings' => array(
-      'user_register_form' => FALSE,
-    ),
-    'widget' => array(
-      'active' => 1,
-      'module' => 'options',
-      'settings' => array(),
-      'type' => 'options_buttons',
-      'weight' => 4,
-    ),
-  );
-
-  // Exported field_instance: 'node-document-field_unit'
-  $field_instances['node-document-field_unit'] = array(
-    'bundle' => 'document',
-    'default_value' => NULL,
-    'deleted' => 0,
-    'description' => 'A unit might be "Week One", "January 1st", "Section Two: Why Monkeys Like Bananas", or another method of chronologically ordering your syllabus.',
-    'display' => array(
-      'default' => array(
-        'label' => 'inline',
-        'module' => 'taxonomy',
-        'settings' => array(),
-        'type' => 'taxonomy_term_reference_plain',
-        'weight' => 6,
-      ),
-      'teaser' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
-      ),
-    ),
-    'entity_type' => 'node',
-    'field_name' => 'field_unit',
-    'label' => 'Unit',
-    'required' => 1,
-    'settings' => array(
-      'user_register_form' => FALSE,
-    ),
-    'widget' => array(
-      'active' => 1,
-      'module' => 'options',
-      'settings' => array(),
-      'type' => 'options_select',
-      'weight' => 3,
     ),
   );
 
@@ -4115,12 +3840,10 @@ function lacuna_stories_content_types_field_default_field_instances() {
   t('(Upon selecting, you will have a text box that asks you to explain your choice)');
   t('A reference to the annotated content');
   t('A transcription of the audio.');
-  t('A unit might be "Week One", "January 1st", "Section Two: Why Monkeys Like Bananas", or another method of chronologically ordering your syllabus.');
   t('About Me');
   t('Add as many media files as necessary');
   t('Annotated Content');
   t('Annotation Text');
-  t('Attachments');
   t('Audience');
   t('Audio');
   t('Bibliographic Entry');
@@ -4152,7 +3875,6 @@ function lacuna_stories_content_types_field_default_field_instances() {
   t('How I learn');
   t('I would like this artifact to be viewable by:');
   t('If a text, insert the text of your artifact here.');
-  t('If there is a PDF or other file version of this document, attach it here.');
   t('Image');
   t('In terms of primary orientation of the artifact under consideration, check those which apply.');
   t('Indicate the form and tone of the artifact.');
@@ -4162,7 +3884,6 @@ function lacuna_stories_content_types_field_default_field_instances() {
   t('Media');
   t('Mode: Tragedy | Irony | Comedy | Pathos ');
   t('My Stitchings');
-  t('Page Numbers');
   t('Participant Observation: Betrachtung');
   t('Please select the proportion appropriate to your artifact. [configure below to a 100% ratio]');
   t('Post Icon');
@@ -4179,11 +3900,9 @@ function lacuna_stories_content_types_field_default_field_instances() {
   t('The URI of the annotated work');
   t('The annotation text');
   t('The name under which you would like your work to appear.');
-  t('The page range or number of pages of this document.');
   t('The ranges for the start and stop of a quote');
   t('The selected text that was annotated');
   t('The text of your blog post');
-  t('The topics with which this document engages.');
   t('The topics with which this video engages.');
   t('To which projects/case(s) could your artifact pertain? ');
   t('Topics');
