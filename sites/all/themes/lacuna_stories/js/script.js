@@ -11,14 +11,19 @@
 // - https://drupal.org/node/1446420
 // - http://www.adequatelygood.com/2010/3/JavaScript-Module-Pattern-In-Depth
 (function ($, Drupal, window, document, undefined) {
-
-
 // To understand behaviors, see https://drupal.org/node/756722#behaviors
 Drupal.behaviors.my_custom_behavior = {
   attach: function(context, settings) {
 
-    // Place your code here.
+$(document).ready(function() {
+    $('<span class="text-content"></span>')
+    .appendTo('.views-field-field-image .field-content a');
 
+	$('img').hover(function(event){
+        // Hover over code
+		});
+
+	});
   }
 };
 
