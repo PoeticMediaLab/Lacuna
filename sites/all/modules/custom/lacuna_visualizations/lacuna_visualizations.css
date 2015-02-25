@@ -59,7 +59,7 @@ svg {
 }
 
 /* not currently used -- turn back on if the fix-on-click behavior
- * is desired 
+ * is desired
 .fixed {
     fill: green;
     stroke: black;
@@ -79,7 +79,7 @@ svg {
     border-style: solid;
 	-webkit-box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
 	-moz-box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
-	box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);  /* BJA removed borders 
+	box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);  /* BJA removed borders
 	                                                added shadows */
 }
 
@@ -97,7 +97,7 @@ svg {
     border-style: solid;
 	-webkit-box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
 	-moz-box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
-	box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);  /* BJA removed borders 
+	box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);  /* BJA removed borders
 	                                                added shadows */
 }
 
@@ -122,7 +122,7 @@ p.hidden {
 
 
 /* stuff used by time brush */
-.axis path, 
+.axis path,
 .axis line {
 	fill: none;
 	stroke: black;
@@ -134,14 +134,15 @@ p.hidden {
 }
 
 .brush .extent {
-  stroke: #88b551; 
-  fill: #88b551; 
+  stroke: #88b551;
+  fill: #88b551;
   fill-opacity: .125;
   shape-rendering: crispEdges;
 }
 
 .bar {
-	fill: #88b551;
+/*	fill: #88b551; */
+    fill: steelblue;
 }
 
 
@@ -169,7 +170,7 @@ p.hidden {
 	fill: white;
 	stroke: grey;
 }
-	
+
 #playFromStart > #playFromStartText {
 	fill: grey;
 }

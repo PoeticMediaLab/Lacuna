@@ -2786,7 +2786,7 @@ function lacuna_stories_content_types_field_default_field_instances() {
         'module' => 'taxonomy',
         'settings' => array(),
         'type' => 'taxonomy_term_reference_link',
-        'weight' => 3,
+        'weight' => 2,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -3407,14 +3407,14 @@ function lacuna_stories_content_types_field_default_field_instances() {
     'bundle' => 'user',
     'default_value' => NULL,
     'deleted' => 0,
-    'description' => '',
+    'description' => 'short text about the user.',
     'display' => array(
       'default' => array(
         'label' => 'above',
         'module' => 'text',
         'settings' => array(),
         'type' => 'text_default',
-        'weight' => 9,
+        'weight' => 7,
       ),
     ),
     'entity_type' => 'user',
@@ -3422,17 +3422,17 @@ function lacuna_stories_content_types_field_default_field_instances() {
     'label' => 'About Me',
     'required' => 0,
     'settings' => array(
-      'text_processing' => 1,
-      'user_register_form' => 1,
+      'text_processing' => 0,
+      'user_register_form' => 0,
     ),
     'widget' => array(
       'active' => 1,
       'module' => 'text',
       'settings' => array(
-        'rows' => 5,
+        'rows' => 6,
       ),
       'type' => 'text_textarea',
-      'weight' => 8,
+      'weight' => 10,
     ),
   );
 
@@ -3479,7 +3479,7 @@ function lacuna_stories_content_types_field_default_field_instances() {
         'year_range' => '-3:+3',
       ),
       'type' => 'date_text',
-      'weight' => 3,
+      'weight' => 4,
     ),
   );
 
@@ -3513,7 +3513,7 @@ function lacuna_stories_content_types_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 2,
+      'weight' => 3,
     ),
   );
 
@@ -3544,7 +3544,7 @@ function lacuna_stories_content_types_field_default_field_instances() {
       'module' => 'options',
       'settings' => array(),
       'type' => 'options_select',
-      'weight' => 5,
+      'weight' => 6,
     ),
   );
 
@@ -3578,7 +3578,7 @@ function lacuna_stories_content_types_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 4,
+      'weight' => 5,
     ),
   );
 
@@ -3594,16 +3594,16 @@ function lacuna_stories_content_types_field_default_field_instances() {
         'module' => 'text',
         'settings' => array(),
         'type' => 'text_default',
-        'weight' => 7,
+        'weight' => 8,
       ),
     ),
     'entity_type' => 'user',
     'field_name' => 'field_how_i_learn',
-    'label' => 'How I Learn',
+    'label' => 'How I learn',
     'required' => 0,
     'settings' => array(
-      'text_processing' => 1,
-      'user_register_form' => 1,
+      'text_processing' => 0,
+      'user_register_form' => 0,
     ),
     'widget' => array(
       'active' => 1,
@@ -3612,7 +3612,7 @@ function lacuna_stories_content_types_field_default_field_instances() {
         'rows' => 5,
       ),
       'type' => 'text_textarea',
-      'weight' => 9,
+      'weight' => 11,
     ),
   );
 
@@ -3628,7 +3628,7 @@ function lacuna_stories_content_types_field_default_field_instances() {
         'module' => 'text',
         'settings' => array(),
         'type' => 'text_default',
-        'weight' => 8,
+        'weight' => 9,
       ),
     ),
     'entity_type' => 'user',
@@ -3637,7 +3637,7 @@ function lacuna_stories_content_types_field_default_field_instances() {
     'required' => 0,
     'settings' => array(
       'text_processing' => 0,
-      'user_register_form' => 1,
+      'user_register_form' => 0,
     ),
     'widget' => array(
       'active' => 1,
@@ -3646,7 +3646,7 @@ function lacuna_stories_content_types_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 10,
+      'weight' => 12,
     ),
   );
 
@@ -3680,7 +3680,7 @@ function lacuna_stories_content_types_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 6,
+      'weight' => 7,
     ),
   );
 
@@ -3714,7 +3714,7 @@ function lacuna_stories_content_types_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 7,
+      'weight' => 8,
     ),
   );
 
@@ -3769,7 +3769,7 @@ function lacuna_stories_content_types_field_default_field_instances() {
       'module' => 'og',
       'settings' => array(),
       'type' => 'og_complex',
-      'weight' => 13,
+      'weight' => 9,
     ),
   );
 
@@ -3809,7 +3809,7 @@ function lacuna_stories_content_types_field_default_field_instances() {
   t('Group');
   t('Group visibility');
   t('Hover Abstract');
-  t('How I Learn');
+  t('How I learn');
   t('If there is a PDF or other file version of this document, attach it here.');
   t('Image');
   t('Learning Goals');
@@ -3852,6 +3852,7 @@ function lacuna_stories_content_types_field_default_field_instances() {
   t('With which topics does this image engage?');
   t('Year in Program');
   t('e.g., Freshman, Senior, 2nd-year PhD student');
+  t('short text about the user.');
 
   return $field_instances;
 }

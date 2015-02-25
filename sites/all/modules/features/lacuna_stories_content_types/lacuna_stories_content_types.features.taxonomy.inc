@@ -55,6 +55,29 @@ function lacuna_stories_content_types_taxonomy_default_vocabularies() {
         ),
       ),
     ),
+    'genre_response' => array(
+      'name' => 'Genre - Responses',
+      'machine_name' => 'genre_response',
+      'description' => 'The genre of a response post',
+      'hierarchy' => 0,
+      'module' => 'taxonomy',
+      'weight' => -8,
+      'rdf_mapping' => array(
+        'rdftype' => array(
+          0 => 'skos:ConceptScheme',
+        ),
+        'name' => array(
+          'predicates' => array(
+            0 => 'dc:title',
+          ),
+        ),
+        'description' => array(
+          'predicates' => array(
+            0 => 'rdfs:comment',
+          ),
+        ),
+      ),
+    ),
     'priority' => array(
       'name' => 'Priority',
       'machine_name' => 'priority',

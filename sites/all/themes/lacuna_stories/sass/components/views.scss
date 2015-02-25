@@ -116,12 +116,10 @@ $views-link-hover-color: #1588BA;
   .views-row {
     position: relative;
     float: left;
-    width: 300px;
-    height: 200px;
+    width: 320px;
     border: 10px;
-    border-bottom: 40px;
-    border-style: solid;
-    border-color: white;
+    margin: 20px 20px 65px 20px;
+    height: 350px;
 
     span.text-content{
       background: rgba(0,0,0,0.5);
@@ -129,7 +127,7 @@ $views-link-hover-color: #1588BA;
       position: absolute;
       top: 0;
       left: 0;
-      width: 300px;
+      width: 320px;
       height: 200px;
       -webkit-transition: opacity 500ms;
       -moz-transition: opacity 500ms;
@@ -143,7 +141,7 @@ $views-link-hover-color: #1588BA;
     .views-field-comment-count {
       position: relative;
       left: 0px;
-      top: -200px;
+      top: -220px;
       opacity: 0;
     }
   }

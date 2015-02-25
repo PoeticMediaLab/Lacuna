@@ -1434,8 +1434,18 @@ function lacuna_stories_content_types_field_default_field_bases() {
     'settings' => array(
       'handler' => 'base',
       'handler_settings' => array(
+        'behaviors' => array(
+          'views-select-list' => array(
+            'status' => 0,
+          ),
+        ),
+        'sort' => array(
+          'direction' => 'ASC',
+          'property' => 'created',
+          'type' => 'property',
+        ),
         'target_bundles' => array(
-          0 => 'annotation',
+          'annotation' => 'annotation',
         ),
       ),
       'target_type' => 'node',

@@ -480,6 +480,7 @@ function lacuna_visualizations_mapview() {
       // author set below -- $item->name for blog posts, but
       // more complicated for biblio entries.
       'author'=> null,
+      'u_id' => $item->uid,
       'title' => $item->title,
       'linksTitles' => array(),
       'thisURL' => get_link_url($docId, $item->nid),
@@ -619,17 +620,21 @@ function lacuna_visualizations_annotation_dashboard_data() {
   $documentNames = array(); // to cut down on db queries
   $userNames = array();   // same as previous - only load users once
   $annotations = array();
-  foreach (array_keys($result['node']) as $nid) {
-    $annotation = node_load($nid);
+  $allNodes = node_load_multiple(array_keys($result['node']));  // instead of loading one by one, do a batch load
+//  foreach (array_keys($result['node']) as $nid) {
+//    $annotation = node_load($nid);
+    foreach($allNodes as $annotation){
     // Create a new data object, populate only with necessary data
     // Make it harder to leak unintended data
     $data = new StdClass();
     $data->id = $annotation->nid;
     $data->created = $annotation->created * 1000; // convert to milliseconds for d3
     $data->updated = $annotation->changed * 1000;
+    $data->u_id = $annotation->uid;
 
     // For readability
     $target_id = $annotation->annotation_reference[$annotation->language][0]['target_id'];
+    $data->doc_id = $target_id;
     if (!array_key_exists($target_id, $documentNames)) {
       $document = node_load($target_id);
       // TODO: use Biblio reference short title instead
