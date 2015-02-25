@@ -150,7 +150,7 @@ div.views-row-last span.views-field-field-image div.topic_image {
 .view-all-content img,
 .view-all-annotations img {
   width: 100%;
-  height: 200px;
+  height: 220px;
   max-width: 100%;
   max-height: 100%;
   box-shadow: 0px 0px 10px #888888;
@@ -171,103 +171,7 @@ div.views-row-last span.views-field-field-image div.topic_image {
   margin: 20px 20px 65px 20px;
   height: 350px;
 }
-/* line 124, ../../sass/components/views.scss */
-.view-documents .views-row span.text-content,
-.view-responses .views-row span.text-content,
-.view-my-threads .views-row span.text-content,
-.view-sewing-kit .views-row span.text-content,
-.view-my-content .views-row span.text-content,
-.view-all-content .views-row span.text-content,
-.view-all-annotations .views-row span.text-content {
-  background: rgba(0, 0, 0, 0.5);
-  opacity: 0;
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 320px;
-  height: 200px;
-  -webkit-transition: opacity 500ms;
-  -moz-transition: opacity 500ms;
-  -o-transition: opacity 500ms;
-  transition: opacity 500ms;
-}
-/* line 138, ../../sass/components/views.scss */
-.view-documents .views-row .views-field-title,
-.view-documents .views-row .views-field-field-display-name,
-.view-documents .views-row .views-field-created,
-.view-documents .views-row .views-field-comment-count,
-.view-responses .views-row .views-field-title,
-.view-responses .views-row .views-field-field-display-name,
-.view-responses .views-row .views-field-created,
-.view-responses .views-row .views-field-comment-count,
-.view-my-threads .views-row .views-field-title,
-.view-my-threads .views-row .views-field-field-display-name,
-.view-my-threads .views-row .views-field-created,
-.view-my-threads .views-row .views-field-comment-count,
-.view-sewing-kit .views-row .views-field-title,
-.view-sewing-kit .views-row .views-field-field-display-name,
-.view-sewing-kit .views-row .views-field-created,
-.view-sewing-kit .views-row .views-field-comment-count,
-.view-my-content .views-row .views-field-title,
-.view-my-content .views-row .views-field-field-display-name,
-.view-my-content .views-row .views-field-created,
-.view-my-content .views-row .views-field-comment-count,
-.view-all-content .views-row .views-field-title,
-.view-all-content .views-row .views-field-field-display-name,
-.view-all-content .views-row .views-field-created,
-.view-all-content .views-row .views-field-comment-count,
-.view-all-annotations .views-row .views-field-title,
-.view-all-annotations .views-row .views-field-field-display-name,
-.view-all-annotations .views-row .views-field-created,
-.view-all-annotations .views-row .views-field-comment-count {
-  position: relative;
-  left: 0px;
-  top: -220px;
-  opacity: 0;
-}
-/* line 150, ../../sass/components/views.scss */
-.view-documents .views-row:hover .views-field-title,
-.view-documents .views-row:hover .views-field-field-display-name,
-.view-documents .views-row:hover .views-field-created,
-.view-documents .views-row:hover .views-field-comment-count,
-.view-responses .views-row:hover .views-field-title,
-.view-responses .views-row:hover .views-field-field-display-name,
-.view-responses .views-row:hover .views-field-created,
-.view-responses .views-row:hover .views-field-comment-count,
-.view-my-threads .views-row:hover .views-field-title,
-.view-my-threads .views-row:hover .views-field-field-display-name,
-.view-my-threads .views-row:hover .views-field-created,
-.view-my-threads .views-row:hover .views-field-comment-count,
-.view-sewing-kit .views-row:hover .views-field-title,
-.view-sewing-kit .views-row:hover .views-field-field-display-name,
-.view-sewing-kit .views-row:hover .views-field-created,
-.view-sewing-kit .views-row:hover .views-field-comment-count,
-.view-my-content .views-row:hover .views-field-title,
-.view-my-content .views-row:hover .views-field-field-display-name,
-.view-my-content .views-row:hover .views-field-created,
-.view-my-content .views-row:hover .views-field-comment-count,
-.view-all-content .views-row:hover .views-field-title,
-.view-all-content .views-row:hover .views-field-field-display-name,
-.view-all-content .views-row:hover .views-field-created,
-.view-all-content .views-row:hover .views-field-comment-count,
-.view-all-annotations .views-row:hover .views-field-title,
-.view-all-annotations .views-row:hover .views-field-field-display-name,
-.view-all-annotations .views-row:hover .views-field-created,
-.view-all-annotations .views-row:hover .views-field-comment-count {
-  opacity: 1;
-  color: white;
-}
-/* line 157, ../../sass/components/views.scss */
-.view-documents .views-row:hover .views-field-field-image span.text-content,
-.view-responses .views-row:hover .views-field-field-image span.text-content,
-.view-my-threads .views-row:hover .views-field-field-image span.text-content,
-.view-sewing-kit .views-row:hover .views-field-field-image span.text-content,
-.view-my-content .views-row:hover .views-field-field-image span.text-content,
-.view-all-content .views-row:hover .views-field-field-image span.text-content,
-.view-all-annotations .views-row:hover .views-field-field-image span.text-content {
-  opacity: 1;
-}
-/* line 162, ../../sass/components/views.scss */
+/* line 125, ../../sass/components/views.scss */
 .view-documents .views-exposed-widget,
 .view-responses .views-exposed-widget,
 .view-my-threads .views-exposed-widget,
@@ -277,7 +181,7 @@ div.views-row-last span.views-field-field-image div.topic_image {
 .view-all-annotations .views-exposed-widget {
   margin-top: 0px;
 }
-/* line 165, ../../sass/components/views.scss */
+/* line 128, ../../sass/components/views.scss */
 .view-documents .views-exposed-widget > label,
 .view-documents .form-item-sort-by > label,
 .view-responses .views-exposed-widget > label,
@@ -295,7 +199,7 @@ div.views-row-last span.views-field-field-image div.topic_image {
   float: left;
   margin-right: 10px;
 }
-/* line 170, ../../sass/components/views.scss */
+/* line 133, ../../sass/components/views.scss */
 .view-documents .views-widget,
 .view-responses .views-widget,
 .view-my-threads .views-widget,
@@ -305,7 +209,7 @@ div.views-row-last span.views-field-field-image div.topic_image {
 .view-all-annotations .views-widget {
   display: inline;
 }
-/* line 172, ../../sass/components/views.scss */
+/* line 135, ../../sass/components/views.scss */
 .view-documents .views-widget input[type=text],
 .view-responses .views-widget input[type=text],
 .view-my-threads .views-widget input[type=text],
@@ -315,7 +219,7 @@ div.views-row-last span.views-field-field-image div.topic_image {
 .view-all-annotations .views-widget input[type=text] {
   width: 20%;
 }
-/* line 176, ../../sass/components/views.scss */
+/* line 139, ../../sass/components/views.scss */
 .view-documents .form-type-bef-checkbox,
 .view-responses .form-type-bef-checkbox,
 .view-my-threads .form-type-bef-checkbox,
@@ -329,17 +233,67 @@ div.views-row-last span.views-field-field-image div.topic_image {
   color: grey;
 }
 
-/* line 184, ../../sass/components/views.scss */
+/* line 148, ../../sass/components/views.scss */
+.view-responses .views-row {
+  position: relative;
+  float: left;
+  width: 320px;
+  border: 10px;
+  margin: 20px 20px 65px 20px;
+  height: 220px;
+}
+/* line 156, ../../sass/components/views.scss */
+.view-responses .views-row span.text-content {
+  background: rgba(0, 0, 0, 0.5);
+  opacity: 0;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 320px;
+  height: 220px;
+  -webkit-transition: opacity 500ms;
+  -moz-transition: opacity 500ms;
+  -o-transition: opacity 500ms;
+  transition: opacity 500ms;
+}
+/* line 170, ../../sass/components/views.scss */
+.view-responses .views-row .views-field-title,
+.view-responses .views-row .views-field-field-display-name,
+.view-responses .views-row .views-field-created,
+.view-responses .views-row .views-field-comment-count {
+  position: relative;
+  left: 0px;
+  top: -220px;
+  opacity: 0;
+}
+/* line 182, ../../sass/components/views.scss */
+.view-responses .views-row:hover .views-field-title,
+.view-responses .views-row:hover .views-field-field-display-name,
+.view-responses .views-row:hover .views-field-created,
+.view-responses .views-row:hover .views-field-comment-count {
+  opacity: 1;
+  color: white;
+}
+/* line 189, ../../sass/components/views.scss */
+.view-responses .views-row:hover .views-field-field-image span.text-content {
+  opacity: 1;
+}
+/* line 194, ../../sass/components/views.scss */
+.view-responses .views-exposed-widget {
+  margin-top: 0px;
+}
+
+/* line 200, ../../sass/components/views.scss */
 table.views-table {
   width: 100%;
 }
 
-/* line 188, ../../sass/components/views.scss */
+/* line 204, ../../sass/components/views.scss */
 .views-table tr {
   text-align: left;
 }
 
-/* line 194, ../../sass/components/views.scss */
+/* line 210, ../../sass/components/views.scss */
 .view-sewing-kit th.views-field-category,
 .view-sewing-kit th.views-field-text,
 .view-sewing-kit th.views-field-quote,
@@ -350,13 +304,13 @@ table.views-table {
 .view-stitchings th.view-field-tags {
   text-align: center;
 }
-/* line 200, ../../sass/components/views.scss */
+/* line 216, ../../sass/components/views.scss */
 .view-sewing-kit th,
 .view-stitchings th {
   width: 2%;
   max-width: 5%;
 }
-/* line 204, ../../sass/components/views.scss */
+/* line 220, ../../sass/components/views.scss */
 .view-sewing-kit th.views-field-text,
 .view-sewing-kit th.views-field-quote,
 .view-stitchings th.views-field-text,
@@ -364,14 +318,14 @@ table.views-table {
   width: 10% !important;
   min-width: 100px;
 }
-/* line 209, ../../sass/components/views.scss */
+/* line 225, ../../sass/components/views.scss */
 .view-sewing-kit th.views-field-views-bulk-operations,
 .view-sewing-kit th.views-field-nothing,
 .view-stitchings th.views-field-views-bulk-operations,
 .view-stitchings th.views-field-nothing {
   width: 1% !important;
 }
-/* line 213, ../../sass/components/views.scss */
+/* line 229, ../../sass/components/views.scss */
 .view-sewing-kit td.views-field-category,
 .view-stitchings td.views-field-category {
   text-align: center;
