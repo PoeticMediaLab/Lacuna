@@ -21,12 +21,12 @@ function lacuna_stories_content_types_default_Workflow() {
       "3" : {"sid":"3","wid":"1","weight":"-19","sysid":"0","state":"Ready for Annotation","status":"1","name":"ready_for_annotation"}
     },
     "transitions" : {
-      "61" : {"tid":"61","sid":"1","target_sid":"2","roles":{"-1":-1,"3":"3","4":"4","5":"5"},"wid":"1","name":"1_2","label":"","rdf_mapping":[]},
-      "62" : {"tid":"62","sid":"1","target_sid":"3","roles":{"3":"3"},"wid":"1","name":"1_3","label":"","rdf_mapping":[]},
-      "63" : {"tid":"63","sid":"2","target_sid":"2","roles":{"-1":-1,"3":"3","4":"4","5":"5","6":"6"},"wid":"1","name":"2_2","label":"","rdf_mapping":[]},
-      "64" : {"tid":"64","sid":"2","target_sid":"3","roles":{"-1":-1,"3":"3","4":"4","5":"5"},"wid":"1","name":"2_3","label":"","rdf_mapping":[]},
-      "65" : {"tid":"65","sid":"3","target_sid":"2","roles":{"3":"3","4":"4"},"wid":"1","name":"3_2","label":"","rdf_mapping":[]},
-      "66" : {"tid":"66","sid":"3","target_sid":"3","roles":{"-1":-1,"3":"3","4":"4","5":"5","6":"6"},"wid":"1","name":"3_3","label":"","rdf_mapping":[]}
+      "16" : {"tid":"16","sid":"1","target_sid":"2","roles":{"-1":-1,"3":"3","4":"4","5":"5"},"wid":"1","name":"1_2","label":"","rdf_mapping":[]},
+      "17" : {"tid":"17","sid":"1","target_sid":"3","roles":{"3":"3"},"wid":"1","name":"1_3","label":"","rdf_mapping":[]},
+      "18" : {"tid":"18","sid":"2","target_sid":"2","roles":{"-1":-1,"3":"3","4":"4","5":"5","6":"6"},"wid":"1","name":"2_2","label":"","rdf_mapping":[]},
+      "19" : {"tid":"19","sid":"2","target_sid":"3","roles":{"-1":-1,"3":"3","4":"4","5":"5"},"wid":"1","name":"2_3","label":"","rdf_mapping":[]},
+      "20" : {"tid":"20","sid":"3","target_sid":"2","roles":{"3":"3","4":"4"},"wid":"1","name":"3_2","label":"","rdf_mapping":[]},
+      "21" : {"tid":"21","sid":"3","target_sid":"3","roles":{"-1":-1,"3":"3","4":"4","5":"5","6":"6"},"wid":"1","name":"3_3","label":"","rdf_mapping":[]}
     },
     "label" : "Materials Publication States",
     "typeMap" : [],
@@ -106,14 +106,6 @@ function lacuna_stories_content_types_node_info() {
       'title_label' => '',
       'help' => '',
     ),
-    'audio' => array(
-      'name' => t('Audio'),
-      'base' => 'node_content',
-      'description' => t('For audio files of any type.'),
-      'has_title' => '1',
-      'title_label' => t('Title'),
-      'help' => '',
-    ),
     'course_or_other_group' => array(
       'name' => t('Course or Other Group'),
       'base' => 'node_content',
@@ -130,36 +122,12 @@ function lacuna_stories_content_types_node_info() {
       'title_label' => t('Title'),
       'help' => '',
     ),
-    'image' => array(
-      'name' => t('Image'),
-      'base' => 'node_content',
-      'description' => t('For any static images.'),
-      'has_title' => '1',
-      'title_label' => t('Title'),
-      'help' => '',
-    ),
-    'music_video' => array(
-      'name' => t('Music Video'),
-      'base' => 'node_content',
-      'description' => t('For music videos. Rock on.'),
-      'has_title' => '1',
-      'title_label' => t('Title'),
-      'help' => '',
-    ),
     'thread' => array(
       'name' => t('Thread'),
       'base' => 'node_content',
       'description' => t('This content type stitches together items in a Sewing Kit.'),
       'has_title' => '1',
       'title_label' => t('Title of My Thread'),
-      'help' => '',
-    ),
-    'video' => array(
-      'name' => t('Video'),
-      'base' => 'node_content',
-      'description' => t('Any videos.'),
-      'has_title' => '1',
-      'title_label' => t('Title'),
       'help' => '',
     ),
     'webform' => array(

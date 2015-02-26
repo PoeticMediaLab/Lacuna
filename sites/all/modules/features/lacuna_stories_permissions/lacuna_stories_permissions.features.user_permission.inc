@@ -736,17 +736,6 @@ function lacuna_stories_permissions_user_default_permissions() {
     'module' => 'node',
   );
 
-  // Exported permission: 'create audio content'.
-  $permissions['create audio content'] = array(
-    'name' => 'create audio content',
-    'roles' => array(
-      'Content Manager' => 'Content Manager',
-      'Instructor' => 'Instructor',
-      'administrator' => 'administrator',
-    ),
-    'module' => 'node',
-  );
-
   // Exported permission: 'create biblio content'.
   $permissions['create biblio content'] = array(
     'name' => 'create biblio content',
@@ -856,17 +845,6 @@ function lacuna_stories_permissions_user_default_permissions() {
     'module' => 'field_permissions',
   );
 
-  // Exported permission: 'create field_video_video'.
-  $permissions['create field_video_video'] = array(
-    'name' => 'create field_video_video',
-    'roles' => array(
-      'Content Manager' => 'Content Manager',
-      'Instructor' => 'Instructor',
-      'administrator' => 'administrator',
-    ),
-    'module' => 'field_permissions',
-  );
-
   // Exported permission: 'create field_year_in_program'.
   $permissions['create field_year_in_program'] = array(
     'name' => 'create field_year_in_program',
@@ -878,28 +856,6 @@ function lacuna_stories_permissions_user_default_permissions() {
       'anonymous user' => 'anonymous user',
     ),
     'module' => 'field_permissions',
-  );
-
-  // Exported permission: 'create image content'.
-  $permissions['create image content'] = array(
-    'name' => 'create image content',
-    'roles' => array(
-      'Content Manager' => 'Content Manager',
-      'Instructor' => 'Instructor',
-      'administrator' => 'administrator',
-    ),
-    'module' => 'node',
-  );
-
-  // Exported permission: 'create music_video content'.
-  $permissions['create music_video content'] = array(
-    'name' => 'create music_video content',
-    'roles' => array(
-      'Content Manager' => 'Content Manager',
-      'Instructor' => 'Instructor',
-      'administrator' => 'administrator',
-    ),
-    'module' => 'node',
   );
 
   // Exported permission: 'create og_user_node'.
@@ -944,17 +900,6 @@ function lacuna_stories_permissions_user_default_permissions() {
       'administrator' => 'administrator',
     ),
     'module' => 'path',
-  );
-
-  // Exported permission: 'create video content'.
-  $permissions['create video content'] = array(
-    'name' => 'create video content',
-    'roles' => array(
-      'Content Manager' => 'Content Manager',
-      'Instructor' => 'Instructor',
-      'administrator' => 'administrator',
-    ),
-    'module' => 'node',
   );
 
   // Exported permission: 'create webform content'.
@@ -1007,16 +952,6 @@ function lacuna_stories_permissions_user_default_permissions() {
     'module' => 'node',
   );
 
-  // Exported permission: 'delete any audio content'.
-  $permissions['delete any audio content'] = array(
-    'name' => 'delete any audio content',
-    'roles' => array(
-      'Content Manager' => 'Content Manager',
-      'administrator' => 'administrator',
-    ),
-    'module' => 'node',
-  );
-
   // Exported permission: 'delete any biblio content'.
   $permissions['delete any biblio content'] = array(
     'name' => 'delete any biblio content',
@@ -1057,26 +992,6 @@ function lacuna_stories_permissions_user_default_permissions() {
     'module' => 'node',
   );
 
-  // Exported permission: 'delete any image content'.
-  $permissions['delete any image content'] = array(
-    'name' => 'delete any image content',
-    'roles' => array(
-      'Content Manager' => 'Content Manager',
-      'administrator' => 'administrator',
-    ),
-    'module' => 'node',
-  );
-
-  // Exported permission: 'delete any music_video content'.
-  $permissions['delete any music_video content'] = array(
-    'name' => 'delete any music_video content',
-    'roles' => array(
-      'Content Manager' => 'Content Manager',
-      'administrator' => 'administrator',
-    ),
-    'module' => 'node',
-  );
-
   // Exported permission: 'delete any page content'.
   $permissions['delete any page content'] = array(
     'name' => 'delete any page content',
@@ -1090,16 +1005,6 @@ function lacuna_stories_permissions_user_default_permissions() {
   // Exported permission: 'delete any thread content'.
   $permissions['delete any thread content'] = array(
     'name' => 'delete any thread content',
-    'roles' => array(
-      'Content Manager' => 'Content Manager',
-      'administrator' => 'administrator',
-    ),
-    'module' => 'node',
-  );
-
-  // Exported permission: 'delete any video content'.
-  $permissions['delete any video content'] = array(
-    'name' => 'delete any video content',
     'roles' => array(
       'Content Manager' => 'Content Manager',
       'administrator' => 'administrator',
@@ -1143,17 +1048,6 @@ function lacuna_stories_permissions_user_default_permissions() {
     'name' => 'delete own article content',
     'roles' => array(
       'Content Manager' => 'Content Manager',
-      'administrator' => 'administrator',
-    ),
-    'module' => 'node',
-  );
-
-  // Exported permission: 'delete own audio content'.
-  $permissions['delete own audio content'] = array(
-    'name' => 'delete own audio content',
-    'roles' => array(
-      'Content Manager' => 'Content Manager',
-      'Instructor' => 'Instructor',
       'administrator' => 'administrator',
     ),
     'module' => 'node',
@@ -1205,28 +1099,6 @@ function lacuna_stories_permissions_user_default_permissions() {
     'module' => 'node',
   );
 
-  // Exported permission: 'delete own image content'.
-  $permissions['delete own image content'] = array(
-    'name' => 'delete own image content',
-    'roles' => array(
-      'Content Manager' => 'Content Manager',
-      'Instructor' => 'Instructor',
-      'administrator' => 'administrator',
-    ),
-    'module' => 'node',
-  );
-
-  // Exported permission: 'delete own music_video content'.
-  $permissions['delete own music_video content'] = array(
-    'name' => 'delete own music_video content',
-    'roles' => array(
-      'Content Manager' => 'Content Manager',
-      'Instructor' => 'Instructor',
-      'administrator' => 'administrator',
-    ),
-    'module' => 'node',
-  );
-
   // Exported permission: 'delete own page content'.
   $permissions['delete own page content'] = array(
     'name' => 'delete own page content',
@@ -1244,17 +1116,6 @@ function lacuna_stories_permissions_user_default_permissions() {
       'Content Manager' => 'Content Manager',
       'Instructor' => 'Instructor',
       'Student' => 'Student',
-      'administrator' => 'administrator',
-    ),
-    'module' => 'node',
-  );
-
-  // Exported permission: 'delete own video content'.
-  $permissions['delete own video content'] = array(
-    'name' => 'delete own video content',
-    'roles' => array(
-      'Content Manager' => 'Content Manager',
-      'Instructor' => 'Instructor',
       'administrator' => 'administrator',
     ),
     'module' => 'node',
@@ -1407,16 +1268,6 @@ function lacuna_stories_permissions_user_default_permissions() {
     'module' => 'node',
   );
 
-  // Exported permission: 'edit any audio content'.
-  $permissions['edit any audio content'] = array(
-    'name' => 'edit any audio content',
-    'roles' => array(
-      'Content Manager' => 'Content Manager',
-      'administrator' => 'administrator',
-    ),
-    'module' => 'node',
-  );
-
   // Exported permission: 'edit any biblio content'.
   $permissions['edit any biblio content'] = array(
     'name' => 'edit any biblio content',
@@ -1457,26 +1308,6 @@ function lacuna_stories_permissions_user_default_permissions() {
     'module' => 'node',
   );
 
-  // Exported permission: 'edit any image content'.
-  $permissions['edit any image content'] = array(
-    'name' => 'edit any image content',
-    'roles' => array(
-      'Content Manager' => 'Content Manager',
-      'administrator' => 'administrator',
-    ),
-    'module' => 'node',
-  );
-
-  // Exported permission: 'edit any music_video content'.
-  $permissions['edit any music_video content'] = array(
-    'name' => 'edit any music_video content',
-    'roles' => array(
-      'Content Manager' => 'Content Manager',
-      'administrator' => 'administrator',
-    ),
-    'module' => 'node',
-  );
-
   // Exported permission: 'edit any page content'.
   $permissions['edit any page content'] = array(
     'name' => 'edit any page content',
@@ -1499,16 +1330,6 @@ function lacuna_stories_permissions_user_default_permissions() {
   // Exported permission: 'edit any thread content'.
   $permissions['edit any thread content'] = array(
     'name' => 'edit any thread content',
-    'roles' => array(
-      'Content Manager' => 'Content Manager',
-      'administrator' => 'administrator',
-    ),
-    'module' => 'node',
-  );
-
-  // Exported permission: 'edit any video content'.
-  $permissions['edit any video content'] = array(
-    'name' => 'edit any video content',
     'roles' => array(
       'Content Manager' => 'Content Manager',
       'administrator' => 'administrator',
@@ -1594,16 +1415,6 @@ function lacuna_stories_permissions_user_default_permissions() {
     'module' => 'field_permissions',
   );
 
-  // Exported permission: 'edit field_video_video'.
-  $permissions['edit field_video_video'] = array(
-    'name' => 'edit field_video_video',
-    'roles' => array(
-      'Content Manager' => 'Content Manager',
-      'administrator' => 'administrator',
-    ),
-    'module' => 'field_permissions',
-  );
-
   // Exported permission: 'edit field_year_in_program'.
   $permissions['edit field_year_in_program'] = array(
     'name' => 'edit field_year_in_program',
@@ -1662,17 +1473,6 @@ function lacuna_stories_permissions_user_default_permissions() {
     'name' => 'edit own article content',
     'roles' => array(
       'Content Manager' => 'Content Manager',
-      'administrator' => 'administrator',
-    ),
-    'module' => 'node',
-  );
-
-  // Exported permission: 'edit own audio content'.
-  $permissions['edit own audio content'] = array(
-    'name' => 'edit own audio content',
-    'roles' => array(
-      'Content Manager' => 'Content Manager',
-      'Instructor' => 'Instructor',
       'administrator' => 'administrator',
     ),
     'module' => 'node',
@@ -1795,17 +1595,6 @@ function lacuna_stories_permissions_user_default_permissions() {
     'module' => 'field_permissions',
   );
 
-  // Exported permission: 'edit own field_video_video'.
-  $permissions['edit own field_video_video'] = array(
-    'name' => 'edit own field_video_video',
-    'roles' => array(
-      'Content Manager' => 'Content Manager',
-      'Instructor' => 'Instructor',
-      'administrator' => 'administrator',
-    ),
-    'module' => 'field_permissions',
-  );
-
   // Exported permission: 'edit own field_year_in_program'.
   $permissions['edit own field_year_in_program'] = array(
     'name' => 'edit own field_year_in_program',
@@ -1816,28 +1605,6 @@ function lacuna_stories_permissions_user_default_permissions() {
       'administrator' => 'administrator',
     ),
     'module' => 'field_permissions',
-  );
-
-  // Exported permission: 'edit own image content'.
-  $permissions['edit own image content'] = array(
-    'name' => 'edit own image content',
-    'roles' => array(
-      'Content Manager' => 'Content Manager',
-      'Instructor' => 'Instructor',
-      'administrator' => 'administrator',
-    ),
-    'module' => 'node',
-  );
-
-  // Exported permission: 'edit own music_video content'.
-  $permissions['edit own music_video content'] = array(
-    'name' => 'edit own music_video content',
-    'roles' => array(
-      'Content Manager' => 'Content Manager',
-      'Instructor' => 'Instructor',
-      'administrator' => 'administrator',
-    ),
-    'module' => 'node',
   );
 
   // Exported permission: 'edit own og_user_node'.
@@ -1869,17 +1636,6 @@ function lacuna_stories_permissions_user_default_permissions() {
       'Content Manager' => 'Content Manager',
       'Instructor' => 'Instructor',
       'Student' => 'Student',
-      'administrator' => 'administrator',
-    ),
-    'module' => 'node',
-  );
-
-  // Exported permission: 'edit own video content'.
-  $permissions['edit own video content'] = array(
-    'name' => 'edit own video content',
-    'roles' => array(
-      'Content Manager' => 'Content Manager',
-      'Instructor' => 'Instructor',
       'administrator' => 'administrator',
     ),
     'module' => 'node',
@@ -2102,20 +1858,6 @@ function lacuna_stories_permissions_user_default_permissions() {
     'module' => 'comment',
   );
 
-  // Exported permission: 'publish any annotation content'.
-  $permissions['publish any annotation content'] = array(
-    'name' => 'publish any annotation content',
-    'roles' => array(),
-    'module' => 'publishcontent',
-  );
-
-  // Exported permission: 'publish any blog content'.
-  $permissions['publish any blog content'] = array(
-    'name' => 'publish any blog content',
-    'roles' => array(),
-    'module' => 'publishcontent',
-  );
-
   // Exported permission: 'publish any content'.
   $permissions['publish any content'] = array(
     'name' => 'publish any content',
@@ -2123,27 +1865,6 @@ function lacuna_stories_permissions_user_default_permissions() {
       'Content Manager' => 'Content Manager',
       'administrator' => 'administrator',
     ),
-    'module' => 'publishcontent',
-  );
-
-  // Exported permission: 'publish any thread content'.
-  $permissions['publish any thread content'] = array(
-    'name' => 'publish any thread content',
-    'roles' => array(),
-    'module' => 'publishcontent',
-  );
-
-  // Exported permission: 'publish editable annotation content'.
-  $permissions['publish editable annotation content'] = array(
-    'name' => 'publish editable annotation content',
-    'roles' => array(),
-    'module' => 'publishcontent',
-  );
-
-  // Exported permission: 'publish editable blog content'.
-  $permissions['publish editable blog content'] = array(
-    'name' => 'publish editable blog content',
-    'roles' => array(),
     'module' => 'publishcontent',
   );
 
@@ -2156,34 +1877,6 @@ function lacuna_stories_permissions_user_default_permissions() {
       'Student' => 'Student',
       'administrator' => 'administrator',
     ),
-    'module' => 'publishcontent',
-  );
-
-  // Exported permission: 'publish editable thread content'.
-  $permissions['publish editable thread content'] = array(
-    'name' => 'publish editable thread content',
-    'roles' => array(),
-    'module' => 'publishcontent',
-  );
-
-  // Exported permission: 'publish own annotation content'.
-  $permissions['publish own annotation content'] = array(
-    'name' => 'publish own annotation content',
-    'roles' => array(),
-    'module' => 'publishcontent',
-  );
-
-  // Exported permission: 'publish own blog content'.
-  $permissions['publish own blog content'] = array(
-    'name' => 'publish own blog content',
-    'roles' => array(),
-    'module' => 'publishcontent',
-  );
-
-  // Exported permission: 'publish own thread content'.
-  $permissions['publish own thread content'] = array(
-    'name' => 'publish own thread content',
-    'roles' => array(),
     'module' => 'publishcontent',
   );
 
@@ -2341,20 +2034,6 @@ function lacuna_stories_permissions_user_default_permissions() {
     'module' => 'flag',
   );
 
-  // Exported permission: 'unpublish any annotation content'.
-  $permissions['unpublish any annotation content'] = array(
-    'name' => 'unpublish any annotation content',
-    'roles' => array(),
-    'module' => 'publishcontent',
-  );
-
-  // Exported permission: 'unpublish any blog content'.
-  $permissions['unpublish any blog content'] = array(
-    'name' => 'unpublish any blog content',
-    'roles' => array(),
-    'module' => 'publishcontent',
-  );
-
   // Exported permission: 'unpublish any content'.
   $permissions['unpublish any content'] = array(
     'name' => 'unpublish any content',
@@ -2362,27 +2041,6 @@ function lacuna_stories_permissions_user_default_permissions() {
       'Content Manager' => 'Content Manager',
       'administrator' => 'administrator',
     ),
-    'module' => 'publishcontent',
-  );
-
-  // Exported permission: 'unpublish any thread content'.
-  $permissions['unpublish any thread content'] = array(
-    'name' => 'unpublish any thread content',
-    'roles' => array(),
-    'module' => 'publishcontent',
-  );
-
-  // Exported permission: 'unpublish editable annotation content'.
-  $permissions['unpublish editable annotation content'] = array(
-    'name' => 'unpublish editable annotation content',
-    'roles' => array(),
-    'module' => 'publishcontent',
-  );
-
-  // Exported permission: 'unpublish editable blog content'.
-  $permissions['unpublish editable blog content'] = array(
-    'name' => 'unpublish editable blog content',
-    'roles' => array(),
     'module' => 'publishcontent',
   );
 
@@ -2395,34 +2053,6 @@ function lacuna_stories_permissions_user_default_permissions() {
       'Student' => 'Student',
       'administrator' => 'administrator',
     ),
-    'module' => 'publishcontent',
-  );
-
-  // Exported permission: 'unpublish editable thread content'.
-  $permissions['unpublish editable thread content'] = array(
-    'name' => 'unpublish editable thread content',
-    'roles' => array(),
-    'module' => 'publishcontent',
-  );
-
-  // Exported permission: 'unpublish own annotation content'.
-  $permissions['unpublish own annotation content'] = array(
-    'name' => 'unpublish own annotation content',
-    'roles' => array(),
-    'module' => 'publishcontent',
-  );
-
-  // Exported permission: 'unpublish own blog content'.
-  $permissions['unpublish own blog content'] = array(
-    'name' => 'unpublish own blog content',
-    'roles' => array(),
-    'module' => 'publishcontent',
-  );
-
-  // Exported permission: 'unpublish own thread content'.
-  $permissions['unpublish own thread content'] = array(
-    'name' => 'unpublish own thread content',
-    'roles' => array(),
     'module' => 'publishcontent',
   );
 
@@ -2563,16 +2193,6 @@ function lacuna_stories_permissions_user_default_permissions() {
     'module' => 'field_permissions',
   );
 
-  // Exported permission: 'view field_video_video'.
-  $permissions['view field_video_video'] = array(
-    'name' => 'view field_video_video',
-    'roles' => array(
-      'Content Manager' => 'Content Manager',
-      'administrator' => 'administrator',
-    ),
-    'module' => 'field_permissions',
-  );
-
   // Exported permission: 'view field_year_in_program'.
   $permissions['view field_year_in_program'] = array(
     'name' => 'view field_year_in_program',
@@ -2666,17 +2286,6 @@ function lacuna_stories_permissions_user_default_permissions() {
   // Exported permission: 'view own field_status'.
   $permissions['view own field_status'] = array(
     'name' => 'view own field_status',
-    'roles' => array(
-      'Content Manager' => 'Content Manager',
-      'Instructor' => 'Instructor',
-      'administrator' => 'administrator',
-    ),
-    'module' => 'field_permissions',
-  );
-
-  // Exported permission: 'view own field_video_video'.
-  $permissions['view own field_video_video'] = array(
-    'name' => 'view own field_video_video',
     'roles' => array(
       'Content Manager' => 'Content Manager',
       'Instructor' => 'Instructor',

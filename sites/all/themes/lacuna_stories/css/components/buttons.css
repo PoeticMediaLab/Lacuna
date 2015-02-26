@@ -31,7 +31,7 @@
   text-align: center;
   vertical-align: middle;
   font-weight: normal;
-  width: 135px;
+  width: auto;
   margin-right: 5px;
 }
 
@@ -77,19 +77,22 @@
   font-size: default !important;
 }
 
-/* line 69, ../../sass/components/buttons.scss */
+/* line 70, ../../sass/components/buttons.scss */
+.lacuna-button.lacuna-button-gray,
 .form-submit {
   background-color: #92a6c4;
   background-image: linear-gradient(to bottom, #92a6c4, #39404a);
 }
 
-/* line 74, ../../sass/components/buttons.scss */
+/* line 78, ../../sass/components/buttons.scss */
+.lacuna-button.lacuna-button-gray:hover,
+.lacuna-button.lacuna-button-gray:focus,
 .form-submit:hover,
 .form-submit:focus {
   background-color: #39404a;
 }
 
-/* line 78, ../../sass/components/buttons.scss */
+/* line 83, ../../sass/components/buttons.scss */
 .view-documents #edit-reset.form-submit,
 .view-your-story #edit-reset.form-submit {
   margin-top: 0px;
@@ -97,13 +100,13 @@
   float: right;
 }
 
-/* line 85, ../../sass/components/buttons.scss */
+/* line 90, ../../sass/components/buttons.scss */
 #blog-node-form #edit-body-und-0-format,
 #comment-form #edit-comment-body-und-0-format {
   display: none;
 }
 
-/* line 89, ../../sass/components/buttons.scss */
+/* line 94, ../../sass/components/buttons.scss */
 .publish-button {
   display: block;
   margin-top: 5px;

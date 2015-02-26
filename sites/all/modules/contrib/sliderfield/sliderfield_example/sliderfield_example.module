@@ -1,0 +1,756 @@
+<?php
+/**
+ * @file
+ * Module's main file.
+ */
+
+
+/**
+ * Implements hook_menu().
+ *
+ * Here we set up the URLs (menu entries) for the
+ * form examples. Note that most of the menu items
+ * have page callbacks and page arguments set, with
+ * page arguments set to be functions in external files.
+ */
+function sliderfield_example_menu() {
+  $items = array();
+  $items['examples/sliderfield'] = array(
+    'title' => 'SliderField Examples',
+    'page callback' => 'sliderfield_example_intro',
+    'access callback' => TRUE,
+    'expanded' => TRUE,
+  );
+  $items['examples/sliderfield/custom_form'] = array(
+    'title' => 'Custom Form Sample',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('sliderfield_example_custom_form'),
+    'access callback' => TRUE,
+    'description' => 'Usage example for custom form',
+    'type' => MENU_NORMAL_ITEM,
+  );
+
+  return $items;
+}
+
+/**
+ * Page callback for our general info page.
+ */
+function sliderfield_example_intro() {
+  $markup = t('Several examples for demonstrating and testing sliderfield');
+  $markup .= '<ul>';
+  $markup .= '<li>' . l(t('Custom Demonstration Form'), 'examples/sliderfield/custom_form') . '</li>';
+  $markup .= '</ul>';
+  return array('#markup' => $markup);
+}
+
+/**
+ * A custom form
+ */
+function sliderfield_example_custom_form($form, &$form_state) {
+  $form['description'] = array(
+    '#type' => 'item',
+    '#title' => t('Sliderfield Demonstration Form'),
+  );
+
+  $form['Simple Slider'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Simple Slider'),
+  );
+  
+  $form['Simple Slider']['slider1'] = array(
+    '#type' => 'slider',
+    '#title' => 'Simple Slider',
+    '#title2' => NULL,
+    '#input_title' => t('Min'),
+    '#input2_title' => t('Max'),
+    /**
+     * Boolean: When set to true, the handle will animate with the default duration.
+     * String: The name of a speed, such as "fast" or "slow".
+     * Number: The duration of the animation, in milliseconds.
+     */
+    '#animate' => 'fast',
+    /**
+    * Make the min value adjustable dynamically via another element
+    * Type of the value CSS selector
+    * like .myfield, #element_id
+    */
+    'adjust_field_min' => NULL,
+    /**
+    * Make the max value adjustable dynamically via another element
+    * Type of the value CSS selector
+    * like .myfield, #element_id
+    */
+    'adjust_field_max' => NULL,
+    /**
+     * Disables the slider if set to true.
+     */
+    '#disabled' => FALSE,
+    /**
+     * The maximum value of the slider.
+     */
+    '#max' => 100,
+    /**
+     * The minimum value of the slider.
+     */
+    '#min' => 0,
+    /**
+     * Determines whether the slider handles move horizontally (min on left, max on right)
+     * or vertically (min on bottom, max on top). Possible values: "horizontal", "vertical".
+     */
+    '#orientation' => 'horizontal',
+    /**
+     * Whether the slider represents a range.
+     * Multiple types supported:
+     *   Boolean: If set to true, the slider will detect if you have two handles and create a stylable range element between these two.
+     *   String: Either "min" or "max". A min range goes from the slider min to one handle. A max range goes from one handle to the slider max.
+     */
+    '#range' => FALSE,
+    /**
+     * Determines the size or amount of each interval or step the slider takes between the min and max.
+     * The full specified value range of the slider (max - min) should be evenly divisible by the step.
+     */
+    '#step' => 1,
+    /**
+     * Determines the value of the slider, if there's only one handle.
+     * If there is more than one handle, determines the value of the first handle.
+     * Or an array of values can be passed array('value'=>1 , 'value2'=> 2) ,
+     * the order of values is important
+     */
+    //'#value' => 0,
+    '#default_value' => 40,
+    /**
+     * Some default color styles for ease of use
+     * red, green, blue
+     */
+    '#slider_style' => NULL,
+    /**
+     * Default size for input values
+     */
+    '#size' => 3,
+    /**
+     * If set to FALSE will display inputs only when javascript is disabled
+     */
+    '#display_inputs' => TRUE,
+    /**
+     * If enabled display the current values of slider
+     * as simple text
+     */
+    '#display_values' => FALSE,
+    /**
+     * Format of the displaied values
+     * The usage is mostly for showing $,% or other signs near the value
+     */
+    '#display_values_format' => '%{value}%',
+    /**
+     * Acceptable types are the same as css with and height and it will be used as width
+     * or height depending on #orientation
+     */
+    '#slider_length' => NULL,
+    /**
+     * Display the element inside a fieldset
+     */
+    '#display_inside_fieldset' => FALSE,
+    /**
+     * Sliders with the same group will be linked
+     * The behavior of linked sliders depends on group_type parametr
+     * group name can only contain letters, numbers and underscore
+     */
+    '#group' => NULL,
+    /**
+     * same : All sliders in the same group will have the same value.
+     * lock : All sliders in the same group will move with the exact same amount
+     * total : The total value of all sliders will be between min/max , incresing value of
+     *         one slider decreases the rest of the sliders in the same group
+     */
+    '#group_type' => 'same',
+    /**
+     * When set to TRUE, other sliders in the same
+     * group will change only if this slider changes
+     * values : TRUE , FALSE
+     */
+    '#group_master' => FALSE,
+    /**
+     * Disable buildin range validation
+     * useful when element is used as widget
+     * for fields, since integer fields have range validation
+     * values : TRUE , FALSE
+     */
+    '#validate_range' => TRUE,
+    /**
+     * In case there are other fields that should be sync dynamically when
+     * the slider changes
+     * value : .my_field_css_class
+     */
+    '#fields_to_sync_css_selector' => NULL,
+     /**
+      * When field is not required, and display_inputs option is inactive
+      * a checkbox will be shown allowing user to ignore the field
+      * and enter no value
+      * values : TRUE , FALSE
+      */
+     '#display_ignore_button' => FALSE,
+     /**
+      * When the slider does not have any value by enabling this option it won't show the
+      * the slider handle unless user clicks on the slider to select a value
+      * values : TRUE , FALSE
+      */
+     '#hide_slider_handle_when_no_value' => FALSE,
+  );
+  
+  
+  $form['Simple Slider']['slider2'] = array(
+    '#title' => 'Range Slider',
+    '#type' => 'slider',
+    '#default_value' => array('value' => 200, 'value2' => 700),
+    //'#orientation' => 'vertical',
+    '#slider_style' => 'orange',
+    '#range' => TRUE,
+    '#min' => 10,
+    '#max' => 1000,
+    '#step' => 1,
+	'#display_bubble' => TRUE,
+	'#display_bubble_format' => '$%{value}%MIN||$%{value}%MAX',
+    //'#required' => 1,
+    //'#disabled' => TRUE,
+    //'#display_inputs' => FALSE,
+    '#display_values' => TRUE,
+	'#display_values_format' => '%%{value}%',
+  );
+  
+  $form['Simple Slider']['slider3'] = array(
+    '#title' => 'Slider Min',
+    '#type' => 'slider',
+    '#default_value' => 50,
+    //'#orientation' => 'vertical',
+    '#slider_style' => 'blue',
+    '#range' => 'min',
+    '#min' => 1,
+    '#max' => 100,
+    '#step' => 1,
+    //'#required' => 1,
+    //'#disabled' => TRUE,
+    '#display_inputs' => FALSE,
+    '#display_values' => TRUE,
+    '#slider_length' => '100px',
+  );
+  
+  $form['Simple Slider']['slider4'] = array(
+    '#title' => 'Vertical Slider Max',
+    '#type' => 'slider',
+    '#default_value' => 50,
+    '#orientation' => 'vertical',
+    '#slider_style' => 'green',
+    '#range' => 'max',
+    '#min' => 1,
+    '#max' => 100,
+    '#step' => 10,
+    //'#required' => 1,
+    //'#disabled' => TRUE,
+    '#display_inputs' => FALSE,
+    '#display_values' => TRUE,
+    '#slider_length' => '100px',
+  );
+  
+  $form['ajax_simple'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Simple Ajax Test')
+  );
+  $form['ajax_simple']['trigger'] = array(
+    '#title' => 'Item 1',
+    '#type' => 'slider',
+    '#default_value' => 50,
+    '#slider_style' => 'green',
+    '#range' => 'min',
+    '#min' => 1,
+    '#max' => 100,
+    '#step' => 1,
+    '#display_inputs' => FALSE,
+    //'#display_bubble' => TRUE,
+    '#ajax' => array(
+      // #ajax has two required keys: callback and wrapper.
+      // 'callback' is a function that will be called when this element changes.
+      'callback' => 'sliderfield_example_simplest_callback',
+      // 'wrapper' is the HTML id of the page element that will be replaced.
+      'wrapper' => 'replace_textfield_div',
+      // There are also several optional keys - see ajax_example_autocheckboxes
+      // below for details on 'method', 'effect' and 'speed' and
+      // ajax_example_dependent_dropdown for 'event'.
+    ),
+  );
+
+  // This entire form element will be replaced whenever 'changethis' is updated.
+  $form['ajax_simple']['container'] = array(
+    '#type' => 'item',
+    // The prefix/suffix provide the div that we're replacing, named by
+    // #ajax['wrapper'] above.
+    '#prefix' => '<div id="replace_textfield_div">',
+    '#suffix' => '</div>',
+  );
+
+  // An AJAX request calls the form builder function for every change.
+  // We can change how we build the form based on $form_state.
+  if (!empty($form_state['values']['changethis'])) {
+    $form['ajax_simple']['container']['#markup'] = t("Say why you chose '@value'", array('@value' => $form_state['values']['trigger']['value']));
+  } else {
+    $form['ajax_simple']['container']['#markup'] = t('You have not moved the slider yet');
+  }
+  
+  $form['Default Value'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Default Value'),
+  );
+  
+  $form['Default Value']['slider1'] = array(
+    '#type' => 'slider',
+    '#title' => 'No handle when default value is empty',
+	/**
+	* When field is not required, and display_inputs option is inactive
+	* a checkbox will be shown allowing user to ignore the field
+	* and enter no value
+	* values : TRUE , FALSE
+	*/
+	'#display_ignore_button' => FALSE,
+	/**
+	* When the slider does not have any value by enabling this option it won't show the
+	* the slider handle unless user clicks on the slider to select a value
+	* values : TRUE , FALSE
+	*/
+	'#hide_slider_handle_when_no_value' => TRUE
+  );
+  
+   $form['Default Value']['slider2'] = array(
+    '#type' => 'slider',
+    '#title' => 'Disable slider when default value is empty',
+	/**
+	* When field is not required, and display_inputs option is inactive
+	* a checkbox will be shown allowing user to ignore the field
+	* and enter no value
+	* values : TRUE , FALSE
+	*/
+	'#display_ignore_button' => TRUE
+  );
+  
+   $form['Default Value']['slider3'] = array(
+    '#type' => 'slider',
+    '#title' => 'Disable slider when default value is empty',
+	'#display_inputs' => FALSE,
+	/**
+	* When field is not required, and display_inputs option is inactive
+	* a checkbox will be shown allowing user to ignore the field
+	* and enter no value
+	* values : TRUE , FALSE
+	*/
+	'#display_ignore_button' => TRUE
+  );
+
+
+  $form['element_status'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Element Status')
+  );
+  $form['element_status']['slider'] = array(
+    '#title' => t('Dynamic slider status'),
+    '#type' => 'slider',
+    '#default_value' => 2,
+    '#min' => 1,
+    '#max' => 10,
+    '#step' => 1,
+	'#disabled' => FALSE,
+    '#required' => TRUE,
+    '#states' => array(
+      'disabled' => array(
+        ':input[name="checkit"]' => array('checked' => TRUE),
+      ),
+    ),
+  );
+  $form['element_status']['checkit'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Check to disable slider'),
+    '#default_value' => 0,
+  );
+  $form['element_status']['disabled'] = array(
+    '#title' => t('Disabled slider'),
+	'#default_value' => array('value' => 200, 'value2' => 700),
+    '#type' => 'slider',
+	'#slider_style' => 'green',
+    '#min' => 1,
+    '#max' => 1000,
+    '#step' => 1,
+	'#range' => TRUE,
+	'#disabled' => TRUE,
+  );
+  
+  $form['Transfer Slider'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Transfer Slider')
+  );
+  
+  $form['Transfer Slider']['slider'] = array(
+    '#type' => 'transfer_slider',
+    '#title' => t('Transfer Slider'),
+    '#left_value' => 0,
+    '#right_value' => 200,
+    '#left' => t('Left input'),
+    '#right' => t('Right input'),
+    '#size' => 4,
+  );
+
+  $form['adjustable_range'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Adjustable Range')
+  );
+
+  $form['adjustable_range']['minrange'] = array(
+    '#title' => t('Range : Min'),
+    '#type' => 'textfield',
+    '#default_value' => '3',
+    '#required' => TRUE,
+    '#size' => 5,
+  );
+
+  $form['adjustable_range']['maxrange'] = array(
+    '#title' => t('Range : Max'),
+    '#type' => 'textfield',
+    '#default_value' => '8',
+    '#required' => TRUE,
+    '#size' => 5,
+  );
+
+  $form['adjustable_range']['initialestimate'] = array(
+    '#type' => 'slider',
+    //'#orientation' => 'vertical',
+    '#default_value' => array('value' => 5, 'value2' => 6),
+    '#slider_style' => 'red',
+    '#range' => TRUE,
+    '#min' => 0,
+    '#max' => 10,
+    '#step' => 1,
+    '#adjust_field_min' => '#edit-minrange',
+    '#adjust_field_max' => '#edit-maxrange',
+    //'#required' => 1,
+    //'#disabled' => TRUE,
+    '#display_inputs' => FALSE,
+    '#display_values' => TRUE,
+    '#display_values_format' => '$%{value}%',
+    '#slider_length' => '700px',
+  );
+
+  $form['group'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Group Slider (Same)')
+  );
+
+  $form['group']['slider5'] = array(
+    '#title' => 'Item 1',
+    '#type' => 'slider',
+    '#default_value' => 50,
+    '#slider_style' => 'green',
+    '#range' => 'min',
+    '#min' => 1,
+    '#max' => 100,
+    '#step' => 1,
+    '#display_inputs' => FALSE,
+	'#group' => 'items_first',
+	'#group_type' => 'same',
+	'#group_master' => NULL,
+    //'#display_bubble' => TRUE,
+  );
+  $form['group']['slider6'] = array(
+    '#title' => 'Item 2',
+    '#type' => 'slider',
+    '#default_value' => 50,
+    '#slider_style' => 'red',
+    '#range' => 'min',
+    '#min' => 1,
+    '#max' => 100,
+    '#step' => 1,
+    '#display_inputs' => FALSE,
+	'#group' => 'items_first',
+	'#group_type' => 'same',
+	'#group_master' => NULL,
+    //'#display_bubble' => TRUE,
+  );
+  $form['group']['slider7'] = array(
+    '#title' => 'Item 2',
+    '#type' => 'slider',
+    '#default_value' => 30,
+    '#slider_style' => 'purple',
+    '#range' => 'min',
+    '#min' => 1,
+    '#max' => 100,
+    '#step' => 1,
+    '#display_inputs' => FALSE,
+	'#group' => 'items_first',
+	'#group_type' => 'same',
+	'#group_master' => NULL,
+    //'#display_bubble' => TRUE,
+  );
+  $form['group']['slider8'] = array(
+    '#title' => 'Item 2',
+    '#type' => 'slider',
+    '#default_value' => 40,
+    '#slider_style' => 'orange',
+    '#range' => 'min',
+    '#min' => 1,
+    '#max' => 100,
+    '#step' => 1,
+    '#display_inputs' => FALSE,
+	'#group' => 'items_first',
+	'#group_type' => 'same',
+	'#group_master' => NULL,
+    //'#display_bubble' => TRUE,
+  );
+
+
+  $form['group_total'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Group Slider (Total)')
+  );
+
+  $form['group_total']['slider5'] = array(
+    '#title' => 'Item 1',
+    '#type' => 'slider',
+    '#default_value' => 50,
+    '#slider_style' => 'green',
+    '#range' => 'min',
+    '#min' => 1,
+    '#max' => 100,
+    '#step' => 1,
+    '#display_inputs' => FALSE,
+	'#group' => 'items_second',
+	'#group_type' => 'total',
+	'#group_master' => NULL,
+    //'#display_bubble' => TRUE,
+  );
+  $form['group_total']['slider6'] = array(
+    '#title' => 'Item 2',
+    '#type' => 'slider',
+    '#default_value' => 50,
+    '#slider_style' => 'red',
+    '#range' => 'min',
+    '#min' => 1,
+    '#max' => 100,
+    '#step' => 1,
+    '#display_inputs' => FALSE,
+	'#group' => 'items_second',
+	'#group_type' => 'total',
+	'#group_master' => NULL,
+    //'#display_bubble' => TRUE,
+  );
+  $form['group_total']['slider7'] = array(
+    '#title' => 'Item 2',
+    '#type' => 'slider',
+    '#default_value' => 30,
+    '#slider_style' => 'purple',
+    '#range' => 'min',
+    '#min' => 1,
+    '#max' => 100,
+    '#step' => 1,
+    '#display_inputs' => FALSE,
+	'#group' => 'items_second',
+	'#group_type' => 'total',
+	'#group_master' => NULL,
+    //'#display_bubble' => TRUE,
+  );
+  $form['group_total']['slider8'] = array(
+    '#title' => 'Item 2',
+    '#type' => 'slider',
+    '#default_value' => 40,
+    '#slider_style' => 'orange',
+    '#range' => 'min',
+    '#min' => 1,
+    '#max' => 100,
+    '#step' => 1,
+    '#display_inputs' => FALSE,
+	'#group' => 'items_second',
+	'#group_type' => 'total',
+	'#group_master' => NULL,
+    //'#display_bubble' => TRUE,
+  );
+
+  $form['group_lock'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Group Slider (Lock)')
+  );
+
+  $form['group_lock']['slider5'] = array(
+    '#title' => 'Item 1',
+    '#type' => 'slider',
+    '#default_value' => 50,
+    '#slider_style' => 'green',
+    '#range' => 'min',
+    '#min' => 1,
+    '#max' => 100,
+    '#step' => 1,
+    '#display_inputs' => FALSE,
+	'#group' => 'items_third',
+	'#group_type' => 'lock',
+	'#group_master' => NULL,
+    //'#display_bubble' => TRUE,
+  );
+  $form['group_lock']['slider6'] = array(
+    '#title' => 'Item 2',
+    '#type' => 'slider',
+    '#default_value' => 50,
+    '#slider_style' => 'red',
+    '#range' => 'min',
+    '#min' => 1,
+    '#max' => 100,
+    '#step' => 1,
+    '#display_inputs' => FALSE,
+	'#group' => 'items_third',
+	'#group_type' => 'lock',
+	'#group_master' => NULL,
+    //'#display_bubble' => TRUE,
+  );
+  $form['group_lock']['slider7'] = array(
+    '#title' => 'Item 2',
+    '#type' => 'slider',
+    '#default_value' => 30,
+    '#slider_style' => 'purple',
+    '#range' => 'min',
+    '#min' => 1,
+    '#max' => 100,
+    '#step' => 1,
+    '#display_inputs' => FALSE,
+	'#group' => 'items_third',
+	'#group_type' => 'lock',
+	'#group_master' => NULL,
+    //'#display_bubble' => TRUE,
+  );
+  $form['group_lock']['slider8'] = array(
+    '#title' => 'Item 2',
+    '#type' => 'slider',
+    '#default_value' => 40,
+    '#slider_style' => 'orange',
+    '#range' => 'min',
+    '#min' => 1,
+    '#max' => 100,
+    '#step' => 1,
+    '#display_inputs' => FALSE,
+	'#group' => 'items_third',
+	'#group_type' => 'lock',
+	'#group_master' => NULL,
+    //'#display_bubble' => TRUE,
+  );
+
+  $form['group_master'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Group Slider (Master)')
+  );
+
+  $form['group_master']['slider5'] = array(
+    '#title' => 'Item 1',
+    '#type' => 'slider',
+    '#default_value' => 50,
+    '#slider_style' => 'green',
+    '#range' => 'min',
+    '#min' => 1,
+    '#max' => 100,
+    '#step' => 1,
+    '#display_inputs' => FALSE,
+	'#group' => 'items_forth',
+	'#group_type' => 'lock',
+	'#group_master' => TRUE,
+    //'#display_bubble' => TRUE,
+  );
+  $form['group_master']['slider6'] = array(
+    '#title' => 'Item 2',
+    '#type' => 'slider',
+    '#default_value' => 50,
+    '#slider_style' => 'red',
+    '#range' => 'min',
+    '#min' => 1,
+    '#max' => 100,
+    '#step' => 1,
+    '#display_inputs' => FALSE,
+	'#group' => 'items_forth',
+	'#group_type' => 'lock',
+	'#group_master' => NULL,
+    //'#display_bubble' => TRUE,
+  );
+  $form['group_master']['slider7'] = array(
+    '#title' => 'Item 2',
+    '#type' => 'slider',
+    '#default_value' => 30,
+    '#slider_style' => 'purple',
+    '#range' => 'min',
+    '#min' => 1,
+    '#max' => 100,
+    '#step' => 1,
+    '#display_inputs' => FALSE,
+	'#group' => 'items_forth',
+	'#group_type' => 'lock',
+	'#group_master' => NULL,
+    //'#display_bubble' => TRUE,
+  );
+  $form['group_master']['slider8'] = array(
+    '#title' => 'Item 2',
+    '#type' => 'slider',
+    '#default_value' => 40,
+    '#slider_style' => 'orange',
+    '#range' => 'min',
+    '#min' => 1,
+    '#max' => 100,
+    '#step' => 1,
+    '#display_inputs' => FALSE,
+	'#group' => 'items_forth',
+	'#group_type' => 'lock',
+	'#group_master' => NULL,
+    //'#display_bubble' => TRUE,
+  );
+
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Submit'),
+  );
+
+  return $form;
+}
+
+
+
+/**
+ * Callback for ajax_example_simplest.
+ *
+ * On an ajax submit, the form builder function is called again, then the $form
+ * and $form_state are passed to this callback function so it can select which
+ * portion of the form to send on to the client.
+ *
+ * @return renderable array (the textfield element)
+ */
+function sliderfield_example_simplest_callback($form, $form_state) {
+  // The form has already been submitted and updated. We can return the replaced
+  // item as it is.
+  return '<div id="replace_textfield_div">' . t("Say why you chose '@value'", array('@value' => $form_state['values']['trigger']['value'])) . '</div>'; 
+}
+
+/**
+ * Validation function for form_example_tutorial_7().
+ */
+function sliderfield_example_custom_form_validate($form, &$form_state) {
+  /**
+  * @todo In the first step $form_state['storage']['all'] is not available, it should be fixed
+  */
+  //if ($form_state['storage']['all']['values']['name']['first'] == $form_state['storage']['all']['values']['name']['last']) {
+    //form_set_error('first', t('First name and last name should not be the same.'));
+  //}
+}
+
+/**
+ * Submit function for form_example_tutorial_7().
+ *
+ * Adds a submit handler/function to our form to send a successful
+ * completion message to the screen.
+ */
+function sliderfield_example_custom_form_submit($form, &$form_state) {
+  if (isset($form_state['values'])) {
+    $values = $form_state['values'];
+    if (isset($form_state['field_group_ajaxified_multipage_enabled']) && isset($form_state['storage']['all']['values'])) {
+      $values = $form_state['storage']['all']['values'];
+    }
+  }
+  drupal_set_message(t('The form has been submitted , submitted values are !s', array('!s' => '<pre>' . print_r($form_state['values'], true) . '</pre>')));
+  return '';
+}

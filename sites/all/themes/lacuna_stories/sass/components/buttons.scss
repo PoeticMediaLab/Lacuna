@@ -29,7 +29,7 @@
   text-align: center;
   vertical-align: middle;
   font-weight: normal;
-  width: 135px;
+  width: auto;
   margin-right: 5px;
 }
 .vbo-table-select-all-pages.form-submit {
@@ -66,14 +66,19 @@
   font-size: default !important;
 }
 
+.lacuna-button.lacuna-button-gray,
 .form-submit {
   background-color: #92a6c4;
   background-image: linear-gradient(to bottom, #92a6c4, #39404a);
 }
+
+.lacuna-button.lacuna-button-gray:hover,
+.lacuna-button.lacuna-button-gray:focus,
 .form-submit:hover,
 .form-submit:focus{
   background-color: #39404a;
 }
+
 .view-documents #edit-reset.form-submit,
 .view-your-story #edit-reset.form-submit{
   margin-top: 0px;

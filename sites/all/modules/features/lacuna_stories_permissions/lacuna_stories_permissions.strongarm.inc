@@ -34,24 +34,6 @@ function lacuna_stories_permissions_strongarm() {
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
-  $strongarm->name = 'content_access_audio';
-  $strongarm->value = array(
-    'view_own' => array(
-      0 => 2,
-      1 => 3,
-      2 => 4,
-    ),
-    'view' => array(
-      0 => 2,
-      1 => 3,
-      2 => 4,
-    ),
-  );
-  $export['content_access_audio'] = $strongarm;
-
-  $strongarm = new stdClass();
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
   $strongarm->name = 'content_access_blog';
   $strongarm->value = array(
     'view_own' => array(
@@ -104,61 +86,6 @@ function lacuna_stories_permissions_strongarm() {
     ),
   );
   $export['content_access_document'] = $strongarm;
-
-  $strongarm = new stdClass();
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'content_access_image';
-  $strongarm->value = array(
-    'view_own' => array(
-      0 => 2,
-      1 => 3,
-      2 => 4,
-    ),
-    'view' => array(
-      0 => 2,
-      1 => 3,
-      2 => 4,
-    ),
-  );
-  $export['content_access_image'] = $strongarm;
-
-  $strongarm = new stdClass();
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'content_access_music_video';
-  $strongarm->value = array(
-    'view_own' => array(
-      0 => 2,
-      1 => 3,
-      2 => 4,
-    ),
-    'view' => array(
-      0 => 2,
-      1 => 3,
-      2 => 4,
-    ),
-  );
-  $export['content_access_music_video'] = $strongarm;
-
-  $strongarm = new stdClass();
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'content_access_video';
-  $strongarm->value = array(
-    'view_own' => array(
-      0 => 2,
-      1 => 3,
-      2 => 4,
-    ),
-    'view' => array(
-      0 => 5,
-      1 => 6,
-      2 => 3,
-      3 => 4,
-    ),
-  );
-  $export['content_access_video'] = $strongarm;
 
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
