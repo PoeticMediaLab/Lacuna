@@ -1550,7 +1550,7 @@ function lacuna_stories_content_types_field_default_field_instances() {
     ),
     'entity_type' => 'node',
     'field_name' => 'field_media',
-    'label' => 'Media',
+    'label' => 'Upload Video, Audio, or Image',
     'required' => 0,
     'settings' => array(
       'description_field' => 0,
@@ -2743,6 +2743,7 @@ function lacuna_stories_content_types_field_default_field_instances() {
   t('The topics with which this document engages.');
   t('Topics');
   t('URI');
+  t('Upload Video, Audio, or Image');
   t('Upload a Cover Image for your artifact.');
   t('What are the media of your upload?');
   t('What category of annotation this is');
