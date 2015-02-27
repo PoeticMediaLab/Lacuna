@@ -115,7 +115,7 @@ function lacuna_stories_content_types_node_info() {
       'help' => '',
     ),
     'document' => array(
-      'name' => t('Document'),
+      'name' => t('Artifact'),
       'base' => 'node_content',
       'description' => t('Any primary or secondary text documents.'),
       'has_title' => '1',

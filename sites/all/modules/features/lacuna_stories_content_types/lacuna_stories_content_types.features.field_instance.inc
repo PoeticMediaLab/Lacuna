@@ -1118,7 +1118,7 @@ function lacuna_stories_content_types_field_default_field_instances() {
       'module' => 'options',
       'settings' => array(),
       'type' => 'options_buttons',
-      'weight' => 12,
+      'weight' => 25,
     ),
   );
 
@@ -1155,44 +1155,7 @@ function lacuna_stories_content_types_field_default_field_instances() {
       'module' => 'options',
       'settings' => array(),
       'type' => 'options_buttons',
-      'weight' => 13,
-    ),
-  );
-
-  // Exported field_instance: 'node-document-field_artifact_projects'
-  $field_instances['node-document-field_artifact_projects'] = array(
-    'bundle' => 'document',
-    'default_value' => NULL,
-    'deleted' => 0,
-    'description' => '(Upon selecting, you will have a text box that asks you to explain your choice)',
-    'display' => array(
-      'default' => array(
-        'label' => 'above',
-        'module' => 'taxonomy',
-        'settings' => array(),
-        'type' => 'taxonomy_term_reference_link',
-        'weight' => 8,
-      ),
-      'teaser' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
-      ),
-    ),
-    'entity_type' => 'node',
-    'field_name' => 'field_artifact_projects',
-    'label' => 'To which projects/case(s) could your artifact pertain? ',
-    'required' => 1,
-    'settings' => array(
-      'user_register_form' => FALSE,
-    ),
-    'widget' => array(
-      'active' => 1,
-      'module' => 'options',
-      'settings' => array(),
-      'type' => 'options_buttons',
-      'weight' => 8,
+      'weight' => 26,
     ),
   );
 
@@ -1229,7 +1192,7 @@ function lacuna_stories_content_types_field_default_field_instances() {
       'module' => 'options',
       'settings' => array(),
       'type' => 'options_buttons',
-      'weight' => 10,
+      'weight' => 23,
     ),
   );
 
@@ -1317,7 +1280,7 @@ function lacuna_stories_content_types_field_default_field_instances() {
         'progress_indicator' => 'throbber',
       ),
       'type' => 'file_generic',
-      'weight' => 17,
+      'weight' => 9,
     ),
   );
 
@@ -1355,46 +1318,6 @@ function lacuna_stories_content_types_field_default_field_instances() {
       'settings' => array(),
       'type' => 'options_select',
       'weight' => 6,
-    ),
-  );
-
-  // Exported field_instance: 'node-document-field_doc_pages'
-  $field_instances['node-document-field_doc_pages'] = array(
-    'bundle' => 'document',
-    'default_value' => NULL,
-    'deleted' => 0,
-    'description' => 'The page range or number of pages of this document.',
-    'display' => array(
-      'default' => array(
-        'label' => 'above',
-        'module' => 'text',
-        'settings' => array(),
-        'type' => 'text_default',
-        'weight' => 2,
-      ),
-      'teaser' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
-      ),
-    ),
-    'entity_type' => 'node',
-    'field_name' => 'field_doc_pages',
-    'label' => 'Page Numbers',
-    'required' => 1,
-    'settings' => array(
-      'text_processing' => 0,
-      'user_register_form' => FALSE,
-    ),
-    'widget' => array(
-      'active' => 1,
-      'module' => 'text',
-      'settings' => array(
-        'size' => 60,
-      ),
-      'type' => 'text_textfield',
-      'weight' => 16,
     ),
   );
 
@@ -1471,23 +1394,37 @@ function lacuna_stories_content_types_field_default_field_instances() {
       'module' => 'options',
       'settings' => array(),
       'type' => 'options_buttons',
-      'weight' => 14,
+      'weight' => 27,
     ),
   );
 
-  // Exported field_instance: 'node-document-field_force_politics_power'
-  $field_instances['node-document-field_force_politics_power'] = array(
+  // Exported field_instance: 'node-document-field_force'
+  $field_instances['node-document-field_force'] = array(
     'bundle' => 'document',
-    'default_value' => NULL,
+    'default_value' => array(
+      0 => array(
+        'value' => 0,
+        'container' => array(
+          'max_value' => 100,
+          'min_value' => 0,
+        ),
+        'ignore' => FALSE,
+      ),
+    ),
     'deleted' => 0,
-    'description' => 'Please select the proportion appropriate to your artifact. [configure below to a 100% ratio]',
+    'description' => '',
     'display' => array(
       'default' => array(
         'label' => 'above',
-        'module' => 'taxonomy',
-        'settings' => array(),
-        'type' => 'taxonomy_term_reference_link',
-        'weight' => 15,
+        'module' => 'number',
+        'settings' => array(
+          'decimal_separator' => '.',
+          'prefix_suffix' => TRUE,
+          'scale' => 0,
+          'thousand_separator' => ' ',
+        ),
+        'type' => 'number_integer',
+        'weight' => 17,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -1497,18 +1434,41 @@ function lacuna_stories_content_types_field_default_field_instances() {
       ),
     ),
     'entity_type' => 'node',
-    'field_name' => 'field_force_politics_power',
-    'label' => 'How Are Force, Politics, Power configured in your artifact',
+    'field_name' => 'field_force',
+    'label' => 'Force',
     'required' => 0,
     'settings' => array(
+      'max' => 100,
+      'min' => 0,
+      'prefix' => '',
+      'suffix' => '',
       'user_register_form' => FALSE,
     ),
     'widget' => array(
       'active' => 1,
-      'module' => 'options',
-      'settings' => array(),
-      'type' => 'options_buttons',
-      'weight' => 15,
+      'module' => 'sliderfield',
+      'settings' => array(
+        'sliderfield_settings' => array(
+          'adjust_field_max' => 'field_power',
+          'adjust_field_min' => 'field_power',
+          'animate' => 1,
+          'display_bubble' => 0,
+          'display_bubble_format' => '%{value}%',
+          'display_ignore_button' => 1,
+          'display_values' => 1,
+          'display_values_format' => '%{value}%',
+          'hide_inputs' => 1,
+          'hide_slider_handle_when_no_value' => 0,
+          'multi_value' => 0,
+          'orientation' => 'horizontal',
+          'range' => 0,
+          'slider_length' => '',
+          'slider_style' => 'red',
+          'step' => 1,
+        ),
+      ),
+      'type' => 'sliderfield',
+      'weight' => 19,
     ),
   );
 
@@ -1568,6 +1528,59 @@ function lacuna_stories_content_types_field_default_field_instances() {
     ),
   );
 
+  // Exported field_instance: 'node-document-field_media'
+  $field_instances['node-document-field_media'] = array(
+    'bundle' => 'document',
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'file',
+        'settings' => array(),
+        'type' => 'file_default',
+        'weight' => 16,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_media',
+    'label' => 'Media',
+    'required' => 0,
+    'settings' => array(
+      'description_field' => 0,
+      'file_directory' => '',
+      'file_extensions' => 'mpg wmv mp4 mpeg m4v mov jpg png gif jpeg wav flac ogg mp3 m4a wma aac',
+      'max_filesize' => '',
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'media',
+      'settings' => array(
+        'allowed_schemes' => array(
+          'flickr' => 0,
+          'private' => 'private',
+          'public' => 'public',
+        ),
+        'allowed_types' => array(
+          'audio' => 'audio',
+          'default' => 0,
+          'image' => 'image',
+          'video' => 'video',
+        ),
+        'progress_indicator' => 'throbber',
+      ),
+      'type' => 'media_generic',
+      'weight' => 10,
+    ),
+  );
+
   // Exported field_instance: 'node-document-field_media_types'
   $field_instances['node-document-field_media_types'] = array(
     'bundle' => 'document',
@@ -1591,7 +1604,7 @@ function lacuna_stories_content_types_field_default_field_instances() {
     ),
     'entity_type' => 'node',
     'field_name' => 'field_media_types',
-    'label' => 'What are the media of your upload? *',
+    'label' => 'What are the media of your upload?',
     'required' => 1,
     'settings' => array(
       'user_register_form' => FALSE,
@@ -1638,23 +1651,37 @@ function lacuna_stories_content_types_field_default_field_instances() {
       'module' => 'options',
       'settings' => array(),
       'type' => 'options_buttons',
-      'weight' => 11,
+      'weight' => 24,
     ),
   );
 
-  // Exported field_instance: 'node-document-field_priority'
-  $field_instances['node-document-field_priority'] = array(
+  // Exported field_instance: 'node-document-field_politics'
+  $field_instances['node-document-field_politics'] = array(
     'bundle' => 'document',
-    'default_value' => NULL,
+    'default_value' => array(
+      0 => array(
+        'value' => 0,
+        'container' => array(
+          'max_value' => 0,
+          'min_value' => 100,
+        ),
+        'ignore' => FALSE,
+      ),
+    ),
     'deleted' => 0,
     'description' => '',
     'display' => array(
       'default' => array(
-        'label' => 'inline',
-        'module' => 'taxonomy',
-        'settings' => array(),
-        'type' => 'taxonomy_term_reference_plain',
-        'weight' => 5,
+        'label' => 'above',
+        'module' => 'number',
+        'settings' => array(
+          'decimal_separator' => '.',
+          'prefix_suffix' => TRUE,
+          'scale' => 0,
+          'thousand_separator' => ' ',
+        ),
+        'type' => 'number_integer',
+        'weight' => 19,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -1664,18 +1691,115 @@ function lacuna_stories_content_types_field_default_field_instances() {
       ),
     ),
     'entity_type' => 'node',
-    'field_name' => 'field_priority',
-    'label' => 'Priority',
-    'required' => 1,
+    'field_name' => 'field_politics',
+    'label' => 'Politics',
+    'required' => 0,
     'settings' => array(
+      'max' => 100,
+      'min' => 0,
+      'prefix' => '',
+      'suffix' => '',
       'user_register_form' => FALSE,
     ),
     'widget' => array(
       'active' => 1,
-      'module' => 'options',
-      'settings' => array(),
-      'type' => 'options_buttons',
-      'weight' => 4,
+      'module' => 'sliderfield',
+      'settings' => array(
+        'sliderfield_settings' => array(
+          'adjust_field_max' => 'field_power',
+          'adjust_field_min' => 'field_power',
+          'animate' => 1,
+          'display_bubble' => 0,
+          'display_bubble_format' => '%{value}%',
+          'display_ignore_button' => 1,
+          'display_values' => 1,
+          'display_values_format' => '%{value}%',
+          'hide_inputs' => 1,
+          'hide_slider_handle_when_no_value' => 0,
+          'multi_value' => 0,
+          'orientation' => 'horizontal',
+          'range' => 0,
+          'slider_length' => '',
+          'slider_style' => 'green',
+          'step' => 1,
+        ),
+      ),
+      'type' => 'sliderfield',
+      'weight' => 21,
+    ),
+  );
+
+  // Exported field_instance: 'node-document-field_power'
+  $field_instances['node-document-field_power'] = array(
+    'bundle' => 'document',
+    'default_value' => array(
+      0 => array(
+        'value' => 0,
+        'container' => array(
+          'max_value' => 0,
+          'min_value' => 100,
+        ),
+        'ignore' => FALSE,
+      ),
+    ),
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'number',
+        'settings' => array(
+          'decimal_separator' => '.',
+          'prefix_suffix' => TRUE,
+          'scale' => 0,
+          'thousand_separator' => ' ',
+        ),
+        'type' => 'number_integer',
+        'weight' => 18,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_power',
+    'label' => 'Power',
+    'required' => 0,
+    'settings' => array(
+      'max' => 100,
+      'min' => 0,
+      'prefix' => '',
+      'suffix' => '',
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'sliderfield',
+      'settings' => array(
+        'sliderfield_settings' => array(
+          'adjust_field_max' => 'field_force',
+          'adjust_field_min' => 'field_force',
+          'animate' => 1,
+          'display_bubble' => 0,
+          'display_bubble_format' => '%{value}%',
+          'display_ignore_button' => 1,
+          'display_values' => 1,
+          'display_values_format' => '%{value}%',
+          'hide_inputs' => 1,
+          'hide_slider_handle_when_no_value' => 0,
+          'multi_value' => 0,
+          'orientation' => 'horizontal',
+          'range' => 0,
+          'slider_length' => '',
+          'slider_style' => 'green',
+          'step' => 1,
+        ),
+      ),
+      'type' => 'sliderfield',
+      'weight' => 20,
     ),
   );
 
@@ -1712,7 +1836,7 @@ function lacuna_stories_content_types_field_default_field_instances() {
       'module' => 'options',
       'settings' => array(),
       'type' => 'options_buttons',
-      'weight' => 9,
+      'weight' => 11,
     ),
   );
 
@@ -1829,43 +1953,6 @@ function lacuna_stories_content_types_field_default_field_instances() {
       'settings' => array(),
       'type' => 'options_buttons',
       'weight' => 4,
-    ),
-  );
-
-  // Exported field_instance: 'node-document-field_unit'
-  $field_instances['node-document-field_unit'] = array(
-    'bundle' => 'document',
-    'default_value' => NULL,
-    'deleted' => 0,
-    'description' => 'A unit might be "Week One", "January 1st", "Section Two: Why Monkeys Like Bananas", or another method of chronologically ordering your syllabus.',
-    'display' => array(
-      'default' => array(
-        'label' => 'inline',
-        'module' => 'taxonomy',
-        'settings' => array(),
-        'type' => 'taxonomy_term_reference_plain',
-        'weight' => 6,
-      ),
-      'teaser' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
-      ),
-    ),
-    'entity_type' => 'node',
-    'field_name' => 'field_unit',
-    'label' => 'Unit',
-    'required' => 1,
-    'settings' => array(
-      'user_register_form' => FALSE,
-    ),
-    'widget' => array(
-      'active' => 1,
-      'module' => 'options',
-      'settings' => array(),
-      'type' => 'options_select',
-      'weight' => 3,
     ),
   );
 
@@ -2592,9 +2679,7 @@ function lacuna_stories_content_types_field_default_field_instances() {
   // Included for use with string extractors like potx.
   t(' (start typing to autofill saved Bibliographic references. These need to be created before uploading an instance)');
   t('(In your browser, e.g. Safari, use Edit --> Paste and Match Style to avoid odd formatting, or else use the eraser button on highlighted text to clear formatting hanging on from the original source)');
-  t('(Upon selecting, you will have a text box that asks you to explain your choice)');
   t('A reference to the annotated content');
-  t('A unit might be "Week One", "January 1st", "Section Two: Why Monkeys Like Bananas", or another method of chronologically ordering your syllabus.');
   t('About Me');
   t('Add as many media files as necessary');
   t('Annotated Content');
@@ -2617,12 +2702,12 @@ function lacuna_stories_content_types_field_default_field_instances() {
   t('Education');
   t('Enter an abstract to appear upon hovering over the document information');
   t('Excess, Mean, or Deficiency?');
+  t('Force');
   t('Gender');
   t('Genre');
   t('Group');
   t('Group visibility');
   t('Hover Abstract');
-  t('How Are Force, Politics, Power configured in your artifact');
   t('How I learn');
   t('I would like this artifact to be viewable by:');
   t('If a text, insert the text of your artifact here.');
@@ -2636,11 +2721,10 @@ function lacuna_stories_content_types_field_default_field_instances() {
   t('Media');
   t('Mode: Tragedy | Irony | Comedy | Pathos ');
   t('My Stitchings');
-  t('Page Numbers');
   t('Participant Observation: Betrachtung');
-  t('Please select the proportion appropriate to your artifact. [configure below to a 100% ratio]');
+  t('Politics');
   t('Post Icon');
-  t('Priority');
+  t('Power');
   t('Private');
   t('Quote');
   t('Ranges');
@@ -2653,17 +2737,14 @@ function lacuna_stories_content_types_field_default_field_instances() {
   t('The URI of the annotated work');
   t('The annotation text');
   t('The name under which you would like your work to appear.');
-  t('The page range or number of pages of this document.');
   t('The ranges for the start and stop of a quote');
   t('The selected text that was annotated');
   t('The text of your blog post');
   t('The topics with which this document engages.');
-  t('To which projects/case(s) could your artifact pertain? ');
   t('Topics');
   t('URI');
-  t('Unit');
   t('Upload a Cover Image for your artifact.');
-  t('What are the media of your upload? *');
+  t('What are the media of your upload?');
   t('What category of annotation this is');
   t('What course are you enrolled in? Or, what groups will you join?');
   t('What is the Bibliographic Entry for your artifact?');

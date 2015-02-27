@@ -460,7 +460,7 @@ function lacuna_stories_views_views_default_views() {
   $view->description = '';
   $view->tag = 'default';
   $view->base_table = 'node';
-  $view->human_name = 'Materials, Syllabus';
+  $view->human_name = 'Artifacts';
   $view->core = 7;
   $view->api_version = '3.0';
   $view->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
@@ -600,9 +600,9 @@ function lacuna_stories_views_views_default_views() {
   $handler->display->display_options['header']['area']['table'] = 'views';
   $handler->display->display_options['header']['area']['field'] = 'area';
   $handler->display->display_options['header']['area']['empty'] = TRUE;
-  $handler->display->display_options['header']['area']['content'] = '<a href="/node/add/biblio" class="lacuna-button lacuna-button-gray">Add Artifact to Bibliography</a>
-<a href="/node/add/artifact" class="lacuna-button lacuna-button-gray">Add Artifact</a>';
-  $handler->display->display_options['header']['area']['format'] = 'full_html';
+  $handler->display->display_options['header']['area']['content'] = '<?php global $base_url; ?>  
+<a href="<?php echo $base_url?>/node/add/biblio" class="lacuna-button lacuna-button-gray">Add Artifact to Bibliography</a> <a href="<?php echo $base_url?>/node/add/document" class="lacuna-button lacuna-button-gray">Add Artifact</a>';
+  $handler->display->display_options['header']['area']['format'] = 'php_code';
   /* No results behavior: Global: Text area */
   $handler->display->display_options['empty']['area']['id'] = 'area';
   $handler->display->display_options['empty']['area']['table'] = 'views';
@@ -727,16 +727,14 @@ function lacuna_stories_views_views_default_views() {
   $handler->display->display_options['fields']['biblio_authors']['biblio_label'] = 0;
   $handler->display->display_options['fields']['biblio_authors']['auth_category'] = '1';
   $handler->display->display_options['fields']['biblio_authors']['initialize'] = 0;
-  /* Field: Content: Unit */
+  /* Field: Broken/missing handler */
   $handler->display->display_options['fields']['field_unit']['id'] = 'field_unit';
   $handler->display->display_options['fields']['field_unit']['table'] = 'field_data_field_unit';
   $handler->display->display_options['fields']['field_unit']['field'] = 'field_unit';
-  $handler->display->display_options['fields']['field_unit']['type'] = 'taxonomy_term_reference_plain';
-  /* Field: Content: Priority */
+  /* Field: Broken/missing handler */
   $handler->display->display_options['fields']['field_priority']['id'] = 'field_priority';
   $handler->display->display_options['fields']['field_priority']['table'] = 'field_data_field_priority';
   $handler->display->display_options['fields']['field_priority']['field'] = 'field_priority';
-  $handler->display->display_options['fields']['field_priority']['type'] = 'taxonomy_term_reference_plain';
   /* Sort criterion: Global: Random */
   $handler->display->display_options['sorts']['random']['id'] = 'random';
   $handler->display->display_options['sorts']['random']['table'] = 'views';
@@ -892,11 +890,15 @@ function lacuna_stories_views_views_default_views() {
         'bef_select_all_none' => 0,
         'bef_collapsible' => 0,
         'is_secondary' => 0,
+        'any_label' => '',
         'bef_filter_description' => '',
         'tokens' => array(
           'available' => array(
             0 => 'global_types',
           ),
+        ),
+        'rewrite' => array(
+          'filter_rewrite_values' => '',
         ),
       ),
     ),
@@ -906,29 +908,39 @@ function lacuna_stories_views_views_default_views() {
         'bef_select_all_none' => 0,
         'bef_collapsible' => 0,
         'is_secondary' => 0,
+        'any_label' => '',
         'bef_filter_description' => '',
         'tokens' => array(
           'available' => array(
             0 => 'global_types',
           ),
         ),
+        'rewrite' => array(
+          'filter_rewrite_values' => '',
+        ),
       ),
     ),
-    'type' => array(
+    'field_media_types_tid' => array(
       'bef_format' => 'bef',
       'more_options' => array(
         'bef_select_all_none' => 0,
         'bef_collapsible' => 0,
         'is_secondary' => 0,
+        'any_label' => '',
         'bef_filter_description' => '',
         'tokens' => array(
           'available' => array(
             0 => 'global_types',
           ),
         ),
+        'rewrite' => array(
+          'filter_rewrite_values' => '',
+        ),
       ),
     ),
   );
+  $handler->display->display_options['exposed_form']['options']['input_required'] = 0;
+  $handler->display->display_options['exposed_form']['options']['text_input_required_format'] = 'filtered_html';
   $handler->display->display_options['defaults']['fields'] = FALSE;
   /* Field: Content: Path */
   $handler->display->display_options['fields']['path']['id'] = 'path';
@@ -961,16 +973,6 @@ function lacuna_stories_views_views_default_views() {
     'image_link' => 'content',
   );
   $handler->display->display_options['fields']['field_image']['delta_offset'] = '0';
-  /* Field: Broken/missing handler */
-  $handler->display->display_options['fields']['field_video_video']['id'] = 'field_video_video';
-  $handler->display->display_options['fields']['field_video_video']['table'] = 'field_data_field_video_video';
-  $handler->display->display_options['fields']['field_video_video']['field'] = 'field_video_video';
-  $handler->display->display_options['fields']['field_video_video']['label'] = '';
-  $handler->display->display_options['fields']['field_video_video']['exclude'] = TRUE;
-  $handler->display->display_options['fields']['field_video_video']['alter']['make_link'] = TRUE;
-  $handler->display->display_options['fields']['field_video_video']['alter']['path'] = '[path_1] ';
-  $handler->display->display_options['fields']['field_video_video']['alter']['absolute'] = TRUE;
-  $handler->display->display_options['fields']['field_video_video']['element_label_colon'] = FALSE;
   /* Field: Content: Link */
   $handler->display->display_options['fields']['view_node']['id'] = 'view_node';
   $handler->display->display_options['fields']['view_node']['table'] = 'views_entity_node';
@@ -1139,6 +1141,28 @@ function lacuna_stories_views_views_default_views() {
   $handler->display->display_options['filters']['sid']['value'] = array(
     3 => '3',
   );
+  /* Filter criterion: Content: What are the media of your upload? (field_media_types) */
+  $handler->display->display_options['filters']['field_media_types_tid']['id'] = 'field_media_types_tid';
+  $handler->display->display_options['filters']['field_media_types_tid']['table'] = 'field_data_field_media_types';
+  $handler->display->display_options['filters']['field_media_types_tid']['field'] = 'field_media_types_tid';
+  $handler->display->display_options['filters']['field_media_types_tid']['exposed'] = TRUE;
+  $handler->display->display_options['filters']['field_media_types_tid']['expose']['operator_id'] = 'field_media_types_tid_op';
+  $handler->display->display_options['filters']['field_media_types_tid']['expose']['label'] = 'Limit by Media Type';
+  $handler->display->display_options['filters']['field_media_types_tid']['expose']['operator'] = 'field_media_types_tid_op';
+  $handler->display->display_options['filters']['field_media_types_tid']['expose']['identifier'] = 'field_media_types_tid';
+  $handler->display->display_options['filters']['field_media_types_tid']['expose']['multiple'] = TRUE;
+  $handler->display->display_options['filters']['field_media_types_tid']['expose']['remember_roles'] = array(
+    2 => '2',
+    1 => 0,
+    3 => 0,
+    4 => 0,
+    5 => 0,
+    6 => 0,
+  );
+  $handler->display->display_options['filters']['field_media_types_tid']['reduce_duplicates'] = TRUE;
+  $handler->display->display_options['filters']['field_media_types_tid']['type'] = 'select';
+  $handler->display->display_options['filters']['field_media_types_tid']['vocabulary'] = 'media_types';
+  $handler->display->display_options['filters']['field_media_types_tid']['error_message'] = FALSE;
   $handler->display->display_options['path'] = 'artifacts';
   $handler->display->display_options['menu']['type'] = 'normal';
   $handler->display->display_options['menu']['title'] = 'Artifacts';

@@ -461,7 +461,7 @@ function lacuna_stories_content_types_strongarm() {
           'weight' => '3',
         ),
         'path' => array(
-          'weight' => '2',
+          'weight' => '3',
         ),
       ),
       'display' => array(),

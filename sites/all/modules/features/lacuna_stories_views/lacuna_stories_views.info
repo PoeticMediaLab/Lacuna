@@ -1,8 +1,8 @@
 name = Lacuna Stories Views
-description = All Views for Lacuna Stories
+description = All Views for Lacuna Stories: Contemporary
 core = 7.x
-package = Lacuna Stories
-version = 7.x-1.0-beta
+package = Lacuna Stories Contemporary
+version = 7.x-1.0-contemporary
 project = lacuna_stories_views
 dependencies[] = better_exposed_filters
 dependencies[] = ctools

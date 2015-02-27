@@ -138,10 +138,10 @@ function lacuna_stories_content_types_field_group_info() {
   $field_group->entity_type = 'node';
   $field_group->bundle = 'document';
   $field_group->mode = 'form';
-  $field_group->parent_name = 'group_content';
+  $field_group->parent_name = '';
   $field_group->data = array(
     'label' => 'About',
-    'weight' => '18',
+    'weight' => '2',
     'children' => array(
       0 => 'field_topics',
       1 => 'field_status',
@@ -385,20 +385,13 @@ function lacuna_stories_content_types_field_group_info() {
       0 => 'field_bibliographic_entry',
       1 => 'field_doc_attachment',
       2 => 'field_doc_genre',
-      3 => 'field_doc_pages',
-      4 => 'field_doc_text',
-      5 => 'field_image',
+      3 => 'field_doc_text',
+      4 => 'field_image',
+      5 => 'field_artifact_projects',
       6 => 'field_media_types',
-      7 => 'field_artifact_projects',
-      8 => 'field_privacy_level',
-      9 => 'field_artifact_theme',
-      10 => 'field_participation_level',
-      11 => 'field_artifact_intercession',
-      12 => 'field_artifact_mode',
-      13 => 'field_excess_mean_or_deficiency',
-      14 => 'field_force_politics_power',
-      15 => 'title',
-      16 => 'group_about',
+      7 => 'field_privacy_level',
+      8 => 'field_media',
+      9 => 'title',
     ),
     'format_type' => 'fieldset',
     'format_settings' => array(
@@ -470,6 +463,67 @@ function lacuna_stories_content_types_field_group_info() {
     ),
   );
   $export['group_content|node|video|form'] = $field_group;
+
+  $field_group = new stdClass();
+  $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
+  $field_group->api_version = 1;
+  $field_group->identifier = 'group_diagnostics|node|document|form';
+  $field_group->group_name = 'group_diagnostics';
+  $field_group->entity_type = 'node';
+  $field_group->bundle = 'document';
+  $field_group->mode = 'form';
+  $field_group->parent_name = '';
+  $field_group->data = array(
+    'label' => 'Diagnostics',
+    'weight' => '1',
+    'children' => array(
+      0 => 'field_artifact_intercession',
+      1 => 'field_artifact_mode',
+      2 => 'field_artifact_theme',
+      3 => 'field_excess_mean_or_deficiency',
+      4 => 'field_participation_level',
+      5 => 'group_force_power_politics',
+    ),
+    'format_type' => 'fieldset',
+    'format_settings' => array(
+      'formatter' => 'collapsible',
+      'instance_settings' => array(
+        'description' => '',
+        'classes' => 'group-diagnostics field-group-fieldset',
+        'required_fields' => 1,
+      ),
+    ),
+  );
+  $export['group_diagnostics|node|document|form'] = $field_group;
+
+  $field_group = new stdClass();
+  $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
+  $field_group->api_version = 1;
+  $field_group->identifier = 'group_force_power_politics|node|document|form';
+  $field_group->group_name = 'group_force_power_politics';
+  $field_group->entity_type = 'node';
+  $field_group->bundle = 'document';
+  $field_group->mode = 'form';
+  $field_group->parent_name = 'group_diagnostics';
+  $field_group->data = array(
+    'label' => 'How Are Force, Politics, Power configured in your artifact?',
+    'weight' => '28',
+    'children' => array(
+      0 => 'field_force',
+      1 => 'field_power',
+      2 => 'field_politics',
+    ),
+    'format_type' => 'fieldset',
+    'format_settings' => array(
+      'formatter' => 'collapsible',
+      'instance_settings' => array(
+        'description' => '',
+        'classes' => 'group-force-power-politics field-group-fieldset',
+        'required_fields' => 1,
+      ),
+    ),
+  );
+  $export['group_force_power_politics|node|document|form'] = $field_group;
 
   $field_group = new stdClass();
   $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */

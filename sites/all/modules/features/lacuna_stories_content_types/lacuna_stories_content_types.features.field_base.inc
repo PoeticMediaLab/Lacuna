@@ -279,43 +279,6 @@ function lacuna_stories_content_types_field_default_field_bases() {
     'type' => 'taxonomy_term_reference',
   );
 
-  // Exported field_base: 'field_artifact_projects'
-  $field_bases['field_artifact_projects'] = array(
-    'active' => 1,
-    'cardinality' => -1,
-    'deleted' => 0,
-    'entity_types' => array(),
-    'field_name' => 'field_artifact_projects',
-    'field_permissions' => array(
-      'type' => 0,
-    ),
-    'foreign keys' => array(
-      'tid' => array(
-        'columns' => array(
-          'tid' => 'tid',
-        ),
-        'table' => 'taxonomy_term_data',
-      ),
-    ),
-    'indexes' => array(
-      'tid' => array(
-        0 => 'tid',
-      ),
-    ),
-    'locked' => 0,
-    'module' => 'taxonomy',
-    'settings' => array(
-      'allowed_values' => array(
-        0 => array(
-          'vocabulary' => 'artifact_projects',
-          'parent' => 0,
-        ),
-      ),
-    ),
-    'translatable' => 0,
-    'type' => 'taxonomy_term_reference',
-  );
-
   // Exported field_base: 'field_artifact_theme'
   $field_bases['field_artifact_theme'] = array(
     'active' => 1,
@@ -528,7 +491,7 @@ function lacuna_stories_content_types_field_default_field_bases() {
   // Exported field_base: 'field_doc_genre'
   $field_bases['field_doc_genre'] = array(
     'active' => 1,
-    'cardinality' => -1,
+    'cardinality' => 1,
     'deleted' => 0,
     'entity_types' => array(),
     'field_name' => 'field_doc_genre',
@@ -560,35 +523,6 @@ function lacuna_stories_content_types_field_default_field_bases() {
     ),
     'translatable' => 0,
     'type' => 'taxonomy_term_reference',
-  );
-
-  // Exported field_base: 'field_doc_pages'
-  $field_bases['field_doc_pages'] = array(
-    'active' => 1,
-    'cardinality' => 1,
-    'deleted' => 0,
-    'entity_types' => array(),
-    'field_name' => 'field_doc_pages',
-    'foreign keys' => array(
-      'format' => array(
-        'columns' => array(
-          'format' => 'format',
-        ),
-        'table' => 'filter_format',
-      ),
-    ),
-    'indexes' => array(
-      'format' => array(
-        0 => 'format',
-      ),
-    ),
-    'locked' => 0,
-    'module' => 'text',
-    'settings' => array(
-      'max_length' => 255,
-    ),
-    'translatable' => 0,
-    'type' => 'text',
   );
 
   // Exported field_base: 'field_doc_text'
@@ -689,41 +623,23 @@ function lacuna_stories_content_types_field_default_field_bases() {
     'type' => 'list_integer',
   );
 
-  // Exported field_base: 'field_force_politics_power'
-  $field_bases['field_force_politics_power'] = array(
+  // Exported field_base: 'field_force'
+  $field_bases['field_force'] = array(
     'active' => 1,
-    'cardinality' => -1,
+    'cardinality' => 1,
     'deleted' => 0,
     'entity_types' => array(),
-    'field_name' => 'field_force_politics_power',
+    'field_name' => 'field_force',
     'field_permissions' => array(
       'type' => 0,
     ),
-    'foreign keys' => array(
-      'tid' => array(
-        'columns' => array(
-          'tid' => 'tid',
-        ),
-        'table' => 'taxonomy_term_data',
-      ),
-    ),
-    'indexes' => array(
-      'tid' => array(
-        0 => 'tid',
-      ),
-    ),
+    'foreign keys' => array(),
+    'indexes' => array(),
     'locked' => 0,
-    'module' => 'taxonomy',
-    'settings' => array(
-      'allowed_values' => array(
-        0 => array(
-          'vocabulary' => 'artifact_force_politics_power',
-          'parent' => 0,
-        ),
-      ),
-    ),
+    'module' => 'number',
+    'settings' => array(),
     'translatable' => 0,
-    'type' => 'taxonomy_term_reference',
+    'type' => 'number_integer',
   );
 
   // Exported field_base: 'field_gender'
@@ -1030,41 +946,42 @@ function lacuna_stories_content_types_field_default_field_bases() {
     'type' => 'taxonomy_term_reference',
   );
 
-  // Exported field_base: 'field_priority'
-  $field_bases['field_priority'] = array(
+  // Exported field_base: 'field_politics'
+  $field_bases['field_politics'] = array(
     'active' => 1,
     'cardinality' => 1,
     'deleted' => 0,
     'entity_types' => array(),
-    'field_name' => 'field_priority',
+    'field_name' => 'field_politics',
     'field_permissions' => array(
       'type' => 0,
     ),
-    'foreign keys' => array(
-      'tid' => array(
-        'columns' => array(
-          'tid' => 'tid',
-        ),
-        'table' => 'taxonomy_term_data',
-      ),
-    ),
-    'indexes' => array(
-      'tid' => array(
-        0 => 'tid',
-      ),
-    ),
+    'foreign keys' => array(),
+    'indexes' => array(),
     'locked' => 0,
-    'module' => 'taxonomy',
-    'settings' => array(
-      'allowed_values' => array(
-        0 => array(
-          'vocabulary' => 'priority',
-          'parent' => 0,
-        ),
-      ),
-    ),
+    'module' => 'number',
+    'settings' => array(),
     'translatable' => 0,
-    'type' => 'taxonomy_term_reference',
+    'type' => 'number_integer',
+  );
+
+  // Exported field_base: 'field_power'
+  $field_bases['field_power'] = array(
+    'active' => 1,
+    'cardinality' => 1,
+    'deleted' => 0,
+    'entity_types' => array(),
+    'field_name' => 'field_power',
+    'field_permissions' => array(
+      'type' => 0,
+    ),
+    'foreign keys' => array(),
+    'indexes' => array(),
+    'locked' => 0,
+    'module' => 'number',
+    'settings' => array(),
+    'translatable' => 0,
+    'type' => 'number_integer',
   );
 
   // Exported field_base: 'field_privacy_level'
@@ -1251,43 +1168,6 @@ function lacuna_stories_content_types_field_default_field_bases() {
       'allowed_values' => array(
         0 => array(
           'vocabulary' => 'topics',
-          'parent' => 0,
-        ),
-      ),
-    ),
-    'translatable' => 0,
-    'type' => 'taxonomy_term_reference',
-  );
-
-  // Exported field_base: 'field_unit'
-  $field_bases['field_unit'] = array(
-    'active' => 1,
-    'cardinality' => 1,
-    'deleted' => 0,
-    'entity_types' => array(),
-    'field_name' => 'field_unit',
-    'field_permissions' => array(
-      'type' => 0,
-    ),
-    'foreign keys' => array(
-      'tid' => array(
-        'columns' => array(
-          'tid' => 'tid',
-        ),
-        'table' => 'taxonomy_term_data',
-      ),
-    ),
-    'indexes' => array(
-      'tid' => array(
-        0 => 'tid',
-      ),
-    ),
-    'locked' => 0,
-    'module' => 'taxonomy',
-    'settings' => array(
-      'allowed_values' => array(
-        0 => array(
-          'vocabulary' => 'unit',
           'parent' => 0,
         ),
       ),
