@@ -8,7 +8,7 @@
 
 
 // implements hook_install
-function user_account_install() 
+function document_add_install() 
 {
   db_update('system')
     ->fields(array('weight' => 1000))
