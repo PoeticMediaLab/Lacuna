@@ -1,0 +1,17 @@
+<?php
+
+/**
+ * Implements hook_menu().
+ */
+function course_menu() {
+  $items = array();
+  $items['createcourse'] = array(
+    'title' => 'Create a New Course',
+    'description' => 'course creation.',
+    'page callback' => 'course_create',
+    'access callback' => TRUE,
+    'type' => MENU_NORMAL_ITEM,
+    'file' => 'course.pages.inc',
+  );
+  return $items;
+}

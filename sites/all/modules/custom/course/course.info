@@ -1,0 +1,4 @@
+name = Course
+description = Course related functionality.
+package = Lacuna Stories
+core = 7.x
