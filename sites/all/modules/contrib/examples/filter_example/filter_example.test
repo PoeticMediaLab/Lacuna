@@ -1,0 +1,109 @@
+<?php
+
+/**
+ * @file
+ * Test case for Testing the filter example module.
+ *
+ * This file contains the test cases to check if module is performing as
+ * expected.
+ */
+
+/**
+ * Functional tests for the Filter Example module.
+ *
+ * @ingroup filter_example
+ */
+
+class FilterExampleTestCase extends DrupalWebTestCase {
+  protected $webUser;
+  protected $filteredHtml;
+  protected $fullHtml;
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function getInfo() {
+    return array(
+      'name' => 'Filter example functionality',
+      'description' => 'Verify that content is processed by example filter.',
+      'group' => 'Examples',
+    );
+  }
+
+  /**
+   * Enable modules and create user with specific permissions.
+   */
+  public function setUp() {
+    parent::setUp('filter_example');
+
+    // Load the used input formats.
+    $this->filteredHtml = db_query_range('SELECT * FROM {filter_format} WHERE name = :name', 0, 1, array(':name' => 'Filtered HTML'))->fetchObject();
+    $this->fullHtml = db_query_range('SELECT * FROM {filter_format} WHERE name = :name', 0, 1, array(':name' => 'Full HTML'))->fetchObject();
+
+    // Create user.
+    $this->webUser = $this->drupalCreateUser(array(
+      'administer filters',
+      filter_permission_name($this->filteredHtml),
+      filter_permission_name($this->fullHtml),
+      'bypass node access',
+    ));
+  }
+
+  /**
+   * Functional test of the foo filter.
+   * 
+   * Login user, create an example node, and test blog functionality through
+   * the admin and user interfaces.
+   */
+  public function testFilterExampleBasic() {
+    // Login the admin user.
+    $this->drupalLogin($this->webUser);
+
+    // Enable both filters in format id 1 (default format).
+    $edit = array(
+      'filters[filter_time][status]' => TRUE,
+      'filters[filter_foo][status]' => TRUE,
+    );
+    $this->drupalPost('admin/config/content/formats/' . $this->filteredHtml->format, $edit, t('Save configuration'));
+
+    // Create a content type to test the filters (with default format).
+    $content_type = $this->drupalCreateContentType();
+
+    // Create a test node.
+    $langcode = LANGUAGE_NONE;
+    $edit = array(
+      "title" => $this->randomName(),
+      "body[$langcode][0][value]" => 'What foo is it? it is <time />',
+    );
+    $result = $this->drupalPost('node/add/' . $content_type->type, $edit, t('Save'));
+    $this->assertResponse(200);
+    $time = format_date(time());
+    $this->assertRaw('What bar is it? it is <em>' . $time . '</em>');
+
+    // Enable foo filter in other format id 2
+    $edit = array(
+      'filters[filter_foo][status]' => TRUE,
+    );
+    $this->drupalPost('admin/config/content/formats/' . $this->fullHtml->format, $edit, t('Save configuration'));
+
+    // Change foo filter replacement with a random string in format id 2
+    $replacement = $this->randomName();
+    $options = array(
+      'filters[filter_foo][settings][filter_example_foo]' => $replacement,
+    );
+    $this->drupalPost('admin/config/content/formats/' . $this->fullHtml->format, $options, t('Save configuration'));
+
+    // Create a test node with content format 2
+    $langcode = LANGUAGE_NONE;
+    $edit = array(
+      "title" => $this->randomName(),
+      "body[$langcode][0][value]" => 'What foo is it? it is <time />',
+      "body[$langcode][0][format]" => $this->fullHtml->format,
+    );
+    $result = $this->drupalPost('node/add/' . $content_type->type, $edit, t('Save'));
+    $this->assertResponse(200);
+
+    // Only foo filter is enabled.
+    $this->assertRaw("What " . $replacement . " is it", 'Foo filter successfully verified.');
+  }
+}

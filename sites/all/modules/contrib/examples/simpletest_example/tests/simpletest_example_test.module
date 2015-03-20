@@ -1,0 +1,31 @@
+<?php
+
+/**
+ * @file
+ * Implements simpletest_example_test module.
+ */
+
+/**
+ * The mock module for SimpleTest Example.
+ *
+ * This module exists so that we can enable it and use it to
+ * test elements of simpletest_module.
+ *
+ * @ingroup simpletest_example
+ */
+
+/**
+ * Implements hook_node_view().
+ *
+ * We'll just add some content to nodes of the type we like.
+ *
+ * @ingroup simpletest_example
+ */
+function simpletest_example_test_node_view($node, $view_mode, $langcode) {
+  if ($node->type == 'simpletest_example') {
+    $node->content['simpletest_example_test_section'] = array(
+      '#markup' => t('The test module did its thing.'),
+      '#weight' => -99,
+    );
+  }
+}

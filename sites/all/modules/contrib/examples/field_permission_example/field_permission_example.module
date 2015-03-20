@@ -1,0 +1,329 @@
+<?php
+/**
+ * @file
+ * An example field using the Field Types API.
+ */
+
+/**
+ * @defgroup field_permission_example Example: Field Permissions
+ * @ingroup examples
+ * @{
+ * Example using permissions on a Field API field.
+ *
+ * This example is a relatively simple text field you can attach to
+ * any fieldable entity.
+ *
+ * In this module we demonstrate how to limit access to a field.
+ * Drupal's Field API gives you two operations to permit or restrict:
+ * view and edit. So you can then decide who gets to see fields,
+ * who can edit them, and who can manage them.
+ *
+ * Our field is called field_permission_example_fieldnote. It has a
+ * simple default widget of a text area, and a default formatter
+ * that applies a CSS style to make it look like a sticky note.
+ *
+ * In addition to demonstrating how to set up permissions-based
+ * access to a field, this module also demonstrates the absolute
+ * minimum required to implement a field, since it doesn't have
+ * any field settings. The tests also have a generalized
+ * field testing class, called FieldTestGeneric, which can be easily
+ * subclassed and reused for other fields.
+ *
+ * If you wish to use this code as skeleton code for a field without
+ * permissions, you can simply remove field_permission_exampe_permission()
+ * and field_permission_field_access(). Also field_permission_example_menu()
+ * and _field_permission_example_page() are vestigial to the Examples
+ * project.
+ *
+ * How does it work?
+ *
+ * You can install this module and go to path /examples/field_permission_example
+ * for an introduction on how to use this field. Or see the same content at
+ * _field_permission_example_page().
+ *
+ * OK, how does the code work?
+ *
+ * As with any permission system, we implement hook_permission() in
+ * order to define a few permissions. In our case, users will want
+ * to either view or edit fieldnote fields. And, similar to the way
+ * node permissions work, we'll also include a context of either
+ * their own content or any content. So that gives us 4 permissions
+ * which administrators can assign to various roles. See
+ * field_permission_example_permission() for the list.
+ *
+ * With our permissions defined in hook_permission(), we can now
+ * handle requests for access. Those come in through
+ * hook_field_access(), which we've implemented as
+ * field_permission_example_field_acces(). This function determines
+ * whether the user has the ability to view or edit the field
+ * in question by calling user_access(). We also give special edit
+ * access to users with the 'bypass node access' and
+ * 'administer content types' permissions, defined by the node module.
+ *
+ * One tricky part is that our field won't always be attached to
+ * nodes. It could be attached to any type of entity. This means
+ * that there's no general way to figure out if the user 'owns'
+ * the entity or not. Since this is a simple example, we'll just
+ * check for 'any' access to unknown entity types. We'll also
+ * limit our known entity types to node and user, since those
+ * are easy to demonstrate.
+ *
+ * In a real application, we'd have use-case specific permissions
+ * which might be more complex than these. Or perhaps simpler.
+ *
+ * You can see a more complex field implementation in
+ * field_example.module.
+ *
+ * @see field_example
+ * @see field_example.module
+ * @see field_types
+ * @see field
+ */
+
+/**
+ * Implements hook_permission().
+ *
+ * We want to let site administrators figure out who should
+ * be able to view, edit, and administer our field.
+ *
+ * Field permission operations can only be view or edit, in the
+ * context of one's own content or that of others. Constrast
+ * with content types where we also have to worry about who can
+ * create or delete content.
+ */
+function field_permission_example_permission() {
+  // Note: This would be very easy to generate programatically,
+  // but it's all typed out here for clarity.
+  // The key text is the machine name of the permission.
+  $perms['view own fieldnote'] = array('title' => t('View own fieldnote'));
+  $perms['edit own fieldnote'] = array('title' => t('Edit own fieldnote'));
+  $perms['view any fieldnote'] = array('title' => t('View any fieldnote'));
+  $perms['edit any fieldnote'] = array('title' => t('Edit any fieldnote'));
+
+  return $perms;
+}
+
+/**
+ * Implements hook_field_access().
+ *
+ * We want to make sure that fields aren't being seen or edited
+ * by those who shouldn't.
+ *
+ * We have to build a permission string similar to those in
+ * hook_permission() in order to ask Drupal whether the user
+ * has that permission. Permission strings will end up being
+ * like 'view any fieldnote' or 'edit own fieldnote'.
+ *
+ * The tricky thing here is that a field can be attached to any type
+ * of entity, so it's not always trivial to figure out whether
+ * $account 'owns' the entity. We'll support access restrictions for
+ * user and node entity types, and be permissive with others,
+ * since that's easy to demonstrate.
+ *
+ * @see field_permission_example_permissions()
+ */
+function field_permission_example_field_access($op, $field, $entity_type, $entity, $account) {
+  // This hook will be invoked for every field type, so we have to
+  // check that it's the one we're interested in.
+  if ($field['type'] == 'field_permission_example_fieldnote') {
+    // First we'll check if the user has the 'superuser'
+    // permissions that node provides. This way administrators
+    // will be able to administer the content types.
+    if (user_access('bypass node access', $account)) {
+      drupal_set_message(t('User can bypass node access.'));
+      return TRUE;
+    }
+    if (user_access('administer content types', $account)) {
+      drupal_set_message(t('User can administer content types.'));
+      return TRUE;
+    }
+    // Now check for our own permissions.
+    // $context will end up being either 'any' or 'own.'
+    $context = 'any';
+    switch ($entity_type) {
+      case 'user':
+      case 'node':
+        // While administering the field itself, $entity will be
+        // NULL, so we have to check it.
+        if ($entity) {
+          if ($entity->uid == $account->uid) {
+            $context = 'own';
+          }
+        }
+    }
+    // Assemble a permission string, such as
+    // 'view any fieldnote'
+    $permission = $op . ' ' . $context . ' fieldnote';
+    // Finally, ask Drupal if this account has that permission.
+    $access = user_access($permission, $account);
+    $status = 'FALSE';
+    if ($access) {
+      $status = 'TRUE';
+    }
+    drupal_set_message($permission . ': ' . $status);
+    return $access;
+  }
+  // We have no opinion on field types other than our own.
+  return TRUE;
+}
+
+/**
+ * Implements hook_field_info().
+ *
+ * Provides the description of the field.
+ */
+function field_permission_example_field_info() {
+  return array(
+    // We name our field as the associative name of the array.
+    'field_permission_example_fieldnote' => array(
+      'label' => t('Fieldnote'),
+      'description' => t('Place a note-taking field on entities, with granular permissions.'),
+      'default_widget' => 'field_permission_example_widget',
+      'default_formatter' => 'field_permission_example_formatter',
+    ),
+  );
+}
+
+/**
+ * Implements hook_field_is_empty().
+ *
+ * hook_field_is_emtpy() is where Drupal asks us if this field is empty.
+ * Return TRUE if it does not contain data, FALSE if it does. This lets
+ * the form API flag an error when required fields are empty.
+ */
+function field_permission_example_field_is_empty($item, $field) {
+  return empty($item['notes']);
+}
+
+/**
+ * Implements hook_field_formatter_info().
+ *
+ * We need to tell Drupal about our excellent field formatter.
+ *
+ * It's some text in a div, styled to look like a sticky note.
+ *
+ * @see field_permission_example_field_formatter_view()
+ */
+function field_permission_example_field_formatter_info() {
+  return array(
+    // This formatter simply displays the text in a text field.
+    'field_permission_example_formatter' => array(
+      'label' => t('Simple text-based formatter'),
+      'field types' => array('field_permission_example_fieldnote'),
+    ),
+  );
+}
+
+/**
+ * Implements hook_field_formatter_view().
+ *
+ * Here we output the field for general consumption.
+ *
+ * The field will have a sticky note appearance, thanks to some
+ * simple CSS.
+ *
+ * Note that all of the permissions and access logic happens
+ * in hook_field_access(), and none of it is here.
+ */
+function field_permission_example_field_formatter_view($entity_type, $entity, $field, $instance, $langcode, $items, $display) {
+  $element = array();
+
+  switch ($display['type']) {
+    case 'field_permission_example_formatter':
+      foreach ($items as $delta => $item) {
+        $element[$delta] = array(
+          // We wrap the fieldnote content up in a div tag.
+          '#type' => 'html_tag',
+          '#tag' => 'div',
+          '#value' => check_plain($item['notes']),
+          // Let's give the note a nice sticky-note CSS appearance.
+          '#attributes' => array(
+            'class' => 'stickynote',
+          ),
+          // ..And this is the CSS for the stickynote.
+          '#attached' => array(
+            'css' => array(drupal_get_path('module', 'field_permission_example') .
+              '/field_permission_example.css'),
+          ),
+        );
+      }
+      break;
+  }
+  return $element;
+}
+
+/**
+ * Implements hook_field_widget_info().
+ *
+ * We're implementing just one widget: A basic textarea.
+ *
+ * @see field_permission_example_field_widget_form()
+ */
+function field_permission_example_field_widget_info() {
+  return array(
+    'field_permission_example_widget' => array(
+      'label' => t('Field note textarea'),
+      'field types' => array('field_permission_example_fieldnote'),
+    ),
+  );
+}
+
+/**
+ * Implements hook_field_widget_form().
+ *
+ * Drupal wants us to create a form for our field. We'll use
+ * something very basic like a default textarea.
+ *
+ * @see field_permission_example_field_widget_info()
+ */
+function field_permission_example_field_widget_form(&$form, &$form_state, $field, $instance, $langcode, $items, $delta, $element) {
+  // Grab the existing value for the field.
+  $value = isset($items[$delta]['notes']) ? $items[$delta]['notes'] : '';
+  // Grab a reference to the form element.
+  $widget = $element;
+  // Set up the delta for our return element.
+  $widget['#delta'] = $delta;
+
+  // Figure out which widget we need to generate.
+  // In our case, there's only one type.
+  switch ($instance['widget']['type']) {
+    case 'field_permission_example_widget':
+      $widget += array(
+        '#type' => 'textarea',
+        '#default_value' => $value,
+      );
+      break;
+  }
+
+  $element['notes'] = $widget;
+  return $element;
+}
+
+/**
+ * Implements hook_menu().
+ *
+ * Provides a simple user interface that gives the developer some clues.
+ */
+function field_permission_example_menu() {
+  $items['examples/field_permission_example'] = array(
+    'title' => 'Field Permission Example',
+    'page callback' => '_field_permission_example_page',
+    'access callback' => TRUE,
+  );
+  return $items;
+}
+
+/**
+ * A simple page to explain to the developer what to do.
+ *
+ * @see field_permission_example.module
+ */
+function _field_permission_example_page() {
+  $page = t("<p>The Field Permission Example module shows how you can restrict view and edit permissions within your field implementation. It adds a new field type called Fieldnote. Fieldnotes appear as simple text boxes on the create/edit form, and as sticky notes when viewed. By 'sticky note' we mean 'Post-It Note' but that's a trademarked term.</p><p>To see this field in action, add it to a content type or user profile. Go to the permissions page (");
+  $page .= l(t('admin/people/permissions'), 'admin/people/permissions');
+  $page .= t(") and look at the 'Field Permission Example' section. This allows you to change which roles can see and edit Fieldnote fields.</p><p>Creating different users with different capabilities will let you see these behaviors in action. Fieldnote helpfully displays a message telling you which permissions it is trying to resolve for the current field/user combination.</p><p>Definitely look through the code to see various implementation details.</p>");
+  return $page;
+}
+/**
+ * @} End of "defgroup field_permission_example".
+ */

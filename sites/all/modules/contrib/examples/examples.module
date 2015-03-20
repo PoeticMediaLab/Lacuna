@@ -1,0 +1,42 @@
+<?php
+
+/**
+ * @file
+ * This file serves as a stub file for the many Examples modules in the
+ * @link http://drupal.org/project/examples Examples for Developers Project @endlink
+ * which you can download and experiment with.
+ *
+ * One might say that examples.module is an example of documentation. However,
+ * note that the example submodules define many doxygen groups, which may or
+ * may not be a good strategy for other modules.
+ */
+
+/**
+ * @defgroup examples Examples
+ * @{
+ * Well-documented API examples for a broad range of Drupal 7 core
+ * functionality.
+ *
+ * Developers can learn how to use a particular API quickly by experimenting
+ * with the examples, and adapt them for their own use.
+ *
+ * Download the Examples for Developers Project (and participate with
+ * submissions, bug reports, patches, and documentation) at
+ * http://drupal.org/project/examples
+ */
+
+/**
+ * Implements hook_help().
+ */
+function examples_help($path, $arg) {
+  // re: http://drupal.org/node/767204
+  // 5. We need a master group (Examples) that will be in a main
+  // examples.module.
+  // The examples.module should be mostly doxy comments that point to the other
+  // examples.  It will also have a hook_help() explaining its purpose and how
+  // to access the other examples.
+}
+
+/**
+ * @} End of 'defgroup examples'.
+ */

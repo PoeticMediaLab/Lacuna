@@ -1,0 +1,17 @@
+/*
+ * @file
+ * CSS for ajax_example.
+ *
+ * See @link ajax_example_dependent_dropdown_degrades @endlink for
+ * details on what this file does. It is not used in any other example.
+ */
+ 
+/* Hides the next button when not degrading to non-javascript browser */
+html.js .next-button { 
+  display: none; 
+}
+
+/* Makes the next/choose button align to the right of the select control */
+.form-item-dropdown-first, .form-item-question-type-select {
+  display: inline-block;
+}

@@ -1,0 +1,46 @@
+<?php
+
+/**
+ * @file
+ * Test file for tabledrag_example module.
+ */
+
+/**
+ * Default test case for the tabledrag_example module.
+ *
+ * @ingroup tabledrag_example
+ */
+class TabledragExampleTestCase extends DrupalWebTestCase {
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function getInfo() {
+    return array(
+      'name' => 'Tabledrag Example',
+      'description' => 'Functional tests for the Tabledrag Example module.' ,
+      'group' => 'Examples',
+    );
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setUp() {
+    parent::setUp('tabledrag_example');
+  }
+
+  /**
+   * Tests the menu paths defined in tabledrag_example module.
+   */
+  public function testTabledragExampleMenus() {
+    $paths = array(
+      'examples/tabledrag_example_simple',
+      'examples/tabledrag_example_parent',
+    );
+    foreach ($paths as $path) {
+      $this->drupalGet($path);
+      $this->assertResponse(200, '200 response for path: ' . $path);
+    }
+  }
+}

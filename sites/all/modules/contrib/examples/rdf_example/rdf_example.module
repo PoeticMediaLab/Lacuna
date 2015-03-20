@@ -1,0 +1,86 @@
+<?php
+/**
+ * @file
+ * This is an example outlining how a module can be used to define RDF mappings.
+ * We define mappings for a node type defined in this module. We also customize
+ * mappings for a node type that is defined in another module, node_example.
+ */
+
+/**
+ * @defgroup rdf_example Example: RDF
+ * @ingroup examples
+ * @{
+ * Example RDF Mapping.
+ */
+
+/**
+ * Implements hook_rdf_mapping().
+ *
+ * This hook should only be used to define the RDF mapping for an entity or
+ * bundle that has been defined by this module. On installation, this mapping
+ * will be saved to the database. To alter anything in this mapping after module
+ * installation (or to alter bundles defined in another module), the RDF CRUD
+ * functions should be used, as shown below.
+ */
+function rdf_example_rdf_mapping() {
+  return array(
+    array(
+      'type' => 'node',
+      'bundle' => 'recipe',
+      'mapping' => array(
+        'rdftype' => array('v:Recipe'),
+        // We don't use the default bundle mapping for title. Instead, we add
+        // the v:name property. We still want to use dc:title as well, though,
+        // so we include it in the array.
+        'title' => array(
+          'predicates' => array('dc:title', 'v:name'),
+        ),
+        'recipe_summary' => array(
+          'predicates' => array('v:summary'),
+        ),
+        // The photo URI isn't a string but instead points to a resource, so we
+        // indicate that the attribute type is rel. If type isn't specified, it
+        // defaults to property, which is used for string values.
+        'recipe_photo' => array(
+          'predicates' => array('v:photo'),
+          'type'  => 'rel',
+        ),
+      ),
+    ),
+  );
+}
+
+/**
+ * Implements hook_rdf_namespaces().
+ *
+ * This hook should be used to define any prefixes used by this module that are
+ * not already defined in core by rdf_rdf_namespaces.
+ *
+ * @see hook_rdf_namespaces()
+ */
+function rdf_example_rdf_namespaces() {
+  return array(
+    // Google's namespace for their custom vocabularies.
+    'v' => 'http://rdf.data-vocabulary.org/#',
+  );
+}
+
+/**
+ * Implements hook_help().
+ */
+function rdf_example_help($path, $arg) {
+  switch ($path) {
+    case 'examples/rdf_example':
+      return "<p>" . t(
+        "The RDF Example module provides RDF mappings for a custom node type and
+        alters another node type's RDF mapping.
+        You can check your RDF using a <a href='!parser'>parser</a> by copying
+        and pasting your HTML source code into the box. For clearest results,
+        use Turtle as your output format.",
+        array('!parser' => url('http://www.w3.org/2007/08/pyRdfa/#distill_by_input'))
+      ) . "</p>";
+  }
+}
+/**
+ * @} End of "defgroup rdf_example".
+ */

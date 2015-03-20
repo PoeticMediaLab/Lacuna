@@ -1,0 +1,13 @@
+name = "SimpleTest Example Mock Module"
+description = "Mock module for the SimpleTest Example module."
+package = Example modules
+core = 7.x
+hidden = TRUE
+dependencies[] = simpletest_example
+
+; Information added by Drupal.org packaging script on 2014-10-03
+version = "7.x-1.x-dev"
+core = "7.x"
+project = "examples"
+datestamp = "1412378934"
+

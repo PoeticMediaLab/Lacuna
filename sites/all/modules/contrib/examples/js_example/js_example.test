@@ -1,0 +1,46 @@
+<?php
+
+/**
+ * @file
+ * Test file for js_example module.
+ */
+
+/**
+ * Default test case for the js_example module.
+ *
+ * @ingroup js_example
+ */
+class JsExampleTestCase extends DrupalWebTestCase {
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function getInfo() {
+    return array(
+      'name' => 'JavaScript Example',
+      'description' => 'Functional tests for the JavaScript Example module.' ,
+      'group' => 'Examples',
+    );
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setUp() {
+    parent::setUp('js_example');
+  }
+
+  /**
+   * Tests the menu paths defined in js_example module.
+   */
+  public function testJsExampleMenus() {
+    $paths = array(
+      'js_example/weights',
+      'js_example/accordion',
+    );
+    foreach ($paths as $path) {
+      $this->drupalGet($path);
+      $this->assertResponse(200, '200 response for path: ' . $path);
+    }
+  }
+}

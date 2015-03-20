@@ -1,0 +1,57 @@
+<?php
+/**
+ * @file
+ * Simpletest case for pager_example module.
+ */
+
+/**
+ * Functionality tests for the pager example module.
+ *
+ * @ingroup pager_example
+ */
+class PagerExampleTestCase extends DrupalWebTestCase {
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function getInfo() {
+    return array(
+      'name' => 'Pager Example',
+      'description' => 'Verify the pager functionality',
+      'group' => 'Examples',
+    );
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setUp() {
+    // Enable the module.
+    parent::setUp('pager_example');
+  }
+
+  /**
+   * Verify the functionality of the example module.
+   */
+  public function testPagerPage() {
+    // No need to login for this test.
+    $this->drupalGet('examples/pager_example');
+    $this->assertText('next', 'Found next link');
+    $this->assertText('last', 'Found last link');
+
+    // On the first page we shouldn't see the first
+    // or previous links.
+    $this->assertNoText('first', 'No first link on the first page');
+    $this->assertNoText('previous', 'No previous link on the first page');
+
+    // Let's go to the second page.
+    $this->drupalGet('examples/pager_example', array('query' => array('page' => 1)));
+    $this->assertText('next', 'Found next link');
+    $this->assertText('last', 'Found last link');
+
+    // On the second page we should also see the first
+    // and previous links.
+    $this->assertText('first', 'Found first link');
+    $this->assertText('previous', 'Found previous link');
+  }
+}

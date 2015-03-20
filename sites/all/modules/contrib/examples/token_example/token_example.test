@@ -1,0 +1,76 @@
+<?php
+
+/**
+ * @file
+ * Test cases for Testing the token example module.
+ */
+
+/**
+ * Functional tests for the Token Example module.
+ *
+ * @ingroup token_example
+ */
+class TokenExampleTestCase extends DrupalWebTestCase {
+
+  protected $webUser;
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function getInfo() {
+    return array(
+      'name' => 'Token example functionality',
+      'description' => 'Verify the token example interface.',
+      'group' => 'Examples',
+    );
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setUp() {
+    parent::setUp('token_example');
+    $this->webUser = $this->drupalCreateUser();
+    $this->drupalLogin($this->webUser);
+  }
+
+  /**
+   * Test interface.
+   */
+  public function testInterface() {
+    $filtered_id = db_query("SELECT format FROM {filter_format} WHERE name = 'Filtered HTML'")->fetchField();
+    $default_format_id = filter_default_format($this->webUser);
+
+    $this->drupalGet('examples/token');
+    $this->assertNoFieldByName('node');
+    $this->assertNoFieldByName('user');
+
+    $edit = array(
+      'text' => 'User [current-user:name] is trying the token example!',
+    );
+    $this->drupalPost(NULL, $edit, t('Submit'));
+    $this->assertText('User ' . $this->webUser->name . ' is trying the token example!');
+
+    // Create a node and then make the 'Plain text' text format the default.
+    $node = $this->drupalCreateNode(array('title' => 'Example node', 'status' => NODE_PUBLISHED));
+    db_update('filter_format')
+      ->fields(array('weight' => -10))
+      ->condition('name', 'Plain text')
+      ->execute();
+
+    $this->drupalGet('examples/token');
+
+    $edit = array(
+      'text' => 'Would you like to view the [node:type-name] [node:title] with text format [node:body-format] (ID [node:body-format:id])?',
+      'node' => $node->nid,
+    );
+    $this->drupalPost(NULL, $edit, t('Submit'));
+    $this->assertText('Would you like to view the Basic page Example node with text format Filtered HTML (ID ' . $filtered_id . ')?');
+
+    $edit = array(
+      'text' => 'Your default text format is [default-format:name] (ID [default-format:id]).',
+    );
+    $this->drupalPost(NULL, $edit, t('Submit'));
+    $this->assertText('Your default text format is Filtered HTML (ID ' . $default_format_id . ')');
+  }
+}

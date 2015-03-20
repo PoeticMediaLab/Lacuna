@@ -1,0 +1,32 @@
+<?php
+/**
+ * @file
+ * Install function for the field_permission_example module.
+ */
+
+/**
+ * Implements hook_field_schema().
+ *
+ * Defines the database schema of the field, using the format used by the
+ * Schema API.
+ *
+ * We only want a simple text field, similar to the body of a node.
+ *
+ * Note that this field has only a normal text (which translates to
+ * 16k of text in MySQL), and so therefore doesn't have an index.
+ * More complex schema would probably have at least one indexed
+ * column.
+ *
+ * @see http://drupal.org/node/146939
+ * @see schemaapi
+ * @see hook_field_schema()
+ * @ingroup field_permission_example
+ */
+function field_permission_example_field_schema($field) {
+  $columns = array(
+    'notes' => array('type' => 'text', 'size' => 'normal', 'not null' => FALSE),
+  );
+  return array(
+    'columns' => $columns,
+  );
+}
