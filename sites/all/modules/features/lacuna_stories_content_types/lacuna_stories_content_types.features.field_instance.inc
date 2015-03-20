@@ -2682,48 +2682,6 @@ function lacuna_stories_content_types_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-page-field_syllabus_pdf'
-  $field_instances['node-page-field_syllabus_pdf'] = array(
-    'bundle' => 'page',
-    'deleted' => 0,
-    'description' => '',
-    'display' => array(
-      'default' => array(
-        'label' => 'above',
-        'module' => 'file',
-        'settings' => array(),
-        'type' => 'file_default',
-        'weight' => 1,
-      ),
-      'teaser' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
-      ),
-    ),
-    'entity_type' => 'node',
-    'field_name' => 'field_syllabus_pdf',
-    'label' => 'Syllabus PDF',
-    'required' => 0,
-    'settings' => array(
-      'description_field' => 0,
-      'file_directory' => '',
-      'file_extensions' => 'txt pdf doc docx',
-      'max_filesize' => '',
-      'user_register_form' => FALSE,
-    ),
-    'widget' => array(
-      'active' => 1,
-      'module' => 'file',
-      'settings' => array(
-        'progress_indicator' => 'throbber',
-      ),
-      'type' => 'file_generic',
-      'weight' => 31,
-    ),
-  );
-
   // Exported field_instance: 'node-thread-field_image'
   $field_instances['node-thread-field_image'] = array(
     'bundle' => 'thread',
@@ -3825,7 +3783,6 @@ function lacuna_stories_content_types_field_default_field_instances() {
   t('References to the content stitched together');
   t('Start typing the name of materials on Lacuna Stories here, and they will autofill. Add everything that gets referenced or mentioned in your post. By using this feature, your writing will be linked with other materials on the site, and the networked thinking you do will be represented in the site\'s visualizations.');
   t('Status');
-  t('Syllabus PDF');
   t('Tags');
   t('Tags for an annotation');
   t('Text');
