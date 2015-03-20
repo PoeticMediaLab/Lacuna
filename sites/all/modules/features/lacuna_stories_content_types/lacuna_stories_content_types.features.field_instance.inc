@@ -755,42 +755,6 @@ function lacuna_stories_content_types_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-audio-field_status'
-  $field_instances['node-audio-field_status'] = array(
-    'bundle' => 'audio',
-    'default_value' => NULL,
-    'deleted' => 0,
-    'description' => '',
-    'display' => array(
-      'default' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 5,
-      ),
-      'teaser' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
-      ),
-    ),
-    'entity_type' => 'node',
-    'field_name' => 'field_status',
-    'label' => 'Status',
-    'required' => 1,
-    'settings' => array(
-      'user_register_form' => FALSE,
-    ),
-    'widget' => array(
-      'active' => 1,
-      'module' => 'options',
-      'settings' => array(),
-      'type' => 'options_buttons',
-      'weight' => 2,
-    ),
-  );
-
   // Exported field_instance: 'node-audio-field_tags'
   $field_instances['node-audio-field_tags'] = array(
     'bundle' => 'audio',
@@ -1798,45 +1762,6 @@ function lacuna_stories_content_types_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-document-field_status'
-  $field_instances['node-document-field_status'] = array(
-    'bundle' => 'document',
-    'default_value' => NULL,
-    'deleted' => 0,
-    'description' => '',
-    'display' => array(
-      'default' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 4,
-      ),
-      'teaser' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
-      ),
-    ),
-    'entity_type' => 'node',
-    'field_name' => 'field_status',
-    'label' => 'Status',
-    'required' => 1,
-    'settings' => array(
-      'user_register_form' => FALSE,
-    ),
-    'widget' => array(
-      'active' => 1,
-      'module' => 'options',
-      'settings' => array(
-        'comment' => 1,
-        'name_as_title' => 1,
-      ),
-      'type' => 'options_buttons',
-      'weight' => 1,
-    ),
-  );
-
   // Exported field_instance: 'node-document-field_tags'
   $field_instances['node-document-field_tags'] = array(
     'bundle' => 'document',
@@ -2126,42 +2051,6 @@ function lacuna_stories_content_types_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-image-field_status'
-  $field_instances['node-image-field_status'] = array(
-    'bundle' => 'image',
-    'default_value' => NULL,
-    'deleted' => 0,
-    'description' => '',
-    'display' => array(
-      'default' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 3,
-      ),
-      'teaser' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
-      ),
-    ),
-    'entity_type' => 'node',
-    'field_name' => 'field_status',
-    'label' => 'Status',
-    'required' => 1,
-    'settings' => array(
-      'user_register_form' => FALSE,
-    ),
-    'widget' => array(
-      'active' => 1,
-      'module' => 'options',
-      'settings' => array(),
-      'type' => 'options_buttons',
-      'weight' => 2,
-    ),
-  );
-
   // Exported field_instance: 'node-image-field_tags'
   $field_instances['node-image-field_tags'] = array(
     'bundle' => 'image',
@@ -2390,42 +2279,6 @@ function lacuna_stories_content_types_field_default_field_instances() {
       'settings' => array(),
       'type' => 'options_select',
       'weight' => 10,
-    ),
-  );
-
-  // Exported field_instance: 'node-music_video-field_status'
-  $field_instances['node-music_video-field_status'] = array(
-    'bundle' => 'music_video',
-    'default_value' => NULL,
-    'deleted' => 0,
-    'description' => '',
-    'display' => array(
-      'default' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 9,
-      ),
-      'teaser' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
-      ),
-    ),
-    'entity_type' => 'node',
-    'field_name' => 'field_status',
-    'label' => 'Status',
-    'required' => 1,
-    'settings' => array(
-      'user_register_form' => FALSE,
-    ),
-    'widget' => array(
-      'active' => 1,
-      'module' => 'options',
-      'settings' => array(),
-      'type' => 'options_buttons',
-      'weight' => 2,
     ),
   );
 
@@ -3016,42 +2869,6 @@ function lacuna_stories_content_types_field_default_field_instances() {
       'settings' => array(),
       'type' => 'options_buttons',
       'weight' => 10,
-    ),
-  );
-
-  // Exported field_instance: 'node-video-field_status'
-  $field_instances['node-video-field_status'] = array(
-    'bundle' => 'video',
-    'default_value' => NULL,
-    'deleted' => 0,
-    'description' => '',
-    'display' => array(
-      'default' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 8,
-      ),
-      'teaser' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
-      ),
-    ),
-    'entity_type' => 'node',
-    'field_name' => 'field_status',
-    'label' => 'Status',
-    'required' => 1,
-    'settings' => array(
-      'user_register_form' => FALSE,
-    ),
-    'widget' => array(
-      'active' => 1,
-      'module' => 'options',
-      'settings' => array(),
-      'type' => 'options_buttons',
-      'weight' => 2,
     ),
   );
 
@@ -3782,7 +3599,6 @@ function lacuna_stories_content_types_field_default_field_instances() {
   t('Ranges');
   t('References to the content stitched together');
   t('Start typing the name of materials on Lacuna Stories here, and they will autofill. Add everything that gets referenced or mentioned in your post. By using this feature, your writing will be linked with other materials on the site, and the networked thinking you do will be represented in the site\'s visualizations.');
-  t('Status');
   t('Tags');
   t('Tags for an annotation');
   t('Text');
