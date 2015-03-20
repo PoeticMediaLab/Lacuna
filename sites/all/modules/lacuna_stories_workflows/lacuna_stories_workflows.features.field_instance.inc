@@ -76,10 +76,7 @@ function lacuna_stories_workflows_field_default_field_instances() {
     'widget' => array(
       'active' => 1,
       'module' => 'options',
-      'settings' => array(
-        'comment' => 1,
-        'name_as_title' => 1,
-      ),
+      'settings' => array(),
       'type' => 'options_buttons',
       'weight' => 1,
     ),

@@ -29,9 +29,7 @@ function lacuna_stories_workflows_field_default_field_bases() {
     'module' => 'workflowfield',
     'settings' => array(
       'allowed_values_function' => 'workflowfield_allowed_values',
-      'allowed_values_string' => '1 | (creation)
-2 | Draft
-3 | Ready for Annotation',
+      'allowed_values_string' => '',
       'history' => array(
         'history_tab_show' => 1,
         'roles' => array(
@@ -43,9 +41,10 @@ function lacuna_stories_workflows_field_default_field_bases() {
         ),
       ),
       'watchdog_log' => 1,
-      'wid' => 1,
+      'wid' => 2,
       'widget' => array(
         'comment' => 1,
+        'hide' => 0,
         'name_as_title' => 1,
         'options' => 'select',
         'schedule' => 0,
