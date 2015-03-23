@@ -763,7 +763,11 @@ function lacuna_stories_permissions_user_default_permissions() {
   // Exported permission: 'create course content'.
   $permissions['create course content'] = array(
     'name' => 'create course content',
-    'roles' => array(),
+    'roles' => array(
+      'Content Manager' => 'Content Manager',
+      'Instructor' => 'Instructor',
+      'administrator' => 'administrator',
+    ),
     'module' => 'node',
   );
 
@@ -878,7 +882,6 @@ function lacuna_stories_permissions_user_default_permissions() {
     'roles' => array(
       'Content Manager' => 'Content Manager',
       'Instructor' => 'Instructor',
-      'Student' => 'Student',
       'administrator' => 'administrator',
       'anonymous user' => 'anonymous user',
     ),
@@ -989,7 +992,10 @@ function lacuna_stories_permissions_user_default_permissions() {
   // Exported permission: 'delete any course content'.
   $permissions['delete any course content'] = array(
     'name' => 'delete any course content',
-    'roles' => array(),
+    'roles' => array(
+      'Content Manager' => 'Content Manager',
+      'administrator' => 'administrator',
+    ),
     'module' => 'node',
   );
 
@@ -1091,7 +1097,11 @@ function lacuna_stories_permissions_user_default_permissions() {
   // Exported permission: 'delete own course content'.
   $permissions['delete own course content'] = array(
     'name' => 'delete own course content',
-    'roles' => array(),
+    'roles' => array(
+      'Content Manager' => 'Content Manager',
+      'Instructor' => 'Instructor',
+      'administrator' => 'administrator',
+    ),
     'module' => 'node',
   );
 
@@ -1301,7 +1311,10 @@ function lacuna_stories_permissions_user_default_permissions() {
   // Exported permission: 'edit any course content'.
   $permissions['edit any course content'] = array(
     'name' => 'edit any course content',
-    'roles' => array(),
+    'roles' => array(
+      'Content Manager' => 'Content Manager',
+      'administrator' => 'administrator',
+    ),
     'module' => 'node',
   );
 
@@ -1463,6 +1476,7 @@ function lacuna_stories_permissions_user_default_permissions() {
   $permissions['edit og_user_node'] = array(
     'name' => 'edit og_user_node',
     'roles' => array(
+      'Content Manager' => 'Content Manager',
       'administrator' => 'administrator',
     ),
     'module' => 'field_permissions',
@@ -1541,7 +1555,11 @@ function lacuna_stories_permissions_user_default_permissions() {
   // Exported permission: 'edit own course content'.
   $permissions['edit own course content'] = array(
     'name' => 'edit own course content',
-    'roles' => array(),
+    'roles' => array(
+      'Content Manager' => 'Content Manager',
+      'Instructor' => 'Instructor',
+      'administrator' => 'administrator',
+    ),
     'module' => 'node',
   );
 
@@ -1651,7 +1669,6 @@ function lacuna_stories_permissions_user_default_permissions() {
     'roles' => array(
       'Content Manager' => 'Content Manager',
       'Instructor' => 'Instructor',
-      'Student' => 'Student',
       'administrator' => 'administrator',
     ),
     'module' => 'field_permissions',
@@ -2412,7 +2429,7 @@ function lacuna_stories_permissions_user_default_permissions() {
   $permissions['view og_user_node'] = array(
     'name' => 'view og_user_node',
     'roles' => array(
-      'Instructor' => 'Instructor',
+      'Content Manager' => 'Content Manager',
       'administrator' => 'administrator',
     ),
     'module' => 'field_permissions',
@@ -2514,6 +2531,7 @@ function lacuna_stories_permissions_user_default_permissions() {
       'Instructor' => 'Instructor',
       'Student' => 'Student',
       'administrator' => 'administrator',
+      'authenticated user' => 'authenticated user',
     ),
     'module' => 'field_permissions',
   );

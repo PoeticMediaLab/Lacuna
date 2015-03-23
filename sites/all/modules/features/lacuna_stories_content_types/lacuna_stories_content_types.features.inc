@@ -56,6 +56,14 @@ function lacuna_stories_content_types_node_info() {
       'title_label' => '',
       'help' => '',
     ),
+    'course' => array(
+      'name' => t('Course'),
+      'base' => 'node_content',
+      'description' => t('A specific course, used to give a group of enrolled students access to materials.'),
+      'has_title' => '1',
+      'title_label' => t('Title'),
+      'help' => '',
+    ),
     'document' => array(
       'name' => t('Document'),
       'base' => 'node_content',

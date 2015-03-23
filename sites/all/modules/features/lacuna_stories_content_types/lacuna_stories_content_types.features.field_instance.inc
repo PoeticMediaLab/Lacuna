@@ -855,6 +855,210 @@ function lacuna_stories_content_types_field_default_field_instances() {
     ),
   );
 
+  // Exported field_instance: 'node-course-body'
+  $field_instances['node-course-body'] = array(
+    'bundle' => 'course',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'hidden',
+        'module' => 'text',
+        'settings' => array(),
+        'type' => 'text_default',
+        'weight' => 0,
+      ),
+      'teaser' => array(
+        'label' => 'hidden',
+        'module' => 'text',
+        'settings' => array(
+          'trim_length' => 600,
+        ),
+        'type' => 'text_summary_or_trimmed',
+        'weight' => 1,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'body',
+    'label' => 'Body',
+    'required' => FALSE,
+    'settings' => array(
+      'display_summary' => TRUE,
+      'text_processing' => 1,
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'module' => 'text',
+      'settings' => array(
+        'rows' => 20,
+        'summary_rows' => 5,
+      ),
+      'type' => 'text_textarea_with_summary',
+      'weight' => 31,
+    ),
+  );
+
+  // Exported field_instance: 'node-course-group_access'
+  $field_instances['node-course-group_access'] = array(
+    'bundle' => 'course',
+    'default_value' => array(
+      0 => array(
+        'value' => 0,
+      ),
+    ),
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'list',
+        'settings' => array(),
+        'type' => 'list_default',
+        'weight' => 2,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'group_access',
+    'label' => 'Group visibility',
+    'required' => TRUE,
+    'settings' => array(
+      'user_register_form' => FALSE,
+    ),
+    'view modes' => array(
+      'full' => array(
+        'label' => 'above',
+        'type' => 'options_onoff',
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'type' => 'options_onoff',
+      ),
+    ),
+    'widget' => array(
+      'module' => 'options',
+      'settings' => array(),
+      'type' => 'options_buttons',
+      'weight' => 32,
+    ),
+    'widget_type' => 'options_select',
+  );
+
+  // Exported field_instance: 'node-course-group_group'
+  $field_instances['node-course-group_group'] = array(
+    'bundle' => 'course',
+    'default_value' => array(
+      0 => array(
+        'value' => 1,
+      ),
+    ),
+    'deleted' => 0,
+    'description' => 'Determine if this is an OG group.',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'og_ui',
+        'settings' => array(
+          'field_name' => 'og_user_node',
+        ),
+        'type' => 'og_group_subscribe',
+        'weight' => 1,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'display_label' => 1,
+    'entity_type' => 'node',
+    'field_name' => 'group_group',
+    'label' => 'Group',
+    'required' => FALSE,
+    'settings' => array(
+      'user_register_form' => FALSE,
+    ),
+    'view modes' => array(
+      'full' => array(
+        'custom settings' => FALSE,
+        'label' => 'Full',
+        'type' => 'og_group_subscribe',
+      ),
+      'teaser' => array(
+        'custom settings' => FALSE,
+        'label' => 'Teaser',
+        'type' => 'og_group_subscribe',
+      ),
+    ),
+    'widget' => array(
+      'module' => 'options',
+      'settings' => array(
+        'display_label' => 0,
+        'og_hide' => TRUE,
+      ),
+      'type' => 'options_onoff',
+      'weight' => 0,
+    ),
+  );
+
+  // Exported field_instance: 'node-course-og_roles_permissions'
+  $field_instances['node-course-og_roles_permissions'] = array(
+    'bundle' => 'course',
+    'default_value' => array(
+      0 => array(
+        'value' => 0,
+      ),
+    ),
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 3,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'og_roles_permissions',
+    'label' => 'Group roles and permissions',
+    'required' => TRUE,
+    'settings' => array(
+      'user_register_form' => FALSE,
+    ),
+    'view modes' => array(
+      'full' => array(
+        'custom settings' => FALSE,
+        'label' => 'Full',
+        'type' => 'list_default',
+      ),
+      'teaser' => array(
+        'custom settings' => FALSE,
+        'label' => 'Teaser',
+        'type' => 'list_default',
+      ),
+    ),
+    'widget' => array(
+      'module' => 'options',
+      'settings' => array(),
+      'type' => 'options_select',
+      'weight' => 33,
+    ),
+  );
+
   // Exported field_instance: 'node-document-field_bibliographic_entry'
   $field_instances['node-document-field_bibliographic_entry'] = array(
     'bundle' => 'document',
@@ -1951,7 +2155,7 @@ function lacuna_stories_content_types_field_default_field_instances() {
     'bundle' => 'user',
     'default_value' => NULL,
     'deleted' => 0,
-    'description' => 'What course are you enrolled in? Or, what groups will you join?',
+    'description' => 'What course are you enrolled in?',
     'display' => array(
       'default' => array(
         'label' => 'above',
@@ -1963,7 +2167,7 @@ function lacuna_stories_content_types_field_default_field_instances() {
     ),
     'entity_type' => 'user',
     'field_name' => 'og_user_node',
-    'label' => 'Course or group(s) joined',
+    'label' => 'Course(s) Enrolled',
     'required' => 0,
     'settings' => array(
       'behaviors' => array(
@@ -2020,16 +2224,20 @@ function lacuna_stories_content_types_field_default_field_instances() {
   t('Choose an image to identify this annotation.');
   t('Comment');
   t('Course');
-  t('Course or group(s) joined');
+  t('Course(s) Enrolled');
   t('Cover Image');
   t('Date of Birth');
   t('Decide if this annotation is private or not');
   t('Describe why these pieces are stitched together');
   t('Description of My Thread');
+  t('Determine if this is an OG group.');
   t('Display Name');
   t('Education');
   t('Gender');
   t('Genre');
+  t('Group');
+  t('Group roles and permissions');
+  t('Group visibility');
   t('How I learn');
   t('If there is a PDF or other file version of this document, attach it here.');
   t('Image');
@@ -2062,7 +2270,7 @@ function lacuna_stories_content_types_field_default_field_instances() {
   t('URI');
   t('Unit');
   t('What category of annotation this is');
-  t('What course are you enrolled in? Or, what groups will you join?');
+  t('What course are you enrolled in?');
   t('What type of post is this?');
   t('Which course(s) or group(s) should be able to see this post?');
   t('Year in Program');

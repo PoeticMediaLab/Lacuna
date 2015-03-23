@@ -783,6 +783,31 @@ function lacuna_stories_content_types_field_default_field_bases() {
     'type' => 'entityreference',
   );
 
+  // Exported field_base: 'og_roles_permissions'
+  $field_bases['og_roles_permissions'] = array(
+    'active' => 1,
+    'cardinality' => 1,
+    'deleted' => 0,
+    'entity_types' => array(),
+    'field_name' => 'og_roles_permissions',
+    'indexes' => array(
+      'value' => array(
+        0 => 'value',
+      ),
+    ),
+    'locked' => 0,
+    'module' => 'list',
+    'settings' => array(
+      'allowed_values' => array(
+        0 => 'Use default roles and permissions',
+        1 => 'Override default roles and permissions',
+      ),
+      'allowed_values_function' => '',
+    ),
+    'translatable' => 0,
+    'type' => 'list_boolean',
+  );
+
   // Exported field_base: 'og_user_node'
   $field_bases['og_user_node'] = array(
     'active' => 1,
@@ -816,7 +841,7 @@ function lacuna_stories_content_types_field_default_field_bases() {
           'type' => 'none',
         ),
         'target_bundles' => array(
-          'course_or_other_group' => 'course_or_other_group',
+          'course' => 'course',
         ),
       ),
       'handler_submit' => 'Change handler',
