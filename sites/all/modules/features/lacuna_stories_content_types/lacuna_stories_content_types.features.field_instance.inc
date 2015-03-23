@@ -965,10 +965,10 @@ function lacuna_stories_content_types_field_default_field_instances() {
         'label' => 'above',
         'module' => 'og_ui',
         'settings' => array(
-          'field_name' => 'og_user_node',
+          'field_name' => FALSE,
         ),
         'type' => 'og_group_subscribe',
-        'weight' => 1,
+        'weight' => 4,
       ),
       'teaser' => array(
         'label' => 'above',
