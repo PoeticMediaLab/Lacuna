@@ -460,7 +460,7 @@ function lacuna_stories_views_views_default_views() {
   $view->description = '';
   $view->tag = 'default';
   $view->base_table = 'node';
-  $view->human_name = 'Materials, Syllabus';
+  $view->human_name = 'Materials';
   $view->core = 7;
   $view->api_version = '3.0';
   $view->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
@@ -479,7 +479,11 @@ function lacuna_stories_views_views_default_views() {
     5 => '5',
     4 => '4',
   );
-  $handler->display->display_options['cache']['type'] = 'none';
+  $handler->display->display_options['cache']['type'] = 'time';
+  $handler->display->display_options['cache']['results_lifespan'] = '60';
+  $handler->display->display_options['cache']['results_lifespan_custom'] = '0';
+  $handler->display->display_options['cache']['output_lifespan'] = '21600';
+  $handler->display->display_options['cache']['output_lifespan_custom'] = '0';
   $handler->display->display_options['query']['type'] = 'views_query';
   $handler->display->display_options['exposed_form']['type'] = 'better_exposed_filters';
   $handler->display->display_options['exposed_form']['options']['reset_button'] = TRUE;
@@ -635,7 +639,7 @@ function lacuna_stories_views_views_default_views() {
     'image_link' => 'content',
   );
   $handler->display->display_options['fields']['field_image']['delta_offset'] = '0';
-  /* Field: Content: Video */
+  /* Field: Broken/missing handler */
   $handler->display->display_options['fields']['field_video_video']['id'] = 'field_video_video';
   $handler->display->display_options['fields']['field_video_video']['table'] = 'field_data_field_video_video';
   $handler->display->display_options['fields']['field_video_video']['field'] = 'field_video_video';
@@ -645,11 +649,6 @@ function lacuna_stories_views_views_default_views() {
   $handler->display->display_options['fields']['field_video_video']['alter']['path'] = '[path_1] ';
   $handler->display->display_options['fields']['field_video_video']['alter']['absolute'] = TRUE;
   $handler->display->display_options['fields']['field_video_video']['element_label_colon'] = FALSE;
-  $handler->display->display_options['fields']['field_video_video']['click_sort_column'] = 'fid';
-  $handler->display->display_options['fields']['field_video_video']['type'] = 'file_rendered';
-  $handler->display->display_options['fields']['field_video_video']['settings'] = array(
-    'file_view_mode' => 'media_preview',
-  );
   /* Field: Content: Link */
   $handler->display->display_options['fields']['view_node']['id'] = 'view_node';
   $handler->display->display_options['fields']['view_node']['table'] = 'views_entity_node';
@@ -668,7 +667,7 @@ function lacuna_stories_views_views_default_views() {
   $handler->display->display_options['fields']['biblio_abst_e']['exclude'] = TRUE;
   $handler->display->display_options['fields']['biblio_abst_e']['alter']['max_length'] = '600';
   $handler->display->display_options['fields']['biblio_abst_e']['alter']['trim'] = TRUE;
-  /* Field: Content: Hover Abstract */
+  /* Field: Broken/missing handler */
   $handler->display->display_options['fields']['field_biblio_hover_abstract']['id'] = 'field_biblio_hover_abstract';
   $handler->display->display_options['fields']['field_biblio_hover_abstract']['table'] = 'field_data_field_biblio_hover_abstract';
   $handler->display->display_options['fields']['field_biblio_hover_abstract']['field'] = 'field_biblio_hover_abstract';
@@ -853,11 +852,13 @@ function lacuna_stories_views_views_default_views() {
   $handler->display->display_options['filters']['sid']['table'] = 'workflow_node_current';
   $handler->display->display_options['filters']['sid']['field'] = 'sid';
   $handler->display->display_options['filters']['sid']['value'] = array(
-    3 => '3',
+    6 => '6',
   );
 
   /* Display: Materials */
-  $handler = $view->new_display('page', 'Materials', 'page');
+  $handler = $view->new_display('page', 'Materials', 'materials');
+  $handler->display->display_options['defaults']['title'] = FALSE;
+  $handler->display->display_options['title'] = 'Materials';
   $handler->display->display_options['defaults']['exposed_form'] = FALSE;
   $handler->display->display_options['exposed_form']['type'] = 'better_exposed_filters';
   $handler->display->display_options['exposed_form']['options']['reset_button'] = TRUE;
@@ -868,19 +869,7 @@ function lacuna_stories_views_views_default_views() {
       'allow_secondary' => 0,
       'secondary_label' => 'Advanced options',
     ),
-    'sort' => array(
-      'bef_format' => 'bef_links',
-      'advanced' => array(
-        'collapsible' => 0,
-        'collapsible_label' => 'Sort options',
-        'combine' => 0,
-        'combine_rewrite' => '',
-        'reset' => 0,
-        'reset_label' => '',
-        'is_secondary' => 0,
-      ),
-    ),
-    'field_topics_tid' => array(
+    'field_unit_tid' => array(
       'bef_format' => 'bef',
       'more_options' => array(
         'bef_select_all_none' => 0,
@@ -916,191 +905,11 @@ function lacuna_stories_views_views_default_views() {
         ),
       ),
     ),
-    'type' => array(
+    'field_medium_tid' => array(
       'bef_format' => 'bef',
       'more_options' => array(
         'bef_select_all_none' => 0,
-        'bef_collapsible' => 0,
-        'is_secondary' => 0,
-        'any_label' => '',
-        'bef_filter_description' => '',
-        'tokens' => array(
-          'available' => array(
-            0 => 'global_types',
-          ),
-        ),
-        'rewrite' => array(
-          'filter_rewrite_values' => '',
-        ),
-      ),
-    ),
-  );
-  $handler->display->display_options['exposed_form']['options']['input_required'] = 0;
-  $handler->display->display_options['exposed_form']['options']['text_input_required_format'] = 'filtered_html';
-  $handler->display->display_options['defaults']['fields'] = FALSE;
-  /* Field: Content: Path */
-  $handler->display->display_options['fields']['path']['id'] = 'path';
-  $handler->display->display_options['fields']['path']['table'] = 'node';
-  $handler->display->display_options['fields']['path']['field'] = 'path';
-  $handler->display->display_options['fields']['path']['relationship'] = 'field_bibliographic_entry_target_id';
-  $handler->display->display_options['fields']['path']['label'] = '';
-  $handler->display->display_options['fields']['path']['exclude'] = TRUE;
-  $handler->display->display_options['fields']['path']['element_label_colon'] = FALSE;
-  $handler->display->display_options['fields']['path']['absolute'] = TRUE;
-  /* Field: Content: Path */
-  $handler->display->display_options['fields']['path_1']['id'] = 'path_1';
-  $handler->display->display_options['fields']['path_1']['table'] = 'node';
-  $handler->display->display_options['fields']['path_1']['field'] = 'path';
-  $handler->display->display_options['fields']['path_1']['label'] = '';
-  $handler->display->display_options['fields']['path_1']['exclude'] = TRUE;
-  $handler->display->display_options['fields']['path_1']['element_label_colon'] = FALSE;
-  $handler->display->display_options['fields']['path_1']['absolute'] = TRUE;
-  /* Field: Field: Image */
-  $handler->display->display_options['fields']['field_image']['id'] = 'field_image';
-  $handler->display->display_options['fields']['field_image']['table'] = 'field_data_field_image';
-  $handler->display->display_options['fields']['field_image']['field'] = 'field_image';
-  $handler->display->display_options['fields']['field_image']['label'] = '';
-  $handler->display->display_options['fields']['field_image']['alter']['path'] = '[path_1]';
-  $handler->display->display_options['fields']['field_image']['element_label_colon'] = FALSE;
-  $handler->display->display_options['fields']['field_image']['hide_empty'] = TRUE;
-  $handler->display->display_options['fields']['field_image']['click_sort_column'] = 'fid';
-  $handler->display->display_options['fields']['field_image']['settings'] = array(
-    'image_style' => 'thumbnails_for_browsing',
-    'image_link' => 'content',
-  );
-  $handler->display->display_options['fields']['field_image']['delta_offset'] = '0';
-  /* Field: Content: Video */
-  $handler->display->display_options['fields']['field_video_video']['id'] = 'field_video_video';
-  $handler->display->display_options['fields']['field_video_video']['table'] = 'field_data_field_video_video';
-  $handler->display->display_options['fields']['field_video_video']['field'] = 'field_video_video';
-  $handler->display->display_options['fields']['field_video_video']['label'] = '';
-  $handler->display->display_options['fields']['field_video_video']['exclude'] = TRUE;
-  $handler->display->display_options['fields']['field_video_video']['alter']['make_link'] = TRUE;
-  $handler->display->display_options['fields']['field_video_video']['alter']['path'] = '[path_1] ';
-  $handler->display->display_options['fields']['field_video_video']['alter']['absolute'] = TRUE;
-  $handler->display->display_options['fields']['field_video_video']['element_label_colon'] = FALSE;
-  $handler->display->display_options['fields']['field_video_video']['click_sort_column'] = 'fid';
-  $handler->display->display_options['fields']['field_video_video']['type'] = 'file_rendered';
-  $handler->display->display_options['fields']['field_video_video']['settings'] = array(
-    'file_view_mode' => 'media_preview',
-  );
-  /* Field: Content: Link */
-  $handler->display->display_options['fields']['view_node']['id'] = 'view_node';
-  $handler->display->display_options['fields']['view_node']['table'] = 'views_entity_node';
-  $handler->display->display_options['fields']['view_node']['field'] = 'view_node';
-  $handler->display->display_options['fields']['view_node']['label'] = '';
-  $handler->display->display_options['fields']['view_node']['alter']['alter_text'] = TRUE;
-  $handler->display->display_options['fields']['view_node']['alter']['text'] = 'Read and Annotate';
-  $handler->display->display_options['fields']['view_node']['element_type'] = 'div';
-  $handler->display->display_options['fields']['view_node']['element_class'] = 'lacuna-button';
-  $handler->display->display_options['fields']['view_node']['element_label_colon'] = FALSE;
-  /* Field: Content: Title */
-  $handler->display->display_options['fields']['title']['id'] = 'title';
-  $handler->display->display_options['fields']['title']['table'] = 'node';
-  $handler->display->display_options['fields']['title']['field'] = 'title';
-  $handler->display->display_options['fields']['title']['label'] = '';
-  $handler->display->display_options['fields']['title']['exclude'] = TRUE;
-  $handler->display->display_options['fields']['title']['element_label_colon'] = FALSE;
-  $handler->display->display_options['fields']['title']['link_to_node'] = FALSE;
-  /* Field: Biblio: Short Title */
-  $handler->display->display_options['fields']['biblio_short_title']['id'] = 'biblio_short_title';
-  $handler->display->display_options['fields']['biblio_short_title']['table'] = 'biblio';
-  $handler->display->display_options['fields']['biblio_short_title']['field'] = 'biblio_short_title';
-  $handler->display->display_options['fields']['biblio_short_title']['relationship'] = 'field_bibliographic_entry_target_id';
-  $handler->display->display_options['fields']['biblio_short_title']['label'] = '';
-  $handler->display->display_options['fields']['biblio_short_title']['alter']['make_link'] = TRUE;
-  $handler->display->display_options['fields']['biblio_short_title']['alter']['path'] = '[path_1]';
-  $handler->display->display_options['fields']['biblio_short_title']['alter']['absolute'] = TRUE;
-  $handler->display->display_options['fields']['biblio_short_title']['element_label_colon'] = FALSE;
-  $handler->display->display_options['fields']['biblio_short_title']['empty'] = '<a href="[path_1]">[title]</a>';
-  $handler->display->display_options['fields']['biblio_short_title']['biblio_label'] = 0;
-  /* Field: Biblio: Abstract */
-  $handler->display->display_options['fields']['biblio_abst_e']['id'] = 'biblio_abst_e';
-  $handler->display->display_options['fields']['biblio_abst_e']['table'] = 'biblio';
-  $handler->display->display_options['fields']['biblio_abst_e']['field'] = 'biblio_abst_e';
-  $handler->display->display_options['fields']['biblio_abst_e']['relationship'] = 'field_bibliographic_entry_target_id';
-  $handler->display->display_options['fields']['biblio_abst_e']['exclude'] = TRUE;
-  $handler->display->display_options['fields']['biblio_abst_e']['alter']['max_length'] = '600';
-  $handler->display->display_options['fields']['biblio_abst_e']['alter']['trim'] = TRUE;
-  $handler->display->display_options['fields']['biblio_abst_e']['empty'] = 'No Abstract Provided';
-  $handler->display->display_options['fields']['biblio_abst_e']['hide_empty'] = TRUE;
-  /* Field: Content: Hover Abstract */
-  $handler->display->display_options['fields']['field_biblio_hover_abstract']['id'] = 'field_biblio_hover_abstract';
-  $handler->display->display_options['fields']['field_biblio_hover_abstract']['table'] = 'field_data_field_biblio_hover_abstract';
-  $handler->display->display_options['fields']['field_biblio_hover_abstract']['field'] = 'field_biblio_hover_abstract';
-  $handler->display->display_options['fields']['field_biblio_hover_abstract']['relationship'] = 'field_bibliographic_entry_target_id';
-  $handler->display->display_options['fields']['field_biblio_hover_abstract']['label'] = '';
-  $handler->display->display_options['fields']['field_biblio_hover_abstract']['exclude'] = TRUE;
-  $handler->display->display_options['fields']['field_biblio_hover_abstract']['element_label_colon'] = FALSE;
-  $handler->display->display_options['fields']['field_biblio_hover_abstract']['empty'] = '[biblio_abst_e]';
-  $handler->display->display_options['fields']['field_biblio_hover_abstract']['hide_empty'] = TRUE;
-  $handler->display->display_options['fields']['field_biblio_hover_abstract']['hide_alter_empty'] = FALSE;
-  $handler->display->display_options['fields']['field_biblio_hover_abstract']['settings'] = array(
-    'trim_length' => '600',
-  );
-  /* Field: Global: Popup */
-  $handler->display->display_options['fields']['popup']['id'] = 'popup';
-  $handler->display->display_options['fields']['popup']['table'] = 'popup_views_integration';
-  $handler->display->display_options['fields']['popup']['field'] = 'popup';
-  $handler->display->display_options['fields']['popup']['label'] = '';
-  $handler->display->display_options['fields']['popup']['element_label_colon'] = FALSE;
-  $handler->display->display_options['fields']['popup']['hide_empty'] = TRUE;
-  $handler->display->display_options['fields']['popup']['title'] = '(See abstract)';
-  $handler->display->display_options['fields']['popup']['text'] = '[field_biblio_hover_abstract] ';
-  $handler->display->display_options['fields']['popup']['close'] = 0;
-  $handler->display->display_options['fields']['popup']['origin'] = 'top-left';
-  $handler->display->display_options['fields']['popup']['expand'] = 'top-right';
-  $handler->display->display_options['fields']['popup']['width'] = '200';
-  $handler->display->display_options['fields']['popup']['style'] = '0';
-  /* Field: Biblio: Year of Publication */
-  $handler->display->display_options['fields']['biblio_year']['id'] = 'biblio_year';
-  $handler->display->display_options['fields']['biblio_year']['table'] = 'biblio';
-  $handler->display->display_options['fields']['biblio_year']['field'] = 'biblio_year';
-  $handler->display->display_options['fields']['biblio_year']['relationship'] = 'field_bibliographic_entry_target_id';
-  $handler->display->display_options['fields']['biblio_year']['label'] = '';
-  $handler->display->display_options['fields']['biblio_year']['exclude'] = TRUE;
-  $handler->display->display_options['fields']['biblio_year']['alter']['alter_text'] = TRUE;
-  $handler->display->display_options['fields']['biblio_year']['alter']['text'] = '([biblio_year])';
-  $handler->display->display_options['fields']['biblio_year']['element_label_colon'] = FALSE;
-  $handler->display->display_options['fields']['biblio_year']['biblio_label'] = 0;
-  /* Field: Biblio: Authors */
-  $handler->display->display_options['fields']['biblio_authors']['id'] = 'biblio_authors';
-  $handler->display->display_options['fields']['biblio_authors']['table'] = 'biblio';
-  $handler->display->display_options['fields']['biblio_authors']['field'] = 'biblio_authors';
-  $handler->display->display_options['fields']['biblio_authors']['relationship'] = 'field_bibliographic_entry_target_id';
-  $handler->display->display_options['fields']['biblio_authors']['label'] = '';
-  $handler->display->display_options['fields']['biblio_authors']['alter']['alter_text'] = TRUE;
-  $handler->display->display_options['fields']['biblio_authors']['alter']['text'] = '[biblio_authors] [biblio_year]';
-  $handler->display->display_options['fields']['biblio_authors']['element_label_colon'] = FALSE;
-  $handler->display->display_options['fields']['biblio_authors']['biblio_label'] = 0;
-  $handler->display->display_options['fields']['biblio_authors']['auth_category'] = '1';
-  $handler->display->display_options['fields']['biblio_authors']['initialize'] = 0;
-  $handler->display->display_options['path'] = 'materials';
-  $handler->display->display_options['menu']['type'] = 'normal';
-  $handler->display->display_options['menu']['title'] = 'Materials';
-  $handler->display->display_options['menu']['weight'] = '0';
-  $handler->display->display_options['menu']['name'] = 'main-menu';
-  $handler->display->display_options['menu']['context'] = 0;
-  $handler->display->display_options['menu']['context_only_inline'] = 0;
-
-  /* Display: Syllabus */
-  $handler = $view->new_display('page', 'Syllabus', 'page_1');
-  $handler->display->display_options['defaults']['title'] = FALSE;
-  $handler->display->display_options['title'] = 'Syllabus';
-  $handler->display->display_options['defaults']['exposed_form'] = FALSE;
-  $handler->display->display_options['exposed_form']['type'] = 'better_exposed_filters';
-  $handler->display->display_options['exposed_form']['options']['reset_button'] = TRUE;
-  $handler->display->display_options['exposed_form']['options']['reset_button_label'] = 'View All';
-  $handler->display->display_options['exposed_form']['options']['autosubmit'] = TRUE;
-  $handler->display->display_options['exposed_form']['options']['bef'] = array(
-    'general' => array(
-      'allow_secondary' => 0,
-      'secondary_label' => 'Advanced options',
-    ),
-    'field_unit_tid' => array(
-      'bef_format' => 'bef',
-      'more_options' => array(
-        'bef_select_all_none' => 0,
+        'bef_select_all_none_nested' => 0,
         'bef_collapsible' => 0,
         'is_secondary' => 0,
         'any_label' => '',
@@ -1156,7 +965,7 @@ function lacuna_stories_views_views_default_views() {
     'image_link' => 'content',
   );
   $handler->display->display_options['fields']['field_image']['delta_offset'] = '0';
-  /* Field: Content: Video */
+  /* Field: Broken/missing handler */
   $handler->display->display_options['fields']['field_video_video']['id'] = 'field_video_video';
   $handler->display->display_options['fields']['field_video_video']['table'] = 'field_data_field_video_video';
   $handler->display->display_options['fields']['field_video_video']['field'] = 'field_video_video';
@@ -1166,11 +975,6 @@ function lacuna_stories_views_views_default_views() {
   $handler->display->display_options['fields']['field_video_video']['alter']['path'] = '[path_1] ';
   $handler->display->display_options['fields']['field_video_video']['alter']['absolute'] = TRUE;
   $handler->display->display_options['fields']['field_video_video']['element_label_colon'] = FALSE;
-  $handler->display->display_options['fields']['field_video_video']['click_sort_column'] = 'fid';
-  $handler->display->display_options['fields']['field_video_video']['type'] = 'file_rendered';
-  $handler->display->display_options['fields']['field_video_video']['settings'] = array(
-    'file_view_mode' => 'media_preview',
-  );
   /* Field: Content: Link */
   $handler->display->display_options['fields']['view_node']['id'] = 'view_node';
   $handler->display->display_options['fields']['view_node']['table'] = 'views_entity_node';
@@ -1181,6 +985,11 @@ function lacuna_stories_views_views_default_views() {
   $handler->display->display_options['fields']['view_node']['element_type'] = 'div';
   $handler->display->display_options['fields']['view_node']['element_class'] = 'lacuna-button';
   $handler->display->display_options['fields']['view_node']['element_label_colon'] = FALSE;
+  /* Field: Biblio: Biblio Citation */
+  $handler->display->display_options['fields']['citation']['id'] = 'citation';
+  $handler->display->display_options['fields']['citation']['table'] = 'biblio';
+  $handler->display->display_options['fields']['citation']['field'] = 'citation';
+  $handler->display->display_options['fields']['citation']['exclude'] = TRUE;
   /* Field: Biblio: Abstract */
   $handler->display->display_options['fields']['biblio_abst_e']['id'] = 'biblio_abst_e';
   $handler->display->display_options['fields']['biblio_abst_e']['table'] = 'biblio';
@@ -1189,16 +998,6 @@ function lacuna_stories_views_views_default_views() {
   $handler->display->display_options['fields']['biblio_abst_e']['exclude'] = TRUE;
   $handler->display->display_options['fields']['biblio_abst_e']['alter']['max_length'] = '600';
   $handler->display->display_options['fields']['biblio_abst_e']['alter']['trim'] = TRUE;
-  /* Field: Content: Hover Abstract */
-  $handler->display->display_options['fields']['field_biblio_hover_abstract']['id'] = 'field_biblio_hover_abstract';
-  $handler->display->display_options['fields']['field_biblio_hover_abstract']['table'] = 'field_data_field_biblio_hover_abstract';
-  $handler->display->display_options['fields']['field_biblio_hover_abstract']['field'] = 'field_biblio_hover_abstract';
-  $handler->display->display_options['fields']['field_biblio_hover_abstract']['relationship'] = 'field_bibliographic_entry_target_id';
-  $handler->display->display_options['fields']['field_biblio_hover_abstract']['label'] = '';
-  $handler->display->display_options['fields']['field_biblio_hover_abstract']['exclude'] = TRUE;
-  $handler->display->display_options['fields']['field_biblio_hover_abstract']['element_label_colon'] = FALSE;
-  $handler->display->display_options['fields']['field_biblio_hover_abstract']['empty'] = '[biblio_abst_e]';
-  $handler->display->display_options['fields']['field_biblio_hover_abstract']['hide_alter_empty'] = FALSE;
   /* Field: Content: Priority */
   $handler->display->display_options['fields']['field_priority']['id'] = 'field_priority';
   $handler->display->display_options['fields']['field_priority']['table'] = 'field_data_field_priority';
@@ -1233,7 +1032,7 @@ function lacuna_stories_views_views_default_views() {
   $handler->display->display_options['fields']['popup']['label'] = '';
   $handler->display->display_options['fields']['popup']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['popup']['title'] = '(See abstract)';
-  $handler->display->display_options['fields']['popup']['text'] = '[field_biblio_hover_abstract]';
+  $handler->display->display_options['fields']['popup']['text'] = '[biblio_abst_e] [citation]';
   $handler->display->display_options['fields']['popup']['close'] = 0;
   $handler->display->display_options['fields']['popup']['origin'] = 'top-left';
   $handler->display->display_options['fields']['popup']['expand'] = 'top-right';
@@ -1275,11 +1074,7 @@ function lacuna_stories_views_views_default_views() {
   $handler->display->display_options['filters']['type_1']['table'] = 'node';
   $handler->display->display_options['filters']['type_1']['field'] = 'type';
   $handler->display->display_options['filters']['type_1']['value'] = array(
-    'audio' => 'audio',
     'document' => 'document',
-    'image' => 'image',
-    'music_video' => 'music_video',
-    'video' => 'video',
   );
   $handler->display->display_options['filters']['type_1']['group'] = 1;
   $handler->display->display_options['filters']['type_1']['expose']['operator_id'] = 'type_1_op';
@@ -1298,7 +1093,7 @@ function lacuna_stories_views_views_default_views() {
   $handler->display->display_options['filters']['sid']['table'] = 'workflow_node_current';
   $handler->display->display_options['filters']['sid']['field'] = 'sid';
   $handler->display->display_options['filters']['sid']['value'] = array(
-    3 => '3',
+    6 => '6',
   );
   $handler->display->display_options['filters']['sid']['group'] = 1;
   /* Filter criterion: Content: Unit (field_unit) */
@@ -1307,7 +1102,7 @@ function lacuna_stories_views_views_default_views() {
   $handler->display->display_options['filters']['field_unit_tid']['field'] = 'field_unit_tid';
   $handler->display->display_options['filters']['field_unit_tid']['exposed'] = TRUE;
   $handler->display->display_options['filters']['field_unit_tid']['expose']['operator_id'] = 'field_unit_tid_op';
-  $handler->display->display_options['filters']['field_unit_tid']['expose']['label'] = 'Unit';
+  $handler->display->display_options['filters']['field_unit_tid']['expose']['label'] = 'Limit by Unit';
   $handler->display->display_options['filters']['field_unit_tid']['expose']['operator'] = 'field_unit_tid_op';
   $handler->display->display_options['filters']['field_unit_tid']['expose']['identifier'] = 'field_unit_tid';
   $handler->display->display_options['filters']['field_unit_tid']['expose']['multiple'] = TRUE;
@@ -1323,9 +1118,54 @@ function lacuna_stories_views_views_default_views() {
   $handler->display->display_options['filters']['field_unit_tid']['type'] = 'select';
   $handler->display->display_options['filters']['field_unit_tid']['vocabulary'] = 'unit';
   $handler->display->display_options['filters']['field_unit_tid']['error_message'] = FALSE;
-  $handler->display->display_options['path'] = 'syllabus';
+  /* Filter criterion: Content: Genre (field_doc_genre) */
+  $handler->display->display_options['filters']['field_doc_genre_tid']['id'] = 'field_doc_genre_tid';
+  $handler->display->display_options['filters']['field_doc_genre_tid']['table'] = 'field_data_field_doc_genre';
+  $handler->display->display_options['filters']['field_doc_genre_tid']['field'] = 'field_doc_genre_tid';
+  $handler->display->display_options['filters']['field_doc_genre_tid']['exposed'] = TRUE;
+  $handler->display->display_options['filters']['field_doc_genre_tid']['expose']['operator_id'] = 'field_doc_genre_tid_op';
+  $handler->display->display_options['filters']['field_doc_genre_tid']['expose']['label'] = 'Limit by Genre';
+  $handler->display->display_options['filters']['field_doc_genre_tid']['expose']['operator'] = 'field_doc_genre_tid_op';
+  $handler->display->display_options['filters']['field_doc_genre_tid']['expose']['identifier'] = 'field_doc_genre_tid';
+  $handler->display->display_options['filters']['field_doc_genre_tid']['expose']['multiple'] = TRUE;
+  $handler->display->display_options['filters']['field_doc_genre_tid']['expose']['remember_roles'] = array(
+    2 => '2',
+    1 => 0,
+    3 => 0,
+    4 => 0,
+    5 => 0,
+    6 => 0,
+  );
+  $handler->display->display_options['filters']['field_doc_genre_tid']['reduce_duplicates'] = TRUE;
+  $handler->display->display_options['filters']['field_doc_genre_tid']['type'] = 'select';
+  $handler->display->display_options['filters']['field_doc_genre_tid']['vocabulary'] = 'genre_doc';
+  $handler->display->display_options['filters']['field_doc_genre_tid']['error_message'] = FALSE;
+  /* Filter criterion: Content: Medium (field_medium) */
+  $handler->display->display_options['filters']['field_medium_tid']['id'] = 'field_medium_tid';
+  $handler->display->display_options['filters']['field_medium_tid']['table'] = 'field_data_field_medium';
+  $handler->display->display_options['filters']['field_medium_tid']['field'] = 'field_medium_tid';
+  $handler->display->display_options['filters']['field_medium_tid']['exposed'] = TRUE;
+  $handler->display->display_options['filters']['field_medium_tid']['expose']['operator_id'] = 'field_medium_tid_op';
+  $handler->display->display_options['filters']['field_medium_tid']['expose']['label'] = 'Limit by Media';
+  $handler->display->display_options['filters']['field_medium_tid']['expose']['operator'] = 'field_medium_tid_op';
+  $handler->display->display_options['filters']['field_medium_tid']['expose']['identifier'] = 'field_medium_tid';
+  $handler->display->display_options['filters']['field_medium_tid']['expose']['multiple'] = TRUE;
+  $handler->display->display_options['filters']['field_medium_tid']['expose']['remember_roles'] = array(
+    2 => '2',
+    1 => 0,
+    3 => 0,
+    4 => 0,
+    5 => 0,
+    6 => 0,
+  );
+  $handler->display->display_options['filters']['field_medium_tid']['reduce_duplicates'] = TRUE;
+  $handler->display->display_options['filters']['field_medium_tid']['type'] = 'select';
+  $handler->display->display_options['filters']['field_medium_tid']['vocabulary'] = 'medium';
+  $handler->display->display_options['filters']['field_medium_tid']['hierarchy'] = 1;
+  $handler->display->display_options['filters']['field_medium_tid']['error_message'] = FALSE;
+  $handler->display->display_options['path'] = 'materials';
   $handler->display->display_options['menu']['type'] = 'normal';
-  $handler->display->display_options['menu']['title'] = 'Syllabus';
+  $handler->display->display_options['menu']['title'] = 'Materials';
   $handler->display->display_options['menu']['weight'] = '0';
   $handler->display->display_options['menu']['name'] = 'main-menu';
   $handler->display->display_options['menu']['context'] = 0;

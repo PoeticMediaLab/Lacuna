@@ -18,9 +18,7 @@ function lacuna_stories_menus_menu_default_menu_links() {
     'link_title' => 'About This Course',
     'options' => array(
       'identifier' => 'main-menu_about-this-course:node/27',
-      'attributes' => array(
-        'title' => '',
-      ),
+      'attributes' => array(),
     ),
     'module' => 'menu',
     'hidden' => 0,
@@ -127,7 +125,7 @@ function lacuna_stories_menus_menu_default_menu_links() {
     'expanded' => 0,
     'weight' => -46,
     'customized' => 1,
-    'parent_identifier' => 'main-menu_explore:<nolink>',
+    'parent_identifier' => 'main-menu_help:<nolink>',
   );
   // Exported menu link: main-menu_connect:<nolink>
   $menu_links['main-menu_connect:<nolink>'] = array(
@@ -369,27 +367,6 @@ function lacuna_stories_menus_menu_default_menu_links() {
     'customized' => 1,
     'parent_identifier' => 'main-menu_create:<nolink>',
   );
-  // Exported menu link: main-menu_reading-schedule:syllabus
-  $menu_links['main-menu_reading-schedule:syllabus'] = array(
-    'menu_name' => 'main-menu',
-    'link_path' => 'syllabus',
-    'router_path' => 'syllabus',
-    'link_title' => 'Reading Schedule',
-    'options' => array(
-      'identifier' => 'main-menu_reading-schedule:syllabus',
-      'attributes' => array(
-        'title' => '',
-      ),
-    ),
-    'module' => 'system',
-    'hidden' => 0,
-    'external' => 0,
-    'has_children' => 0,
-    'expanded' => 0,
-    'weight' => -47,
-    'customized' => 1,
-    'parent_identifier' => 'main-menu_explore:<nolink>',
-  );
   // Exported menu link: main-menu_reflect:<nolink>
   $menu_links['main-menu_reflect:<nolink>'] = array(
     'menu_name' => 'main-menu',
@@ -563,7 +540,6 @@ function lacuna_stories_menus_menu_default_menu_links() {
   t('Materials');
   t('My Profile');
   t('My Writing');
-  t('Reading Schedule');
   t('Reflect');
   t('Research Consent');
   t('Responses');
