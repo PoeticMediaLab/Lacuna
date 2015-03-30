@@ -625,7 +625,7 @@ function lacuna_stories_views_views_default_views() {
   $handler->display->display_options['fields']['path_1']['exclude'] = TRUE;
   $handler->display->display_options['fields']['path_1']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['path_1']['absolute'] = TRUE;
-  /* Field: Field: Image */
+  /* Field: Content: Image */
   $handler->display->display_options['fields']['field_image']['id'] = 'field_image';
   $handler->display->display_options['fields']['field_image']['table'] = 'field_data_field_image';
   $handler->display->display_options['fields']['field_image']['field'] = 'field_image';
@@ -775,7 +775,7 @@ function lacuna_stories_views_views_default_views() {
   $handler->display->display_options['filters']['status']['value'] = 1;
   $handler->display->display_options['filters']['status']['group'] = 1;
   $handler->display->display_options['filters']['status']['expose']['operator'] = FALSE;
-  /* Filter criterion: Content: Topics (field_topics) */
+  /* Filter criterion: Broken/missing handler */
   $handler->display->display_options['filters']['field_topics_tid']['id'] = 'field_topics_tid';
   $handler->display->display_options['filters']['field_topics_tid']['table'] = 'field_data_field_topics';
   $handler->display->display_options['filters']['field_topics_tid']['field'] = 'field_topics_tid';
@@ -793,10 +793,6 @@ function lacuna_stories_views_views_default_views() {
     3 => '3',
     4 => '4',
   );
-  $handler->display->display_options['filters']['field_topics_tid']['reduce_duplicates'] = TRUE;
-  $handler->display->display_options['filters']['field_topics_tid']['type'] = 'select';
-  $handler->display->display_options['filters']['field_topics_tid']['vocabulary'] = 'topics';
-  $handler->display->display_options['filters']['field_topics_tid']['error_message'] = FALSE;
   /* Filter criterion: Content: Genre (field_doc_genre) */
   $handler->display->display_options['filters']['field_doc_genre_tid']['id'] = 'field_doc_genre_tid';
   $handler->display->display_options['filters']['field_doc_genre_tid']['table'] = 'field_data_field_doc_genre';
@@ -935,23 +931,15 @@ function lacuna_stories_views_views_default_views() {
   $handler->display->display_options['fields']['field_unit']['exclude'] = TRUE;
   $handler->display->display_options['fields']['field_unit']['type'] = 'taxonomy_term_reference_plain';
   /* Field: Content: Path */
-  $handler->display->display_options['fields']['path']['id'] = 'path';
-  $handler->display->display_options['fields']['path']['table'] = 'node';
-  $handler->display->display_options['fields']['path']['field'] = 'path';
-  $handler->display->display_options['fields']['path']['relationship'] = 'field_bibliographic_entry_target_id';
-  $handler->display->display_options['fields']['path']['label'] = '';
-  $handler->display->display_options['fields']['path']['exclude'] = TRUE;
-  $handler->display->display_options['fields']['path']['element_label_colon'] = FALSE;
-  $handler->display->display_options['fields']['path']['absolute'] = TRUE;
-  /* Field: Content: Path */
   $handler->display->display_options['fields']['path_1']['id'] = 'path_1';
   $handler->display->display_options['fields']['path_1']['table'] = 'node';
   $handler->display->display_options['fields']['path_1']['field'] = 'path';
   $handler->display->display_options['fields']['path_1']['label'] = '';
   $handler->display->display_options['fields']['path_1']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['path_1']['alter']['path'] = '[path]';
   $handler->display->display_options['fields']['path_1']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['path_1']['absolute'] = TRUE;
-  /* Field: Field: Image */
+  /* Field: Content: Image */
   $handler->display->display_options['fields']['field_image']['id'] = 'field_image';
   $handler->display->display_options['fields']['field_image']['table'] = 'field_data_field_image';
   $handler->display->display_options['fields']['field_image']['field'] = 'field_image';
@@ -965,16 +953,6 @@ function lacuna_stories_views_views_default_views() {
     'image_link' => 'content',
   );
   $handler->display->display_options['fields']['field_image']['delta_offset'] = '0';
-  /* Field: Broken/missing handler */
-  $handler->display->display_options['fields']['field_video_video']['id'] = 'field_video_video';
-  $handler->display->display_options['fields']['field_video_video']['table'] = 'field_data_field_video_video';
-  $handler->display->display_options['fields']['field_video_video']['field'] = 'field_video_video';
-  $handler->display->display_options['fields']['field_video_video']['label'] = '';
-  $handler->display->display_options['fields']['field_video_video']['exclude'] = TRUE;
-  $handler->display->display_options['fields']['field_video_video']['alter']['make_link'] = TRUE;
-  $handler->display->display_options['fields']['field_video_video']['alter']['path'] = '[path_1] ';
-  $handler->display->display_options['fields']['field_video_video']['alter']['absolute'] = TRUE;
-  $handler->display->display_options['fields']['field_video_video']['element_label_colon'] = FALSE;
   /* Field: Content: Link */
   $handler->display->display_options['fields']['view_node']['id'] = 'view_node';
   $handler->display->display_options['fields']['view_node']['table'] = 'views_entity_node';
@@ -982,8 +960,8 @@ function lacuna_stories_views_views_default_views() {
   $handler->display->display_options['fields']['view_node']['label'] = '';
   $handler->display->display_options['fields']['view_node']['alter']['alter_text'] = TRUE;
   $handler->display->display_options['fields']['view_node']['alter']['text'] = 'Read and Annotate';
-  $handler->display->display_options['fields']['view_node']['element_type'] = 'div';
-  $handler->display->display_options['fields']['view_node']['element_class'] = 'lacuna-button';
+  $handler->display->display_options['fields']['view_node']['alter']['make_link'] = TRUE;
+  $handler->display->display_options['fields']['view_node']['alter']['link_class'] = 'lacuna-button';
   $handler->display->display_options['fields']['view_node']['element_label_colon'] = FALSE;
   /* Field: Biblio: Biblio Citation */
   $handler->display->display_options['fields']['citation']['id'] = 'citation';
@@ -1595,7 +1573,7 @@ function lacuna_stories_views_views_default_views() {
   $handler->display->display_options['relationships']['uid']['id'] = 'uid';
   $handler->display->display_options['relationships']['uid']['table'] = 'node';
   $handler->display->display_options['relationships']['uid']['field'] = 'uid';
-  /* Field: Field: Image */
+  /* Field: Content: Image */
   $handler->display->display_options['fields']['field_image']['id'] = 'field_image';
   $handler->display->display_options['fields']['field_image']['table'] = 'field_data_field_image';
   $handler->display->display_options['fields']['field_image']['field'] = 'field_image';
@@ -1677,7 +1655,7 @@ function lacuna_stories_views_views_default_views() {
   $handler->display->display_options['filters']['field_genre_tid']['type'] = 'select';
   $handler->display->display_options['filters']['field_genre_tid']['vocabulary'] = 'genre_blog_post';
   $handler->display->display_options['filters']['field_genre_tid']['error_message'] = FALSE;
-  /* Filter criterion: Content: Topics (field_topics) */
+  /* Filter criterion: Broken/missing handler */
   $handler->display->display_options['filters']['field_topics_tid']['id'] = 'field_topics_tid';
   $handler->display->display_options['filters']['field_topics_tid']['table'] = 'field_data_field_topics';
   $handler->display->display_options['filters']['field_topics_tid']['field'] = 'field_topics_tid';
@@ -1696,10 +1674,6 @@ function lacuna_stories_views_views_default_views() {
     5 => 0,
     6 => 0,
   );
-  $handler->display->display_options['filters']['field_topics_tid']['reduce_duplicates'] = TRUE;
-  $handler->display->display_options['filters']['field_topics_tid']['type'] = 'select';
-  $handler->display->display_options['filters']['field_topics_tid']['vocabulary'] = 'topics';
-  $handler->display->display_options['filters']['field_topics_tid']['error_message'] = FALSE;
   /* Filter criterion: User: Display Name (field_display_name) */
   $handler->display->display_options['filters']['field_display_name_value']['id'] = 'field_display_name_value';
   $handler->display->display_options['filters']['field_display_name_value']['table'] = 'field_data_field_display_name';

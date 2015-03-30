@@ -260,6 +260,10 @@ Drupal.wysiwyg.plugins.media = {
     for (var blackList in Drupal.settings.media.blacklist) {
       delete mediaAttributes[Drupal.settings.media.blacklist[blackList]];
     }
+    if (attributes['view_mode'] == undefined || attributes['fid'] == undefined || mediaAttributes == undefined) {
+      // Getting out of here, user has changed media style.
+      return imgNode[0].outerHTML;
+    }
     tagContent = {
       "type": 'media',
       // @todo: This will be selected from the format form

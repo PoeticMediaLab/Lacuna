@@ -85,10 +85,10 @@ Drupal.media.browser.library.prototype.loadMedia = function () {
 
 Drupal.media.browser.library.prototype.scrollUpdater = function (e){
   if (!e.data.loading) {
-    var scrollbox = $('#scrollbox');
-    var scrolltop = scrollbox.attr('scrollTop');
-    var scrollheight = scrollbox.attr('scrollHeight');
-    var windowheight = scrollbox.attr('clientHeight');
+    var scrollbox = document.getElementById('scrollbox');
+    var scrolltop = scrollbox.scrollTop;
+    var scrollheight = scrollbox.scrollHeight;
+    var windowheight = scrollbox.clientHeight;
     var scrolloffset = 20;
 
     if(scrolltop >= (scrollheight - (windowheight + scrolloffset))) {

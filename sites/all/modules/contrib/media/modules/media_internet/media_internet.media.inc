@@ -11,7 +11,7 @@
 function media_internet_media_browser_plugin_info() {
   $plugins = array();
 
-  if (user_access('administer media') || user_access('add media from remote sources')) {
+  if (media_internet_access()) {
     $plugins['media_internet'] = array(
       '#weight' => -10,
     );
