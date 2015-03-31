@@ -1310,8 +1310,8 @@ function lacuna_stories_views_views_default_views() {
   $handler->display->display_options['fields']['view_node']['label'] = '';
   $handler->display->display_options['fields']['view_node']['alter']['alter_text'] = TRUE;
   $handler->display->display_options['fields']['view_node']['alter']['text'] = 'Read and Annotate';
-  $handler->display->display_options['fields']['view_node']['element_type'] = 'div';
-  $handler->display->display_options['fields']['view_node']['element_class'] = 'lacuna-button';
+  $handler->display->display_options['fields']['view_node']['alter']['make_link'] = TRUE;
+  $handler->display->display_options['fields']['view_node']['alter']['link_class'] = 'lacuna-button';
   $handler->display->display_options['fields']['view_node']['element_label_colon'] = FALSE;
   /* Field: Biblio: Abstract */
   $handler->display->display_options['fields']['biblio_abst_e']['id'] = 'biblio_abst_e';
