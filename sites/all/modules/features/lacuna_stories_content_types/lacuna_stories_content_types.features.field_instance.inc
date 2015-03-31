@@ -3037,6 +3037,40 @@ function lacuna_stories_content_types_field_default_field_instances() {
     ),
   );
 
+  // Exported field_instance: 'user-user-field_about_me'
+  $field_instances['user-user-field_about_me'] = array(
+    'bundle' => 'user',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'text',
+        'settings' => array(),
+        'type' => 'text_default',
+        'weight' => 9,
+      ),
+    ),
+    'entity_type' => 'user',
+    'field_name' => 'field_about_me',
+    'label' => 'About Me',
+    'required' => 0,
+    'settings' => array(
+      'text_processing' => 0,
+      'user_register_form' => 1,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'text',
+      'settings' => array(
+        'rows' => 5,
+      ),
+      'type' => 'text_textarea',
+      'weight' => 4,
+    ),
+  );
+
   // Exported field_instance: 'user-user-field_date_of_birth'
   $field_instances['user-user-field_date_of_birth'] = array(
     'bundle' => 'user',
@@ -3114,7 +3148,7 @@ function lacuna_stories_content_types_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 3,
+      'weight' => 2,
     ),
   );
 
@@ -3180,6 +3214,74 @@ function lacuna_stories_content_types_field_default_field_instances() {
       ),
       'type' => 'text_textfield',
       'weight' => 5,
+    ),
+  );
+
+  // Exported field_instance: 'user-user-field_how_i_learn'
+  $field_instances['user-user-field_how_i_learn'] = array(
+    'bundle' => 'user',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'text',
+        'settings' => array(),
+        'type' => 'text_default',
+        'weight' => 7,
+      ),
+    ),
+    'entity_type' => 'user',
+    'field_name' => 'field_how_i_learn',
+    'label' => 'How I Learn',
+    'required' => 0,
+    'settings' => array(
+      'text_processing' => 0,
+      'user_register_form' => 1,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'text',
+      'settings' => array(
+        'rows' => 5,
+      ),
+      'type' => 'text_textarea',
+      'weight' => 6,
+    ),
+  );
+
+  // Exported field_instance: 'user-user-field_learning_goals'
+  $field_instances['user-user-field_learning_goals'] = array(
+    'bundle' => 'user',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'text',
+        'settings' => array(),
+        'type' => 'text_default',
+        'weight' => 8,
+      ),
+    ),
+    'entity_type' => 'user',
+    'field_name' => 'field_learning_goals',
+    'label' => 'Learning Goals',
+    'required' => 0,
+    'settings' => array(
+      'text_processing' => 0,
+      'user_register_form' => 1,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'text',
+      'settings' => array(
+        'size' => 60,
+      ),
+      'type' => 'text_textfield',
+      'weight' => 7,
     ),
   );
 
@@ -3268,7 +3370,7 @@ function lacuna_stories_content_types_field_default_field_instances() {
     ),
     'entity_type' => 'user',
     'field_name' => 'og_user_node',
-    'label' => 'Course or group(s) joined',
+    'label' => 'Course(s) Enrolled In',
     'required' => 0,
     'settings' => array(
       'behaviors' => array(
@@ -3302,7 +3404,7 @@ function lacuna_stories_content_types_field_default_field_instances() {
       'module' => 'og',
       'settings' => array(),
       'type' => 'og_complex',
-      'weight' => 9,
+      'weight' => 8,
     ),
   );
 
@@ -3311,6 +3413,7 @@ function lacuna_stories_content_types_field_default_field_instances() {
   t('A reference to the annotated content');
   t('A transcription of the audio.');
   t('A unit might be "Week One", "January 1st", "Section Two: Why Monkeys Like Bananas", or another method of chronologically ordering your syllabus.');
+  t('About Me');
   t('Add as many media files as necessary');
   t('Annotated Content');
   t('Annotation Text');
@@ -3324,7 +3427,7 @@ function lacuna_stories_content_types_field_default_field_instances() {
   t('Choose a cover image for this video.');
   t('Choose an icon to represent this blog post when browsing. All browsing icons on Lacuna Stories are portrait dimensions, so please try to choose this proportion of image or crop it yourself before uploading. If you upload a landscape image, it will likely become skewed in the automated cropping. Also make sure your image is larger than 220 pixels wide and 320 pixels tall. If not, you can change that in programs like Mac Preview by selecting TOOLS --> ADJUST SIZE and increase the pixels.');
   t('Comment');
-  t('Course or group(s) joined');
+  t('Course(s) Enrolled In');
   t('Cover Image');
   t('Date of Birth');
   t('Decide if this annotation is private or not');
@@ -3340,8 +3443,10 @@ function lacuna_stories_content_types_field_default_field_instances() {
   t('Group');
   t('Group visibility');
   t('Hover Abstract');
+  t('How I Learn');
   t('If there is a PDF or other file version of this document, attach it here.');
   t('Image');
+  t('Learning Goals');
   t('Major/Degree');
   t('Media');
   t('My Stitchings');

@@ -344,6 +344,35 @@ function lacuna_stories_content_types_field_group_info() {
   $field_group = new stdClass();
   $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
   $field_group->api_version = 1;
+  $field_group->identifier = 'group_about|user|user|form';
+  $field_group->group_name = 'group_about';
+  $field_group->entity_type = 'user';
+  $field_group->bundle = 'user';
+  $field_group->mode = 'form';
+  $field_group->parent_name = '';
+  $field_group->data = array(
+    'label' => 'About Me',
+    'weight' => '1',
+    'children' => array(
+      0 => 'field_display_name',
+      1 => 'field_about_me',
+      2 => 'picture',
+    ),
+    'format_type' => 'fieldset',
+    'format_settings' => array(
+      'formatter' => 'collapsible',
+      'instance_settings' => array(
+        'description' => '',
+        'classes' => 'group-about field-group-fieldset',
+        'required_fields' => 1,
+      ),
+    ),
+  );
+  $export['group_about|user|user|form'] = $field_group;
+
+  $field_group = new stdClass();
+  $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
+  $field_group->api_version = 1;
   $field_group->identifier = 'group_content|node|audio|form';
   $field_group->group_name = 'group_content';
   $field_group->entity_type = 'node';
@@ -460,6 +489,66 @@ function lacuna_stories_content_types_field_group_info() {
     ),
   );
   $export['group_content|node|video|form'] = $field_group;
+
+  $field_group = new stdClass();
+  $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
+  $field_group->api_version = 1;
+  $field_group->identifier = 'group_demographics|user|user|form';
+  $field_group->group_name = 'group_demographics';
+  $field_group->entity_type = 'user';
+  $field_group->bundle = 'user';
+  $field_group->mode = 'form';
+  $field_group->parent_name = '';
+  $field_group->data = array(
+    'label' => 'Demographics',
+    'weight' => '5',
+    'children' => array(
+      0 => 'field_date_of_birth',
+      1 => 'field_gender',
+      2 => 'field_education',
+      3 => 'field_major_degree',
+      4 => 'field_year_in_program',
+    ),
+    'format_type' => 'fieldset',
+    'format_settings' => array(
+      'formatter' => 'collapsible',
+      'instance_settings' => array(
+        'description' => '',
+        'classes' => 'group-demographics field-group-fieldset',
+        'required_fields' => 1,
+      ),
+    ),
+  );
+  $export['group_demographics|user|user|form'] = $field_group;
+
+  $field_group = new stdClass();
+  $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
+  $field_group->api_version = 1;
+  $field_group->identifier = 'group_learning|user|user|form';
+  $field_group->group_name = 'group_learning';
+  $field_group->entity_type = 'user';
+  $field_group->bundle = 'user';
+  $field_group->mode = 'form';
+  $field_group->parent_name = '';
+  $field_group->data = array(
+    'label' => 'Learning',
+    'weight' => '6',
+    'children' => array(
+      0 => 'og_user_node',
+      1 => 'field_how_i_learn',
+      2 => 'field_learning_goals',
+    ),
+    'format_type' => 'fieldset',
+    'format_settings' => array(
+      'formatter' => 'collapsible',
+      'instance_settings' => array(
+        'description' => '',
+        'classes' => 'group-learning field-group-fieldset',
+        'required_fields' => 1,
+      ),
+    ),
+  );
+  $export['group_learning|user|user|form'] = $field_group;
 
   $field_group = new stdClass();
   $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
