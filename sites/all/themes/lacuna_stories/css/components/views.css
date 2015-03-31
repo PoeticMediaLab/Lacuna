@@ -45,11 +45,6 @@ fieldset.form-wrapper {
 }
 
 /* Arrange topic view */
-/* line 42, ../../sass/components/views.scss */
-.view-topics .view-content div {
-  height: 200px;
-}
-
 /* line 46, ../../sass/components/views.scss */
 .views-row-odd span.views-field-field-image div.topic_image {
   float: left;
@@ -74,17 +69,19 @@ div.views-row-last span.views-field-field-image div.topic_image {
   width: 100%;
 }
 
-/*.views-exposed-form .views-exposed-widget.views-reset-button {
+/* line 66, ../../sass/components/views.scss */
+.views-exposed-form .views-exposed-widget.views-reset-button {
   margin-top: 10px;
-  padding-top:0px;
-}*/
-/* line 69, ../../sass/components/views.scss */
+  padding-top: 0px;
+}
+
+/* line 71, ../../sass/components/views.scss */
 .views-exposed-form .views-exposed-widget label {
   min-width: 150px;
 }
 
 /* View-specific theming, for Materials, Responses, Threads */
-/* line 84, ../../sass/components/views.scss */
+/* line 86, ../../sass/components/views.scss */
 .view-documents .views-submit-button,
 .view-documents .views-widget-sort-order,
 .view-responses .views-submit-button,
@@ -101,7 +98,7 @@ div.views-row-last span.views-field-field-image div.topic_image {
 .view-all-annotations .views-widget-sort-order {
   display: none;
 }
-/* line 88, ../../sass/components/views.scss */
+/* line 91, ../../sass/components/views.scss */
 .view-documents .views-widget-sort-by .form-type-bef-link,
 .view-responses .views-widget-sort-by .form-type-bef-link,
 .view-my-threads .views-widget-sort-by .form-type-bef-link,
@@ -112,7 +109,7 @@ div.views-row-last span.views-field-field-image div.topic_image {
   float: left;
   margin: 0 10px 0 15px;
 }
-/* line 91, ../../sass/components/views.scss */
+/* line 94, ../../sass/components/views.scss */
 .view-documents .views-widget-sort-by .form-type-bef-link a,
 .view-responses .views-widget-sort-by .form-type-bef-link a,
 .view-my-threads .views-widget-sort-by .form-type-bef-link a,
@@ -120,11 +117,11 @@ div.views-row-last span.views-field-field-image div.topic_image {
 .view-my-content .views-widget-sort-by .form-type-bef-link a,
 .view-all-content .views-widget-sort-by .form-type-bef-link a,
 .view-all-annotations .views-widget-sort-by .form-type-bef-link a {
-  color: gray;
+  color: #808080;
   font-weight: bold;
   font-size: 15px;
 }
-/* line 96, ../../sass/components/views.scss */
+/* line 99, ../../sass/components/views.scss */
 .view-documents .views-widget-sort-by .form-type-bef-link a:hover,
 .view-responses .views-widget-sort-by .form-type-bef-link a:hover,
 .view-my-threads .views-widget-sort-by .form-type-bef-link a:hover,
@@ -132,9 +129,9 @@ div.views-row-last span.views-field-field-image div.topic_image {
 .view-my-content .views-widget-sort-by .form-type-bef-link a:hover,
 .view-all-content .views-widget-sort-by .form-type-bef-link a:hover,
 .view-all-annotations .views-widget-sort-by .form-type-bef-link a:hover {
-  color: #1588ba;
+  color: #1588BA;
 }
-/* line 100, ../../sass/components/views.scss */
+/* line 103, ../../sass/components/views.scss */
 .view-documents .views-widget-sort-by .form-type-bef-link.selected a,
 .view-responses .views-widget-sort-by .form-type-bef-link.selected a,
 .view-my-threads .views-widget-sort-by .form-type-bef-link.selected a,
@@ -142,9 +139,9 @@ div.views-row-last span.views-field-field-image div.topic_image {
 .view-my-content .views-widget-sort-by .form-type-bef-link.selected a,
 .view-all-content .views-widget-sort-by .form-type-bef-link.selected a,
 .view-all-annotations .views-widget-sort-by .form-type-bef-link.selected a {
-  color: #1588ba;
+  color: #1588BA;
 }
-/* line 104, ../../sass/components/views.scss */
+/* line 107, ../../sass/components/views.scss */
 .view-documents img,
 .view-responses img,
 .view-my-threads img,
@@ -152,13 +149,14 @@ div.views-row-last span.views-field-field-image div.topic_image {
 .view-my-content img,
 .view-all-content img,
 .view-all-annotations img {
-  width: auto;
-  height: auto;
+  width: 100%;
+  height: 220px;
   max-width: 100%;
   max-height: 100%;
   box-shadow: 0px 0px 10px #888888;
+  z-index: -1;
 }
-/* line 111, ../../sass/components/views.scss */
+/* line 116, ../../sass/components/views.scss */
 .view-documents .views-row,
 .view-responses .views-row,
 .view-my-threads .views-row,
@@ -166,12 +164,14 @@ div.views-row-last span.views-field-field-image div.topic_image {
 .view-my-content .views-row,
 .view-all-content .views-row,
 .view-all-annotations .views-row {
+  position: relative;
   float: left;
-  width: 150px;
+  width: 320px;
+  border: 10px;
   margin: 20px 20px 65px 20px;
   height: 350px;
 }
-/* line 117, ../../sass/components/views.scss */
+/* line 125, ../../sass/components/views.scss */
 .view-documents .views-exposed-widget,
 .view-responses .views-exposed-widget,
 .view-my-threads .views-exposed-widget,
@@ -181,7 +181,7 @@ div.views-row-last span.views-field-field-image div.topic_image {
 .view-all-annotations .views-exposed-widget {
   margin-top: 0px;
 }
-/* line 121, ../../sass/components/views.scss */
+/* line 128, ../../sass/components/views.scss */
 .view-documents .views-exposed-widget > label,
 .view-documents .form-item-sort-by > label,
 .view-responses .views-exposed-widget > label,
@@ -199,7 +199,7 @@ div.views-row-last span.views-field-field-image div.topic_image {
   float: left;
   margin-right: 10px;
 }
-/* line 125, ../../sass/components/views.scss */
+/* line 133, ../../sass/components/views.scss */
 .view-documents .views-widget,
 .view-responses .views-widget,
 .view-my-threads .views-widget,
@@ -209,7 +209,7 @@ div.views-row-last span.views-field-field-image div.topic_image {
 .view-all-annotations .views-widget {
   display: inline;
 }
-/* line 127, ../../sass/components/views.scss */
+/* line 135, ../../sass/components/views.scss */
 .view-documents .views-widget input[type=text],
 .view-responses .views-widget input[type=text],
 .view-my-threads .views-widget input[type=text],
@@ -219,7 +219,7 @@ div.views-row-last span.views-field-field-image div.topic_image {
 .view-all-annotations .views-widget input[type=text] {
   width: 20%;
 }
-/* line 131, ../../sass/components/views.scss */
+/* line 139, ../../sass/components/views.scss */
 .view-documents .form-type-bef-checkbox,
 .view-responses .form-type-bef-checkbox,
 .view-my-threads .form-type-bef-checkbox,
@@ -232,30 +232,68 @@ div.views-row-last span.views-field-field-image div.topic_image {
   font-size: 0.95em;
   color: grey;
 }
-/* line 137, ../../sass/components/views.scss */
-.view-documents .view-content h3,
-.view-responses .view-content h3,
-.view-my-threads .view-content h3,
-.view-sewing-kit .view-content h3,
-.view-my-content .view-content h3,
-.view-all-content .view-content h3,
-.view-all-annotations .view-content h3 {
-  display: inline-block;
-  width: 100%;
-  padding-top: 25px;
+
+/* line 148, ../../sass/components/views.scss */
+.view-responses .views-row {
+  position: relative;
+  float: left;
+  width: 320px;
+  border: 10px;
+  margin: 20px 20px 65px 20px;
+  height: 220px;
+}
+/* line 156, ../../sass/components/views.scss */
+.view-responses .views-row span.text-content {
+  background: rgba(0, 0, 0, 0.5);
+  opacity: 0;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 320px;
+  height: 220px;
+  -webkit-transition: opacity 500ms;
+  -moz-transition: opacity 500ms;
+  -o-transition: opacity 500ms;
+  transition: opacity 500ms;
+}
+/* line 170, ../../sass/components/views.scss */
+.view-responses .views-row .views-field-title,
+.view-responses .views-row .views-field-field-display-name,
+.view-responses .views-row .views-field-created,
+.view-responses .views-row .views-field-comment-count {
+  position: relative;
+  left: 0px;
+  top: -220px;
+  opacity: 0;
+}
+/* line 182, ../../sass/components/views.scss */
+.view-responses .views-row:hover .views-field-title,
+.view-responses .views-row:hover .views-field-field-display-name,
+.view-responses .views-row:hover .views-field-created,
+.view-responses .views-row:hover .views-field-comment-count {
+  opacity: 1;
+  color: white;
+}
+/* line 189, ../../sass/components/views.scss */
+.view-responses .views-row:hover .views-field-field-image span.text-content {
+  opacity: 1;
+}
+/* line 194, ../../sass/components/views.scss */
+.view-responses .views-exposed-widget {
+  margin-top: 0px;
 }
 
-/* line 144, ../../sass/components/views.scss */
+/* line 200, ../../sass/components/views.scss */
 table.views-table {
   width: 100%;
 }
 
-/* line 148, ../../sass/components/views.scss */
+/* line 204, ../../sass/components/views.scss */
 .views-table tr {
   text-align: left;
 }
 
-/* line 157, ../../sass/components/views.scss */
+/* line 210, ../../sass/components/views.scss */
 .view-sewing-kit th.views-field-category,
 .view-sewing-kit th.views-field-text,
 .view-sewing-kit th.views-field-quote,
@@ -266,13 +304,13 @@ table.views-table {
 .view-stitchings th.view-field-tags {
   text-align: center;
 }
-/* line 160, ../../sass/components/views.scss */
+/* line 216, ../../sass/components/views.scss */
 .view-sewing-kit th,
 .view-stitchings th {
   width: 2%;
   max-width: 5%;
 }
-/* line 165, ../../sass/components/views.scss */
+/* line 220, ../../sass/components/views.scss */
 .view-sewing-kit th.views-field-text,
 .view-sewing-kit th.views-field-quote,
 .view-stitchings th.views-field-text,
@@ -280,14 +318,14 @@ table.views-table {
   width: 10% !important;
   min-width: 100px;
 }
-/* line 170, ../../sass/components/views.scss */
+/* line 225, ../../sass/components/views.scss */
 .view-sewing-kit th.views-field-views-bulk-operations,
 .view-sewing-kit th.views-field-nothing,
 .view-stitchings th.views-field-views-bulk-operations,
 .view-stitchings th.views-field-nothing {
   width: 1% !important;
 }
-/* line 173, ../../sass/components/views.scss */
+/* line 229, ../../sass/components/views.scss */
 .view-sewing-kit td.views-field-category,
 .view-stitchings td.views-field-category {
   text-align: center;

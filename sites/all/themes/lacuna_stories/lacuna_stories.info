@@ -67,7 +67,7 @@ stylesheets[all][] = css/user_profile.css
 
 ; Optionally add some JavaScripts to your theme.
 
-;scripts[] = js/script.js
+scripts[] = js/script.js
 
 
 
