@@ -46,6 +46,8 @@
 	position: relative;
 	margin-left: 100px;			
 	transform: translateX(-50%); 	/* this along with margin will position img centrally*/
+	-ms-transform: translateX(-50%); /* IE 9 */
+    -webkit-transform: translateX(-50%); /* Chrome, Safari, Opera */
 }
 
 #user-profile-main div.column
