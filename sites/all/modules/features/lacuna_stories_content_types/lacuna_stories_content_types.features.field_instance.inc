@@ -231,56 +231,6 @@ function lacuna_stories_content_types_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-annotation-field_image'
-  $field_instances['node-annotation-field_image'] = array(
-    'bundle' => 'annotation',
-    'deleted' => 0,
-    'description' => 'Choose an image to identify this annotation.',
-    'display' => array(
-      'default' => array(
-        'label' => 'hidden',
-        'module' => 'image',
-        'settings' => array(
-          'image_link' => '',
-          'image_style' => '',
-        ),
-        'type' => 'image',
-        'weight' => 0,
-      ),
-      'teaser' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
-      ),
-    ),
-    'entity_type' => 'node',
-    'field_name' => 'field_image',
-    'label' => 'Image',
-    'required' => 0,
-    'settings' => array(
-      'alt_field' => 0,
-      'default_image' => 192,
-      'file_directory' => '',
-      'file_extensions' => 'png gif jpg jpeg',
-      'max_filesize' => '',
-      'max_resolution' => '',
-      'min_resolution' => '',
-      'title_field' => 0,
-      'user_register_form' => FALSE,
-    ),
-    'widget' => array(
-      'active' => 1,
-      'module' => 'image',
-      'settings' => array(
-        'preview_image_style' => 'thumbnails_for_browsing',
-        'progress_indicator' => 'throbber',
-      ),
-      'type' => 'image_image',
-      'weight' => 0,
-    ),
-  );
-
   // Exported field_instance: 'node-annotation-private'
   $field_instances['node-annotation-private'] = array(
     'bundle' => 'annotation',
@@ -2535,96 +2485,6 @@ function lacuna_stories_content_types_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-thread-field_image'
-  $field_instances['node-thread-field_image'] = array(
-    'bundle' => 'thread',
-    'deleted' => 0,
-    'description' => '',
-    'display' => array(
-      'default' => array(
-        'label' => 'hidden',
-        'module' => 'image',
-        'settings' => array(
-          'image_link' => '',
-          'image_style' => '',
-        ),
-        'type' => 'image',
-        'weight' => 0,
-      ),
-      'teaser' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
-      ),
-    ),
-    'entity_type' => 'node',
-    'field_name' => 'field_image',
-    'label' => 'Image',
-    'required' => 0,
-    'settings' => array(
-      'alt_field' => 0,
-      'default_image' => 109,
-      'file_directory' => '',
-      'file_extensions' => 'png gif jpg jpeg',
-      'max_filesize' => '',
-      'max_resolution' => '',
-      'min_resolution' => '',
-      'title_field' => 0,
-      'user_register_form' => FALSE,
-    ),
-    'widget' => array(
-      'active' => 1,
-      'module' => 'image',
-      'settings' => array(
-        'preview_image_style' => 'thumbnail',
-        'progress_indicator' => 'throbber',
-      ),
-      'type' => 'image_image',
-      'weight' => 2,
-    ),
-  );
-
-  // Exported field_instance: 'node-thread-field_tags'
-  $field_instances['node-thread-field_tags'] = array(
-    'bundle' => 'thread',
-    'default_value' => NULL,
-    'deleted' => 0,
-    'description' => '',
-    'display' => array(
-      'default' => array(
-        'label' => 'above',
-        'module' => 'taxonomy',
-        'settings' => array(),
-        'type' => 'taxonomy_term_reference_link',
-        'weight' => 2,
-      ),
-      'teaser' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
-      ),
-    ),
-    'entity_type' => 'node',
-    'field_name' => 'field_tags',
-    'label' => 'Tags',
-    'required' => 0,
-    'settings' => array(
-      'user_register_form' => FALSE,
-    ),
-    'widget' => array(
-      'active' => 0,
-      'module' => 'taxonomy',
-      'settings' => array(
-        'autocomplete_path' => 'taxonomy/autocomplete',
-        'size' => 60,
-      ),
-      'type' => 'taxonomy_autocomplete',
-      'weight' => 5,
-    ),
-  );
-
   // Exported field_instance: 'node-thread-thread_description'
   $field_instances['node-thread-thread_description'] = array(
     'bundle' => 'thread',
@@ -3177,40 +3037,6 @@ function lacuna_stories_content_types_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'user-user-field_about_me'
-  $field_instances['user-user-field_about_me'] = array(
-    'bundle' => 'user',
-    'default_value' => NULL,
-    'deleted' => 0,
-    'description' => 'short text about the user.',
-    'display' => array(
-      'default' => array(
-        'label' => 'above',
-        'module' => 'text',
-        'settings' => array(),
-        'type' => 'text_default',
-        'weight' => 7,
-      ),
-    ),
-    'entity_type' => 'user',
-    'field_name' => 'field_about_me',
-    'label' => 'About Me',
-    'required' => 0,
-    'settings' => array(
-      'text_processing' => 0,
-      'user_register_form' => 0,
-    ),
-    'widget' => array(
-      'active' => 1,
-      'module' => 'text',
-      'settings' => array(
-        'rows' => 6,
-      ),
-      'type' => 'text_textarea',
-      'weight' => 10,
-    ),
-  );
-
   // Exported field_instance: 'user-user-field_date_of_birth'
   $field_instances['user-user-field_date_of_birth'] = array(
     'bundle' => 'user',
@@ -3357,74 +3183,6 @@ function lacuna_stories_content_types_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'user-user-field_how_i_learn'
-  $field_instances['user-user-field_how_i_learn'] = array(
-    'bundle' => 'user',
-    'default_value' => NULL,
-    'deleted' => 0,
-    'description' => '',
-    'display' => array(
-      'default' => array(
-        'label' => 'above',
-        'module' => 'text',
-        'settings' => array(),
-        'type' => 'text_default',
-        'weight' => 8,
-      ),
-    ),
-    'entity_type' => 'user',
-    'field_name' => 'field_how_i_learn',
-    'label' => 'How I learn',
-    'required' => 0,
-    'settings' => array(
-      'text_processing' => 0,
-      'user_register_form' => 0,
-    ),
-    'widget' => array(
-      'active' => 1,
-      'module' => 'text',
-      'settings' => array(
-        'rows' => 5,
-      ),
-      'type' => 'text_textarea',
-      'weight' => 11,
-    ),
-  );
-
-  // Exported field_instance: 'user-user-field_learning_goals'
-  $field_instances['user-user-field_learning_goals'] = array(
-    'bundle' => 'user',
-    'default_value' => NULL,
-    'deleted' => 0,
-    'description' => '',
-    'display' => array(
-      'default' => array(
-        'label' => 'above',
-        'module' => 'text',
-        'settings' => array(),
-        'type' => 'text_default',
-        'weight' => 9,
-      ),
-    ),
-    'entity_type' => 'user',
-    'field_name' => 'field_learning_goals',
-    'label' => 'Learning Goals',
-    'required' => 0,
-    'settings' => array(
-      'text_processing' => 0,
-      'user_register_form' => 0,
-    ),
-    'widget' => array(
-      'active' => 1,
-      'module' => 'text',
-      'settings' => array(
-        'size' => 60,
-      ),
-      'type' => 'text_textfield',
-      'weight' => 12,
-    ),
-  );
-
   // Exported field_instance: 'user-user-field_major_degree'
   $field_instances['user-user-field_major_degree'] = array(
     'bundle' => 'user',
@@ -3553,7 +3311,6 @@ function lacuna_stories_content_types_field_default_field_instances() {
   t('A reference to the annotated content');
   t('A transcription of the audio.');
   t('A unit might be "Week One", "January 1st", "Section Two: Why Monkeys Like Bananas", or another method of chronologically ordering your syllabus.');
-  t('About Me');
   t('Add as many media files as necessary');
   t('Annotated Content');
   t('Annotation Text');
@@ -3566,7 +3323,6 @@ function lacuna_stories_content_types_field_default_field_instances() {
   t('Category');
   t('Choose a cover image for this video.');
   t('Choose an icon to represent this blog post when browsing. All browsing icons on Lacuna Stories are portrait dimensions, so please try to choose this proportion of image or crop it yourself before uploading. If you upload a landscape image, it will likely become skewed in the automated cropping. Also make sure your image is larger than 220 pixels wide and 320 pixels tall. If not, you can change that in programs like Mac Preview by selecting TOOLS --> ADJUST SIZE and increase the pixels.');
-  t('Choose an image to identify this annotation.');
   t('Comment');
   t('Course or group(s) joined');
   t('Cover Image');
@@ -3584,10 +3340,8 @@ function lacuna_stories_content_types_field_default_field_instances() {
   t('Group');
   t('Group visibility');
   t('Hover Abstract');
-  t('How I learn');
   t('If there is a PDF or other file version of this document, attach it here.');
   t('Image');
-  t('Learning Goals');
   t('Major/Degree');
   t('Media');
   t('My Stitchings');
@@ -3625,7 +3379,6 @@ function lacuna_stories_content_types_field_default_field_instances() {
   t('With which topics does this image engage?');
   t('Year in Program');
   t('e.g., Freshman, Senior, 2nd-year PhD student');
-  t('short text about the user.');
 
   return $field_instances;
 }
