@@ -1040,6 +1040,10 @@ function lacuna_stories_views_views_default_views() {
   $handler->display->display_options['fields']['biblio_authors']['auth_category'] = '1';
   $handler->display->display_options['fields']['biblio_authors']['initialize'] = 0;
   $handler->display->display_options['defaults']['sorts'] = FALSE;
+  /* Sort criterion: Content: Unit (field_unit) */
+  $handler->display->display_options['sorts']['field_unit_tid']['id'] = 'field_unit_tid';
+  $handler->display->display_options['sorts']['field_unit_tid']['table'] = 'field_data_field_unit';
+  $handler->display->display_options['sorts']['field_unit_tid']['field'] = 'field_unit_tid';
   /* Sort criterion: Content: Priority (field_priority) */
   $handler->display->display_options['sorts']['field_priority_tid']['id'] = 'field_priority_tid';
   $handler->display->display_options['sorts']['field_priority_tid']['table'] = 'field_data_field_priority';

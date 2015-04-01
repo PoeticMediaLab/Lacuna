@@ -42,6 +42,35 @@ function lacuna_stories_content_types_field_group_info() {
   $field_group = new stdClass();
   $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
   $field_group->api_version = 1;
+  $field_group->identifier = 'group_about|node|document|default';
+  $field_group->group_name = 'group_about';
+  $field_group->entity_type = 'node';
+  $field_group->bundle = 'document';
+  $field_group->mode = 'default';
+  $field_group->parent_name = '';
+  $field_group->data = array(
+    'label' => 'About',
+    'weight' => '3',
+    'children' => array(
+      0 => 'field_doc_genre',
+      1 => 'field_tags',
+      2 => 'field_medium',
+    ),
+    'format_type' => 'fieldset',
+    'format_settings' => array(
+      'label' => 'About',
+      'instance_settings' => array(
+        'classes' => 'group-about field-group-fieldset',
+        'description' => '',
+      ),
+      'formatter' => 'collapsed',
+    ),
+  );
+  $export['group_about|node|document|default'] = $field_group;
+
+  $field_group = new stdClass();
+  $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
+  $field_group->api_version = 1;
   $field_group->identifier = 'group_about|node|document|form';
   $field_group->group_name = 'group_about';
   $field_group->entity_type = 'node';
@@ -101,6 +130,35 @@ function lacuna_stories_content_types_field_group_info() {
     ),
   );
   $export['group_content|node|document|form'] = $field_group;
+
+  $field_group = new stdClass();
+  $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
+  $field_group->api_version = 1;
+  $field_group->identifier = 'group_course|node|document|default';
+  $field_group->group_name = 'group_course';
+  $field_group->entity_type = 'node';
+  $field_group->bundle = 'document';
+  $field_group->mode = 'default';
+  $field_group->parent_name = '';
+  $field_group->data = array(
+    'label' => 'Course',
+    'weight' => '4',
+    'children' => array(
+      0 => 'field_priority',
+      1 => 'field_unit',
+      2 => 'og_group_ref',
+    ),
+    'format_type' => 'fieldset',
+    'format_settings' => array(
+      'label' => 'Course',
+      'instance_settings' => array(
+        'classes' => 'group-course field-group-fieldset',
+        'description' => '',
+      ),
+      'formatter' => 'collapsed',
+    ),
+  );
+  $export['group_course|node|document|default'] = $field_group;
 
   $field_group = new stdClass();
   $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
