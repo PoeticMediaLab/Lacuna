@@ -28,8 +28,8 @@ $bg-color: #F8F8F8;
 }
 
 body {
+  // font-family defined in _init
   background-color: $bg-color;
-  font-family: 'Open Sans', sans-serif;
   line-height: 1.5em;
 }
 
@@ -73,7 +73,7 @@ div.messages {
 }
 
 h1,h2,h3,h4,h5,h6 {
-  font-family: 'Noto Sans', sans-serif;
+  font-family: 'Carrois Gothic SC', sans-serif;
   line-height: 1.3em;
 }
 

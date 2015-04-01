@@ -1,170 +1,134 @@
-#user-profile-main
-{
+$border-color: rgba(7,7,7,.2);
+
+#user-profile-main {
 	width: 100%;
-	font-family: serif;
-}
+	div.column {
+		display: inline-block;
+	}
 
-#user-profile-main #user-avatar-space
-{
-	height: 240px;
-	vertical-align: bottom;
-	text-align: center;
-}
-#user-profile-main #user-command-buttons
-{
-	margin-bottom: 10px;
-}
+	.profile-section {
+		margin-bottom: 20px;
+		padding-top: 15px;
+	}
 
-#user-profile-main #user-command-buttons a,
-#user-profile-main #user-command-buttons a:visited,
-#user-profile-main #user-command-buttons a:hover,
-#user-profile-main #user-command-buttons a:active
-{
-	color: inherit;
-}
+	div.left-part {
+		margin-right: 10px;
+		vertical-align: top;
+		width: 22%;
+	}
 
-#user-profile-main #user-command-buttons a:not(:first-child)
-{
-	margin-left: 20px;
-}
+	div.right-part {
+		vertical-align: top;
+		width: 75%;
+		float: right;
+	}
 
-#user-profile-main #user-avatar-space .user-picture
-{
-	width: 200px;
-	height: 200px;
-	border: 1px solid #000000;
-	border-radius: 100px;
-	display: inline-block;
-	overflow: hidden;
-}
+	span.caption {
+		font-size: 24px;
+		font-weight: bold;
+	}
 
-#user-profile-main #user-avatar-space .user-picture img
-{
-	min-width: 200px;
-	min-height: 200px;
-	max-width: none;
-	position: relative;
-	margin-left: 100px;
-	transform: translateX(-50%); 	/* this along with margin will position img centrally*/
-}
+	div.field-wrapper {
+		border: 1px solid;
+		border-color: $border-color;
+		border-radius: 5px;
+		padding: 10px;
+		p {
+			margin: 0;
+			font-size: 16px;
+		}
+		p.title {
+			font-style: italic;
+			font-size: 20px;
+		}
+		p.no-results {
+			margin-top: 10px;
+		}
+	}
 
-#user-profile-main div.column
-{
-	display: inline-block;
-}
+	#user-avatar-space {
+		height: 240px;
+		vertical-align: bottom;
+		text-align: center;
+		.user-picture {
+			width: 220px;
+			height: 220px;
+			border: 1px solid $border-color;
+			border-radius: 120px;
+			display: inline-block;
+			overflow: hidden;
+			img {
+				min-width: 220px;
+				min-height: 220px;
+				max-width: none;
+				position: relative;
+				margin-left: 110px;
+				transform: translateX(-50%); 	/* this along with margin will position img centrally*/
+			}
+		}
+	}
 
-#user-profile-main .profile-section
-{
-	margin-bottom: 20px;
-}
+	#user-command-buttons {
+		margin-bottom: 10px;
+		a, a:visited, a:hover, a:active {
+			color: inherit;
+		}
+		a:not(:first-child) {
+			margin-left: 20px;
+		}
+	}
 
-#user-profile-main div.left-part
-{
-	margin-right: 10px;
-	vertical-align: top;
-	width: 22%;
-}
-#user-profile-main div.right-part
-{
-	vertical-align: top;
-	width: 75%;
-	float: right;
-}
+	#how-I-Learn-space div.field-wrapper {
+		height: 460px;
+	}
 
+	#user-contributions-space {
+		div.field-wrapper {
+			height: 100px;
+			padding-right: 0;
+			padding-bottom: 0;
+			.block {
+				overflow-y: scroll;
+				height: 75px;
+			}
+		}
+		div.field-wrapper:nth-child(n+1) {
+			// border-top: none;
+			margin-top: -1px;
+		}
+	}
+	#user-bio-space div.field-wrapper {
+		height: 30px
+	}
+	#user-about-space div.field-wrapper,
+	#user-learning-goals-space div.field-wrapper {
+		height: 120px;
+	}
 
-#user-profile-main span.caption
-{
-	font-size: 24px;
-	font-weight: bold;
+	#user-learning {
+		table {
+			width: 100%;
+			margin: 0;
+			td {
+				text-align: center;
+				p {
+					font-style: italic;
+				}
+				img {
+					border: 1px solid;
+					border-color: $border-color;
+					border-radius: 8px;
+					width: 120px;
+					height: 120px;
+				}
+			}
+		}
+		div.user-link-item.is-empty {
+			opacity: 0.4;
+			a {
+				cursor: default;
+				pointer-events: none;
+			}
+		}
+	}
 }
-
-#user-profile-main div.field-wrapper
-{
-	border: 1px solid #000000;
-	padding: 10px;
-}
-
-#user-profile-main #how-I-Learn-space div.field-wrapper
-{
-	height: 460px;
-}
-
-#user-profile-main #user-contributions-space div.field-wrapper
-{
-	height: 100px;
-	padding-right: 0;
-	padding-bottom: 0;
-}
-
-#user-profile-main #user-contributions-space div.field-wrapper:not(:first-child)
-{
-	margin-top: -1px;	/*	to avoid double-tick borders*/
-}
-
-#user-profile-main #user-bio-space div.field-wrapper
-{
-	height: 30px
-}
-
-#user-profile-main #user-about-space div.field-wrapper,
-#user-profile-main #user-learning-goals-space div.field-wrapper
-{
-	height: 120px;
-}
-
-#user-profile-main div.field-wrapper p
-{
-	margin: 0;
-	font-size: 16px;
-}
-#user-profile-main div.field-wrapper p.title
-{
-	font-style: italic;
-}
-#user-profile-main div.field-wrapper p.no-results
-{
-	margin-top: 10px;
-	font-size: 20px;
-}
-
-#user-profile-main #user-learning table
-{
-    width: 100%;
-    margin: 0;
-}
-
-#user-profile-main #user-learning div.user-link-item.is-empty a
-{
-    cursor: default;
-    pointer-events: none;
-}
-
-#user-profile-main #user-learning div.user-link-item.is-empty
-{
-    opacity: 0.4;
-}
-
-#user-profile-main #user-learning table td
-{
-    text-align: center;
-}
-#user-profile-main #user-learning table td p
-{
-    font-style: italic;
-}
-
-#user-profile-main #user-learning table td img
-{
-    border: 1px solid #000;
-    border-radius: 8px;
-    width: 120px;
-    height: 120px;
-}
-
-#user-profile-main #user-contributions-space div.field-wrapper .block
-{
-	overflow-y: scroll;
-	height: 75px;
-}
-
-

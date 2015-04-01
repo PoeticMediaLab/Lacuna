@@ -6,6 +6,7 @@
  * of these @include files will be combined into a single file.
  */
 /* Import Sass mixins, variables, Compass modules, etc. */
+@import url(http://fonts.googleapis.com/css?family=Libre+Baskerville|Carrois+Gothic+SC);
 /* HTML element (SMACSS base) rules */
 /**
  * @file
@@ -111,7 +112,7 @@ audio:not([controls]) {
  */
 /* line 106, ../sass/_normalize.scss */
 html {
-  font-family: Verdana, Tahoma, "DejaVu Sans", sans-serif;
+  font-family: "Libre Baskerville", Georgia, "Times New Roman", "DejaVu Serif", serif;
   /* 1 */
   font-size: 100%;
   /* 3 */
@@ -886,7 +887,6 @@ table {
 /* line 30, ../sass/components/base.scss */
 body {
   background-color: #f8f8f8;
-  font-family: 'Open Sans', sans-serif;
   line-height: 1.5em;
 }
 
@@ -915,109 +915,111 @@ b {
 /* line 55, ../sass/components/base.scss */
 sup {
   vertical-align: super;
-  font-size: small;
+  font-size: x-small;
+  top: -0.3em;
+  padding-left: .2em;
 }
 
-/* line 60, ../sass/components/base.scss */
+/* line 62, ../sass/components/base.scss */
 p {
   margin-bottom: 10px;
 }
 
-/* line 64, ../sass/components/base.scss */
+/* line 66, ../sass/components/base.scss */
 article.node {
   text-align: justify;
 }
 
 /* fix to avoid drop down menu overwrite of message pane */
-/* line 69, ../sass/components/base.scss */
+/* line 71, ../sass/components/base.scss */
 div.messages, div.messages--status, div.messages--warning, div.messages--error {
   margin-top: 40px;
 }
 
-/* line 73, ../sass/components/base.scss */
+/* line 75, ../sass/components/base.scss */
 h1, h2, h3, h4, h5, h6 {
-  font-family: 'Noto Sans', sans-serif;
+  font-family: 'Carrois Gothic SC', sans-serif;
   line-height: 1.3em;
 }
 
-/* line 78, ../sass/components/base.scss */
+/* line 80, ../sass/components/base.scss */
 h1 {
   font-size: 1.5em;
   margin-bottom: 10px;
 }
 
-/* line 82, ../sass/components/base.scss */
+/* line 84, ../sass/components/base.scss */
 h2 {
   font-size: 1.4em;
   margin-bottom: 10px;
 }
 
-/* line 86, ../sass/components/base.scss */
+/* line 88, ../sass/components/base.scss */
 h3 {
   font-size: 1.3em;
   margin-bottom: 10px;
 }
 
-/* line 90, ../sass/components/base.scss */
+/* line 92, ../sass/components/base.scss */
 h4 {
   font-size: 1.2em;
   margin-bottom: 10px;
 }
 
-/* line 94, ../sass/components/base.scss */
+/* line 96, ../sass/components/base.scss */
 h5 {
   font-size: 1.1em;
   margin-bottom: 10px;
 }
 
-/* line 98, ../sass/components/base.scss */
+/* line 100, ../sass/components/base.scss */
 dt {
   margin-top: 10px;
 }
 
-/* line 102, ../sass/components/base.scss */
+/* line 104, ../sass/components/base.scss */
 a {
   color: #1588ba;
   text-decoration: none;
 }
 
-/* line 107, ../sass/components/base.scss */
+/* line 109, ../sass/components/base.scss */
 a:hover {
   color: #094762;
 }
 
-/* line 111, ../sass/components/base.scss */
+/* line 113, ../sass/components/base.scss */
 label {
   margin-bottom: 10px;
 }
 
-/* line 114, ../sass/components/base.scss */
+/* line 116, ../sass/components/base.scss */
 input {
   max-width: 100%;
 }
 
-/* line 117, ../sass/components/base.scss */
+/* line 119, ../sass/components/base.scss */
 input[checked='checked'] {
   background-color: blue;
 }
 
-/* line 121, ../sass/components/base.scss */
+/* line 123, ../sass/components/base.scss */
 td.active {
   background-color: white;
 }
 
-/* line 125, ../sass/components/base.scss */
+/* line 127, ../sass/components/base.scss */
 #page-title {
   margin-bottom: 20px;
   font-weight: bold;
 }
 
-/* line 130, ../sass/components/base.scss */
+/* line 132, ../sass/components/base.scss */
 .breadcrumb {
   display: none;
 }
 
-/* line 134, ../sass/components/base.scss */
+/* line 136, ../sass/components/base.scss */
 .form-item {
   margin-top: 30px;
 }
@@ -1863,7 +1865,7 @@ tr.selected td {
 /* line 803, ../sass/components/_misc.scss */
 .progress .filled {
   background-color: #0072b9;
-  background-image: url('../images/progress.gif?1398863088');
+  background-image: url('../images/progress.gif?1427834510');
 }
 
 /* line 5, ../sass/components/menus.scss */
@@ -1876,94 +1878,96 @@ a.nolink {
 #block-superfish-1 {
   float: right;
   padding-right: 50px;
+  font-size: 1em;
+  font-family: 'Carrois Gothic SC', sans-serif;
 }
 
-/* line 16, ../sass/components/menus.scss */
+/* line 18, ../sass/components/menus.scss */
 #superfish-1 {
   padding-bottom: 100px;
   margin-top: -80px;
 }
 
 /* Superfish dropdown menu rules */
-/* line 22, ../sass/components/menus.scss */
+/* line 24, ../sass/components/menus.scss */
 .sf-menu {
   font-size: 12pt;
   background-color: transparent;
 }
-/* line 26, ../sass/components/menus.scss */
+/* line 28, ../sass/components/menus.scss */
 .sf-menu li {
   list-style-type: none;
   list-style-image: none;
   padding: 10px 15px 10px 15px;
   margin: 0px;
 }
-/* line 32, ../sass/components/menus.scss */
+/* line 34, ../sass/components/menus.scss */
 .sf-menu span.sf-depth-2 {
   display: block;
   padding: 10px 15px 10px 15px;
   margin: 0px;
 }
-/* line 37, ../sass/components/menus.scss */
+/* line 39, ../sass/components/menus.scss */
 .sf-menu .sf-depth-1.sf-no-children {
   display: none;
 }
-/* line 40, ../sass/components/menus.scss */
+/* line 42, ../sass/components/menus.scss */
 .sf-menu li.menuparent {
   background-color: transparent;
 }
-/* line 42, ../sass/components/menus.scss */
+/* line 44, ../sass/components/menus.scss */
 .sf-menu li.menuparent a {
   border: none;
   background-color: transparent !important;
 }
-/* line 47, ../sass/components/menus.scss */
+/* line 49, ../sass/components/menus.scss */
 .sf-menu li.menuparent ul li {
   padding: 0px;
   background-color: white;
   border: 1px solid gray;
   border-bottom: 0px;
 }
-/* line 53, ../sass/components/menus.scss */
+/* line 55, ../sass/components/menus.scss */
 .sf-menu li.menuparent ul li.firstandlast, .sf-menu li.menuparent ul li.last {
   border-bottom: 1px solid gray;
 }
-/* line 56, ../sass/components/menus.scss */
+/* line 58, ../sass/components/menus.scss */
 .sf-menu li.menuparent ul li.active-trail {
   background-color: #eeeeee !important;
 }
 
-/* line 66, ../sass/components/menus.scss */
+/* line 68, ../sass/components/menus.scss */
 .sf-depth-2 {
   width: 80% !important;
 }
 
-/* line 70, ../sass/components/menus.scss */
+/* line 72, ../sass/components/menus.scss */
 ul.menu {
   list-style-type: none;
 }
 
-/* line 78, ../sass/components/menus.scss */
+/* line 80, ../sass/components/menus.scss */
 ul.menu li:hover {
   cursor: pointer;
 }
 
-/* line 82, ../sass/components/menus.scss */
+/* line 84, ../sass/components/menus.scss */
 ul.menu li a {
   text-decoration: none;
 }
 
-/* line 86, ../sass/components/menus.scss */
+/* line 88, ../sass/components/menus.scss */
 ul.tabs.primary {
   margin-bottom: 20px;
   overflow: hidden;
 }
 
-/* line 91, ../sass/components/menus.scss */
+/* line 93, ../sass/components/menus.scss */
 ul.tabs.primary li {
   float: left;
 }
 
-/* line 95, ../sass/components/menus.scss */
+/* line 97, ../sass/components/menus.scss */
 ul.tabs.primary a {
   padding: 5px 10px;
   border-radius: 5px 5px 0px 0px;
@@ -1975,7 +1979,7 @@ ul.tabs.primary a {
   border-bottom-color: transparent;
 }
 
-/* line 106, ../sass/components/menus.scss */
+/* line 108, ../sass/components/menus.scss */
 ul.tabs.primary a.active, ul.tabs.primary a:hover {
   background-color: whitesmoke;
 }
@@ -2451,6 +2455,153 @@ fieldset#edit-thread-description-format {
   margin-bottom: 5px;
   margin-left: auto;
   margin-right: auto;
+}
+
+/* line 3, ../sass/components/users.scss */
+#user-profile-main {
+  width: 100%;
+}
+/* line 5, ../sass/components/users.scss */
+#user-profile-main div.column {
+  display: inline-block;
+}
+/* line 9, ../sass/components/users.scss */
+#user-profile-main .profile-section {
+  margin-bottom: 20px;
+  padding-top: 15px;
+}
+/* line 14, ../sass/components/users.scss */
+#user-profile-main div.left-part {
+  margin-right: 10px;
+  vertical-align: top;
+  width: 22%;
+}
+/* line 20, ../sass/components/users.scss */
+#user-profile-main div.right-part {
+  vertical-align: top;
+  width: 75%;
+  float: right;
+}
+/* line 26, ../sass/components/users.scss */
+#user-profile-main span.caption {
+  font-size: 24px;
+  font-weight: bold;
+}
+/* line 31, ../sass/components/users.scss */
+#user-profile-main div.field-wrapper {
+  border: 1px solid;
+  border-color: rgba(7, 7, 7, 0.2);
+  border-radius: 5px;
+  padding: 10px;
+}
+/* line 36, ../sass/components/users.scss */
+#user-profile-main div.field-wrapper p {
+  margin: 0;
+  font-size: 16px;
+}
+/* line 40, ../sass/components/users.scss */
+#user-profile-main div.field-wrapper p.title {
+  font-style: italic;
+  font-size: 20px;
+}
+/* line 44, ../sass/components/users.scss */
+#user-profile-main div.field-wrapper p.no-results {
+  margin-top: 10px;
+}
+/* line 49, ../sass/components/users.scss */
+#user-profile-main #user-avatar-space {
+  height: 240px;
+  vertical-align: bottom;
+  text-align: center;
+}
+/* line 53, ../sass/components/users.scss */
+#user-profile-main #user-avatar-space .user-picture {
+  width: 220px;
+  height: 220px;
+  border: 1px solid rgba(7, 7, 7, 0.2);
+  border-radius: 120px;
+  display: inline-block;
+  overflow: hidden;
+}
+/* line 60, ../sass/components/users.scss */
+#user-profile-main #user-avatar-space .user-picture img {
+  min-width: 220px;
+  min-height: 220px;
+  max-width: none;
+  position: relative;
+  margin-left: 110px;
+  transform: translateX(-50%);
+  /* this along with margin will position img centrally*/
+}
+/* line 71, ../sass/components/users.scss */
+#user-profile-main #user-command-buttons {
+  margin-bottom: 10px;
+}
+/* line 73, ../sass/components/users.scss */
+#user-profile-main #user-command-buttons a, #user-profile-main #user-command-buttons a:visited, #user-profile-main #user-command-buttons a:hover, #user-profile-main #user-command-buttons a:active {
+  color: inherit;
+}
+/* line 76, ../sass/components/users.scss */
+#user-profile-main #user-command-buttons a:not(:first-child) {
+  margin-left: 20px;
+}
+/* line 81, ../sass/components/users.scss */
+#user-profile-main #how-I-Learn-space div.field-wrapper {
+  height: 460px;
+}
+/* line 86, ../sass/components/users.scss */
+#user-profile-main #user-contributions-space div.field-wrapper {
+  height: 100px;
+  padding-right: 0;
+  padding-bottom: 0;
+}
+/* line 90, ../sass/components/users.scss */
+#user-profile-main #user-contributions-space div.field-wrapper .block {
+  overflow-y: scroll;
+  height: 75px;
+}
+/* line 95, ../sass/components/users.scss */
+#user-profile-main #user-contributions-space div.field-wrapper:nth-child(n+1) {
+  margin-top: -1px;
+}
+/* line 100, ../sass/components/users.scss */
+#user-profile-main #user-bio-space div.field-wrapper {
+  height: 30px;
+}
+/* line 104, ../sass/components/users.scss */
+#user-profile-main #user-about-space div.field-wrapper,
+#user-profile-main #user-learning-goals-space div.field-wrapper {
+  height: 120px;
+}
+/* line 109, ../sass/components/users.scss */
+#user-profile-main #user-learning table {
+  width: 100%;
+  margin: 0;
+}
+/* line 112, ../sass/components/users.scss */
+#user-profile-main #user-learning table td {
+  text-align: center;
+}
+/* line 114, ../sass/components/users.scss */
+#user-profile-main #user-learning table td p {
+  font-style: italic;
+}
+/* line 117, ../sass/components/users.scss */
+#user-profile-main #user-learning table td img {
+  border: 1px solid;
+  border-color: rgba(7, 7, 7, 0.2);
+  border-radius: 8px;
+  width: 120px;
+  height: 120px;
+}
+/* line 126, ../sass/components/users.scss */
+#user-profile-main #user-learning div.user-link-item.is-empty {
+  opacity: 0.4;
+}
+/* line 128, ../sass/components/users.scss */
+#user-profile-main #user-learning div.user-link-item.is-empty a {
+  cursor: default;
+  pointer-events: none;
 }
 
 /**
