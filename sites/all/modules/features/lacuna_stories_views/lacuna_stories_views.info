@@ -19,6 +19,7 @@ features[views_view][] = all_emails
 features[views_view][] = documents
 features[views_view][] = my_annotations_view
 features[views_view][] = my_content
+features[views_view][] = people
 features[views_view][] = responses
 features[views_view][] = sewing-kit
 features[views_view][] = stitchings
