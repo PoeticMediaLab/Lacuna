@@ -17,3 +17,18 @@ function user_account_menu_alter(&$items)
   $items['user/%user/contact']['type'] = MENU_CALLBACK;
   $items['user/%user/notify']['type'] = MENU_CALLBACK;
 }
+
+
+/*
+ * set maximum character count on user account text fields.
+ */
+function user_account_update_7006()
+{
+    $fields_to_change = array("field_about_me" => 400, "field_how_i_learn" => 400);
+    foreach($fields_to_change as $field => $max_length)
+    {
+		$info = field_info_field($field);
+		$info['settings']['max_length'] = $max_length;
+		field_update_field($info);    	
+    }
+}

@@ -88,7 +88,8 @@
 
 #user-profile-main #how-I-Learn-space div.field-wrapper
 {
-	height: 460px;	
+	height: 428px;	
+	overflow-y: scroll;
 }
 
 #user-profile-main #user-contributions-space div.field-wrapper
@@ -112,6 +113,7 @@
 #user-profile-main #user-learning-goals-space div.field-wrapper
 {
 	height: 120px;
+	overflow-y: scroll;
 }
 
 #user-profile-main div.field-wrapper p
