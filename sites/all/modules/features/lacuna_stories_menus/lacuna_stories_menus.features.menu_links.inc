@@ -367,6 +367,24 @@ function lacuna_stories_menus_menu_default_menu_links() {
     'customized' => 1,
     'parent_identifier' => 'main-menu_create:<nolink>',
   );
+  // Exported menu link: main-menu_people:people
+  $menu_links['main-menu_people:people'] = array(
+    'menu_name' => 'main-menu',
+    'link_path' => 'people',
+    'router_path' => 'people',
+    'link_title' => 'People',
+    'options' => array(
+      'identifier' => 'main-menu_people:people',
+    ),
+    'module' => 'system',
+    'hidden' => 0,
+    'external' => 0,
+    'has_children' => 0,
+    'expanded' => 0,
+    'weight' => -50,
+    'customized' => 1,
+    'parent_identifier' => 'main-menu_connect:<nolink>',
+  );
   // Exported menu link: main-menu_reflect:<nolink>
   $menu_links['main-menu_reflect:<nolink>'] = array(
     'menu_name' => 'main-menu',
@@ -458,7 +476,7 @@ function lacuna_stories_menus_menu_default_menu_links() {
     'external' => 0,
     'has_children' => 0,
     'expanded' => 0,
-    'weight' => -50,
+    'weight' => -49,
     'customized' => 1,
     'parent_identifier' => 'main-menu_connect:<nolink>',
   );
@@ -495,7 +513,7 @@ function lacuna_stories_menus_menu_default_menu_links() {
     'external' => 0,
     'has_children' => 0,
     'expanded' => 0,
-    'weight' => -49,
+    'weight' => -48,
     'customized' => 1,
     'parent_identifier' => 'main-menu_connect:<nolink>',
   );
@@ -540,6 +558,7 @@ function lacuna_stories_menus_menu_default_menu_links() {
   t('Materials');
   t('My Profile');
   t('My Writing');
+  t('People');
   t('Reflect');
   t('Research Consent');
   t('Responses');

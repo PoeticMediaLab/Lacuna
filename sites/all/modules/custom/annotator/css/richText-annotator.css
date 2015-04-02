@@ -23,7 +23,7 @@
 
 /* Some change in the design of Annotator */
 .annotator-editor .annotator-widget{
-	min-width: 400px;
+	min-width: 250px;
 }
 
 /* Fix to show icons */
@@ -36,5 +36,15 @@
 }
 
 table.mceLayout {
-	width: 100%;
+	/* !important because TinyMCE theme sets its own value */
+	width: 100% !important;
+}
+
+table.mceToolbar {
+	display: inline-table;
+}
+
+.mceEditor.defaultSkin td.mceToolbar {
+	/* Shrink the toolbar to a decent height */
+	line-height: 10px;
 }

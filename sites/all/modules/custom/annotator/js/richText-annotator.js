@@ -33,14 +33,15 @@ Annotator.Plugin.RichText = (function(_super) {
 	RichText.prototype.options = {
 		tinymce:{
 			selector: "li.annotator-item textarea",
-			plugins: "",
+			plugins: "media, jbimages",
 			menubar: false,
 			theme: 'advanced',
 			theme_advanced_disable: 'bold, italic, underline, strikethrough, justifyleft, justifycenter, justifyright, justifyfull, bullist, numlist, outdent, indent, cut, copy, hr, styleselect, formatselect, fontselect, fontsizeselect, sup, sub, forecolor, backcolor, anchor, cleanup, help, seperator, charmap, visualaid, hr, undo, redo, code',
+			theme_advanced_buttons1_add: "media,jbimages",
 			editor_selector: 'mceAdvanced',
 			toolbar_items_size: 'small',
 			extended_valid_elements : "iframe[src|frameborder|style|scrolling|class|width|height|name|align|id]",
-    	toolbar: "insertfile link image media ",
+    	toolbar: "link advimage media jbimages",
 		}
 	};
 

@@ -50,22 +50,6 @@ $border-color: rgba(7,7,7,.2);
 		height: 240px;
 		vertical-align: bottom;
 		text-align: center;
-		.user-picture {
-			width: 220px;
-			height: 220px;
-			border: 1px solid $border-color;
-			border-radius: 120px;
-			display: inline-block;
-			overflow: hidden;
-			img {
-				min-width: 220px;
-				min-height: 220px;
-				max-width: none;
-				position: relative;
-				margin-left: 110px;
-				transform: translateX(-50%); 	/* this along with margin will position img centrally*/
-			}
-		}
 	}
 
 	#user-command-buttons {
@@ -130,5 +114,22 @@ $border-color: rgba(7,7,7,.2);
 				pointer-events: none;
 			}
 		}
+	}
+}
+
+.user-picture {
+	width: 220px;
+	height: 220px;
+	border: 1px solid $border-color;
+	border-radius: 120px;
+	display: inline-block;
+	overflow: hidden;
+	img {
+		min-width: 220px;
+		min-height: 220px;
+		max-width: none;
+		position: relative;
+		margin-left: 110px;
+		transform: translateX(-50%); 	/* this along with margin will position img centrally*/
 	}
 }
