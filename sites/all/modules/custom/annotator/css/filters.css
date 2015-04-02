@@ -1,15 +1,20 @@
-#annotation-filters-wrapper {
-    position: relative;
-    font-size: 10pt;
+section.region-sidebar-second {
+
 }
 
-#annotation-filters {
-    position: fixed;
+section.region-sidebar-second {
+    position: relative;
+    font-size: 12px;
     border: 1px solid rgb(200, 200, 200);
     --moz-border-radius: 5px;
     --webkit-border-radius: 5px;
     border-radius: 5px;
     padding: 2px;
+}
+
+
+section.region-sidebar-second div#block-block-1 {
+  position: fixed;
 }
 
 @media (max-width: 959px) {
@@ -47,13 +52,13 @@
   }
 }
 
-#annotation-filters h2 {
+section.region-sidebar-second h2 {
   text-align: center;
   margin-top: 5px;
   margin-bottom: 5px;
 }
 
-#annotation-filters input[type="checkbox"] {
+section.region-sidebar-second input[type="checkbox"] {
   margin: 10% 5% 10% 20%;
 }
 
@@ -99,6 +104,7 @@
   text-align: center;
   vertical-align: middle;
   font-weight: normal;
+  font-size: 14px;
   margin-right: 5px;
 }
 

@@ -8,7 +8,7 @@
   $ = jQuery;
 
   select = {
-    'interface': '#annotation-filters',
+    'interface': 'section.region-sidebar-second',
     'annotation': 'annotation-',
     'hide': 'af-annotation-hide',
     'filters': {
@@ -186,7 +186,6 @@
 
     Filters.prototype.pagerClick = function(event) {
       var index, total;
-      console.log('pagerClick', event);
       index = this.Model.get('index');
       total = this.Model.get('total');
       switch (event.target.id) {

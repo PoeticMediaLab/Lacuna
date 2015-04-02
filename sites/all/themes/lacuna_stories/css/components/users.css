@@ -1,0 +1,146 @@
+/* line 3, ../../sass/components/users.scss */
+#user-profile-main {
+  width: 100%;
+}
+/* line 5, ../../sass/components/users.scss */
+#user-profile-main div.column {
+  display: inline-block;
+}
+/* line 9, ../../sass/components/users.scss */
+#user-profile-main .profile-section {
+  margin-bottom: 20px;
+  padding-top: 15px;
+}
+/* line 14, ../../sass/components/users.scss */
+#user-profile-main div.left-part {
+  margin-right: 10px;
+  vertical-align: top;
+  width: 22%;
+}
+/* line 20, ../../sass/components/users.scss */
+#user-profile-main div.right-part {
+  vertical-align: top;
+  width: 75%;
+  float: right;
+}
+/* line 26, ../../sass/components/users.scss */
+#user-profile-main span.caption {
+  font-size: 24px;
+  font-weight: bold;
+}
+/* line 31, ../../sass/components/users.scss */
+#user-profile-main div.field-wrapper {
+  border: 1px solid;
+  border-color: rgba(7, 7, 7, 0.2);
+  border-radius: 5px;
+  padding: 10px;
+}
+/* line 36, ../../sass/components/users.scss */
+#user-profile-main div.field-wrapper p {
+  margin: 0;
+  font-size: 16px;
+}
+/* line 40, ../../sass/components/users.scss */
+#user-profile-main div.field-wrapper p.title {
+  font-style: italic;
+  font-size: 20px;
+}
+/* line 44, ../../sass/components/users.scss */
+#user-profile-main div.field-wrapper p.no-results {
+  margin-top: 10px;
+}
+/* line 49, ../../sass/components/users.scss */
+#user-profile-main #user-avatar-space {
+  height: 240px;
+  vertical-align: bottom;
+  text-align: center;
+}
+/* line 53, ../../sass/components/users.scss */
+#user-profile-main #user-avatar-space .user-picture {
+  width: 220px;
+  height: 220px;
+  border: 1px solid rgba(7, 7, 7, 0.2);
+  border-radius: 120px;
+  display: inline-block;
+  overflow: hidden;
+}
+/* line 60, ../../sass/components/users.scss */
+#user-profile-main #user-avatar-space .user-picture img {
+  min-width: 220px;
+  min-height: 220px;
+  max-width: none;
+  position: relative;
+  margin-left: 110px;
+  transform: translateX(-50%);
+  /* this along with margin will position img centrally*/
+}
+/* line 71, ../../sass/components/users.scss */
+#user-profile-main #user-command-buttons {
+  margin-bottom: 10px;
+}
+/* line 73, ../../sass/components/users.scss */
+#user-profile-main #user-command-buttons a, #user-profile-main #user-command-buttons a:visited, #user-profile-main #user-command-buttons a:hover, #user-profile-main #user-command-buttons a:active {
+  color: inherit;
+}
+/* line 76, ../../sass/components/users.scss */
+#user-profile-main #user-command-buttons a:not(:first-child) {
+  margin-left: 20px;
+}
+/* line 81, ../../sass/components/users.scss */
+#user-profile-main #how-I-Learn-space div.field-wrapper {
+  height: 460px;
+}
+/* line 86, ../../sass/components/users.scss */
+#user-profile-main #user-contributions-space div.field-wrapper {
+  height: 100px;
+  padding-right: 0;
+  padding-bottom: 0;
+}
+/* line 90, ../../sass/components/users.scss */
+#user-profile-main #user-contributions-space div.field-wrapper .block {
+  overflow-y: scroll;
+  height: 75px;
+}
+/* line 95, ../../sass/components/users.scss */
+#user-profile-main #user-contributions-space div.field-wrapper:nth-child(n+1) {
+  margin-top: -1px;
+}
+/* line 100, ../../sass/components/users.scss */
+#user-profile-main #user-bio-space div.field-wrapper {
+  height: 30px;
+}
+/* line 104, ../../sass/components/users.scss */
+#user-profile-main #user-about-space div.field-wrapper,
+#user-profile-main #user-learning-goals-space div.field-wrapper {
+  height: 120px;
+}
+/* line 109, ../../sass/components/users.scss */
+#user-profile-main #user-learning table {
+  width: 100%;
+  margin: 0;
+}
+/* line 112, ../../sass/components/users.scss */
+#user-profile-main #user-learning table td {
+  text-align: center;
+}
+/* line 114, ../../sass/components/users.scss */
+#user-profile-main #user-learning table td p {
+  font-style: italic;
+}
+/* line 117, ../../sass/components/users.scss */
+#user-profile-main #user-learning table td img {
+  border: 1px solid;
+  border-color: rgba(7, 7, 7, 0.2);
+  border-radius: 8px;
+  width: 120px;
+  height: 120px;
+}
+/* line 126, ../../sass/components/users.scss */
+#user-profile-main #user-learning div.user-link-item.is-empty {
+  opacity: 0.4;
+}
+/* line 128, ../../sass/components/users.scss */
+#user-profile-main #user-learning div.user-link-item.is-empty a {
+  cursor: default;
+  pointer-events: none;
+}

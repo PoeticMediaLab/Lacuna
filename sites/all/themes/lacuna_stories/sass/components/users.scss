@@ -1,12 +1,14 @@
+$border-color: rgba(7,7,7,.2);
+
 #user-profile-main {
 	width: 100%;
-	font-family: serif;
 	div.column {
 		display: inline-block;
 	}
 
 	.profile-section {
 		margin-bottom: 20px;
+		padding-top: 15px;
 	}
 
 	div.left-part {
@@ -27,18 +29,20 @@
 	}
 
 	div.field-wrapper {
-		border: 1px solid #000000;
+		border: 1px solid;
+		border-color: $border-color;
+		border-radius: 5px;
 		padding: 10px;
 		p {
 			margin: 0;
 			font-size: 16px;
-			.title {
-				font-style: italic;
-			}
-			.no-results {
-				margin-top: 10px;
-				font-size: 20px;
-			}
+		}
+		p.title {
+			font-style: italic;
+			font-size: 20px;
+		}
+		p.no-results {
+			margin-top: 10px;
 		}
 	}
 
@@ -47,18 +51,18 @@
 		vertical-align: bottom;
 		text-align: center;
 		.user-picture {
-			width: 200px;
-			height: 200px;
-			border: 1px solid #000000;
-			border-radius: 100px;
+			width: 220px;
+			height: 220px;
+			border: 1px solid $border-color;
+			border-radius: 120px;
 			display: inline-block;
 			overflow: hidden;
 			img {
-				min-width: 200px;
-				min-height: 200px;
+				min-width: 220px;
+				min-height: 220px;
 				max-width: none;
 				position: relative;
-				margin-left: 100px;
+				margin-left: 110px;
 				transform: translateX(-50%); 	/* this along with margin will position img centrally*/
 			}
 		}
@@ -88,9 +92,9 @@
 				height: 75px;
 			}
 		}
-		div.field-wrapper:not(:first-child) {
-			//border-top: 0;
-			margin-top: -1px;	/*	to avoid double-tick borders*/
+		div.field-wrapper:nth-child(n+1) {
+			// border-top: none;
+			margin-top: -1px;
 		}
 	}
 	#user-bio-space div.field-wrapper {
@@ -111,7 +115,8 @@
 					font-style: italic;
 				}
 				img {
-					border: 1px solid #000;
+					border: 1px solid;
+					border-color: $border-color;
 					border-radius: 8px;
 					width: 120px;
 					height: 120px;
