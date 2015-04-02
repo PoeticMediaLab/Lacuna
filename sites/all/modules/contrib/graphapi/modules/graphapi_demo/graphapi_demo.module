@@ -69,6 +69,9 @@ function graphapi_demo_engine_config() {
       'enable_node_info' => TRUE,
       'node_info_path' => 'graphapi/info/thejit_forcedirected/module/',
     ),
+    'graph_phyz' => array(
+      'showLinks' => TRUE,
+    ),
   );
 }
 
@@ -85,6 +88,9 @@ function graphapi_demo_graph() {
 
   graphapi_add_link($graph, 'graphapi_demo', 'graphapi');
   graphapi_add_link($graph, 'graphapi_filters', 'graphapi');
+
+  graphapi_set_link_title($graph, 'graphapi_demo', 'graphapi', 'depends');
+  graphapi_set_link_title($graph, 'graphapi_filters', 'graphapi', 'depends');
 
   graphapi_add_link($graph, 'thejit_spacetree', 'thejit');
   graphapi_add_link($graph, 'thejit_forcedirected', 'thejit');

@@ -1435,8 +1435,9 @@ function webform_node_view($node, $view_mode) {
   }
 
   // If the webform is not set to display in this view mode, return early.
+  // View mode of 'form' is exempted to allow blocks and views to force display.
   $extra_fields = field_extra_fields_get_display('node', $node->type, $view_mode);
-  if (empty($extra_fields['webform']['visible'])) {
+  if ($view_mode != 'form' && empty($extra_fields['webform']['visible'])) {
     return;
   }
 
@@ -1762,7 +1763,7 @@ function webform_block_view($delta = '') {
 
   // Generate the content of the block based on display settings.
   if ($settings['display'] == 'form') {
-    webform_node_view($node, 'full');
+    webform_node_view($node, 'form');
     $content = isset($node->content['webform']) ? $node->content['webform'] : array();
   }
   else {
