@@ -2048,6 +2048,7 @@ function lacuna_stories_views_views_default_views() {
   $handler->display->display_options['fields']['text']['id'] = 'text';
   $handler->display->display_options['fields']['text']['table'] = 'field_data_text';
   $handler->display->display_options['fields']['text']['field'] = 'text';
+  $handler->display->display_options['fields']['text']['type'] = 'text_plain';
   /* Field: Content: Quote */
   $handler->display->display_options['fields']['quote']['id'] = 'quote';
   $handler->display->display_options['fields']['quote']['table'] = 'field_data_quote';
