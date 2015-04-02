@@ -36,6 +36,8 @@ $border-color: rgba(7,7,7,.2);
 		p {
 			margin: 0;
 			font-size: 16px;
+			text-overflow: ellipsis;
+			overflow: hidden;
 		}
 		p.title {
 			font-style: italic;
@@ -62,8 +64,8 @@ $border-color: rgba(7,7,7,.2);
 		}
 	}
 
-	#how-I-Learn-space div.field-wrapper {
-		height: 460px;
+	#how-I-Learn-space div.field-wrapper p {
+		max-height: 460px;
 	}
 
 	#user-contributions-space {
@@ -84,9 +86,9 @@ $border-color: rgba(7,7,7,.2);
 	#user-bio-space div.field-wrapper {
 		height: 30px
 	}
-	#user-about-space div.field-wrapper,
 	#user-learning-goals-space div.field-wrapper {
 		height: 120px;
+		white-space: nowrap;
 	}
 
 	#user-learning {
@@ -117,6 +119,10 @@ $border-color: rgba(7,7,7,.2);
 	}
 }
 
+/*
+	We use this CSS in the People view, so separate it from
+  just the user profile ID
+*/
 .user-picture {
 	width: 220px;
 	height: 220px;

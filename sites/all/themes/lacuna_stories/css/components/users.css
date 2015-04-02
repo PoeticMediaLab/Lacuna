@@ -39,76 +39,78 @@
 #user-profile-main div.field-wrapper p {
   margin: 0;
   font-size: 16px;
+  text-overflow: ellipsis;
+  overflow: hidden;
 }
-/* line 40, ../../sass/components/users.scss */
+/* line 42, ../../sass/components/users.scss */
 #user-profile-main div.field-wrapper p.title {
   font-style: italic;
   font-size: 20px;
 }
-/* line 44, ../../sass/components/users.scss */
+/* line 46, ../../sass/components/users.scss */
 #user-profile-main div.field-wrapper p.no-results {
   margin-top: 10px;
 }
-/* line 49, ../../sass/components/users.scss */
+/* line 51, ../../sass/components/users.scss */
 #user-profile-main #user-avatar-space {
   height: 240px;
   vertical-align: bottom;
   text-align: center;
 }
-/* line 55, ../../sass/components/users.scss */
+/* line 57, ../../sass/components/users.scss */
 #user-profile-main #user-command-buttons {
   margin-bottom: 10px;
 }
-/* line 57, ../../sass/components/users.scss */
+/* line 59, ../../sass/components/users.scss */
 #user-profile-main #user-command-buttons a, #user-profile-main #user-command-buttons a:visited, #user-profile-main #user-command-buttons a:hover, #user-profile-main #user-command-buttons a:active {
   color: inherit;
 }
-/* line 60, ../../sass/components/users.scss */
+/* line 62, ../../sass/components/users.scss */
 #user-profile-main #user-command-buttons a:not(:first-child) {
   margin-left: 20px;
 }
-/* line 65, ../../sass/components/users.scss */
-#user-profile-main #how-I-Learn-space div.field-wrapper {
-  height: 460px;
+/* line 67, ../../sass/components/users.scss */
+#user-profile-main #how-I-Learn-space div.field-wrapper p {
+  max-height: 460px;
 }
-/* line 70, ../../sass/components/users.scss */
+/* line 72, ../../sass/components/users.scss */
 #user-profile-main #user-contributions-space div.field-wrapper {
   height: 100px;
   padding-right: 0;
   padding-bottom: 0;
 }
-/* line 74, ../../sass/components/users.scss */
+/* line 76, ../../sass/components/users.scss */
 #user-profile-main #user-contributions-space div.field-wrapper .block {
   overflow-y: scroll;
   height: 75px;
 }
-/* line 79, ../../sass/components/users.scss */
+/* line 81, ../../sass/components/users.scss */
 #user-profile-main #user-contributions-space div.field-wrapper:nth-child(n+1) {
   margin-top: -1px;
 }
-/* line 84, ../../sass/components/users.scss */
+/* line 86, ../../sass/components/users.scss */
 #user-profile-main #user-bio-space div.field-wrapper {
   height: 30px;
 }
-/* line 88, ../../sass/components/users.scss */
-#user-profile-main #user-about-space div.field-wrapper,
+/* line 89, ../../sass/components/users.scss */
 #user-profile-main #user-learning-goals-space div.field-wrapper {
   height: 120px;
+  white-space: nowrap;
 }
-/* line 93, ../../sass/components/users.scss */
+/* line 95, ../../sass/components/users.scss */
 #user-profile-main #user-learning table {
   width: 100%;
   margin: 0;
 }
-/* line 96, ../../sass/components/users.scss */
+/* line 98, ../../sass/components/users.scss */
 #user-profile-main #user-learning table td {
   text-align: center;
 }
-/* line 98, ../../sass/components/users.scss */
+/* line 100, ../../sass/components/users.scss */
 #user-profile-main #user-learning table td p {
   font-style: italic;
 }
-/* line 101, ../../sass/components/users.scss */
+/* line 103, ../../sass/components/users.scss */
 #user-profile-main #user-learning table td img {
   border: 1px solid;
   border-color: rgba(7, 7, 7, 0.2);
@@ -116,17 +118,21 @@
   width: 120px;
   height: 120px;
 }
-/* line 110, ../../sass/components/users.scss */
+/* line 112, ../../sass/components/users.scss */
 #user-profile-main #user-learning div.user-link-item.is-empty {
   opacity: 0.4;
 }
-/* line 112, ../../sass/components/users.scss */
+/* line 114, ../../sass/components/users.scss */
 #user-profile-main #user-learning div.user-link-item.is-empty a {
   cursor: default;
   pointer-events: none;
 }
 
-/* line 120, ../../sass/components/users.scss */
+/*
+	We use this CSS in the People view, so separate it from
+  just the user profile ID
+*/
+/* line 126, ../../sass/components/users.scss */
 .user-picture {
   width: 220px;
   height: 220px;
@@ -135,7 +141,7 @@
   display: inline-block;
   overflow: hidden;
 }
-/* line 127, ../../sass/components/users.scss */
+/* line 133, ../../sass/components/users.scss */
 .user-picture img {
   min-width: 220px;
   min-height: 220px;

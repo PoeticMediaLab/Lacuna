@@ -456,7 +456,7 @@ function lacuna_stories_content_types_field_default_field_bases() {
   // Exported field_base: 'field_learning_goals'
   $field_bases['field_learning_goals'] = array(
     'active' => 1,
-    'cardinality' => -1,
+    'cardinality' => 5,
     'deleted' => 0,
     'entity_types' => array(),
     'field_name' => 'field_learning_goals',
