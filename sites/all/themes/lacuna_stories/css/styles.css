@@ -6,7 +6,8 @@
  * of these @include files will be combined into a single file.
  */
 /* Import Sass mixins, variables, Compass modules, etc. */
-@import url(http://fonts.googleapis.com/css?family=Libre+Baskerville|Carrois+Gothic+SC);
+@import url("//fonts.googleapis.com/css?family=Libre+Baskerville|Carrois+Gothic+SC");
+@import url("//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css");
 /* HTML element (SMACSS base) rules */
 /**
  * @file
@@ -112,11 +113,7 @@ audio:not([controls]) {
  */
 /* line 106, ../sass/_normalize.scss */
 html {
-<<<<<<< HEAD
   font-family: "Carrois Gothic SC", Verdana, Tahoma, "DejaVu Sans", sans-serif;
-=======
-  font-family: "Libre Baskerville", Georgia, "Times New Roman", "DejaVu Serif", serif;
->>>>>>> master
   /* 1 */
   font-size: 100%;
   /* 3 */
@@ -938,163 +935,95 @@ article.node {
 }
 
 /* fix to avoid drop down menu overwrite of message pane */
-<<<<<<< HEAD
 /* line 74, ../sass/components/base.scss */
-=======
-/* line 71, ../sass/components/base.scss */
->>>>>>> master
 div.messages, div.messages--status, div.messages--warning, div.messages--error {
   margin-top: 40px;
 }
 
-<<<<<<< HEAD
 /* line 78, ../sass/components/base.scss */
-=======
-/* line 75, ../sass/components/base.scss */
->>>>>>> master
 h1, h2, h3, h4, h5, h6 {
   font-family: 'Carrois Gothic SC', sans-serif;
   line-height: 1.3em;
 }
 
-<<<<<<< HEAD
 /* line 83, ../sass/components/base.scss */
-=======
-/* line 80, ../sass/components/base.scss */
->>>>>>> master
 h1 {
   font-size: 1.5em;
   margin-bottom: 10px;
 }
 
-<<<<<<< HEAD
 /* line 87, ../sass/components/base.scss */
-=======
-/* line 84, ../sass/components/base.scss */
->>>>>>> master
 h2 {
   font-size: 1.4em;
   margin-bottom: 10px;
 }
 
-<<<<<<< HEAD
 /* line 91, ../sass/components/base.scss */
-=======
-/* line 88, ../sass/components/base.scss */
->>>>>>> master
 h3 {
   font-size: 1.3em;
   margin-bottom: 10px;
 }
 
-<<<<<<< HEAD
 /* line 95, ../sass/components/base.scss */
-=======
-/* line 92, ../sass/components/base.scss */
->>>>>>> master
 h4 {
   font-size: 1.2em;
   margin-bottom: 10px;
 }
 
-<<<<<<< HEAD
 /* line 99, ../sass/components/base.scss */
-=======
-/* line 96, ../sass/components/base.scss */
->>>>>>> master
 h5 {
   font-size: 1.1em;
   margin-bottom: 10px;
 }
 
-<<<<<<< HEAD
 /* line 103, ../sass/components/base.scss */
-=======
-/* line 100, ../sass/components/base.scss */
->>>>>>> master
 dt {
   margin-top: 10px;
 }
 
-<<<<<<< HEAD
 /* line 107, ../sass/components/base.scss */
-=======
-/* line 104, ../sass/components/base.scss */
->>>>>>> master
 a {
   color: #1588ba;
   text-decoration: none;
 }
 
-<<<<<<< HEAD
 /* line 112, ../sass/components/base.scss */
-=======
-/* line 109, ../sass/components/base.scss */
->>>>>>> master
 a:hover {
   color: #094762;
 }
 
-<<<<<<< HEAD
 /* line 116, ../sass/components/base.scss */
-=======
-/* line 113, ../sass/components/base.scss */
->>>>>>> master
 label {
   margin-bottom: 10px;
 }
 
-<<<<<<< HEAD
 /* line 119, ../sass/components/base.scss */
-=======
-/* line 116, ../sass/components/base.scss */
->>>>>>> master
 input {
   max-width: 100%;
 }
 
-<<<<<<< HEAD
 /* line 122, ../sass/components/base.scss */
-=======
-/* line 119, ../sass/components/base.scss */
->>>>>>> master
 input[checked='checked'] {
   background-color: blue;
 }
 
-<<<<<<< HEAD
 /* line 126, ../sass/components/base.scss */
-=======
-/* line 123, ../sass/components/base.scss */
->>>>>>> master
 td.active {
   background-color: white;
 }
 
-<<<<<<< HEAD
 /* line 130, ../sass/components/base.scss */
-=======
-/* line 127, ../sass/components/base.scss */
->>>>>>> master
 #page-title {
   margin-bottom: 20px;
   font-weight: bold;
 }
 
-<<<<<<< HEAD
 /* line 135, ../sass/components/base.scss */
-=======
-/* line 132, ../sass/components/base.scss */
->>>>>>> master
 .breadcrumb {
   display: none;
 }
 
-<<<<<<< HEAD
 /* line 139, ../sass/components/base.scss */
-=======
-/* line 136, ../sass/components/base.scss */
->>>>>>> master
 .form-item {
   margin-top: 30px;
 }
@@ -2579,167 +2508,79 @@ fieldset#edit-thread-description-format {
 #user-profile-main div.field-wrapper p {
   margin: 0;
   font-size: 16px;
-<<<<<<< HEAD
   text-overflow: ellipsis;
   overflow: hidden;
 }
 /* line 42, ../sass/components/users.scss */
-=======
-}
-/* line 40, ../sass/components/users.scss */
->>>>>>> master
 #user-profile-main div.field-wrapper p.title {
   font-style: italic;
   font-size: 20px;
 }
-<<<<<<< HEAD
 /* line 46, ../sass/components/users.scss */
 #user-profile-main div.field-wrapper p.no-results {
   margin-top: 10px;
 }
 /* line 51, ../sass/components/users.scss */
-=======
-/* line 44, ../sass/components/users.scss */
-#user-profile-main div.field-wrapper p.no-results {
-  margin-top: 10px;
-}
-/* line 49, ../sass/components/users.scss */
->>>>>>> master
 #user-profile-main #user-avatar-space {
   height: 240px;
   vertical-align: bottom;
   text-align: center;
 }
-<<<<<<< HEAD
-/* line 57, ../sass/components/users.scss */
+/* line 58, ../sass/components/users.scss */
 #user-profile-main #user-command-buttons {
   margin-bottom: 10px;
-}
-/* line 59, ../sass/components/users.scss */
-#user-profile-main #user-command-buttons a, #user-profile-main #user-command-buttons a:visited, #user-profile-main #user-command-buttons a:hover, #user-profile-main #user-command-buttons a:active {
-  color: inherit;
-}
-/* line 62, ../sass/components/users.scss */
-#user-profile-main #user-command-buttons a:not(:first-child) {
-  margin-left: 20px;
-}
-/* line 67, ../sass/components/users.scss */
-#user-profile-main #how-I-Learn-space div.field-wrapper p {
-  max-height: 460px;
-}
-/* line 72, ../sass/components/users.scss */
-=======
-/* line 53, ../sass/components/users.scss */
-#user-profile-main #user-avatar-space .user-picture {
-  width: 220px;
-  height: 220px;
-  border: 1px solid rgba(7, 7, 7, 0.2);
-  border-radius: 120px;
-  display: inline-block;
-  overflow: hidden;
 }
 /* line 60, ../sass/components/users.scss */
-#user-profile-main #user-avatar-space .user-picture img {
-  min-width: 220px;
-  min-height: 220px;
-  max-width: none;
-  position: relative;
-  margin-left: 110px;
-  transform: translateX(-50%);
-  /* this along with margin will position img centrally*/
-  -ms-transform: translateX(-50%);
-  /* IE 9 */
-  -webkit-transform: translateX(-50%);
-  /* Chrome, Safari, Opera */
-}
-/* line 73, ../sass/components/users.scss */
-#user-profile-main #user-command-buttons {
-  margin-bottom: 10px;
-}
-/* line 75, ../sass/components/users.scss */
 #user-profile-main #user-command-buttons a, #user-profile-main #user-command-buttons a:visited, #user-profile-main #user-command-buttons a:hover, #user-profile-main #user-command-buttons a:active {
   color: inherit;
 }
-/* line 78, ../sass/components/users.scss */
+/* line 63, ../sass/components/users.scss */
 #user-profile-main #user-command-buttons a:not(:first-child) {
   margin-left: 20px;
 }
-/* line 83, ../sass/components/users.scss */
-#user-profile-main #how-I-Learn-space div.field-wrapper {
+/* line 68, ../sass/components/users.scss */
+#user-profile-main #how-I-Learn-space div.field-wrapper p {
+  max-height: 460px;
   height: 460px;
 }
-/* line 88, ../sass/components/users.scss */
->>>>>>> master
+/* line 74, ../sass/components/users.scss */
 #user-profile-main #user-contributions-space div.field-wrapper {
   height: 100px;
   padding-right: 0;
   padding-bottom: 0;
 }
-<<<<<<< HEAD
-/* line 76, ../sass/components/users.scss */
-=======
-/* line 92, ../sass/components/users.scss */
->>>>>>> master
+/* line 78, ../sass/components/users.scss */
 #user-profile-main #user-contributions-space div.field-wrapper .block {
   overflow-y: scroll;
   height: 75px;
 }
-<<<<<<< HEAD
-/* line 81, ../sass/components/users.scss */
+/* line 83, ../sass/components/users.scss */
 #user-profile-main #user-contributions-space div.field-wrapper:nth-child(n+1) {
   margin-top: -1px;
 }
-/* line 86, ../sass/components/users.scss */
+/* line 88, ../sass/components/users.scss */
 #user-profile-main #user-bio-space div.field-wrapper {
   height: 30px;
 }
-/* line 89, ../sass/components/users.scss */
+/* line 91, ../sass/components/users.scss */
 #user-profile-main #user-learning-goals-space div.field-wrapper {
   height: 120px;
   white-space: nowrap;
 }
-/* line 95, ../sass/components/users.scss */
-=======
 /* line 97, ../sass/components/users.scss */
-#user-profile-main #user-contributions-space div.field-wrapper:nth-child(n+1) {
-  margin-top: -1px;
-}
-/* line 102, ../sass/components/users.scss */
-#user-profile-main #user-bio-space div.field-wrapper {
-  height: 30px;
-}
-/* line 106, ../sass/components/users.scss */
-#user-profile-main #user-about-space div.field-wrapper,
-#user-profile-main #user-learning-goals-space div.field-wrapper {
-  height: 120px;
-}
-/* line 111, ../sass/components/users.scss */
->>>>>>> master
 #user-profile-main #user-learning table {
   width: 100%;
   margin: 0;
 }
-<<<<<<< HEAD
-/* line 98, ../sass/components/users.scss */
-#user-profile-main #user-learning table td {
-  text-align: center;
-}
 /* line 100, ../sass/components/users.scss */
-#user-profile-main #user-learning table td p {
-  font-style: italic;
-}
-/* line 103, ../sass/components/users.scss */
-=======
-/* line 114, ../sass/components/users.scss */
 #user-profile-main #user-learning table td {
   text-align: center;
 }
-/* line 116, ../sass/components/users.scss */
+/* line 102, ../sass/components/users.scss */
 #user-profile-main #user-learning table td p {
   font-style: italic;
 }
-/* line 119, ../sass/components/users.scss */
->>>>>>> master
+/* line 105, ../sass/components/users.scss */
 #user-profile-main #user-learning table td img {
   border: 1px solid;
   border-color: rgba(7, 7, 7, 0.2);
@@ -2747,30 +2588,21 @@ fieldset#edit-thread-description-format {
   width: 120px;
   height: 120px;
 }
-<<<<<<< HEAD
-/* line 112, ../sass/components/users.scss */
-#user-profile-main #user-learning div.user-link-item.is-empty {
-  opacity: 0.4;
-}
 /* line 114, ../sass/components/users.scss */
-=======
-/* line 128, ../sass/components/users.scss */
 #user-profile-main #user-learning div.user-link-item.is-empty {
   opacity: 0.4;
 }
-/* line 130, ../sass/components/users.scss */
->>>>>>> master
+/* line 116, ../sass/components/users.scss */
 #user-profile-main #user-learning div.user-link-item.is-empty a {
   cursor: default;
   pointer-events: none;
 }
 
-<<<<<<< HEAD
 /*
 	We use this CSS in the People view, so separate it from
   just the user profile ID
 */
-/* line 126, ../sass/components/users.scss */
+/* line 128, ../sass/components/users.scss */
 .user-picture {
   width: 220px;
   height: 220px;
@@ -2779,7 +2611,7 @@ fieldset#edit-thread-description-format {
   display: inline-block;
   overflow: hidden;
 }
-/* line 133, ../sass/components/users.scss */
+/* line 135, ../sass/components/users.scss */
 .user-picture img {
   min-width: 220px;
   min-height: 220px;
@@ -2794,8 +2626,6 @@ fieldset#edit-thread-description-format {
   /* Chrome, Safari, Opera */
 }
 
-=======
->>>>>>> master
 /**
  * @file
  * Print styling
