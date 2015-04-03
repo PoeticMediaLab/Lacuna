@@ -2326,7 +2326,7 @@ function lacuna_stories_content_types_field_default_field_instances() {
   t('Group');
   t('Group roles and permissions');
   t('Group visibility');
-  t('How I learn');
+  t('How I Learn');
   t('If there is a PDF or other file version of this document, attach it here.');
   t('Image');
   t('Learning Goals');

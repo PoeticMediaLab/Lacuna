@@ -34,6 +34,7 @@ dependencies[] = views
 dependencies[] = wysiwyg
 dependencies[] = wysiwyg_filter
 features[context][] = annotation_filters
+features[context][] = bibliography
 features[context][] = stitchings_edit
 features[ctools][] = context:context:3
 features[ctools][] = field_group:field_group:1
