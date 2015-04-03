@@ -611,19 +611,33 @@ function lacuna_visualizations_annotation_dashboard_data() {
   global $user;
 
   // Query all annotations with no access checks
-  $query = new EntityFieldQuery();
-  $result = $query->entityCondition('entity_type', 'node')
-      ->entityCondition('bundle', 'annotation')
-      ->addTag('DANGEROUS_ACCESS_CHECK_OPT_OUT')
-      ->execute();
+  // $query = new EntityFieldQuery();
+  // $result = $query->entityCondition('entity_type', 'node')
+  //     ->entityCondition('bundle', 'annotation')
+  //     ->addTag('DANGEROUS_ACCESS_CHECK_OPT_OUT')
+  //     ->execute();
+
+  $result = db_query("SELECT nid FROM {node} WHERE type = :type", array(
+  ':type' => 'annotation'));
+
+  if ($result) {
+    $all = array();
+    foreach ($result->fetchAll() as $row) {
+      array_push($all, $row->nid);
+    }
+  }
+
+
   $canReadAll = user_access('access any private annotation');
   $documentNames = array(); // to cut down on db queries
   $userNames = array();   // same as previous - only load users once
   $annotations = array();
-  $allNodes = node_load_multiple(array_keys($result['node']));  // instead of loading one by one, do a batch load
-//  foreach (array_keys($result['node']) as $nid) {
-//    $annotation = node_load($nid);
-    foreach($allNodes as $annotation){
+
+  // Fields need for db query:
+  // created, uid, annotation_reference, text, quote, private, annotation_tags, category
+  $allNodes = node_load_multiple($all);
+
+  foreach ($allNodes as $annotation) {
     // Create a new data object, populate only with necessary data
     // Make it harder to leak unintended data
     $data = new StdClass();
@@ -646,6 +660,7 @@ function lacuna_visualizations_annotation_dashboard_data() {
     // Convert from Drupal format to a simpler data format for viz
     // TODO: Refactor the next two loops into a single function
     // Put function in a helper library for general use here and Annotation Store
+
     $fields = array('text', 'quote', 'private');
     foreach ($fields as $field) {
       if (isset($annotation->{$field}[$annotation->language][0]['value'])) {

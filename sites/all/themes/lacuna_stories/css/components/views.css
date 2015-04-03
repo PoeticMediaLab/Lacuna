@@ -292,3 +292,9 @@ table.views-table {
 .view-stitchings td.views-field-category {
   text-align: center;
 }
+
+/* line 180, ../../sass/components/views.scss */
+.view-people .views-field-field-display-name,
+.view-people .views-field-rid {
+  text-align: center;
+}

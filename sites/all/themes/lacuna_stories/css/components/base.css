@@ -69,98 +69,169 @@ p {
 /* line 66, ../../sass/components/base.scss */
 article.node {
   text-align: justify;
+  font-family: 'Baskerville Libre', serif;
+  font-size: 18px;
+  line-height: 1.5em;
 }
 
 /* fix to avoid drop down menu overwrite of message pane */
+<<<<<<< HEAD
+/* line 74, ../../sass/components/base.scss */
+=======
 /* line 71, ../../sass/components/base.scss */
+>>>>>>> master
 div.messages {
   margin-top: 40px;
 }
 
+<<<<<<< HEAD
+/* line 78, ../../sass/components/base.scss */
+=======
 /* line 75, ../../sass/components/base.scss */
+>>>>>>> master
 h1, h2, h3, h4, h5, h6 {
   font-family: 'Carrois Gothic SC', sans-serif;
   line-height: 1.3em;
 }
 
+<<<<<<< HEAD
+/* line 83, ../../sass/components/base.scss */
+=======
 /* line 80, ../../sass/components/base.scss */
+>>>>>>> master
 h1 {
   font-size: 1.5em;
   margin-bottom: 10px;
 }
 
+<<<<<<< HEAD
+/* line 87, ../../sass/components/base.scss */
+=======
 /* line 84, ../../sass/components/base.scss */
+>>>>>>> master
 h2 {
   font-size: 1.4em;
   margin-bottom: 10px;
 }
 
+<<<<<<< HEAD
+/* line 91, ../../sass/components/base.scss */
+=======
 /* line 88, ../../sass/components/base.scss */
+>>>>>>> master
 h3 {
   font-size: 1.3em;
   margin-bottom: 10px;
 }
 
+<<<<<<< HEAD
+/* line 95, ../../sass/components/base.scss */
+=======
 /* line 92, ../../sass/components/base.scss */
+>>>>>>> master
 h4 {
   font-size: 1.2em;
   margin-bottom: 10px;
 }
 
+<<<<<<< HEAD
+/* line 99, ../../sass/components/base.scss */
+=======
 /* line 96, ../../sass/components/base.scss */
+>>>>>>> master
 h5 {
   font-size: 1.1em;
   margin-bottom: 10px;
 }
 
+<<<<<<< HEAD
+/* line 103, ../../sass/components/base.scss */
+=======
 /* line 100, ../../sass/components/base.scss */
+>>>>>>> master
 dt {
   margin-top: 10px;
 }
 
+<<<<<<< HEAD
+/* line 107, ../../sass/components/base.scss */
+=======
 /* line 104, ../../sass/components/base.scss */
+>>>>>>> master
 a {
   color: #1588ba;
   text-decoration: none;
 }
 
+<<<<<<< HEAD
+/* line 112, ../../sass/components/base.scss */
+=======
 /* line 109, ../../sass/components/base.scss */
+>>>>>>> master
 a:hover {
   color: #094762;
 }
 
+<<<<<<< HEAD
+/* line 116, ../../sass/components/base.scss */
+=======
 /* line 113, ../../sass/components/base.scss */
+>>>>>>> master
 label {
   margin-bottom: 10px;
 }
 
+<<<<<<< HEAD
+/* line 119, ../../sass/components/base.scss */
+=======
 /* line 116, ../../sass/components/base.scss */
+>>>>>>> master
 input {
   max-width: 100%;
 }
 
+<<<<<<< HEAD
+/* line 122, ../../sass/components/base.scss */
+=======
 /* line 119, ../../sass/components/base.scss */
+>>>>>>> master
 input[checked='checked'] {
   background-color: blue;
 }
 
+<<<<<<< HEAD
+/* line 126, ../../sass/components/base.scss */
+=======
 /* line 123, ../../sass/components/base.scss */
+>>>>>>> master
 td.active {
   background-color: white;
 }
 
+<<<<<<< HEAD
+/* line 130, ../../sass/components/base.scss */
+=======
 /* line 127, ../../sass/components/base.scss */
+>>>>>>> master
 #page-title {
   margin-bottom: 20px;
   font-weight: bold;
 }
 
+<<<<<<< HEAD
+/* line 135, ../../sass/components/base.scss */
+=======
 /* line 132, ../../sass/components/base.scss */
+>>>>>>> master
 .breadcrumb {
   display: none;
 }
 
+<<<<<<< HEAD
+/* line 139, ../../sass/components/base.scss */
+=======
 /* line 136, ../../sass/components/base.scss */
+>>>>>>> master
 .form-item {
   margin-top: 30px;
 }

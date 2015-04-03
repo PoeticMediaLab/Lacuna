@@ -6,7 +6,8 @@
  * of these @include files will be combined into a single file.
  */
 /* Import Sass mixins, variables, Compass modules, etc. */
-@import url(http://fonts.googleapis.com/css?family=Libre+Baskerville|Carrois+Gothic+SC);
+@import url("//fonts.googleapis.com/css?family=Libre+Baskerville|Carrois+Gothic+SC");
+@import url("//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css");
 /* HTML element (SMACSS base) rules */
 /**
  * @file
@@ -112,7 +113,7 @@ audio:not([controls]) {
  */
 /* line 106, ../sass/_normalize.scss */
 html {
-  font-family: "Libre Baskerville", Georgia, "Times New Roman", "DejaVu Serif", serif;
+  font-family: "Carrois Gothic SC", Verdana, Tahoma, "DejaVu Sans", sans-serif;
   /* 1 */
   font-size: 100%;
   /* 3 */
@@ -928,98 +929,101 @@ p {
 /* line 66, ../sass/components/base.scss */
 article.node {
   text-align: justify;
+  font-family: 'Baskerville Libre', serif;
+  font-size: 18px;
+  line-height: 1.5em;
 }
 
 /* fix to avoid drop down menu overwrite of message pane */
-/* line 71, ../sass/components/base.scss */
+/* line 74, ../sass/components/base.scss */
 div.messages, div.messages--status, div.messages--warning, div.messages--error {
   margin-top: 40px;
 }
 
-/* line 75, ../sass/components/base.scss */
+/* line 78, ../sass/components/base.scss */
 h1, h2, h3, h4, h5, h6 {
   font-family: 'Carrois Gothic SC', sans-serif;
   line-height: 1.3em;
 }
 
-/* line 80, ../sass/components/base.scss */
+/* line 83, ../sass/components/base.scss */
 h1 {
   font-size: 1.5em;
   margin-bottom: 10px;
 }
 
-/* line 84, ../sass/components/base.scss */
+/* line 87, ../sass/components/base.scss */
 h2 {
   font-size: 1.4em;
   margin-bottom: 10px;
 }
 
-/* line 88, ../sass/components/base.scss */
+/* line 91, ../sass/components/base.scss */
 h3 {
   font-size: 1.3em;
   margin-bottom: 10px;
 }
 
-/* line 92, ../sass/components/base.scss */
+/* line 95, ../sass/components/base.scss */
 h4 {
   font-size: 1.2em;
   margin-bottom: 10px;
 }
 
-/* line 96, ../sass/components/base.scss */
+/* line 99, ../sass/components/base.scss */
 h5 {
   font-size: 1.1em;
   margin-bottom: 10px;
 }
 
-/* line 100, ../sass/components/base.scss */
+/* line 103, ../sass/components/base.scss */
 dt {
   margin-top: 10px;
 }
 
-/* line 104, ../sass/components/base.scss */
+/* line 107, ../sass/components/base.scss */
 a {
   color: #1588ba;
   text-decoration: none;
 }
 
-/* line 109, ../sass/components/base.scss */
+/* line 112, ../sass/components/base.scss */
 a:hover {
   color: #094762;
 }
 
-/* line 113, ../sass/components/base.scss */
+/* line 116, ../sass/components/base.scss */
 label {
   margin-bottom: 10px;
 }
 
-/* line 116, ../sass/components/base.scss */
+/* line 119, ../sass/components/base.scss */
 input {
   max-width: 100%;
 }
 
-/* line 119, ../sass/components/base.scss */
+/* line 122, ../sass/components/base.scss */
 input[checked='checked'] {
   background-color: blue;
 }
 
-/* line 123, ../sass/components/base.scss */
+/* line 126, ../sass/components/base.scss */
 td.active {
   background-color: white;
 }
 
-/* line 127, ../sass/components/base.scss */
+/* line 130, ../sass/components/base.scss */
 #page-title {
   margin-bottom: 20px;
   font-weight: bold;
 }
 
-/* line 132, ../sass/components/base.scss */
+/* line 135, ../sass/components/base.scss */
 .breadcrumb {
   display: none;
 }
 
-/* line 136, ../sass/components/base.scss */
+/* line 139, ../sass/components/base.scss */
 .form-item {
   margin-top: 30px;
 }
@@ -2279,6 +2283,12 @@ table.views-table {
   text-align: center;
 }
 
+/* line 180, ../sass/components/views.scss */
+.view-people .views-field-field-display-name,
+.view-people .views-field-rid {
+  text-align: center;
+}
+
 /* line 1, ../sass/components/content.scss */
 .field {
   margin-bottom: 30px;
@@ -2369,7 +2379,7 @@ fieldset#edit-thread-description-format {
   box-shadow: 0 1px 0 rgba(255, 255, 255, 0.2) inset, 0 1px 2px rgba(0, 0, 0, 0.05);
   cursor: pointer;
   display: inline-block;
-  font-size: 14px;
+  font-size: 12px;
   line-height: 20px;
   margin-bottom: 0;
   padding: 4px 6px;
@@ -2498,99 +2508,79 @@ fieldset#edit-thread-description-format {
 #user-profile-main div.field-wrapper p {
   margin: 0;
   font-size: 16px;
+  text-overflow: ellipsis;
+  overflow: hidden;
 }
-/* line 40, ../sass/components/users.scss */
+/* line 42, ../sass/components/users.scss */
 #user-profile-main div.field-wrapper p.title {
   font-style: italic;
   font-size: 20px;
 }
-/* line 44, ../sass/components/users.scss */
+/* line 46, ../sass/components/users.scss */
 #user-profile-main div.field-wrapper p.no-results {
   margin-top: 10px;
 }
-/* line 49, ../sass/components/users.scss */
+/* line 51, ../sass/components/users.scss */
 #user-profile-main #user-avatar-space {
   height: 240px;
   vertical-align: bottom;
   text-align: center;
 }
-/* line 53, ../sass/components/users.scss */
-#user-profile-main #user-avatar-space .user-picture {
-  width: 220px;
-  height: 220px;
-  border: 1px solid rgba(7, 7, 7, 0.2);
-  border-radius: 120px;
-  display: inline-block;
-  overflow: hidden;
-}
-/* line 60, ../sass/components/users.scss */
-#user-profile-main #user-avatar-space .user-picture img {
-  min-width: 220px;
-  min-height: 220px;
-  max-width: none;
-  position: relative;
-  margin-left: 110px;
-  transform: translateX(-50%);
-  /* this along with margin will position img centrally*/
-  -ms-transform: translateX(-50%);
-  /* IE 9 */
-  -webkit-transform: translateX(-50%);
-  /* Chrome, Safari, Opera */
-}
-/* line 73, ../sass/components/users.scss */
+/* line 58, ../sass/components/users.scss */
 #user-profile-main #user-command-buttons {
   margin-bottom: 10px;
 }
-/* line 75, ../sass/components/users.scss */
+/* line 60, ../sass/components/users.scss */
 #user-profile-main #user-command-buttons a, #user-profile-main #user-command-buttons a:visited, #user-profile-main #user-command-buttons a:hover, #user-profile-main #user-command-buttons a:active {
   color: inherit;
 }
-/* line 78, ../sass/components/users.scss */
+/* line 63, ../sass/components/users.scss */
 #user-profile-main #user-command-buttons a:not(:first-child) {
   margin-left: 20px;
 }
-/* line 83, ../sass/components/users.scss */
-#user-profile-main #how-I-Learn-space div.field-wrapper {
+/* line 68, ../sass/components/users.scss */
+#user-profile-main #how-I-Learn-space div.field-wrapper p {
+  max-height: 460px;
   height: 460px;
 }
-/* line 88, ../sass/components/users.scss */
+/* line 74, ../sass/components/users.scss */
 #user-profile-main #user-contributions-space div.field-wrapper {
   height: 100px;
   padding-right: 0;
   padding-bottom: 0;
 }
-/* line 92, ../sass/components/users.scss */
+/* line 78, ../sass/components/users.scss */
 #user-profile-main #user-contributions-space div.field-wrapper .block {
   overflow-y: scroll;
   height: 75px;
 }
-/* line 97, ../sass/components/users.scss */
+/* line 83, ../sass/components/users.scss */
 #user-profile-main #user-contributions-space div.field-wrapper:nth-child(n+1) {
   margin-top: -1px;
 }
-/* line 102, ../sass/components/users.scss */
+/* line 88, ../sass/components/users.scss */
 #user-profile-main #user-bio-space div.field-wrapper {
   height: 30px;
 }
-/* line 106, ../sass/components/users.scss */
-#user-profile-main #user-about-space div.field-wrapper,
+/* line 91, ../sass/components/users.scss */
 #user-profile-main #user-learning-goals-space div.field-wrapper {
   height: 120px;
+  white-space: nowrap;
 }
-/* line 111, ../sass/components/users.scss */
+/* line 97, ../sass/components/users.scss */
 #user-profile-main #user-learning table {
   width: 100%;
   margin: 0;
 }
-/* line 114, ../sass/components/users.scss */
+/* line 100, ../sass/components/users.scss */
 #user-profile-main #user-learning table td {
   text-align: center;
 }
-/* line 116, ../sass/components/users.scss */
+/* line 102, ../sass/components/users.scss */
 #user-profile-main #user-learning table td p {
   font-style: italic;
 }
-/* line 119, ../sass/components/users.scss */
+/* line 105, ../sass/components/users.scss */
 #user-profile-main #user-learning table td img {
   border: 1px solid;
   border-color: rgba(7, 7, 7, 0.2);
@@ -2598,14 +2588,42 @@ fieldset#edit-thread-description-format {
   width: 120px;
   height: 120px;
 }
-/* line 128, ../sass/components/users.scss */
+/* line 114, ../sass/components/users.scss */
 #user-profile-main #user-learning div.user-link-item.is-empty {
   opacity: 0.4;
 }
-/* line 130, ../sass/components/users.scss */
+/* line 116, ../sass/components/users.scss */
 #user-profile-main #user-learning div.user-link-item.is-empty a {
   cursor: default;
   pointer-events: none;
+}
+
+/*
+	We use this CSS in the People view, so separate it from
+  just the user profile ID
+*/
+/* line 128, ../sass/components/users.scss */
+.user-picture {
+  width: 220px;
+  height: 220px;
+  border: 1px solid rgba(7, 7, 7, 0.2);
+  border-radius: 50%;
+  display: inline-block;
+  overflow: hidden;
+}
+/* line 135, ../sass/components/users.scss */
+.user-picture img {
+  min-width: 220px;
+  min-height: 220px;
+  margin-left: 110px;
+  max-width: none;
+  position: relative;
+  transform: translateX(-50%);
+  /* this along with margin will position img centrally*/
+  -ms-transform: translateX(-50%);
+  /* IE 9 */
+  -webkit-transform: translateX(-50%);
+  /* Chrome, Safari, Opera */
 }
 
 /**

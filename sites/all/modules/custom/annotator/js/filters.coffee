@@ -15,7 +15,7 @@ $ = jQuery  # for Drupal
 # generating them progammatically (though that's my preference)
 # 'default' is the class that should be applied for each element type
 select = {
-            'interface':  '#annotation-filters'
+            'interface':  'section.region-sidebar-second'
             'annotation': 'annotation-'
             'hide':       'af-annotation-hide'
             'filters':

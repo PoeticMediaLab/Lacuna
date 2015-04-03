@@ -72,7 +72,10 @@ $h6-font-size: 0.67 * $base-font-size;
 
 
 // Our web font stack
-@import url(http://fonts.googleapis.com/css?family=Libre+Baskerville|Carrois+Gothic+SC);
+@import url("//fonts.googleapis.com/css?family=Libre+Baskerville|Carrois+Gothic+SC");
+
+// Include Font Awesome
+@import url("//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css");
 
 // First, let's create some font stacks.
 $times-new-roman: "Times New Roman", Times, Georgia, "DejaVu Serif", serif;
@@ -89,8 +92,8 @@ $arial:           Arial, Helvetica, "Nimbus Sans L", sans-serif;
 $courier:         "Courier New", "DejaVu Sans Mono", monospace, sans-serif;
 
 // Now create some variables for the font stacks we want to use on this site.
-$base-font-family: 'Libre Baskerville', $georgia; // The font family set on the html element.
-$font-body:        'Libre Baskerville', $georgia;
+$base-font-family: 'Carrois Gothic SC', $verdana; // The font family set on the html element.
+$font-body:        'Carrois Gothic SC', $verdana;
 $font-monospace:   $courier;
 
 //

@@ -12,6 +12,13 @@ function media_internet_hook_info() {
 }
 
 /**
+ * Access callback for the media_internet media browser plugin.
+ */
+function media_internet_access($account = NULL) {
+  return user_access('administer media', $account) || user_access('add media from remote sources', $account);
+}
+
+/**
  * Implement hook_permission().
  */
 function media_internet_permission() {
@@ -224,127 +231,4 @@ function media_internet_get_provider($embed_string) {
     }
   }
   throw new MediaInternetNoHandlerException(t('Unable to handle the provided embed string or URL.'));
-}
-
-class MediaInternetFileHandler extends MediaInternetBaseHandler {
-
-  public $fileObject;
-
-  public function preSave(&$file_obj) {
-    // Coppies the remote file locally.
-    $remote_uri = $file_obj->uri;
-    //@TODO: we should follow redirection here an save the final filename, not just the basename.
-    $local_filename = basename($remote_uri);
-    $local_filename = file_munge_filename($local_filename, media_variable_get('file_extensions'), FALSE);
-    $local_uri = file_stream_wrapper_uri_normalize('temporary://' . $local_filename);
-    if (!@copy($remote_uri, $local_uri)) {
-      throw new Exception('Unable to add file ' . $remote_uri);
-      return;
-    }
-    // Make the current fileObject point to the local_uri, not the remote one.
-    $file_obj = file_uri_to_object($local_uri);
-  }
-
-  public function postSave(&$file_obj) {
-    $scheme = variable_get('file_default_scheme', 'public') . '://';
-    $uri = file_stream_wrapper_uri_normalize($scheme . $file_obj->filename);
-    // Now to its new home.
-    $file_obj = file_move($file_obj, $uri, FILE_EXISTS_RENAME);
-  }
-
-  public function getFileObject() {
-    if (!$this->fileObject) {
-      $this->fileObject = file_uri_to_object($this->embedCode);
-    }
-    return $this->fileObject;
-  }
-
-  public function claim($embedCode) {
-    // Claim only valid URLs using a supported scheme.
-    if (!valid_url($embedCode, TRUE) || !in_array(file_uri_scheme($embedCode), media_variable_get('fromurl_supported_schemes'))) {
-      return FALSE;
-    }
-
-    // This handler is intended for regular files, so don't claim URLs
-    // containing query strings or fragments.
-    if (preg_match('/[\?\#]/', $embedCode)) {
-      return FALSE;
-    }
-
-    // Since this handler copies the remote file to the local web server, do not
-    // claim a URL with an extension disallowed for media uploads.
-    $regex = '/\.(' . preg_replace('/ +/', '|', preg_quote(media_variable_get('file_extensions'))) . ')$/i';
-    if (!preg_match($regex, basename($embedCode))) {
-      return FALSE;
-    }
-
-    return TRUE;
-  }
-}
-
-abstract class MediaInternetBaseHandler {
-
-  public function __construct($embedCode) {
-    $this->embedCode = $embedCode;
-  }
-
-  /**
-   * If required, implementors can validate the embedCode.
-   */
-  public function validate() {}
-
-  /**
-   * Returns a file object which can be used for validation
-   *
-   * @return StdClass
-   */
-  abstract public function getFileObject();
-
-  /**
-   * Saves a file to the file_managed table (with file_save)
-   *
-   * @return StdClass
-   */
-  public function save() {
-    $file_obj = $this->getFileObject();
-    $this->preSave($file_obj);
-    file_save($file_obj);
-    $this->postSave($file_obj);
-    return $file_obj;
-  }
-
-  /**
-   * After the file has been saved, implementors may do additional operations.
-   *
-   * @param $file_obj;
-   */
-  public function postSave(&$file_obj) {
-
-  }
-
-  /**
-   * Before the file has been saved, implementors may do additional operations.
-   */
-  public function preSave(&$file_obj) {
-
-  }
-
-  /**
-   * Recognize if this handler should take the the item with the embed
-   * coded passed as argument.
-   *
-   * @param string $embed_code
-   *
-   * @return boolean
-   *   Whether or not this handler is resposible for the give embed code.
-   */
-  abstract public function claim($embed_code);
-}
-
-class MediaInternetValidationException extends Exception {
-
-}
-
-class MediaInternetNoHandlerException extends Exception {
-
 }

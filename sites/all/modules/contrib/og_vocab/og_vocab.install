@@ -1,0 +1,259 @@
+<?php
+
+/**
+ * @file
+ * Install file for the og_vocab module.
+ */
+
+/**
+ * Implements hook_schema().
+ */
+function og_vocab_schema() {
+  $schema['og_vocab_relation'] = array(
+    'description' => t('Relate groups to vocabularies'),
+    'fields' => array(
+      'id' => array(
+        'description' => 'Primary Key: Unique OG vocab ID.',
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'group_type' => array(
+        'description' => "The group's entity type.",
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'gid'               => array(
+        'description'     => "The group's unique ID.",
+        'type'            => 'int',
+        'size'            => 'normal',
+        'not null'        => TRUE,
+      ),
+      'vid' => array(
+        'description' => 'Vocabulary ID',
+        'type'        => 'int',
+        'not null'    => TRUE,
+        'default'     => 0,
+      ),
+    ),
+    'primary key' => array('vid'),
+    'indexes' => array(
+      'id' => array('id'),
+    ),
+  );
+
+  $schema['og_vocab'] = array(
+    'description' => t('Relate Og-vocab settings to bundles'),
+    'fields' => array(
+      'id' => array(
+        'description' => 'Primary Key: Unique OG vocab ID.',
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'vid' => array(
+        'description' => 'Vocabulary ID',
+        'type'        => 'int',
+        'not null'    => TRUE,
+        'default'     => 0,
+      ),
+      'entity_type' => array(
+        'description' => "On which entity-type the widget should appear.",
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'bundle' => array(
+        'description' => "On which bundle the widget should appear.",
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'settings' => array(
+        'description' => 'Serialized array with field instance settings.',
+        'type' => 'text',
+        'serialize' => TRUE,
+        'size' => 'big',
+      ),
+      'field_name' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => "The name of the field the OG-vocab is associated with.",
+      ),
+    ),
+    'indexes' => array(
+      'id' => array('id'),
+    ),
+  );
+
+  return $schema;
+}
+
+/**
+ * Snapshot of the schema as it was in 7.x-1.0
+ */
+function og_vocab_schema_7000() {
+  $schema['og_vocab_relation'] = array(
+    'description' => t('Relate groups to vocabularies'),
+    'fields' => array(
+      'id' => array(
+        'description' => 'Primary Key: Unique OG vocab ID.',
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'group_type' => array(
+        'description' => "The group's entity type.",
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'gid'               => array(
+        'description'     => "The group's unique ID.",
+        'type'            => 'int',
+        'size'            => 'normal',
+        'not null'        => TRUE,
+      ),
+      'vid' => array(
+        'description' => 'Vocabulary ID',
+        'type'        => 'int',
+        'not null'    => TRUE,
+        'default'     => 0,
+      ),
+    ),
+    'primary key' => array('vid'),
+    'indexes' => array(
+      'id' => array('id'),
+    ),
+  );
+
+  $schema['og_vocab'] = array(
+    'description' => t('Relate Og-vocab settings to bundles'),
+    'fields' => array(
+      'id' => array(
+        'description' => 'Primary Key: Unique OG vocab ID.',
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'vid' => array(
+        'description' => 'Vocabulary ID',
+        'type'        => 'int',
+        'not null'    => TRUE,
+        'default'     => 0,
+      ),
+      'entity_type' => array(
+        'description' => "On which entity-type the widget should appear.",
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'bundle' => array(
+        'description' => "On which bundle the widget should appear.",
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'settings' => array(
+        'description' => 'Serialized array with field instance settings.',
+        'type' => 'text',
+        'serialize' => TRUE,
+        'size' => 'big',
+      ),
+    ),
+    'indexes' => array(
+      'id' => array('id'),
+    ),
+  );
+
+  return $schema;
+}
+
+
+/**
+ * Upgrade tables from Drupal 6 to 7.
+ */
+function og_vocab_update_7000(&$sandbox) {
+  $schema = og_vocab_schema_7000();
+  if (!isset($sandbox['total'])) {
+    db_rename_table('og_vocab', 'og_vocab_relation');
+
+    // Drop the current primary key, as we are adding a serial column.
+    db_drop_primary_key('og_vocab_relation');
+    db_add_field('og_vocab_relation', 'id', $schema['og_vocab_relation']['fields']['id'], array('primary key' => array('id')));
+
+    // Rename nid to gid.
+    db_change_field('og_vocab_relation', 'nid', 'gid', $schema['og_vocab_relation']['fields']['gid']);
+
+    // Add group-type field.
+    db_add_field('og_vocab_relation', 'group_type', $schema['og_vocab_relation']['fields']['group_type']);
+
+    $query = db_select('og_vocab_relation');
+    $sandbox['last'] = 0;
+    $sandbox['total'] = $query->countQuery()->execute()->fetchField();
+    $sandbox['#finished'] = 0;
+  }
+  elseif ($sandbox['last'] <= $sandbox['total']  && $sandbox['total'] > 0) {
+    // Populate "group-type" with "node".
+    $batch_size = 200;
+    db_update('og_vocab_relation')
+      ->fields(array('group_type' => 'node'))
+      ->condition('id', $sandbox['last'], '>')
+      ->execute();
+
+    $sandbox['last'] += $batch_size;
+    $sandbox['#finished'] = min(0.99, $sandbox['last'] / $sandbox['total']);
+  }
+  else {
+    // Finished processing.
+    $sandbox['#finished'] = 1;
+  }
+
+  db_drop_table('og_vocab');
+  db_create_table('og_vocab', $schema['og_vocab']);
+
+  // Temporary variable to indicate we need to migrate the fields.
+  variable_set('og_vocab_7000', TRUE);
+  return t('Enable Migrate and OG-vocabulary modules to continue the migration of data.');
+}
+
+/**
+ * Add og_vocab.field_name column.
+ */
+function og_vocab_update_7100(&$sandbox) {
+  $spec = array(
+    'type' => 'varchar',
+    'length' => 255,
+    'not null' => TRUE,
+    'default' => '',
+    'description' => "The name of the field holding the group ID, the OG memebership is associated with.",
+  );
+  db_add_field('og_vocab', 'field_name', $spec);
+}
+
+
+/**
+ * Fill in field name for OG vocabularies without a field name.
+ */
+function og_vocab_update_7101() {
+  db_update('og_vocab')
+    ->fields(array('field_name' => OG_VOCAB_FIELD))
+    ->condition('field_name', '', '=')
+    ->execute();
+}
+
+/**
+ * Delete variable related to the deprecated Advanced-queue.
+ */
+function og_vocab_update_7102() {
+  variable_del('og_vocab_use_queue');
+}

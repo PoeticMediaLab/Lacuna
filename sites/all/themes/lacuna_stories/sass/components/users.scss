@@ -36,6 +36,8 @@ $border-color: rgba(7,7,7,.2);
 		p {
 			margin: 0;
 			font-size: 16px;
+			text-overflow: ellipsis;
+			overflow: hidden;
 		}
 		p.title {
 			font-style: italic;
@@ -50,24 +52,7 @@ $border-color: rgba(7,7,7,.2);
 		height: 240px;
 		vertical-align: bottom;
 		text-align: center;
-		.user-picture {
-			width: 220px;
-			height: 220px;
-			border: 1px solid $border-color;
-			border-radius: 120px;
-			display: inline-block;
-			overflow: hidden;
-			img {
-				min-width: 220px;
-				min-height: 220px;
-				max-width: none;
-				position: relative;
-				margin-left: 110px;
-				transform: translateX(-50%); 	/* this along with margin will position img centrally*/
-				-ms-transform: translateX(-50%); /* IE 9 */
-				-webkit-transform: translateX(-50%); /* Chrome, Safari, Opera */
-			}
-		}
+
 	}
 
 	#user-command-buttons {
@@ -80,7 +65,8 @@ $border-color: rgba(7,7,7,.2);
 		}
 	}
 
-	#how-I-Learn-space div.field-wrapper {
+	#how-I-Learn-space div.field-wrapper p {
+		max-height: 460px;
 		height: 460px;
 	}
 
@@ -102,9 +88,9 @@ $border-color: rgba(7,7,7,.2);
 	#user-bio-space div.field-wrapper {
 		height: 30px
 	}
-	#user-about-space div.field-wrapper,
 	#user-learning-goals-space div.field-wrapper {
 		height: 120px;
+		white-space: nowrap;
 	}
 
 	#user-learning {
@@ -132,5 +118,28 @@ $border-color: rgba(7,7,7,.2);
 				pointer-events: none;
 			}
 		}
+	}
+}
+
+/*
+	We use this CSS in the People view, so separate it from
+  just the user profile ID
+*/
+.user-picture {
+	width: 220px;
+	height: 220px;
+	border: 1px solid $border-color;
+	border-radius: 50%;
+	display: inline-block;
+	overflow: hidden;
+	img {
+		min-width: 220px;
+		min-height: 220px;
+		margin-left: 110px;
+		max-width: none;
+		position: relative;
+		transform: translateX(-50%); 	/* this along with margin will position img centrally*/
+		-ms-transform: translateX(-50%); /* IE 9 */
+		-webkit-transform: translateX(-50%); /* Chrome, Safari, Opera */
 	}
 }

@@ -125,7 +125,7 @@ function lacuna_stories_menus_menu_default_menu_links() {
     'expanded' => 0,
     'weight' => -47,
     'customized' => 1,
-    'parent_identifier' => 'main-menu_explore:<nolink>',
+    'parent_identifier' => 'main-menu_help:<nolink>',
   );
   // Exported menu link: main-menu_connect:<nolink>
   $menu_links['main-menu_connect:<nolink>'] = array(

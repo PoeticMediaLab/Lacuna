@@ -1,0 +1,23 @@
+name = Organic groups vocabularies
+description = "Enable groups to maintain their own vocabularies."
+dependencies[] = og
+dependencies[] = taxonomy
+package = "Organic groups"
+core = 7.x
+
+files[] = includes/og_vocab.og_vocab.inc
+files[] = includes/og_vocab.exception.inc
+
+; Test files
+files[] = og_vocab.test
+
+; Migrate files
+files[] = includes/migrate/og_vocab.migrate.inc
+; files[] = includes/migrate/delete_fields.inc
+
+; Information added by drupal.org packaging script on 2013-10-31
+version = "7.x-1.2"
+core = "7.x"
+project = "og_vocab"
+datestamp = "1383228663"
+
