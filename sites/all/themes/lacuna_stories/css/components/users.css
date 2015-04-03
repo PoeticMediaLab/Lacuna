@@ -150,4 +150,8 @@
   margin-left: 110px;
   transform: translateX(-50%);
   /* this along with margin will position img centrally*/
+  -ms-transform: translateX(-50%);
+  /* IE 9 */
+  -webkit-transform: translateX(-50%);
+  /* Chrome, Safari, Opera */
 }
