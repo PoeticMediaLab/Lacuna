@@ -609,7 +609,6 @@ function lacuna_visualizations_annotation_dashboard() {
 function lacuna_visualizations_annotation_dashboard_data() {
   // Prepare the data for the dashboard, output as JSON
   global $user;
-  $time_pre = microtime(true);
 
   // Query all annotations with no access checks
   // $query = new EntityFieldQuery();
@@ -628,24 +627,16 @@ function lacuna_visualizations_annotation_dashboard_data() {
     }
   }
 
-  $time_post = microtime(true);
-  ddl($time_post - $time_pre, 'db_query');
 
   $canReadAll = user_access('access any private annotation');
   $documentNames = array(); // to cut down on db queries
   $userNames = array();   // same as previous - only load users once
   $annotations = array();
 
-  $time_pre = microtime(true);
-
   // Fields need for db query:
   // created, uid, annotation_reference, text, quote, private, annotation_tags, category
   $allNodes = node_load_multiple($all);
 
-  $time_post = microtime(true);
-  ddl($time_post - $time_pre, 'node_load_multiple');
-
-  $time_pre = microtime(true);
   foreach ($allNodes as $annotation) {
     // Create a new data object, populate only with necessary data
     // Make it harder to leak unintended data
@@ -715,8 +706,6 @@ function lacuna_visualizations_annotation_dashboard_data() {
     $data->username = $userNames[$annotation->uid];
     array_push($annotations, $data);
   }
-  $time_post = microtime(true);
-  ddl($time_post - $time_pre, 'data sanitizing');
   drupal_json_output($annotations);
   drupal_exit();
 }
