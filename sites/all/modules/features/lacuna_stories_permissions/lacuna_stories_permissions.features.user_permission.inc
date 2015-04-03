@@ -53,6 +53,7 @@ function lacuna_stories_permissions_user_default_permissions() {
     'roles' => array(
       'Content Manager' => 'Content Manager',
       'Instructor' => 'Instructor',
+      'Teaching Assistant' => 'Teaching Assistant',
       'administrator' => 'administrator',
     ),
     'module' => 'annotation',
@@ -97,6 +98,7 @@ function lacuna_stories_permissions_user_default_permissions() {
       'Content Manager' => 'Content Manager',
       'Instructor' => 'Instructor',
       'Student' => 'Student',
+      'Teaching Assistant' => 'Teaching Assistant',
       'administrator' => 'administrator',
     ),
     'module' => 'comment',
@@ -220,6 +222,7 @@ function lacuna_stories_permissions_user_default_permissions() {
       'Content Manager' => 'Content Manager',
       'Instructor' => 'Instructor',
       'Student' => 'Student',
+      'Teaching Assistant' => 'Teaching Assistant',
       'administrator' => 'administrator',
     ),
     'module' => 'contact',
@@ -238,6 +241,7 @@ function lacuna_stories_permissions_user_default_permissions() {
     'roles' => array(
       'Content Manager' => 'Content Manager',
       'Instructor' => 'Instructor',
+      'Teaching Assistant' => 'Teaching Assistant',
       'administrator' => 'administrator',
     ),
     'module' => 'contact',
@@ -249,6 +253,8 @@ function lacuna_stories_permissions_user_default_permissions() {
     'roles' => array(
       'Content Manager' => 'Content Manager',
       'Instructor' => 'Instructor',
+      'Student' => 'Student',
+      'Teaching Assistant' => 'Teaching Assistant',
       'administrator' => 'administrator',
     ),
     'module' => 'user',
@@ -271,6 +277,7 @@ function lacuna_stories_permissions_user_default_permissions() {
       'Content Manager' => 'Content Manager',
       'Instructor' => 'Instructor',
       'Student' => 'Student',
+      'Teaching Assistant' => 'Teaching Assistant',
       'administrator' => 'administrator',
     ),
     'module' => 'media_internet',
@@ -610,6 +617,7 @@ function lacuna_stories_permissions_user_default_permissions() {
     'name' => 'administer users',
     'roles' => array(
       'Instructor' => 'Instructor',
+      'Teaching Assistant' => 'Teaching Assistant',
       'administrator' => 'administrator',
     ),
     'module' => 'user',
@@ -667,6 +675,7 @@ function lacuna_stories_permissions_user_default_permissions() {
       'Content Manager' => 'Content Manager',
       'Instructor' => 'Instructor',
       'Student' => 'Student',
+      'Teaching Assistant' => 'Teaching Assistant',
       'administrator' => 'administrator',
     ),
     'module' => 'user',
@@ -679,6 +688,7 @@ function lacuna_stories_permissions_user_default_permissions() {
       'Content Manager' => 'Content Manager',
       'Instructor' => 'Instructor',
       'Student' => 'Student',
+      'Teaching Assistant' => 'Teaching Assistant',
       'administrator' => 'administrator',
     ),
     'module' => 'user',
@@ -709,6 +719,7 @@ function lacuna_stories_permissions_user_default_permissions() {
       'Content Manager' => 'Content Manager',
       'Instructor' => 'Instructor',
       'Student' => 'Student',
+      'Teaching Assistant' => 'Teaching Assistant',
       'administrator' => 'administrator',
     ),
     'module' => 'node',
@@ -721,6 +732,7 @@ function lacuna_stories_permissions_user_default_permissions() {
       'Content Manager' => 'Content Manager',
       'Instructor' => 'Instructor',
       'Student' => 'Student',
+      'Teaching Assistant' => 'Teaching Assistant',
       'administrator' => 'administrator',
     ),
     'module' => 'annotator',
@@ -743,6 +755,7 @@ function lacuna_stories_permissions_user_default_permissions() {
       'Content Manager' => 'Content Manager',
       'Instructor' => 'Instructor',
       'Student' => 'Student',
+      'Teaching Assistant' => 'Teaching Assistant',
       'administrator' => 'administrator',
     ),
     'module' => 'node',
@@ -755,6 +768,7 @@ function lacuna_stories_permissions_user_default_permissions() {
       'Content Manager' => 'Content Manager',
       'Instructor' => 'Instructor',
       'Student' => 'Student',
+      'Teaching Assistant' => 'Teaching Assistant',
       'administrator' => 'administrator',
     ),
     'module' => 'node',
@@ -766,6 +780,7 @@ function lacuna_stories_permissions_user_default_permissions() {
     'roles' => array(
       'Content Manager' => 'Content Manager',
       'Instructor' => 'Instructor',
+      'Teaching Assistant' => 'Teaching Assistant',
       'administrator' => 'administrator',
     ),
     'module' => 'node',
@@ -777,6 +792,7 @@ function lacuna_stories_permissions_user_default_permissions() {
     'roles' => array(
       'Content Manager' => 'Content Manager',
       'Instructor' => 'Instructor',
+      'Teaching Assistant' => 'Teaching Assistant',
       'administrator' => 'administrator',
     ),
     'module' => 'node',
@@ -789,6 +805,7 @@ function lacuna_stories_permissions_user_default_permissions() {
       'Content Manager' => 'Content Manager',
       'Instructor' => 'Instructor',
       'Student' => 'Student',
+      'Teaching Assistant' => 'Teaching Assistant',
       'administrator' => 'administrator',
       'anonymous user' => 'anonymous user',
     ),
@@ -802,6 +819,7 @@ function lacuna_stories_permissions_user_default_permissions() {
       'Content Manager' => 'Content Manager',
       'Instructor' => 'Instructor',
       'Student' => 'Student',
+      'Teaching Assistant' => 'Teaching Assistant',
       'administrator' => 'administrator',
       'anonymous user' => 'anonymous user',
     ),
@@ -815,16 +833,10 @@ function lacuna_stories_permissions_user_default_permissions() {
       'Content Manager' => 'Content Manager',
       'Instructor' => 'Instructor',
       'Student' => 'Student',
+      'Teaching Assistant' => 'Teaching Assistant',
       'administrator' => 'administrator',
       'anonymous user' => 'anonymous user',
     ),
-    'module' => 'field_permissions',
-  );
-
-  // Exported permission: 'create field_how_i_learn'.
-  $permissions['create field_how_i_learn'] = array(
-    'name' => 'create field_how_i_learn',
-    'roles' => array(),
     'module' => 'field_permissions',
   );
 
@@ -835,6 +847,7 @@ function lacuna_stories_permissions_user_default_permissions() {
       'Content Manager' => 'Content Manager',
       'Instructor' => 'Instructor',
       'Student' => 'Student',
+      'Teaching Assistant' => 'Teaching Assistant',
       'administrator' => 'administrator',
       'anonymous user' => 'anonymous user',
     ),
@@ -847,6 +860,7 @@ function lacuna_stories_permissions_user_default_permissions() {
     'roles' => array(
       'Content Manager' => 'Content Manager',
       'Instructor' => 'Instructor',
+      'Teaching Assistant' => 'Teaching Assistant',
       'administrator' => 'administrator',
     ),
     'module' => 'field_permissions',
@@ -858,6 +872,7 @@ function lacuna_stories_permissions_user_default_permissions() {
     'roles' => array(
       'Content Manager' => 'Content Manager',
       'Instructor' => 'Instructor',
+      'Teaching Assistant' => 'Teaching Assistant',
       'administrator' => 'administrator',
     ),
     'module' => 'field_permissions',
@@ -870,6 +885,7 @@ function lacuna_stories_permissions_user_default_permissions() {
       'Content Manager' => 'Content Manager',
       'Instructor' => 'Instructor',
       'Student' => 'Student',
+      'Teaching Assistant' => 'Teaching Assistant',
       'administrator' => 'administrator',
       'anonymous user' => 'anonymous user',
     ),
@@ -882,6 +898,7 @@ function lacuna_stories_permissions_user_default_permissions() {
     'roles' => array(
       'Content Manager' => 'Content Manager',
       'Instructor' => 'Instructor',
+      'Teaching Assistant' => 'Teaching Assistant',
       'administrator' => 'administrator',
       'anonymous user' => 'anonymous user',
     ),
@@ -905,6 +922,7 @@ function lacuna_stories_permissions_user_default_permissions() {
       'Content Manager' => 'Content Manager',
       'Instructor' => 'Instructor',
       'Student' => 'Student',
+      'Teaching Assistant' => 'Teaching Assistant',
       'administrator' => 'administrator',
     ),
     'module' => 'node',
@@ -924,7 +942,6 @@ function lacuna_stories_permissions_user_default_permissions() {
     'name' => 'create webform content',
     'roles' => array(
       'Content Manager' => 'Content Manager',
-      'Instructor' => 'Instructor',
       'Student' => 'Student',
       'administrator' => 'administrator',
     ),
@@ -1055,6 +1072,7 @@ function lacuna_stories_permissions_user_default_permissions() {
       'Content Manager' => 'Content Manager',
       'Instructor' => 'Instructor',
       'Student' => 'Student',
+      'Teaching Assistant' => 'Teaching Assistant',
       'administrator' => 'administrator',
     ),
     'module' => 'node',
@@ -1077,6 +1095,7 @@ function lacuna_stories_permissions_user_default_permissions() {
       'Content Manager' => 'Content Manager',
       'Instructor' => 'Instructor',
       'Student' => 'Student',
+      'Teaching Assistant' => 'Teaching Assistant',
       'administrator' => 'administrator',
     ),
     'module' => 'node',
@@ -1089,6 +1108,7 @@ function lacuna_stories_permissions_user_default_permissions() {
       'Content Manager' => 'Content Manager',
       'Instructor' => 'Instructor',
       'Student' => 'Student',
+      'Teaching Assistant' => 'Teaching Assistant',
       'administrator' => 'administrator',
     ),
     'module' => 'node',
@@ -1100,6 +1120,7 @@ function lacuna_stories_permissions_user_default_permissions() {
     'roles' => array(
       'Content Manager' => 'Content Manager',
       'Instructor' => 'Instructor',
+      'Teaching Assistant' => 'Teaching Assistant',
       'administrator' => 'administrator',
     ),
     'module' => 'node',
@@ -1111,6 +1132,7 @@ function lacuna_stories_permissions_user_default_permissions() {
     'roles' => array(
       'Content Manager' => 'Content Manager',
       'Instructor' => 'Instructor',
+      'Teaching Assistant' => 'Teaching Assistant',
       'administrator' => 'administrator',
     ),
     'module' => 'node',
@@ -1133,6 +1155,7 @@ function lacuna_stories_permissions_user_default_permissions() {
       'Content Manager' => 'Content Manager',
       'Instructor' => 'Instructor',
       'Student' => 'Student',
+      'Teaching Assistant' => 'Teaching Assistant',
       'administrator' => 'administrator',
     ),
     'module' => 'node',
@@ -1143,7 +1166,6 @@ function lacuna_stories_permissions_user_default_permissions() {
     'name' => 'delete own webform content',
     'roles' => array(
       'Content Manager' => 'Content Manager',
-      'Instructor' => 'Instructor',
       'Student' => 'Student',
       'administrator' => 'administrator',
     ),
@@ -1373,6 +1395,7 @@ function lacuna_stories_permissions_user_default_permissions() {
     'roles' => array(
       'Content Manager' => 'Content Manager',
       'Instructor' => 'Instructor',
+      'Teaching Assistant' => 'Teaching Assistant',
       'administrator' => 'administrator',
     ),
     'module' => 'biblio',
@@ -1384,6 +1407,7 @@ function lacuna_stories_permissions_user_default_permissions() {
     'roles' => array(
       'Content Manager' => 'Content Manager',
       'Instructor' => 'Instructor',
+      'Teaching Assistant' => 'Teaching Assistant',
       'administrator' => 'administrator',
     ),
     'module' => 'biblio',
@@ -1413,13 +1437,6 @@ function lacuna_stories_permissions_user_default_permissions() {
     'roles' => array(
       'administrator' => 'administrator',
     ),
-    'module' => 'field_permissions',
-  );
-
-  // Exported permission: 'edit field_how_i_learn'.
-  $permissions['edit field_how_i_learn'] = array(
-    'name' => 'edit field_how_i_learn',
-    'roles' => array(),
     'module' => 'field_permissions',
   );
 
@@ -1467,6 +1484,7 @@ function lacuna_stories_permissions_user_default_permissions() {
     'roles' => array(
       'Content Manager' => 'Content Manager',
       'Instructor' => 'Instructor',
+      'Teaching Assistant' => 'Teaching Assistant',
       'administrator' => 'administrator',
     ),
     'module' => 'media',
@@ -1489,6 +1507,7 @@ function lacuna_stories_permissions_user_default_permissions() {
       'Content Manager' => 'Content Manager',
       'Instructor' => 'Instructor',
       'Student' => 'Student',
+      'Teaching Assistant' => 'Teaching Assistant',
       'administrator' => 'administrator',
     ),
     'module' => 'node',
@@ -1501,6 +1520,7 @@ function lacuna_stories_permissions_user_default_permissions() {
       'Content Manager' => 'Content Manager',
       'Instructor' => 'Instructor',
       'Student' => 'Student',
+      'Teaching Assistant' => 'Teaching Assistant',
       'administrator' => 'administrator',
     ),
     'module' => 'annotator',
@@ -1523,6 +1543,7 @@ function lacuna_stories_permissions_user_default_permissions() {
       'Content Manager' => 'Content Manager',
       'Instructor' => 'Instructor',
       'Student' => 'Student',
+      'Teaching Assistant' => 'Teaching Assistant',
       'administrator' => 'administrator',
     ),
     'module' => 'node',
@@ -1535,6 +1556,7 @@ function lacuna_stories_permissions_user_default_permissions() {
       'Content Manager' => 'Content Manager',
       'Instructor' => 'Instructor',
       'Student' => 'Student',
+      'Teaching Assistant' => 'Teaching Assistant',
       'administrator' => 'administrator',
     ),
     'module' => 'node',
@@ -1547,6 +1569,7 @@ function lacuna_stories_permissions_user_default_permissions() {
       'Content Manager' => 'Content Manager',
       'Instructor' => 'Instructor',
       'Student' => 'Student',
+      'Teaching Assistant' => 'Teaching Assistant',
       'administrator' => 'administrator',
     ),
     'module' => 'comment',
@@ -1558,6 +1581,7 @@ function lacuna_stories_permissions_user_default_permissions() {
     'roles' => array(
       'Content Manager' => 'Content Manager',
       'Instructor' => 'Instructor',
+      'Teaching Assistant' => 'Teaching Assistant',
       'administrator' => 'administrator',
     ),
     'module' => 'node',
@@ -1569,6 +1593,7 @@ function lacuna_stories_permissions_user_default_permissions() {
     'roles' => array(
       'Content Manager' => 'Content Manager',
       'Instructor' => 'Instructor',
+      'Teaching Assistant' => 'Teaching Assistant',
       'administrator' => 'administrator',
     ),
     'module' => 'node',
@@ -1581,6 +1606,7 @@ function lacuna_stories_permissions_user_default_permissions() {
       'Content Manager' => 'Content Manager',
       'Instructor' => 'Instructor',
       'Student' => 'Student',
+      'Teaching Assistant' => 'Teaching Assistant',
       'administrator' => 'administrator',
     ),
     'module' => 'field_permissions',
@@ -1593,6 +1619,7 @@ function lacuna_stories_permissions_user_default_permissions() {
       'Content Manager' => 'Content Manager',
       'Instructor' => 'Instructor',
       'Student' => 'Student',
+      'Teaching Assistant' => 'Teaching Assistant',
       'administrator' => 'administrator',
     ),
     'module' => 'field_permissions',
@@ -1605,15 +1632,9 @@ function lacuna_stories_permissions_user_default_permissions() {
       'Content Manager' => 'Content Manager',
       'Instructor' => 'Instructor',
       'Student' => 'Student',
+      'Teaching Assistant' => 'Teaching Assistant',
       'administrator' => 'administrator',
     ),
-    'module' => 'field_permissions',
-  );
-
-  // Exported permission: 'edit own field_how_i_learn'.
-  $permissions['edit own field_how_i_learn'] = array(
-    'name' => 'edit own field_how_i_learn',
-    'roles' => array(),
     'module' => 'field_permissions',
   );
 
@@ -1624,6 +1645,7 @@ function lacuna_stories_permissions_user_default_permissions() {
       'Content Manager' => 'Content Manager',
       'Instructor' => 'Instructor',
       'Student' => 'Student',
+      'Teaching Assistant' => 'Teaching Assistant',
       'administrator' => 'administrator',
     ),
     'module' => 'field_permissions',
@@ -1635,6 +1657,7 @@ function lacuna_stories_permissions_user_default_permissions() {
     'roles' => array(
       'Content Manager' => 'Content Manager',
       'Instructor' => 'Instructor',
+      'Teaching Assistant' => 'Teaching Assistant',
       'administrator' => 'administrator',
     ),
     'module' => 'field_permissions',
@@ -1646,6 +1669,7 @@ function lacuna_stories_permissions_user_default_permissions() {
     'roles' => array(
       'Content Manager' => 'Content Manager',
       'Instructor' => 'Instructor',
+      'Teaching Assistant' => 'Teaching Assistant',
       'administrator' => 'administrator',
     ),
     'module' => 'field_permissions',
@@ -1658,6 +1682,7 @@ function lacuna_stories_permissions_user_default_permissions() {
       'Content Manager' => 'Content Manager',
       'Instructor' => 'Instructor',
       'Student' => 'Student',
+      'Teaching Assistant' => 'Teaching Assistant',
       'administrator' => 'administrator',
     ),
     'module' => 'field_permissions',
@@ -1669,6 +1694,7 @@ function lacuna_stories_permissions_user_default_permissions() {
     'roles' => array(
       'Content Manager' => 'Content Manager',
       'Instructor' => 'Instructor',
+      'Teaching Assistant' => 'Teaching Assistant',
       'administrator' => 'administrator',
     ),
     'module' => 'field_permissions',
@@ -1691,6 +1717,7 @@ function lacuna_stories_permissions_user_default_permissions() {
       'Content Manager' => 'Content Manager',
       'Instructor' => 'Instructor',
       'Student' => 'Student',
+      'Teaching Assistant' => 'Teaching Assistant',
       'administrator' => 'administrator',
     ),
     'module' => 'node',
@@ -1701,7 +1728,6 @@ function lacuna_stories_permissions_user_default_permissions() {
     'name' => 'edit own webform content',
     'roles' => array(
       'Content Manager' => 'Content Manager',
-      'Instructor' => 'Instructor',
       'Student' => 'Student',
       'administrator' => 'administrator',
     ),
@@ -1775,6 +1801,7 @@ function lacuna_stories_permissions_user_default_permissions() {
       'Content Manager' => 'Content Manager',
       'Instructor' => 'Instructor',
       'Student' => 'Student',
+      'Teaching Assistant' => 'Teaching Assistant',
       'administrator' => 'administrator',
     ),
     'module' => 'taxonomy',
@@ -1796,6 +1823,7 @@ function lacuna_stories_permissions_user_default_permissions() {
     'roles' => array(
       'Content Manager' => 'Content Manager',
       'Instructor' => 'Instructor',
+      'Teaching Assistant' => 'Teaching Assistant',
       'administrator' => 'administrator',
     ),
     'module' => 'workflow',
@@ -1848,7 +1876,6 @@ function lacuna_stories_permissions_user_default_permissions() {
     'name' => 'import from file',
     'roles' => array(
       'Content Manager' => 'Content Manager',
-      'Instructor' => 'Instructor',
       'administrator' => 'administrator',
     ),
     'module' => 'biblio',
@@ -1888,7 +1915,7 @@ function lacuna_stories_permissions_user_default_permissions() {
     'roles' => array(
       'Content Manager' => 'Content Manager',
       'Instructor' => 'Instructor',
-      'Student' => 'Student',
+      'Teaching Assistant' => 'Teaching Assistant',
       'administrator' => 'administrator',
     ),
     'module' => 'workflow',
@@ -1910,6 +1937,7 @@ function lacuna_stories_permissions_user_default_permissions() {
       'Content Manager' => 'Content Manager',
       'Instructor' => 'Instructor',
       'Student' => 'Student',
+      'Teaching Assistant' => 'Teaching Assistant',
       'administrator' => 'administrator',
     ),
     'module' => 'comment',
@@ -1967,6 +1995,7 @@ function lacuna_stories_permissions_user_default_permissions() {
       'Content Manager' => 'Content Manager',
       'Instructor' => 'Instructor',
       'Student' => 'Student',
+      'Teaching Assistant' => 'Teaching Assistant',
       'administrator' => 'administrator',
     ),
     'module' => 'publishcontent',
@@ -1989,14 +2018,20 @@ function lacuna_stories_permissions_user_default_permissions() {
   // Exported permission: 'publish own blog content'.
   $permissions['publish own blog content'] = array(
     'name' => 'publish own blog content',
-    'roles' => array(),
+    'roles' => array(
+      'Instructor' => 'Instructor',
+      'Teaching Assistant' => 'Teaching Assistant',
+    ),
     'module' => 'publishcontent',
   );
 
   // Exported permission: 'publish own thread content'.
   $permissions['publish own thread content'] = array(
     'name' => 'publish own thread content',
-    'roles' => array(),
+    'roles' => array(
+      'Instructor' => 'Instructor',
+      'Teaching Assistant' => 'Teaching Assistant',
+    ),
     'module' => 'publishcontent',
   );
 
@@ -2054,6 +2089,7 @@ function lacuna_stories_permissions_user_default_permissions() {
       'Content Manager' => 'Content Manager',
       'Instructor' => 'Instructor',
       'Student' => 'Student',
+      'Teaching Assistant' => 'Teaching Assistant',
       'administrator' => 'administrator',
     ),
     'module' => 'user',
@@ -2073,8 +2109,6 @@ function lacuna_stories_permissions_user_default_permissions() {
     'name' => 'show export links',
     'roles' => array(
       'Content Manager' => 'Content Manager',
-      'Instructor' => 'Instructor',
-      'Student' => 'Student',
       'administrator' => 'administrator',
     ),
     'module' => 'biblio',
@@ -2087,6 +2121,7 @@ function lacuna_stories_permissions_user_default_permissions() {
       'Content Manager' => 'Content Manager',
       'Instructor' => 'Instructor',
       'Student' => 'Student',
+      'Teaching Assistant' => 'Teaching Assistant',
       'administrator' => 'administrator',
     ),
     'module' => 'biblio',
@@ -2108,6 +2143,7 @@ function lacuna_stories_permissions_user_default_permissions() {
       'Content Manager' => 'Content Manager',
       'Instructor' => 'Instructor',
       'Student' => 'Student',
+      'Teaching Assistant' => 'Teaching Assistant',
       'administrator' => 'administrator',
     ),
     'module' => 'biblio',
@@ -2119,6 +2155,7 @@ function lacuna_stories_permissions_user_default_permissions() {
     'roles' => array(
       'Content Manager' => 'Content Manager',
       'Instructor' => 'Instructor',
+      'Teaching Assistant' => 'Teaching Assistant',
       'administrator' => 'administrator',
     ),
     'module' => 'workflow',
@@ -2131,6 +2168,7 @@ function lacuna_stories_permissions_user_default_permissions() {
       'Content Manager' => 'Content Manager',
       'Instructor' => 'Instructor',
       'Student' => 'Student',
+      'Teaching Assistant' => 'Teaching Assistant',
       'administrator' => 'administrator',
     ),
     'module' => 'comment',
@@ -2206,6 +2244,7 @@ function lacuna_stories_permissions_user_default_permissions() {
       'Content Manager' => 'Content Manager',
       'Instructor' => 'Instructor',
       'Student' => 'Student',
+      'Teaching Assistant' => 'Teaching Assistant',
       'administrator' => 'administrator',
     ),
     'module' => 'publishcontent',
@@ -2228,14 +2267,20 @@ function lacuna_stories_permissions_user_default_permissions() {
   // Exported permission: 'unpublish own blog content'.
   $permissions['unpublish own blog content'] = array(
     'name' => 'unpublish own blog content',
-    'roles' => array(),
+    'roles' => array(
+      'Instructor' => 'Instructor',
+      'Teaching Assistant' => 'Teaching Assistant',
+    ),
     'module' => 'publishcontent',
   );
 
   // Exported permission: 'unpublish own thread content'.
   $permissions['unpublish own thread content'] = array(
     'name' => 'unpublish own thread content',
-    'roles' => array(),
+    'roles' => array(
+      'Instructor' => 'Instructor',
+      'Teaching Assistant' => 'Teaching Assistant',
+    ),
     'module' => 'publishcontent',
   );
 
@@ -2273,6 +2318,7 @@ function lacuna_stories_permissions_user_default_permissions() {
       'Content Manager' => 'Content Manager',
       'Instructor' => 'Instructor',
       'Student' => 'Student',
+      'Teaching Assistant' => 'Teaching Assistant',
       'administrator' => 'administrator',
     ),
     'module' => 'filter',
@@ -2321,6 +2367,7 @@ function lacuna_stories_permissions_user_default_permissions() {
       'Content Manager' => 'Content Manager',
       'Instructor' => 'Instructor',
       'Student' => 'Student',
+      'Teaching Assistant' => 'Teaching Assistant',
       'administrator' => 'administrator',
     ),
     'module' => 'annotator',
@@ -2331,6 +2378,7 @@ function lacuna_stories_permissions_user_default_permissions() {
     'name' => 'view field_date_of_birth',
     'roles' => array(
       'Instructor' => 'Instructor',
+      'Teaching Assistant' => 'Teaching Assistant',
       'administrator' => 'administrator',
     ),
     'module' => 'field_permissions',
@@ -2341,6 +2389,7 @@ function lacuna_stories_permissions_user_default_permissions() {
     'name' => 'view field_education',
     'roles' => array(
       'Instructor' => 'Instructor',
+      'Teaching Assistant' => 'Teaching Assistant',
       'administrator' => 'administrator',
     ),
     'module' => 'field_permissions',
@@ -2351,15 +2400,9 @@ function lacuna_stories_permissions_user_default_permissions() {
     'name' => 'view field_gender',
     'roles' => array(
       'Instructor' => 'Instructor',
+      'Teaching Assistant' => 'Teaching Assistant',
       'administrator' => 'administrator',
     ),
-    'module' => 'field_permissions',
-  );
-
-  // Exported permission: 'view field_how_i_learn'.
-  $permissions['view field_how_i_learn'] = array(
-    'name' => 'view field_how_i_learn',
-    'roles' => array(),
     'module' => 'field_permissions',
   );
 
@@ -2368,6 +2411,7 @@ function lacuna_stories_permissions_user_default_permissions() {
     'name' => 'view field_major_degree',
     'roles' => array(
       'Instructor' => 'Instructor',
+      'Teaching Assistant' => 'Teaching Assistant',
       'administrator' => 'administrator',
     ),
     'module' => 'field_permissions',
@@ -2398,6 +2442,7 @@ function lacuna_stories_permissions_user_default_permissions() {
     'name' => 'view field_year_in_program',
     'roles' => array(
       'Instructor' => 'Instructor',
+      'Teaching Assistant' => 'Teaching Assistant',
       'administrator' => 'administrator',
     ),
     'module' => 'field_permissions',
@@ -2442,6 +2487,7 @@ function lacuna_stories_permissions_user_default_permissions() {
       'Content Manager' => 'Content Manager',
       'Instructor' => 'Instructor',
       'Student' => 'Student',
+      'Teaching Assistant' => 'Teaching Assistant',
       'administrator' => 'administrator',
     ),
     'module' => 'field_permissions',
@@ -2454,6 +2500,7 @@ function lacuna_stories_permissions_user_default_permissions() {
       'Content Manager' => 'Content Manager',
       'Instructor' => 'Instructor',
       'Student' => 'Student',
+      'Teaching Assistant' => 'Teaching Assistant',
       'administrator' => 'administrator',
     ),
     'module' => 'field_permissions',
@@ -2466,15 +2513,9 @@ function lacuna_stories_permissions_user_default_permissions() {
       'Content Manager' => 'Content Manager',
       'Instructor' => 'Instructor',
       'Student' => 'Student',
+      'Teaching Assistant' => 'Teaching Assistant',
       'administrator' => 'administrator',
     ),
-    'module' => 'field_permissions',
-  );
-
-  // Exported permission: 'view own field_how_i_learn'.
-  $permissions['view own field_how_i_learn'] = array(
-    'name' => 'view own field_how_i_learn',
-    'roles' => array(),
     'module' => 'field_permissions',
   );
 
@@ -2485,6 +2526,7 @@ function lacuna_stories_permissions_user_default_permissions() {
       'Content Manager' => 'Content Manager',
       'Instructor' => 'Instructor',
       'Student' => 'Student',
+      'Teaching Assistant' => 'Teaching Assistant',
       'administrator' => 'administrator',
     ),
     'module' => 'field_permissions',
@@ -2506,6 +2548,7 @@ function lacuna_stories_permissions_user_default_permissions() {
     'roles' => array(
       'Content Manager' => 'Content Manager',
       'Instructor' => 'Instructor',
+      'Teaching Assistant' => 'Teaching Assistant',
       'administrator' => 'administrator',
     ),
     'module' => 'field_permissions',
@@ -2518,6 +2561,7 @@ function lacuna_stories_permissions_user_default_permissions() {
       'Content Manager' => 'Content Manager',
       'Instructor' => 'Instructor',
       'Student' => 'Student',
+      'Teaching Assistant' => 'Teaching Assistant',
       'administrator' => 'administrator',
     ),
     'module' => 'field_permissions',
@@ -2543,6 +2587,7 @@ function lacuna_stories_permissions_user_default_permissions() {
       'Content Manager' => 'Content Manager',
       'Instructor' => 'Instructor',
       'Student' => 'Student',
+      'Teaching Assistant' => 'Teaching Assistant',
       'administrator' => 'administrator',
     ),
     'module' => 'node',

@@ -25,7 +25,7 @@ function lacuna_stories_permissions_user_default_roles() {
   // Exported role: Student.
   $roles['Student'] = array(
     'name' => 'Student',
-    'weight' => 5,
+    'weight' => 6,
   );
 
   // Exported role: administrator.
