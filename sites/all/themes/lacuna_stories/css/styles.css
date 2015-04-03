@@ -2605,7 +2605,7 @@ fieldset#edit-thread-description-format {
   width: 220px;
   height: 220px;
   border: 1px solid rgba(7, 7, 7, 0.2);
-  border-radius: 120px;
+  border-radius: 50%;
   display: inline-block;
   overflow: hidden;
 }
@@ -2613,9 +2613,9 @@ fieldset#edit-thread-description-format {
 .user-picture img {
   min-width: 220px;
   min-height: 220px;
+  margin-left: 110px;
   max-width: none;
   position: relative;
-  margin-left: 110px;
   transform: translateX(-50%);
   /* this along with margin will position img centrally*/
   -ms-transform: translateX(-50%);
