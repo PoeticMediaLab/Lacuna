@@ -397,7 +397,7 @@ function lacuna_stories_content_types_field_default_field_bases() {
     'settings' => array(
       'allowed_values' => array(
         0 => array(
-          'vocabulary' => 'genre_blog_post',
+          'vocabulary' => 'genre_response',
           'parent' => 0,
         ),
       ),
@@ -414,7 +414,7 @@ function lacuna_stories_content_types_field_default_field_bases() {
     'entity_types' => array(),
     'field_name' => 'field_how_i_learn',
     'field_permissions' => array(
-      'type' => 2,
+      'type' => 0,
     ),
     'indexes' => array(
       'format' => array(
