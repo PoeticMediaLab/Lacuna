@@ -533,6 +533,58 @@ function lacuna_stories_views_views_default_views() {
   $export['all_emails'] = $view;
 
   $view = new view();
+  $view->name = 'bibliography';
+  $view->description = '';
+  $view->tag = 'default';
+  $view->base_table = 'node';
+  $view->human_name = 'Bibliography';
+  $view->core = 7;
+  $view->api_version = '3.0';
+  $view->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
+
+  /* Display: Master */
+  $handler = $view->new_display('default', 'Master', 'default');
+  $handler->display->display_options['title'] = 'Bibliography';
+  $handler->display->display_options['use_more_always'] = FALSE;
+  $handler->display->display_options['access']['type'] = 'none';
+  $handler->display->display_options['cache']['type'] = 'none';
+  $handler->display->display_options['query']['type'] = 'views_query';
+  $handler->display->display_options['exposed_form']['type'] = 'basic';
+  $handler->display->display_options['pager']['type'] = 'none';
+  $handler->display->display_options['style_plugin'] = 'default';
+  $handler->display->display_options['row_plugin'] = 'fields';
+  /* Field: Biblio: Biblio Citation */
+  $handler->display->display_options['fields']['citation']['id'] = 'citation';
+  $handler->display->display_options['fields']['citation']['table'] = 'biblio';
+  $handler->display->display_options['fields']['citation']['field'] = 'citation';
+  $handler->display->display_options['fields']['citation']['label'] = '';
+  $handler->display->display_options['fields']['citation']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['citation']['export_links'] = 0;
+  $handler->display->display_options['fields']['citation']['file_attachments'] = 0;
+  /* Filter criterion: Content: Published */
+  $handler->display->display_options['filters']['status']['id'] = 'status';
+  $handler->display->display_options['filters']['status']['table'] = 'node';
+  $handler->display->display_options['filters']['status']['field'] = 'status';
+  $handler->display->display_options['filters']['status']['value'] = 1;
+  $handler->display->display_options['filters']['status']['group'] = 1;
+  $handler->display->display_options['filters']['status']['expose']['operator'] = FALSE;
+  /* Filter criterion: Content: Type */
+  $handler->display->display_options['filters']['type']['id'] = 'type';
+  $handler->display->display_options['filters']['type']['table'] = 'node';
+  $handler->display->display_options['filters']['type']['field'] = 'type';
+  $handler->display->display_options['filters']['type']['value'] = array(
+    'biblio' => 'biblio',
+  );
+
+  /* Display: Page */
+  $handler = $view->new_display('page', 'Page', 'page');
+  $handler->display->display_options['path'] = 'bibliography';
+
+  /* Display: Block */
+  $handler = $view->new_display('block', 'Block', 'block');
+  $export['bibliography'] = $view;
+
+  $view = new view();
   $view->name = 'documents';
   $view->description = '';
   $view->tag = 'default';
@@ -810,11 +862,8 @@ function lacuna_stories_views_views_default_views() {
   );
   $handler->display->display_options['exposed_form']['options']['input_required'] = 0;
   $handler->display->display_options['exposed_form']['options']['text_input_required_format'] = 'filtered_html';
-  $handler->display->display_options['pager']['type'] = 'full';
-  $handler->display->display_options['pager']['options']['items_per_page'] = '100';
+  $handler->display->display_options['pager']['type'] = 'none';
   $handler->display->display_options['pager']['options']['offset'] = '0';
-  $handler->display->display_options['pager']['options']['id'] = '0';
-  $handler->display->display_options['pager']['options']['quantity'] = '9';
   $handler->display->display_options['style_plugin'] = 'default';
   $handler->display->display_options['style_options']['grouping'] = array(
     0 => array(
@@ -1109,6 +1158,7 @@ function lacuna_stories_views_views_default_views() {
         'bef_select_all_none' => 0,
         'bef_collapsible' => 0,
         'is_secondary' => 0,
+        'any_label' => '',
         'bef_filter_description' => '',
         'tokens' => array(
           'available' => array(
@@ -1158,6 +1208,7 @@ function lacuna_stories_views_views_default_views() {
         'bef_select_all_none' => 0,
         'bef_collapsible' => 0,
         'is_secondary' => 0,
+        'any_label' => '',
         'bef_filter_description' => '',
         'tokens' => array(
           'available' => array(
@@ -1426,7 +1477,6 @@ function lacuna_stories_views_views_default_views() {
   $handler->display->display_options['filters']['field_unit_tid']['expose']['label'] = 'Limit by Unit';
   $handler->display->display_options['filters']['field_unit_tid']['expose']['operator'] = 'field_unit_tid_op';
   $handler->display->display_options['filters']['field_unit_tid']['expose']['identifier'] = 'field_unit_tid';
-  $handler->display->display_options['filters']['field_unit_tid']['expose']['remember'] = TRUE;
   $handler->display->display_options['filters']['field_unit_tid']['expose']['multiple'] = TRUE;
   $handler->display->display_options['filters']['field_unit_tid']['expose']['remember_roles'] = array(
     2 => '2',
