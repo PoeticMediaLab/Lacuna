@@ -3064,6 +3064,10 @@ function lacuna_stories_content_types_field_default_field_instances() {
       'active' => 1,
       'module' => 'text',
       'settings' => array(
+        'maxlength_js' => 300,
+        'maxlength_js_enforce' => 1,
+        'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
+        'maxlength_js_truncate_html' => 1,
         'rows' => 5,
       ),
       'type' => 'text_textarea',
@@ -3244,6 +3248,10 @@ function lacuna_stories_content_types_field_default_field_instances() {
       'active' => 1,
       'module' => 'text',
       'settings' => array(
+        'maxlength_js' => 300,
+        'maxlength_js_enforce' => 1,
+        'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
+        'maxlength_js_truncate_html' => 1,
         'rows' => 5,
       ),
       'type' => 'text_textarea',
