@@ -6,7 +6,7 @@
  * of these @include files will be combined into a single file.
  */
 /* Import Sass mixins, variables, Compass modules, etc. */
-@import url("//fonts.googleapis.com/css?family=Libre+Baskerville|Carrois+Gothic+SC");
+@import url("//fonts.googleapis.com/css?family=Libre+Baskerville|Noto+Sans);");
 @import url("//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css");
 /* HTML element (SMACSS base) rules */
 /**
@@ -29,7 +29,7 @@
  * HTML5 display definitions
  */
 /* Correct `block` display not defined in IE 8/9. */
-@import url("//fonts.googleapis.com/css?family=Libre+Baskerville|Carrois+Gothic+SC");
+@import url("//fonts.googleapis.com/css?family=Libre+Baskerville|Noto+Sans);");
 @import url("//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css");
 /* line 33, ../sass/_normalize.scss */
 article,
@@ -115,7 +115,7 @@ audio:not([controls]) {
  */
 /* line 106, ../sass/_normalize.scss */
 html {
-  font-family: "Carrois Gothic SC", Verdana, Tahoma, "DejaVu Sans", sans-serif;
+  font-family: "Noto Sans", Verdana, Tahoma, "DejaVu Sans", sans-serif;
   /* 1 */
   font-size: 100%;
   /* 3 */

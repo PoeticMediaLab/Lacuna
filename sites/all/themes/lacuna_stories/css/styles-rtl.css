@@ -3,7 +3,7 @@
  * RTL companion for the styles.scss file.
  */
 /* Import Sass mixins, variables, Compass modules, etc. */
-@import url("//fonts.googleapis.com/css?family=Libre+Baskerville|Carrois+Gothic+SC");
+@import url("//fonts.googleapis.com/css?family=Libre+Baskerville|Noto+Sans);");
 @import url("//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css");
 /* HTML element (SMACSS base) rules */
 /**

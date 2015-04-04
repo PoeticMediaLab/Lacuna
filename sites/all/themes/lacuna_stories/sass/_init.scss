@@ -72,7 +72,7 @@ $h6-font-size: 0.67 * $base-font-size;
 
 
 // Our web font stack
-@import url("//fonts.googleapis.com/css?family=Libre+Baskerville|Carrois+Gothic+SC");
+@import url("//fonts.googleapis.com/css?family=Libre+Baskerville|Noto+Sans);");
 
 // Include Font Awesome
 @import url("//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css");
@@ -92,8 +92,8 @@ $arial:           Arial, Helvetica, "Nimbus Sans L", sans-serif;
 $courier:         "Courier New", "DejaVu Sans Mono", monospace, sans-serif;
 
 // Now create some variables for the font stacks we want to use on this site.
-$base-font-family: 'Carrois Gothic SC', $verdana; // The font family set on the html element.
-$font-body:        'Carrois Gothic SC', $verdana;
+$base-font-family: 'Noto Sans', $verdana; // The font family set on the html element.
+$font-body:        'Noto Sans', $verdana;
 $font-monospace:   $courier;
 $base-serif-font-family: 'Baskerville Libre', $georgia;
 
