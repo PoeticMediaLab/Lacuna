@@ -566,6 +566,14 @@ function lacuna_stories_views_views_default_views() {
   $handler->display->display_options['sorts']['lastname']['table'] = 'biblio_contributor_data';
   $handler->display->display_options['sorts']['lastname']['field'] = 'lastname';
   $handler->display->display_options['sorts']['lastname']['rank'] = '0';
+  /* Sort criterion: Biblio: Sort Title */
+  $handler->display->display_options['sorts']['biblio_sort_title']['id'] = 'biblio_sort_title';
+  $handler->display->display_options['sorts']['biblio_sort_title']['table'] = 'biblio';
+  $handler->display->display_options['sorts']['biblio_sort_title']['field'] = 'biblio_sort_title';
+  /* Sort criterion: Biblio: Year of Publication */
+  $handler->display->display_options['sorts']['biblio_year']['id'] = 'biblio_year';
+  $handler->display->display_options['sorts']['biblio_year']['table'] = 'biblio';
+  $handler->display->display_options['sorts']['biblio_year']['field'] = 'biblio_year';
   /* Filter criterion: Content: Published */
   $handler->display->display_options['filters']['status']['id'] = 'status';
   $handler->display->display_options['filters']['status']['table'] = 'node';
