@@ -5,8 +5,7 @@ sites/*/settings*.php
 sites/*/files
 sites/*/private
 */.sass-cache/*
+sites/all/themes/lacuna_stories/.sass-cache/*
 
 .DS_Store
 */.DS_Store
-
-*/.sass-cache/*
