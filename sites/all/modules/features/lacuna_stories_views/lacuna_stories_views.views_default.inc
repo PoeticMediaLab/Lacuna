@@ -561,6 +561,11 @@ function lacuna_stories_views_views_default_views() {
   $handler->display->display_options['fields']['citation']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['citation']['export_links'] = 0;
   $handler->display->display_options['fields']['citation']['file_attachments'] = 0;
+  /* Sort criterion: Biblio: Author last name */
+  $handler->display->display_options['sorts']['lastname']['id'] = 'lastname';
+  $handler->display->display_options['sorts']['lastname']['table'] = 'biblio_contributor_data';
+  $handler->display->display_options['sorts']['lastname']['field'] = 'lastname';
+  $handler->display->display_options['sorts']['lastname']['rank'] = '0';
   /* Filter criterion: Content: Published */
   $handler->display->display_options['filters']['status']['id'] = 'status';
   $handler->display->display_options['filters']['status']['table'] = 'node';

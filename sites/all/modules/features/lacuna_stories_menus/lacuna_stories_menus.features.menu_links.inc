@@ -25,7 +25,7 @@ function lacuna_stories_menus_menu_default_menu_links() {
     'external' => 0,
     'has_children' => 0,
     'expanded' => 0,
-    'weight' => -46,
+    'weight' => 5,
     'customized' => 1,
     'parent_identifier' => 'main-menu_explore:<nolink>',
   );
@@ -105,27 +105,6 @@ function lacuna_stories_menus_menu_default_menu_links() {
     'weight' => -50,
     'customized' => 1,
     'parent_identifier' => 'main-menu_reflect:<nolink>',
-  );
-  // Exported menu link: main-menu_bibliography:biblio
-  $menu_links['main-menu_bibliography:biblio'] = array(
-    'menu_name' => 'main-menu',
-    'link_path' => 'biblio',
-    'router_path' => 'biblio',
-    'link_title' => 'Bibliography',
-    'options' => array(
-      'attributes' => array(
-        'title' => '',
-      ),
-      'identifier' => 'main-menu_bibliography:biblio',
-    ),
-    'module' => 'menu',
-    'hidden' => 1,
-    'external' => 0,
-    'has_children' => 0,
-    'expanded' => 0,
-    'weight' => -47,
-    'customized' => 1,
-    'parent_identifier' => 'main-menu_help:<nolink>',
   );
   // Exported menu link: main-menu_connect:<nolink>
   $menu_links['main-menu_connect:<nolink>'] = array(
@@ -324,7 +303,7 @@ function lacuna_stories_menus_menu_default_menu_links() {
     'external' => 0,
     'has_children' => 0,
     'expanded' => 0,
-    'weight' => -49,
+    'weight' => -50,
     'customized' => 1,
     'parent_identifier' => 'main-menu_explore:<nolink>',
   );
@@ -458,7 +437,7 @@ function lacuna_stories_menus_menu_default_menu_links() {
     'external' => 0,
     'has_children' => 0,
     'expanded' => 0,
-    'weight' => -48,
+    'weight' => -49,
     'customized' => 1,
     'parent_identifier' => 'main-menu_explore:<nolink>',
   );
@@ -545,7 +524,6 @@ function lacuna_stories_menus_menu_default_menu_links() {
   t('All Content');
   t('All Emails');
   t('Annotations Dashboard');
-  t('Bibliography');
   t('Connect');
   t('Contact');
   t('Create');
