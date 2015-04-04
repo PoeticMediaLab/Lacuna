@@ -212,7 +212,7 @@ function main(data) {
 	d3.select('.fa-spinner').remove();
 	annotations = new Annotations(data);
 	// Clean up the data a bit
-	var text_length_scale = d3.scale.ordinal()
+	var text_length_scale = d3.scale.linear()
 		.domain([0,50,100,150])
 		.range(['Zero','Short','Medium','Long']);
 	// Format annotations for display
@@ -1089,7 +1089,7 @@ function main(data) {
           vars[hash[0]] = hash[1];
       }
       return vars;
-  }  
+  }
 
 	// Initial creation
 	update();
