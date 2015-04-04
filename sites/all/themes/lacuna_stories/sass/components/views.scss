@@ -177,9 +177,14 @@ table.views-table {
 }
 
 .view-people {
-  .views-field-field-display-name,
+  .views-field-name,
   .views-field-rid {
     text-align: center;
+  }
+  table.views-view-grid {
+    td {
+      padding-left: 25px;
+    }
   }
 }
 

@@ -296,12 +296,16 @@ table.views-table {
 }
 
 /* line 181, ../../sass/components/views.scss */
-.view-people .views-field-field-display-name,
+.view-people .views-field-name,
 .view-people .views-field-rid {
   text-align: center;
 }
+/* line 185, ../../sass/components/views.scss */
+.view-people table.views-view-grid td {
+  padding-left: 25px;
+}
 
-/* line 186, ../../sass/components/views.scss */
+/* line 191, ../../sass/components/views.scss */
 div#block-views-bibliography-block {
   font-family: "Baskerville Libre", Georgia, "Times New Roman", "DejaVu Serif", serif;
 }
