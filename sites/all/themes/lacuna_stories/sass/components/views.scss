@@ -1,3 +1,4 @@
+@import "init";
 /* Hide "Operations" text in Sewing Kit */
 .vbo-views-form form div fieldset.container-inline legend span.fieldset-legend {
   display: none;
@@ -180,4 +181,8 @@ table.views-table {
   .views-field-rid {
     text-align: center;
   }
+}
+
+div#block-views-bibliography-block {
+  font-family: $base-serif-font-family;
 }
