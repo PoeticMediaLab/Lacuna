@@ -5,7 +5,7 @@
 .annotator-notice,
 .annotator-filter *,
 .annotator-widget * {
-  font-family: inherit !important;
+  /*font-family: inherit !important;*/
 }
 
 /***

@@ -31,6 +31,8 @@
 /* Correct `block` display not defined in IE 8/9. */
 @import url("//fonts.googleapis.com/css?family=Libre+Baskerville|Noto+Sans);");
 @import url("//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css");
+@import url("//fonts.googleapis.com/css?family=Libre+Baskerville|Noto+Sans);");
+@import url("//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css");
 /* line 33, ../sass/_normalize.scss */
 article,
 aside,
@@ -860,46 +862,46 @@ table {
   }
 }
 /* Component (SMACSS module) rules */
-/* line 5, ../sass/components/base.scss */
+/* line 7, ../sass/components/base.scss */
 #name-and-slogan {
   font-size: 1em;
 }
 
-/* line 12, ../sass/components/base.scss */
+/* line 14, ../sass/components/base.scss */
 #name-and-slogan span {
   color: gray;
 }
 
-/* line 16, ../sass/components/base.scss */
+/* line 18, ../sass/components/base.scss */
 .header__name-and-slogan {
   float: none !important;
   margin-top: 50px;
 }
 
-/* line 21, ../sass/components/base.scss */
+/* line 23, ../sass/components/base.scss */
 #site-name {
   font-size: 1.5em;
 }
 
-/* line 25, ../sass/components/base.scss */
+/* line 27, ../sass/components/base.scss */
 #name-and-slogan #site-name a, #name-and-slogan #site-name a:hover {
   text-decoration: none;
   font-weight: normal;
 }
 
-/* line 30, ../sass/components/base.scss */
+/* line 32, ../sass/components/base.scss */
 body {
   background-color: #f8f8f8;
   line-height: 1.5em;
 }
 
-/* line 36, ../sass/components/base.scss */
+/* line 38, ../sass/components/base.scss */
 #main {
   padding-top: 0px !important;
   top: -50px !important;
 }
 
-/* line 41, ../sass/components/base.scss */
+/* line 43, ../sass/components/base.scss */
 #page {
   max-width: 1200px;
   padding: 15px;
@@ -910,12 +912,12 @@ body {
   padding-bottom: 100px;
 }
 
-/* line 51, ../sass/components/base.scss */
+/* line 53, ../sass/components/base.scss */
 b {
   font-weight: bold;
 }
 
-/* line 55, ../sass/components/base.scss */
+/* line 57, ../sass/components/base.scss */
 sup {
   vertical-align: super;
   font-size: x-small;
@@ -923,109 +925,109 @@ sup {
   padding-left: .2em;
 }
 
-/* line 62, ../sass/components/base.scss */
+/* line 64, ../sass/components/base.scss */
 p {
   margin-bottom: 10px;
 }
 
-/* line 66, ../sass/components/base.scss */
+/* line 68, ../sass/components/base.scss */
 article.node {
   text-align: justify;
-  font-family: 'Baskerville Libre', serif;
+  font-family: "Baskerville Libre", Georgia, "Times New Roman", "DejaVu Serif", serif;
   font-size: 18px;
   line-height: 1.5em;
 }
 
 /* fix to avoid drop down menu overwrite of message pane */
-/* line 74, ../sass/components/base.scss */
+/* line 76, ../sass/components/base.scss */
 div.messages, div.messages--status, div.messages--warning, div.messages--error {
   margin-top: 40px;
 }
 
-/* line 78, ../sass/components/base.scss */
+/* line 80, ../sass/components/base.scss */
 h1, h2, h3, h4, h5, h6 {
-  font-family: 'Carrois Gothic SC', sans-serif;
+  font-family: "Noto Sans", Verdana, Tahoma, "DejaVu Sans", sans-serif;
   line-height: 1.3em;
 }
 
-/* line 83, ../sass/components/base.scss */
+/* line 85, ../sass/components/base.scss */
 h1 {
   font-size: 1.5em;
   margin-bottom: 10px;
 }
 
-/* line 87, ../sass/components/base.scss */
+/* line 89, ../sass/components/base.scss */
 h2 {
   font-size: 1.4em;
   margin-bottom: 10px;
 }
 
-/* line 91, ../sass/components/base.scss */
+/* line 93, ../sass/components/base.scss */
 h3 {
   font-size: 1.3em;
   margin-bottom: 10px;
 }
 
-/* line 95, ../sass/components/base.scss */
+/* line 97, ../sass/components/base.scss */
 h4 {
   font-size: 1.2em;
   margin-bottom: 10px;
 }
 
-/* line 99, ../sass/components/base.scss */
+/* line 101, ../sass/components/base.scss */
 h5 {
   font-size: 1.1em;
   margin-bottom: 10px;
 }
 
-/* line 103, ../sass/components/base.scss */
+/* line 105, ../sass/components/base.scss */
 dt {
   margin-top: 10px;
 }
 
-/* line 107, ../sass/components/base.scss */
+/* line 109, ../sass/components/base.scss */
 a {
   color: #1588ba;
   text-decoration: none;
 }
 
-/* line 112, ../sass/components/base.scss */
+/* line 114, ../sass/components/base.scss */
 a:hover {
   color: #094762;
 }
 
-/* line 116, ../sass/components/base.scss */
+/* line 118, ../sass/components/base.scss */
 label {
   margin-bottom: 10px;
 }
 
-/* line 119, ../sass/components/base.scss */
+/* line 121, ../sass/components/base.scss */
 input {
   max-width: 100%;
 }
 
-/* line 122, ../sass/components/base.scss */
+/* line 124, ../sass/components/base.scss */
 input[checked='checked'] {
   background-color: blue;
 }
 
-/* line 126, ../sass/components/base.scss */
+/* line 128, ../sass/components/base.scss */
 td.active {
   background-color: white;
 }
 
-/* line 130, ../sass/components/base.scss */
+/* line 132, ../sass/components/base.scss */
 #page-title {
   margin-bottom: 20px;
   font-weight: bold;
 }
 
-/* line 135, ../sass/components/base.scss */
+/* line 137, ../sass/components/base.scss */
 .breadcrumb {
   display: none;
 }
 
-/* line 139, ../sass/components/base.scss */
+/* line 141, ../sass/components/base.scss */
 .form-item {
   margin-top: 30px;
 }
