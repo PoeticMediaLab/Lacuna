@@ -1,3 +1,6 @@
 # These should be initialized locally with `composer install`.
 bin/*
 vendor/*
+
+# Local config
+behat.yml

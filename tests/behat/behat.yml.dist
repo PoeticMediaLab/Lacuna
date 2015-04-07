@@ -1,0 +1,18 @@
+# Local overrides to the default profile
+default:
+  extensions:
+    Behat\MinkExtension:
+      # URL of the site when accessed locally.
+      base_url: http://192.168.10.10
+      # Configure browser to be used. Browser must be available on wd_host.
+      browser_name: chrome
+    Drupal\DrupalExtension:
+      drupal:
+        # Local site docroot.
+        drupal_root: '</path/to/drupal/docroot>'
+      drush:
+        # Local site docroot.
+        root: '</path/to/drupal/docroot>'
+
+imports:
+  - behat.common.yml
