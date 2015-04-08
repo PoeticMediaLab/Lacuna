@@ -1,4 +1,6 @@
 $border-color: rgba(7,7,7,.2);
+$profile-width: 220px;
+$profile-height: 220px;
 
 #user-profile-main {
 	width: 100%;
@@ -127,20 +129,31 @@ $border-color: rgba(7,7,7,.2);
   just the user profile ID
 */
 .user-picture {
-	width: 220px;
-	height: 220px;
+	width: $profile-width;
+	height: $profile-height;
 	border: 1px solid $border-color;
 	border-radius: 50%;
 	display: inline-block;
 	overflow: hidden;
 	img {
-		min-width: 220px;
-		min-height: 220px;
-		margin-left: 110px;
+		min-width: $profile-width;
+		min-height: $profile-height;
+		margin-left: $profile-width / 2;
 		max-width: none;
 		position: relative;
 		transform: translateX(-50%); 	/* this along with margin will position img centrally*/
 		-ms-transform: translateX(-50%); /* IE 9 */
 		-webkit-transform: translateX(-50%); /* Chrome, Safari, Opera */
 	}
+}
+
+/*
+ Here instead of views.scss because of close linkage with
+ user profile styles, use of variables
+ */
+.view-people {
+  .views-field-rid {
+    width: $profile-width;
+    height: 1em;
+  }
 }
