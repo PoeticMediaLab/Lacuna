@@ -1993,6 +1993,10 @@ function lacuna_stories_views_views_default_views() {
   $handler->display->display_options['fields']['rid']['label'] = '';
   $handler->display->display_options['fields']['rid']['alter']['max_length'] = '50';
   $handler->display->display_options['fields']['rid']['element_label_colon'] = FALSE;
+  /* Sort criterion: User: Created date */
+  $handler->display->display_options['sorts']['created']['id'] = 'created';
+  $handler->display->display_options['sorts']['created']['table'] = 'users';
+  $handler->display->display_options['sorts']['created']['field'] = 'created';
   /* Sort criterion: User: Display Name (field_display_name) */
   $handler->display->display_options['sorts']['field_display_name_value']['id'] = 'field_display_name_value';
   $handler->display->display_options['sorts']['field_display_name_value']['table'] = 'field_data_field_display_name';
