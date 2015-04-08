@@ -30,10 +30,6 @@ select#edit-thread-add {
   margin-left: auto;
 }
 
-fieldset.form-wrapper {
-  border: none;
-}
-
 .views-field-biblio-url {
   margin-top: 5px;
   margin-bottom: 5px;
@@ -140,6 +136,12 @@ $views-link-hover-color: #1588BA;
     width: 100%;
     padding-top: 25px;
   }
+}
+
+.view-documents #edit-reset.form-submit,
+.view-responses #edit-reset.form-submit{
+  margin-top: 0px;
+  margin-right: 80px;
 }
 
 table.views-table {
