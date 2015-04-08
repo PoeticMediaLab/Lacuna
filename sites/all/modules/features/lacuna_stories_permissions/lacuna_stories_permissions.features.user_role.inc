@@ -22,16 +22,16 @@ function lacuna_stories_permissions_user_default_roles() {
     'weight' => 4,
   );
 
+  // Exported role: Site Administrator.
+  $roles['Site Administrator'] = array(
+    'name' => 'Site Administrator',
+    'weight' => 2,
+  );
+
   // Exported role: Student.
   $roles['Student'] = array(
     'name' => 'Student',
     'weight' => 6,
-  );
-
-  // Exported role: administrator.
-  $roles['administrator'] = array(
-    'name' => 'administrator',
-    'weight' => 2,
   );
 
   return $roles;

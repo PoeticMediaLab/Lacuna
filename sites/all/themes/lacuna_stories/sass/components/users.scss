@@ -156,4 +156,8 @@ $profile-height: 220px;
     width: $profile-width;
     height: 1em;
   }
+  tr {
+  	height: $profile-height + ($profile-height / 2);
+  	vertical-align: top;
+  }
 }

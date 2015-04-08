@@ -1991,6 +1991,7 @@ function lacuna_stories_views_views_default_views() {
   $handler->display->display_options['fields']['rid']['table'] = 'users_roles';
   $handler->display->display_options['fields']['rid']['field'] = 'rid';
   $handler->display->display_options['fields']['rid']['label'] = '';
+  $handler->display->display_options['fields']['rid']['alter']['max_length'] = '50';
   $handler->display->display_options['fields']['rid']['element_label_colon'] = FALSE;
   /* Sort criterion: User: Display Name (field_display_name) */
   $handler->display->display_options['sorts']['field_display_name_value']['id'] = 'field_display_name_value';
@@ -2003,15 +2004,11 @@ function lacuna_stories_views_views_default_views() {
   $handler->display->display_options['filters']['status']['value'] = '1';
   $handler->display->display_options['filters']['status']['group'] = 1;
   $handler->display->display_options['filters']['status']['expose']['operator'] = FALSE;
-  /* Filter criterion: User: Roles */
-  $handler->display->display_options['filters']['rid']['id'] = 'rid';
-  $handler->display->display_options['filters']['rid']['table'] = 'users_roles';
-  $handler->display->display_options['filters']['rid']['field'] = 'rid';
-  $handler->display->display_options['filters']['rid']['operator'] = 'not';
-  $handler->display->display_options['filters']['rid']['value'] = array(
-    3 => '3',
-    4 => '4',
-  );
+  /* Filter criterion: User: Picture */
+  $handler->display->display_options['filters']['picture']['id'] = 'picture';
+  $handler->display->display_options['filters']['picture']['table'] = 'users';
+  $handler->display->display_options['filters']['picture']['field'] = 'picture';
+  $handler->display->display_options['filters']['picture']['value'] = '1';
 
   /* Display: Page */
   $handler = $view->new_display('page', 'Page', 'page');
