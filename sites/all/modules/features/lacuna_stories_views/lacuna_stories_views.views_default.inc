@@ -1431,19 +1431,6 @@ function lacuna_stories_views_views_default_views() {
   $handler->display->display_options['fields']['view_node']['alter']['make_link'] = TRUE;
   $handler->display->display_options['fields']['view_node']['alter']['link_class'] = 'lacuna-button';
   $handler->display->display_options['fields']['view_node']['element_label_colon'] = FALSE;
-  /* Field: Biblio: Biblio Citation */
-  $handler->display->display_options['fields']['citation']['id'] = 'citation';
-  $handler->display->display_options['fields']['citation']['table'] = 'biblio';
-  $handler->display->display_options['fields']['citation']['field'] = 'citation';
-  $handler->display->display_options['fields']['citation']['exclude'] = TRUE;
-  /* Field: Biblio: Abstract */
-  $handler->display->display_options['fields']['biblio_abst_e']['id'] = 'biblio_abst_e';
-  $handler->display->display_options['fields']['biblio_abst_e']['table'] = 'biblio';
-  $handler->display->display_options['fields']['biblio_abst_e']['field'] = 'biblio_abst_e';
-  $handler->display->display_options['fields']['biblio_abst_e']['relationship'] = 'field_bibliographic_entry_target_id';
-  $handler->display->display_options['fields']['biblio_abst_e']['exclude'] = TRUE;
-  $handler->display->display_options['fields']['biblio_abst_e']['alter']['max_length'] = '600';
-  $handler->display->display_options['fields']['biblio_abst_e']['alter']['trim'] = TRUE;
   /* Field: Content: Priority */
   $handler->display->display_options['fields']['field_priority']['id'] = 'field_priority';
   $handler->display->display_options['fields']['field_priority']['table'] = 'field_data_field_priority';
@@ -1457,6 +1444,9 @@ function lacuna_stories_views_views_default_views() {
   $handler->display->display_options['fields']['title']['field'] = 'title';
   $handler->display->display_options['fields']['title']['label'] = '';
   $handler->display->display_options['fields']['title']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['title']['alter']['max_length'] = '50';
+  $handler->display->display_options['fields']['title']['alter']['word_boundary'] = FALSE;
+  $handler->display->display_options['fields']['title']['alter']['trim'] = TRUE;
   $handler->display->display_options['fields']['title']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['title']['link_to_node'] = FALSE;
   /* Field: Biblio: Short Title */
@@ -1471,19 +1461,6 @@ function lacuna_stories_views_views_default_views() {
   $handler->display->display_options['fields']['biblio_short_title']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['biblio_short_title']['empty'] = '<a href="[path_1]">[title]</a>';
   $handler->display->display_options['fields']['biblio_short_title']['biblio_label'] = 0;
-  /* Field: Global: Popup */
-  $handler->display->display_options['fields']['popup']['id'] = 'popup';
-  $handler->display->display_options['fields']['popup']['table'] = 'popup_views_integration';
-  $handler->display->display_options['fields']['popup']['field'] = 'popup';
-  $handler->display->display_options['fields']['popup']['label'] = '';
-  $handler->display->display_options['fields']['popup']['element_label_colon'] = FALSE;
-  $handler->display->display_options['fields']['popup']['title'] = '(See abstract)';
-  $handler->display->display_options['fields']['popup']['text'] = '[biblio_abst_e] [citation]';
-  $handler->display->display_options['fields']['popup']['close'] = 0;
-  $handler->display->display_options['fields']['popup']['origin'] = 'top-left';
-  $handler->display->display_options['fields']['popup']['expand'] = 'top-right';
-  $handler->display->display_options['fields']['popup']['width'] = '200';
-  $handler->display->display_options['fields']['popup']['style'] = '0';
   /* Field: Biblio: Year of Publication */
   $handler->display->display_options['fields']['biblio_year']['id'] = 'biblio_year';
   $handler->display->display_options['fields']['biblio_year']['table'] = 'biblio';
