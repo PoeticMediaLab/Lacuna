@@ -628,7 +628,8 @@ label.option {
 
 /* Buttons used by contrib modules like Media. */
 a.button {
-  @include appearance(button);
+  // We'll handle the buttons ourselves, thankyouverymuch - MLW
+  // @include appearance(button);
 }
 
 /* Password confirmation. */

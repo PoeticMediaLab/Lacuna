@@ -2,6 +2,18 @@
   width: 200px;
 }
 
+// Ensure our styles get shown
+// Overwriting rules in _normalize
+button,
+html input[type="button"],
+input[type="reset"],
+input[type="submit"] {
+  appearance: normal !important;
+  -moz-appearance: normal !important;
+  -webkit-appearance: normal !important;
+}
+
+.media-widget .button,
 .lacuna-button,
 .form-submit,
 .af-button-large {
