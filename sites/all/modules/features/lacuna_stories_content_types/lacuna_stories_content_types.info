@@ -281,8 +281,4 @@ features_exclude[field_instance][node-document-field_status] = node-document-fie
 features_exclude[field_instance][node-image-field_status] = node-image-field_status
 features_exclude[field_instance][node-music_video-field_status] = node-music_video-field_status
 features_exclude[field_instance][node-video-field_status] = node-video-field_status
-<<<<<<< HEAD
-=======
-features_exclude[field_instance][node-annotation-field_image] = node-annotation-field_image
->>>>>>> 0d207b1... Removed image from Annotation
 project path = sites/all/modules/features
