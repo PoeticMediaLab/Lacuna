@@ -143,14 +143,16 @@
       this.Model.removeFilter('user');
       this.Model.removeFilter('none');
       if (type === select.button.mine) {
+        this.View.eraseFilter('user');
         this.Model.filterAnnotations('user', this.Model.get('currentUser'));
         this.View.drawFilter('user', this.Model.get('currentUser'));
       } else if (type === select.button.all) {
-        this.View.eraseFilter('user', this.Model.get('currentUser'));
+        this.View.eraseFilter('user');
       } else if (type === select.button.none) {
         this.Model.removeAllFilters();
         this.Model.filterAnnotations('none', 'none');
         this.View.eraseAllFilters();
+        this.View.drawFilter('user', 'None');
       } else if (type === select.button.reset) {
         this.Model.removeAllFilters();
         this.View.eraseAllFilters();
@@ -534,7 +536,7 @@
       this.i = $(select.interface);
       this.Controller = Controller;
       this.Model = Model;
-      this.i.append('<h2>Annotation Filters</h2>');
+      this.i.append('<h2>Select Annotations</h2>');
       this.drawPager(this.Model.get('index'), this.Model.get('total'));
       this.i.append("<div id='" + select.button["default"] + "'></div>");
       this.drawButton(select.button["default"], 'none', 'user');
@@ -548,7 +550,7 @@
       }
       this.i.append("<div id='" + select.button.reset + "'></div>");
       this.drawButton(select.button.reset, 'reset', 'reset');
-      this.i.append("<div id='" + select.filters.active + "'>Active Filters</div>");
+      this.i.append("<div id='" + select.filters.active + "'>Active Selections</div>");
     };
 
     View.prototype.update = function() {};
@@ -640,7 +642,11 @@
     };
 
     View.prototype.eraseFilter = function(id, value) {
-      $('#' + id + '.' + select.filters.active + ("[data-value='" + value + "'")).remove();
+      if (value != null) {
+        $('#' + id + '.' + select.filters.active + ("[data-value='" + value + "'")).remove();
+      } else {
+        $('#' + id + '.' + select.filters.active).remove();
+      }
       if (id === 'user') {
         return $('.' + select.button.active + '.' + select.button.user).removeClass(select.button.active);
       }

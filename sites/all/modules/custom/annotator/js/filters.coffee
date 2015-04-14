@@ -4,6 +4,7 @@
 # Creates a sidebar of annotations with filters
 # Hides/shows annotations in document based on user choices
 #
+#
 # Mike Widner <mikewidner@stanford.edu>
 #
 #######
@@ -129,14 +130,17 @@ class Annotator.Plugin.Filters extends Annotator.Plugin
     @Model.removeFilter 'user'
     @Model.removeFilter 'none'
     if type == select.button.mine
+      @View.eraseFilter 'user'
       @Model.filterAnnotations 'user', @Model.get('currentUser')
       @View.drawFilter 'user', @Model.get('currentUser')
     else if type == select.button.all
-      @View.eraseFilter 'user', @Model.get('currentUser')
+      # @View.eraseFilter 'user', @Model.get('currentUser')
+      @View.eraseFilter 'user'
     else if type == select.button.none
       @Model.removeAllFilters()
       @Model.filterAnnotations 'none', 'none'
       @View.eraseAllFilters()
+      @View.drawFilter 'user', 'None'
     else if type == select.button.reset
       # Return to starting state
       # Currently: only the current user's annotations
@@ -418,7 +422,7 @@ class View
     @i = $(select.interface)  # shortcut to interface selector
     @Controller = Controller
     @Model = Model
-    @i.append('<h2>Annotation Filters</h2>')
+    @i.append('<h2>Select Annotations</h2>')
     @drawPager(@Model.get('index'), @Model.get('total'))
     @i.append("<div id='#{select.button.default}'></div>")
     @drawButton(select.button.default, 'none', 'user')
@@ -429,7 +433,7 @@ class View
       @drawAutocomplete(filter, values)
     @i.append("<div id='#{select.button.reset}'></div>")
     @drawButton(select.button.reset, 'reset', 'reset')
-    @i.append("<div id='#{select.filters.active}'>Active Filters</div>")
+    @i.append("<div id='#{select.filters.active}'>Active Selections</div>")
     return
 
   update: () ->
@@ -512,7 +516,11 @@ class View
     $('.' + select.filters.active).remove()
 
   eraseFilter: (id, value) ->
-    $('#' + id + '.' + select.filters.active + "[data-value='#{value}'").remove()
+    if value?
+      $('#' + id + '.' + select.filters.active + "[data-value='#{value}'").remove()
+    else
+      # No explicit value; remove all of this type
+      $('#' + id + '.' + select.filters.active).remove()
     if id == 'user'
       $('.' + select.button.active + '.' + select.button.user).removeClass(select.button.active)
 
