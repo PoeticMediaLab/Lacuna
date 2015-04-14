@@ -9,7 +9,7 @@
 #
 #######
 
-$ = jQuery  # for Drupal
+$ = jQuery  # for Drupal and my own laziness
 
 # CSS ids and classes
 # All written explicitly because it's easier than
