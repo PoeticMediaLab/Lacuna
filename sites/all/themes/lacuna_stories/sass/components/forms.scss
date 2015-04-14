@@ -73,3 +73,8 @@ form#user-register-form {
     margin-bottom: 20px;
   }
 } // End #user-register-form
+
+// For required asterisks
+table.tabledrag-processed td label {
+  display: inline-block;
+}
