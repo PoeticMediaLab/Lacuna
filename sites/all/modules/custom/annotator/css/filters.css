@@ -7,7 +7,9 @@
   --webkit-border-radius: 5px;
   border-radius: 5px;
   padding: 2px;
-  width: 16em;
+  /*width: 14%;*/
+  min-width: 14em;
+  max-width: 16em;
 }
 
 #annotation-filters {
