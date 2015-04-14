@@ -16,7 +16,10 @@ $ = jQuery  # for Drupal
 # generating them progammatically (though that's my preference)
 # 'default' is the class that should be applied for each element type
 select = {
-            'interface':  'section.region-sidebar-second'
+            'interface':
+              'setup':  'section.region-sidebar-second'
+              'wrapper': 'annotation-filters-wrapper'
+              'filters': 'annotation-filters'
             'annotation': 'annotation-'
             'hide':       'af-annotation-hide'
             'filters':
@@ -419,7 +422,8 @@ class Model
 class View
   setup: (Controller, Model) =>
     @viewer = new Annotator.Viewer()
-    @i = $(select.interface)  # shortcut to interface selector
+    $(select.interface.setup).append("<div id='#{select.interface.wrapper}'><div id='#{select.interface.filters}'></div></div>")
+    @i = $('#' + select.interface.wrapper)  # interface shortcut
     @Controller = Controller
     @Model = Model
     @i.append('<h2>Select Annotations</h2>')
@@ -470,7 +474,7 @@ class View
 
   drawCheckbox: (id, value) ->
     classes = [select.checkbox.default, select.checkbox[id]].join(' ')
-    $(select.interface).append($("<input type='checkbox' name='#{id}' checked>",
+    $('#' + select.interface.wrapper).append($("<input type='checkbox' name='#{id}' checked>",
       {name: id})
       .on("click", @Controller.checkboxToggle)
     ).append("<span id='#{id}' class='#{classes}'>#{value}</span>")
