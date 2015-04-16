@@ -21,9 +21,7 @@ function lacuna_stories_content_types_context_default_contexts() {
       'values' => array(
         'blog' => 'blog',
         'document' => 'document',
-        'image' => 'image',
-        'music_video' => 'music_video',
-        'video' => 'video',
+        'page' => 'page',
       ),
       'options' => array(
         'node_form' => '0',

@@ -231,6 +231,56 @@ function lacuna_stories_content_types_field_default_field_instances() {
     ),
   );
 
+  // Exported field_instance: 'node-annotation-field_image'
+  $field_instances['node-annotation-field_image'] = array(
+    'bundle' => 'annotation',
+    'deleted' => 0,
+    'description' => 'Choose an image to identify this annotation.',
+    'display' => array(
+      'default' => array(
+        'label' => 'hidden',
+        'module' => 'image',
+        'settings' => array(
+          'image_link' => '',
+          'image_style' => '',
+        ),
+        'type' => 'image',
+        'weight' => 0,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_image',
+    'label' => 'Image',
+    'required' => 0,
+    'settings' => array(
+      'alt_field' => 0,
+      'default_image' => 192,
+      'file_directory' => '',
+      'file_extensions' => 'png gif jpg jpeg',
+      'max_filesize' => '',
+      'max_resolution' => '',
+      'min_resolution' => '',
+      'title_field' => 0,
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'image',
+      'settings' => array(
+        'preview_image_style' => 'thumbnails_for_browsing',
+        'progress_indicator' => 'throbber',
+      ),
+      'type' => 'image_image',
+      'weight' => 0,
+    ),
+  );
+
   // Exported field_instance: 'node-annotation-private'
   $field_instances['node-annotation-private'] = array(
     'bundle' => 'annotation',
@@ -881,6 +931,43 @@ function lacuna_stories_content_types_field_default_field_instances() {
     ),
   );
 
+  // Exported field_instance: 'node-blog-field_topics'
+  $field_instances['node-blog-field_topics'] = array(
+    'bundle' => 'blog',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'taxonomy',
+        'settings' => array(),
+        'type' => 'taxonomy_term_reference_plain',
+        'weight' => 4,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_topics',
+    'label' => 'Topics',
+    'required' => 1,
+    'settings' => array(
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'options',
+      'settings' => array(),
+      'type' => 'options_buttons',
+      'weight' => 5,
+    ),
+  );
+
   // Exported field_instance: 'node-blog-og_group_ref'
   $field_instances['node-blog-og_group_ref'] = array(
     'bundle' => 'blog',
@@ -942,67 +1029,93 @@ function lacuna_stories_content_types_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-course-body'
-  $field_instances['node-course-body'] = array(
-    'bundle' => 'course',
+  // Exported field_instance: 'node-document-field_artifact_intercession'
+  $field_instances['node-document-field_artifact_intercession'] = array(
+    'bundle' => 'document',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => 'Which of the following best describe your artifact?',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'taxonomy',
+        'settings' => array(),
+        'type' => 'taxonomy_term_reference_link',
+        'weight' => 12,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_artifact_intercession',
+    'label' => 'Intercession: Lepsis, Metalepsis, or Syndialepsis?',
+    'required' => 0,
+    'settings' => array(
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'options',
+      'settings' => array(),
+      'type' => 'options_buttons',
+      'weight' => 26,
+    ),
+  );
+
+  // Exported field_instance: 'node-document-field_artifact_mode'
+  $field_instances['node-document-field_artifact_mode'] = array(
+    'bundle' => 'document',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => 'Indicate the form and tone of the artifact.',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'taxonomy',
+        'settings' => array(),
+        'type' => 'taxonomy_term_reference_link',
+        'weight' => 13,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_artifact_mode',
+    'label' => 'Mode: Tragedy | Irony | Comedy | Pathos ',
+    'required' => 1,
+    'settings' => array(
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'options',
+      'settings' => array(),
+      'type' => 'options_buttons',
+      'weight' => 27,
+    ),
+  );
+
+  // Exported field_instance: 'node-document-field_artifact_theme'
+  $field_instances['node-document-field_artifact_theme'] = array(
+    'bundle' => 'document',
     'default_value' => NULL,
     'deleted' => 0,
     'description' => '',
     'display' => array(
       'default' => array(
-        'label' => 'hidden',
-        'module' => 'text',
-        'settings' => array(),
-        'type' => 'text_default',
-        'weight' => 0,
-      ),
-      'teaser' => array(
-        'label' => 'hidden',
-        'module' => 'text',
-        'settings' => array(
-          'trim_length' => 600,
-        ),
-        'type' => 'text_summary_or_trimmed',
-        'weight' => 1,
-      ),
-    ),
-    'entity_type' => 'node',
-    'field_name' => 'body',
-    'label' => 'Body',
-    'required' => FALSE,
-    'settings' => array(
-      'display_summary' => TRUE,
-      'text_processing' => 1,
-      'user_register_form' => FALSE,
-    ),
-    'widget' => array(
-      'module' => 'text',
-      'settings' => array(
-        'rows' => 20,
-        'summary_rows' => 5,
-      ),
-      'type' => 'text_textarea_with_summary',
-      'weight' => 31,
-    ),
-  );
-
-  // Exported field_instance: 'node-course-group_access'
-  $field_instances['node-course-group_access'] = array(
-    'bundle' => 'course',
-    'default_value' => array(
-      0 => array(
-        'value' => 0,
-      ),
-    ),
-    'deleted' => 0,
-    'description' => '',
-    'display' => array(
-      'default' => array(
         'label' => 'above',
-        'module' => 'list',
+        'module' => 'taxonomy',
         'settings' => array(),
-        'type' => 'list_default',
-        'weight' => 2,
+        'type' => 'taxonomy_term_reference_link',
+        'weight' => 10,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -1012,137 +1125,18 @@ function lacuna_stories_content_types_field_default_field_instances() {
       ),
     ),
     'entity_type' => 'node',
-    'field_name' => 'group_access',
-    'label' => 'Group visibility',
-    'required' => TRUE,
+    'field_name' => 'field_artifact_theme',
+    'label' => 'Your artifact principally primes which of the following?',
+    'required' => 1,
     'settings' => array(
       'user_register_form' => FALSE,
     ),
-    'view modes' => array(
-      'full' => array(
-        'label' => 'above',
-        'type' => 'options_onoff',
-      ),
-      'teaser' => array(
-        'label' => 'above',
-        'type' => 'options_onoff',
-      ),
-    ),
     'widget' => array(
+      'active' => 1,
       'module' => 'options',
       'settings' => array(),
       'type' => 'options_buttons',
-      'weight' => 32,
-    ),
-    'widget_type' => 'options_select',
-  );
-
-  // Exported field_instance: 'node-course-group_group'
-  $field_instances['node-course-group_group'] = array(
-    'bundle' => 'course',
-    'default_value' => array(
-      0 => array(
-        'value' => 1,
-      ),
-    ),
-    'deleted' => 0,
-    'description' => 'Determine if this is an OG group.',
-    'display' => array(
-      'default' => array(
-        'label' => 'above',
-        'module' => 'og_ui',
-        'settings' => array(
-          'field_name' => FALSE,
-        ),
-        'type' => 'og_group_subscribe',
-        'weight' => 4,
-      ),
-      'teaser' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
-      ),
-    ),
-    'display_label' => 1,
-    'entity_type' => 'node',
-    'field_name' => 'group_group',
-    'label' => 'Group',
-    'required' => FALSE,
-    'settings' => array(
-      'user_register_form' => FALSE,
-    ),
-    'view modes' => array(
-      'full' => array(
-        'custom settings' => FALSE,
-        'label' => 'Full',
-        'type' => 'og_group_subscribe',
-      ),
-      'teaser' => array(
-        'custom settings' => FALSE,
-        'label' => 'Teaser',
-        'type' => 'og_group_subscribe',
-      ),
-    ),
-    'widget' => array(
-      'module' => 'options',
-      'settings' => array(
-        'display_label' => 0,
-        'og_hide' => TRUE,
-      ),
-      'type' => 'options_onoff',
-      'weight' => 0,
-    ),
-  );
-
-  // Exported field_instance: 'node-course-og_roles_permissions'
-  $field_instances['node-course-og_roles_permissions'] = array(
-    'bundle' => 'course',
-    'default_value' => array(
-      0 => array(
-        'value' => 0,
-      ),
-    ),
-    'deleted' => 0,
-    'description' => '',
-    'display' => array(
-      'default' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 3,
-      ),
-      'teaser' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
-      ),
-    ),
-    'entity_type' => 'node',
-    'field_name' => 'og_roles_permissions',
-    'label' => 'Group roles and permissions',
-    'required' => TRUE,
-    'settings' => array(
-      'user_register_form' => FALSE,
-    ),
-    'view modes' => array(
-      'full' => array(
-        'custom settings' => FALSE,
-        'label' => 'Full',
-        'type' => 'list_default',
-      ),
-      'teaser' => array(
-        'custom settings' => FALSE,
-        'label' => 'Teaser',
-        'type' => 'list_default',
-      ),
-    ),
-    'widget' => array(
-      'module' => 'options',
-      'settings' => array(),
-      'type' => 'options_select',
-      'weight' => 33,
+      'weight' => 23,
     ),
   );
 
@@ -1151,13 +1145,16 @@ function lacuna_stories_content_types_field_default_field_instances() {
     'bundle' => 'document',
     'default_value' => NULL,
     'deleted' => 0,
-    'description' => '',
+    'description' => ' Start typing to autofill saved Bibliographic references. The reference must be created before uploading an artifact.',
     'display' => array(
       'default' => array(
         'label' => 'inline',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 5,
+        'module' => 'entityreference',
+        'settings' => array(
+          'link' => 1,
+        ),
+        'type' => 'entityreference_label',
+        'weight' => 6,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -1168,8 +1165,8 @@ function lacuna_stories_content_types_field_default_field_instances() {
     ),
     'entity_type' => 'node',
     'field_name' => 'field_bibliographic_entry',
-    'label' => 'Bibliographic Entry',
-    'required' => 0,
+    'label' => 'What is the Bibliographic Entry for your artifact?',
+    'required' => 1,
     'settings' => array(
       'user_register_form' => FALSE,
     ),
@@ -1199,7 +1196,7 @@ function lacuna_stories_content_types_field_default_field_instances() {
           'file_view_mode' => 'default',
         ),
         'type' => 'file_rendered',
-        'weight' => 2,
+        'weight' => 1,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -1227,7 +1224,7 @@ function lacuna_stories_content_types_field_default_field_instances() {
         'progress_indicator' => 'throbber',
       ),
       'type' => 'file_generic',
-      'weight' => 5,
+      'weight' => 8,
     ),
   );
 
@@ -1239,11 +1236,11 @@ function lacuna_stories_content_types_field_default_field_instances() {
     'description' => '',
     'display' => array(
       'default' => array(
-        'label' => 'inline',
+        'label' => 'above',
         'module' => 'taxonomy',
         'settings' => array(),
         'type' => 'taxonomy_term_reference_plain',
-        'weight' => 13,
+        'weight' => 4,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -1254,7 +1251,7 @@ function lacuna_stories_content_types_field_default_field_instances() {
     ),
     'entity_type' => 'node',
     'field_name' => 'field_doc_genre',
-    'label' => 'Genre',
+    'label' => 'What is the primary genre of your artifact?',
     'required' => 1,
     'settings' => array(
       'user_register_form' => FALSE,
@@ -1263,8 +1260,8 @@ function lacuna_stories_content_types_field_default_field_instances() {
       'active' => 1,
       'module' => 'options',
       'settings' => array(),
-      'type' => 'options_buttons',
-      'weight' => 3,
+      'type' => 'options_select',
+      'weight' => 6,
     ),
   );
 
@@ -1273,14 +1270,14 @@ function lacuna_stories_content_types_field_default_field_instances() {
     'bundle' => 'document',
     'default_value' => NULL,
     'deleted' => 0,
-    'description' => 'The actual text of the document.',
+    'description' => '(In your browser, e.g. Safari, use Edit --> Paste and Match Style to avoid odd formatting, or else use the eraser button on highlighted text to clear formatting hanging on from the original source)',
     'display' => array(
       'default' => array(
         'label' => 'hidden',
         'module' => 'text',
         'settings' => array(),
         'type' => 'text_default',
-        'weight' => 1,
+        'weight' => 0,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -1291,7 +1288,7 @@ function lacuna_stories_content_types_field_default_field_instances() {
     ),
     'entity_type' => 'node',
     'field_name' => 'field_doc_text',
-    'label' => 'Text',
+    'label' => 'If a text, insert the text of your artifact here.',
     'required' => 0,
     'settings' => array(
       'text_processing' => 1,
@@ -1304,7 +1301,158 @@ function lacuna_stories_content_types_field_default_field_instances() {
         'rows' => 5,
       ),
       'type' => 'text_textarea',
-      'weight' => 2,
+      'weight' => 4,
+    ),
+  );
+
+  // Exported field_instance: 'node-document-field_excess_mean_or_deficiency'
+  $field_instances['node-document-field_excess_mean_or_deficiency'] = array(
+    'bundle' => 'document',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => 'Where would you locate your artifact in the series Excess, Mean, or Deficiency? (Number 5 being "Mean")',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'list',
+        'settings' => array(),
+        'type' => 'list_default',
+        'weight' => 14,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_excess_mean_or_deficiency',
+    'label' => 'Excess, Mean, or Deficiency?',
+    'required' => 0,
+    'settings' => array(
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'options',
+      'settings' => array(),
+      'type' => 'options_buttons',
+      'weight' => 28,
+    ),
+  );
+
+  // Exported field_instance: 'node-document-field_explanation'
+  $field_instances['node-document-field_explanation'] = array(
+    'bundle' => 'document',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => 'Provide a basic explanation for why you categorized this artifact as you did.',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'text',
+        'settings' => array(),
+        'type' => 'text_default',
+        'weight' => 20,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_explanation',
+    'label' => 'Explanation',
+    'required' => 1,
+    'settings' => array(
+      'text_processing' => 1,
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'text',
+      'settings' => array(
+        'rows' => 5,
+      ),
+      'type' => 'text_textarea',
+      'weight' => 24,
+    ),
+  );
+
+  // Exported field_instance: 'node-document-field_force'
+  $field_instances['node-document-field_force'] = array(
+    'bundle' => 'document',
+    'default_value' => array(
+      0 => array(
+        'value' => 0,
+        'container' => array(
+          'max_value' => 100,
+          'min_value' => 0,
+        ),
+        'ignore' => FALSE,
+      ),
+    ),
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'number',
+        'settings' => array(
+          'decimal_separator' => '.',
+          'prefix_suffix' => TRUE,
+          'scale' => 0,
+          'thousand_separator' => ' ',
+        ),
+        'type' => 'number_integer',
+        'weight' => 17,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_force',
+    'label' => 'Force',
+    'required' => 0,
+    'settings' => array(
+      'max' => 100,
+      'min' => 0,
+      'prefix' => '',
+      'suffix' => '',
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'number',
+      'settings' => array(
+        'sliderfield_settings' => array(
+          'adjust_field_max' => 'field_power',
+          'adjust_field_min' => 'field_power',
+          'animate' => 1,
+          'display_bubble' => 0,
+          'display_bubble_format' => '%{value}%',
+          'display_ignore_button' => 1,
+          'display_values' => 1,
+          'display_values_format' => '%{value}%',
+          'hide_inputs' => 1,
+          'hide_slider_handle_when_no_value' => 0,
+          'multi_value' => 0,
+          'orientation' => 'horizontal',
+          'range' => 0,
+          'slider_length' => '',
+          'slider_style' => 'red',
+          'step' => 1,
+        ),
+      ),
+      'type' => 'number',
+      'weight' => 19,
     ),
   );
 
@@ -1318,7 +1466,7 @@ function lacuna_stories_content_types_field_default_field_instances() {
         'label' => 'hidden',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 7,
+        'weight' => 5,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -1329,8 +1477,8 @@ function lacuna_stories_content_types_field_default_field_instances() {
     ),
     'entity_type' => 'node',
     'field_name' => 'field_image',
-    'label' => 'Cover Image',
-    'required' => 1,
+    'label' => 'Upload a Cover Image for your artifact.',
+    'required' => 0,
     'settings' => array(
       'alt_field' => 0,
       'default_image' => 0,
@@ -1338,7 +1486,6 @@ function lacuna_stories_content_types_field_default_field_instances() {
       'file_extensions' => 'png gif jpg jpeg',
       'max_filesize' => '',
       'max_resolution' => '',
-      'media_library_include_in_library' => FALSE,
       'min_resolution' => '',
       'title_field' => 0,
       'user_register_form' => FALSE,
@@ -1348,17 +1495,20 @@ function lacuna_stories_content_types_field_default_field_instances() {
       'module' => 'media',
       'settings' => array(
         'allowed_schemes' => array(
-          0 => 'public',
-          1 => 'private',
+          'flickr' => 0,
+          'private' => 'private',
+          'public' => 'public',
         ),
         'allowed_types' => array(
-          0 => 'image',
+          'audio' => 0,
+          'default' => 0,
+          'image' => 'image',
+          'video' => 0,
         ),
-        'preview_image_style' => 'medium',
         'progress_indicator' => 'throbber',
       ),
       'type' => 'media_generic',
-      'weight' => 1,
+      'weight' => 5,
     ),
   );
 
@@ -1366,16 +1516,14 @@ function lacuna_stories_content_types_field_default_field_instances() {
   $field_instances['node-document-field_media'] = array(
     'bundle' => 'document',
     'deleted' => 0,
-    'description' => 'Any non-text media.',
+    'description' => '',
     'display' => array(
       'default' => array(
-        'label' => 'hidden',
-        'module' => 'file_entity',
-        'settings' => array(
-          'file_view_mode' => 'default',
-        ),
-        'type' => 'file_rendered',
-        'weight' => 0,
+        'label' => 'above',
+        'module' => 'file',
+        'settings' => array(),
+        'type' => 'file_default',
+        'weight' => 16,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -1386,12 +1534,12 @@ function lacuna_stories_content_types_field_default_field_instances() {
     ),
     'entity_type' => 'node',
     'field_name' => 'field_media',
-    'label' => 'Media',
+    'label' => 'Upload Video, Audio, or Image',
     'required' => 0,
     'settings' => array(
       'description_field' => 0,
       'file_directory' => '',
-      'file_extensions' => 'png gif jpg jpeg mpg mp4 wmv ogg mp3 wav',
+      'file_extensions' => 'mpg wmv mp4 mpeg m4v mov jpg png gif jpeg wav flac ogg mp3 m4a wma aac',
       'max_filesize' => '',
       'user_register_form' => FALSE,
     ),
@@ -1406,30 +1554,30 @@ function lacuna_stories_content_types_field_default_field_instances() {
         ),
         'allowed_types' => array(
           'audio' => 'audio',
-          'default' => 'default',
+          'default' => 0,
           'image' => 'image',
           'video' => 'video',
         ),
         'progress_indicator' => 'throbber',
       ),
       'type' => 'media_generic',
-      'weight' => 4,
+      'weight' => 9,
     ),
   );
 
-  // Exported field_instance: 'node-document-field_medium'
-  $field_instances['node-document-field_medium'] = array(
+  // Exported field_instance: 'node-document-field_media_types'
+  $field_instances['node-document-field_media_types'] = array(
     'bundle' => 'document',
     'default_value' => NULL,
     'deleted' => 0,
-    'description' => 'The medium or media of this document.',
+    'description' => '',
     'display' => array(
       'default' => array(
-        'label' => 'inline',
+        'label' => 'above',
         'module' => 'taxonomy',
         'settings' => array(),
-        'type' => 'taxonomy_term_reference_plain',
-        'weight' => 15,
+        'type' => 'taxonomy_term_reference_link',
+        'weight' => 7,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -1439,8 +1587,8 @@ function lacuna_stories_content_types_field_default_field_instances() {
       ),
     ),
     'entity_type' => 'node',
-    'field_name' => 'field_medium',
-    'label' => 'Medium',
+    'field_name' => 'field_media_types',
+    'label' => 'What are the media of your artifact?',
     'required' => 1,
     'settings' => array(
       'user_register_form' => FALSE,
@@ -1450,22 +1598,22 @@ function lacuna_stories_content_types_field_default_field_instances() {
       'module' => 'options',
       'settings' => array(),
       'type' => 'options_buttons',
-      'weight' => 4,
+      'weight' => 7,
     ),
   );
 
-  // Exported field_instance: 'node-document-field_priority'
-  $field_instances['node-document-field_priority'] = array(
+  // Exported field_instance: 'node-document-field_participation_level'
+  $field_instances['node-document-field_participation_level'] = array(
     'bundle' => 'document',
     'default_value' => NULL,
     'deleted' => 0,
-    'description' => '',
+    'description' => 'In terms of primary orientation of the artifact under consideration, check those which apply.',
     'display' => array(
       'default' => array(
-        'label' => 'inline',
+        'label' => 'above',
         'module' => 'taxonomy',
         'settings' => array(),
-        'type' => 'taxonomy_term_reference_plain',
+        'type' => 'taxonomy_term_reference_link',
         'weight' => 11,
       ),
       'teaser' => array(
@@ -1476,8 +1624,8 @@ function lacuna_stories_content_types_field_default_field_instances() {
       ),
     ),
     'entity_type' => 'node',
-    'field_name' => 'field_priority',
-    'label' => 'Priority',
+    'field_name' => 'field_participation_level',
+    'label' => 'Participant Observation: Betrachtung',
     'required' => 1,
     'settings' => array(
       'user_register_form' => FALSE,
@@ -1487,7 +1635,192 @@ function lacuna_stories_content_types_field_default_field_instances() {
       'module' => 'options',
       'settings' => array(),
       'type' => 'options_buttons',
-      'weight' => 16,
+      'weight' => 25,
+    ),
+  );
+
+  // Exported field_instance: 'node-document-field_politics'
+  $field_instances['node-document-field_politics'] = array(
+    'bundle' => 'document',
+    'default_value' => array(
+      0 => array(
+        'value' => 0,
+        'container' => array(
+          'max_value' => 0,
+          'min_value' => 100,
+        ),
+        'ignore' => FALSE,
+      ),
+    ),
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'number',
+        'settings' => array(
+          'decimal_separator' => '.',
+          'prefix_suffix' => TRUE,
+          'scale' => 0,
+          'thousand_separator' => ' ',
+        ),
+        'type' => 'number_integer',
+        'weight' => 19,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_politics',
+    'label' => 'Politics',
+    'required' => 0,
+    'settings' => array(
+      'max' => 100,
+      'min' => 0,
+      'prefix' => '',
+      'suffix' => '',
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'number',
+      'settings' => array(
+        'sliderfield_settings' => array(
+          'adjust_field_max' => 'field_power',
+          'adjust_field_min' => 'field_power',
+          'animate' => 1,
+          'display_bubble' => 0,
+          'display_bubble_format' => '%{value}%',
+          'display_ignore_button' => 1,
+          'display_values' => 1,
+          'display_values_format' => '%{value}%',
+          'hide_inputs' => 1,
+          'hide_slider_handle_when_no_value' => 0,
+          'multi_value' => 0,
+          'orientation' => 'horizontal',
+          'range' => 0,
+          'slider_length' => '',
+          'slider_style' => 'green',
+          'step' => 1,
+        ),
+      ),
+      'type' => 'number',
+      'weight' => 21,
+    ),
+  );
+
+  // Exported field_instance: 'node-document-field_power'
+  $field_instances['node-document-field_power'] = array(
+    'bundle' => 'document',
+    'default_value' => array(
+      0 => array(
+        'value' => 0,
+        'container' => array(
+          'max_value' => 0,
+          'min_value' => 100,
+        ),
+        'ignore' => FALSE,
+      ),
+    ),
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'number',
+        'settings' => array(
+          'decimal_separator' => '.',
+          'prefix_suffix' => TRUE,
+          'scale' => 0,
+          'thousand_separator' => ' ',
+        ),
+        'type' => 'number_integer',
+        'weight' => 18,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_power',
+    'label' => 'Power',
+    'required' => 0,
+    'settings' => array(
+      'max' => 100,
+      'min' => 0,
+      'prefix' => '',
+      'suffix' => '',
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'number',
+      'settings' => array(
+        'sliderfield_settings' => array(
+          'adjust_field_max' => 'field_force',
+          'adjust_field_min' => 'field_force',
+          'animate' => 1,
+          'display_bubble' => 0,
+          'display_bubble_format' => '%{value}%',
+          'display_ignore_button' => 1,
+          'display_values' => 1,
+          'display_values_format' => '%{value}%',
+          'hide_inputs' => 1,
+          'hide_slider_handle_when_no_value' => 0,
+          'multi_value' => 0,
+          'orientation' => 'horizontal',
+          'range' => 0,
+          'slider_length' => '',
+          'slider_style' => 'green',
+          'step' => 1,
+        ),
+      ),
+      'type' => 'number',
+      'weight' => 20,
+    ),
+  );
+
+  // Exported field_instance: 'node-document-field_privacy_level'
+  $field_instances['node-document-field_privacy_level'] = array(
+    'bundle' => 'document',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'taxonomy',
+        'settings' => array(),
+        'type' => 'taxonomy_term_reference_link',
+        'weight' => 9,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_privacy_level',
+    'label' => 'I would like this artifact to be viewable by:',
+    'required' => 1,
+    'settings' => array(
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'options',
+      'settings' => array(),
+      'type' => 'options_buttons',
+      'weight' => 11,
     ),
   );
 
@@ -1499,11 +1832,11 @@ function lacuna_stories_content_types_field_default_field_instances() {
     'description' => '',
     'display' => array(
       'default' => array(
-        'label' => 'inline',
+        'label' => 'above',
         'module' => 'taxonomy',
         'settings' => array(),
-        'type' => 'taxonomy_term_reference_plain',
-        'weight' => 14,
+        'type' => 'taxonomy_term_reference_link',
+        'weight' => 5,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -1527,23 +1860,23 @@ function lacuna_stories_content_types_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'taxonomy_autocomplete',
-      'weight' => 6,
+      'weight' => 5,
     ),
   );
 
-  // Exported field_instance: 'node-document-field_unit'
-  $field_instances['node-document-field_unit'] = array(
+  // Exported field_instance: 'node-document-field_topics'
+  $field_instances['node-document-field_topics'] = array(
     'bundle' => 'document',
     'default_value' => NULL,
     'deleted' => 0,
-    'description' => 'A unit might be "Week One", "January 1st", "Section Two: Why Monkeys Like Bananas", or another method of chronologically ordering your syllabus.',
+    'description' => 'The case(s) with which this artifact engages.',
     'display' => array(
       'default' => array(
-        'label' => 'inline',
+        'label' => 'above',
         'module' => 'taxonomy',
         'settings' => array(),
         'type' => 'taxonomy_term_reference_plain',
-        'weight' => 10,
+        'weight' => 3,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -1553,8 +1886,8 @@ function lacuna_stories_content_types_field_default_field_instances() {
       ),
     ),
     'entity_type' => 'node',
-    'field_name' => 'field_unit',
-    'label' => 'Unit',
+    'field_name' => 'field_topics',
+    'label' => 'Case',
     'required' => 1,
     'settings' => array(
       'user_register_form' => FALSE,
@@ -1563,8 +1896,8 @@ function lacuna_stories_content_types_field_default_field_instances() {
       'active' => 1,
       'module' => 'options',
       'settings' => array(),
-      'type' => 'options_select',
-      'weight' => 15,
+      'type' => 'options_buttons',
+      'weight' => 4,
     ),
   );
 
@@ -1573,16 +1906,16 @@ function lacuna_stories_content_types_field_default_field_instances() {
     'bundle' => 'document',
     'default_value' => NULL,
     'deleted' => 0,
-    'description' => 'To which course(s) is this document assigned?',
+    'description' => 'Choose N/A or leave blank to make the artifact visible only to you.',
     'display' => array(
       'default' => array(
-        'label' => 'inline',
+        'label' => 'above',
         'module' => 'entityreference',
         'settings' => array(
-          'link' => 1,
+          'link' => FALSE,
         ),
         'type' => 'entityreference_label',
-        'weight' => 9,
+        'weight' => 21,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -1593,7 +1926,7 @@ function lacuna_stories_content_types_field_default_field_instances() {
     ),
     'entity_type' => 'node',
     'field_name' => 'og_group_ref',
-    'label' => 'Course',
+    'label' => 'I Would Like This Artifact to be Visible to:',
     'required' => 0,
     'settings' => array(
       'behaviors' => array(
@@ -1615,7 +1948,7 @@ function lacuna_stories_content_types_field_default_field_instances() {
       'module' => 'og',
       'settings' => array(),
       'type' => 'og_complex',
-      'weight' => 14,
+      'weight' => 10,
     ),
   );
 
@@ -1663,8 +1996,8 @@ function lacuna_stories_content_types_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-page-field_doc_attachment'
-  $field_instances['node-page-field_doc_attachment'] = array(
+  // Exported field_instance: 'node-page-field_syllabus_file'
+  $field_instances['node-page-field_syllabus_file'] = array(
     'bundle' => 'page',
     'deleted' => 0,
     'description' => '',
@@ -1684,13 +2017,13 @@ function lacuna_stories_content_types_field_default_field_instances() {
       ),
     ),
     'entity_type' => 'node',
-    'field_name' => 'field_doc_attachment',
-    'label' => 'Attachments',
+    'field_name' => 'field_syllabus_file',
+    'label' => 'Syllabus File',
     'required' => 0,
     'settings' => array(
       'description_field' => 0,
       'file_directory' => '',
-      'file_extensions' => 'txt pdf doc docx odt xlsl',
+      'file_extensions' => 'txt pdf doc docx',
       'max_filesize' => '',
       'user_register_form' => FALSE,
     ),
@@ -1701,7 +2034,49 @@ function lacuna_stories_content_types_field_default_field_instances() {
         'progress_indicator' => 'throbber',
       ),
       'type' => 'file_generic',
-      'weight' => 32,
+      'weight' => 31,
+    ),
+  );
+
+  // Exported field_instance: 'node-page-field_syllabus_pdf'
+  $field_instances['node-page-field_syllabus_pdf'] = array(
+    'bundle' => 'page',
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'file',
+        'settings' => array(),
+        'type' => 'file_default',
+        'weight' => 1,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_syllabus_pdf',
+    'label' => 'Syllabus PDF',
+    'required' => 0,
+    'settings' => array(
+      'description_field' => 0,
+      'file_directory' => '',
+      'file_extensions' => 'txt pdf doc docx',
+      'max_filesize' => '',
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'file',
+      'settings' => array(
+        'progress_indicator' => 'throbber',
+      ),
+      'type' => 'file_generic',
+      'weight' => 31,
     ),
   );
 
@@ -1922,19 +2297,64 @@ function lacuna_stories_content_types_field_default_field_instances() {
     ),
   );
 
+  // Exported field_instance: 'taxonomy_term-topics-field_image'
+  $field_instances['taxonomy_term-topics-field_image'] = array(
+    'bundle' => 'topics',
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'hidden',
+        'module' => 'image',
+        'settings' => array(
+          'image_link' => '',
+          'image_style' => 'medium',
+        ),
+        'type' => 'image',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'taxonomy_term',
+    'field_name' => 'field_image',
+    'label' => 'Image',
+    'required' => 0,
+    'settings' => array(
+      'alt_field' => 0,
+      'default_image' => 0,
+      'file_directory' => '',
+      'file_extensions' => 'png gif jpg jpeg',
+      'max_filesize' => '',
+      'max_resolution' => '',
+      'media_library_include_in_library' => FALSE,
+      'min_resolution' => '',
+      'title_field' => 0,
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'image',
+      'settings' => array(
+        'preview_image_style' => 'thumbnail',
+        'progress_indicator' => 'throbber',
+      ),
+      'type' => 'image_image',
+      'weight' => 2,
+    ),
+  );
+
   // Exported field_instance: 'user-user-field_about_me'
   $field_instances['user-user-field_about_me'] = array(
     'bundle' => 'user',
     'default_value' => NULL,
     'deleted' => 0,
-    'description' => '',
+    'description' => 'short text about the user.',
     'display' => array(
       'default' => array(
         'label' => 'above',
         'module' => 'text',
         'settings' => array(),
         'type' => 'text_default',
-        'weight' => 9,
+        'weight' => 7,
       ),
     ),
     'entity_type' => 'user',
@@ -1943,20 +2363,16 @@ function lacuna_stories_content_types_field_default_field_instances() {
     'required' => 0,
     'settings' => array(
       'text_processing' => 0,
-      'user_register_form' => 1,
+      'user_register_form' => 0,
     ),
     'widget' => array(
       'active' => 1,
       'module' => 'text',
       'settings' => array(
-        'maxlength_js' => 300,
-        'maxlength_js_enforce' => 1,
-        'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
-        'maxlength_js_truncate_html' => 1,
-        'rows' => 5,
+        'rows' => 6,
       ),
       'type' => 'text_textarea',
-      'weight' => 7,
+      'weight' => 10,
     ),
   );
 
@@ -2003,7 +2419,7 @@ function lacuna_stories_content_types_field_default_field_instances() {
         'year_range' => '-3:+3',
       ),
       'type' => 'date_text',
-      'weight' => 5,
+      'weight' => 4,
     ),
   );
 
@@ -2068,7 +2484,7 @@ function lacuna_stories_content_types_field_default_field_instances() {
       'module' => 'options',
       'settings' => array(),
       'type' => 'options_select',
-      'weight' => 4,
+      'weight' => 6,
     ),
   );
 
@@ -2102,7 +2518,7 @@ function lacuna_stories_content_types_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 6,
+      'weight' => 5,
     ),
   );
 
@@ -2118,29 +2534,25 @@ function lacuna_stories_content_types_field_default_field_instances() {
         'module' => 'text',
         'settings' => array(),
         'type' => 'text_default',
-        'weight' => 7,
+        'weight' => 8,
       ),
     ),
     'entity_type' => 'user',
     'field_name' => 'field_how_i_learn',
-    'label' => 'How I Learn',
+    'label' => 'How I learn',
     'required' => 0,
     'settings' => array(
       'text_processing' => 0,
-      'user_register_form' => 1,
+      'user_register_form' => 0,
     ),
     'widget' => array(
       'active' => 1,
       'module' => 'text',
       'settings' => array(
-        'maxlength_js' => 300,
-        'maxlength_js_enforce' => 1,
-        'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
-        'maxlength_js_truncate_html' => 1,
         'rows' => 5,
       ),
       'type' => 'text_textarea',
-      'weight' => 3,
+      'weight' => 11,
     ),
   );
 
@@ -2156,7 +2568,7 @@ function lacuna_stories_content_types_field_default_field_instances() {
         'module' => 'text',
         'settings' => array(),
         'type' => 'text_default',
-        'weight' => 8,
+        'weight' => 9,
       ),
     ),
     'entity_type' => 'user',
@@ -2165,18 +2577,16 @@ function lacuna_stories_content_types_field_default_field_instances() {
     'required' => 0,
     'settings' => array(
       'text_processing' => 0,
-      'user_register_form' => 1,
+      'user_register_form' => 0,
     ),
     'widget' => array(
       'active' => 1,
       'module' => 'text',
       'settings' => array(
-        'maxlength_js' => 1,
-        'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 4,
+      'weight' => 12,
     ),
   );
 
@@ -2210,7 +2620,7 @@ function lacuna_stories_content_types_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 5,
+      'weight' => 7,
     ),
   );
 
@@ -2244,7 +2654,7 @@ function lacuna_stories_content_types_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 6,
+      'weight' => 8,
     ),
   );
 
@@ -2253,7 +2663,7 @@ function lacuna_stories_content_types_field_default_field_instances() {
     'bundle' => 'user',
     'default_value' => NULL,
     'deleted' => 0,
-    'description' => 'What course are you enrolled in?',
+    'description' => 'What course are you enrolled in? Or, what groups will you join?',
     'display' => array(
       'default' => array(
         'label' => 'above',
@@ -2265,7 +2675,7 @@ function lacuna_stories_content_types_field_default_field_instances() {
     ),
     'entity_type' => 'user',
     'field_name' => 'og_user_node',
-    'label' => 'Course(s) Enrolled',
+    'label' => 'Course or group(s) joined',
     'required' => 0,
     'settings' => array(
       'behaviors' => array(
@@ -2299,79 +2709,95 @@ function lacuna_stories_content_types_field_default_field_instances() {
       'module' => 'og',
       'settings' => array(),
       'type' => 'og_complex',
-      'weight' => 7,
+      'weight' => 9,
     ),
   );
 
   // Translatables
   // Included for use with string extractors like potx.
+  t(' Start typing to autofill saved Bibliographic references. The reference must be created before uploading an artifact.');
+  t('(In your browser, e.g. Safari, use Edit --> Paste and Match Style to avoid odd formatting, or else use the eraser button on highlighted text to clear formatting hanging on from the original source)');
   t('A reference to the annotated content');
-  t('A unit might be "Week One", "January 1st", "Section Two: Why Monkeys Like Bananas", or another method of chronologically ordering your syllabus.');
   t('About Me');
   t('Add as many media files as necessary');
   t('Annotated Content');
   t('Annotation Text');
-  t('Any non-text media.');
   t('Attachments');
   t('Audience');
-  t('Bibliographic Entry');
   t('Bibliography');
   t('Body');
+  t('Case');
   t('Category');
+  t('Choose N/A or leave blank to make the artifact visible only to you.');
   t('Choose an icon to represent this blog post when browsing. All browsing icons on Lacuna Stories are portrait dimensions, so please try to choose this proportion of image or crop it yourself before uploading. If you upload a landscape image, it will likely become skewed in the automated cropping. Also make sure your image is larger than 220 pixels wide and 320 pixels tall. If not, you can change that in programs like Mac Preview by selecting TOOLS --> ADJUST SIZE and increase the pixels.');
+  t('Choose an image to identify this annotation.');
   t('Comment');
-  t('Course');
-  t('Course(s) Enrolled');
-  t('Cover Image');
+  t('Course or group(s) joined');
   t('Date of Birth');
   t('Decide if this annotation is private or not');
   t('Describe why these pieces are stitched together');
   t('Description of My Thread');
-  t('Determine if this is an OG group.');
   t('Display Name');
   t('Education');
   t('Enter a comma-separated list of words to describe your content.');
+  t('Excess, Mean, or Deficiency?');
+  t('Explanation');
+  t('Force');
   t('Gender');
   t('Genre');
-  t('Group');
-  t('Group roles and permissions');
-  t('Group visibility');
-  t('How I Learn');
+  t('How I learn');
+  t('I Would Like This Artifact to be Visible to:');
+  t('I would like this artifact to be viewable by:');
+  t('If a text, insert the text of your artifact here.');
   t('If there is a PDF or other file version of this document, attach it here.');
   t('Image');
+  t('In terms of primary orientation of the artifact under consideration, check those which apply.');
+  t('Indicate the form and tone of the artifact.');
+  t('Intercession: Lepsis, Metalepsis, or Syndialepsis?');
   t('Learning Goals');
   t('Major/Degree');
   t('Media');
-  t('Medium');
+  t('Mode: Tragedy | Irony | Comedy | Pathos ');
   t('My Stitchings');
+  t('Participant Observation: Betrachtung');
+  t('Politics');
   t('Post Icon');
-  t('Priority');
+  t('Power');
   t('Private');
+  t('Provide a basic explanation for why you categorized this artifact as you did.');
   t('Quote');
   t('Ranges');
   t('References to the content stitched together');
   t('Start typing the name of materials on Lacuna Stories here, and they will autofill. Add everything that gets referenced or mentioned in your post. By using this feature, your writing will be linked with other materials on the site, and the networked thinking you do will be represented in the site\'s visualizations.');
+  t('Syllabus File');
+  t('Syllabus PDF');
   t('Tags');
   t('Tags for an annotation');
-  t('Text');
   t('The URI of the annotated work');
-  t('The actual text of the document.');
   t('The annotation text');
-  t('The medium or media of this document.');
+  t('The case(s) with which this artifact engages.');
   t('The name under which you would like your work to appear.');
   t('The ranges for the start and stop of a quote');
   t('The selected text that was annotated');
   t('The text of your blog post');
-  t('To which course(s) is this document assigned?');
+  t('Topics');
   t('URI');
-  t('Unit');
+  t('Upload Video, Audio, or Image');
+  t('Upload a Cover Image for your artifact.');
   t('Upload an image to go with this article.');
+  t('What are the media of your artifact?');
   t('What category of annotation this is');
-  t('What course are you enrolled in?');
+  t('What course are you enrolled in? Or, what groups will you join?');
+  t('What is the Bibliographic Entry for your artifact?');
+  t('What is the primary genre of your artifact?');
   t('What type of post is this?');
+  t('Where would you locate your artifact in the series Excess, Mean, or Deficiency? (Number 5 being "Mean")');
   t('Which course(s) or group(s) should be able to see this post?');
+  t('Which of the following best describe your artifact?');
   t('Year in Program');
+  t('Your artifact principally primes which of the following?');
   t('e.g., Freshman, Senior, 2nd-year PhD student');
+  t('short text about the user.');
 
   return $field_instances;
 }

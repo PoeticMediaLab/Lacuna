@@ -10,25 +10,6 @@
 function lacuna_stories_menus_menu_default_menu_links() {
   $menu_links = array();
 
-  // Exported menu link: main-menu_about-this-course:node/27
-  $menu_links['main-menu_about-this-course:node/27'] = array(
-    'menu_name' => 'main-menu',
-    'link_path' => 'node/27',
-    'router_path' => 'node/%',
-    'link_title' => 'About This Course',
-    'options' => array(
-      'identifier' => 'main-menu_about-this-course:node/27',
-      'attributes' => array(),
-    ),
-    'module' => 'menu',
-    'hidden' => 0,
-    'external' => 0,
-    'has_children' => 0,
-    'expanded' => 0,
-    'weight' => 5,
-    'customized' => 1,
-    'parent_identifier' => 'main-menu_explore:<nolink>',
-  );
   // Exported menu link: main-menu_account:<nolink>
   $menu_links['main-menu_account:<nolink>'] = array(
     'menu_name' => 'main-menu',
@@ -106,6 +87,45 @@ function lacuna_stories_menus_menu_default_menu_links() {
     'customized' => 1,
     'parent_identifier' => 'main-menu_reflect:<nolink>',
   );
+  // Exported menu link: main-menu_artifacts:artifacts
+  $menu_links['main-menu_artifacts:artifacts'] = array(
+    'menu_name' => 'main-menu',
+    'link_path' => 'artifacts',
+    'router_path' => 'artifacts',
+    'link_title' => 'Artifacts',
+    'options' => array(
+      'identifier' => 'main-menu_artifacts:artifacts',
+    ),
+    'module' => 'system',
+    'hidden' => 0,
+    'external' => 0,
+    'has_children' => 0,
+    'expanded' => 0,
+    'weight' => -50,
+    'customized' => 1,
+    'parent_identifier' => 'main-menu_explore:<nolink>',
+  );
+  // Exported menu link: main-menu_bibliography:biblio
+  $menu_links['main-menu_bibliography:biblio'] = array(
+    'menu_name' => 'main-menu',
+    'link_path' => 'biblio',
+    'router_path' => 'biblio',
+    'link_title' => 'Bibliography',
+    'options' => array(
+      'attributes' => array(
+        'title' => '',
+      ),
+      'identifier' => 'main-menu_bibliography:biblio',
+    ),
+    'module' => 'menu',
+    'hidden' => 0,
+    'external' => 0,
+    'has_children' => 0,
+    'expanded' => 0,
+    'weight' => -47,
+    'customized' => 1,
+    'parent_identifier' => 'main-menu_explore:<nolink>',
+  );
   // Exported menu link: main-menu_connect:<nolink>
   $menu_links['main-menu_connect:<nolink>'] = array(
     'menu_name' => 'main-menu',
@@ -144,9 +164,9 @@ function lacuna_stories_menus_menu_default_menu_links() {
     'external' => 0,
     'has_children' => 0,
     'expanded' => 0,
-    'weight' => -47,
+    'weight' => -46,
     'customized' => 1,
-    'parent_identifier' => 'main-menu_help:<nolink>',
+    'parent_identifier' => 'main-menu_account:<nolink>',
   );
   // Exported menu link: main-menu_create:<nolink>
   $menu_links['main-menu_create:<nolink>'] = array(
@@ -188,27 +208,6 @@ function lacuna_stories_menus_menu_default_menu_links() {
     'weight' => -50,
     'customized' => 1,
   );
-  // Exported menu link: main-menu_faq:node/28
-  $menu_links['main-menu_faq:node/28'] = array(
-    'menu_name' => 'main-menu',
-    'link_path' => 'node/28',
-    'router_path' => 'node/%',
-    'link_title' => 'FAQ',
-    'options' => array(
-      'identifier' => 'main-menu_faq:node/28',
-      'attributes' => array(
-        'title' => '',
-      ),
-    ),
-    'module' => 'menu',
-    'hidden' => 0,
-    'external' => 0,
-    'has_children' => 0,
-    'expanded' => 0,
-    'weight' => -50,
-    'customized' => 1,
-    'parent_identifier' => 'main-menu_help:<nolink>',
-  );
   // Exported menu link: main-menu_help:<nolink>
   $menu_links['main-menu_help:<nolink>'] = array(
     'menu_name' => 'main-menu',
@@ -222,30 +221,13 @@ function lacuna_stories_menus_menu_default_menu_links() {
       'identifier' => 'main-menu_help:<nolink>',
     ),
     'module' => 'menu',
-    'hidden' => 0,
+    'hidden' => 1,
     'external' => 0,
     'has_children' => 1,
     'expanded' => 0,
-    'weight' => 5,
+    'weight' => -47,
     'customized' => 1,
-  );
-  // Exported menu link: main-menu_instructors-guide:node/29
-  $menu_links['main-menu_instructors-guide:node/29'] = array(
-    'menu_name' => 'main-menu',
-    'link_path' => 'node/29',
-    'router_path' => 'node/%',
-    'link_title' => 'Instructor\'s Guide',
-    'options' => array(
-      'identifier' => 'main-menu_instructors-guide:node/29',
-    ),
-    'module' => 'menu',
-    'hidden' => 0,
-    'external' => 0,
-    'has_children' => 0,
-    'expanded' => 0,
-    'weight' => -48,
-    'customized' => 1,
-    'parent_identifier' => 'main-menu_help:<nolink>',
+    'parent_identifier' => 'main-menu_account:<nolink>',
   );
   // Exported menu link: main-menu_logout:user/logout
   $menu_links['main-menu_logout:user/logout'] = array(
@@ -264,7 +246,7 @@ function lacuna_stories_menus_menu_default_menu_links() {
     'external' => 0,
     'has_children' => 0,
     'expanded' => 0,
-    'weight' => -48,
+    'weight' => -45,
     'customized' => 1,
     'parent_identifier' => 'main-menu_account:<nolink>',
   );
@@ -288,24 +270,6 @@ function lacuna_stories_menus_menu_default_menu_links() {
     'weight' => -49,
     'customized' => 1,
     'parent_identifier' => 'main-menu_account:<nolink>',
-  );
-  // Exported menu link: main-menu_materials:materials
-  $menu_links['main-menu_materials:materials'] = array(
-    'menu_name' => 'main-menu',
-    'link_path' => 'materials',
-    'router_path' => 'materials',
-    'link_title' => 'Materials',
-    'options' => array(
-      'identifier' => 'main-menu_materials:materials',
-    ),
-    'module' => 'system',
-    'hidden' => 0,
-    'external' => 0,
-    'has_children' => 0,
-    'expanded' => 0,
-    'weight' => -50,
-    'customized' => 1,
-    'parent_identifier' => 'main-menu_explore:<nolink>',
   );
   // Exported menu link: main-menu_my-profile:user
   $menu_links['main-menu_my-profile:user'] = array(
@@ -360,9 +324,8 @@ function lacuna_stories_menus_menu_default_menu_links() {
     'external' => 0,
     'has_children' => 0,
     'expanded' => 0,
-    'weight' => -50,
-    'customized' => 1,
-    'parent_identifier' => 'main-menu_connect:<nolink>',
+    'weight' => 0,
+    'customized' => 0,
   );
   // Exported menu link: main-menu_reflect:<nolink>
   $menu_links['main-menu_reflect:<nolink>'] = array(
@@ -384,22 +347,25 @@ function lacuna_stories_menus_menu_default_menu_links() {
     'weight' => -47,
     'customized' => 1,
   );
-  // Exported menu link: main-menu_research-consent:node/67
-  $menu_links['main-menu_research-consent:node/67'] = array(
+  // Exported menu link: main-menu_research-consent:node/225
+  $menu_links['main-menu_research-consent:node/225'] = array(
     'menu_name' => 'main-menu',
-    'link_path' => 'node/67',
+    'link_path' => 'node/225',
     'router_path' => 'node/%',
     'link_title' => 'Research Consent',
     'options' => array(
-      'identifier' => 'main-menu_research-consent:node/67',
+      'attributes' => array(
+        'title' => '',
+      ),
+      'identifier' => 'main-menu_research-consent:node/225',
     ),
     'module' => 'menu',
     'hidden' => 0,
     'external' => 0,
     'has_children' => 0,
     'expanded' => 0,
-    'weight' => 0,
-    'customized' => 0,
+    'weight' => -48,
+    'customized' => 1,
     'parent_identifier' => 'main-menu_account:<nolink>',
   );
   // Exported menu link: main-menu_responses-map:visualization/responses
@@ -437,7 +403,7 @@ function lacuna_stories_menus_menu_default_menu_links() {
     'external' => 0,
     'has_children' => 0,
     'expanded' => 0,
-    'weight' => -49,
+    'weight' => -48,
     'customized' => 1,
     'parent_identifier' => 'main-menu_explore:<nolink>',
   );
@@ -455,19 +421,18 @@ function lacuna_stories_menus_menu_default_menu_links() {
     'external' => 0,
     'has_children' => 0,
     'expanded' => 0,
-    'weight' => -49,
+    'weight' => -50,
     'customized' => 1,
     'parent_identifier' => 'main-menu_connect:<nolink>',
   );
-  // Exported menu link: main-menu_student-user-guide:node/30
-  $menu_links['main-menu_student-user-guide:node/30'] = array(
+  // Exported menu link: main-menu_terms-of-engagement:node/331
+  $menu_links['main-menu_terms-of-engagement:node/331'] = array(
     'menu_name' => 'main-menu',
-    'link_path' => 'node/30',
+    'link_path' => 'node/331',
     'router_path' => 'node/%',
-    'link_title' => 'Student User Guide',
+    'link_title' => 'Terms of Engagement',
     'options' => array(
-      'identifier' => 'main-menu_student-user-guide:node/30',
-      'attributes' => array(),
+      'identifier' => 'main-menu_terms-of-engagement:node/331',
     ),
     'module' => 'menu',
     'hidden' => 0,
@@ -476,7 +441,7 @@ function lacuna_stories_menus_menu_default_menu_links() {
     'expanded' => 0,
     'weight' => -49,
     'customized' => 1,
-    'parent_identifier' => 'main-menu_help:<nolink>',
+    'parent_identifier' => 'main-menu_explore:<nolink>',
   );
   // Exported menu link: main-menu_threads:threads
   $menu_links['main-menu_threads:threads'] = array(
@@ -492,7 +457,7 @@ function lacuna_stories_menus_menu_default_menu_links() {
     'external' => 0,
     'has_children' => 0,
     'expanded' => 0,
-    'weight' => -48,
+    'weight' => -49,
     'customized' => 1,
     'parent_identifier' => 'main-menu_connect:<nolink>',
   );
@@ -519,21 +484,19 @@ function lacuna_stories_menus_menu_default_menu_links() {
   );
   // Translatables
   // Included for use with string extractors like potx.
-  t('About This Course');
   t('Account');
   t('All Content');
   t('All Emails');
   t('Annotations Dashboard');
+  t('Artifacts');
+  t('Bibliography');
   t('Connect');
   t('Contact');
   t('Create');
   t('Explore');
-  t('FAQ');
   t('Help');
-  t('Instructor\'s Guide');
   t('Logout');
   t('Manage');
-  t('Materials');
   t('My Profile');
   t('My Writing');
   t('People');
@@ -542,7 +505,7 @@ function lacuna_stories_menus_menu_default_menu_links() {
   t('Responses');
   t('Responses Map');
   t('Sewing Kit');
-  t('Student User Guide');
+  t('Terms of Engagement');
   t('Threads');
   t('Write a Response');
 
