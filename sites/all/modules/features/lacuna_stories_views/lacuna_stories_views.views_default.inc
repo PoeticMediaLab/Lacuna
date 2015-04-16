@@ -1603,7 +1603,7 @@ function lacuna_stories_views_views_default_views() {
   $handler->display->display_options['filters']['field_media_types_tid']['field'] = 'field_media_types_tid';
   $handler->display->display_options['filters']['field_media_types_tid']['exposed'] = TRUE;
   $handler->display->display_options['filters']['field_media_types_tid']['expose']['operator_id'] = 'field_media_types_tid_op';
-  $handler->display->display_options['filters']['field_media_types_tid']['expose']['label'] = 'Limit by Media Type';
+  $handler->display->display_options['filters']['field_media_types_tid']['expose']['label'] = 'Limit by Media';
   $handler->display->display_options['filters']['field_media_types_tid']['expose']['operator'] = 'field_media_types_tid_op';
   $handler->display->display_options['filters']['field_media_types_tid']['expose']['identifier'] = 'field_media_types_tid';
   $handler->display->display_options['filters']['field_media_types_tid']['expose']['multiple'] = TRUE;
@@ -1612,7 +1612,9 @@ function lacuna_stories_views_views_default_views() {
     1 => 0,
     3 => 0,
     4 => 0,
+    8 => 0,
     5 => 0,
+    7 => 0,
     6 => 0,
   );
   $handler->display->display_options['filters']['field_media_types_tid']['reduce_duplicates'] = TRUE;
