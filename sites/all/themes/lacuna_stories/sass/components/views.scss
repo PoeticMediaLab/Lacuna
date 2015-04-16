@@ -84,7 +84,8 @@ $views-link-hover-color: #1588BA;
   .views-widget-sort-order {
     display: none;
   }
-  .views-widget-sort-by {
+  .views-widget-sort-by,
+  .bef-select-as-links {
     .form-type-bef-link {
       float: left;
       margin: 0 10px 0 15px;
@@ -121,10 +122,20 @@ $views-link-hover-color: #1588BA;
   #edit-field-topics-tid-wrapper label {
     height: 50px;
   }
+  .form-item {
+    margin-top: 0px;
+    margin-bottom: 5px;
+  }
+  .form-item-sort-by {
+    margin-bottom: 50px;
+  }
   .views-exposed-widget>label,
   .form-item-sort-by>label  {
     float: left;
     margin-right: 10px;
+  }
+  .form-item-sort-order {
+    display: none;
   }
   .views-widget {
     display: inline;
@@ -133,7 +144,7 @@ $views-link-hover-color: #1588BA;
     }
   }
   .form-checkboxes {
-    // float: right;
+    float: right;
   }
   .form-type-bef-checkbox {
     float: left;
@@ -146,12 +157,13 @@ $views-link-hover-color: #1588BA;
     width: 100%;
     padding-top: 25px;
   }
-}
-
-.view-documents #edit-reset.form-submit,
-.view-responses #edit-reset.form-submit{
-  margin-top: 0px;
-  margin-right: 80px;
+  #edit-reset.form-submit{
+    margin-top: 0px;
+    margin-right: 80px;
+  }
+  .views-row-first {
+    margin-left: 0px;
+  }
 }
 
 table.views-table {
