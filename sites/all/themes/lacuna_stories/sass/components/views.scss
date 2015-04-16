@@ -77,6 +77,9 @@ $views-link-hover-color: #1588BA;
 .view-my-content,
 .view-all-content,
 .view-all-annotations {
+  .view-header {
+    padding-bottom: 1.5em;
+  }
   .views-submit-button,
   .views-widget-sort-order {
     display: none;
@@ -113,6 +116,10 @@ $views-link-hover-color: #1588BA;
   }
   .views-exposed-widget {
     margin-top: 0px;
+
+  }
+  #edit-field-topics-tid-wrapper label {
+    height: 50px;
   }
   .views-exposed-widget>label,
   .form-item-sort-by>label  {
@@ -124,6 +131,9 @@ $views-link-hover-color: #1588BA;
     input[type=text] {
       width: 20%;
     }
+  }
+  .form-checkboxes {
+    // float: right;
   }
   .form-type-bef-checkbox {
     float: left;
