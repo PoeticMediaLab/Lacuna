@@ -5,14 +5,16 @@ core = 7.x
 
 dependencies[] = media
 
+files[] = includes/MediaBrowserInternet.inc
 files[] = includes/MediaInternetBaseHandler.inc
 files[] = includes/MediaInternetFileHandler.inc
 files[] = includes/MediaInternetNoHandlerException.inc
 files[] = includes/MediaInternetValidationException.inc
+files[] = tests/media_internet.test
 
-; Information added by Drupal.org packaging script on 2015-03-21
-version = "7.x-1.5"
+; Information added by Drupal.org packaging script on 2015-04-17
+version = "7.x-2.0-alpha4+32-dev"
 core = "7.x"
 project = "media"
-datestamp = "1426963084"
+datestamp = "1429292285"
 

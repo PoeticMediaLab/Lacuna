@@ -8,9 +8,9 @@ dependencies[] = media_internet
 files[] = includes/MediaVimeoStreamWrapper.inc
 files[] = includes/MediaInternetVimeoHandler.inc
 
-; Information added by Drupal.org packaging script on 2014-03-26
-version = "7.x-2.0"
+; Information added by Drupal.org packaging script on 2014-06-25
+version = "7.x-2.0+1-dev"
 core = "7.x"
 project = "media_vimeo"
-datestamp = "1395824043"
+datestamp = "1403663628"
 

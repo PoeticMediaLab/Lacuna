@@ -15,12 +15,14 @@ class MediaInternetVimeoHandler extends MediaInternetBaseHandler {
     // http://vimeo.com/*
     // http://vimeo.com/video/*
     // http://vimeo.com/groups/*/videos/*
-    // http://vimeo.com/channels/*#$ID
+    // http://vimeo.com/channels/*/*
+    // http://vimeo.com/album/*/video/*
     $patterns = array(
       '@vimeo\.com/(\d+)@i',
       '@vimeo\.com/video/(\d+)@i',
       '@vimeo\.com/groups/.+/videos/(\d+)@i',
-      '@vimeo\.com/channels/.+#(\d+)@i',
+      '@vimeo\.com/channels/.+/(\d+)@i',
+      '@vimeo\.com/album/.+/video/(\d+)@i',
     );
 
     foreach ($patterns as $pattern) {

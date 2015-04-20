@@ -17,7 +17,7 @@ class MediaInternetFileHandler extends MediaInternetBaseHandler {
     $remote_uri = $file_obj->uri;
     //@TODO: we should follow redirection here an save the final filename, not just the basename.
     $local_filename = basename($remote_uri);
-    $local_filename = file_munge_filename($local_filename, media_variable_get('file_extensions'), FALSE);
+    $local_filename = file_munge_filename($local_filename, variable_get('file_entity_default_allowed_extensions', 'jpg jpeg gif png txt doc docx xls xlsx pdf ppt pptx pps ppsx odt ods odp mp3 mov mp4 m4a m4v mpeg avi ogg oga ogv weba webp webm'), FALSE);
     $local_uri = file_stream_wrapper_uri_normalize('temporary://' . $local_filename);
     if (!@copy($remote_uri, $local_uri)) {
       throw new Exception('Unable to add file ' . $remote_uri);
@@ -29,7 +29,9 @@ class MediaInternetFileHandler extends MediaInternetBaseHandler {
 
   public function postSave(&$file_obj) {
     $scheme = variable_get('file_default_scheme', 'public') . '://';
-    $uri = file_stream_wrapper_uri_normalize($scheme . $file_obj->filename);
+    module_load_include('inc', 'file_entity', 'file_entity.pages');
+    $destination_uri = file_entity_upload_destination_uri(array());
+    $uri = file_stream_wrapper_uri_normalize($destination_uri . '/' . $file_obj->filename);
     // Now to its new home.
     $file_obj = file_move($file_obj, $uri, FILE_EXISTS_RENAME);
   }
@@ -43,7 +45,7 @@ class MediaInternetFileHandler extends MediaInternetBaseHandler {
 
   public function claim($embedCode) {
     // Claim only valid URLs using a supported scheme.
-    if (!valid_url($embedCode, TRUE) || !in_array(file_uri_scheme($embedCode), media_variable_get('fromurl_supported_schemes'))) {
+    if (!valid_url($embedCode, TRUE) || !in_array(file_uri_scheme($embedCode), variable_get('media_fromurl_supported_schemes', array('http', 'https', 'ftp', 'smb', 'ftps')))) {
       return FALSE;
     }
 
@@ -55,7 +57,7 @@ class MediaInternetFileHandler extends MediaInternetBaseHandler {
 
     // Since this handler copies the remote file to the local web server, do not
     // claim a URL with an extension disallowed for media uploads.
-    $regex = '/\.(' . preg_replace('/ +/', '|', preg_quote(media_variable_get('file_extensions'))) . ')$/i';
+    $regex = '/\.(' . preg_replace('/ +/', '|', preg_quote(variable_get('file_entity_default_allowed_extensions', 'jpg jpeg gif png txt doc docx xls xlsx pdf ppt pptx pps ppsx odt ods odp mp3 mov mp4 m4a m4v mpeg avi ogg oga ogv weba webp webm'))) . ')$/i';
     if (!preg_match($regex, basename($embedCode))) {
       return FALSE;
     }

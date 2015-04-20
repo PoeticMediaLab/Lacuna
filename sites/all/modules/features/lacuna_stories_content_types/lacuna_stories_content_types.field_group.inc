@@ -25,8 +25,7 @@ function lacuna_stories_content_types_field_group_info() {
     'children' => array(
       0 => 'field_genre',
       1 => 'og_group_ref',
-      2 => 'field_topics',
-      3 => 'field_tags',
+      2 => 'field_tags',
     ),
     'format_type' => 'fieldset',
     'format_settings' => array(

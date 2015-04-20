@@ -19,24 +19,24 @@ function lacuna_stories_content_types_filter_default_formats() {
     'weight' => 0,
     'filters' => array(
       'filter_url' => array(
-        'weight' => -44,
+        'weight' => -50,
         'status' => 1,
         'settings' => array(
           'filter_url_length' => 72,
         ),
       ),
       'filter_autop' => array(
-        'weight' => -42,
+        'weight' => -49,
         'status' => 1,
         'settings' => array(),
       ),
       'filter_htmlcorrector' => array(
-        'weight' => -41,
+        'weight' => -48,
         'status' => 1,
         'settings' => array(),
       ),
       'wysiwyg' => array(
-        'weight' => -40,
+        'weight' => -44,
         'status' => 1,
         'settings' => array(
           'valid_elements' => 'a[!href|target<_blank|title],
@@ -166,10 +166,26 @@ br,span,em,strong,cite,code,blockquote,ul,ol,li,dl,dt,dd',
           'rule_style_urls' => array(),
         ),
       ),
-      'media_filter' => array(
-        'weight' => -39,
+      'htmlpurifier_basic' => array(
+        'weight' => -43,
         'status' => 1,
-        'settings' => array(),
+        'settings' => array(
+          'htmlpurifier_help' => 1,
+          'htmlpurifier_basic_config' => array(
+            'Attr.EnableID' => 0,
+            'AutoFormat.AutoParagraph' => 1,
+            'AutoFormat.Linkify' => 1,
+            'AutoFormat.RemoveEmpty' => 0,
+            'Null_HTML.Allowed' => 1,
+            'HTML.ForbiddenAttributes' => '',
+            'HTML.ForbiddenElements' => '',
+            'HTML.SafeObject' => 0,
+            'Output.FlashCompat' => 0,
+            'URI.DisableExternalResources' => 0,
+            'URI.DisableResources' => 0,
+            'Null_URI.Munge' => 1,
+          ),
+        ),
       ),
     ),
   );

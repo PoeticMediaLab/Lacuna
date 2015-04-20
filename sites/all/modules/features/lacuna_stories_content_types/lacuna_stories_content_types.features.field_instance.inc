@@ -631,7 +631,7 @@ function lacuna_stories_content_types_field_default_field_instances() {
         'module' => 'text',
         'settings' => array(),
         'type' => 'text_default',
-        'weight' => 0,
+        'weight' => 1,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -794,13 +794,13 @@ function lacuna_stories_content_types_field_default_field_instances() {
     'description' => 'Add as many media files as necessary',
     'display' => array(
       'default' => array(
-        'label' => 'above',
+        'label' => 'hidden',
         'module' => 'file_entity',
         'settings' => array(
           'file_view_mode' => 'default',
         ),
         'type' => 'file_rendered',
-        'weight' => 1,
+        'weight' => 0,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -834,6 +834,7 @@ function lacuna_stories_content_types_field_default_field_instances() {
           'image' => 'image',
           'video' => 'video',
         ),
+        'browser_plugins' => array(),
         'progress_indicator' => 'throbber',
       ),
       'type' => 'media_generic',
@@ -1354,6 +1355,7 @@ function lacuna_stories_content_types_field_default_field_instances() {
         'allowed_types' => array(
           0 => 'image',
         ),
+        'browser_plugins' => array(),
         'preview_image_style' => 'medium',
         'progress_indicator' => 'throbber',
       ),
@@ -1410,6 +1412,7 @@ function lacuna_stories_content_types_field_default_field_instances() {
           'image' => 'image',
           'video' => 'video',
         ),
+        'browser_plugins' => array(),
         'progress_indicator' => 'throbber',
       ),
       'type' => 'media_generic',

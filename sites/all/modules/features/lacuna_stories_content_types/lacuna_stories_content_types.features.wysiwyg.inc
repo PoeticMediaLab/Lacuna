@@ -44,9 +44,6 @@ function lacuna_stories_content_types_wysiwyg_default_profiles() {
           'Paste' => 1,
           'SpecialChar' => 1,
         ),
-        'drupal' => array(
-          'media' => 1,
-        ),
       ),
       'toolbarLocation' => 'top',
       'resize_enabled' => 1,
