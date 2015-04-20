@@ -419,7 +419,7 @@ function lacuna_stories_content_types_strongarm() {
           'weight' => '0',
         ),
         'path' => array(
-          'weight' => '10',
+          'weight' => '9',
         ),
       ),
       'display' => array(),

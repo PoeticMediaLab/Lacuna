@@ -85,6 +85,7 @@ function lacuna_stories_content_types_field_group_info() {
       2 => 'field_status',
       3 => 'field_tags',
       4 => 'field_medium',
+      5 => 'group_content_access',
     ),
     'format_type' => 'fieldset',
     'format_settings' => array(
@@ -143,11 +144,10 @@ function lacuna_stories_content_types_field_group_info() {
     'weight' => '0',
     'children' => array(
       0 => 'field_doc_attachment',
-      1 => 'field_doc_pages',
-      2 => 'field_doc_text',
-      3 => 'field_image',
-      4 => 'field_media',
-      5 => 'title',
+      1 => 'field_doc_text',
+      2 => 'field_image',
+      3 => 'field_media',
+      4 => 'title',
     ),
     'format_type' => 'fieldset',
     'format_settings' => array(
