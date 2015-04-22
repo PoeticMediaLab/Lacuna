@@ -1,0 +1,427 @@
+<?php
+/**
+ * @var DELETE_ALL_MAX_EXECUTION
+ *
+ * Total seconds to allow the delete script to run
+ */
+define('DELETE_ALL_MAX_EXECUTION', 600);
+
+
+/**
+ * @file
+ * Delete all 7.x module
+ */
+
+function delete_all_menu() {
+  $items = array();
+
+  $items['admin/content/delete_content'] = array(
+    'title'            => 'Delete all content',
+    'description'      => 'Delete all nodes and comments on this site. This is useful for development sites, or prior to launching the site. Otherwise it destroys all data on a site.',
+    'page callback'    => 'drupal_get_form',
+    'page arguments'   => array('delete_all_content'),
+    'access arguments' => array('administer nodes'),
+    'type'             => MENU_NORMAL_ITEM,
+  );
+
+  $items['admin/content/delete_content/confirm'] = array(
+    'title'            => 'Confirm deletion of all content',
+    'page callback'    => 'drupal_get_form',
+    'page arguments'   => array('delete_all_content_confirm'),
+    'access arguments' => array('administer nodes'),
+    'type'             => MENU_CALLBACK,
+  );
+
+  $items['admin/content/delete_users'] = array(
+    'title'            => 'Delete all users',
+    'description'      => 'Delete all users on this site. This is useful for development sites, or prior to launching the site. Otherwise it destroys all data on a site.',
+    'page callback'    => 'drupal_get_form',
+    'page arguments'   => array('delete_all_users'),
+    'access arguments' => array('administer users'),
+    'type'             => MENU_NORMAL_ITEM,
+  );
+
+  return $items;
+}
+
+function delete_all_content() {
+  // count how many nodes we have of each type
+  $result = db_query("SELECT type, COUNT(*) AS num FROM {node} GROUP BY type");
+  $count = array();
+  foreach ($result as $data) {
+    $count[$data->type] = $data->num;
+  }
+
+  // Add the types to the form. If there are no eligible types to delete,
+  // we don't need to render the form.
+  $types = array();
+  foreach (node_type_get_types() as $type => $info) {
+    if (array_key_exists($type, $count)) {
+      $types[$type] = $info->name . ' (' . $count[$type] . ')';
+    }
+  }
+  asort($types);
+
+  if (empty($types)) {
+    $form = array();
+    $form['no_content_types'] = array(
+      '#prefix' => '<p>',
+      '#suffix' => '</p>',
+      '#value' => t('There are no content types with content available to delete. You must <a href="@node-add">create some content</a> in order to delete it.', array('@node-add' => url('node/add'))),
+    );
+
+    if (module_exists('devel')) {
+      $form['generate_content_suggestion'] = array(
+        '#prefix' => '<p>',
+        '#suffix' => '</p>',
+        '#value' => t('You can generate content quickly at the <a href="@generate-content-page">generate content page</a>.', array('@generate-content-page' => url('admin/generate/content'))),
+      );
+    }
+    return $form;
+  }
+
+  drupal_add_js(drupal_get_path('module', 'delete_all') . '/delete_all.js');
+  $form = array();
+  $form['all'] = array(
+    '#type' => 'checkbox',
+    '#default_value' => TRUE,
+    '#title' => t('Delete All Content'),
+    '#description' => t('Select to delete all content'),
+    '#attributes' => array('class' => array('delete-all')),
+  );
+
+  $form['reset'] = array(
+    '#type' => 'checkbox',
+    '#default_value' => FALSE,
+    '#title' => t('Reset node count'),
+    '#description' => t('Select to reset the node count'),
+    '#attributes' => array('class' => array('delete-reset')),
+  );
+
+  $form['type-fieldset'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Types'),
+    '#collapsible' => TRUE,
+    '#collapsed' => FALSE,
+    'types' => array(
+      '#type' => 'checkboxes',
+      '#options' => $types,
+      '#description' => t('Select the types of content to delete'),
+    ),
+  );
+  $form['method-fieldset'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Method'),
+    '#collapsible' => TRUE,
+    '#collapsed' => FALSE,
+    'method' => array(
+      '#type' => 'radios',
+      '#title' => t('Method'),
+      '#options' => array('normal' => t('Normal'), 'quick' => t('Quick')),
+      '#default_value' => 'normal',
+      '#description' => t('Normal node delete calls node_delete() on every node in the database.  If you have only a few hundred nodes, this can take a very long time.  Use the quick node delete method to get around this problem.  This method deletes directly from the database, skipping the extra php processing.  The downside is that it can miss related tables that are normally handled by module hook_delete\'s.'),
+    ),
+  );
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Delete'),
+  );
+  $form['#action'] = url('admin/content/delete_content/confirm');
+  return $form;
+}
+
+function delete_all_content_confirm() {
+  $results = $_POST;
+
+  $form = array();
+  $form['method'] = array(
+    '#type' => 'hidden',
+    '#value' => $results['method'],
+  );
+
+  if (!isset($results['all']) ) {
+    $results['all'] = '';
+  }
+
+  if (!isset($results['reset']) ) {
+    $results['reset'] = '';
+  }
+
+  $form['all'] = array(
+    '#type' => 'hidden',
+    '#value' => $results['all'],
+  );
+
+  if (isset($results['all']) && !isset($results['types'])) {
+    if (!empty($results['all']) ) {
+      // Only carry reset value through if delete all nodes is set
+      $form['reset'] = array(
+        '#type' => 'hidden',
+        '#value' => $results['reset'],
+      );
+
+      $form['all_warning'] = array(
+        '#markup' => '<p>' . t('All content in all content types will be deleted. Be sure to have a backup of any important data!') . '</p>'
+      );
+    }
+    if (!empty($results['reset']) ) {
+      if (empty($results['all']) ) {
+        $form['all_reset'] = array(
+          '#markup' => '<p>' . t('Sorry, we can\'t reset the counters because you are not deleting all nodes.') . '</p>'
+        );
+      }
+      else {
+        $form['all_reset'] = array(
+          '#markup' => '<p>' . t('Node, revision and comment counts will be reset.') . '</p>'
+        );
+      }
+    }
+  }
+
+  if (isset($results['types']) ) {
+    if (is_array($results['types'])) {
+      foreach ($results['types'] as $key_type => $type) {
+        $form['type_' . $key_type] = array(
+          '#type' => 'hidden',
+          '#value' => $type,
+        );
+        $info = node_type_get_types('type', $type);
+        $info = $info[$type];
+
+        $form[$type . '_warning'] = array(
+          '#markup' => '<p>' . t('All content in the %type content type will be deleted. Be sure to have a backup of any important data!', array('%type' => $info->name)) . '</p>'
+        );
+      }
+    }
+  }
+
+  $keys = array_filter(array_keys($results), "_delete_all_type_keys");
+
+  foreach ($keys as $key) {
+    $form[$key] = array(
+      '#type' => 'hidden',
+      '#value' => $results[$key],
+    );
+  }
+
+  return confirm_form($form, t('Are you sure you wish to delete content?'), 'admin/content/delete_content', NULL, t('Delete all content now'), t('Cancel delete of all content'));
+}
+
+function delete_all_content_confirm_submit($form, &$form_state) {
+  $types = array();
+  $keys = array_filter(array_keys($form_state['values']), "_delete_all_type_keys");
+  foreach ($keys as $key) {
+    $types[] = $form_state['values'][$key];
+  }
+  switch ($form_state['values']['method']) {
+    case 'normal':
+      $count = _delete_all_normal($form_state['values']['all'], $types);
+      break;
+
+    case 'quick':
+      // the quick method doesn't support an all option,
+      // so just get all the content types and delete all of those
+      if ($form_state['values']['all']) {
+        $result = db_query("SELECT DISTINCT type FROM {node}");
+        foreach ($result as $data) {
+          // while ($data = db_fetch_object($result)) {
+          $types[] = $type;
+        }
+      }
+      $count = _delete_all_quick($types);
+      break;
+  }
+
+  if (!$types) {
+    // Delete the URL aliases
+    db_query("DELETE FROM {url_alias} WHERE source LIKE 'node/%%'");
+
+    drupal_set_message(t('All nodes, comments and URL aliases have been deleted. Number of nodes deleted: !count.', array('!count' => check_plain($count))));
+
+    if ($form_state['values']['reset']) {
+      db_query("ALTER TABLE node AUTO_INCREMENT=1");
+      db_query("ALTER TABLE node_revision AUTO_INCREMENT=1");
+      if (module_exists('comment')) {
+        db_query("ALTER TABLE comment AUTO_INCREMENT=1");
+        drupal_set_message(t('All node, revision and comment counts have been reset.'));
+      }
+      else {
+        drupal_set_message(t('All node and revision counts have been reset.'));
+      }
+    }
+  }
+  else {
+    drupal_set_message(t('Nodes and comments of type @type have been deleted. Number of nodes deleted: !count.', array('!count' => check_plain($count), '@type' => implode(', ', $types))));
+  }
+
+  drupal_goto('admin');
+}
+
+function _delete_all_normal($all, $types) {
+  $results = array();
+  $deleted = 0;
+  if (is_array($types) && count($types) > 0) {
+    foreach ($types as $type) {
+      $results[] = db_query(
+        'SELECT nid FROM {node} WHERE type = :type',
+        array(':type' => $type)
+      );
+    }
+  }
+  else {
+    $results[] = db_query(
+      'SELECT nid FROM {node}'
+    );
+  }
+  foreach ($results as $result) {
+    if ($result) {
+      foreach ($result as $data) {
+        set_time_limit(30);
+        node_delete($data->nid);
+        $deleted ++;
+      }
+    }
+  }
+  return $deleted;
+}
+
+function _delete_all_quick($types) {
+  $deleted = 0;
+  foreach ($types as $type) {
+    // keep this alive
+    set_time_limit(240);
+
+    // determine how many items will be deleted
+    $count = db_result(db_query("SELECT COUNT(*) FROM {node} WHERE type = '%s'", $type));
+    if ($count) { // should always be positive
+      /**
+       * build a list of tables that need to be deleted from
+       *
+       * The tables array is of the format table_name => array('col1', 'col2', ...)
+       * where "col1, col2" are using "nid, vid", but could simply be "nid".
+       */
+
+      $nid_vid = array('nid', 'vid');
+      $nid = array('nid');
+      $tables = array('node_revisions' => $nid_vid, 'comments' => $nid);
+      $tables[_content_tablename($type, CONTENT_DB_STORAGE_PER_CONTENT_TYPE)] = $nid_vid;
+      $content = content_types($type);
+      if (count($content['fields'])) {
+        foreach ($content['fields'] as $field) {
+          $field_info = content_database_info($field);
+          $tables[$field_info['table']] = $nid_vid;
+        }
+      }
+
+      // find all other tables that might be related
+      switch ($GLOBALS['db_type']) {
+        case 'mysql':
+        case 'mysqli':
+          $result_tables = db_query("SHOW TABLES");
+          while ($data = db_fetch_array($result_tables)) {
+            $table = array_pop($data);
+            if (isset($tables[$table]) || substr($table, 0, 8) == 'content_') {
+              continue;
+            }
+            $result_cols = db_query("SHOW COLUMNS FROM %s", $table);
+            $cols = array();
+            while ($data = db_fetch_array($result_cols)) {
+              $cols[$data['Field']] = $data;
+            }
+            if (isset($cols['nid'])) {
+              $tables[$table] = isset($cols['vid']) ? $nid_vid : $nid;
+            }
+          }
+          break;
+
+        case 'pgsql':
+          // @TODO: inspect the database and look for nid fields
+          break;
+      }
+
+      // @todo: update all node related nid references
+      // delete from all of the content tables in one sql statement
+      $sql = array('delete' => array(), 'from' => array(), 'where' => array());
+      $index = 0;
+      foreach ($tables as $table => $cols) {
+        $table = '{' . $table . '}';
+        $sql['cols'][] = "t$index.*";
+        // build the ON clause
+        $on = array();
+        foreach ($cols as $col) {
+          $on[] = "t$index.$col = n.$col";
+        }
+        // now that we have the ON clause, build the join clause
+        $sql['join'][] = " LEFT JOIN $table t$index ON " . implode(' AND ', $on);
+        $index ++;
+      }
+      $delete_sql = "DELETE n.*, " . implode(', ', $sql['cols']) . " FROM {node} n " . implode(' ', $sql['join']);
+      db_query($delete_sql . " WHERE n.type = '%s'", $type);
+
+      $deleted += $count;
+    }
+  }
+  return $deleted;
+}
+
+function delete_all_users() {
+  $form = array();
+  return confirm_form(
+    $form,
+    t('Are you sure you want to delete all users (uid > 1)?'),
+    'admin',
+    t('This will delete all users except for User 1 (the administrative user). This action cannot be undone'),
+    t('Delete'),
+    t('Cancel'),
+    'delete_all_content');
+}
+
+function delete_all_users_submit($form, &$form_state) {
+  ini_set('max_execution_time', DELETE_ALL_MAX_EXECUTION);
+  $count = delete_all_users_delete();
+  drupal_set_message(t('All users have been deleted. Number of users deleted: !count.', array('!count' => check_plain($count))));
+  drupal_goto('admin');
+}
+
+function delete_all_users_delete($roles = NULL) {
+  $count = 0;
+  if (!$roles) {
+    $result = db_query('SELECT uid FROM {users} WHERE uid > 1');
+    foreach ($result as $data) {
+      user_delete($data->uid);
+      $count++;
+    }
+    // Delete the URL aliases
+    db_query("DELETE FROM {url_alias} WHERE source LIKE 'user/%%'");
+  }
+  else {
+    if (is_array($roles)) {
+      $result = array();
+      foreach ($roles as $role) {
+        $rid = db_select('role', 'r')->fields('r', array('rid'))->condition('name', $role, '=')->execute()->fetchField();
+        $result = array_merge($result, db_select('users_roles', 'ur')->fields('ur', array('uid'))->condition('rid', $rid, '=')->execute()->fetchCol('uid'));
+      }
+    }
+    else {
+      $rid = db_select('role', 'r')->fields('r', array('rid'))->condition('name', $roles, '=')->execute()->fetchField();
+      $result = db_select('users_roles', 'ur')->fields('ur', array('uid'))->condition('rid', $rid, '=')->execute()->fetchCol('uid');
+    }
+    foreach ($result as $data) {
+      user_delete($data);
+      $count++;
+    }
+    // @TODO Delete individual aliases
+  }
+  return $count;
+}
+
+/**
+ * Private callback to determine if a variable starts with 'type_'.
+ * @param $var
+ *   The string to test against.
+ * @return bool
+ *  TRUE if $var begins with 'type_'
+ */
+function _delete_all_type_keys($var) {
+  return (strpos($var, 'type_') === 0 ? TRUE : FALSE);
+}

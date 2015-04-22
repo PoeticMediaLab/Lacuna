@@ -1,0 +1,373 @@
+<?php
+
+/**
+ * @file
+ * Provides a stream wrapper and formatters appropriate for accessing and
+ * displaying oEmbed resources.
+ */
+
+// Load all oEmbed file formatters.
+require_once dirname(__FILE__) . '/includes/media_oembed.formatters.inc';
+
+/**
+ * Implements hook_media_internet_providers();
+ */
+function media_oembed_media_internet_providers() {
+  return array(
+    'MediaInternetOEmbedHandler' => array(
+      'title' => t('oEmbed'),
+    ),
+  );
+}
+
+/**
+ * Implements hook_stream_wrappers().
+ */
+function media_oembed_stream_wrappers() {
+  return array(
+    'oembed' => array(
+      'name' => t('oEmbed resources'),
+      'class' => 'MediaOEmbedStreamWrapper',
+      'description' => t('Remote resources hosted on any website that supports the oEmbed API.'),
+      'type' => STREAM_WRAPPERS_READ_VISIBLE,
+    ),
+  );
+}
+
+/**
+ * Implements hook_media_parse().
+ *
+ * @todo This hook should be deprecated. Refactor Media module to not call it
+ *   any more, since media_internet should be able to automatically route to the
+ *   appropriate handler.
+ */
+function media_oembed_media_parse($embed_code) {
+  $handler = new MediaInternetOEmbedHandler($embed_code);
+  return $handler->parse($embed_code);
+}
+
+/**
+ * Implements hook_file_mimetype_mapping_alter().
+ */
+function media_oembed_file_mimetype_mapping_alter(&$mapping) {
+  $mapping['mimetypes'][] = 'audio/oembed';
+  $mapping['mimetypes'][] = 'image/oembed';
+  $mapping['mimetypes'][] = 'text/oembed';
+  $mapping['mimetypes'][] = 'video/oembed';
+}
+
+/**
+ * Implements hook_hook_info().
+ */
+function media_oembed_hook_info() {
+  $hooks = array(
+    'media_oembed_request_alter',
+    'media_oembed_response_alter',
+  );
+
+  return array_fill_keys($hooks, array('group' => 'media_oembed'));
+}
+
+/**
+ * Implements hook_permission().
+ */
+function media_oembed_permission() {
+  return array(
+    'administer media oembed' => array(
+      'title' => t('Administer Media: oEmbed'),
+      'description' => t('Configure oEmbed providers and settings.'),
+    ),
+  );
+}
+
+/**
+ * Implements hook_menu().
+ */
+function media_oembed_menu() {
+  $items['admin/config/media/media-oembed/settings'] = array(
+    'title' => 'Settings',
+    'description' => 'Settings for retrieving and processing oEmbed resources.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('media_oembed_settings'),
+    'file' => 'media_oembed.admin.inc',
+    'access arguments' => array('administer site configuration'),
+    'type' => MENU_LOCAL_TASK,
+  );
+
+  return $items;
+}
+
+/**
+ * Implements hook_theme().
+ */
+function media_oembed_theme($existing, $type, $theme, $path) {
+  return array(
+    'media_oembed' => array(
+      'variables' => array('uri' => NULL, 'options' => array()),
+      'file' => 'media_oembed.theme.inc',
+      'path' => $path . '/themes',
+      'template' => 'media-oembed',
+    ),
+  );
+}
+
+/**
+ * Implements hook_flush_caches().
+ */
+function media_oembed_flush_caches() {
+  return array('cache_media_oembed');
+}
+
+/**
+ * Returns the provider for a url.
+ *
+ * @param string $url
+ *  The url to get the provider for.
+ * @return mixed
+ *  A valid callback or FALSE
+ */
+function media_oembed_get_provider($url, &$matches, $role = 'consumer') {
+  ctools_include('plugins');
+  $plugins = ctools_get_plugins('media_oembed', 'providers');
+  uasort($plugins, 'ctools_plugin_sort');
+
+  // This function may need check twice if a provider matches the URL. The first check
+  // is to determine if the plugin's callback can handle the URL. The second check
+  // returns the name of the child plugin that can fulfill the request.
+  foreach ($plugins as $plugin) {
+    // A plugin with no schemes is effectively disabled.
+    if ($plugin[$role] && !empty($plugin['scheme'])) {
+      // Plugins will only be checked if they are enabled for the role.
+      if (preg_match($plugin['scheme'], $url, $matches)) {
+        // A scheme map is used to match a URL to a specific child plugin.
+        if (!empty($plugin['scheme map'])) {
+          foreach ($plugin['scheme map'] as $id => $scheme) {
+            if (preg_match($scheme, $url, $matches)) {
+              // This forces the 'get child' callback to the loaded.
+              ctools_plugin_get_function($plugin, 'get child');
+              $plugin = ctools_get_plugins('media_oembed', 'providers', $id);
+              break;
+            }
+          }
+        }
+
+        return $plugin;
+      }
+    }
+  }
+
+  return FALSE;
+}
+
+/**
+ * Reset the registered provider caches.
+ */
+function media_oembed_providers_reset() {
+  ctools_include('plugins');
+  ctools_get_plugins_reset();
+
+  $info = ctools_plugin_get_info('media_oembed', 'providers');
+
+  cache_clear_all('plugins:media_oembed:providers', $info['cache table']);
+}
+
+/**
+ * Fetch data for an embeddable URL.
+ *
+ * @param string $url
+ *   An external URL for the content to embed.
+ * @param array $parameters
+ *   An associative array of request parameters, with the following keys:
+ *   - 'maxwidth'
+ *       The maximum width of the embed, in pixels.
+ *   - 'maxheight'
+ *       The maximum height of the embed, in pixels.
+ *   Other keys may be supported by some providers (twitter, youtube, wordpress).
+ * @return
+ *   False or an object representing the embeddable data of the URL.
+ */
+function media_oembed_get_data($url, $parameters = array()) {
+  $matches = array();
+  $parameters = array_filter($parameters);
+
+  if ($plugin = media_oembed_get_provider($url, $matches)) {
+    return media_oembed_oembed_fetch($plugin, $url, $matches, $parameters);
+  }
+
+  return FALSE;
+}
+
+/**
+ * oEmbed fetcher and parser.
+ *
+ * This handles fetching from remote providers and local registered callbacks.
+ * It does not cache the responses because they are cached when rendered.
+ */
+function media_oembed_oembed_fetch($plugin, $url, $matches, $parameters = array()) {
+  $embed = FALSE;
+
+  // Normalize the parameters and attributes for better cache performance.
+  ksort($parameters);
+  $parameters = array_filter($parameters);
+
+  if ($plugin['cache']) {
+    $cache_keys = array();
+
+    // Remove trailing slash to normalize URLs.
+    $cache_keys[] = hash('sha256', substr($url, -1) == '/' ? substr($url, 0, -1) : $url);
+
+    // Hash and serialize request parameters and display options.
+    if (!empty($parameters)) {
+      $cache_keys[] = hash('sha256', serialize($parameters));
+    }
+
+    $cache_key = implode(':', $cache_keys);
+    $cache = cache_get($cache_key, 'cache_media_oembed');
+
+    // Cache hit.
+    if ($cache && isset($cache->data)) {
+      return $cache->data;
+    }
+  }
+
+  // Cache miss.
+  drupal_alter('media_oembed_request', $parameters, $plugin, $url);
+
+  // Drupal oEmbed provider uses function callbacks for internal requests.
+  $function = ctools_plugin_get_function($plugin, 'callback');
+
+  if ($function) {
+    $embed = call_user_func($function, $plugin, $url, $matches, $parameters);
+  }
+
+  // Decorate the oEmbed response object with additional properties that are
+  // handy when theming the output.
+  if ($embed) {
+    $embed['original_url'] = $url;
+    $embed['provider'] = $plugin['name'];
+
+    drupal_alter('media_oembed_response', $embed);
+  }
+
+  if ($plugin['cache']) {
+    // If expire is not set, use default value and adjust for request time.
+    $lifetime = variable_get('media_oembed_cache_lifetime', 3600);
+
+    // Recalculate cache expire time based on response.
+    if ($embed && $lifetime != CACHE_PERMANENT && isset($embed['cache_age'])) {
+      $lifetime = max($lifetime, intval($embed['cache_age']));
+    }
+    else if (!$embed && $lifetime == CACHE_PERMANENT) {
+      $lifetime = 3600;
+    }
+
+    if ($embed && $lifetime == CACHE_PERMANENT) {
+      $expire = $lifetime;
+    }
+    else {
+      $expire = min($lifetime + REQUEST_TIME, 2147483647);
+    }
+
+    // Twitter returns an unreasonably high cache_age of 31536000000 seconds,
+    // which is longer than the expire column in Drupal cache table supports.
+    cache_set($cache_key, $embed, 'cache_media_oembed', $expire);
+  }
+
+  return $embed;
+}
+
+/**
+ * Implements hook_ctools_plugin_type().
+ */
+function media_oembed_ctools_plugin_type() {
+  $plugins['providers'] = array(
+    'cache' => TRUE,
+    'child plugins' => TRUE,
+    'process' => array(
+      'file' => 'media_oembed.media_oembed.inc',
+      'path' => drupal_get_path('module', 'media_oembed'),
+      'function' => 'media_oembed_provider_process',
+    ),
+    'defaults' => array(
+      'capture subpatterns' => FALSE,
+      'cache' => TRUE,
+      'consumer' => FALSE,
+      'provider' => FALSE,
+    ),
+  );
+
+  return $plugins;
+}
+
+/**
+ * Implement hook_ctools_plugin_directory().
+ */
+function media_oembed_ctools_plugin_directory($module, $plugin) {
+  if ($module == 'ctools' && $plugin == 'export_ui') {
+    return 'plugins/' . $plugin;
+  }
+  if ($module == 'media_oembed' && $plugin == 'providers') {
+    return 'plugins/' . $plugin;
+  }
+}
+
+/**
+ * Implements hook_ctools_plugin_api().
+ */
+function media_oembed_ctools_plugin_api($module, $api) {
+  if ($module == 'media_oembed' && $api == 'media_oembed_provider') {
+    return array('version' => 1);
+  }
+  if ($module == 'file_entity' && $api == 'file_default_displays') {
+    return array('version' => 1);
+  }
+}
+
+/**
+ * Implements hook_file_metadata_info().
+ */
+function media_oembed_file_metadata_info() {
+  $info['media_oembed_local_thumbnail_path'] = array(
+    'label' => t('Media: oEmbed local thumbnail path'),
+    'type' => 'string',
+  );
+
+  return $info;
+}
+
+/**
+ * Implements hook_file_operations().
+ */
+function media_oembed_file_operations() {
+  $operations = array(
+    'media_oembed_refresh' => array(
+      'label' => t('Refresh oEmbed information from source'),
+      'callback' => 'media_oembed_cache_clear',
+    ),
+  );
+
+  return $operations;
+}
+
+/**
+ * Clear the cached oEmbed content for the selected files.
+ */
+function media_oembed_cache_clear($fids) {
+  $fids = array_keys($fids);
+
+  $query = new EntityFieldQuery();
+  $results = $query
+    ->entityCondition('entity_type', 'file')
+    ->propertyCondition('uri', 'oembed:', 'STARTS_WITH')
+    ->propertyCondition('fid', $fids)
+    ->execute();
+
+  $files = file_load_multiple(array_keys($results['file']));
+
+  foreach ($files as $file) {
+    $wrapper = file_stream_wrapper_get_instance_by_uri($file->uri);
+    $url = $wrapper->getExternalUrl();
+    $cid = hash('sha256', $url);
+    cache_clear_all($cid, 'cache_media_oembed', TRUE);
+  }
+}

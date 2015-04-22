@@ -1,0 +1,56 @@
+<?php
+
+/**
+ * @file
+ * AJAX Examples install file schema for ajax_example_form_node_form_alter()
+ */
+
+/**
+ * Implements hook_schema().
+ */
+function ajax_example_schema() {
+  $schema['ajax_example_node_form_alter'] = array(
+    'description' => 'Stores example settings for nodes.',
+    'fields' => array(
+      'nid' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'The {node}.nid to store settings.',
+      ),
+      'example_1' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'Node Form Example 1 checkbox',
+      ),
+      'example_2' => array(
+        'type' => 'varchar',
+        'length' => 256,
+        'not null' => FALSE,
+        'default' => '',
+        'description' => 'Node Form Example 2 textfield',
+      ),
+    ),
+    'primary key' => array('nid'),
+    'foreign keys' => array(
+      'dnv_node' => array(
+        'table' => 'node',
+        'columns' => array('nid' => 'nid'),
+      ),
+    ),
+  );
+  return $schema;
+}
+
+/**
+ * Add the new ajax_example_node_form_alter table.
+ */
+function ajax_example_update_7100() {
+  if (!db_table_exists('ajax_example_node_form_alter')) {
+    $schema = ajax_example_schema();
+    db_create_table('ajax_example_node_form_alter', $schema['ajax_example_node_form_alter']);
+    return st('Created table ajax_example_node_form_alter');
+  }
+}

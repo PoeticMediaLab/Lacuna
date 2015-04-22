@@ -1,0 +1,592 @@
+<?php
+
+/**
+ * @file
+ * Test organic groups vocabulary module.
+ */
+
+class OgVocabMenuAccessTestCase extends DrupalWebTestCase {
+
+  public static function getInfo() {
+    return array(
+      'name' => 'OG vocabulary access',
+      'description' => 'Check access to vocabulary related menu items.',
+      'group' => 'Organic groups vocabulary',
+    );
+  }
+
+  function setUp() {
+    parent::setUp('og_vocab', 'og_ui');
+
+    // Add OG group field sto article node.
+    og_create_field(OG_GROUP_FIELD, 'node', 'article');
+  }
+
+  /**
+   * Test access to vocabulary.
+   *
+   * - User not a member of a group.
+   * - User member of group but no permissions
+   * - User member of group with correct permissions.
+   * - User is admin in group.
+   * - User has 'administer organic groups' permissions.
+   */
+  function testAccess() {
+    $perm = 'administer group';
+
+    // Create two users.
+    $user1 = $this->drupalCreateUser();
+    $user2 = $this->drupalCreateUser();
+
+    // Create group owned by user1.
+    $settings = array();
+    $settings['type'] = 'article';
+    $settings[OG_GROUP_FIELD][LANGUAGE_NONE][0]['value'] = 1;
+    $settings['uid'] = $user1->uid;
+    $node = $this->drupalCreateNode($settings);
+
+    // Create a terms vocabulary.
+    $vocabulary = new stdClass();
+    $vocabulary->name = 'Terms';
+    $vocabulary->machine_name = 'terms';
+    taxonomy_vocabulary_save($vocabulary);
+
+    // Create a term in the vocabulary.
+    $term = new stdClass();
+    $term->name = "term 1";
+    $term->vid = $vocabulary->vid;
+    taxonomy_term_save($term);
+
+    // Relate vocabulary to group.
+    og_vocab_relation_save($vocabulary->vid, 'node', $node->nid);
+
+    $this->assertTrue(og_user_access('node', $node->nid, 'administer taxonomy', $user1), 'User1 has access to the vocabulary.');
+    $this->assertFalse(og_user_access('node', $node->nid, 'administer taxonomy', $user2), 'User2 does not have access to the vocabulary.');
+
+    $paths = array(
+      'taxonomy',
+      'taxonomy/add',
+      'taxonomy/terms',
+      'taxonomy/terms/list',
+      'taxonomy/terms/edit',
+      'taxonomy/terms/add',
+    );
+
+    $this->drupalLogin($user1);
+    foreach ($paths as $path) {
+      $path = 'group/node/1/admin/' . $path;
+      $this->drupalGet($path);
+      $this->assertResponse(200, format_string('User1 can access @path', array('@path' => $path)));
+    }
+
+    $path = 'taxonomy/term/1/edit';
+    $this->drupalGet($path);
+    $this->assertResponse(200, format_string('User1 can access @path', array('@path' => $path)));
+
+    $this->drupalLogin($user2);
+    foreach ($paths as $path) {
+      $path = 'group/node/1/admin/' . $path;
+      $this->drupalGet($path);
+      $this->assertResponse(403, format_string('User2 can not access @path', array('@path' => $path)));
+    }
+
+    $path = 'taxonomy/term/1/edit';
+    $this->drupalGet($path);
+    $this->assertResponse(403, format_string('User2 can not access @path', array('@path' => $path)));
+  }
+}
+
+
+class OgVocabComplexWidgetTestCase extends DrupalWebTestCase {
+
+  public static function getInfo() {
+    return array(
+      'name' => 'OG vocabulary widget',
+      'description' => 'Test the comlpex widget behavior.',
+      'group' => 'Organic groups vocabulary',
+    );
+  }
+
+  function setUp() {
+    parent::setUp('og_vocab');
+
+    // Add OG group field sto article node.
+    og_create_field(OG_GROUP_FIELD, 'node', 'article');
+
+    $this->drupalCreateContentType(array('type' => 'post'));
+    og_create_field(OG_AUDIENCE_FIELD, 'node', 'post');
+    og_create_field(OG_VOCAB_FIELD, 'node', 'post');
+
+    // Create two users.
+    $user1 = $this->drupalCreateUser(array('access content', 'create post content'));
+    $user2 = $this->drupalCreateUser();
+
+    // Array key with the node ID (to be created) and the user ID as the
+    // value.
+    $info = array(
+      // Groups owned by user1.
+      1 => $user1->uid,
+      2 => $user1->uid,
+      // Group owned by user2.
+      3 => $user2->uid,
+    );
+
+    $settings = array();
+    $settings['type'] = 'article';
+    $settings[OG_GROUP_FIELD][LANGUAGE_NONE][0]['value'] = 1;
+    foreach ($info as $uid) {
+      $settings['uid'] = $uid;
+      $node = $this->drupalCreateNode($settings);
+    }
+
+    // Array keyed by a serial ID and the value is array with node ID of
+    // the group and the settings to pass to og_vocab_create_og_vocab().
+    $info = array(
+      1 => array('nid' => 1, 'settings' => array('required' => TRUE)),
+      2 => array('nid' => 1, 'settings' => array('cardinality' => 1)),
+      3 => array('nid' => 2, 'settings' => array('widget_type' => 'entityreference_autocomplete')),
+      4 => array('nid' => 3, 'settings' => array()),
+    );
+
+    $og_vocabs = array();
+    foreach ($info as $id => $value) {
+      // Create a terms vocabulary and relate them to the groups.
+      $vocabulary = new stdClass();
+      $vocabulary->name = "Vocabulary $id";
+      $vocabulary->machine_name = "vocabulary_$id";
+      taxonomy_vocabulary_save($vocabulary);
+
+      // Relate vocabulary to group.
+      og_vocab_relation_save($vocabulary->vid, 'node', $value['nid']);
+
+      // Create OG-vocab entity.
+      $og_vocab = og_vocab_create_og_vocab($vocabulary->vid, 'node', 'post', OG_VOCAB_FIELD, $value['settings']);
+      $og_vocab->save();
+      $og_vocabs[$vocabulary->vid] = $og_vocab;
+
+      // Create terms in the vocabulary.
+      for ($i = 1; $i < 3; ++$i) {
+        $term = new stdClass();
+        $term->name = "Vocab $vocabulary->vid term $i";
+        $term->vid = $vocabulary->vid;
+        taxonomy_term_save($term);
+      }
+      $this->drupalLogin($user1);
+      $this->user1 = $user1;
+    }
+  }
+
+  /**
+   * Test widget.
+   */
+  function testWidget() {
+    // Assert user can see widget with 3 vocabularies.
+    $this->drupalGet('node/add/post');
+    $names = array(
+      'og_vocabulary[und][0][2][]',
+      'og_vocabulary[und][0][3]',
+      'og_vocabulary[und][0][4][0][target_id]',
+    );
+    foreach ($names as $name) {
+      $this->assertField($name, 'Expected vocabulary sub-widget found.');
+    }
+
+    // Assert sub-widget is required and multiple.
+
+    // Assert sub-widget is not-required and not-multiple.
+
+    // Assert sub-widget is autocomplete.
+  }
+
+  /**
+   * Test Showing widget by context.
+   */
+  function testContext() {
+    module_enable(array('og_context', 'og_vocab_test'));
+
+    // Subscribe user to user2's group.
+    og_group('node', 3, array('entity' => $this->user1));
+
+    $field = field_info_field(OG_VOCAB_FIELD);
+    $field['settings']['handler_settings']['behaviors']['og_vocab']['use_context'] = 'force';
+    field_update_field($field);
+
+    $this->drupalGet('node/add/post');
+    $names = array(
+      'og_vocabulary[und][0][2][]' => FALSE,
+      'og_vocabulary[und][0][3]' => FALSE,
+      'og_vocabulary[und][0][4][0][target_id]' => FALSE,
+      // Belongs to another group.
+      'og_vocabulary[und][0][5][]' => FALSE,
+    );
+    $this->assertSubWidgets($names);
+
+    // Set og-context, by passing it in the URL, and the test-module
+    // will make sure to set the context.
+    variable_set('og_vocab_test_context_nid', 3);
+    $this->drupalGet('node/add/post');
+    $names = array(
+      'og_vocabulary[und][0][2][]' => FALSE,
+      'og_vocabulary[und][0][3]' => FALSE,
+      'og_vocabulary[und][0][4][0][target_id]' => FALSE,
+      // Belongs to another group.
+      'og_vocabulary[und][0][5][]' => TRUE,
+    );
+    $this->assertSubWidgets($names);
+
+    $field['settings']['handler_settings']['behaviors']['og_vocab']['use_context'] = 'yes';
+    field_update_field($field);
+    variable_set('og_vocab_test_context_nid', 3);
+    $this->drupalGet('node/add/post');
+    $names = array(
+      'og_vocabulary[und][0][2][]' => FALSE,
+      'og_vocabulary[und][0][3]' => FALSE,
+      'og_vocabulary[und][0][4][0][target_id]' => FALSE,
+      // Belongs to another group.
+      'og_vocabulary[und][0][5][]' => TRUE,
+    );
+    $this->assertSubWidgets($names);
+
+    variable_set('og_vocab_test_context_nid', FALSE);
+    $this->drupalGet('node/add/post');
+    $names = array(
+      'og_vocabulary[und][0][2][]' => TRUE,
+      'og_vocabulary[und][0][3]' => TRUE,
+      'og_vocabulary[und][0][4][0][target_id]' => TRUE,
+      // Belongs to another group.
+      'og_vocabulary[und][0][5][]' => TRUE,
+    );
+    $this->assertSubWidgets($names);
+
+    $field['settings']['handler_settings']['behaviors']['og_vocab']['use_context'] = 'no';
+    field_update_field($field);
+    variable_set('og_vocab_test_context_nid', 3);
+    $this->drupalGet('node/add/post');
+
+    $names = array(
+      'og_vocabulary[und][0][2][]' => TRUE,
+      'og_vocabulary[und][0][3]' => TRUE,
+      'og_vocabulary[und][0][4][0][target_id]' => TRUE,
+      // Belongs to another group.
+      'og_vocabulary[und][0][5][]' => TRUE,
+    );
+    $this->assertSubWidgets($names);
+  }
+
+  /**
+   * Helper function to assert sub-widgets appear.
+   */
+  function assertSubWidgets($names) {
+    foreach ($names as $name => $value) {
+      $method = $value ? 'assertField' : 'assertNoField';
+      $message = $value ? 'Expected vocabulary sub-widget found.' : 'Vocabulary sub-widget not found as expected.';
+      $this->{$method}($name, $message);
+    }
+  }
+}
+
+
+
+/**
+ * Test the revocation of group roles.
+ */
+class OgVocabMigrateTestCase extends UpgradePathTestCase {
+
+  public static function getInfo() {
+    return array(
+      'name' => 'Migrate from 6.x to 7.x',
+      'description' => 'Test the upgrade from Drupal 6.x to to 7.x.',
+      'group' => 'Organic groups vocabulary',
+      'dependencies' => array('migrate'),
+    );
+  }
+
+  function setUp() {
+    // Path to the database dump files.
+    $this->databaseDumpFiles = array(
+      drupal_get_path('module', 'og_vocab') . '/tests/og-vocab-6.database.php',
+    );
+    parent::setUp();
+  }
+
+  function testUpgrade() {
+    $this->assertTrue($this->performUpgrade(), 'The upgrade was completed successfully.');
+
+    // spl_autoload_register() wasn't called, so we do it here, to allow
+    // classes to be auto-loaded.
+    spl_autoload_register('drupal_autoload_class');
+    spl_autoload_register('drupal_autoload_interface');
+
+    module_enable(array('og_vocab', 'migrate'));
+
+    // FIXME: migrate_flush_caches() crashes, so we register manually.
+    foreach (node_type_get_names() as $bundle => $value) {
+      // Register a dynamic migration.
+      $machine_name = 'OgVocabMigrate' . ucfirst($bundle);
+      Migration::registerMigration('OgVocabMigrate', $machine_name, array('bundle' => $bundle));
+
+      $migration = Migration::getInstance($machine_name, 'OgVocabMigrate', array('bundle' => $bundle));
+      $result = $migration->processImport();
+      $this->assertEqual($result, Migration::RESULT_COMPLETED, "$machine_name migration executed.");
+    }
+
+    // Assert field OG-vocab exists on class and departments.
+    $this->assertTrue(field_info_instance('node', OG_VOCAB_FIELD, 'class') && field_info_instance('node', OG_VOCAB_FIELD, 'department'), 'OG vocabulary found on node-types.');
+
+
+    // Assert OG-vocabs were created.
+
+    // Multiple.
+    $og_vocab = entity_load_single('og_vocab', 1);
+    $settings = array(
+      'required' => FALSE,
+      'widget_type' => 'options_select',
+      'cardinality' => FIELD_CARDINALITY_UNLIMITED,
+    );
+    $this->assertEqual($og_vocab->settings, $settings, 'Multiple converted correctly.');
+
+    // Required.
+    $og_vocab = entity_load_single('og_vocab', 3);
+    $settings = array(
+      'required' => TRUE,
+      'widget_type' => 'options_select',
+      'cardinality' => 1,
+    );
+    $this->assertEqual($og_vocab->settings, $settings, 'Required converted correctly.');
+
+    // Tags.
+    $og_vocab = entity_load_single('og_vocab', 5);
+    $settings = array(
+      'required' => FALSE,
+      'widget_type' => 'entityreference_autocomplete_tags',
+      'cardinality' => FIELD_CARDINALITY_UNLIMITED,
+    );
+    $this->assertEqual($og_vocab->settings, $settings, 'Tags converted correctly.');
+
+    // there are 6 vocabularies, but we expect only 5 OG-vocabs, as one
+    // of the vocabularies is not assigned to any content-type.
+    $this->assertEqual(count(entity_load('og_vocab')), 5, 'All expected OG vocabs were created.');
+  }
+}
+
+class OgVocabApiTestCase extends DrupalWebTestCase {
+
+  public static function getInfo() {
+    return array(
+      'name' => 'OG vocabulary API',
+      'description' => 'Check various API functions.',
+      'group' => 'Organic groups vocabulary',
+    );
+  }
+
+
+  function setUp() {
+    parent::setUp('og_vocab');
+
+    // Create a group.
+    $type = $this->drupalCreateContentType();
+    og_create_field(OG_GROUP_FIELD, 'node', $type->type);
+
+    $this->user1 = $this->drupalCreateUser();
+    $this->user2 = $this->drupalCreateUser();
+
+    $settings = array();
+    $settings['type'] = $type->type;
+    $settings['uid'] = $this->user1->uid;
+    $settings[OG_GROUP_FIELD][LANGUAGE_NONE][0]['value'] = 1;
+    $node = $this->drupalCreateNode($settings);
+    $this->gid = $node->nid;
+
+    // Create group-content type.
+    $type = $this->drupalCreateContentType();
+    $this->type = $type;
+
+    // Create a terms vocabulary.
+    $vocabulary = new stdClass();
+    $vocabulary->name = 'Terms';
+    $vocabulary->machine_name = 'terms';
+    taxonomy_vocabulary_save($vocabulary);
+    $this->vid = $vocabulary->vid;
+
+    // Relate vocabulary to group.
+    og_vocab_relation_save($vocabulary->vid, 'node', $node->nid);
+  }
+
+  /**
+   * Test creating of OG vocabuylary field when OG-vocab is saved.
+   */
+  function testAutoCreateField() {
+    $type = $this->type;
+    $this->assertFalse(field_info_instance('node', OG_VOCAB_FIELD, $type->type), 'OG-vocabulary does not exist.');
+
+    // Create a new OG-vocab.
+    $og_vocab = og_vocab_create_og_vocab($this->vid, 'node', $type->type);
+    $og_vocab->save();
+    $this->assertTrue(field_info_instance('node', OG_VOCAB_FIELD, $type->type), 'OG-vocabulary was created.');
+  }
+
+  /**
+   * Test the entity_label() and entity_uri() callbacks.
+   */
+  function testLabelUrlCallbacks() {
+    global $user;
+    $admin1 = $this->drupalCreateUser(array('administer taxonomy'));
+
+    $type = $this->type;
+    $vocab = taxonomy_vocabulary_load($this->vid);
+    $group = node_load($this->gid);
+
+    $og_vocab = og_vocab_create_og_vocab($this->vid, 'node', $type->type);
+    $og_vocab->save();
+
+    $this->drupalLogin($admin1);
+    $label = entity_label('og_vocab', $og_vocab);
+
+    $params = array(
+      '@id' => $og_vocab->id,
+      '@bundle' => $type->name,
+      '@name' => $vocab->name,
+    );
+    $expected_label =  t('@bundle bundle in @name vocabulary (OG Vocabulary ID @id)', $params);
+    $this->assertEqual($label, $expected_label, 'Correct label for admin user.');
+
+    $uri = entity_uri('og_vocab', $og_vocab);
+    $this->assertEqual($uri['path'], 'admin/structure/taxonomy/terms/edit', 'Correct URL for admin user.');
+
+    // Assert the fragment.
+    $this->assertEqual($uri['options']['fragment'], 'og-vocab-node-' . $type->type, 'Correct URL fragment.');
+
+    $this->drupalLogin($this->user2);
+    // This is needed as otherwise og_user_access() fails.
+    $user = $this->user2;
+
+    $label = entity_label('og_vocab', $og_vocab);
+    $expected_label =  t('OG Vocabulary ID @id', array('@id' => $og_vocab->id));
+    $this->assertEqual($label, $expected_label, 'Correct label for authenticated user.');
+
+    $uri = entity_uri('og_vocab', $og_vocab);
+    $this->assertTrue(empty($uri['path']), 'User has no access to the URL.');
+
+    // Set group permissions.
+    $roles = array_flip(og_roles('node', $group->type));
+    og_role_change_permissions($roles[OG_AUTHENTICATED_ROLE], array('administer taxonomy' => 1));
+
+    // Add user to group.
+    og_group('node', $this->gid, array('entity' => $this->user2));
+    $uri = entity_uri('og_vocab', $og_vocab);
+    $this->assertEqual($uri['path'], "group/node/{$this->gid}/admin/taxonomy/{$vocab->machine_name}/edit", 'Correct URL for authenticated user that is a group member.');
+  }
+}
+
+class OgVocabUnbindFromContentType extends DrupalWebTestCase {
+  private $user;
+  private $group;
+  private $first_group_content;
+  private $second_group_content;
+
+  public static function getInfo() {
+    return array(
+      'name' => 'OG vocabulary removing vocabulary from content type.',
+      'description' => 'Check the removing of the vocabulary delete the OG vocabulary term reference from nodes.',
+      'group' => 'Organic groups vocabulary',
+      'dependencies' => array('advancedqueue'),
+    );
+  }
+
+  public function setup() {
+    parent::setUp('og_vocab', 'advancedqueue');
+
+    // Create group.
+    $group_type = $this->drupalCreateContentType();
+    og_create_field(OG_GROUP_FIELD, 'node', $group_type->type);
+
+    $settings = array();
+    $settings['type'] = $group_type->type;
+    $settings[OG_GROUP_FIELD][LANGUAGE_NONE][0]['value'] = 1;
+    $this->group = $this->drupalCreateNode($settings);
+
+    // Create two groups type.
+    $type = $this->drupalCreateContentType();
+    og_create_field(OG_AUDIENCE_FIELD, 'node', $type->type);
+    $this->first_group_content = $this->drupalCreateNode(array(
+      'type' => $type->type,
+    ));
+
+    $wrapper = entity_metadata_wrapper('node', $this->first_group_content);
+    $wrapper->{OG_AUDIENCE_FIELD}->set(array($this->group));
+    $wrapper->save();
+
+    $type = $this->drupalCreateContentType();
+    og_create_field(OG_AUDIENCE_FIELD, 'node', $type->type);
+    $this->second_group_content = $this->drupalCreateNode(array(
+      'type' => $type->type,
+    ));
+
+    $wrapper = entity_metadata_wrapper('node', $this->second_group_content);
+    $wrapper->{OG_AUDIENCE_FIELD}->set(array($this->group));
+    $wrapper->save();
+
+    variable_set('og_use_queue', TRUE);
+  }
+
+  /**
+   * When a vocabulary is related to a bundle and it's term are reference to the
+   * group content, un-bind it from the bundle the terms should not be
+   * reference any more to the node.
+   */
+  public function testUnbindContentType() {
+    $groups_contents = array($this->first_group_content, $this->second_group_content);
+
+    // Create a dummy vocabulary.
+    $vocabulary = new stdClass();
+    $vocabulary->name = "Vocabulary " . $this->group->nid;
+    $vocabulary->machine_name = "vocabulary_" . $this->group->nid;
+    taxonomy_vocabulary_save($vocabulary);
+
+    // Relate vocabulary to group.
+    og_vocab_relation_save($vocabulary->vid, 'node', $this->group->nid);
+
+    // Create the vocabulary.
+    foreach ($groups_contents as $groups_content) {
+      // Create OG vocabulary entity.
+      $og_vocab = og_vocab_create_og_vocab($vocabulary->vid, 'node', $groups_content->type);
+      $og_vocab->save();
+
+      // Create terms in the vocabulary.
+      $terms = array();
+      for ($i = 1; $i < 3; ++$i) {
+        $term = new stdClass();
+        $term->name = "Vocab $vocabulary->vid term $i";
+        $term->vid = $vocabulary->vid;
+        taxonomy_term_save($term);
+        $terms[] = $term->tid;
+      }
+
+      // Reference between the taxonomy terms and the nodes.
+      $wrapper = entity_metadata_wrapper('node', $groups_content);
+      $wrapper->{OG_VOCAB_FIELD}->set($terms);
+      $wrapper->save();
+    }
+
+    // Verify the terms are attached to the nodes.
+    foreach ($groups_contents as $groups_content) {
+      $node = node_load($groups_content->nid);
+      $this->assertTrue(!empty($node->{OG_VOCAB_FIELD}), format_string('Terms are attached to the node @title.', array('@title' => $groups_content->title)));
+    }
+
+    // Delete the last vocabulary.
+    $og_vocab->delete();
+
+    // Execute manually the queue worker.
+    $queue = DrupalQueue::get('og_vocab');
+    $item = $queue->claimItem();
+    og_vocab_remove_referenced_items_queue_worker($item->data);
+
+    // Verify the terms are attached to the nodes.
+    $node = node_load($this->first_group_content->nid);
+    $this->assertTrue(!empty($node->{OG_VOCAB_FIELD}), format_string('Terms are attached to the node @title.', array('@title' => $this->first_group_content->title)));
+
+    $node = node_load($this->second_group_content->nid);
+    $this->assertTrue(empty($node->{OG_VOCAB_FIELD}), format_string('There are no terms attached to the node @title.', array('@title' => $this->second_group_content->title)));
+  }
+}

@@ -1,0 +1,122 @@
+<?php
+
+/**
+ * @file
+ * Examples showing how to use some of the new JavaScript features in Drupal 7.
+ */
+
+/**
+ * @defgroup js_example Example: JavaScript
+ * @ingroup examples
+ * @{
+ * Examples using Drupal 7's built-in JavaScript.
+ */
+
+/**
+ * Implements hook_theme().
+ */
+function js_example_theme() {
+  return array(
+    'my_accordion' => array(
+      'template' => 'accordion',
+      'variables' => array('title' => NULL),
+    ),
+  );
+}
+
+/**
+ * Implements hook_menu().
+ */
+function js_example_menu() {
+  $items = array();
+  $items['js_example/weights'] = array(
+    'title' => 'JS Example: see weighting in action',
+    'page callback' => 'js_example_js_weights',
+    'access callback' => TRUE,
+  );
+  $items['js_example/accordion'] = array(
+    'title' => 'JS Example: jQuery UI accordion',
+    'page callback' => 'js_example_accordion',
+    'access callback' => TRUE,
+  );
+  return $items;
+}
+
+/**
+ * Weights demonstration.
+ *
+ * Here we demonstrate attaching a number of scripts to the render array.
+ * These scripts generate content according to 'weight' and color.
+ *
+ * On the Drupal side, we do three main things:
+ * - Create a container DIV, with an ID all the scripts can recognize.
+ * - Attach some scripts which generate color-coded content. We use the
+ *   'weight' attribute to set the order in which the scripts are included.
+ * - Add the color->weight array to the settings variable in each *color*.js
+ *   file. This is where Drupal passes data out to JavaScript.
+ *
+ * Each of the color scripts (red.js, blue.js, etc) uses jQuery to find our
+ * DIV, and then add some content to it. The order in which the color scripts
+ * execute will end up being the order of the content.
+ *
+ * The 'weight' form atttribute determines the order in which a script is
+ * output to the page. To see this in action:
+ * - Uncheck the 'Aggregate Javascript files' setting at:
+ *   admin/config/development/performance.
+ * - Load the page: js_example/weights. Examine the page source.
+ *   You will see that the color js scripts have been added in the <head>
+ *   element in weight order.
+ *
+ * To test further, change a weight in the $weights array below, then save
+ * this file and reload js_example/weights. Examine the new source to see the
+ * reordering.
+ *
+ * @return array
+ *   A renderable array.
+ */
+function js_example_js_weights() {
+  // Add some css to show which line is output by which script.
+  drupal_add_css(drupal_get_path('module', 'js_example') . '/css/jsweights.css');
+  // Create an array of items with random-ish weight values.
+  $weights = array(
+    'red' => 100,
+    'blue' => 23,
+    'green' => 3,
+    'brown' => 45,
+    'black' => 5,
+    'purple' => 60,
+  );
+  // Attach the weights array to our JavaScript settings. This allows the
+  // color scripts to discover their weight values, by accessing
+  // settings.jsWeights.*color*. The color scripts only use this information for
+  // display to the user.
+  drupal_add_js(array('jsWeights' => $weights), array('type' => 'setting'));
+  // Add our individual scripts. We add them in an arbitrary order, but the
+  // 'weight' attribute will cause Drupal to render (and thus load and execute)
+  // them in the weighted order.
+  drupal_add_js(drupal_get_path('module', 'js_example') . '/js/red.js', array('weight' => $weights['red']));
+  drupal_add_js(drupal_get_path('module', 'js_example') . '/js/blue.js', array('weight' => $weights['blue']));
+  drupal_add_js(drupal_get_path('module', 'js_example') . '/js/green.js', array('weight' => $weights['green']));
+  drupal_add_js(drupal_get_path('module', 'js_example') . '/js/brown.js', array('weight' => $weights['brown']));
+  drupal_add_js(drupal_get_path('module', 'js_example') . '/js/black.js', array('weight' => $weights['black']));
+  drupal_add_js(drupal_get_path('module', 'js_example') . '/js/purple.js', array('weight' => $weights['purple']));
+  // Main container DIV. We give it a unique ID so that the JavaScript can
+  // find it using jQuery.
+  $output = '<div id="js-weights"></div>';
+  return $output;
+}
+
+/**
+ * Demonstrate accordion effect.
+ */
+function js_example_accordion() {
+  $title = t('Click sections to expand or collapse:');
+  $build['myelement'] = array(
+    '#theme' => 'my_accordion',
+    '#title' => $title,
+  );
+  $build['myelement']['#attached']['library'][] = array('system', 'ui.accordion');
+  $build['myelement']['#attached']['js'][] = array('data' => '(function($){$(function() { $("#accordion").accordion(); })})(jQuery);', 'type' => 'inline');
+  $output = drupal_render($build);
+  return $output;
+}

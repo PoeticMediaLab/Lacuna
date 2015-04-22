@@ -1,0 +1,1609 @@
+<?php
+
+/**
+ * @file
+ * Give each group its own system controlled vocabularies.
+ */
+
+/**
+ * OG-vocab default field name.
+ */
+define('OG_VOCAB_FIELD', 'og_vocabulary');
+
+/**
+ * Implements hook_menu().
+ */
+function og_vocab_menu() {
+  $items = array();
+
+  // Add our own autocomplete callback to pass also the group and
+  // vocabulary info.
+  $items['og-vocab/autocomplete/single/%entity_object'] = array(
+    'load arguments' => array('og_vocab'),
+    'title' => 'Entity Reference Autocomplete',
+    'description' => 'Autocomplete a reference for the vocabulary and the group',
+    'page callback' => 'og_vocab_autocomplete_callback',
+    'page arguments' => array(2, 3),
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+  );
+  $items['og-vocab/autocomplete/tags/%entity_object'] = array(
+    'load arguments' => array('og_vocab'),
+    'title' => 'Entity Reference Autocomplete',
+    'description' => 'Autocomplete a reference for the vocabulary and the group',
+    'page callback' => 'og_vocab_autocomplete_callback',
+    'page arguments' => array(2, 3),
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+  );
+
+
+  $items['admin/config/group/og-vocab'] = array(
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('og_vocab_admin_settings'),
+    'title' => 'OG vocabulary settings',
+    'access arguments' => array('administer group'),
+    'description' => 'OG vocabulary module settings.',
+    'file' => 'includes/og_vocab.admin.inc',
+  );
+
+  return $items;
+}
+
+/**
+ * Implements hook_menu_alter().
+ */
+function og_vocab_menu_alter(&$callbacks) {
+  // Array with menu items, keyed by the ones we need to copy, and the value
+  // is the destination menu item.
+  $items = array(
+    'taxonomy' => array(
+      'argument position' => FALSE,
+    ),
+    'taxonomy/add' => array(
+      'argument position' => FALSE,
+    ),
+    'taxonomy/%taxonomy_vocabulary_machine_name' => array(),
+    'taxonomy/%taxonomy_vocabulary_machine_name/list' => array(),
+    'taxonomy/%taxonomy_vocabulary_machine_name/edit' => array(),
+    'taxonomy/%taxonomy_vocabulary_machine_name/add' => array(),
+  );
+
+  $path = drupal_get_path('module', 'taxonomy');
+  foreach ($items as $key => $item) {
+    $item += array(
+      'argument position' => 2,
+    );
+
+    $item_path = 'group/%/%/admin/' . $key;
+    $original_path = 'admin/structure/' . $key;
+
+    $callbacks[$item_path] = $callbacks[$original_path];
+
+    $callbacks[$item_path]['access callback'] = 'og_vocab_vocabulary_access';
+    $access_arguments = array(1, 2, 'administer taxonomy');
+
+    if ($item['argument position']) {
+      $argument_position = 3 + $item['argument position'];
+
+      // Replace the last page argument if it is numeric.
+      if (!empty($callbacks[$original_path]['page arguments'])) {
+        $page_arguments = $callbacks[$original_path]['page arguments'];
+        $pop = array_pop($page_arguments);
+        if (is_numeric($pop)) {
+          $page_arguments[] = $argument_position;
+        }
+        $callbacks[$item_path]['page arguments'] = $page_arguments;
+      }
+
+      // Set the access arguments.
+      $access_arguments[] = $argument_position;
+
+      // Set the title argument.
+      if (!empty($callbacks[$item_path]['title arguments'])) {
+        $callbacks[$item_path]['title arguments'] = array('taxonomy_vocabulary', $argument_position);
+      }
+    }
+
+    $callbacks[$item_path]['access arguments'] = $access_arguments;
+    $callbacks[$item_path]['file path'] = $path;
+  }
+
+  // Change the access callback for taxonomy/term/%taxonomy_term/edit
+  $callbacks['taxonomy/term/%taxonomy_term/edit']['access callback'] = 'og_vocab_taxonomy_term_edit_access';
+
+  if (variable_get('og_vocab_term_page_access', FALSE)) {
+    $callbacks['taxonomy/term/%taxonomy_term']['access callback'] = 'og_vocab_term_page_access';
+    $callbacks['taxonomy/term/%taxonomy_term']['access arguments'] = array(2);
+
+    $callbacks['taxonomy/term/%taxonomy_term/feed']['access callback'] = 'og_vocab_term_page_access';
+    $callbacks['taxonomy/term/%taxonomy_term/feed']['access arguments'] = array(2);
+  }
+}
+
+/**
+ * Determince access to term page if term belongs to a vocabulary owned by
+ * OG-vocab.
+ *
+ * @param $term
+ *   The taxonomy term object.
+ */
+function og_vocab_term_page_access($term) {
+  if (!user_access('access content')) {
+    return;
+  }
+
+
+  if (!$relation = og_vocab_relation_get($term->vid)) {
+    // Term doesn't belong to OG-vocab
+    return TRUE;
+  }
+
+  // Check if user has access to the group.
+  $group = entity_load_single($relation->group_type, $relation->gid);
+  return entity_access('view', $relation->group_type, $group);
+}
+
+
+/**
+ * Implements hook_og_ui_get_group_admin()
+ */
+function og_vocab_og_ui_get_group_admin($group_type, $gid) {
+  $items = array();
+  if (og_user_access($group_type, $gid, 'administer taxonomy')) {
+    $items['taxonomy'] = array(
+      'title' => t('Taxonomy'),
+      'description' => t('Show vocabularies related to this group.'),
+      'href' => 'admin/taxonomy',
+    );
+  }
+
+  return $items;
+}
+
+
+/**
+ * Implements hook_og_permissions().
+ */
+function og_vocab_og_permission() {
+  $permissions = array(
+    'administer taxonomy' => array(
+      'title' => t('Administer vocabularies and terms'),
+    ),
+    'edit terms' => array(
+      'title' => t('Edit terms in group'),
+     ),
+    'delete terms' => array(
+      'title' => t('Delete terms in group'),
+     ),
+  );
+  return $permissions;
+}
+
+/**
+ * Implements hook_entity_info().
+ */
+function og_vocab_entity_info() {
+  $items['og_vocab'] = array(
+    'label' => t('OG vocab'),
+    'label callback' => 'og_vocab_label',
+    'uri callback' => 'og_vocab_uri',
+    'controller class' => 'EntityAPIController',
+    'entity class' => 'OgVocab',
+    'base table' => 'og_vocab',
+    'fieldable' => TRUE,
+    'entity keys' => array(
+      'id' => 'id',
+    ),
+    'bundles' => array(
+      'og_vocab' => array(
+        'label' => t('OG vocab'),
+      ),
+    ),
+    'module' => 'og_vocab',
+  );
+
+  return $items;
+}
+
+/**
+ * Label callback.
+ *
+ * Return the taxonomy name for privleged users, otherwise the OG vocab ID.
+ */
+function og_vocab_label($og_vocab) {
+  $relation = og_vocab_relation_get($og_vocab->vid);
+  if (og_user_access($relation->group_type, $relation->gid, 'administer taxonomy')) {
+    $entity_info = entity_get_info($og_vocab->entity_type);
+    $vocab = taxonomy_vocabulary_load($og_vocab->vid);
+    $params = array(
+      '@id' => $og_vocab->id,
+      '@bundle' => $entity_info['bundles'][$og_vocab->bundle]['label'],
+      '@name' => $vocab->name,
+    );
+    return t('@bundle bundle in @name vocabulary (OG Vocabulary ID @id)', $params);
+  }
+  return t('OG Vocabulary ID @id', array('@id' => $og_vocab->id));
+}
+
+/**
+ * URI callback.
+ *
+ * Return the link of admin/structure/taxonomy for privileged users,
+ * otherwise the group's admin link. If user can't access any of these,
+ * return nothing.
+ */
+function og_vocab_uri($og_vocab) {
+  $url = array();
+
+  $vocab = taxonomy_vocabulary_load($og_vocab->vid);
+  if (user_access('administer taxonomy')) {
+    // URL to taxonomy administration.
+    $url = array(
+      'path' => "admin/structure/taxonomy/$vocab->machine_name/edit",
+    );
+  }
+  else {
+    $relation = og_vocab_relation_get($og_vocab->vid);
+    if (og_user_access($relation->group_type, $relation->gid, 'administer taxonomy')) {
+      // URL to taxonomy administration in the group context.
+      $url = array(
+        'path' => "group/$relation->group_type/$relation->gid/admin/taxonomy/$vocab->machine_name/edit",
+      );
+    }
+  }
+
+  if ($url) {
+    $entity_type = $og_vocab->entity_type;
+    $bundle = $og_vocab->bundle;
+    $url['options']['fragment'] = drupal_clean_css_identifier("og-vocab-$entity_type-$bundle");
+  }
+
+  return $url;
+}
+
+/**
+ * Implements hook_migrate_api().
+ */
+function og_vocab_migrate_api() {
+  $api = array(
+    'api' => 2,
+  );
+  return $api;
+}
+
+/**
+ * Helper to easily create views-queries.
+ */
+function og_vocab_create_og_vocab($vid, $entity_type, $bundle, $field_name = OG_VOCAB_FIELD, $settings = array()) {
+  $values = array(
+    'vid' => $vid,
+    'entity_type' => $entity_type,
+    'bundle' => $bundle,
+    'field_name' => $field_name,
+    'settings' => $settings
+  );
+
+  $values['settings'] += array(
+    'required' => FALSE,
+    'widget_type' => 'options_select',
+    'cardinality' => FIELD_CARDINALITY_UNLIMITED,
+  );
+
+  return entity_create('og_vocab', $values);
+}
+
+/**
+ * Get OG vocabulary settings by vocabulary ID.
+ */
+function og_vocab_load_og_vocab($vid, $entity_type, $bundle, $field_name = NULL, $defaults = FALSE) {
+  $query = new EntityFieldQuery();
+  $query->entityCondition('entity_type', 'og_vocab')
+    ->propertyCondition('vid', $vid)
+    ->propertyCondition('entity_type', $entity_type)
+    ->propertyCondition('bundle', $bundle)
+    ->range(0, 1);
+
+  if (!empty($field_name)) {
+    $query->propertyCondition('field_name', $field_name);
+  }
+
+  $result = $query->execute();
+
+  if (empty($result['og_vocab'])) {
+    if (!$defaults) {
+      return;
+    }
+    if (empty($field_name)) {
+      // Get the field name from the bundle, or default to OG_VOCAB_FIELD.
+      $field_names = og_vocab_get_og_vocab_fields($entity_type, $bundle);
+      $field_name = !empty($field_names) ? key($field_names) : OG_VOCAB_FIELD;
+    }
+    return og_vocab_create_og_vocab($vid, $entity_type, $bundle, $field_name);
+  }
+
+  $id = key($result['og_vocab']);
+  return entity_load_single('og_vocab', $id);
+}
+
+/**
+ * Implements hook_og_fields_info().
+ */
+function og_vocab_og_fields_info() {
+  $items[OG_VOCAB_FIELD] = array(
+    'type' => array('group content'),
+    'description' => t('Complex widget to reference taxonomy terms related to accessible groups.'),
+    // Allow multiple OG-vocab fields on the same bundle.
+    'multiple' => TRUE,
+    'field' => array(
+      'settings' => array(
+        'handler' => 'base',
+        'target_type' => 'taxonomy_term',
+        'handler_settings' => array(
+          'target_bundles' => array(),
+          'behaviors' => array(
+            'og_vocab' => array('status' => TRUE),
+            'taxonomy-index' => array('status' => TRUE),
+          ),
+        ),
+      ),
+      'field_name' => OG_VOCAB_FIELD,
+      'type' => 'entityreference',
+      'cardinality' => FIELD_CARDINALITY_UNLIMITED,
+    ),
+    'instance' => array(
+      'label' => t('OG vocabulary'),
+      'widget' => array(
+        'module' => 'og_vocab',
+        'settings' => array(),
+        'type' => 'og_vocab_complex',
+      ),
+      'display' => array(
+        'default' => array(
+          'type' => 'og_vocab',
+        ),
+      ),
+    ),
+  );
+
+  return $items;
+}
+
+/**
+ * Return TRUE if field is associated with OG-vocab.
+ *
+ * @param $entity_type
+ *   The entity type.
+ * @param $field_name
+ *   The field name.
+ * @param $bundle_name
+ *   The bundle name to be checked.
+ *
+ * @see og_is_group_audience_field()
+ */
+function og_vocab_is_og_vocab_field($entity_type, $field_name, $bundle_name) {
+  $field = field_info_field($field_name);
+  $instance = field_info_instance($entity_type, $field_name, $bundle_name);
+  return $field['type'] == 'entityreference' &&  $field['settings']['target_type'] == 'taxonomy_term' && $instance['widget']['type'] == 'og_vocab_complex';
+}
+
+/**
+ * Get the name of the group-audience type field.
+ *
+ * @param $entity_type
+ *   The entity type.
+ * @param $bundle_name
+ *   The bundle name to be checked.
+ *
+ * @return
+ *   Array keyed with the field name and the field label as the value.
+ *
+ * @see og_get_group_audience_fields()
+ */
+function og_vocab_get_og_vocab_fields($entity_type, $bundle_name) {
+  $return = &drupal_static(__FUNCTION__, array());
+  $identifier = $entity_type . ':' . $bundle_name;
+  if (isset($return[$identifier])) {
+    return $return[$identifier];
+  }
+  $return[$identifier] = array();
+  // field_info_instances() doesn't give the field type, so we have to use
+  // field_info_fields().
+  foreach (field_info_instances($entity_type, $bundle_name) as $field_name => $instance) {
+    if (!og_vocab_is_og_vocab_field($entity_type, $field_name, $bundle_name)) {
+      continue;
+    }
+
+    $return[$identifier][$field_name] = $instance['label'];
+  }
+  return $return[$identifier];
+}
+
+/**
+ * Implements hook_field_widget_info().
+ */
+function og_vocab_field_widget_info() {
+  $widgets['og_vocab_complex'] = array(
+    'label' => t('OG vocab'),
+    'description' => t('Complex widget to reference taxonomy terms related to accessible groups.'),
+    'field types' => array('entityreference'),
+  );
+
+  return $widgets;
+}
+
+
+/**
+ * Implements hook_field_widget_form().
+ */
+function og_vocab_field_widget_form(&$form, &$form_state, $field, $instance, $langcode, $items, $delta, $element) {
+  $entity_type = $instance['entity_type'];
+  $entity = isset($element['#entity']) ? $element['#entity'] : NULL;
+  $field_name = $field['field_name'];
+
+  if (!$entity) {
+    return;
+  }
+
+  // Cache the processed entity, to make sure we call the widget only once.
+  $cache = &drupal_static(__FUNCTION__, array());
+  list($id,, $bundle) = entity_extract_ids($entity_type, $entity);
+  $identifier = $entity_type . ':' . $id . ':' . $field_name;
+
+  if (isset($cache[$identifier])) {
+    return array();
+  }
+  $cache[$identifier] = TRUE;
+
+  if (!$vids = og_vocab_get_accessible_vocabs($entity_type, $bundle, $field_name)) {
+    return;
+  }
+
+  // Iterate over vocabularies and build each one.
+  foreach ($vids as $vid) {
+    $og_vocab = og_vocab_load_og_vocab($vid, $entity_type, $bundle);
+    $element[$vid] = $og_vocab->getFormElement($entity_type, $entity, $form, $form_state);
+  }
+
+  return $element;
+}
+
+/**
+ * @see _entityreference_autocomplete_tags_validate()
+ */
+function _og_vocab_autocomplete_tags_validate($element, &$form_state, $form) {
+  $value = array();
+  // If a value was entered into the autocomplete...
+  if (!empty($element['#value'])) {
+    $entities = drupal_explode_tags($element['#value']);
+    $value = array();
+    foreach ($entities as $entity) {
+      // Indicate if a value was found, or we need to create a new one.
+      $found = FALSE;
+      if ($tid = _og_vocab_term_exists_in_vocab($entity, $element['#vid'])) {
+        // The term name already exists in the vocabulary.
+        $value[] = array('target_id' => $tid);
+        $found = TRUE;
+      }
+      elseif (preg_match("/.+\((\d+)\)/", $entity, $matches)) {
+        // Take "label (entity id)', match the id from parenthesis.
+        $value[] = array('target_id' => $matches[1]);
+        $found = TRUE;
+      }
+      else {
+        // Try to get a match from the input string when the user didn't use the
+        // autocomplete but filled in a value manually.
+        $field = field_info_field($element['#field_name']);
+        $handler = entityreference_get_selection_handler($field);
+        // TODO: We can't use validateAutocompleteInput()
+        // We might need to create our own Selection plugin.
+        //if ($input = $handler->validateAutocompleteInput($entity, $element, $form_state, $form)) {
+          //$value[] = array('target_id' => $input);
+        //}
+      }
+      if (!$found) {
+        $vocabulary = taxonomy_vocabulary_load($element['#vid']);
+        $term = array(
+          'target_id' => 'autocreate',
+          'vid' => $vocabulary->vid,
+          'name' => $entity,
+          'vocabulary_machine_name' => $vocabulary->machine_name,
+        );
+        $value[] = (array)$term;
+      }
+    }
+  }
+
+  form_set_value($element, $value, $form_state);
+}
+
+/**
+ * Checks if the term already exists in the vocabulary.
+ *
+ * @param $name
+ *   The term name.
+ * @param $vid
+ *   The vocabulary ID.
+ *
+ * @return
+ *   The term ID if found, or FALSE.
+ */
+function _og_vocab_term_exists_in_vocab($name, $vid) {
+  $query = new EntityFieldQuery();
+  $result = $query->entityCondition('entity_type', 'taxonomy_term')
+    ->propertyCondition('vid', $vid)
+    ->propertyCondition('name', $name)
+    ->execute();
+
+  return !empty($result['taxonomy_term']) ? reset(array_keys($result['taxonomy_term'])) : FALSE;
+}
+
+/**
+ * Menu callback: autocomplete the label of an entity.
+ *
+ * @todo: Get the field in instance settings, based on the group and
+ * vocabulary ID.
+ *
+ * @param $type
+ *   The widget type (i.e. 'single' or 'tags').
+ * @param $field_name
+ *   The name of the entity-reference field.
+ * @param $entity_type
+ *   The entity type.
+ * @param $bundle_name
+ *   The bundle name.
+ * @param $vid
+ *   The vocabulary ID.
+ * @param $entity_id
+ *   Optional; The entity ID the entity-reference field is attached to.
+ *   Defaults to ''.
+ * @param $string
+ *   The label of the entity to query by.
+ */
+function og_vocab_autocomplete_callback($type, OgVocab $og_vocab, $entity_id = '', $string = '') {
+  $mocked_field = $og_vocab->getMockedField();
+  $instance = $mocked_field['instance'];
+  $field = $mocked_field['field'];
+  $entity_type = $og_vocab->entity_type;
+
+  if (!$field || !$instance || $field['type'] != 'entityreference' || !field_access('edit', $field, $entity_type)) {
+    return MENU_ACCESS_DENIED;
+  }
+
+  return entityreference_autocomplete_callback_get_matches($type, $field, $instance, $entity_type, $entity_id, $string);
+}
+
+/**
+ * Implement hook_field_formatter_info().
+ */
+function og_vocab_field_formatter_info() {
+  return array(
+    'og_vocab' => array(
+      'label' => t('OG vocabulary'),
+      'field types' => array('entityreference'),
+      'settings' => array(
+        'concatenate' => FALSE,
+      ),
+    ),
+  );
+}
+
+/**
+ * Implements hook_field_formatter_settings_form().
+ */
+function og_vocab_field_formatter_settings_form($field, $instance, $view_mode, $form, &$form_state) {
+  $display = $instance['display'][$view_mode];
+  $settings = $display['settings'];
+
+  $element['concatenate'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Concatenate'),
+    '#description' => t('Show concatenated terms, separeated by comma. If disalbed, show list of terms, grouped by vocabulary.'),
+    '#default_value' => $settings['concatenate'],
+  );
+
+  return $element;
+}
+
+/**
+ * Implements hook_field_formatter_settings_summary().
+ */
+function og_vocab_field_formatter_settings_summary($field, $instance, $view_mode) {
+  $display = $instance['display'][$view_mode];
+  $settings = $display['settings'];
+
+  $summary = array();
+
+  $summary[] = $settings['concatenate'] ? t('Show concatenated terms') : t('Show list of terms, grouped by vocabulary');
+  return implode('<br />', $summary);
+}
+
+/**
+ * Implements hook_field_formatter_view().
+ *
+ * @todo Allow limiting by group visibilty.
+ * @todo Deal with taxonomy_select_nodes() not showing our nodes as they
+ * are not inside Taxonomy terms' tables.
+ */
+function og_vocab_field_formatter_view($entity_type, $entity, $field, $instance, $langcode, $items, $display) {
+  global $user;
+  list(,, $bundle) = entity_extract_ids($entity_type, $entity);
+  if (!og_vocab_is_og_vocab_field($entity_type, $field['field_name'], $bundle)) {
+    return array('#markup' => t('OG Vocabulary formatter should be used only on "Entity reference" fields with "OG complex" widgets.'));
+  }
+
+  if (!$items) {
+    return;
+  }
+
+  $tids = array();
+  foreach ($items as $item) {
+    $tids[] = $item['target_id'];
+  }
+
+  $terms = taxonomy_term_load_multiple($tids);
+  $ordered_terms = array();
+
+  foreach ($terms as $term) {
+    $vocabulary = taxonomy_vocabulary_load($term->vid);
+    $ordered_terms[] = array(
+      'term' => $term,
+      'weight' => $vocabulary->weight,
+      'vid' => $vocabulary->vid,
+    );
+  }
+
+  uasort($ordered_terms, 'og_vocab_sort_weight');
+
+  // Re-build the terms array, as it is now ordered.
+  $terms = array();
+  foreach ($ordered_terms as $info) {
+    $terms[] = $info['term'];
+  }
+
+  $settings = $display['settings'];
+
+  if ($settings['concatenate']) {
+    $values = array();
+    foreach ($terms as $term) {
+      $url = entity_uri('taxonomy_term', $term);
+      $values[] = l($term->name, $url['path']);
+    }
+
+    $element[0] = array('#markup' => implode(', ', $values));
+    return $element;
+  }
+
+  // Iterate over each term and group by vocabulary.
+  $data = array();
+  foreach ($terms as $term) {
+    if (empty($data['vocabylary'][$term->vid])) {
+      $vocab = taxonomy_vocabulary_load($term->vid);
+      $data['vocabylary'][$term->vid] = check_plain($vocab->name);
+    }
+    $url = entity_uri('taxonomy_term', $term);
+    $data['term'][$term->vid][] = l($term->name, $url['path']);
+  }
+
+  if (!$data) {
+    return;
+  }
+
+  $element = array();
+  foreach ($data['term'] as $vid => $values) {
+    $element[0][$vid] = array('#theme' => 'item_list', '#items' => $values, '#title' => $data['vocabylary'][$vid]);
+  }
+
+  return $element;
+}
+
+/**
+ * Sorts a structured array by the 'weight' element, and if they are equal then
+ * by the vocabylary ID.
+ *
+ * @param $a
+ *   First item for comparison.
+ * @param $b
+ *   Second item for comparison.
+ *
+ * @see drupal_sort_weight()
+ */
+function og_vocab_sort_weight($a, $b) {
+  $result = drupal_sort_weight($a, $b);
+  if ($result !== 0) {
+    return $result;
+  }
+
+  // Sort by the vocabulary ID.
+  return ($a['vid'] < $b['vid']) ? -1 : 1;
+}
+
+
+/**
+ * Save relation between a vocabulary and a group.
+ */
+function og_vocab_relation_save($vid, $group_type, $gid) {
+  if ($og_vocab = og_vocab_relation_get($vid)) {
+    if ($og_vocab->group_type != $group_type || $og_vocab->gid != $gid) {
+      throw new OgVocabException('Vocabulary ID is already associated with another group.');
+    }
+    return;
+  }
+
+  $og_vocab = array(
+    'vid' => $vid,
+    'group_type' => $group_type,
+    'gid' => $gid,
+  );
+  drupal_write_record('og_vocab_relation', $og_vocab);
+}
+
+/**
+ * Get the group related to a vocabulary.
+ */
+function og_vocab_relation_get($vid) {
+  $cache = drupal_static(__FUNCTION__, array());
+  if (!isset($cache[$vid])) {
+    $cache[$vid] = db_select('og_vocab_relation', 'ogr')
+      ->fields('ogr')
+      ->condition('vid', $vid)
+      ->execute()
+      ->fetch();
+  }
+
+  return $cache[$vid];
+}
+
+/**
+ * Get all Vocabularies related to a group.
+ */
+function og_vocab_relation_get_by_group($group_type, $gid) {
+  return db_select('og_vocab_relation', 'ogr')
+    ->fields('ogr')
+    ->condition('group_type', $group_type)
+    ->condition('gid', $gid)
+    ->execute()
+    ->fetchAll();
+}
+
+/**
+ * Delete a relation between a group and a vocabulary and all its OG-vocabs.
+ *
+ * @param $entity_type
+ *   The entity type is deleted.
+ * @param $entity_id
+ *   The entity ID that is deleted.
+ *
+ */
+function og_vocab_realtion_delete($entity_type, $entity_id) {
+  $vids = array();
+  if ($entity_type == 'taxonomy_vocabulary') {
+    if (!$relation = og_vocab_relation_get($entity_id)) {
+      return;
+    }
+    $vids[] = $entity_id;
+  }
+  else {
+    // Get the vocabylary ID from the group.
+    if (!$relations = og_vocab_relation_get_by_group($entity_type, $entity_id)) {
+      return;
+    }
+    foreach ($relations as $relation) {
+      $vids[] = $relation->vid;
+    }
+  }
+  db_delete('og_vocab_relation')
+    ->condition('vid', $vids, 'IN')
+    ->execute();
+
+  // Get all OG vocabs related to the entity_type, and delete them.
+  $query = new EntityFieldQuery();
+  $result = $query->entityCondition('entity_type', 'og_vocab')
+    ->propertyCondition('vid', $vids, 'IN')
+    ->execute();
+
+  if (empty($result['og_vocab'])) {
+    return;
+  }
+
+  entity_delete_multiple('og_vocab', array_keys($result['og_vocab']));
+}
+
+
+/**
+ * Replacement for core's taxonomy_autocomplete().
+ *
+ * @see taxonomy_autocomplete()
+ */
+function og_vocab_taxonomy_autocomplete($vid, $field_name, $tags_typed = '') {
+  // If the request has a '/' in the search text, then the menu system will have
+  // split it into multiple arguments, recover the intended $tags_typed.
+  $args = func_get_args();
+  // Shift off the $field_name argument.
+  array_shift($args);
+  $tags_typed = implode('/', $args);
+
+  // The user enters a comma-separated list of tags. We only autocomplete the last tag.
+  $tags_typed = drupal_explode_tags($tags_typed);
+  $tag_last = drupal_strtolower(array_pop($tags_typed));
+
+  $matches = array();
+  if ($tag_last != '') {
+
+    // Part of the criteria for the query come from the field's own settings.
+    $vids = array($vid);
+
+    $query = db_select('taxonomy_term_data', 't');
+    $query->addTag('translatable');
+    $query->addTag('term_access');
+
+    // Do not select already entered terms.
+    if (!empty($tags_typed)) {
+      $query->condition('t.name', $tags_typed, 'NOT IN');
+    }
+    // Select rows that match by term name.
+    $tags_return = $query
+      ->fields('t', array('tid', 'name'))
+      ->condition('t.vid', $vids)
+      ->condition('t.name', '%' . db_like($tag_last) . '%', 'LIKE')
+      ->range(0, 10)
+      ->execute()
+      ->fetchAllKeyed();
+
+    $prefix = count($tags_typed) ? drupal_implode_tags($tags_typed) . ', ' : '';
+
+    $term_matches = array();
+    foreach ($tags_return as $tid => $name) {
+      $n = $name;
+      // Term names containing commas or quotes must be wrapped in quotes.
+      if (strpos($name, ',') !== FALSE || strpos($name, '"') !== FALSE) {
+        $n = '"' . str_replace('"', '""', $name) . '"';
+      }
+      $term_matches[$prefix . $n] = check_plain($name);
+    }
+  }
+
+  drupal_json_output($term_matches);
+}
+
+function og_vocab_taxonomy_autocomplete_validate($element, &$form_state) {
+  // Autocomplete widgets do not send their tids in the form, so we must detect
+  // them here and process them independently.
+  $value = array();
+  if ($tags = $element['#value']) {
+    // Collect candidate vocabularies.
+    $field = field_widget_field($element, $form_state);
+    $field = $element['#og_vocab'];
+    $vocabularies = array();
+    foreach ($field['settings']['allowed_values'] as $tree) {
+      if ($vocabulary = taxonomy_vocabulary_machine_name_load($tree['vocabulary'])) {
+        $vocabularies[$vocabulary->vid] = $vocabulary;
+      }
+    }
+
+    // Translate term names into actual terms.
+    $typed_terms = drupal_explode_tags($tags);
+    foreach ($typed_terms as $typed_term) {
+      // See if the term exists in the chosen vocabulary and return the tid;
+      // otherwise, create a new 'autocreate' term for insert/update.
+      if ($possibilities = taxonomy_term_load_multiple(array(), array('name' => trim($typed_term), 'vid' => array_keys($vocabularies)))) {
+        $term = array_pop($possibilities);
+      }
+      else {
+        $vocabulary = reset($vocabularies);
+        $term = array(
+          'tid' => 'autocreate',
+          'vid' => $vocabulary->vid,
+          'name' => $typed_term,
+          'vocabulary_machine_name' => $vocabulary->machine_name,
+        );
+      }
+      $value[] = (array)$term;
+    }
+  }
+
+  form_set_value($element, $value, $form_state);
+}
+
+/**
+ * Implements hook_ctools_plugin_directory().
+ */
+function og_vocab_ctools_plugin_directory($module, $plugin) {
+  if ($module == 'entityreference') {
+    return "plugins/$plugin";
+  }
+}
+
+//////////////////////////////////////////////////////////////////////////
+/// Form alters
+
+
+/**
+ * Implements hook_query_TAG_alter().
+ *
+ * Alter loading vocabularies. If the static variable is set to "skip",
+ * no altering will occour.
+ *
+ * @see og_vocab_machine_name_validate()
+ */
+function og_vocab_query_taxonomy_vocabulary_load_multiple_alter(QueryAlterableInterface $query) {
+  $cache = &drupal_static(__FUNCTION__, FALSE);
+
+  if ($cache == 'skip') {
+    return;
+  }
+
+  if ($cache) {
+    // Prevent recursion.
+    return;
+  }
+  $cache = TRUE;
+
+  if (!$context = og_vocab_is_group_admin_context()) {
+    return;
+  }
+
+  $group_type = $context['group_type'];
+  $gid = $context['gid'];
+
+  $query->innerJoin('og_vocab_relation', 'ogr', 'ogr.vid = base.vid');
+  $query
+    ->condition('ogr.group_type', $group_type)
+    ->condition('ogr.gid', $gid);
+}
+
+/**
+ * Implements hook_form_FORM-ID_alter().
+ *
+ * Vocabularies overview.
+ */
+function og_vocab_form_taxonomy_overview_vocabularies_alter(&$form, $form_state) {
+  if (!$context = og_vocab_is_group_admin_context()) {
+    return;
+  }
+
+  $group_type = $context['group_type'];
+  $gid = $context['gid'];
+
+  $path_prefix = "group/$group_type/$gid/admin";
+
+  foreach (array_keys($form) as $key) {
+    if (!is_numeric($key)) {
+      continue;
+    }
+
+    $ops = array('edit', 'list', 'add');
+
+    foreach ($ops as $op) {
+      $form[$key][$op]['#href'] = $path_prefix . str_replace('admin/structure', '', $form[$key][$op]['#href']);
+    }
+  }
+}
+
+/**
+ * Implements hook_theme_registry_alter().
+ *
+ * @see theme_og_vocab_taxonomy_overview_vocabularies()
+ */
+function og_vocab_theme_registry_alter(&$theme_registry) {
+  $theme_registry['taxonomy_overview_vocabularies']['function'] = 'theme_og_vocab_taxonomy_overview_vocabularies';
+}
+
+/**
+ * Override theme_taxonomy_overview_vocabularies() to make it group aware.
+ *
+ * The empty text (i.e. when there are no vocabularies) will redirect to
+ * the correct path.
+ *
+ * @param $variables
+ *   An associative array containing:
+ *   - form: A render element representing the form.
+ *
+ * @see theme_taxonomy_overview_vocabularies()
+ */
+function theme_og_vocab_taxonomy_overview_vocabularies($variables) {
+  if (!$context = og_vocab_is_group_admin_context()) {
+    return theme_taxonomy_overview_vocabularies($variables);
+  }
+
+  $item = menu_get_item();
+  $empty = t('No vocabularies available. <a href="@link">Add vocabulary</a>.', array('@link' => url($item['href'] . '/add')));
+
+  $form = $variables['form'];
+
+  $rows = array();
+
+  foreach (element_children($form) as $key) {
+    if (isset($form[$key]['name'])) {
+      $vocabulary = &$form[$key];
+
+      $row = array();
+      $row[] = drupal_render($vocabulary['name']);
+      if (isset($vocabulary['weight'])) {
+        $vocabulary['weight']['#attributes']['class'] = array('vocabulary-weight');
+        $row[] = drupal_render($vocabulary['weight']);
+      }
+      $row[] = drupal_render($vocabulary['edit']);
+      $row[] = drupal_render($vocabulary['list']);
+      $row[] = drupal_render($vocabulary['add']);
+      $rows[] = array('data' => $row, 'class' => array('draggable'));
+    }
+  }
+
+  $header = array(t('Vocabulary name'));
+  if (isset($form['actions'])) {
+    $header[] = t('Weight');
+    drupal_add_tabledrag('taxonomy', 'order', 'sibling', 'vocabulary-weight');
+  }
+  $header[] = array('data' => t('Operations'), 'colspan' => '3');
+  return theme('table', array('header' => $header, 'rows' => $rows, 'empty' => $empty, 'attributes' => array('id' => 'taxonomy'))) . drupal_render_children($form);
+}
+
+
+/**
+ * Implements hook_form_FORM-ID_alter().
+ *
+ * 1) Add group id to the vocabulary if it's a group context.
+ * 2) Add own submit handler.
+ *
+ * @see og_vocab_form_taxonomy_form_vocabulary_submit().
+ */
+function og_vocab_form_taxonomy_form_vocabulary_alter(&$form, $form_state) {
+  if (!empty($form_state['triggering_element']['#parents'][0]) && $form_state['triggering_element']['#parents'][0] == 'delete') {
+    // This is delete confirmation page.
+    return;
+  }
+
+  if (!empty($form['#vocabulary']->vid)) {
+    if (!$relation = og_vocab_relation_get($form['#vocabulary']->vid)) {
+      // This is an existing vocabulary, not associated with a group.
+      return;
+    }
+
+    $group_type = $relation->group_type;
+    $gid = $relation->gid;
+  }
+  elseif ($context = og_vocab_is_group_admin_context()) {
+    // We are inside a group context.
+    $group_type = $context['group_type'];
+    $gid = $context['gid'];
+    $form['#validate'][] = 'og_vocab_form_taxonomy_form_vocabulary_validate';
+  }
+
+  if (empty($group_type)) {
+    // We don't have enough context, about which group this vocabulary
+    // should belong to.
+    return;
+  }
+
+
+  $group = entity_load_single($group_type, $gid);
+  list(,, $group_bundle) = entity_extract_ids($group_type, $group);
+
+  // Validate the machine name when creating a new vocabulary.
+  if (empty($form_state['vocabulary']->vid)) {
+    $form['machine_name']['#element_validate'][] = 'og_vocab_machine_name_validate';
+  }
+
+  $form['og_vocab_relation'] = array(
+    '#type' => 'value',
+    '#value' => array('group_type' => $group_type, 'gid' => $gid),
+  );
+
+  // Add widget settings per group content. We discover all the group
+  // content that reference this group type.
+  $entity_info = entity_get_info();
+
+  $options = array();
+  foreach (og_get_all_group_content_bundle() as $entity_type => $bundles) {
+    if ($entity_type == 'user') {
+      // Adding terms to the user is probably not the use case, so skip
+      // it.
+      continue;
+    }
+    foreach ($bundles as $bundle => $bundle_label) {
+      foreach (og_get_group_audience_fields($entity_type, $bundle, FALSE) as $field_name => $field_label) {
+        $field = field_info_field($field_name);
+        if (empty($field['settings']['handler_settings']['target_bundles']) || in_array($group_bundle, $field['settings']['handler_settings']['target_bundles'])) {
+          $options[$entity_type][$bundle] = $entity_info[$entity_type]['label'] . ' - ' . $bundle_label;
+        }
+      }
+    }
+  }
+
+  if (!$options) {
+    $form['og_vocab'] = array(
+      '#markup' => t('There are no group contents referencing this group type.'),
+    );
+    return;
+  }
+
+  $form['og_vocab'] = array(
+    '#tree' => TRUE,
+  );
+
+  $vocabulary = $form['#vocabulary'];
+  $vid = !empty($vocabulary->vid) ? $vocabulary->vid : 0;
+
+  foreach ($options as $entity_type => $values) {
+    foreach ($values as $bundle => $name) {
+      // Load the OG-vocab record if exists, or a default one.
+      $form['og_vocab']["$entity_type:$bundle"] = array(
+        '#type' => 'fieldset',
+        '#title' => check_plain($name),
+        '#id' => drupal_clean_css_identifier("og-vocab-$entity_type-$bundle"),
+      );
+
+      // Load an existing OG-vocab, or get default values.
+      $og_vocab = og_vocab_load_og_vocab($vid, $entity_type, $bundle, NULL, TRUE);
+
+      $form['og_vocab']["$entity_type:$bundle"]['entity'] = array(
+        '#type' => 'value',
+        '#value' => $og_vocab,
+      );
+
+      // Get all the entity reference widget types, except OG-vocab's.
+      $form['og_vocab']["$entity_type:$bundle"]['status'] = array(
+        '#type' => 'checkbox',
+        '#title' => t('Enable'),
+        '#description' => t('Show term reference in @name add and edit form', array('@name' => $name)),
+        '#default_value' => empty($og_vocab->is_new),
+      );
+
+      module_load_include('inc', 'field_ui', 'field_ui.admin');
+      $widget_types = field_ui_widget_type_options('entityreference');
+      unset($widget_types['og_vocab_complex'], $widget_types['og_complex']);
+
+      $element_name = "og_vocab[$entity_type:$bundle][status]";
+      $states = array(
+        '#states' => array(
+          'visible' => array(
+            ':input[name="' . $element_name . '"]' => array('checked' => TRUE),
+          ),
+        ),
+      );
+
+      $form['og_vocab']["$entity_type:$bundle"]['widget_type'] = array(
+        '#type' => 'select',
+        '#title' => t('Widget type'),
+        '#required' => TRUE,
+        '#options' => $widget_types,
+        '#default_value' => $og_vocab->settings['widget_type'],
+        '#description' => t('The type of form element you would like to present to the user when creating this field in the %type type.', array('%type' => $bundle_label)),
+      ) + $states;
+
+      $form['og_vocab']["$entity_type:$bundle"]['required'] = array(
+        '#type' => 'checkbox',
+        '#title' => t('Required field'),
+        '#default_value' => $og_vocab->settings['required'],
+      ) + $states;
+
+      $form['og_vocab']["$entity_type:$bundle"]['cardinality'] = array(
+        '#type' => 'select',
+        '#title' => t('Number of values'),
+        '#options' => array(FIELD_CARDINALITY_UNLIMITED => t('Unlimited')) + drupal_map_assoc(range(1, 10)),
+        '#default_value' => $og_vocab->settings['cardinality'],
+        '#description' => t('Maximum number of values users can enter for this field.'),
+      ) + $states;
+
+      // Add the field name to associate with. If there's just a single or
+      // it still doesn't exist we hide it, and select it as the default.
+      $og_vocab_fields = og_vocab_get_og_vocab_fields($entity_type, $bundle);
+      if (!empty($og_vocab_fields) && count($og_vocab_fields) > 1) {
+        $form['og_vocab']["$entity_type:$bundle"]['field_name'] = array(
+          '#title' => t('Field name'),
+          '#type' => 'select',
+          '#options' => $og_vocab_fields,
+          '#default_value' => $og_vocab->field_name,
+        );
+      }
+      else {
+        // Pass it as value.
+        $form['og_vocab']["$entity_type:$bundle"]['field_name'] = array(
+          '#type' => 'value',
+          '#value' => $og_vocab->field_name,
+        );
+      }
+    }
+  }
+  $form['#submit'][] = 'og_vocab_form_taxonomy_form_vocabulary_submit';
+}
+
+/**
+ * Implements hook_form_alter().
+ *
+ * Using the hook_form_alter and not hook_form_FORM_ID_alter due to the
+ * invokes order of the hooks.
+ */
+function og_vocab_form_alter(&$form, $form_state, $form_id) {
+  if (!in_array($form_id, array('taxonomy_form_vocabulary', 'taxonomy_overview_terms')) || !$context = og_vocab_is_group_admin_context()) {
+    return;
+  }
+  if ($form_id == 'taxonomy_overview_terms') {
+
+    // Alter the 'Add term' link that is displayed when no terms have yet been
+    // added.
+    $og_vocab = taxonomy_vocabulary_load($form['#vocabulary']->vid);
+    $relation = og_vocab_relation_get($og_vocab->vid);
+    if (og_user_access($relation->group_type, $relation->gid, 'administer taxonomy')) {
+      $path = "group/$relation->group_type/$relation->gid/admin/taxonomy/$og_vocab->machine_name/add";
+      $form['#empty_text'] = t('No terms available. <a href="@link">Add term</a>.', array('@link' => url($path)));
+    }
+  }
+  $form['#submit'][] = 'og_vocab_redirect_to_group_vocabularies';
+}
+
+/**
+ * After deleting the group vocabulary, redirect to the taxonomy group admin
+ * page.
+ */
+function og_vocab_redirect_to_group_vocabularies($form, &$form_state) {
+  if (!$context = og_vocab_is_group_admin_context()) {
+    return;
+  }
+  $form_state['redirect'] = 'group/' . $context['group_type'] .'/' . $context['gid'] . '/admin/taxonomy';
+
+  if ($form['#form_id'] == 'taxonomy_overview_terms' && !empty($form_state['confirm_reset_alphabetical']) && !empty($form_state['complete form']['machine_name']['#value'])) {
+    // Redirect back to the terms overview, after "Reset alphabetical"
+    // was submitted.
+    $form_state['redirect'] .= '/' . $form_state['complete form']['machine_name']['#value'] . '/list';
+  }
+}
+
+/**
+ * Element validate; Auto-set a new machine name if vocabulary already
+ * exists.
+ */
+function og_vocab_machine_name_validate($element, &$form_state) {
+  if (empty($form_state['values']['machine_name'])) {
+    return;
+  }
+
+  $machine_name = $form_state['values']['machine_name'];
+
+  // Set the static variable to "skip" to prevent altering while we verify
+  // the machine name doesn't exist yet.
+  $cache = &drupal_static('og_vocab_query_taxonomy_vocabulary_load_multiple_alter', FALSE);
+  $cache = 'skip';
+
+  if (!taxonomy_vocabulary_machine_name_load($machine_name)) {
+    return;
+  }
+
+  // Start iterating over machine names until we hit one that doesn't
+  // exist yet.
+  $i = 1;
+  while (taxonomy_vocabulary_machine_name_load($machine_name)) {
+    $machine_name = substr($machine_name, 0, 32 - strlen($i)) . $i;
+    ++$i;
+  }
+  form_set_value($element, $machine_name, $form_state);
+}
+
+/**
+ * Validate handler; Redirect back to taxonomy overview.
+ */
+function og_vocab_form_taxonomy_form_vocabulary_validate(&$form, $form_state) {
+  // TODO: Why do we need to set the $_GET['destination']?
+  $group_type = $form_state['values']['og_vocab_relation']['group_type'];
+  $gid = $form_state['values']['og_vocab_relation']['gid'];
+  $_GET['destination'] = $form_state['redirect'] = "group/$group_type/$gid/admin/taxonomy";
+}
+
+/**
+ * Submit handler; Save the OG-vocab record.
+ */
+function og_vocab_form_taxonomy_form_vocabulary_submit(&$form, $form_state) {
+  $vocab = $form_state['vocabulary'];
+  $group_type = $form_state['values']['og_vocab_relation']['group_type'];
+  $gid = $form_state['values']['og_vocab_relation']['gid'];
+
+  // Save the relation.
+  og_vocab_relation_save($vocab->vid, $group_type, $gid);
+
+  foreach ($form_state['values']['og_vocab'] as $key => $value) {
+    $og_vocab = $form_state['values']['og_vocab'][$key]['entity'];
+    $og_vocab->vid = $vocab->vid;
+
+    // Check if status was disable, and if so delete the og-vocab.
+    if (!$value['status'] && empty($og_vocab->is_new)) {
+      $og_vocab->delete();
+    }
+    elseif ($value['status']) {
+      // Rebuild the settings.
+      $settings = array(
+        'required',
+        'widget_type',
+        'cardinality',
+      );
+      foreach ($settings as $setting) {
+        $og_vocab->settings[$setting] = $form_state['values']['og_vocab'][$key][$setting];
+      }
+      $og_vocab->field_name = $form_state['values']['og_vocab'][$key]['field_name'];
+      $og_vocab->save();
+    }
+  }
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ *
+ * Term edit page.
+ */
+function og_vocab_form_taxonomy_form_term_alter(&$form, $form_state) {
+  $vocab = $form['#vocabulary'];
+  if (!$relation = og_vocab_relation_get($vocab->vid)) {
+    return;
+  }
+  $form['actions']['delete']['#access'] = og_user_access($relation->group_type, $relation->gid, 'delete terms') || og_user_access($relation->group_type, $relation->gid, 'administer taxonomy');
+}
+
+/**
+ * API function; Get all the vocabs a user may access.
+ *
+ * This will include the global vocabualries (i.e. ones that aren't associated
+ * with a group), and the ones that are associated with a group the user is a
+ * member.
+ *
+ * @todo: Take care of administrators, we need to show ALL widgets?
+ *
+ * @param $entity_type
+ *   The entity type.
+ * @param $bundle
+ *   The entity bundle.
+ * @param $field_name
+ *   The field name that is associated with the OG-vocab.
+ * @param $account
+ *   User object. Defaults to current user.
+ *
+ * @return
+ *   An array with the vocabulary IDs or an empty array if no vocabulary
+ *   was found.
+ */
+function og_vocab_get_accessible_vocabs($entity_type, $bundle, $field_name, $account = NULL) {
+  if (empty($account)) {
+    global $user;
+    $account = clone $user;
+  }
+
+  $field = field_info_field($field_name);
+  $use_context = !empty($field['settings']['handler_settings']['behaviors']['og_vocab']['use_context']) ? $field['settings']['handler_settings']['behaviors']['og_vocab']['use_context'] : 'yes';
+  $context = FALSE;
+  $gids = array();
+
+  if (in_array($use_context, array('force', 'yes')) && module_exists('og_context') && $context = og_context()) {
+    $gids[$context['group_type']][$context['gid']] = array($context['gid']);
+  }
+  elseif (in_array($use_context, array('yes', 'no')) && !$gids) {
+    $gids = og_get_entity_groups('user', $account);
+  }
+
+  if (!$gids) {
+    return;
+  }
+
+  $query = db_select('og_vocab_relation', 'ogr');
+  $query->fields('ogr', array('vid'));
+
+  // Prepare a query according to the group types. In the common case that
+  // the user has only a single group type (e.g. node) we can make a simpler
+  // query.
+  if (count($gids) == 1) {
+    $group_type = key($gids);
+    $query
+      ->condition('group_type', $group_type)
+      ->condition('gid', $gids[$group_type], 'IN');
+  }
+  else {
+    // TODO
+  }
+
+  // Join with the OG-vocab.
+  $query->innerJoin('og_vocab', 'ogv', 'ogr.vid = ogv.vid');
+  $query
+    ->condition('ogv.entity_type', $entity_type)
+    ->condition('ogv.bundle', $bundle)
+    ->condition('ogv.field_name', $field_name);
+
+  $result = $query
+    ->execute()
+    ->fetchAllAssoc('vid');
+
+  return !empty($result) ? array_keys($result) : FALSE;
+}
+
+/**
+ * Access function to determine if a user has access to the menu item.
+ *
+ * @param $entity_type
+ *   The entity type.
+ * @param $entity_id
+ *   The entity ID.
+ * @param $perm
+ *   The permission to check is user has.
+ * @param $vocabulary
+ *   Optional; The vocabulary ID.
+ *
+ * @return
+ *   TRUE if user has access to the menu item.
+ */
+function og_vocab_vocabulary_access($entity_type, $entity_id, $perm, $vocabulary = NULL) {
+  if (!$entity = entity_load_single($entity_type,$entity_id)) {
+    return FALSE;
+  }
+
+  if ($vocabulary) {
+    // Make sure vocabulary ID belongs to the group node.
+    if (!$og_vocab = og_vocab_relation_get($vocabulary->vid)) {
+      return FALSE;
+    }
+
+    // Check the group matches our passed group.
+    if ($og_vocab->group_type != $entity_type || $og_vocab->gid != $entity_id) {
+      return FALSE;
+    }
+  }
+
+  return og_user_access($entity_type, $entity_id, $perm);
+}
+
+/**
+ * Return edit access for a given term.
+ */
+function og_vocab_taxonomy_term_edit_access($term) {
+  if ($og_vocab = og_vocab_relation_get($term->vid)) {
+    return og_user_access($og_vocab->group_type, $og_vocab->gid, 'edit terms') || og_user_access($og_vocab->group_type, $og_vocab->gid, 'administer taxonomy');
+  }
+  return taxonomy_term_edit_access($term);
+}
+
+/**
+ * Implements hook_entity_delete().
+ */
+function og_vocab_entity_delete($entity, $entity_type) {
+  if ($entity_type == 'taxonomy_vocabulary') {
+    og_vocab_realtion_delete($entity_type, $entity->vid);
+  }
+  elseif(og_is_group($entity_type, $entity)) {
+    list($id) = entity_extract_ids($entity_type, $entity);
+    og_vocab_realtion_delete($entity_type, $id);
+  }
+}
+
+/**
+ * Check if a given page is inside a group admin context.
+ *
+ * We determine the context by the menu item path, and if it doesn't exist
+ * and OG context module is enabled, we try to check if we have a group
+ * context avialable.
+ *
+ * @return
+ *   Array keyed with the group type and group ID, if context found.
+ */
+function og_vocab_is_group_admin_context() {
+  if (strpos($_GET['q'], 'group/') === 0 && ($item = menu_get_item()) && !empty($item['map'][2])) {
+    return array('group_type' => $item['map'][1], 'gid' => $item['map'][2]);
+  }
+
+  // Iterate over modules implementing context, and return early once
+  // a context was found.
+  foreach (module_implements('og_vocab_is_admin_context') as $module) {
+    $function = $module . '_og_vocab_is_admin_context';
+    if ($context = $function()) {
+      return $context;
+    }
+  }
+}
+
+
+/**
+ * Implements hook_modules_enabled().
+ *
+ * Register dynamic migrate plugins for upgrading from OG6.
+ */
+function og_vocab_modules_enabled($modules) {
+  if (!variable_get('og_vocab_7000', FALSE)) {
+    return;
+  }
+
+  if (!in_array('migrate', $modules) && !module_exists('migrate')) {
+    return;
+  }
+
+  foreach (node_type_get_names() as $bundle => $value) {
+    // Register a dynamic migration.
+    Migration::registerMigration('OgVocabMigrate', 'OgVocabMigrate' . ucfirst($bundle), array('bundle' => $bundle));
+  }
+}
+
+/**
+ * Implements hook_cron_queue_info().
+ */
+function og_vocab_cron_queue_info() {
+  $items['og_vocab'] = array(
+    'title' => t('OG Vocabulary'),
+    'worker callback' => 'og_vocab_remove_referenced_items_queue_worker',
+    'time' => 60,
+  );
+  return $items;
+}
+
+/**
+ * Queue worker; Process a queue item.
+ *
+ * When a OG vocabulary is being deleted we need to remove the reference between
+ * the nodes to the terms.
+ */
+function og_vocab_remove_referenced_items_queue_worker($data, $end_time = FALSE) {
+  extract($data);
+
+  // Get range of the group content.
+  // We don't use entityFieldQuery() as we want to join to the entity base
+  // table, to make sure we process only entities from the correct bundle.
+  $entity_info = entity_get_info($entity_type);
+
+  $query = db_select('og_membership', 'ogm');
+  $query->fields('ogm', array('id', 'entity_type', 'etid'));
+  $query
+    ->condition('ogm.group_type', $group_type)
+    ->condition('ogm.gid', $gid)
+    ->condition('ogm.entity_type', $entity_type)
+    // The last processed OG-membership ID.
+    ->condition('ogm.id', $last_id, '>')
+    ->orderBy('ogm.id');
+
+  $base_table = $entity_info['base table'];
+  $bundle_key = $entity_info['entity keys']['bundle'];
+  $id_key = $entity_info['entity keys']['id'];
+
+  $alias = $query->innerJoin($base_table, NULL, "ogm.etid = $base_table.$id_key");
+  $result = $query
+    ->condition("$alias.$bundle_key", $bundle)
+    ->range(0, 100)
+    ->execute()
+    ->fetchAllAssoc('id');
+
+  if (empty($result)) {
+    // No more group-content for this entity, so we can delete the task item.
+    return;
+  }
+
+  foreach ($result as $row) {
+    $last_id = $row->id;
+    $wrapper = entity_metadata_wrapper($row->entity_type, $row->etid);
+    if (!$terms = $wrapper->{$field_name}->value()) {
+      // Field doesn't have any term, so we can skip.
+      continue;
+    }
+
+    // Array with the original and new term IDs.
+    $original_tids = array();
+    $new_tids = array();
+    foreach ($terms as $term) {
+      $original_tids[] = $term->tid;
+
+      if ($term->vid != $vid) {
+        $new_tids[] = $term->tid;
+      }
+    }
+    if ($original_tids != $new_tids) {
+      // Some terms were removed so re-save the entity.
+      $wrapper->{$field_name}->set($new_tids);
+      $wrapper->save();
+    }
+  }
+
+  // Update the item with the last OG-membership ID.
+  $data = array(
+    'vid' => $vid,
+    'entity_type' => $entity_type,
+    'bundle' => $bundle,
+    'field_name' => $field_name,
+    'group_type' => $group_type,
+    'gid' => $gid,
+    'last_id' => $last_id,
+  );
+
+  $queue = DrupalQueue::get('og_vocab');
+  return $queue->createItem($data);
+}

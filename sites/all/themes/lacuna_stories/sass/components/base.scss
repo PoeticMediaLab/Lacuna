@@ -1,3 +1,5 @@
+@import "init";
+
 $link-color: #1588ba;
 $link-color-hover: #094762;
 $bg-color: #F8F8F8;
@@ -28,8 +30,8 @@ $bg-color: #F8F8F8;
 }
 
 body {
+  // font-family defined in _init
   background-color: $bg-color;
-  font-family: 'Open Sans', sans-serif;
   line-height: 1.5em;
 }
 
@@ -54,7 +56,9 @@ b {
 
 sup {
   vertical-align: super;
-  font-size: small;
+  font-size: x-small;
+  top: -0.3em;
+  padding-left: .2em;
 }
 
 p {
@@ -63,6 +67,9 @@ p {
 
 article.node {
   text-align: justify;
+  font-family: $base-serif-font-family;
+  font-size: 18px;
+  line-height: 1.5em;
 }
 
 /* fix to avoid drop down menu overwrite of message pane */
@@ -71,7 +78,7 @@ div.messages {
 }
 
 h1,h2,h3,h4,h5,h6 {
-  font-family: 'Noto Sans', sans-serif;
+  font-family: $base-font-family;
   line-height: 1.3em;
 }
 

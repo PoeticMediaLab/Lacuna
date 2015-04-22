@@ -2,12 +2,19 @@ name = Media Internet Sources
 description = Provides an API for accessing media on various internet services
 package = Media
 core = 7.x
-dependencies[] = media
-files[] = media_internet.module
 
-; Information added by Drupal.org packaging script on 2014-01-08
-version = "7.x-1.4"
+dependencies[] = media
+
+files[] = includes/MediaBrowserInternet.inc
+files[] = includes/MediaInternetBaseHandler.inc
+files[] = includes/MediaInternetFileHandler.inc
+files[] = includes/MediaInternetNoHandlerException.inc
+files[] = includes/MediaInternetValidationException.inc
+files[] = tests/media_internet.test
+
+; Information added by Drupal.org packaging script on 2015-04-17
+version = "7.x-2.0-alpha4+32-dev"
 core = "7.x"
 project = "media"
-datestamp = "1389219517"
+datestamp = "1429292285"
 

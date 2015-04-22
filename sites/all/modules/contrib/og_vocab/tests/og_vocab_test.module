@@ -1,0 +1,17 @@
+<?php
+
+
+/**
+ * @file
+ * Test module for OG vocabulary.
+ */
+
+/**
+ * Implements hook_init().
+ */
+function og_vocab_test_init() {
+  if ($nid = variable_get('og_vocab_test_context_nid', FALSE)) {
+    $node = node_load($nid);
+    og_context('node', $node);
+  }
+}

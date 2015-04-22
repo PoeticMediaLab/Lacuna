@@ -1,0 +1,22 @@
+/**
+ * @file
+ * CSS for Field Example.
+ */
+.stickynote {
+background:#fefabc;
+padding:0.8em;
+font-family:cursive;
+font-size:1.1em;
+color: #000;
+width:15em;
+
+-moz-transform: rotate(2deg);
+-webkit-transform: rotate(2deg);
+-o-transform: rotate(2deg);
+-ms-transform: rotate(2deg);
+transform: rotate(2deg);
+
+box-shadow: 0px 4px 6px #333;
+-moz-box-shadow: 0px 4px 6px #333;
+-webkit-box-shadow: 0px 4px 6px #333;
+}

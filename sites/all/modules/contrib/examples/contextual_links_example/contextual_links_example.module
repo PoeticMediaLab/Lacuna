@@ -1,0 +1,388 @@
+<?php
+
+/**
+ * @file
+ * Shows how to use Drupal's contextual links functionality.
+ *
+ * @see http://drupal.org/node/1089922
+ */
+
+/**
+ * @defgroup contextual_links_example Example: Contextual Links
+ * @ingroup examples
+ * @{
+ * Example of implementing contextual links.
+ */
+
+/**
+ * Implements hook_menu().
+ *
+ * Drupal's menu system allows you to indicate that particular menu items
+ * should be displayed as contextual links. If you hover over a block or node
+ * while logged in as an administrator (and with the Contextual Links module
+ * enabled) you'll see a small gear icon appear. Click on this icon, and the
+ * list of items that appears in the exposed menu are what Drupal calls
+ * "contextual links".
+ *
+ * Contextual links allow site administrators to quickly perform actions
+ * related to elements on a page, without having to hunt through the
+ * administrative interface. As such, you should usually attach them to objects
+ * that appear on the main part of a Drupal site and limit them to a few common
+ * tasks that are frequently performed (for example, "edit" or "configure").
+ * Do not rely on contextual links being present for your module to work
+ * correctly, since they are a convenience feature only. Within Drupal core,
+ * the Contextual Links module must be enabled (and the user viewing the page
+ * must have the "access contextual links" permission) in order for the
+ * contextual links corresponding to actions that the user can perform to
+ * actually be injected into the page's HTML.
+ *
+ * Three examples of contextual links are provided here. Although none are
+ * difficult to implement, they are presented in order of increasing
+ * complexity:
+ * - Attaching contextual links to a node.
+ * - Attaching contextual links to a block.
+ * - Attaching contextual links to an arbitrary piece of content defined by
+ *   your module.
+ *
+ * @see contextual_links_example_block_info()
+ * @see contextual_links_example_block_view()
+ * @see contextual_links_overview_page()
+ */
+function contextual_links_example_menu() {
+  // First example (attaching contextual links to a node):
+  //
+  // Many modules add tabs to nodes underneath the node/<nid> path. If the path
+  // you are adding corresponds to a commonly performed action on the node, you
+  // can choose to expose it as a contextual link. Since the Node module
+  // already has code to display all contextual links underneath the node/<nid>
+  // path (such as "Edit" and "Delete") when a node is being rendered outside
+  // of its own page (for example, when a teaser of the node is being displayed
+  // on the front page of the site), you only need to inform Drupal's menu
+  // system that your path is a contextual link also, and it will automatically
+  // appear with the others. In the example below, we add a contextual link
+  // named "Example action" to the list.
+  $items['node/%node/example-action'] = array(
+    'title' => 'Example action',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('contextual_links_example_node_action_form', 1),
+    'access callback' => TRUE,
+    // To be displayed as a contextual link, a menu item should be defined as
+    // one of the node's local tasks.
+    'type' => MENU_LOCAL_TASK,
+    // To make the local task display as a contextual link, specify the
+    // optional 'context' argument. The most common method is to set both
+    // MENU_CONTEXT_PAGE and MENU_CONTEXT_INLINE (shown below), which causes
+    // the link to display as both a tab on the node page and as an entry in
+    // the contextual links dropdown. This is recommended for most cases
+    // because not all users who have permission to visit the "Example action"
+    // page will necessarily have access to contextual links, and they still
+    // need a way to get to the page via the user interface.
+    'context' => MENU_CONTEXT_PAGE | MENU_CONTEXT_INLINE,
+    // If we give the item a large weight, we can make it display as the last
+    // tab on the page, as well as the last item inside the contextual links
+    // dropdown.
+    'weight' => 80,
+  );
+
+  // Second example (attaching contextual links to a block):
+  //
+  // If your module provides content that is displayed in a block, you can
+  // attach contextual links to the block that allow actions to be performed on
+  // it. This is useful for administrative pages that affect the content
+  // wherever it is displayed or used on the site. For configuration options
+  // that only affect the appearance of the content in the block itself, it is
+  // better to implement hook_block_configure() rather than creating a separate
+  // administrative page (this allows your options to appear when an
+  // administrator clicks the existing "Configure block" contextual link
+  // already provided by the Block module).
+  //
+  // In the code below, we assume that your module has a type of object
+  // ("contextual links example object") that will be displayed in a block. The
+  // code below defines menu items for this object using a standard pattern,
+  // with "View" and "Edit object" as the object's local tasks, and makes the
+  // "Edit object" item display as a contextual link in addition to a tab. Once
+  // the contextual links are defined here, additional steps are required to
+  // actually display the content in a block and attach the contextual links to
+  // the block itself. This occurs in contextual_links_example_block_info() and
+  // contextual_links_example_block_view().
+  $items['examples/contextual-links/%contextual_links_example_object'] = array(
+    'title' => 'Contextual links example object',
+    'page callback' => 'contextual_links_example_object_page',
+    'page arguments' => array(2),
+    'access callback' => TRUE,
+  );
+  $items['examples/contextual-links/%contextual_links_example_object/view'] = array(
+    'title' => 'View',
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+    'weight' => -10,
+  );
+  $items['examples/contextual-links/%contextual_links_example_object/edit'] = array(
+    'title' => 'Edit object',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('contextual_links_example_object_edit_form', 2),
+    'access callback' => TRUE,
+    'type' => MENU_LOCAL_TASK,
+    // As in our first example, this is the line of code that makes "Edit
+    // "object" display as a contextual link in addition to as a tab.
+    'context' => MENU_CONTEXT_PAGE | MENU_CONTEXT_INLINE,
+  );
+
+  // Third example (attaching contextual links directly to your module's
+  // content):
+  //
+  // Sometimes your module may want to display its content in an arbitrary
+  // location and attach contextual links there. For example, you might
+  // display your content in a listing on its own page and then attach the
+  // contextual links directly to each piece of content in the listing. Here,
+  // we will reuse the menu items and contextual links that were defined for
+  // our example object above, and display them in a listing in
+  // contextual_links_overview_page().
+  $items['examples/contextual-links'] = array(
+    'title' => 'Contextual Links Example',
+    'page callback' => 'contextual_links_overview_page',
+    'access callback' => TRUE,
+  );
+
+  return $items;
+}
+
+/**
+ * Menu loader callback for the object defined by this module.
+ *
+ * @param int $id
+ *   The ID of the object to load.
+ *
+ * @return object|FALSE
+ *   A fully loaded object, or FALSE if the object does not exist.
+ */
+function contextual_links_example_object_load($id) {
+  // In a real use case, this function might load an object from the database.
+  // For the sake of this example, we just define a stub object with a basic
+  // title and content for any numeric ID that is passed in.
+  if (is_numeric($id)) {
+    $object = new stdClass();
+    $object->id = $id;
+    $object->title = t('Title for example object @id', array('@id' => $id));
+    $object->content = t('This is the content of example object @id.', array('@id' => $id));
+    return $object;
+  }
+  else {
+    return FALSE;
+  }
+}
+
+/**
+ * Implements hook_block_info().
+ */
+function contextual_links_example_block_info() {
+  // Define the block that will display our module's content.
+  $blocks['example']['info'] = t('Contextual links example block');
+  return $blocks;
+}
+
+/**
+ * Implements hook_block_view().
+ */
+function contextual_links_example_block_view($delta = '') {
+  if ($delta == 'example') {
+    // Display our module's content inside a block. In a real use case, we
+    // might define a new block for each object that exists. For the sake of
+    // this example, though, we only define one block and hardcode it to always
+    // display object #1.
+    $id = 1;
+    $object = contextual_links_example_object_load($id);
+    $block['subject'] = t('Contextual links example block for object @id', array('@id' => $id));
+    $block['content'] = array(
+      // In order to attach contextual links, the block's content must be a
+      // renderable array. (Normally this would involve themed output using
+      // #theme, but for simplicity we just use HTML markup directly here.)
+      '#type' => 'markup',
+      '#markup' => filter_xss($object->content),
+      // Contextual links are attached to the block array using the special
+      // #contextual_links property. The #contextual_links property contains an
+      // array, keyed by the name of each module that is attaching contextual
+      // links to it.
+      '#contextual_links' => array(
+        'contextual_links_example' => array(
+          // Each element is itself an array, containing two elements which are
+          // combined together to form the base path whose contextual links
+          // should be attached. The two elements are split such that the first
+          // is the static part of the path and the second is the dynamic part.
+          // (This split is for performance reasons.) For example, the code
+          // below tells Drupal to load the menu item corresponding to the path
+          // "examples/contextual-links/$id" and attach all this item's
+          // contextual links (which were defined in hook_menu()) to the object
+          // when it is rendered. If the contextual links you are attaching
+          // don't have any dynamic elements in their path, you can pass an
+          // empty array as the second element.
+          'examples/contextual-links',
+          array($id),
+        ),
+      ),
+    );
+    // Since we are attaching our contextual links to a block, and the Block
+    // module takes care of rendering the block in such a way that contextual
+    // links are supported, we do not need to do anything else here. When the
+    // appropriate conditions are met, the contextual links we have defined
+    // will automatically appear attached to the block, next to the "Configure
+    // block" link that the Block module itself provides.
+    return $block;
+  }
+}
+
+/**
+ * Menu callback; displays a listing of objects defined by this module.
+ *
+ * @see contextual_links_example_theme()
+ * @see contextual-links-example-object.tpl.php
+ * @see contextual_links_example_block_view()
+ */
+function contextual_links_overview_page() {
+  $build = array();
+
+  // For simplicity, we will hardcode this example page to list five of our
+  // module's objects.
+  for ($id = 1; $id <= 5; $id++) {
+    $object = contextual_links_example_object_load($id);
+    $build[$id] = array(
+      // To support attaching contextual links to an object that we are
+      // displaying on our own, the object must be themed in a particular way.
+      // See contextual_links_example_theme() and
+      // contextual-links-example-object.tpl.php for more discussion.
+      '#theme' => 'contextual_links_example_object',
+      '#object' => $object,
+      // Contextual links are attached to the block using the special
+      // #contextual_links property. See contextual_links_example_block_view()
+      // for discussion of the syntax used here.
+      '#contextual_links' => array(
+        'contextual_links_example' => array(
+          'examples/contextual-links',
+          array($id),
+        ),
+      ),
+    );
+  }
+
+  return $build;
+}
+
+/**
+ * Implements hook_theme().
+ *
+ * @see template_preprocess_contextual_links_example_object()
+ */
+function contextual_links_example_theme() {
+  // The core Contextual Links module imposes two restrictions on how an object
+  // must be themed in order for it to display the object's contextual links in
+  // the user interface:
+  // - The object must use a template file rather than a theme function. See
+  //   contextual-links-example-object.tpl.php for more information on how the
+  //   template file should be structured.
+  // - The first variable passed to the template must be a renderable array. In
+  //   this case, we accomplish that via the most common method, by passing a
+  //   single renderable element.
+  return array(
+    'contextual_links_example_object' => array(
+      'template' => 'contextual-links-example-object',
+      'render element' => 'element',
+    ),
+  );
+}
+
+/**
+ * Process variables for contextual-links-example-object.tpl.php.
+ *
+ * @see contextual_links_overview_page()
+ */
+function template_preprocess_contextual_links_example_object(&$variables) {
+  // Here we take the object that is being themed and define some useful
+  // variables that we will print in the template file.
+  $variables['title'] = filter_xss($variables['element']['#object']->title);
+  $variables['content'] = filter_xss($variables['element']['#object']->content);
+}
+
+/**
+ * Menu callback; displays an object defined by this module on its own page.
+ *
+ * @see contextual_links_overview_page()
+ */
+function contextual_links_example_object_page($object) {
+  // Here we render the object but without the #contextual_links property,
+  // since we don't want contextual links to appear when the object is already
+  // being displayed on its own page.
+  $build = array(
+    '#theme' => 'contextual_links_example_object',
+    '#object' => $object,
+  );
+
+  return $build;
+}
+
+/**
+ * Form callback; display the form for editing our module's content.
+ *
+ * @ingroup forms
+ * @see contextual_links_example_object_edit_form_submit()
+ */
+function contextual_links_example_object_edit_form($form, &$form_state, $object) {
+  $form['text'] = array(
+    '#markup' => t('This is the page that would allow you to edit object @id.', array('@id' => $object->id)),
+    '#prefix' => '<p>',
+    '#suffix' => '</p>',
+  );
+  $form['object_id'] = array(
+    '#type' => 'value',
+    '#value' => $object->id,
+  );
+
+  $form['actions'] = array('#type' => 'actions');
+  $form['actions']['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Submit'),
+  );
+
+  return $form;
+}
+
+/**
+ * Submit handler for contextual_links_example_object_edit_form().
+ */
+function contextual_links_example_object_edit_form_submit($form, &$form_state) {
+  drupal_set_message(t('Object @id was edited.', array('@id' => $form_state['values']['object_id'])));
+}
+
+/**
+ * Form callback; display the form for performing an example action on a node.
+ *
+ * @ingroup forms
+ * @see contextual_links_example_node_action_form_submit()
+ */
+function contextual_links_example_node_action_form($form, &$form_state, $node) {
+  $form['text'] = array(
+    '#markup' => t('This is the page that would allow you to perform an example action on node @nid.', array('@nid' => $node->nid)),
+    '#prefix' => '<p>',
+    '#suffix' => '</p>',
+  );
+  $form['nid'] = array(
+    '#type' => 'value',
+    '#value' => $node->nid,
+  );
+
+  $form['actions'] = array('#type' => 'actions');
+  $form['actions']['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Submit'),
+  );
+
+  return $form;
+}
+
+/**
+ * Submit handler for contextual_links_example_node_action_form().
+ */
+function contextual_links_example_node_action_form_submit($form, &$form_state) {
+  drupal_set_message(t('The example action was performed on node @nid.', array('@nid' => $form_state['values']['nid'])));
+}
+/**
+ * @} End of "defgroup contextual_links_example".
+ */

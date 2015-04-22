@@ -1,0 +1,14 @@
+name = Entity Example
+description = A simple entity example showing the main steps required to set up your own entity.
+core = 7.x
+package = Example modules
+dependencies[] = field
+files[] = entity_example.test
+configure = admin/structure/entity_example_basic/manage
+
+; Information added by Drupal.org packaging script on 2014-10-03
+version = "7.x-1.x-dev"
+core = "7.x"
+project = "examples"
+datestamp = "1412378934"
+

@@ -1,3 +1,4 @@
+@import "init";
 /* Hide "Operations" text in Sewing Kit */
 .vbo-views-form form div fieldset.container-inline legend span.fieldset-legend {
   display: none;
@@ -27,10 +28,6 @@ select#edit-thread-add {
 .vbo-fieldset-select-all {
   margin-right: auto;
   margin-left: auto;
-}
-
-fieldset.form-wrapper {
-  border: none;
 }
 
 .views-field-biblio-url {
@@ -141,6 +138,12 @@ $views-link-hover-color: #1588BA;
   }
 }
 
+.view-documents #edit-reset.form-submit,
+.view-responses #edit-reset.form-submit{
+  margin-top: 0px;
+  margin-right: 80px;
+}
+
 table.views-table {
   width: 100%;
 }
@@ -173,4 +176,20 @@ table.views-table {
   td.views-field-category {
     text-align: center;
   }
+}
+
+.view-people {
+  .views-field-name,
+  .views-field-rid {
+    text-align: center;
+  }
+  table.views-view-grid {
+    td {
+      padding-left: 25px;
+    }
+  }
+}
+
+div#block-views-bibliography-block {
+  font-family: $base-serif-font-family;
 }

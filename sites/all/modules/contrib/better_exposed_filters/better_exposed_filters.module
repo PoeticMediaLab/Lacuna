@@ -75,11 +75,12 @@ function better_exposed_filters_views_api() {
  * Unpacks sort_by and sort_order from the sort_bef_combine element.
  */
 function bef_sort_combine_submit($form, &$form_state) {
-  if (empty($form_state['values']['sort_bef_combine'])) {
+  $combine_param = $form_state['#combine_param'];
+  if (empty($form_state['values'][$combine_param])) {
     $form_state['values']['sort_by'] = $form_state['values']['sort_order'] = '';
   }
   else {
-    list($form_state['values']['sort_by'], $form_state['values']['sort_order']) = explode(' ', $form_state['values']['sort_bef_combine']);
+    list($form_state['values']['sort_by'], $form_state['values']['sort_order']) = explode(' ', $form_state['values'][$combine_param]);
   }
 
   // And pass this along to Views.
@@ -178,34 +179,4 @@ function _better_exposed_filters_slider_selected($element, &$form_state) {
 function _better_exposed_filters_get_num_decimal_places($number) {
   $str = (string) $number;
   return strlen(substr(strrchr($str, '.'), 1));
-}
-
-/**
- * Translate user entered string.
- *
- * @param string $name
- * @param string $string
- * @param string $langcode
- * @return string
- */
-function better_exposed_filters_translate($name, $string, $langcode = NULL) {
-  return function_exists('i18n_string_translate') ? i18n_string_translate($name, $string, array(
-    'langcode' => $langcode,
-    'format' => FALSE,
-    'sanitize' => FALSE,
-  )) : $string;
-}
-
-/**
- * Implements hook_i18n_string_info()
- */
-function better_exposed_filters_i18n_string_info() {
-  $groups['better_exposed_filters'] = array(
-    'title' => t('Better exposed filters'),
-    'description' => t('Custom strings.'),
-    'format' => FALSE, // This group doesn't have strings with format
-    'list' => FALSE, // This group cannot list all strings
-    'refresh callback' => 'better_exposed_filters_i18n_string_refresh',
-  );
-  return $groups;
 }

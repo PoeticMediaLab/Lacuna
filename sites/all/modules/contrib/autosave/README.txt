@@ -28,7 +28,6 @@ Drupal 7 version and current maintainer: Larry Garfield sponsored by American Pu
 
 CHANGE LOG
 ==========
-- 7.x-2.x - Working dev version; can handle TinyMCE WYSIWYG areas only.
 - 6.x-2.0 version is a complete re-write to remove dependencies on TinyMCE.
 - this version is now tied to the WYSIWYG module and currently is known to work with FCK, CK and TinyMCE 3.0 editors but requires
 the 6.x-2.x-dev version of WYSIWYG with this patch: http://drupal.org/node/614146#comment-2193764; this patch should be commited soon and will

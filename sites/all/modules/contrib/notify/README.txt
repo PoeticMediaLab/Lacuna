@@ -7,10 +7,12 @@ CONTENTS OF THIS FILE
 
 * Introduction
 * Requirements
+* Recommended modules
 * Installation
 * Configuration
   - Administration form
   - User's settings
+* Troubleshooting
 * Testing
 * Maintainers
 
@@ -38,6 +40,13 @@ REQUIREMENTS
 
 This module requires a supported version of Drupal and cron to be
 running.
+
+RECOMMENDED MODULES
+-------------------
+
+* Advanced help (https://www.drupal.org/project/advanced_help)
+  When this module is enabled the administrator will have access to
+  more online help.
 
 
 INSTALLATION
@@ -84,12 +93,13 @@ Administration form
 The administrative interface is at: Administer » Configuration »
 People » Notification settings.
 
-There are four tabs:
+There are five tabs:
 
 1. Settings: All the main options for this module.
-2. Defaults: Default settings for new users.
-3. Queue: Process and inspect the notification queue.
-4. Users: Review and alter per-user settings.
+2. Queue: Operations on the notification queue.
+3. Skip flags: Inspect the notification queue and flag postings to skip.
+4. Defaults: Default settings for new users.
+5. Users: Review and alter per-user settings.
 
 
 Settings
@@ -105,20 +115,20 @@ When setting how often notifications are sent, note that e-mail
 updates can only happen as frequently as the cron is set to run.
 
 To reset the count of failed sends to zero, look at the notification
-settings in the user's profile and save it press "Save settings"
+settings in the user's profile and save it by pressing "Save settings"
 (there is no need to change anything).
 
 If you check "Include updated posts in notifications", any change to a
 node or content will cause it to be included in the next notification.
 Note that even minor changes, such as correcting a trivial typo or
 setting or unsetting the "sticky" attribute for the node will flag it
-as updated, so use this option with caution in order to avoid excess
-notificatons.
+as updated, so use this option with caution, or in combination with
+skip flags (see below) in order to avoid excess notificatons.
 
 If you check "Exclude contents from unverified authors from user
 notifications", notify will not notify about postings from unverified
 (i.e. anonymous) authors.  You need only care about this setting if
-you you permit postings from anonymous authors.  Even if you have spam
+you permit postings from anonymous authors.  Even if you have spam
 protection in the shape of CAPTCHA or other measures, you may
 experience that some spammers still manage to post contents on your
 site.  By checking this setting, you will at least save your
@@ -126,8 +136,8 @@ subscribers from being notified about spam.  As with most of these
 settings, it doesn't apply to administrators. Even when checked
 administrators will be notified, in order to intervene and delete the
 spam before it gets much exposure.  Note that if you check this
-settings, there is currently no keeping track of the content that is
-excluded due this setting.  If you use it, your users will never
+setting, there is currently no way to keep track of the content that
+is excluded due this setting.  If you use it, your users will never
 receive any notification email about new content from unverified
 authors.  That's not a bug, it is a feature.
 
@@ -135,44 +145,52 @@ If you check "Administrators shall be notified about unpublished
 content", users belonging to roles with the "administer nodes" and
 "administer comments" permissions granted will receive notifications
 about unpublished content.  This is mainly to make the module useful
-to manage moderation queues.  Note that notifications about
-unpublished content are only sent once.
+to manage moderation queues.
 
 If you've set up a multilingual site, there should also be three radio
 buttons that allow you to filter notifications about new nodes against
-the user's language setting (may be set by editing the user profile).
-The first setting ("All contents") will notify a user about all new
-content on the site. If a piece of contents exists in more than one
-language, all versions will be notified about.  The setting "Contents
-in the user's preferred language + contents not yet translated" will
-notify about content in the user's preferred language and also about
-content that is in some other language if no translation of it
-exists. The last setting, "Only contents in the user's preferred
-language ", will only notify about new contents in the user's
-preferred language.  However, please note that new contents that are
-marked as "language neutral" will always be included in notifications.
-The multilingual settings do not apply to administrators.
-Administrators will always be notified about all new contents.  Note
-that if you use the second setting, contents that is not in the user's
-preferred language will be excluded from the notification if some
-translation of exists, even if that translation is not to the user's
-preferred language.
+the user's language setting (it may be set by editing the user
+profile).  The first setting ("All contents") will notify a user about
+all new content on the site. If a piece of contents exists in more
+than one language, all versions will be notified about.  The setting
+"Contents in the user's preferred language + contents not yet
+translated" will notify about content in the user's preferred language
+and also about content that is in some other language if no
+translation of it exists. The last setting, "Only contents in the
+user's preferred language", will only notify about new contents in
+the user's preferred language.  However, please note that new contents
+that are marked as "language neutral" will always be included in
+notifications.  The multilingual settings do not apply to
+administrators.  Administrators will always be notified about all new
+contents.  Note that if you use the second setting, contents that is
+not in the user's preferred language will be excluded from the
+notification if some translation of exists, even if that translation
+is not to the user's preferred language.
 
 The "Watchdog log level" setting lets you specify how much to log.
 The setting "All" will make a log record of every notification mail
 sent.  The setting "Failures+Summary" will only log failed
 notification attempts. It will also insert a summary of how many sent
 and how many failures at the end of each batch.  The "Failures"
-setting will omit the summary.  The "Nothing" setting will turn of
+setting will omit the summary.  The "Nothing" setting will turn off
 logging for Notify.
+
+The "Weight of notification field in user registration form" setting
+lets you specify the weight that determines the position of the
+notification field group when it appears in the user registration
+form.  The number is relative to the row weights that can be inspected
+on Administer » Configuration » People » Account settings.  Pick a
+higher (heavier) weight to make the field group positoned below a
+specific field, and vice versa.
 
 
 Queue
 
-The Queue tab is to process and inspect the notification queue.
+The Queue tab gives access to notification queue operatons and the
+notification queue status panel.
 
-The radio buttons below the heading "Process notification queue" has
-the following meanings:
+The radio buttons below the heading "Notification queue operations"
+has the following meanings:
 
  - Send batch now: Force sending a notification batch without waiting
    for the next cron run.  Note that if the number of notifications
@@ -184,8 +202,25 @@ the following meanings:
  - Truncate queue: Truncate the queue of pending notifications without
    sending out any notifications.
 
-The status panel gives the administrator a rough overview of the
-current state of the notification queue.
+ - Override timestamp: Change the value of the last notification
+   timestamp.  To resend postings that has already been sent, set pick
+   a value before the oldest posting you want to resend.
+
+The text field "Last notification timestamp" can be used to override
+the value of the last notification timestamp.  This value is only used
+to override of the operation "Override timestamp" is selected.
+
+The status panel at the bottom of the page gives the administrator a
+rough overview of the current state of the notification queue. Its
+main use is for debugging.
+
+
+Skip flags
+
+The Skip flags tab will show a list of all the postings that are
+candidates for being sent in the next notification.  Each has a
+checkbox that can be checked to exclude the posting from all
+notification emails, including the one sent to the administrator.
 
 
 Defaults
@@ -240,6 +275,29 @@ new content on the site, without making it subscribable for
 non-administrators.
 
 
+TROUBLESHOOTING
+---------------
+
+* If Notify does not send out <em>any</em> notification emails, first
+  check that Drupal can send email otherwise (e.g. request a password
+  reset email).  If this does not work, the problem is with your
+  site's email configuration, not Notify.
+
+* If inbound links in the notification e-mail is rendered as
+  http://default, you may need to set the $base_url in your
+  settings.php file. Examples for how to do this are provided in
+  settings.php.
+
+* If Notify makes the site crash, and you have the core PHP Filter
+  module enabled, nodes which include bad PHP code will break your
+  site when they're processed by Notify. Please see the following
+  issue for further details: https://www.drupal.org/node/146521. If
+  this happens, you may try to disable the PHP Filter module.
+
+If the above does not help you, to file bug reports, use the issue
+queue linked to from the Notify project page.
+
+
 TESTING
 -------
 
@@ -252,15 +310,14 @@ MAINTAINERS
 -----------
 
 Kjartan Mannes <kjartan@drop.org> is the original author.
-
 Rob Barreca <rob@electronicinsight.com> was a previous maintainer.
-
-Matt Chapman <matt@ninjitsuweb.com> is the current maintainer.
+Matt Chapman <matt@ninjitsuweb.com> is the project owner.
+Gisle Hannemyr <gisle@hannemyr.no> maintains the Drupal 7 branch.
 
 Marton Bodonyi (http://www.interactivejunky.com/),
 Mark Lindsey,
 John Oltman <john.oltman@sitebasin.com>,
 Ward Poelmans <wpoely86@gmail.com>,
-Ishmael Sanchez (http://ishmaelsanchez.com),
-Ajit Shinde (https://www.facebook.com/shinde.ajit), and 
-Gisle Hannemyr <gisle@hannemyr.no> contributed to the Drupal 7 port.
+Ishmael Sanchez (http://ishmaelsanchez.com), and
+Ajit Shinde (https://www.facebook.com/shinde.ajit)
+contributed to the Drupal 7 port.

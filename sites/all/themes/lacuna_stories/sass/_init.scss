@@ -70,6 +70,13 @@ $h6-font-size: 0.67 * $base-font-size;
 // monospace) hints at what type of font to use if the web browser doesn't
 // find any of the fonts in the list.
 
+
+// Our web font stack
+@import url("//fonts.googleapis.com/css?family=Libre+Baskerville|Noto+Sans);");
+
+// Include Font Awesome
+@import url("//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css");
+
 // First, let's create some font stacks.
 $times-new-roman: "Times New Roman", Times, Georgia, "DejaVu Serif", serif;
 $times:           Times, "Times New Roman", Georgia, "DejaVu Serif", serif;
@@ -85,10 +92,10 @@ $arial:           Arial, Helvetica, "Nimbus Sans L", sans-serif;
 $courier:         "Courier New", "DejaVu Sans Mono", monospace, sans-serif;
 
 // Now create some variables for the font stacks we want to use on this site.
-$base-font-family: $verdana; // The font family set on the html element.
-$font-body:        $verdana;
+$base-font-family: 'Noto Sans', $verdana; // The font family set on the html element.
+$font-body:        'Noto Sans', $verdana;
 $font-monospace:   $courier;
-
+$base-serif-font-family: 'Baskerville Libre', $georgia;
 
 //
 // Colors, etc.

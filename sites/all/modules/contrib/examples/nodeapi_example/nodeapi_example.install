@@ -1,0 +1,80 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the nodeapi_example module.
+ */
+
+/**
+ * Implements hook_schema().
+ *
+ * @ingroup nodeapi_example
+ */
+function nodeapi_example_schema() {
+  $schema['nodeapi_example'] = array(
+    'description' => 'Stores information of extended content.',
+    'fields' => array(
+      'nid'    => array(
+        'description' => 'Node ID that the rating is applied to.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'vid'    => array(
+        'description' => 'Revision ID, as we are tracking rating with node revisions',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'rating' => array(
+        'description' => 'The rating of the node.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+    ),
+    'primary key' => array('vid'),
+    'indexes' => array(
+      'nid'   => array('nid'),
+    ),
+  );
+
+  return $schema;
+}
+
+/**
+ * Implements hook_uninstall().
+ *
+ * We need to clean up our variables data when uninstalling our module.
+ *
+ * Our implementation of nodeapi_example_form_alter() automatically
+ * creates a nodeapi_example_node_type_<contentType> variable for each node type
+ * the user wants to rate.
+ *
+ * To delete our variables we call variable_del for our variables'
+ * namespace, 'nodeapi_example_node_type_'. Note that an average module would
+ * have known variables that it had created, and it could just delete those
+ * explicitly. For example, see render_example_uninstall(). It's important
+ * not to delete variables that might be owned by other modules, so normally
+ * we would just explicitly delete a set of known variables.
+ *
+ * hook_uninstall() will only be called when uninstalling a module, not when
+ * disabling a module. This allows our data to stay in the database if the user
+ * only disables our module without uninstalling it.
+ *
+ * @ingroup nodeapi_example
+ */
+function nodeapi_example_uninstall() {
+  // Simple DB query to get the names of our variables.
+  $results = db_select('variable', 'v')
+    ->fields('v', array('name'))
+    ->condition('name', 'nodeapi_example_node_type_%', 'LIKE')
+    ->execute();
+  // Loop through and delete each of our variables.
+  foreach ($results as $result) {
+    variable_del($result->name);
+  }
+}

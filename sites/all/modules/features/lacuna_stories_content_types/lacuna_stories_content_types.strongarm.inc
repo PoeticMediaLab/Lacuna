@@ -27,13 +27,6 @@ function lacuna_stories_content_types_strongarm() {
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
-  $strongarm->name = 'comment_anonymous_audio';
-  $strongarm->value = 0;
-  $export['comment_anonymous_audio'] = $strongarm;
-
-  $strongarm = new stdClass();
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
   $strongarm->name = 'comment_anonymous_blog';
   $strongarm->value = 0;
   $export['comment_anonymous_blog'] = $strongarm;
@@ -41,9 +34,9 @@ function lacuna_stories_content_types_strongarm() {
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
-  $strongarm->name = 'comment_anonymous_course_or_other_group';
+  $strongarm->name = 'comment_anonymous_course';
   $strongarm->value = 0;
-  $export['comment_anonymous_course_or_other_group'] = $strongarm;
+  $export['comment_anonymous_course'] = $strongarm;
 
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
@@ -51,20 +44,6 @@ function lacuna_stories_content_types_strongarm() {
   $strongarm->name = 'comment_anonymous_document';
   $strongarm->value = 0;
   $export['comment_anonymous_document'] = $strongarm;
-
-  $strongarm = new stdClass();
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'comment_anonymous_image';
-  $strongarm->value = 0;
-  $export['comment_anonymous_image'] = $strongarm;
-
-  $strongarm = new stdClass();
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'comment_anonymous_music_video';
-  $strongarm->value = 0;
-  $export['comment_anonymous_music_video'] = $strongarm;
 
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
@@ -83,23 +62,9 @@ function lacuna_stories_content_types_strongarm() {
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
-  $strongarm->name = 'comment_anonymous_video';
-  $strongarm->value = 0;
-  $export['comment_anonymous_video'] = $strongarm;
-
-  $strongarm = new stdClass();
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
   $strongarm->name = 'comment_anonymous_webform';
   $strongarm->value = 0;
   $export['comment_anonymous_webform'] = $strongarm;
-
-  $strongarm = new stdClass();
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'comment_audio';
-  $strongarm->value = '1';
-  $export['comment_audio'] = $strongarm;
 
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
@@ -111,9 +76,9 @@ function lacuna_stories_content_types_strongarm() {
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
-  $strongarm->name = 'comment_course_or_other_group';
+  $strongarm->name = 'comment_course';
   $strongarm->value = '1';
-  $export['comment_course_or_other_group'] = $strongarm;
+  $export['comment_course'] = $strongarm;
 
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
@@ -125,13 +90,6 @@ function lacuna_stories_content_types_strongarm() {
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
-  $strongarm->name = 'comment_default_mode_audio';
-  $strongarm->value = 1;
-  $export['comment_default_mode_audio'] = $strongarm;
-
-  $strongarm = new stdClass();
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
   $strongarm->name = 'comment_default_mode_blog';
   $strongarm->value = 1;
   $export['comment_default_mode_blog'] = $strongarm;
@@ -139,9 +97,9 @@ function lacuna_stories_content_types_strongarm() {
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
-  $strongarm->name = 'comment_default_mode_course_or_other_group';
+  $strongarm->name = 'comment_default_mode_course';
   $strongarm->value = 1;
-  $export['comment_default_mode_course_or_other_group'] = $strongarm;
+  $export['comment_default_mode_course'] = $strongarm;
 
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
@@ -149,20 +107,6 @@ function lacuna_stories_content_types_strongarm() {
   $strongarm->name = 'comment_default_mode_document';
   $strongarm->value = 1;
   $export['comment_default_mode_document'] = $strongarm;
-
-  $strongarm = new stdClass();
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'comment_default_mode_image';
-  $strongarm->value = 1;
-  $export['comment_default_mode_image'] = $strongarm;
-
-  $strongarm = new stdClass();
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'comment_default_mode_music_video';
-  $strongarm->value = 1;
-  $export['comment_default_mode_music_video'] = $strongarm;
 
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
@@ -181,13 +125,6 @@ function lacuna_stories_content_types_strongarm() {
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
-  $strongarm->name = 'comment_default_mode_video';
-  $strongarm->value = 1;
-  $export['comment_default_mode_video'] = $strongarm;
-
-  $strongarm = new stdClass();
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
   $strongarm->name = 'comment_default_mode_webform';
   $strongarm->value = 1;
   $export['comment_default_mode_webform'] = $strongarm;
@@ -202,13 +139,6 @@ function lacuna_stories_content_types_strongarm() {
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
-  $strongarm->name = 'comment_default_per_page_audio';
-  $strongarm->value = '50';
-  $export['comment_default_per_page_audio'] = $strongarm;
-
-  $strongarm = new stdClass();
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
   $strongarm->name = 'comment_default_per_page_blog';
   $strongarm->value = '50';
   $export['comment_default_per_page_blog'] = $strongarm;
@@ -216,9 +146,9 @@ function lacuna_stories_content_types_strongarm() {
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
-  $strongarm->name = 'comment_default_per_page_course_or_other_group';
+  $strongarm->name = 'comment_default_per_page_course';
   $strongarm->value = '50';
-  $export['comment_default_per_page_course_or_other_group'] = $strongarm;
+  $export['comment_default_per_page_course'] = $strongarm;
 
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
@@ -226,20 +156,6 @@ function lacuna_stories_content_types_strongarm() {
   $strongarm->name = 'comment_default_per_page_document';
   $strongarm->value = '50';
   $export['comment_default_per_page_document'] = $strongarm;
-
-  $strongarm = new stdClass();
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'comment_default_per_page_image';
-  $strongarm->value = '50';
-  $export['comment_default_per_page_image'] = $strongarm;
-
-  $strongarm = new stdClass();
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'comment_default_per_page_music_video';
-  $strongarm->value = '50';
-  $export['comment_default_per_page_music_video'] = $strongarm;
 
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
@@ -254,13 +170,6 @@ function lacuna_stories_content_types_strongarm() {
   $strongarm->name = 'comment_default_per_page_thread';
   $strongarm->value = '50';
   $export['comment_default_per_page_thread'] = $strongarm;
-
-  $strongarm = new stdClass();
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'comment_default_per_page_video';
-  $strongarm->value = '50';
-  $export['comment_default_per_page_video'] = $strongarm;
 
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
@@ -286,13 +195,6 @@ function lacuna_stories_content_types_strongarm() {
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
-  $strongarm->name = 'comment_form_location_audio';
-  $strongarm->value = 1;
-  $export['comment_form_location_audio'] = $strongarm;
-
-  $strongarm = new stdClass();
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
   $strongarm->name = 'comment_form_location_blog';
   $strongarm->value = 1;
   $export['comment_form_location_blog'] = $strongarm;
@@ -300,9 +202,9 @@ function lacuna_stories_content_types_strongarm() {
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
-  $strongarm->name = 'comment_form_location_course_or_other_group';
+  $strongarm->name = 'comment_form_location_course';
   $strongarm->value = 1;
-  $export['comment_form_location_course_or_other_group'] = $strongarm;
+  $export['comment_form_location_course'] = $strongarm;
 
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
@@ -310,20 +212,6 @@ function lacuna_stories_content_types_strongarm() {
   $strongarm->name = 'comment_form_location_document';
   $strongarm->value = 1;
   $export['comment_form_location_document'] = $strongarm;
-
-  $strongarm = new stdClass();
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'comment_form_location_image';
-  $strongarm->value = 1;
-  $export['comment_form_location_image'] = $strongarm;
-
-  $strongarm = new stdClass();
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'comment_form_location_music_video';
-  $strongarm->value = 1;
-  $export['comment_form_location_music_video'] = $strongarm;
 
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
@@ -342,30 +230,9 @@ function lacuna_stories_content_types_strongarm() {
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
-  $strongarm->name = 'comment_form_location_video';
-  $strongarm->value = 1;
-  $export['comment_form_location_video'] = $strongarm;
-
-  $strongarm = new stdClass();
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
   $strongarm->name = 'comment_form_location_webform';
   $strongarm->value = 1;
   $export['comment_form_location_webform'] = $strongarm;
-
-  $strongarm = new stdClass();
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'comment_image';
-  $strongarm->value = '1';
-  $export['comment_image'] = $strongarm;
-
-  $strongarm = new stdClass();
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'comment_music_video';
-  $strongarm->value = '1';
-  $export['comment_music_video'] = $strongarm;
 
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
@@ -384,13 +251,6 @@ function lacuna_stories_content_types_strongarm() {
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
-  $strongarm->name = 'comment_preview_audio';
-  $strongarm->value = '1';
-  $export['comment_preview_audio'] = $strongarm;
-
-  $strongarm = new stdClass();
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
   $strongarm->name = 'comment_preview_blog';
   $strongarm->value = '1';
   $export['comment_preview_blog'] = $strongarm;
@@ -398,9 +258,9 @@ function lacuna_stories_content_types_strongarm() {
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
-  $strongarm->name = 'comment_preview_course_or_other_group';
+  $strongarm->name = 'comment_preview_course';
   $strongarm->value = '1';
-  $export['comment_preview_course_or_other_group'] = $strongarm;
+  $export['comment_preview_course'] = $strongarm;
 
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
@@ -408,20 +268,6 @@ function lacuna_stories_content_types_strongarm() {
   $strongarm->name = 'comment_preview_document';
   $strongarm->value = '1';
   $export['comment_preview_document'] = $strongarm;
-
-  $strongarm = new stdClass();
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'comment_preview_image';
-  $strongarm->value = '1';
-  $export['comment_preview_image'] = $strongarm;
-
-  $strongarm = new stdClass();
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'comment_preview_music_video';
-  $strongarm->value = '1';
-  $export['comment_preview_music_video'] = $strongarm;
 
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
@@ -440,13 +286,6 @@ function lacuna_stories_content_types_strongarm() {
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
-  $strongarm->name = 'comment_preview_video';
-  $strongarm->value = '1';
-  $export['comment_preview_video'] = $strongarm;
-
-  $strongarm = new stdClass();
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
   $strongarm->name = 'comment_preview_webform';
   $strongarm->value = '1';
   $export['comment_preview_webform'] = $strongarm;
@@ -461,13 +300,6 @@ function lacuna_stories_content_types_strongarm() {
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
-  $strongarm->name = 'comment_subject_field_audio';
-  $strongarm->value = 1;
-  $export['comment_subject_field_audio'] = $strongarm;
-
-  $strongarm = new stdClass();
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
   $strongarm->name = 'comment_subject_field_blog';
   $strongarm->value = 1;
   $export['comment_subject_field_blog'] = $strongarm;
@@ -475,9 +307,9 @@ function lacuna_stories_content_types_strongarm() {
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
-  $strongarm->name = 'comment_subject_field_course_or_other_group';
+  $strongarm->name = 'comment_subject_field_course';
   $strongarm->value = 1;
-  $export['comment_subject_field_course_or_other_group'] = $strongarm;
+  $export['comment_subject_field_course'] = $strongarm;
 
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
@@ -485,20 +317,6 @@ function lacuna_stories_content_types_strongarm() {
   $strongarm->name = 'comment_subject_field_document';
   $strongarm->value = 1;
   $export['comment_subject_field_document'] = $strongarm;
-
-  $strongarm = new stdClass();
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'comment_subject_field_image';
-  $strongarm->value = 1;
-  $export['comment_subject_field_image'] = $strongarm;
-
-  $strongarm = new stdClass();
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'comment_subject_field_music_video';
-  $strongarm->value = 1;
-  $export['comment_subject_field_music_video'] = $strongarm;
 
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
@@ -517,13 +335,6 @@ function lacuna_stories_content_types_strongarm() {
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
-  $strongarm->name = 'comment_subject_field_video';
-  $strongarm->value = 1;
-  $export['comment_subject_field_video'] = $strongarm;
-
-  $strongarm = new stdClass();
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
   $strongarm->name = 'comment_subject_field_webform';
   $strongarm->value = 1;
   $export['comment_subject_field_webform'] = $strongarm;
@@ -534,13 +345,6 @@ function lacuna_stories_content_types_strongarm() {
   $strongarm->name = 'comment_thread';
   $strongarm->value = '2';
   $export['comment_thread'] = $strongarm;
-
-  $strongarm = new stdClass();
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'comment_video';
-  $strongarm->value = '1';
-  $export['comment_video'] = $strongarm;
 
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
@@ -584,48 +388,6 @@ function lacuna_stories_content_types_strongarm() {
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
-  $strongarm->name = 'field_bundle_settings_node__audio';
-  $strongarm->value = array(
-    'view_modes' => array(
-      'teaser' => array(
-        'custom_settings' => TRUE,
-      ),
-      'full' => array(
-        'custom_settings' => FALSE,
-      ),
-      'rss' => array(
-        'custom_settings' => FALSE,
-      ),
-      'search_index' => array(
-        'custom_settings' => FALSE,
-      ),
-      'search_result' => array(
-        'custom_settings' => FALSE,
-      ),
-      'token' => array(
-        'custom_settings' => FALSE,
-      ),
-      'workflow_tab' => array(
-        'custom_settings' => FALSE,
-      ),
-    ),
-    'extra_fields' => array(
-      'form' => array(
-        'title' => array(
-          'weight' => '1',
-        ),
-        'path' => array(
-          'weight' => '3',
-        ),
-      ),
-      'display' => array(),
-    ),
-  );
-  $export['field_bundle_settings_node__audio'] = $strongarm;
-
-  $strongarm = new stdClass();
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
   $strongarm->name = 'field_bundle_settings_node__blog';
   $strongarm->value = array(
     'view_modes' => array(
@@ -657,13 +419,48 @@ function lacuna_stories_content_types_strongarm() {
           'weight' => '0',
         ),
         'path' => array(
-          'weight' => '10',
+          'weight' => '9',
         ),
       ),
       'display' => array(),
     ),
   );
   $export['field_bundle_settings_node__blog'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'field_bundle_settings_node__course';
+  $strongarm->value = array(
+    'view_modes' => array(
+      'teaser' => array(
+        'custom_settings' => TRUE,
+      ),
+      'full' => array(
+        'custom_settings' => FALSE,
+      ),
+      'rss' => array(
+        'custom_settings' => FALSE,
+      ),
+      'search_index' => array(
+        'custom_settings' => FALSE,
+      ),
+      'search_result' => array(
+        'custom_settings' => FALSE,
+      ),
+      'token' => array(
+        'custom_settings' => FALSE,
+      ),
+      'workflow_tab' => array(
+        'custom_settings' => FALSE,
+      ),
+    ),
+    'extra_fields' => array(
+      'form' => array(),
+      'display' => array(),
+    ),
+  );
+  $export['field_bundle_settings_node__course'] = $strongarm;
 
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
@@ -706,90 +503,6 @@ function lacuna_stories_content_types_strongarm() {
     ),
   );
   $export['field_bundle_settings_node__document'] = $strongarm;
-
-  $strongarm = new stdClass();
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'field_bundle_settings_node__image';
-  $strongarm->value = array(
-    'view_modes' => array(
-      'teaser' => array(
-        'custom_settings' => TRUE,
-      ),
-      'full' => array(
-        'custom_settings' => FALSE,
-      ),
-      'rss' => array(
-        'custom_settings' => FALSE,
-      ),
-      'search_index' => array(
-        'custom_settings' => FALSE,
-      ),
-      'search_result' => array(
-        'custom_settings' => FALSE,
-      ),
-      'token' => array(
-        'custom_settings' => FALSE,
-      ),
-      'workflow_tab' => array(
-        'custom_settings' => FALSE,
-      ),
-    ),
-    'extra_fields' => array(
-      'form' => array(
-        'title' => array(
-          'weight' => '0',
-        ),
-        'path' => array(
-          'weight' => '4',
-        ),
-      ),
-      'display' => array(),
-    ),
-  );
-  $export['field_bundle_settings_node__image'] = $strongarm;
-
-  $strongarm = new stdClass();
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'field_bundle_settings_node__music_video';
-  $strongarm->value = array(
-    'view_modes' => array(
-      'teaser' => array(
-        'custom_settings' => TRUE,
-      ),
-      'full' => array(
-        'custom_settings' => FALSE,
-      ),
-      'rss' => array(
-        'custom_settings' => FALSE,
-      ),
-      'search_index' => array(
-        'custom_settings' => FALSE,
-      ),
-      'search_result' => array(
-        'custom_settings' => FALSE,
-      ),
-      'token' => array(
-        'custom_settings' => FALSE,
-      ),
-      'workflow_tab' => array(
-        'custom_settings' => FALSE,
-      ),
-    ),
-    'extra_fields' => array(
-      'form' => array(
-        'title' => array(
-          'weight' => '0',
-        ),
-        'path' => array(
-          'weight' => '3',
-        ),
-      ),
-      'display' => array(),
-    ),
-  );
-  $export['field_bundle_settings_node__music_video'] = $strongarm;
 
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
@@ -856,48 +569,6 @@ function lacuna_stories_content_types_strongarm() {
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
-  $strongarm->name = 'field_bundle_settings_node__video';
-  $strongarm->value = array(
-    'view_modes' => array(
-      'teaser' => array(
-        'custom_settings' => TRUE,
-      ),
-      'full' => array(
-        'custom_settings' => FALSE,
-      ),
-      'rss' => array(
-        'custom_settings' => FALSE,
-      ),
-      'search_index' => array(
-        'custom_settings' => FALSE,
-      ),
-      'search_result' => array(
-        'custom_settings' => FALSE,
-      ),
-      'token' => array(
-        'custom_settings' => FALSE,
-      ),
-      'workflow_tab' => array(
-        'custom_settings' => FALSE,
-      ),
-    ),
-    'extra_fields' => array(
-      'form' => array(
-        'title' => array(
-          'weight' => '1',
-        ),
-        'path' => array(
-          'weight' => '3',
-        ),
-      ),
-      'display' => array(),
-    ),
-  );
-  $export['field_bundle_settings_node__video'] = $strongarm;
-
-  $strongarm = new stdClass();
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
   $strongarm->name = 'menu_options_annotation';
   $strongarm->value = array(
     0 => 'main-menu',
@@ -925,11 +596,11 @@ function lacuna_stories_content_types_strongarm() {
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
-  $strongarm->name = 'menu_options_course_or_other_group';
+  $strongarm->name = 'menu_options_course';
   $strongarm->value = array(
     0 => 'main-menu',
   );
-  $export['menu_options_course_or_other_group'] = $strongarm;
+  $export['menu_options_course'] = $strongarm;
 
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
@@ -1018,9 +689,9 @@ function lacuna_stories_content_types_strongarm() {
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
-  $strongarm->name = 'menu_parent_course_or_other_group';
+  $strongarm->name = 'menu_parent_course';
   $strongarm->value = 'main-menu:0';
-  $export['menu_parent_course_or_other_group'] = $strongarm;
+  $export['menu_parent_course'] = $strongarm;
 
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
@@ -1105,11 +776,11 @@ function lacuna_stories_content_types_strongarm() {
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
-  $strongarm->name = 'node_options_course_or_other_group';
+  $strongarm->name = 'node_options_course';
   $strongarm->value = array(
     0 => 'status',
   );
-  $export['node_options_course_or_other_group'] = $strongarm;
+  $export['node_options_course'] = $strongarm;
 
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
@@ -1189,13 +860,6 @@ function lacuna_stories_content_types_strongarm() {
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
-  $strongarm->name = 'node_preview_audio';
-  $strongarm->value = '1';
-  $export['node_preview_audio'] = $strongarm;
-
-  $strongarm = new stdClass();
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
   $strongarm->name = 'node_preview_blog';
   $strongarm->value = '1';
   $export['node_preview_blog'] = $strongarm;
@@ -1203,9 +867,9 @@ function lacuna_stories_content_types_strongarm() {
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
-  $strongarm->name = 'node_preview_course_or_other_group';
+  $strongarm->name = 'node_preview_course';
   $strongarm->value = '1';
-  $export['node_preview_course_or_other_group'] = $strongarm;
+  $export['node_preview_course'] = $strongarm;
 
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
@@ -1213,20 +877,6 @@ function lacuna_stories_content_types_strongarm() {
   $strongarm->name = 'node_preview_document';
   $strongarm->value = '1';
   $export['node_preview_document'] = $strongarm;
-
-  $strongarm = new stdClass();
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'node_preview_image';
-  $strongarm->value = '1';
-  $export['node_preview_image'] = $strongarm;
-
-  $strongarm = new stdClass();
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'node_preview_music_video';
-  $strongarm->value = '1';
-  $export['node_preview_music_video'] = $strongarm;
 
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
@@ -1241,13 +891,6 @@ function lacuna_stories_content_types_strongarm() {
   $strongarm->name = 'node_preview_thread';
   $strongarm->value = '1';
   $export['node_preview_thread'] = $strongarm;
-
-  $strongarm = new stdClass();
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'node_preview_video';
-  $strongarm->value = '1';
-  $export['node_preview_video'] = $strongarm;
 
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
@@ -1280,9 +923,9 @@ function lacuna_stories_content_types_strongarm() {
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
-  $strongarm->name = 'node_submitted_course_or_other_group';
+  $strongarm->name = 'node_submitted_course';
   $strongarm->value = 0;
-  $export['node_submitted_course_or_other_group'] = $strongarm;
+  $export['node_submitted_course'] = $strongarm;
 
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
@@ -1332,6 +975,216 @@ function lacuna_stories_content_types_strongarm() {
   $strongarm->name = 'node_submitted_webform';
   $strongarm->value = 0;
   $export['node_submitted_webform'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'pathauto_blog_pattern';
+  $strongarm->value = 'responses/[user:name]';
+  $export['pathauto_blog_pattern'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'pathauto_forum_pattern';
+  $strongarm->value = '[term:vocabulary]/[term:name]';
+  $export['pathauto_forum_pattern'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'pathauto_node_annotation_pattern';
+  $strongarm->value = 'annotation/[node:title]';
+  $export['pathauto_node_annotation_pattern'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'pathauto_node_article_pattern';
+  $strongarm->value = '';
+  $export['pathauto_node_article_pattern'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'pathauto_node_biblio_pattern';
+  $strongarm->value = 'bibliography/[node:title]';
+  $export['pathauto_node_biblio_pattern'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'pathauto_node_blog_pattern';
+  $strongarm->value = 'response/[node:title]';
+  $export['pathauto_node_blog_pattern'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'pathauto_node_course_pattern';
+  $strongarm->value = 'course/[node:title]';
+  $export['pathauto_node_course_pattern'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'pathauto_node_document_pattern';
+  $strongarm->value = 'document/[node:title]';
+  $export['pathauto_node_document_pattern'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'pathauto_node_forum_pattern';
+  $strongarm->value = 'forum/[node:title]';
+  $export['pathauto_node_forum_pattern'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'pathauto_node_page_pattern';
+  $strongarm->value = '';
+  $export['pathauto_node_page_pattern'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'pathauto_node_pattern';
+  $strongarm->value = 'content/[node:title]';
+  $export['pathauto_node_pattern'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'pathauto_node_thread_pattern';
+  $strongarm->value = 'thread/[node:title]';
+  $export['pathauto_node_thread_pattern'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'pathauto_node_webform_pattern';
+  $strongarm->value = '';
+  $export['pathauto_node_webform_pattern'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'pathauto_punctuation_hyphen';
+  $strongarm->value = 1;
+  $export['pathauto_punctuation_hyphen'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'pathauto_taxonomy_term_annotation_categories_pattern';
+  $strongarm->value = '';
+  $export['pathauto_taxonomy_term_annotation_categories_pattern'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'pathauto_taxonomy_term_genre_doc_pattern';
+  $strongarm->value = '';
+  $export['pathauto_taxonomy_term_genre_doc_pattern'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'pathauto_taxonomy_term_genre_response_pattern';
+  $strongarm->value = '';
+  $export['pathauto_taxonomy_term_genre_response_pattern'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'pathauto_taxonomy_term_medium_pattern';
+  $strongarm->value = '';
+  $export['pathauto_taxonomy_term_medium_pattern'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'pathauto_taxonomy_term_pattern';
+  $strongarm->value = '[term:vocabulary]/[term:name]';
+  $export['pathauto_taxonomy_term_pattern'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'pathauto_taxonomy_term_priority_pattern';
+  $strongarm->value = '';
+  $export['pathauto_taxonomy_term_priority_pattern'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'pathauto_taxonomy_term_tags_pattern';
+  $strongarm->value = '';
+  $export['pathauto_taxonomy_term_tags_pattern'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'pathauto_taxonomy_term_unit_pattern';
+  $strongarm->value = '';
+  $export['pathauto_taxonomy_term_unit_pattern'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'pathauto_user_pattern';
+  $strongarm->value = 'users/[user:name]';
+  $export['pathauto_user_pattern'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'user_pictures';
+  $strongarm->value = 1;
+  $export['user_pictures'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'user_picture_default';
+  $strongarm->value = '';
+  $export['user_picture_default'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'user_picture_dimensions';
+  $strongarm->value = '1024x1024';
+  $export['user_picture_dimensions'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'user_picture_file_size';
+  $strongarm->value = '800';
+  $export['user_picture_file_size'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'user_picture_guidelines';
+  $strongarm->value = '';
+  $export['user_picture_guidelines'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'user_picture_path';
+  $strongarm->value = 'pictures';
+  $export['user_picture_path'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'user_picture_style';
+  $strongarm->value = 'medium';
+  $export['user_picture_style'] = $strongarm;
 
   return $export;
 }

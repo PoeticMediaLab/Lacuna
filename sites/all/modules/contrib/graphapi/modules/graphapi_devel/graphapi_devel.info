@@ -8,9 +8,9 @@ dependencies[] = graphapi
 files[] = graphapi_devel.module
 
 
-; Information added by Drupal.org packaging script on 2014-01-03
+; Information added by Drupal.org packaging script on 2015-04-02
 version = "7.x-1.x-dev"
 core = "7.x"
 project = "graphapi"
-datestamp = "1388755463"
+datestamp = "1427980094"
 

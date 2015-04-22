@@ -17,14 +17,6 @@ function lacuna_stories_content_types_field_default_field_bases() {
     'deleted' => 0,
     'entity_types' => array(),
     'field_name' => 'annotation_reference',
-    'foreign keys' => array(
-      'node' => array(
-        'columns' => array(
-          'target_id' => 'nid',
-        ),
-        'table' => 'node',
-      ),
-    ),
     'indexes' => array(
       'target_id' => array(
         0 => 'target_id',
@@ -50,14 +42,6 @@ function lacuna_stories_content_types_field_default_field_bases() {
     'deleted' => 0,
     'entity_types' => array(),
     'field_name' => 'annotation_tags',
-    'foreign keys' => array(
-      'tid' => array(
-        'columns' => array(
-          'tid' => 'tid',
-        ),
-        'table' => 'taxonomy_term_data',
-      ),
-    ),
     'indexes' => array(
       'tid' => array(
         0 => 'tid',
@@ -89,14 +73,6 @@ function lacuna_stories_content_types_field_default_field_bases() {
     'field_permissions' => array(
       'type' => 0,
     ),
-    'foreign keys' => array(
-      'format' => array(
-        'columns' => array(
-          'format' => 'format',
-        ),
-        'table' => 'filter_format',
-      ),
-    ),
     'indexes' => array(
       'format' => array(
         0 => 'format',
@@ -116,14 +92,6 @@ function lacuna_stories_content_types_field_default_field_bases() {
     'deleted' => 0,
     'entity_types' => array(),
     'field_name' => 'category',
-    'foreign keys' => array(
-      'tid' => array(
-        'columns' => array(
-          'tid' => 'tid',
-        ),
-        'table' => 'taxonomy_term_data',
-      ),
-    ),
     'indexes' => array(
       'tid' => array(
         0 => 'tid',
@@ -155,14 +123,6 @@ function lacuna_stories_content_types_field_default_field_bases() {
     'field_permissions' => array(
       'type' => 0,
     ),
-    'foreign keys' => array(
-      'format' => array(
-        'columns' => array(
-          'format' => 'format',
-        ),
-        'table' => 'filter_format',
-      ),
-    ),
     'indexes' => array(
       'format' => array(
         0 => 'format',
@@ -185,102 +145,6 @@ function lacuna_stories_content_types_field_default_field_bases() {
     'field_permissions' => array(
       'type' => 0,
     ),
-    'foreign keys' => array(
-      'format' => array(
-        'columns' => array(
-          'format' => 'format',
-        ),
-        'table' => 'filter_format',
-      ),
-    ),
-    'indexes' => array(
-      'format' => array(
-        0 => 'format',
-      ),
-    ),
-    'locked' => 0,
-    'module' => 'text',
-    'settings' => array(),
-    'translatable' => 0,
-    'type' => 'text_long',
-  );
-
-  // Exported field_base: 'field_audio_audio'
-  $field_bases['field_audio_audio'] = array(
-    'active' => 1,
-    'cardinality' => 1,
-    'deleted' => 0,
-    'entity_types' => array(),
-    'field_name' => 'field_audio_audio',
-    'foreign keys' => array(
-      'fid' => array(
-        'columns' => array(
-          'fid' => 'fid',
-        ),
-        'table' => 'file_managed',
-      ),
-    ),
-    'indexes' => array(
-      'fid' => array(
-        0 => 'fid',
-      ),
-    ),
-    'locked' => 0,
-    'module' => 'file',
-    'settings' => array(
-      'display_default' => 0,
-      'display_field' => 0,
-      'uri_scheme' => 'public',
-    ),
-    'translatable' => 0,
-    'type' => 'file',
-  );
-
-  // Exported field_base: 'field_audio_transcription'
-  $field_bases['field_audio_transcription'] = array(
-    'active' => 1,
-    'cardinality' => 1,
-    'deleted' => 0,
-    'entity_types' => array(),
-    'field_name' => 'field_audio_transcription',
-    'foreign keys' => array(
-      'format' => array(
-        'columns' => array(
-          'format' => 'format',
-        ),
-        'table' => 'filter_format',
-      ),
-    ),
-    'indexes' => array(
-      'format' => array(
-        0 => 'format',
-      ),
-    ),
-    'locked' => 0,
-    'module' => 'text',
-    'settings' => array(),
-    'translatable' => 0,
-    'type' => 'text_long',
-  );
-
-  // Exported field_base: 'field_biblio_hover_abstract'
-  $field_bases['field_biblio_hover_abstract'] = array(
-    'active' => 1,
-    'cardinality' => 1,
-    'deleted' => 0,
-    'entity_types' => array(),
-    'field_name' => 'field_biblio_hover_abstract',
-    'field_permissions' => array(
-      'type' => 0,
-    ),
-    'foreign keys' => array(
-      'format' => array(
-        'columns' => array(
-          'format' => 'format',
-        ),
-        'table' => 'filter_format',
-      ),
-    ),
     'indexes' => array(
       'format' => array(
         0 => 'format',
@@ -302,14 +166,6 @@ function lacuna_stories_content_types_field_default_field_bases() {
     'field_name' => 'field_bibliographic_entry',
     'field_permissions' => array(
       'type' => 0,
-    ),
-    'foreign keys' => array(
-      'node' => array(
-        'columns' => array(
-          'target_id' => 'nid',
-        ),
-        'table' => 'node',
-      ),
     ),
     'indexes' => array(
       'target_id' => array(
@@ -349,7 +205,6 @@ function lacuna_stories_content_types_field_default_field_bases() {
     'field_permissions' => array(
       'type' => 2,
     ),
-    'foreign keys' => array(),
     'indexes' => array(),
     'locked' => 0,
     'module' => 'date',
@@ -382,14 +237,6 @@ function lacuna_stories_content_types_field_default_field_bases() {
     'field_permissions' => array(
       'type' => 0,
     ),
-    'foreign keys' => array(
-      'format' => array(
-        'columns' => array(
-          'format' => 'format',
-        ),
-        'table' => 'filter_format',
-      ),
-    ),
     'indexes' => array(
       'format' => array(
         0 => 'format',
@@ -411,13 +258,8 @@ function lacuna_stories_content_types_field_default_field_bases() {
     'deleted' => 0,
     'entity_types' => array(),
     'field_name' => 'field_doc_attachment',
-    'foreign keys' => array(
-      'fid' => array(
-        'columns' => array(
-          'fid' => 'fid',
-        ),
-        'table' => 'file_managed',
-      ),
+    'field_permissions' => array(
+      'type' => 0,
     ),
     'indexes' => array(
       'fid' => array(
@@ -442,14 +284,6 @@ function lacuna_stories_content_types_field_default_field_bases() {
     'deleted' => 0,
     'entity_types' => array(),
     'field_name' => 'field_doc_genre',
-    'foreign keys' => array(
-      'tid' => array(
-        'columns' => array(
-          'tid' => 'tid',
-        ),
-        'table' => 'taxonomy_term_data',
-      ),
-    ),
     'indexes' => array(
       'tid' => array(
         0 => 'tid',
@@ -469,35 +303,6 @@ function lacuna_stories_content_types_field_default_field_bases() {
     'type' => 'taxonomy_term_reference',
   );
 
-  // Exported field_base: 'field_doc_pages'
-  $field_bases['field_doc_pages'] = array(
-    'active' => 1,
-    'cardinality' => 1,
-    'deleted' => 0,
-    'entity_types' => array(),
-    'field_name' => 'field_doc_pages',
-    'foreign keys' => array(
-      'format' => array(
-        'columns' => array(
-          'format' => 'format',
-        ),
-        'table' => 'filter_format',
-      ),
-    ),
-    'indexes' => array(
-      'format' => array(
-        0 => 'format',
-      ),
-    ),
-    'locked' => 0,
-    'module' => 'text',
-    'settings' => array(
-      'max_length' => 255,
-    ),
-    'translatable' => 0,
-    'type' => 'text',
-  );
-
   // Exported field_base: 'field_doc_text'
   $field_bases['field_doc_text'] = array(
     'active' => 1,
@@ -505,14 +310,6 @@ function lacuna_stories_content_types_field_default_field_bases() {
     'deleted' => 0,
     'entity_types' => array(),
     'field_name' => 'field_doc_text',
-    'foreign keys' => array(
-      'format' => array(
-        'columns' => array(
-          'format' => 'format',
-        ),
-        'table' => 'filter_format',
-      ),
-    ),
     'indexes' => array(
       'format' => array(
         0 => 'format',
@@ -535,7 +332,6 @@ function lacuna_stories_content_types_field_default_field_bases() {
     'field_permissions' => array(
       'type' => 2,
     ),
-    'foreign keys' => array(),
     'indexes' => array(
       'value' => array(
         0 => 'value',
@@ -567,14 +363,6 @@ function lacuna_stories_content_types_field_default_field_bases() {
     'field_permissions' => array(
       'type' => 2,
     ),
-    'foreign keys' => array(
-      'format' => array(
-        'columns' => array(
-          'format' => 'format',
-        ),
-        'table' => 'filter_format',
-      ),
-    ),
     'indexes' => array(
       'format' => array(
         0 => 'format',
@@ -598,14 +386,6 @@ function lacuna_stories_content_types_field_default_field_bases() {
     'field_name' => 'field_genre',
     'field_permissions' => array(
       'type' => 0,
-    ),
-    'foreign keys' => array(
-      'tid' => array(
-        'columns' => array(
-          'tid' => 'tid',
-        ),
-        'table' => 'taxonomy_term_data',
-      ),
     ),
     'indexes' => array(
       'tid' => array(
@@ -634,15 +414,7 @@ function lacuna_stories_content_types_field_default_field_bases() {
     'entity_types' => array(),
     'field_name' => 'field_how_i_learn',
     'field_permissions' => array(
-      'type' => 2,
-    ),
-    'foreign keys' => array(
-      'format' => array(
-        'columns' => array(
-          'format' => 'format',
-        ),
-        'table' => 'filter_format',
-      ),
+      'type' => 0,
     ),
     'indexes' => array(
       'format' => array(
@@ -666,14 +438,6 @@ function lacuna_stories_content_types_field_default_field_bases() {
     'field_permissions' => array(
       'type' => 0,
     ),
-    'foreign keys' => array(
-      'fid' => array(
-        'columns' => array(
-          'fid' => 'fid',
-        ),
-        'table' => 'file_managed',
-      ),
-    ),
     'indexes' => array(
       'fid' => array(
         0 => 'fid',
@@ -692,20 +456,12 @@ function lacuna_stories_content_types_field_default_field_bases() {
   // Exported field_base: 'field_learning_goals'
   $field_bases['field_learning_goals'] = array(
     'active' => 1,
-    'cardinality' => -1,
+    'cardinality' => 5,
     'deleted' => 0,
     'entity_types' => array(),
     'field_name' => 'field_learning_goals',
     'field_permissions' => array(
       'type' => 0,
-    ),
-    'foreign keys' => array(
-      'format' => array(
-        'columns' => array(
-          'format' => 'format',
-        ),
-        'table' => 'filter_format',
-      ),
     ),
     'indexes' => array(
       'format' => array(
@@ -731,14 +487,6 @@ function lacuna_stories_content_types_field_default_field_bases() {
     'field_permissions' => array(
       'type' => 2,
     ),
-    'foreign keys' => array(
-      'format' => array(
-        'columns' => array(
-          'format' => 'format',
-        ),
-        'table' => 'filter_format',
-      ),
-    ),
     'indexes' => array(
       'format' => array(
         0 => 'format',
@@ -761,15 +509,7 @@ function lacuna_stories_content_types_field_default_field_bases() {
     'entity_types' => array(),
     'field_name' => 'field_media',
     'field_permissions' => array(
-      'type' => 0,
-    ),
-    'foreign keys' => array(
-      'fid' => array(
-        'columns' => array(
-          'fid' => 'fid',
-        ),
-        'table' => 'file_managed',
-      ),
+      'type' => 2,
     ),
     'indexes' => array(
       'fid' => array(
@@ -781,10 +521,39 @@ function lacuna_stories_content_types_field_default_field_bases() {
     'settings' => array(
       'display_default' => 0,
       'display_field' => 0,
-      'uri_scheme' => 'public',
+      'uri_scheme' => 'private',
     ),
     'translatable' => 0,
     'type' => 'file',
+  );
+
+  // Exported field_base: 'field_medium'
+  $field_bases['field_medium'] = array(
+    'active' => 1,
+    'cardinality' => -1,
+    'deleted' => 0,
+    'entity_types' => array(),
+    'field_name' => 'field_medium',
+    'field_permissions' => array(
+      'type' => 0,
+    ),
+    'indexes' => array(
+      'tid' => array(
+        0 => 'tid',
+      ),
+    ),
+    'locked' => 0,
+    'module' => 'taxonomy',
+    'settings' => array(
+      'allowed_values' => array(
+        0 => array(
+          'vocabulary' => 'medium',
+          'parent' => 0,
+        ),
+      ),
+    ),
+    'translatable' => 0,
+    'type' => 'taxonomy_term_reference',
   );
 
   // Exported field_base: 'field_priority'
@@ -796,14 +565,6 @@ function lacuna_stories_content_types_field_default_field_bases() {
     'field_name' => 'field_priority',
     'field_permissions' => array(
       'type' => 0,
-    ),
-    'foreign keys' => array(
-      'tid' => array(
-        'columns' => array(
-          'tid' => 'tid',
-        ),
-        'table' => 'taxonomy_term_data',
-      ),
     ),
     'indexes' => array(
       'tid' => array(
@@ -824,87 +585,6 @@ function lacuna_stories_content_types_field_default_field_bases() {
     'type' => 'taxonomy_term_reference',
   );
 
-  // Exported field_base: 'field_status'
-  $field_bases['field_status'] = array(
-    'active' => 1,
-    'cardinality' => 1,
-    'deleted' => 0,
-    'entity_types' => array(),
-    'field_name' => 'field_status',
-    'field_permissions' => array(
-      'type' => 2,
-    ),
-    'foreign keys' => array(),
-    'indexes' => array(
-      'value' => array(
-        0 => 'value',
-      ),
-    ),
-    'locked' => 0,
-    'module' => 'workflowfield',
-    'settings' => array(
-      'allowed_values_function' => 'workflowfield_allowed_values',
-      'allowed_values_string' => '1 | (creation)
-2 | Draft
-3 | Ready for Annotation',
-      'history' => array(
-        'history_tab_show' => 1,
-        'roles' => array(
-          -1 => 0,
-          3 => 3,
-          4 => 4,
-          5 => 0,
-          6 => 0,
-        ),
-      ),
-      'watchdog_log' => 1,
-      'wid' => 1,
-      'widget' => array(
-        'comment' => 1,
-        'name_as_title' => 1,
-        'options' => 'select',
-        'schedule' => 0,
-        'schedule_timezone' => 0,
-      ),
-    ),
-    'translatable' => 0,
-    'type' => 'workflow',
-  );
-
-  // Exported field_base: 'field_syllabus_pdf'
-  $field_bases['field_syllabus_pdf'] = array(
-    'active' => 1,
-    'cardinality' => 1,
-    'deleted' => 0,
-    'entity_types' => array(),
-    'field_name' => 'field_syllabus_pdf',
-    'field_permissions' => array(
-      'type' => 0,
-    ),
-    'foreign keys' => array(
-      'fid' => array(
-        'columns' => array(
-          'fid' => 'fid',
-        ),
-        'table' => 'file_managed',
-      ),
-    ),
-    'indexes' => array(
-      'fid' => array(
-        0 => 'fid',
-      ),
-    ),
-    'locked' => 0,
-    'module' => 'file',
-    'settings' => array(
-      'display_default' => 0,
-      'display_field' => 0,
-      'uri_scheme' => 'public',
-    ),
-    'translatable' => 0,
-    'type' => 'file',
-  );
-
   // Exported field_base: 'field_tags'
   $field_bases['field_tags'] = array(
     'active' => 1,
@@ -914,14 +594,6 @@ function lacuna_stories_content_types_field_default_field_bases() {
     'field_name' => 'field_tags',
     'field_permissions' => array(
       'type' => 0,
-    ),
-    'foreign keys' => array(
-      'tid' => array(
-        'columns' => array(
-          'tid' => 'tid',
-        ),
-        'table' => 'taxonomy_term_data',
-      ),
     ),
     'indexes' => array(
       'tid' => array(
@@ -942,43 +614,6 @@ function lacuna_stories_content_types_field_default_field_bases() {
     'type' => 'taxonomy_term_reference',
   );
 
-  // Exported field_base: 'field_topics'
-  $field_bases['field_topics'] = array(
-    'active' => 1,
-    'cardinality' => -1,
-    'deleted' => 0,
-    'entity_types' => array(),
-    'field_name' => 'field_topics',
-    'field_permissions' => array(
-      'type' => 0,
-    ),
-    'foreign keys' => array(
-      'tid' => array(
-        'columns' => array(
-          'tid' => 'tid',
-        ),
-        'table' => 'taxonomy_term_data',
-      ),
-    ),
-    'indexes' => array(
-      'tid' => array(
-        0 => 'tid',
-      ),
-    ),
-    'locked' => 0,
-    'module' => 'taxonomy',
-    'settings' => array(
-      'allowed_values' => array(
-        0 => array(
-          'vocabulary' => 'topics',
-          'parent' => 0,
-        ),
-      ),
-    ),
-    'translatable' => 0,
-    'type' => 'taxonomy_term_reference',
-  );
-
   // Exported field_base: 'field_unit'
   $field_bases['field_unit'] = array(
     'active' => 1,
@@ -988,14 +623,6 @@ function lacuna_stories_content_types_field_default_field_bases() {
     'field_name' => 'field_unit',
     'field_permissions' => array(
       'type' => 0,
-    ),
-    'foreign keys' => array(
-      'tid' => array(
-        'columns' => array(
-          'tid' => 'tid',
-        ),
-        'table' => 'taxonomy_term_data',
-      ),
     ),
     'indexes' => array(
       'tid' => array(
@@ -1016,70 +643,6 @@ function lacuna_stories_content_types_field_default_field_bases() {
     'type' => 'taxonomy_term_reference',
   );
 
-  // Exported field_base: 'field_video_transcription'
-  $field_bases['field_video_transcription'] = array(
-    'active' => 1,
-    'cardinality' => 1,
-    'deleted' => 0,
-    'entity_types' => array(),
-    'field_name' => 'field_video_transcription',
-    'field_permissions' => array(
-      'type' => 0,
-    ),
-    'foreign keys' => array(
-      'format' => array(
-        'columns' => array(
-          'format' => 'format',
-        ),
-        'table' => 'filter_format',
-      ),
-    ),
-    'indexes' => array(
-      'format' => array(
-        0 => 'format',
-      ),
-    ),
-    'locked' => 0,
-    'module' => 'text',
-    'settings' => array(),
-    'translatable' => 0,
-    'type' => 'text_long',
-  );
-
-  // Exported field_base: 'field_video_video'
-  $field_bases['field_video_video'] = array(
-    'active' => 1,
-    'cardinality' => 1,
-    'deleted' => 0,
-    'entity_types' => array(),
-    'field_name' => 'field_video_video',
-    'field_permissions' => array(
-      'type' => 2,
-    ),
-    'foreign keys' => array(
-      'fid' => array(
-        'columns' => array(
-          'fid' => 'fid',
-        ),
-        'table' => 'file_managed',
-      ),
-    ),
-    'indexes' => array(
-      'fid' => array(
-        0 => 'fid',
-      ),
-    ),
-    'locked' => 0,
-    'module' => 'file',
-    'settings' => array(
-      'display_default' => 0,
-      'display_field' => 0,
-      'uri_scheme' => 'private',
-    ),
-    'translatable' => 0,
-    'type' => 'file',
-  );
-
   // Exported field_base: 'field_year_in_program'
   $field_bases['field_year_in_program'] = array(
     'active' => 1,
@@ -1089,14 +652,6 @@ function lacuna_stories_content_types_field_default_field_bases() {
     'field_name' => 'field_year_in_program',
     'field_permissions' => array(
       'type' => 2,
-    ),
-    'foreign keys' => array(
-      'format' => array(
-        'columns' => array(
-          'format' => 'format',
-        ),
-        'table' => 'filter_format',
-      ),
     ),
     'indexes' => array(
       'format' => array(
@@ -1119,7 +674,6 @@ function lacuna_stories_content_types_field_default_field_bases() {
     'deleted' => 0,
     'entity_types' => array(),
     'field_name' => 'group_access',
-    'foreign keys' => array(),
     'indexes' => array(
       'value' => array(
         0 => 'value',
@@ -1139,6 +693,35 @@ function lacuna_stories_content_types_field_default_field_bases() {
     'type' => 'list_boolean',
   );
 
+  // Exported field_base: 'group_content_access'
+  $field_bases['group_content_access'] = array(
+    'active' => 1,
+    'cardinality' => 1,
+    'deleted' => 0,
+    'entity_types' => array(),
+    'field_name' => 'group_content_access',
+    'field_permissions' => array(
+      'type' => 0,
+    ),
+    'indexes' => array(
+      'value' => array(
+        0 => 'value',
+      ),
+    ),
+    'locked' => 0,
+    'module' => 'list',
+    'no_ui' => TRUE,
+    'settings' => array(
+      'allowed_values' => array(
+        1 => 'Public - accessible to all site users',
+        2 => 'Private - accessible only to course members',
+      ),
+      'allowed_values_function' => '',
+    ),
+    'translatable' => 0,
+    'type' => 'list_integer',
+  );
+
   // Exported field_base: 'group_group'
   $field_bases['group_group'] = array(
     'active' => 1,
@@ -1146,7 +729,6 @@ function lacuna_stories_content_types_field_default_field_bases() {
     'deleted' => 0,
     'entity_types' => array(),
     'field_name' => 'group_group',
-    'foreign keys' => array(),
     'indexes' => array(
       'value' => array(
         0 => 'value',
@@ -1175,14 +757,6 @@ function lacuna_stories_content_types_field_default_field_bases() {
     'field_permissions' => array(
       'type' => 0,
     ),
-    'foreign keys' => array(
-      'node' => array(
-        'columns' => array(
-          'target_id' => 'nid',
-        ),
-        'table' => 'node',
-      ),
-    ),
     'indexes' => array(
       'target_id' => array(
         0 => 'target_id',
@@ -1206,7 +780,7 @@ function lacuna_stories_content_types_field_default_field_bases() {
           'type' => 'none',
         ),
         'target_bundles' => array(
-          'course_or_other_group' => 'course_or_other_group',
+          'course' => 'course',
         ),
       ),
       'handler_submit' => 'Change handler',
@@ -1215,6 +789,31 @@ function lacuna_stories_content_types_field_default_field_bases() {
     'target_type' => 'node',
     'translatable' => 0,
     'type' => 'entityreference',
+  );
+
+  // Exported field_base: 'og_roles_permissions'
+  $field_bases['og_roles_permissions'] = array(
+    'active' => 1,
+    'cardinality' => 1,
+    'deleted' => 0,
+    'entity_types' => array(),
+    'field_name' => 'og_roles_permissions',
+    'indexes' => array(
+      'value' => array(
+        0 => 'value',
+      ),
+    ),
+    'locked' => 0,
+    'module' => 'list',
+    'settings' => array(
+      'allowed_values' => array(
+        0 => 'Use default roles and permissions',
+        1 => 'Override default roles and permissions',
+      ),
+      'allowed_values_function' => '',
+    ),
+    'translatable' => 0,
+    'type' => 'list_boolean',
   );
 
   // Exported field_base: 'og_user_node'
@@ -1227,14 +826,6 @@ function lacuna_stories_content_types_field_default_field_bases() {
     'field_permissions' => array(
       'type' => 2,
     ),
-    'foreign keys' => array(
-      'node' => array(
-        'columns' => array(
-          'target_id' => 'nid',
-        ),
-        'table' => 'node',
-      ),
-    ),
     'indexes' => array(
       'target_id' => array(
         0 => 'target_id',
@@ -1258,7 +849,7 @@ function lacuna_stories_content_types_field_default_field_bases() {
           'type' => 'none',
         ),
         'target_bundles' => array(
-          'course_or_other_group' => 'course_or_other_group',
+          'course' => 'course',
         ),
       ),
       'handler_submit' => 'Change handler',
@@ -1276,7 +867,6 @@ function lacuna_stories_content_types_field_default_field_bases() {
     'deleted' => 0,
     'entity_types' => array(),
     'field_name' => 'private',
-    'foreign keys' => array(),
     'indexes' => array(
       'value' => array(
         0 => 'value',
@@ -1304,14 +894,6 @@ function lacuna_stories_content_types_field_default_field_bases() {
     'deleted' => 0,
     'entity_types' => array(),
     'field_name' => 'quote',
-    'foreign keys' => array(
-      'format' => array(
-        'columns' => array(
-          'format' => 'format',
-        ),
-        'table' => 'filter_format',
-      ),
-    ),
     'indexes' => array(
       'format' => array(
         0 => 'format',
@@ -1333,14 +915,6 @@ function lacuna_stories_content_types_field_default_field_bases() {
     'deleted' => 0,
     'entity_types' => array(),
     'field_name' => 'ranges',
-    'foreign keys' => array(
-      'format' => array(
-        'columns' => array(
-          'format' => 'format',
-        ),
-        'table' => 'filter_format',
-      ),
-    ),
     'indexes' => array(
       'format' => array(
         0 => 'format',
@@ -1360,14 +934,6 @@ function lacuna_stories_content_types_field_default_field_bases() {
     'deleted' => 0,
     'entity_types' => array(),
     'field_name' => 'text',
-    'foreign keys' => array(
-      'format' => array(
-        'columns' => array(
-          'format' => 'format',
-        ),
-        'table' => 'filter_format',
-      ),
-    ),
     'indexes' => array(
       'format' => array(
         0 => 'format',
@@ -1387,14 +953,6 @@ function lacuna_stories_content_types_field_default_field_bases() {
     'deleted' => 0,
     'entity_types' => array(),
     'field_name' => 'thread_description',
-    'foreign keys' => array(
-      'format' => array(
-        'columns' => array(
-          'format' => 'format',
-        ),
-        'table' => 'filter_format',
-      ),
-    ),
     'indexes' => array(
       'format' => array(
         0 => 'format',
@@ -1416,14 +974,6 @@ function lacuna_stories_content_types_field_default_field_bases() {
     'deleted' => 0,
     'entity_types' => array(),
     'field_name' => 'thread_reference',
-    'foreign keys' => array(
-      'node' => array(
-        'columns' => array(
-          'target_id' => 'nid',
-        ),
-        'table' => 'node',
-      ),
-    ),
     'indexes' => array(
       'target_id' => array(
         0 => 'target_id',
@@ -1461,7 +1011,6 @@ function lacuna_stories_content_types_field_default_field_bases() {
     'deleted' => 0,
     'entity_types' => array(),
     'field_name' => 'uri',
-    'foreign keys' => array(),
     'indexes' => array(),
     'locked' => 1,
     'module' => 'link',
