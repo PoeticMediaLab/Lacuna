@@ -1,0 +1,84 @@
+<?php
+/**
+ * @file
+ * An example of how to build a sortable form using tabledrag.
+ */
+
+/**
+ * @defgroup tabledrag_example Example: Tabledrag
+ * @ingroup examples
+ * @{
+ * Example of draggable table rows.
+ */
+
+/**
+ * Implements hook_help().
+ *
+ * Show a bit of information about this module on the example page.
+ */
+function tabledrag_example_help($path, $arg) {
+  switch ($path) {
+    case 'examples/tabledrag_example':
+      return '<p>' . t('The form here is a themed as a table that is sortable using tabledrag handles.') . '</p>';
+  }
+}
+
+/**
+ * Implements hook_menu().
+ *
+ * We'll let drupal_get_form() generate the form page for us, for both of
+ * these menu items.
+ *
+ * @see drupal_get_form()
+ */
+function tabledrag_example_menu() {
+  // Basic example with single-depth sorting.
+  $items['examples/tabledrag_example_simple'] = array(
+    'title' => 'TableDrag example (simple)',
+    'description' => 'Show a page with a sortable tabledrag form',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('tabledrag_example_simple_form'),
+    'access callback' => TRUE,
+    'file' => 'tabledrag_example_simple_form.inc',
+  );
+  // Basic parent/child example.
+  $items['examples/tabledrag_example_parent'] = array(
+    'title' => 'TableDrag example (parent/child)',
+    'description' => 'Show a page with a sortable parent/child tabledrag form',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('tabledrag_example_parent_form'),
+    'access callback' => TRUE,
+    'file' => 'tabledrag_example_parent_form.inc',
+  );
+  return $items;
+}
+
+/**
+ * Implements hook_theme().
+ *
+ * We need run our forms through custom theme functions in order to build the
+ * table structure which is required by tabledrag.js.  Before we can use our
+ * custom theme functions, we need to implement hook_theme in order to register
+ * them with Drupal.
+ *
+ * We are defining our theme hooks with the same name as the form generation
+ * function so that Drupal automatically calls our theming function when the
+ * form is displayed.
+ */
+function tabledrag_example_theme() {
+  return array(
+    // Theme function for the 'simple' example.
+    'tabledrag_example_simple_form' => array(
+      'render element' => 'form',
+      'file' => 'tabledrag_example_simple_form.inc',
+    ),
+    // Theme function for the 'parent/child' example.
+    'tabledrag_example_parent_form' => array(
+      'render element' => 'form',
+      'file' => 'tabledrag_example_parent_form.inc',
+    ),
+  );
+}
+/**
+ * @} End of "defgroup tabledrag_example".
+ */

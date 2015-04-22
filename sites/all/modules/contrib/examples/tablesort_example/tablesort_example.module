@@ -1,0 +1,93 @@
+<?php
+
+/**
+ * @file
+ * This is an example describing how a module can display data in a sortable
+ * table
+ *
+ * See:
+ * @link http://drupal.org/node/508796 Extenders @endlink
+ * @link http://drupal.org/developing/api/database Database API @endlink
+ */
+
+/**
+ * @defgroup tablesort_example Example: Tablesort
+ * @ingroup examples
+ * @{
+ * Example of a sortable table display.
+ */
+
+/**
+ * Implements hook_help().
+ *
+ * Show a bit of information about this module on the example page
+ */
+function tablesort_example_help($path, $arg) {
+  switch ($path) {
+    case 'examples/tablesort_example':
+      return '<p>' . t('The layout here is a themed as a table that is sortable by clicking the header name.') . '</p>';
+  }
+}
+
+/**
+ * Implements hook_menu().
+ */
+function tablesort_example_menu() {
+  $items['examples/tablesort_example'] = array(
+    'title' => 'TableSort example',
+    'description' => 'Show a page with a sortable table',
+    'page callback' => 'tablesort_example_page',
+    'access callback' => TRUE,
+  );
+  return $items;
+}
+
+/**
+ * Build the table render array.
+ *
+ * @return array
+ *   A render array set for theming by theme_table().
+ */
+function tablesort_example_page() {
+  // We are going to output the results in a table with a nice header.
+  $header = array(
+    // The header gives the table the information it needs in order to make
+    // the query calls for ordering. TableSort uses the field information
+    // to know what database column to sort by.
+    array('data' => t('Numbers'), 'field' => 't.numbers'),
+    array('data' => t('Letters'), 'field' => 't.alpha'),
+    array('data' => t('Mixture'), 'field' => 't.random'),
+  );
+
+  // Using the TableSort Extender is what tells the the query object that we
+  // are sorting.
+  $query = db_select('tablesort_example', 't')
+      ->extend('TableSort');
+  $query->fields('t');
+
+  // Don't forget to tell the query object how to find the header information.
+  $result = $query
+      ->orderByHeader($header)
+      ->execute();
+
+  $rows = array();
+  foreach ($result as $row) {
+    // Normally we would add some nice formatting to our rows
+    // but for our purpose we are simply going to add our row
+    // to the array.
+    $rows[] = array('data' => (array) $row);
+  }
+
+  // Build the table for the nice output.
+  $build['tablesort_table'] = array(
+    '#theme' => 'table',
+    '#header' => $header,
+    '#rows' => $rows,
+  );
+
+  return $build;
+}
+
+/**
+ * @} End of "defgroup tablesort_example".
+ */

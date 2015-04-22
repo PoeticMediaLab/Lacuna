@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the Lacuna Stories Workflows feature.
+ */
+
+include_once 'lacuna_stories_workflows.features.inc';

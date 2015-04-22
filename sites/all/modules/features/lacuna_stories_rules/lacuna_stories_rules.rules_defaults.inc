@@ -9,6 +9,24 @@
  */
 function lacuna_stories_rules_default_rules_configuration() {
   $items = array();
+  $items['rules_after_irb_form_completed_direct_user_to_materials'] = entity_import('rules_config', '{ "rules_after_irb_form_completed_direct_user_to_materials" : {
+      "LABEL" : "After IRB Form Completed, Direct User to Materials",
+      "PLUGIN" : "reaction rule",
+      "OWNER" : "rules",
+      "REQUIRES" : [ "webform_rules", "rules" ],
+      "ON" : { "webform_rules_submit" : [] },
+      "IF" : [
+        { "webform_has_id" : {
+            "form_id" : [ "form_id" ],
+            "selected_webform" : { "value" : { "webform-client-form-67" : "webform-client-form-67" } }
+          }
+        }
+      ],
+      "DO" : [
+        { "drupal_message" : { "message" : "\\u003Cspan id=\\u0022irb-complete-message\\u0022\\u003EBegin \\u003Ca href=\\u0022[site:url]\\u0022\\u003EExploring Materials\\u003C\\/a\\u003E\\u003C\\/span\\u003E" } }
+      ]
+    }
+  }');
   $items['rules_notice_about_annotations_on_responses'] = entity_import('rules_config', '{ "rules_notice_about_annotations_on_responses" : {
       "LABEL" : "Notice about Annotations on Responses",
       "PLUGIN" : "reaction rule",

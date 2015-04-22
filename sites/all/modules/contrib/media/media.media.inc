@@ -9,134 +9,102 @@
  * Implements hook_media_browser_plugin_info().
  */
 function media_media_browser_plugin_info() {
-  $plugins = array();
-
-  // @TODO: Should we add a permission around this?
-  $plugins['library'] = array(
-    '#weight' => 10,
+  $info['upload'] = array(
+    'title' => t('Upload'),
+    'weight' => -10,
+    'class' => 'MediaBrowserUpload',
   );
 
-  if (user_access('administer media') || user_access('edit media')) {
-    $plugins['upload'] = array(
-      '#weight' => -10,
-    );
+  // Add a plugin for each View display using the 'media_browser' display type.
+  $view_weight = 10;
+  foreach (views_get_enabled_views() as $view) {
+    foreach ($view->display as $display) {
+      if ($display->display_plugin == 'media_browser') {
+        $title = $display->display_title;
+        if (!empty($display->display_options['title'])) {
+          $title = $display->display_options['title'];
+        }
+        $info["{$view->name}--{$display->id}"] = array(
+          'title' => $title,
+          // @TODO make this configurable.
+          'weight' => $view_weight++,
+          'class' => 'MediaBrowserView',
+          'view_name' => $view->name,
+          'view_display_id' => $display->id,
+        );
+      }
+    }
   }
-  return $plugins;
+
+  return $info;
 }
 
 /**
- * Implements hook_media_browser_plugin_view().
+ * Implements hook_query_TAG_alter().
+ *
+ * @todo: Potentially move this into media.module in a future version of Media.
  */
-function media_media_browser_plugin_view($plugin_name, $params) {
-  $path = drupal_get_path('module', 'media');
+function media_query_media_browser_alter($query) {
+  // Ensure that the query is against the file_managed table.
+  $tables = $query->getTables();
 
-  $params += array(
-    'types' => array(),
-    'multiselect' => FALSE,
-  );
-
-  // The multiselect parameter is a string.  So we check to see if it is set and
-  // adjust the local variable accordingly.
-  if ($params['multiselect'] != 'false' && $params['multiselect'] !== FALSE) {
-    $params['multiselect'] = TRUE;
+  if (empty($tables['file_managed'])) {
+    throw new Exception(t('Media browser being queried without the file_managed table.'));
   }
 
-  $redirect = array('media/browser', array('query' => array('render' => 'media-popup')));
-  switch ($plugin_name) {
-    case 'upload':
-      $attached = array();
-      if ($params['multiselect'] && module_exists('plupload')) {
-        $upload_form_id = 'media_add_upload_multiple';
-        $attached['js'] = array($path . '/js/plugins/media.upload_multiple.js');
+  $alias = $tables['file_managed']['alias'];
+
+  // How do we validate these?  I don't know.
+  // I think PDO should protect them, but I'm not 100% certain.
+  $params = media_get_browser_params();
+
+  // Gather any file restrictions.
+  $types = !empty($params['types']) ? $params['types'] : array();
+  $schemes = !empty($params['schemes']) ? $params['schemes'] : array();
+  $extensions = !empty($params['file_extensions']) ? explode(' ', $params['file_extensions']) : array();
+
+  $or = db_or();
+
+  // Filter out files with restricted types.
+  if (!empty($types)) {
+    $query->condition($alias . '.type', $types, 'IN');
+  }
+
+  // Filter out files with restricted schemes.
+  if (!empty($schemes)) {
+    $local_or = db_or();
+    $local_and = db_and();
+
+    // Gather all of the local stream wrappers.
+    $local_stream_wrappers = media_get_local_stream_wrappers();
+
+    foreach ($schemes as $scheme) {
+      // Only local files have extensions.
+      // Filter out files with restricted extensions.
+      if (!empty($extensions) && isset($local_stream_wrappers[$scheme])) {
+        $mimetypes = array();
+        foreach ($extensions as $extension) {
+          $mimetype = media_get_extension_mimetype($extension);
+          if ($mimetype) {
+            $mimetypes[] = $mimetype;
+          }
+        }
+        $local_and->condition($alias . '.uri', db_like($scheme . '://') . '%', 'LIKE');
+        if (count($mimetypes)) {
+          $local_and->condition($alias . '.filemime', $mimetypes, 'IN');
+        }
+        $local_or->condition($local_and);
+        $local_and = db_and();
       }
       else {
-        $upload_form_id = 'media_add_upload';
+        $local_or->condition($alias . '.uri', db_like($scheme . '://') . '%', 'LIKE');
       }
+    }
 
-      module_load_include('inc', 'media', 'includes/media.pages');
-      $upload_form = drupal_get_form($upload_form_id, $params);
-      return array(
-        '#title' => t('Upload'),
-        'form' => array($upload_form),
-        '#attached' => $attached,
-      );
-      break;
-    case 'library':
-      return array(
-        '#title' => t('Library'),
-        '#attached' => array(
-          'js' => array(
-            $path . '/js/plugins/media.library.js',
-          ),
-          'css' => array(
-            //@todo: should move this.
-            $path . '/js/plugins/media.library.css',
-          ),
-        ),
-        '#settings' => array(
-          'viewMode' => 'thumbnails',
-          'getMediaUrl' => url('media/browser/list'),
-        // We should probably change this to load dynamically when requested
-        // via the JS file.
-        ) + $params,
-        '#markup' => '<div id="container"><div id="scrollbox"><ul id="media-browser-library-list" class="media-list-thumbnails"></ul><div id="status"></div></div></div>',
-      );
-    break;
+    $or->condition($local_or);
   }
 
-  return array();
-}
-
-/**
- * Implements hook_media_display_types().
- *
- * This is used to display media in different ways on the admin section.
- * Perhaps should be merged in with the browser display.
- */
-function media_media_display_types() {
-  $path = drupal_get_path('module', 'media');
-  $display_types = array();
-
-  $display_types['list'] = array(
-    'title' => t('List'),
-    'description' => t('Display as a list.'),
-    'icon' => $path . '/images/display-list.png',
-    'icon_active' => $path . '/images/display-list-active.png',
-    'callback' => 'media_admin_list',
-    'file' => drupal_get_path('module', 'media') . '/includes/media.admin.inc',
-  );
-
-  $display_types['thumbnails'] = array(
-    'title' => t('Thumbnails'),
-    'description' => t('Display as thumbnails.'),
-    'icon' => $path . '/images/display-thumbnails.png',
-    'icon_active' => $path . '/images/display-thumbnails-active.png',
-    'callback' => 'media_admin_thumbnails',
-    'file' => drupal_get_path('module', 'media') . '/includes/media.admin.inc',
-  );
-
-  return $display_types;
-}
-
-/**
- * Implements hook_media_operations().
- */
-function media_media_operations() {
-  $operations = array(
-    'delete' => array(
-      'label' => t('Delete'),
-      'callback' => NULL,
-    ),
-    'edit' => array(
-      'label' => t('Edit'),
-      'callback' => NULL,
-      'redirect' => 'media/%fids/multiedit'
-    ),
-  );
-
-  if (!module_exists('multiform')) {
-    // If the multiform module is not installed, do not show this option.
-    unset($operations['edit']);
+  if ($or->count()) {
+    $query->condition($or);
   }
-  return $operations;
 }

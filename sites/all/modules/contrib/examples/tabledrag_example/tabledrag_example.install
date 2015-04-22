@@ -1,0 +1,151 @@
+<?php
+/**
+ * @file
+ * Install and uninstall functions for the tabledrag example module.
+ *
+ * This file contains the functions required to perform install and
+ * uninstall operations.
+ */
+
+/**
+ * Implements hook_schema().
+ *
+ * This defines the database table which will hold the example item info.
+ *
+ * @ingroup tabledrag_example
+ */
+function tabledrag_example_schema() {
+  $schema['tabledrag_example'] = array(
+    'description' => 'Stores some entries for our tabledrag fun.',
+    'fields' => array(
+      'id' => array(
+        'description' => 'The primary identifier for each item',
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'name' => array(
+        'description' => 'A name for this item',
+        'type' => 'varchar',
+        'length' => 32,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'description' => array(
+        'description' => 'A description for this item',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'itemgroup' => array(
+        'description' => 'The group this item belongs to',
+        'type' => 'varchar',
+        'length' => 32,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'weight' => array(
+        'description' => 'The sortable weight for this item',
+        'type' => 'int',
+        'length' => 11,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'pid' => array(
+        'description' => 'The primary id of the parent for this item',
+        'type' => 'int',
+        'length' => 11,
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'depth' => array(
+        'description' => 'The depth of this item within the tree',
+        'type' => 'int',
+        'size' => 'small',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+    ),
+    'primary key' => array('id'),
+  );
+  return $schema;
+}
+
+/**
+ * Implements hook_install().
+ *
+ * This datafills the example item info which will be used in the example.
+ *
+ * @ingroup tabledrag_example
+ */
+function tabledrag_example_install() {
+  // Ensure translations don't break at install time.
+  $t = get_t();
+  // Insert some values into the database.
+  $rows = array(
+    array(
+      'name' => $t('Item One'),
+      'description' => $t('The first item'),
+      'itemgroup' => $t('Group1'),
+    ),
+    array(
+      'name' => $t('Item Two'),
+      'description' => $t('The second item'),
+      'itemgroup' => $t('Group1'),
+    ),
+    array(
+      'name' => $t('Item Three'),
+      'description' => $t('The third item'),
+      'itemgroup' => $t('Group1'),
+    ),
+    array(
+      'name' => $t('Item Four'),
+      'description' => $t('The fourth item'),
+      'itemgroup' => $t('Group2'),
+    ),
+    array(
+      'name' => $t('Item Five'),
+      'description' => $t('The fifth item'),
+      'itemgroup' => $t('Group2'),
+    ),
+    array(
+      'name' => $t('Item Six'),
+      'description' => $t('The sixth item'),
+      'itemgroup' => $t('Group2'),
+    ),
+    array(
+      'name' => $t('Item Seven'),
+      'description' => $t('The seventh item'),
+      'itemgroup' => $t('Group3'),
+    ),
+    array(
+      'name' => $t('A Root Node'),
+      'description' => $t('This item cannot be nested under a parent item'),
+      'itemgroup' => $t('Group3'),
+    ),
+    array(
+      'name' => $t('A Leaf Item'),
+      'description' => $t('This item cannot have child items'),
+      'itemgroup' => $t('Group3'),
+    ),
+  );
+  if (db_table_exists('tabledrag_example')) {
+    foreach ($rows as $row) {
+      db_insert('tabledrag_example')->fields($row)->execute();
+    }
+  }
+}
+
+/**
+ * Implements hook_uninstall().
+ *
+ * This removes the example data when the module is uninstalled.
+ *
+ * @ingroup tabledrag_example
+ */
+function tabledrag_example_uninstall() {
+  db_drop_table('tabledrag_example');
+}

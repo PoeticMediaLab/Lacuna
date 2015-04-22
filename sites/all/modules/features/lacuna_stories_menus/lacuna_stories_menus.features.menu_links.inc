@@ -18,9 +18,7 @@ function lacuna_stories_menus_menu_default_menu_links() {
     'link_title' => 'About This Course',
     'options' => array(
       'identifier' => 'main-menu_about-this-course:node/27',
-      'attributes' => array(
-        'title' => '',
-      ),
+      'attributes' => array(),
     ),
     'module' => 'menu',
     'hidden' => 0,
@@ -107,27 +105,6 @@ function lacuna_stories_menus_menu_default_menu_links() {
     'weight' => -50,
     'customized' => 1,
     'parent_identifier' => 'main-menu_reflect:<nolink>',
-  );
-  // Exported menu link: main-menu_bibliography:biblio
-  $menu_links['main-menu_bibliography:biblio'] = array(
-    'menu_name' => 'main-menu',
-    'link_path' => 'biblio',
-    'router_path' => 'biblio',
-    'link_title' => 'Bibliography',
-    'options' => array(
-      'attributes' => array(
-        'title' => '',
-      ),
-      'identifier' => 'main-menu_bibliography:biblio',
-    ),
-    'module' => 'menu',
-    'hidden' => 0,
-    'external' => 0,
-    'has_children' => 0,
-    'expanded' => 0,
-    'weight' => -46,
-    'customized' => 1,
-    'parent_identifier' => 'main-menu_explore:<nolink>',
   );
   // Exported menu link: main-menu_connect:<nolink>
   $menu_links['main-menu_connect:<nolink>'] = array(
@@ -369,26 +346,23 @@ function lacuna_stories_menus_menu_default_menu_links() {
     'customized' => 1,
     'parent_identifier' => 'main-menu_create:<nolink>',
   );
-  // Exported menu link: main-menu_reading-schedule:syllabus
-  $menu_links['main-menu_reading-schedule:syllabus'] = array(
+  // Exported menu link: main-menu_people:people
+  $menu_links['main-menu_people:people'] = array(
     'menu_name' => 'main-menu',
-    'link_path' => 'syllabus',
-    'router_path' => 'syllabus',
-    'link_title' => 'Reading Schedule',
+    'link_path' => 'people',
+    'router_path' => 'people',
+    'link_title' => 'People',
     'options' => array(
-      'identifier' => 'main-menu_reading-schedule:syllabus',
-      'attributes' => array(
-        'title' => '',
-      ),
+      'identifier' => 'main-menu_people:people',
     ),
     'module' => 'system',
     'hidden' => 0,
     'external' => 0,
     'has_children' => 0,
     'expanded' => 0,
-    'weight' => -47,
+    'weight' => -50,
     'customized' => 1,
-    'parent_identifier' => 'main-menu_explore:<nolink>',
+    'parent_identifier' => 'main-menu_connect:<nolink>',
   );
   // Exported menu link: main-menu_reflect:<nolink>
   $menu_links['main-menu_reflect:<nolink>'] = array(
@@ -481,7 +455,7 @@ function lacuna_stories_menus_menu_default_menu_links() {
     'external' => 0,
     'has_children' => 0,
     'expanded' => 0,
-    'weight' => -50,
+    'weight' => -49,
     'customized' => 1,
     'parent_identifier' => 'main-menu_connect:<nolink>',
   );
@@ -518,7 +492,7 @@ function lacuna_stories_menus_menu_default_menu_links() {
     'external' => 0,
     'has_children' => 0,
     'expanded' => 0,
-    'weight' => -49,
+    'weight' => -48,
     'customized' => 1,
     'parent_identifier' => 'main-menu_connect:<nolink>',
   );
@@ -550,7 +524,6 @@ function lacuna_stories_menus_menu_default_menu_links() {
   t('All Content');
   t('All Emails');
   t('Annotations Dashboard');
-  t('Bibliography');
   t('Connect');
   t('Contact');
   t('Create');
@@ -563,7 +536,7 @@ function lacuna_stories_menus_menu_default_menu_links() {
   t('Materials');
   t('My Profile');
   t('My Writing');
-  t('Reading Schedule');
+  t('People');
   t('Reflect');
   t('Research Consent');
   t('Responses');

@@ -1,0 +1,55 @@
+<?php
+
+/**
+ * @file
+ * Tests for rdf.module.
+ */
+
+/**
+ * Test RDFa markup generation.
+ *
+ * @ingroup rdf_example
+ */
+class RdfExampleRdfaMarkupTestCase extends DrupalWebTestCase {
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function getInfo() {
+    return array(
+      'name' => 'RDFa markup',
+      'description' => 'Test RDFa markup generation.',
+      'group' => 'Examples',
+    );
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setUp() {
+    parent::setUp('rdf', 'field_test', 'rdf_example');
+  }
+
+  /**
+   * Test whether RDF mapping is define in markup.
+   *
+   * Create a recipe node of type blog and test whether the RDF mapping defined 
+   * for this bundle is reflected in the markup.
+   */
+  public function testAttributesInMarkup() {
+    $node = $this->drupalCreateNode(array('type' => 'recipe'));
+    $this->drupalGet('node/' . $node->nid);
+    $iso_date = date('c', $node->changed);
+    $url = url('node/' . $node->nid);
+
+    // The title is mapped to dc:title and v:name and is exposed in a meta tag
+    // in the header.
+    $recipe_title = $this->xpath("//meta[contains(@property, 'dc:title') and contains(@property, 'v:name') and @content='$node->title']");
+    $this->assertTrue(!empty($recipe_title), 'Title is exposed with dc:title and v:name in meta element.');
+
+    // Test that the type is applied and that the default mapping for date is
+    // used.
+    $recipe_meta = $this->xpath("//div[(@about='$url') and (@typeof='v:Recipe')]//span[contains(@property, 'dc:date') and contains(@property, 'dc:created') and @datatype='xsd:dateTime' and @content='$iso_date']");
+    $this->assertTrue(!empty($recipe_meta), 'RDF type is present on post. Properties dc:date and dc:created are present on post date.');
+  }
+}

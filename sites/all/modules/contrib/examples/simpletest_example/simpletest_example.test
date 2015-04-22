@@ -1,0 +1,262 @@
+<?php
+
+/**
+ * @file
+ * An example of simpletest tests to accompany the tutorial at
+ * http://drupal.org/node/890654.
+ */
+
+/**
+ * The SimpleTestExampleTestCase is a functional test case, meaning that it
+ * actually exercises a particular sequence of actions through the web UI.
+ * The majority of core test cases are done this way, but the SimpleTest suite
+ * also provides unit tests as demonstrated in the unit test case example later
+ * in this file.
+ *
+ * Functional test cases are far slower to execute than unit test cases because
+ * they require a complete Drupal install to be done for each test.
+ *
+ * @see DrupalWebTestCase
+ * @see SimpleTestUnitTestExampleTestCase
+ *
+ * @ingroup simpletest_example
+ */
+class SimpleTestExampleTestCase extends DrupalWebTestCase {
+
+  protected $privilegedUser;
+
+  /**
+   * Give display information to the SimpleTest system.
+   *
+   * getInfo() returns a keyed array of information for SimpleTest to show.
+   *
+   * It's a good idea to organize your tests consistently using the 'group'
+   * key.
+   */
+  public static function getInfo() {
+    return array(
+      'name' => 'SimpleTest Example',
+      'description' => 'Ensure that the simpletest_example content type provided functions properly.',
+      'group' => 'Examples',
+    );
+  }
+
+  /**
+   * Set up the test environment.
+   *
+   * This method is called once per test method, before the test is executed.
+   * It gives you a chance to control the setup of the test environment.
+   *
+   * If you need a different test environment, then you should create another
+   * test class which overloads DrupalWebTestCase::setUp() differently.
+   *
+   * @see DrupalWebTestCase::setUp()
+   */
+  public function setUp() {
+    // We call parent::setUp() with the list of modules we want to enable.
+    // This can be an array or just a list of arguments.
+    parent::setUp('simpletest_example');
+    // Create and log in our user. The user has the arbitrary privilege
+    // 'extra special edit any simpletest_example' which is provided by
+    // our module to grant access.
+    $this->privilegedUser = $this->drupalCreateUser(array('create simpletest_example content', 'extra special edit any simpletest_example'));
+    $this->drupalLogin($this->privilegedUser);
+  }
+
+  /**
+   * Create a simpletest_example node using the node form.
+   */
+  public function testSimpleTestExampleCreate() {
+    // Create node to edit.
+    $edit = array();
+    $edit['title'] = $this->randomName(8);
+    $edit["body[und][0][value]"] = $this->randomName(16);
+    $this->drupalPost('node/add/simpletest-example', $edit, t('Save'));
+    $this->assertText(t('SimpleTest Example Node Type @title has been created.', array('@title' => $edit['title'])));
+  }
+
+  /**
+   * Create a simpletest_example node and then see if our user can edit it.
+   */
+  public function testSimpleTestExampleEdit() {
+    $settings = array(
+      'type' => 'simpletest_example',
+      'title' => $this->randomName(32),
+      'body' => array(LANGUAGE_NONE => array(array($this->randomName(64)))),
+    );
+    $node = $this->drupalCreateNode($settings);
+
+    // For debugging, we might output the node structure with $this->verbose()
+    // It would only be output if the testing settings had 'verbose' set.
+    $this->verbose('Node created: ' . var_export($node, TRUE));
+
+    // We'll run this test normally, but not on the testbot, as it would
+    // indicate that the examples module was failing tests.
+    if (!$this->runningOnTestbot()) {
+      // The debug() statement will output information into the test results.
+      // It can also be used in Drupal 7 anywhere in code and will come out
+      // as a drupal_set_message().
+      debug('We are not running on the PIFR testing server, so will go ahead and catch the failure.');
+      $this->drupalGet("node/{$node->nid}/edit");
+      // Make sure we don't get a 401 unauthorized response:
+      $this->assertResponse(200, 'User is allowed to edit the content.');
+
+      // Looking for title text in the page to determine whether we were
+      // successful opening edit form.
+      $this->assertText(t("@title", array('@title' => $settings['title'])), "Found title in edit form");
+    }
+  }
+
+  /**
+   * Detect if we're running on PIFR testbot.
+   *
+   * Skip intentional failure in that case. It happens that on the testbot the
+   * site under test is in a directory named 'checkout' or 'site_under_test'.
+   *
+   * @return bool
+   *   TRUE if running on testbot.
+   */
+  public function runningOnTestbot() {
+    return (file_exists("../checkout") || file_exists("../site_under_test"));
+  }
+}
+
+
+/**
+ * Although most core test cases are based on DrupalWebTestCase and are
+ * functional tests (exercising the web UI) we also have DrupalUnitTestCase,
+ * which executes much faster because a Drupal install does not have to be
+ * one. No environment is provided to a test case based on DrupalUnitTestCase;
+ * it must be entirely self-contained.
+ *
+ * @see DrupalUnitTestCase
+ *
+ * @ingroup simpletest_example
+ */
+class SimpleTestUnitTestExampleTestCase extends DrupalUnitTestCase {
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function getInfo() {
+    return array(
+      'name' => 'SimpleTest Example unit tests',
+      'description' => 'Test that simpletest_example_empty_mysql_date works properly.',
+      'group' => 'Examples',
+    );
+  }
+
+  /**
+   * Set up the test environment.
+   *
+   * Note that we use drupal_load() instead of passing our module dependency
+   * to parent::setUp(). That's because we're using DrupalUnitTestCase, and
+   * thus we don't want to install the module, only load it's code.
+   *
+   * Also, DrupalUnitTestCase can't actually install modules. This is by
+   * design.
+   */
+  public function setUp() {
+    drupal_load('module', 'simpletest_example');
+    parent::setUp();
+  }
+
+  /**
+   * Test simpletest_example_empty_mysql_date().
+   *
+   * Note that no environment is provided; we're just testing the correct
+   * behavior of a function when passed specific arguments.
+   */
+  public function testSimpleTestUnitTestExampleFunction() {
+    $result = simpletest_example_empty_mysql_date(NULL);
+    // Note that test assertion messages should never be translated, so
+    // this string is not wrapped in t().
+    $message = 'A NULL value should return TRUE.';
+    $this->assertTrue($result, $message);
+
+    $result = simpletest_example_empty_mysql_date('');
+    $message = 'An empty string should return TRUE.';
+    $this->assertTrue($result, $message);
+
+    $result = simpletest_example_empty_mysql_date('0000-00-00');
+    $message = 'An "empty" MySQL DATE should return TRUE.';
+    $this->assertTrue($result, $message);
+
+    $result = simpletest_example_empty_mysql_date(date('Y-m-d'));
+    $message = 'A valid date should return FALSE.';
+    $this->assertFalse($result, $message);
+  }
+}
+
+/**
+ * SimpleTestExampleMockModuleTestCase allows us to demonstrate how you can
+ * use a mock module to aid in functional testing in Drupal.
+ *
+ * If you have some functionality that's not intrinsic to the code under test,
+ * you can add a special mock module that only gets installed during test
+ * time. This allows you to implement APIs created by your module, or otherwise
+ * exercise the code in question.
+ *
+ * This test case class is very similar to SimpleTestExampleTestCase. The main
+ * difference is that we enable the simpletest_example_test module in the
+ * setUp() method. Then we can test for behaviors provided by that module.
+ *
+ * @see SimpleTestExampleTestCase
+ *
+ * @ingroup simpletest_example
+ */
+class SimpleTestExampleMockModuleTestCase extends DrupalWebTestCase {
+
+  /**
+   * Give display information to the SimpleTest system.
+   *
+   * getInfo() returns a keyed array of information for SimpleTest to show.
+   *
+   * It's a good idea to organize your tests consistently using the 'group'
+   * key.
+   */
+  public static function getInfo() {
+    return array(
+      'name' => 'SimpleTest Mock Module Example',
+      'description' => "Ensure that we can modify SimpleTest Example's content types.",
+      'group' => 'Examples',
+    );
+  }
+
+  /**
+   * Set up the test environment.
+   *
+   * Note that we're enabling both the simpletest_example and
+   * simpletest_example_test modules.
+   */
+  public function setUp() {
+    // We call parent::setUp() with the list of modules we want to enable.
+    parent::setUp('simpletest_example', 'simpletest_example_test');
+  }
+
+  /**
+   * Test modifications made by our mock module.
+   *
+   * We create a simpletest_example node and then see if our submodule
+   * operated on it.
+   */
+  public function testSimpleTestExampleMockModule() {
+    // Create a user.
+    $test_user = $this->drupalCreateUser(array('access content'));
+    // Log them in.
+    $this->drupalLogin($test_user);
+    // Set up some content.
+    $settings = array(
+      'type' => 'simpletest_example',
+      'title' => $this->randomName(32),
+      'body' => array(LANGUAGE_NONE => array(array($this->randomName(64)))),
+    );
+    // Create the content node.
+    $node = $this->drupalCreateNode($settings);
+    // View the node.
+    $this->drupalGet("node/{$node->nid}");
+    // Check that our module did it's thing.
+    $this->assertText(t('The test module did its thing.'), "Found evidence of test module.");
+  }
+
+}

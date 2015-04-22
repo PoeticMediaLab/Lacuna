@@ -1,0 +1,571 @@
+<?php
+/**
+ * @file
+ * Tests for Field Permission Example.
+ *
+ * @ingroup field_permission_example
+ */
+
+/**
+ * A generic field testing class.
+ *
+ * Subclass this one to test your specific field type
+ * and get some basic unit testing for free.
+ *
+ * Since Simpletest only looks through one class definition
+ * to find test functions, we define generic tests as
+ * 'code_testWhatever' or 'form_testWhatever'. Subclasses
+ * can then implement shim test methods that just call the
+ * generic tests.
+ *
+ * 'code_' and 'form_' prefixes denote the type of test:
+ * using code only, or through Drupal page forms.
+ *
+ * @ingroup field_permission_example
+ */
+class GenericFieldTest extends DrupalWebTestCase {
+
+  // Our tests will generate some random field instance
+  // names. We store them here so many functions can act on them.
+  protected $instanceNames;
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function getInfo() {
+    return array(
+      'name' => 'Generic Field Test',
+      'description' => 'Someone neglected to override GenericFieldTest::getInfo().',
+      'group' => 'Examples',
+    );
+  }
+
+  /**
+   * Supply the field types we wish to test.
+   *
+   * Return an array of field types to instantiate and test.
+   *
+   * @return array
+   *   The field types we wish to use.
+   */
+  protected function getFieldTypes() {
+    return array('these_are_not', 'valid_field_types', 'please_override');
+  }
+
+  /**
+   * The module to enable.
+   *
+   * @return string
+   *   Module machine name.
+   */
+  protected function getModule() {
+    return 'this-is-not-a-module-name-please-override';
+  }
+
+  /**
+   * Simpletest's setUp().
+   *
+   * We want to be able to subclass this class, so we jump
+   * through a few hoops in order to get the modules from args
+   * and add our own.
+   */
+  public function setUp() {
+    $this->instanceNames = array();
+    $modules = func_get_args();
+    if (isset($modules[0]) && is_array($modules[0])) {
+      $modules = $modules[0];
+    }
+    $modules[] = 'node';
+    $modules[] = 'field_ui';
+    parent::setUp($modules);
+  }
+
+  /**
+   * Verify that all required fields are specified in hook_field_info().
+   *
+   * The full list is label, description, settings, instance_settings,
+   * default_widget, default_formatter, no_ui.
+   *
+   * Some are optional, and we won't check for those.
+   *
+   * In a sane world, this would be a unit test, rather than a
+   * web test, but module_implements is unavailable to us
+   * in unit tests.
+   *
+   * @see hook_field_info()
+   */
+  public function runTestGenericFieldInfo() {
+    $field_types = $this->getFieldTypes();
+    $module = $this->getModule();
+    $info_keys = array(
+      'label',
+      'description',
+      'default_widget',
+      'default_formatter',
+    );
+    // We don't want to use field_info_field_types()
+    // because there is a hook_field_info_alter().
+    // We're testing the module here, not the rest of
+    // the system. So invoke hook_field_info() ourselves.
+    $modules = module_implements('field_info');
+    $this->assertTrue(in_array($module, $modules),
+      'Module ' . $module . ' implements hook_field_info()');
+
+    foreach ($field_types as $field_type) {
+      $field_info = module_invoke($module, 'field_info');
+      $this->assertTrue(isset($field_info[$field_type]),
+        'Module ' . $module . ' defines field type ' . $field_type);
+      $field_info = $field_info[$field_type];
+      foreach ($info_keys as $key) {
+        $this->assertTrue(
+          isset($field_info[$key]),
+          $field_type . "'s " . $key . ' is set.'
+        );
+      }
+    }
+  }
+
+  /**
+   * Add all testable fields as instances to a content type.
+   *
+   * As a side-effect: Store the names of the instances created
+   * in $this->$instance_names.
+   *
+   * @param object $node_type
+   *   A content type object. If none is provided, one will be generated.
+   *
+   * @return object
+   *   The content type object that has the fields attached.
+   */
+  public function codeTestGenericAddAllFields($node_type = NULL) {
+    $this->instanceNames = array();
+    if (!$node_type) {
+      $node_type = $this->drupalCreateContentType();
+    }
+    foreach ($this->getFieldTypes() as $field_type) {
+      $instance_name = drupal_strtolower($this->randomName(32));
+      $field = array(
+        'field_name' => $instance_name,
+        'type' => $field_type,
+      );
+      $field = field_create_field($field);
+      $instance = array(
+        'field_name' => $instance_name,
+        'entity_type' => 'node',
+        'bundle' => $node_type->name,
+        'label' => drupal_strtolower($this->randomName(20)),
+      );
+      // Finally create the instance.
+      $instance = field_create_instance($instance);
+      // Reset the caches...
+      _field_info_collate_fields(TRUE);
+      // Grab this instance.
+      $verify_instance = field_info_instance('node', $instance_name, $node_type->name);
+      $this->assertTrue($verify_instance, 'Instance object exists.');
+      $this->assertTrue(
+        $verify_instance != NULL,
+        'field_info_instance() says ' . $instance_name . ' (' . $node_type->name . ') was created.'
+      );
+      $this->instanceNames[] = $instance_name;
+    }
+    return $node_type;
+  }
+
+  /**
+   * Remove all fields in $this->field_names.
+   *
+   * @param mixed $node_type
+   *   A content type object. If none is specified,
+   *   the test fails.
+   */
+  public function codeTestGenericRemoveAllFields($node_type = NULL) {
+    if (!$node_type) {
+      $this->fail('No node type.');
+    }
+    if (count($this->instanceNames) < 1) {
+      $this->fail('There are no instances to remove.');
+      return;
+    }
+    foreach ($this->instanceNames as $instance_name) {
+      $instance = field_info_instance('node', $instance_name, $node_type->name);
+      $this->assertTrue($instance, "Instance exists, now we'll delete it.");
+      field_delete_field($instance_name);
+      $instance = field_info_instance('node', $instance_name, $node_type->name);
+      $this->assertFalse($instance, 'Instance was deleted.');
+    }
+    $this->instanceNames = array();
+  }
+
+  /**
+   * Add and delete all field types through Form API.
+   *
+   * @access public
+   */
+  public function formTestGenericFieldNodeAddDeleteForm() {
+    // Create and login user.
+    $account = $this->drupalCreateUser(array(
+      'administer content types',
+      ));
+    $this->drupalLogin($account);
+
+    // Add a content type.
+    $node_type = $this->drupalCreateContentType();
+
+    // Add all our testable fields.
+    $field_names = $this->formAddAllFields($node_type);
+
+    // Now let's delete all the fields.
+    foreach ($field_names as $field_name) {
+      // This is the path for the 'delete' link on field admin page.
+      $this->drupalGet('admin/structure/types/manage/' .
+        $node_type->name . '/fields/field_' . $field_name . '/delete');
+      // Click the 'delete' button.
+      $this->drupalPost(NULL, array(), t('Delete'));
+      $this->assertText(t('The field @field has been deleted from the @type content type.',
+        array('@field' => $field_name, '@type' => $node_type->name)));
+    }
+  }
+
+  /**
+   * Add all fields using Form API.
+   *
+   * @param mixed $node_type
+   *   A content type object. If none is specified,
+   *   the test fails.
+   */
+  protected function formAddAllFields($node_type = NULL) {
+    if (!$node_type) {
+      $this->fail('No content type specified.');
+    }
+    // Get all our field types.
+    $field_types = $this->getFieldTypes();
+    // Keep a list of no_ui fields so we can tell the user.
+    $unsafe_field_types = array();
+    $field_names = array();
+
+    $manage_path = 'admin/structure/types/manage/' . $node_type->name . '/fields';
+    foreach ($field_types as $field_type) {
+      // Get the field info.
+      $field_info = field_info_field_types($field_type);
+      // Exclude no_ui field types.
+      if (isset($field_info['no_ui']) && $field_info['no_ui']) {
+        $unsafe_field_types[] = $field_type;
+      }
+      else {
+        // Generate a name for our field.
+        // 26 is max length for field name.
+        $field_name = drupal_strtolower($this->randomName(26));
+        $field_names[$field_type] = $field_name;
+        // Create the field through Form API.
+        $this->formCreateField($manage_path, $field_type, $field_name,
+          $field_info['default_widget'], 1);
+      }
+    }
+
+    // Tell the user which fields we couldn't test.
+    if (!empty($unsafe_field_types)) {
+      debug(
+        'Unable to attach these no_ui fields: ' .
+        implode(', ', $unsafe_field_types)
+      );
+    }
+
+    // Somehow clicking "save" isn't enough, and we have to
+    // rebuild a few caches.
+    node_types_rebuild();
+    menu_rebuild();
+    return $field_names;
+  }
+
+  /**
+   * Create a field using the content type management form.
+   *
+   * @param mixed $manage_path
+   *   Path to our content type management form.
+   * @param mixed $field_type
+   *   The type of field we're adding.
+   * @param mixed $field_name
+   *   The name of the field instance we want.
+   * @param mixed $widget_type
+   *   Which widget would we like?
+   * @param mixed $cardinality
+   *   Cardinality for this field instance.
+   */
+  protected function formCreateField($manage_path, $field_type, $field_name, $widget_type, $cardinality) {
+    // $manage_path is the field edit form for our content type.
+    $this->drupalGet($manage_path);
+    $edit = array(
+      'fields[_add_new_field][label]' => $field_name,
+      'fields[_add_new_field][field_name]' => $field_name,
+      'fields[_add_new_field][type]' => $field_type,
+      'fields[_add_new_field][widget_type]' => $widget_type,
+    );
+    $this->drupalPost(NULL, $edit, t('Save'));
+
+    // Assume there are no settings for this,
+    // so just press the button.
+    $this->drupalPost(NULL, array(), t('Save field settings'));
+
+    $edit = array('field[cardinality]' => (string) $cardinality);
+    $this->drupalPost(NULL, $edit, t('Save settings'));
+
+    debug(
+      t('Saved settings for field !field_name with widget !widget_type and cardinality !cardinality',
+        array(
+          '!field_name' => $field_name,
+          '!widget_type' => $widget_type,
+          '!cardinality' => $cardinality,
+        )
+      )
+    );
+
+    $this->assertText(t('Saved @name configuration.', array('@name' => $field_name)));
+  }
+
+  /**
+   * Create a node with some field content.
+   *
+   * @return object
+   *   Node object for the created node.
+   */
+  public function createFieldContentForUser(
+      $account = NULL,
+      $content = 'testable_content',
+      $node_type = NULL,
+      $instance_name = '',
+      $column = NULL
+    ) {
+    if (!$column) {
+      $this->fail('No column name given.');
+      return NULL;
+    }
+    if (!$account) {
+      $account = $this->drupalCreateUser(array(
+        'bypass node access',
+        'administer content types',
+        ));
+    }
+    $this->drupalLogin($account);
+
+    if (!$node_type) {
+      $node_type = $this->codeTestGenericAddAllFields();
+    }
+
+    if (!$instance_name) {
+      $instance_name = reset($this->instanceNames);
+    }
+    $field = array();
+    $field[LANGUAGE_NONE][0][$column] = $content;
+
+    $settings = array(
+      'type' => $node_type->name,
+      $instance_name => $field,
+    );
+    $node = $this->drupalCreateNode($settings);
+
+    $this->assertTrue($node, 'Node of type ' . $node->type . ' allegedly created.');
+
+    $node = node_load($node->nid);
+    debug('Loaded node id: ' . $node->nid);
+    $this->assertTrue($node->$instance_name, 'Field actually created.');
+    $field = $node->$instance_name;
+    $this->assertTrue($field[LANGUAGE_NONE][0][$column] == $content,
+      'Content was stored properly on the field.');
+    return $node;
+  }
+
+}
+
+class FieldTestPermissionsExample extends GenericFieldTest {
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setUp() {
+    parent::setUp(array('field_permission_example'));
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function getInfo() {
+    return array(
+      'name' => 'Field Permission Example',
+      'description' => 'Various tests on the functionality of the Fieldnote field.',
+      'group' => 'Examples',
+    );
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function getFieldTypes() {
+    return array('field_permission_example_fieldnote');
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function getModule() {
+    return 'field_permission_example';
+  }
+
+  /**
+   * Override createFieldContentForUser().
+   *
+   * We override so we can make sure $column is set to 'notes'.
+   */
+  public function createFieldContentForUser(
+      $account = NULL,
+      $content = 'fieldnote_testable_content',
+      $node_type = NULL,
+      $instance_name = '',
+      $column = 'notes'
+    ) {
+    return parent::createFieldContentForUser($account, $content, $node_type, $instance_name, $column);
+  }
+
+
+  /**
+   * Test of hook_field_info() and other implementation requirements.
+   *
+   * @see GenericFieldTest::runTestGenericFieldInfo()
+   */
+  public function testFieldnoteInfo() {
+    $this->runTestGenericFieldInfo();
+  }
+
+  /**
+   * Add and remove the field through Form API.
+   */
+  public function testAddRemoveFieldnoteForm() {
+    $this->formTestGenericFieldNodeAddDeleteForm();
+  }
+
+  /**
+   * Add and remove the field through code.
+   */
+  public function testAddRemoveFieldnoteCode() {
+    $node_type = $this->codeTestGenericAddAllFields();
+    $this->codeTestGenericRemoveAllFields($node_type);
+  }
+
+  /**
+   * Test view permissions.
+   */
+  public function testFieldnoteViewPerms() {
+    // We create two sets of content so we can get a few
+    // test cases out of the way.
+    $view_own_content = $this->randomName(23);
+    $view_any_content = $this->randomName(23);
+    $view_own_node = $this->createFieldContentForUser(NULL, $view_own_content);
+    // Get the type of the node so we can create another one.
+    $node_type = node_type_load($view_own_node->type);
+    $view_any_node = $this->createFieldContentForUser(NULL, $view_any_content, $node_type);
+
+    // There should be a node now, with some lovely content, but it's the wrong
+    // user for the view-own test.
+    $view_own_account = $this->drupalCreateUser(array(
+      'view own fieldnote',
+    ));
+    debug("Created user with 'view own fieldnote' permission.");
+
+    // Now change the user id for the test node.
+    $view_own_node = node_load($view_own_node->nid);
+    $view_own_node->uid = $view_own_account->uid;
+    node_save($view_own_node);
+    $view_own_node = node_load($view_own_node->nid);
+    $this->assertTrue($view_own_node->uid == $view_own_account->uid, 'New user assigned to node.');
+
+    // Now we want to look at the page with the field and
+    // check that we can see it.
+    $this->drupalLogin($view_own_account);
+
+    $this->drupalGet('node/' . $view_own_node->nid);
+    // Check that the field content is present.
+    $output_strings = $this->xpath("//div[contains(@class,'stickynote')]/text()");
+    $this->assertEqual((string) reset($output_strings), $view_own_content);
+    debug("'view own fieldnote' can view own field.");
+
+    // This account shouldn't be able to see the field on the
+    // 'view any' node.
+    $this->drupalGet('node/' . $view_any_node->nid);
+    // Check that the field content is not present.
+    $output_strings = $this->xpath("//div[contains(@class,'stickynote')]/text()");
+    $this->assertNotEqual((string) reset($output_strings), $view_any_content);
+    debug("'view own fieldnote' cannot view other field.");
+
+    // Now, to test for 'view any fieldnote' we create another user
+    // with that permission, and try to look at the same node.
+    $view_any_account = $this->drupalCreateUser(array(
+      'view any fieldnote',
+    ));
+    debug("Created user with 'view any fieldnote' permission.");
+    $this->drupalLogin($view_any_account);
+    // This account should be able to see the field on the
+    // 'view any' node.
+    $this->drupalGet('node/' . $view_any_node->nid);
+    // Check that the field content is present.
+    $output_strings = $this->xpath("//div[contains(@class,'stickynote')]/text()");
+    $this->assertEqual((string) reset($output_strings), $view_any_content);
+    debug("'view any fieldnote' can view other field.");
+  }
+
+  /**
+   * Test edit permissions.
+   *
+   * Note that this is mostly identical to testFieldnoteViewPerms() and could
+   * probably be refactored.
+   */
+  public function testFieldnoteEditPerms() {
+    // We create two sets of content so we can get a few
+    // test cases out of the way.
+    $edit_own_content = $this->randomName(23);
+    $edit_any_content = $this->randomName(23);
+    $edit_own_node = $this->createFieldContentForUser(NULL, $edit_own_content);
+    // Get the type of the node so we can create another one.
+    $node_type = node_type_load($edit_own_node->type);
+    $edit_any_node = $this->createFieldContentForUser(NULL, $edit_any_content, $node_type);
+
+    $edit_own_account = $this->drupalCreateUser(array(
+      'edit own ' . $node_type->name . ' content',
+      'edit own fieldnote',
+    ));
+    debug("Created user with 'edit own fieldnote' permission.");
+
+    // Now change the user id for the test node.
+    $edit_own_node = node_load($edit_own_node->nid);
+    $edit_own_node->uid = $edit_own_account->uid;
+    node_save($edit_own_node);
+    $edit_own_node = node_load($edit_own_node->nid);
+    $this->assertTrue($edit_own_node->uid == $edit_own_account->uid, 'New edit test user assigned to node.');
+
+    // Now we want to look at the page with the field and
+    // check that we can see it.
+    $this->drupalLogin($edit_own_account);
+
+    $this->drupalGet('node/' . $edit_own_node->nid . '/edit');
+    $this->assertText($edit_own_content, "'edit own fieldnote' can edit own fieldnote.");
+
+    // This account shouldn't be able to edit the field on the
+    // 'edit any' node.
+    $this->drupalGet('node/' . $edit_any_node->nid . '/edit');
+    $this->assertNoText($edit_any_content, "'edit own fieldnote' can not edit any fieldnote.");
+
+    // Now, to test for 'edit any fieldnote' we create another user
+    // with that permission, and try to edit at the same node.
+    // We have to add the ability to edit any node content, as well
+    // or Drupal will deny us access to the page.
+    $edit_any_account = $this->drupalCreateUser(array(
+      'edit any ' . $node_type->name . ' content',
+      'edit any fieldnote',
+    ));
+    debug("Created user with 'edit any fieldnote' permission.");
+    $this->drupalLogin($edit_any_account);
+    // This account should be able to see the field on the
+    // 'edit any' node.
+    $this->drupalGet('node/' . $edit_any_node->nid . '/edit');
+    $this->assertText($edit_any_content, "'edit any fieldnote' can edit any fieldnote.");
+  }
+
+}

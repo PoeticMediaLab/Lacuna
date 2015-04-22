@@ -1,0 +1,12 @@
+name = Cron example
+description = Demonstrates hook_cron() and related features
+package = Example modules
+core = 7.x
+files[] = cron_example.test
+
+; Information added by Drupal.org packaging script on 2014-10-03
+version = "7.x-1.x-dev"
+core = "7.x"
+project = "examples"
+datestamp = "1412378934"
+

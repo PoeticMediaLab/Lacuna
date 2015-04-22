@@ -1,0 +1,62 @@
+<?php
+
+/**
+ * @file
+ * Functional tests for the contextual_links_example module.
+ */
+
+/**
+ * Functional tests for the contextual_links_example module.
+ *
+ * @ingroup contextual_links_example
+ */
+class ContextualLinksExampleTestCase extends DrupalWebTestCase {
+
+  protected $webUser;
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function getInfo() {
+    return array(
+      'name' => 'Contextual links example functionality',
+      'description' => 'Tests the behavior of the contextual links provided by the Contextual links example module.',
+      'group' => 'Examples',
+    );
+  }
+
+  /**
+   * Enable modules and create user with specific permissions.
+   */
+  public function setUp() {
+    parent::setUp('contextual', 'contextual_links_example');
+    $this->webUser = $this->drupalCreateUser(array('access contextual links', 'administer blocks'));
+    $this->drupalLogin($this->webUser);
+  }
+
+  /**
+   * Test the various contextual links that this module defines and displays.
+   */
+  public function testContextualLinksExample() {
+    // Create a node and promote it to the front page. Then view the front page
+    // and verify that the "Example action" contextual link works.
+    $node = $this->drupalCreateNode(array('type' => 'page', 'promote' => 1));
+    $this->drupalGet('');
+    $this->clickLink(t('Example action'));
+    $this->assertUrl('node/' . $node->nid . '/example-action', array('query' => array('destination' => 'node')));
+
+    // Visit our example overview page and click the third contextual link.
+    // This should take us to a page for editing the third object we defined.
+    $this->drupalGet('examples/contextual-links');
+    $this->clickLink('Edit object', 2);
+    $this->assertUrl('examples/contextual-links/3/edit', array('query' => array('destination' => 'examples/contextual-links')));
+
+    // Enable our module's block, go back to the front page, and click the
+    // "Edit object" contextual link that we expect to be there.
+    $edit['blocks[contextual_links_example_example][region]'] = 'sidebar_first';
+    $this->drupalPost('admin/structure/block', $edit, t('Save blocks'));
+    $this->drupalGet('');
+    $this->clickLink('Edit object');
+    $this->assertUrl('examples/contextual-links/1/edit', array('query' => array('destination' => 'node')));
+  }
+}

@@ -1,0 +1,80 @@
+/*
+  Stylesheet for forms
+*/
+
+$border-color: #eee;
+
+// User registration form
+form#user-register-form {
+
+  // Remove ugly padding around fieldsets in forms
+  fieldset.form-wrapper {
+    margin: 0px;
+    padding: 0px;
+    border: none;
+    legend {
+      left: 0px;
+    }
+  }
+
+  // For user profiles, particularly the date of birth field
+  legend span.fieldset-legend {
+    font-weight: bold;
+  }
+
+  fieldset.collapsible {
+    border: 1px solid $border-color;
+    padding-left: 1em;
+  }
+
+  table.tabledrag-processed {
+    tbody {
+      tr {
+        border-left: 1px solid $border-color;
+        border-right: 1px solid $border-color;
+      }
+    }
+  }
+
+  // Fix the birth date display on form edit
+  #field-date-of-birth-add-more-wrapper {
+    fieldset.form-wrapper {
+      legend {
+        span {
+          background-image: none;
+          padding-left: 0px;
+        }
+      }
+      .fieldset-wrapper {
+        .date-no-float {
+          .form-type-date-text {
+            #edit-field-date-of-birth-und-0-value {
+              padding: 0px;
+            }
+          }
+        }
+        padding-left: 0px;
+      }
+    }
+  }
+
+  fieldset#edit-picture {
+    legend {
+      span.fieldset-legend {
+        display: none;
+        background-image: none;
+        padding-left: 0px;
+      }
+    }
+  }
+
+  // Space above the "Create New Account" button
+    fieldset.group-education {
+    margin-bottom: 20px;
+  }
+} // End #user-register-form
+
+// For required asterisks
+table.tabledrag-processed td label {
+  display: inline-block;
+}

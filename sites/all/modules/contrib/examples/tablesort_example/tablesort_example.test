@@ -1,0 +1,66 @@
+<?php
+
+/**
+ * @file
+ * Simpletest case for tablesort_example module.
+ */
+
+/**
+ * Functionality tests for the tablesort example module.
+ *
+ * @ingroup tablesort_example
+ */
+class TableSortExampleTestCase extends DrupalWebTestCase {
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function getInfo() {
+    return array(
+      'name' => 'TableSort Example',
+      'description' => 'Verify the tablesort functionality',
+      'group' => 'Examples',
+    );
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setUp() {
+    // Enable the module.
+    parent::setUp('tablesort_example');
+  }
+
+  /**
+   * Verify the functionality of the example module.
+   */
+  public function testTableSortPage() {
+    // No need to login for this test.
+    $this->drupalGet('examples/tablesort_example', array('query' => array('sort' => 'desc', 'order' => 'Numbers')));
+    $this->assertRaw('<tbody>
+ <tr class="odd"><td class="active">7</td><td>e</td><td>t982hkv</td> </tr>', 'Ordered by Number decending');
+
+    $this->drupalGet('examples/tablesort_example', array('query' => array('sort' => 'asc', 'order' => 'Numbers')));
+    $this->assertRaw('<tbody>
+ <tr class="odd"><td class="active">1</td><td>e</td><td>912cv21</td> </tr>', 'Ordered by Number ascending');
+
+    // Sort by Letters.
+    $this->drupalGet('examples/tablesort_example', array('query' => array('sort' => 'desc', 'order' => 'Letters')));
+    $this->assertRaw('<tbody>
+ <tr class="odd"><td>4</td><td class="active">w</td><td>80jsv772</td> </tr>', 'Ordered by Letters decending');
+
+    $this->drupalGet('examples/tablesort_example', array('query' => array('sort' => 'asc', 'order' => 'Letters')));
+    $this->assertRaw('<tbody>
+ <tr class="odd"><td>2</td><td class="active">a</td><td>0kuykuh</td> </tr>', 'Ordered by Letters ascending');
+
+    // Sort by Mixture.
+    $this->drupalGet('examples/tablesort_example', array('query' => array('sort' => 'desc', 'order' => 'Mixture')));
+    $this->assertRaw('<tbody>
+ <tr class="odd"><td>7</td><td>e</td><td class="active">t982hkv</td> </tr>', 'Ordered by Mixture decending');
+
+    $this->drupalGet('examples/tablesort_example', array('query' => array('sort' => 'asc', 'order' => 'Mixture')));
+    $this->assertRaw('<tbody>
+ <tr class="odd"><td>2</td><td>a</td><td class="active">0kuykuh</td> </tr>', 'Ordered by Mixture ascending');
+  }
+
+}

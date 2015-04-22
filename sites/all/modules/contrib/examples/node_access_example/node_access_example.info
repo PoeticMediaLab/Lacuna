@@ -1,0 +1,12 @@
+name = Node access example
+description = Demonstrates how a module can use Drupal's node access system
+package = Example modules
+core = 7.x
+files[] = node_access_example.test
+
+; Information added by Drupal.org packaging script on 2014-10-03
+version = "7.x-1.x-dev"
+core = "7.x"
+project = "examples"
+datestamp = "1412378934"
+

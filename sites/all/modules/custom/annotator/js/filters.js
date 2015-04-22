@@ -8,7 +8,11 @@
   $ = jQuery;
 
   select = {
-    'interface': '#annotation-filters',
+    'interface': {
+      'setup': 'section.region-sidebar-second',
+      'wrapper': 'annotation-filters-wrapper',
+      'filters': 'annotation-filters'
+    },
     'annotation': 'annotation-',
     'hide': 'af-annotation-hide',
     'filters': {
@@ -143,14 +147,16 @@
       this.Model.removeFilter('user');
       this.Model.removeFilter('none');
       if (type === select.button.mine) {
+        this.View.eraseFilter('user');
         this.Model.filterAnnotations('user', this.Model.get('currentUser'));
         this.View.drawFilter('user', this.Model.get('currentUser'));
       } else if (type === select.button.all) {
-        this.View.eraseFilter('user', this.Model.get('currentUser'));
+        this.View.eraseFilter('user');
       } else if (type === select.button.none) {
         this.Model.removeAllFilters();
         this.Model.filterAnnotations('none', 'none');
         this.View.eraseAllFilters();
+        this.View.drawFilter('user', 'None');
       } else if (type === select.button.reset) {
         this.Model.removeAllFilters();
         this.View.eraseAllFilters();
@@ -186,7 +192,6 @@
 
     Filters.prototype.pagerClick = function(event) {
       var index, total;
-      console.log('pagerClick', event);
       index = this.Model.get('index');
       total = this.Model.get('total');
       switch (event.target.id) {
@@ -532,10 +537,11 @@
     View.prototype.setup = function(Controller, Model) {
       var filter, values, _ref;
       this.viewer = new Annotator.Viewer();
-      this.i = $(select.interface);
+      $(select.interface.setup).append("<div id='" + select.interface.wrapper + "'><div id='" + select.interface.filters + "'></div></div>");
+      this.i = $('#' + select.interface.wrapper);
       this.Controller = Controller;
       this.Model = Model;
-      this.i.append('<h2>Annotation Filters</h2>');
+      this.i.append('<h2>Select Annotations</h2>');
       this.drawPager(this.Model.get('index'), this.Model.get('total'));
       this.i.append("<div id='" + select.button["default"] + "'></div>");
       this.drawButton(select.button["default"], 'none', 'user');
@@ -549,7 +555,7 @@
       }
       this.i.append("<div id='" + select.button.reset + "'></div>");
       this.drawButton(select.button.reset, 'reset', 'reset');
-      this.i.append("<div id='" + select.filters.active + "'>Active Filters</div>");
+      this.i.append("<div id='" + select.filters.active + "'>Active Selections</div>");
     };
 
     View.prototype.update = function() {};
@@ -591,7 +597,7 @@
     View.prototype.drawCheckbox = function(id, value) {
       var classes;
       classes = [select.checkbox["default"], select.checkbox[id]].join(' ');
-      return $(select.interface).append($("<input type='checkbox' name='" + id + "' checked>", {
+      return $('#' + select.interface.wrapper).append($("<input type='checkbox' name='" + id + "' checked>", {
         name: id
       }).on("click", this.Controller.checkboxToggle)).append("<span id='" + id + "' class='" + classes + "'>" + value + "</span>");
     };
@@ -641,7 +647,11 @@
     };
 
     View.prototype.eraseFilter = function(id, value) {
-      $('#' + id + '.' + select.filters.active + ("[data-value='" + value + "'")).remove();
+      if (value != null) {
+        $('#' + id + '.' + select.filters.active + ("[data-value='" + value + "'")).remove();
+      } else {
+        $('#' + id + '.' + select.filters.active).remove();
+      }
       if (id === 'user') {
         return $('.' + select.button.active + '.' + select.button.user).removeClass(select.button.active);
       }

@@ -25,6 +25,7 @@ function autosave_help($path, $arg) {
 * Implements hook_menu().
 */
 function autosave_menu() {
+  $items = array();
   $items['autosave/handler'] = array(
     'title'           => 'Autosave save',
     'page callback'   => 'autosave_save',
@@ -69,6 +70,7 @@ function autosave_menu() {
  * Implements hook_library().
  */
 function autosave_library() {
+  $libraries = array();
   $libraries['jquery.autosave'] = array(
     'title' => 'jQuery Autosave',
     'website' => 'https://bitbucket.org/stanlemon/jquery-autosave',
@@ -200,7 +202,8 @@ function autosave_form_alter(&$form, &$form_state, $form_id) {
       // Store form arguments in db only if the form has not been autosaved
       // before. The second part of the condition prevents the creation of db
       // entries with autosave/restore/ path during autosave restore AJAX.
-      if (!empty($form_state['build_info']['args']) && !strpos($path, 'autosave/restore/')) {
+      // Note that 'autosave/restore' might be after a language prefix.
+      if (!empty($form_state['build_info']['args']) && (strpos($path, 'autosave/restore/') === FALSE)) {
         $key = array(
           'form_id' => $form_id,
           'uid' => $GLOBALS['user']->uid,
@@ -217,6 +220,7 @@ function autosave_form_alter(&$form, &$form_state, $form_id) {
           ->execute();
       }
 
+      $settings = array();
       $settings['autosave']['form_id'] = $form_id;
       $settings['autosave']['url'] = url('autosave/handler');
       $settings['autosave']['period'] = variable_get('autosave_period', 10);
@@ -274,8 +278,10 @@ function autosave_restore($form_id, $timestamp) {
   global $user;
   // Fetch the saved form, if any.
   $record = autosave_get_autosaved_form($form_id, $timestamp, $user->uid);
+  $commands = array();
 
   if ($record) {
+    $form_state = array();
     // We need to extract and reuse any additional page arguments that the
     // original form may have.  That's especially true for, say, a node form,
     // which needs the node object passed in as well.
@@ -295,6 +301,9 @@ function autosave_restore($form_id, $timestamp) {
     // Disable the "this form has already been submitted" nonsense by making
     // Drupal think the form is being rebuilt as part of a multi-step form.
     $form_state['rebuild'] = TRUE;
+
+    // Stop recording of form error messages
+    $form_state['triggering_element']['#limit_validation_errors'] = array();
 
     // When restoring we will need to know the form token so that the user can
     // be validated.
@@ -409,6 +418,7 @@ function autosave_save() {
  */
 function autosave_autosave_prevent_alter(&$prevent_autosave) {
   // TODO: Do something clever for not just node forms.
+  global $user;
   $path = $_POST['autosave_form_path'];
   $path_args = explode("/", $path);
   // check if node has just been saved - if it has then it's because AS ajax fired off as user was submitting
@@ -491,7 +501,7 @@ function autosave_node_update($node) {
 function autosave_menu_get_item($path) {
   if (drupal_multilingual() && language_negotiation_get_any(LOCALE_LANGUAGE_NEGOTIATION_URL)) {
     $url_part = variable_get('locale_language_negotiation_url_part', LOCALE_LANGUAGE_NEGOTIATION_URL_PREFIX);
-    if ($url_part === LOCALE_LANGUAGE_NEGOTIATION_URL_PREFIX) {
+    if ($url_part == LOCALE_LANGUAGE_NEGOTIATION_URL_PREFIX) {
       list($lang, $path) = language_url_split_prefix($path, language_list());
     }
   }
@@ -510,9 +520,11 @@ function autosave_remove() {
     $form['#form_id'] = str_replace('-', '_', $_POST['form_id']);
     if (drupal_valid_token($_POST['form_token'], $form['#form_id'])) {
       $_POST['autosave_form_path'] = $_POST['q'];
+      $form_id = check_plain($_POST['form_id']);
+      $path = check_plain($_POST['q']);
       $key = array(
           'form_id' => $form_id,
-          'uid' => $GLOBALS['user']->uid,
+          'uid' => $user->uid,
           'path' => $path,
         );
         db_merge('autosaved_forms')

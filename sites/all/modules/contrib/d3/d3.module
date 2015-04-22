@@ -295,7 +295,7 @@ function d3_draw($vis) {
   // If user selected cdn, we need to load this manually.
   // @see http://drupal.org/node/864376
   if (!empty($d3['cdn'])) {
-    drupal_add_js($d3['library path'] . '/' . $d3['files']['js']['data']);
+    drupal_add_js($d3['library path'] . '/' . $d3['files']['js']['data'], array('type' => 'external', 'group' => JS_LIBRARY));
   }
 
   // Type is required for correct processing.

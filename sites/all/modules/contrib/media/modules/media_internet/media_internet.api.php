@@ -6,9 +6,10 @@
  */
 
 /**
- * Implementors return an multidim array, keyed by a class name
- * with the following elements:
+ * Implements hook_media_internet_providers().
  *
+ * Implementors return an multidim array, keyed by a class name with the
+ * following elements:
  * - title
  * - image (optional)
  * - hidden: bool If the logo should be shown on form. (optional)
@@ -18,7 +19,7 @@ function hook_media_internet_providers() {
   return array(
     'youtube' => array(
       'title' => 'youtube',
-      'image' => 'youtube.jpg'
+      'image' => 'youtube.jpg',
     ),
   );
 }

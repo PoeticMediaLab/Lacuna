@@ -1,0 +1,75 @@
+<?php
+/**
+ * @file
+ * Test ajax example module.
+ */
+
+/**
+ * Functional tests for AJAX Example module.
+ *
+ * @ingroup ajax_example
+ */
+class AjaxExampleTestCase extends DrupalWebTestCase {
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function getInfo() {
+    return array(
+      'name' => 'Ajax example',
+      'description' => 'Checks behavior of the Ajax Example',
+      'group' => 'Examples',
+    );
+  }
+
+  /**
+   * Enable module.
+   */
+  public function setUp() {
+    parent::setUp('ajax_example');
+  }
+
+  /**
+   * Check the non-JS version of the "Dynamic Sections" example.
+   */
+  public function testDynamicSectionsNoJs() {
+    // The path to the example form.
+    $path = 'examples/ajax_example/dynamic_sections_no_js';
+    // Confirmation text for right and wrong answers.
+    $wrong = t('Wrong answer. Try again. (Hint: The right answer is "George Washington".)');
+    $right = t('You got the right answer: George Washington');
+    // For each question style, choose some parameters.
+    $params = array(
+      t('Multiple Choice') => array(
+        'value' => t('Abraham Lincoln'),
+        'answer' => t('Abraham Lincoln'),
+        'response' => $wrong,
+      ),
+      t('True/False') => array(
+        'value' => t('George Washington'),
+        'answer' => t('George Washington'),
+        'response' => $right,
+      ),
+      t('Fill-in-the-blanks') => array(
+        'value' => NULL,
+        'answer' => t('George Washington'),
+        'response' => $right,
+      ),
+    );
+    foreach ($params as $style => $q_and_a) {
+      // Submit the initial form.
+      $edit = array('question_type_select' => $style);
+      $this->drupalPost($path, $edit, t('Choose'));
+      $this->assertResponse(200, format_string('Question style "@style" selected.', array('@style' => $style)));
+      // For convenience, make variables out of the entries in $QandA.
+      extract($q_and_a);
+      // Check for the expected input field.
+      $this->assertFieldByName('question', $value);
+      // Now, submit the dynamically generated form.
+      $edit = array('question' => $answer);
+      $this->drupalPost(NULL, $edit, t('Submit your answer'));
+      $this->assertRaw($response, 'Dynamic form has been submitted.');
+    }
+  }
+
+}

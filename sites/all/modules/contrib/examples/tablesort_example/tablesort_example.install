@@ -1,0 +1,78 @@
+<?php
+
+/**
+ * @file
+ * Install and uninstall functions for the tablesort example module.
+ *
+ * This file contains the functions required to perform install and
+ * uninstall operations.
+ */
+
+/**
+ * Implements hook_install().
+ *
+ * @ingroup tablesort_example
+ */
+function tablesort_example_install() {
+  // Let's fill the database with some values for sorting.
+  $rows = array(
+    array('numbers' => 1, 'alpha' => 'e', 'random' => '912cv21'),
+    array('numbers' => 2, 'alpha' => 'a', 'random' => '0kuykuh'),
+    array('numbers' => 3, 'alpha' => 'm', 'random' => 'fuye8734h'),
+    array('numbers' => 4, 'alpha' => 'w', 'random' => '80jsv772'),
+    array('numbers' => 5, 'alpha' => 'o', 'random' => 'd82sf-csj'),
+    array('numbers' => 6, 'alpha' => 's', 'random' => 'au832'),
+    array('numbers' => 7, 'alpha' => 'e', 'random' => 't982hkv'),
+  );
+
+  if (db_table_exists('tablesort_example')) {
+    foreach ($rows as $row) {
+      db_insert('tablesort_example')->fields($row)->execute();
+    }
+  }
+}
+
+/**
+ * Implements hook_uninstall().
+ *
+ * It's good to clean up after ourselves
+ *
+ * @ingroup tablesort_example
+ */
+function tablesort_example_uninstall() {
+  db_drop_table('tablesort_example');
+}
+
+/**
+ * Implements hook_schema().
+ *
+ * @ingroup tablesort_example
+ */
+function tablesort_example_schema() {
+  $schema['tablesort_example'] = array(
+    'description' => 'Stores some values for sorting fun.',
+    'fields' => array(
+      'numbers'    => array(
+        'description' => 'This column simply holds numbers values',
+        'type' => 'varchar',
+        'length' => 2,
+        'not null' => TRUE,
+      ),
+      'alpha'    => array(
+        'description' => 'This column simply holds alpha values',
+        'type' => 'varchar',
+        'length' => 2,
+        'not null' => TRUE,
+      ),
+      'random' => array(
+        'description' => 'This column simply holds random values',
+        'type' => 'varchar',
+        'length' => 12,
+        'not null' => TRUE,
+      ),
+    ),
+    'primary key' => array('numbers'),
+  );
+
+  return $schema;
+}

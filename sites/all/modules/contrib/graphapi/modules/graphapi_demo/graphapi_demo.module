@@ -69,6 +69,9 @@ function graphapi_demo_engine_config() {
       'enable_node_info' => TRUE,
       'node_info_path' => 'graphapi/info/thejit_forcedirected/module/',
     ),
+    'graph_phyz' => array(
+      'showLinks' => TRUE,
+    ),
   );
 }
 
@@ -86,6 +89,9 @@ function graphapi_demo_graph() {
   graphapi_add_link($graph, 'graphapi_demo', 'graphapi');
   graphapi_add_link($graph, 'graphapi_filters', 'graphapi');
 
+  graphapi_set_link_title($graph, 'graphapi_demo', 'graphapi', 'depends');
+  graphapi_set_link_title($graph, 'graphapi_filters', 'graphapi', 'depends');
+
   graphapi_add_link($graph, 'thejit_spacetree', 'thejit');
   graphapi_add_link($graph, 'thejit_forcedirected', 'thejit');
 
@@ -95,8 +101,14 @@ function graphapi_demo_graph() {
   graphapi_add_link($graph, 'views_ui', 'views');
 
   graphapi_set_node_content($graph, 'graphapi', _graphapi_demo_module_content('graphapi'));
+  _graphapi_demo_set_node_uri($graph, 'graphapi');
+
   graphapi_set_node_content($graph, 'thejit', _graphapi_demo_module_content('thejit'));
+  _graphapi_demo_set_node_uri($graph, 'thejit');
+
   graphapi_set_node_content($graph, 'views', _graphapi_demo_module_content('views'));
+  _graphapi_demo_set_node_uri($graph, 'views');
+
   graphapi_set_node_content($graph, 'views_ui', _graphapi_demo_module_content('views_ui', 'views'));
 
   $sub = _graphapi_demo_subgraph();
@@ -127,4 +139,8 @@ function _graphapi_demo_module_content($id, $project_id = NULL) {
   }
   $text .= 'See ' . l("$project_id", 'http://drupal.org/project/' . $project_id) . ' on drupal.org';
   return $text;
+}
+
+function _graphapi_demo_set_node_uri(&$graph, $module) {
+  graphapi_set_node_uri($graph, $module, 'https://drupal.org/project/' . $module);
 }

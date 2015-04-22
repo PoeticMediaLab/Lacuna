@@ -1,0 +1,114 @@
+<?php
+
+/**
+ * @file
+ * Module file for vertical_tabs_example module.
+ */
+
+/**
+ * @defgroup vertical_tabs_example Example: Vertical Tabs
+ * @ingroup examples
+ * @{
+ * Demonstrates the vertical tabs functionality provided by Drupal 7.
+ *
+ * This example does not cover how to save or load a custom setting, and only
+ * deals with the elements visibility and summary in the tab.
+ *
+ * @see vertical_tabs_example.js
+ */
+
+/**
+ * Implements hook_menu().
+ *
+ * Gives us a simple explanation page.
+ */
+function vertical_tabs_example_menu() {
+  $items['examples/vertical_tabs'] = array(
+    'title' => 'Vertical tabs example',
+    'description' => 'Shows how vertical tabs can best be supported by a custom module',
+    'page callback' => '_vertical_tabs_example_explanation',
+    'access callback' => TRUE,
+  );
+  return $items;
+}
+
+/**
+ * Implements hook_form_alter().
+ *
+ * Adds custom fieldset to the node form, and attach ajax behaviour for vertical
+ * panels to update the settings description.
+ *
+ * @see vertical_tabs_example.js
+ */
+function vertical_tabs_example_form_alter(&$form, $form_state, $form_id) {
+  // Only include on node add/edit forms.
+  if (!empty($form['#node_edit_form'])) {
+
+    // Create a fieldset that will be included in the vertical tab.
+    $form['vertical_tabs_example'] = array(
+      '#type' => 'fieldset',
+      '#title' => t('Example vertical tab'),
+      '#collapsible' => TRUE,
+      '#collapsed' => FALSE,
+      '#tree' => TRUE,
+      // Send this tab to the top of the list.
+      '#weight' => -99,
+      // The #group value must match the name of the vertical tabs element.
+      // In most cases, this is 'additional_settings'.
+      '#group' => 'additional_settings',
+      // Vertical tabs provide its most usable appearance when they are used to
+      // include a summary of the information contained in the fieldset. To do
+      // this, we attach additional JavaScript to handle changing the summary
+      // when form settings are changed.
+      '#attached' => array(
+        'js' => array(
+          'vertical-tabs' => drupal_get_path('module', 'vertical_tabs_example') . '/vertical_tabs_example.js',
+        ),
+      ),
+    );
+
+    // The form elements below provide a demonstration of how a fieldset
+    // summary can be displayed in a collapsed tab.
+    //
+    // This checkbox is used to show or hide the custom settings form using
+    // javascript (altering states of a container defined later).
+    $form['vertical_tabs_example']['enabled'] = array(
+      '#type' => 'checkbox',
+      '#title' => t('Change this setting'),
+      '#default_value' => FALSE,
+    );
+
+    // This container will be used to store the whole form for our custom
+    // settings. This way, showing/hiding the form using javascript is easier,
+    // as only one element should be set visible.
+    $form['vertical_tabs_example']['vertical_tabs_examplecontainer'] = array(
+      '#type' => 'container',
+      '#parents' => array('vertical_tabs_example'),
+      '#states' => array(
+        'invisible' => array(
+          // If the checkbox is not enabled, show the container.
+          'input[name="vertical_tabs_example[enabled]"]' => array('checked' => FALSE),
+        ),
+      ),
+    );
+
+    // The string of this textfield will be shown as summary in the vertical
+    // tab.
+    $form['vertical_tabs_example']['vertical_tabs_examplecontainer']['custom_setting'] = array(
+      '#type' => 'textfield',
+      '#title' => t('Use this setting instead'),
+      '#default_value' => 'I am a setting with a summary',
+      '#description' => t('As you type into this field, the summary will be updated in the tab.'),
+    );
+  }
+}
+
+/**
+ * Simple explanation page.
+ */
+function _vertical_tabs_example_explanation() {
+  return t("<p>The Vertical Tabs Example shows how a custom module can add a vertical tab to a node edit form, and support its summary field with JavaScript.</p><p>To see the effects of this module, <a href='!node_add'>add a piece of content</a> and look at the set of tabs at the bottom. We've added one called 'Example vertical tab.'</p>", array('!node_add' => url('node/add')));
+}
+/**
+ * @} End of "defgroup vertical_tabs_example".
+ */

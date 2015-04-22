@@ -1,3 +1,5 @@
+@import "init";
+
 $menu-color: transparent;
 $tabs-color: rgb(245,245,245);
 $menu-active-color: #eee;
@@ -11,6 +13,8 @@ a.nolink {
 #block-superfish-1 {
   float: right;
   padding-right: 50px;
+  font-size: 1em;
+  font-family: $base-font-family;
 }
 
 #superfish-1 {

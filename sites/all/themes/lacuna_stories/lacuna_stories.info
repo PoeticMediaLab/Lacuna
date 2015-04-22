@@ -50,7 +50,6 @@ stylesheets[all][] = system.theme.css
 
 ; Then we add our own stylesheet.
 stylesheets[all][] = css/styles.css
-stylesheets[all][] = css/user_profile.css
 
 
 ; Built-in conditional stylesheet support has been removed from Zen 7.x-5.x.

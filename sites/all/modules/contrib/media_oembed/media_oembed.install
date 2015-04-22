@@ -1,0 +1,80 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the Media: oEmbed module.
+ */
+
+/**
+ * Implements hook_schema().
+ */
+function media_oembed_schema() {
+  $schema['media_oembed_provider'] = array(
+    'export' => array(
+      'identifier' => 'provider',
+      'default hook' => 'default_media_oembed_provider',
+      'api' => array(
+        'owner' => 'media_oembed',
+        'api' => 'media_oembed_provider',
+        'minimum_version' => 1,
+        'current_version' => 1,
+      ),
+    ),
+    'fields' => array(
+      'pid' => array(
+        'type' => 'serial',
+        'description' => 'A database primary key to ensure uniqueness.',
+        'not null' => TRUE,
+        'no export' => TRUE,
+      ),
+      'name' => array(
+        'type' => 'varchar',
+        'length' => '255',
+        'description' => 'Unique ID for this provider. Used to identify it programmatically.',
+      ),
+      'admin_title' => array(
+        'type' => 'varchar',
+        'length' => '255',
+        'description' => 'Administrative title for this provider.',
+      ),
+      'admin_description' => array(
+        'type' => 'text',
+        'size' => 'big',
+        'description' => 'Administrative description for this provider.',
+        'object default' => '',
+      ),
+      'endpoint' => array(
+        'type' => 'varchar',
+        'length' => '255',
+        'description' => 'Endpoint for this provider.',
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'scheme' => array(
+        'type' => 'text',
+        'size' => 'big',
+        'description' => 'Line separated scheme definition for this provider.',
+        'not null' => TRUE,
+        'serialize' => TRUE,
+        'object default' => '',
+      ),
+    ),
+    'primary key' => array('pid'),
+    'unique keys' => array(
+      'name' => array('name'),
+    ),
+  );
+
+  $schema['cache_media_oembed'] = drupal_get_schema_unprocessed('system', 'cache');
+  $schema['cache_media_oembed']['description'] = 'Cache table for the Media: oEmbed module.';
+
+  return $schema;
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function media_oembed_uninstall() {
+  // Remove variables.
+  variable_del('media_oembed_cache_lifetime');
+}

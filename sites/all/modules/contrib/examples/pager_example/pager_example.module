@@ -1,0 +1,98 @@
+<?php
+
+/**
+ * @file
+ * This is an example describing how a module can implement a pager in order
+ * to reduce the number of output rows to the screen and allow a user
+ * to scroll through multiple screens of output.
+ *
+ * See:
+ * @link http://drupal.org/developing/api/database Database API @endlink
+ * @link http://drupal.org/node/508796 Extenders @endlink
+ */
+
+/**
+ * @defgroup pager_example Example: Pager
+ * @ingroup examples
+ * @{
+ * Example of a results pager.
+ */
+
+/**
+ * Implements hook_help().
+ */
+function pager_example_help($path, $arg) {
+  switch ($path) {
+    case 'examples/pager_example':
+      return '<p>' . t('The layout here is a themed as a table with a default limit of 10 rows per page. The limit can be changed in the code by changing the limit to some other value.  This can be extended to add a filter form as well so the user can choose how many they would like to see on each screen.') . '</p>';
+  }
+}
+
+/**
+ * Implements hook_menu().
+ */
+function pager_example_menu() {
+  $items['examples/pager_example'] = array(
+    'title' => 'Pager example',
+    'description' => 'Show a page with a long list across multiple pages',
+    'page callback' => 'pager_example_page',
+    'access callback' => TRUE,
+  );
+  return $items;
+}
+
+/**
+ * Build the pager query.
+ *
+ * Uses the date_formats table since it is installed with ~35 rows
+ * in it and we don't have to create fake data in order to show
+ * this example.
+ *
+ * @return array
+ *   A render array completely set up with a pager.
+ */
+function pager_example_page() {
+  // We are going to output the results in a table with a nice header.
+  $header = array(
+    array('data' => t('DFID')),
+    array('data' => t('Format')),
+    array('data' => t('Type')),
+  );
+
+  // We are extending the PagerDefault class here.
+  // It has a default of 10 rows per page.
+  // The extend('PagerDefault') part here does all the magic.
+  $query = db_select('date_formats', 'd')->extend('PagerDefault');
+  $query->fields('d', array('dfid', 'format', 'type'));
+
+  // Change the number of rows with the limit() call.
+  $result = $query
+    ->limit(10)
+    ->orderBy('d.dfid')
+    ->execute();
+
+  $rows = array();
+  foreach ($result as $row) {
+    // Normally we would add some nice formatting to our rows
+    // but for our purpose we are simply going to add our row
+    // to the array.
+    $rows[] = array('data' => (array) $row);
+  }
+
+  // Create a render array ($build) which will be themed as a table with a
+  // pager.
+  $build['pager_table'] = array(
+    '#theme' => 'table',
+    '#header' => $header,
+    '#rows' => $rows,
+    '#empty' => t('There are no date formats found in the db'),
+  );
+
+  // Attach the pager theme.
+  $build['pager_pager'] = array('#theme' => 'pager');
+
+  return $build;
+}
+/**
+ * @} End of "defgroup pager_example".
+ */

@@ -1,0 +1,163 @@
+$border-color: rgba(7,7,7,.2);
+$profile-width: 220px;
+$profile-height: 220px;
+
+#user-profile-main {
+	width: 100%;
+	div.column {
+		display: inline-block;
+	}
+
+	.profile-section {
+		margin-bottom: 20px;
+		padding-top: 15px;
+	}
+
+	div.left-part {
+		margin-right: 10px;
+		vertical-align: top;
+		width: 22%;
+		float: left;
+	}
+
+	div.right-part {
+		vertical-align: top;
+		width: 75%;
+		min-height: 820px;
+	}
+
+	span.caption {
+		font-size: 24px;
+		font-weight: bold;
+	}
+
+	div.field-wrapper {
+		border: 1px solid;
+		border-color: $border-color;
+		border-radius: 5px;
+		padding: 10px;
+		p {
+			margin: 0;
+			font-size: 16px;
+			text-overflow: ellipsis;
+			overflow: hidden;
+		}
+		p.title {
+			font-style: italic;
+			font-size: 20px;
+		}
+		p.no-results {
+			margin-top: 10px;
+		}
+	}
+
+	#user-avatar-space {
+		height: 240px;
+		vertical-align: bottom;
+		text-align: center;
+
+	}
+
+	#user-command-buttons {
+		margin-bottom: 10px;
+		a, a:visited, a:hover, a:active {
+			color: inherit;
+		}
+		a:not(:first-child) {
+			margin-left: 20px;
+		}
+	}
+
+	#how-I-Learn-space div.field-wrapper p {
+		max-height: 460px;
+		height: 460px;
+	}
+
+	#user-contributions-space {
+		div.field-wrapper {
+			height: 100px;
+			padding-right: 0;
+			padding-bottom: 0;
+			.block {
+				overflow-y: scroll;
+				height: 75px;
+			}
+		}
+		div.field-wrapper:nth-child(n+1) {
+			// border-top: none;
+			margin-top: -1px;
+		}
+	}
+	#user-bio-space div.field-wrapper {
+		height: 30px
+	}
+	#user-learning-goals-space div.field-wrapper {
+		height: 120px;
+		white-space: nowrap;
+	}
+
+	#user-learning {
+		table {
+			width: 100%;
+			margin: 0;
+			td {
+				text-align: center;
+				p {
+					font-style: italic;
+				}
+				img {
+					border: 1px solid;
+					border-color: $border-color;
+					border-radius: 8px;
+					width: 120px;
+					height: 120px;
+				}
+			}
+		}
+		div.user-link-item.is-empty {
+			opacity: 0.4;
+			a {
+				cursor: default;
+				pointer-events: none;
+			}
+		}
+	}
+}
+
+/*
+	We use this CSS in the People view, so separate it from
+  just the user profile ID
+*/
+.user-picture {
+	width: $profile-width;
+	height: $profile-height;
+	border: 1px solid $border-color;
+	border-radius: 50%;
+	display: inline-block;
+	overflow: hidden;
+	img {
+		min-width: $profile-width;
+		min-height: $profile-height;
+		margin-left: $profile-width / 2;
+		max-width: none;
+		position: relative;
+		transform: translateX(-50%); 	/* this along with margin will position img centrally*/
+		-ms-transform: translateX(-50%); /* IE 9 */
+		-webkit-transform: translateX(-50%); /* Chrome, Safari, Opera */
+	}
+}
+
+/*
+ Here instead of views.scss because of close linkage with
+ user profile styles, use of variables
+ */
+.view-people {
+  .views-field-rid {
+    width: $profile-width;
+    height: 1em;
+  }
+  tr {
+  	height: $profile-height + ($profile-height / 2);
+  	vertical-align: top;
+  }
+}
