@@ -1,0 +1,61 @@
+<?php
+/**
+ * Implements hook_update_N().
+ */
+function sliderfield_update_7200() {
+  $result = db_select('field_config_instance', 'c')
+    ->fields('c')
+    ->condition(
+        db_or()->condition('data', '%jslider_field%', 'LIKE')->
+        condition('data', '%sliderfield%', 'LIKE')
+    )->execute();
+
+  while($record = $result->fetchAssoc()) {
+	$data = unserialize($record['data']);
+	if ($data['widget']['module'] == 'sliderfield') {
+	  $data['widget']['type'] = 'sliderfield';
+
+	  $v_default = array(
+		'adjust_field_min' => NULL,
+		'adjust_field_max' => NULL,
+		'animate' => TRUE,
+		'orientation' => 'horizontal',
+		'range' => FALSE,
+		'step' => 1,
+		'slider_style' => NULL,
+		'display_values' => FALSE,
+		'slider_length' => NULL,
+		'hide_inputs' => FALSE
+	  );
+	  
+	  $v = $data['widget']['settings'];
+	  $data['widget']['settings'] = array();
+	  
+	  if (isset($v['sliderfield_adjust_field'])) {
+	    $v_default['adjust_field_max'] = $v['sliderfield_adjust_field'];
+	  }
+	  if (isset($v['step'])) {
+	    $v_default['step'] = $v['step'];
+	  }
+
+	  $data['widget']['settings']['sliderfield_settings'] = $v_default;
+	}
+	
+	if ($data['widget']['module'] == 'jslider_field') {
+	  $data['widget']['type'] = 'sliderfield';
+	  $data['widget']['module'] = 'sliderfield';
+	  $data['widget']['settings']['sliderfield_settings'] = $data['widget']['settings']['jslider_settings'];
+	  unset($data['widget']['settings']['jslider_settings']);
+	}
+	
+	db_update('field_config_instance')
+	  ->fields(array(
+	    'data' => serialize($data)
+	  ))
+	  ->condition('id', $record['id'])
+	  ->execute();
+  }
+  
+  drupal_get_schema(NULL, TRUE);
+  entity_info_cache_clear();
+}

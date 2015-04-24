@@ -1,0 +1,18 @@
+/* Element style */
+.transfer-slider {
+  clear: both;
+}
+
+.transfer-slider > div {
+  float: left;
+}
+
+.transfer-slider .transfer-slider-container {
+	width: 50%;
+	margin: 10px 15px 0;
+}
+
+/* Slider style */
+.transfer-slider .ui-slider {
+	border: 1px solid #d3d3d3;
+}

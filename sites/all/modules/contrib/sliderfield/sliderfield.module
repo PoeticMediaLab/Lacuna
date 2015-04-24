@@ -1,0 +1,418 @@
+<?php
+/**
+ * Implements hook_element_info().
+ *
+ * To keep the various pieces of the example together in external files,
+ * this just returns _form_example_elements().
+ */
+function sliderfield_element_info() {
+  require_once('sliderfield_element_sliderfield.inc');
+  $data1 = _sliderfield_element_info_sliderfield();
+  require_once('sliderfield_element_transfer_slider.inc');
+  $data2 = _sliderfield_element_info_transfer_slider();
+  $data = array_merge($data1, $data2);
+  return $data;
+}
+
+/**
+ * Implements hook_theme().
+ *
+ * The only theme implementation is by the element example. To keep the various
+ * parts of the example together, this actually returns
+ * _form_example_element_theme().
+ */
+function sliderfield_theme($existing, $type, $theme, $path) {
+  require_once('sliderfield_element_sliderfield.inc');
+  $data1 = _sliderfield_theme_sliderfield($existing, $type, $theme, $path);
+  require_once('sliderfield_element_transfer_slider.inc');
+  $data2 = _sliderfield_theme_transfer_slider($existing, $type, $theme, $path);
+  $data = array_merge($data1, $data2);
+  $data['sliderfield_webform_element'] = array(
+    'render element' => 'element'
+  );
+  return $data;
+}
+
+/**
+ * @return array
+ */
+function sliderfield_field_widget_info() {
+  require_once('sliderfield_element_sliderfield.inc');
+  $data = _sliderfield_field_widget_info_sliderfield();
+  //$data = array_merge($data1, $data2);
+  return $data;
+}
+
+/**
+ * @param $form
+ * @param $form_state
+ * @param $field
+ * @param $instance
+ * @param $langcode
+ * @param $items
+ * @param $delta
+ * @param $element
+ * @return mixed
+ */
+function sliderfield_field_widget_form(&$form, &$form_state, $field, $instance, $langcode, $items, $delta, $element) {
+  require_once('sliderfield_element_sliderfield.inc');
+  $data = _sliderfield_field_widget_form($form, $form_state, $field, $instance, $langcode, $items, $delta, $element);
+  //$data = array_merge($data1, $data2);
+  return $data;
+}
+
+/**
+ * @param $field
+ * @param $instance
+ * @return mixed
+ */
+function sliderfield_field_widget_settings_form($field, $instance) {
+  require_once('sliderfield_element_sliderfield.inc');
+  $data = _sliderfield_field_widget_settings_form_sliderfield($field, $instance);
+  //$data = array_merge($data1, $data2);
+  return $data;
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function sliderfield_form_field_ui_field_edit_form_alter(&$form, &$form_state) {
+  require_once('sliderfield_element_sliderfield.inc');
+  _sliderfield_form_field_ui_field_edit_form_alter_sliderfield($form, $form_state);
+}
+
+/**
+ * Implements hook_field_validate().
+ */
+function sliderfield_field_validate($entity_type, $entity, $field, $instance, $langcode, $items, &$errors) {
+  require_once('sliderfield_element_sliderfield.inc');
+  _sliderfield_sliderfield_field_validate($entity_type, $entity, $field, $instance, $langcode, $items, $errors);
+}
+
+/**
+ * Function to validate integer numbers
+ *
+ * @param $element
+ * @param $form_state
+ */
+function sliderfield_validate_integer($element, &$form_state) {
+  return sliderfield_validate_number($element, $form_state);
+}
+
+/**
+ * Function to validate integer numbers
+ *
+ * @param $element
+ * @param $form_state
+ */
+function sliderfield_validate_number($element, &$form_state) {
+  if (!is_numeric($element['#value']) && !is_float($element['#value']) && !empty($element['#value'])) {
+    form_error($element, t('The value should be a valid number'));
+	return FALSE;
+  }
+  return TRUE;
+}
+
+/**
+ * Function to validate integer numbers
+ *
+ * @param $element
+ * @param $form_state
+ */
+function sliderfield_validate_positive_number($element, &$form_state) {
+  if (sliderfield_validate_number($element, $form_state)) {
+    if ($element['#value'] < 0) {
+      form_error($element, t('The value should be a valid positive number'));
+	}
+  }
+}
+
+/**
+ *
+ */
+function sliderfield_get_styles($default = FALSE) {
+  $items = array(
+    '' => t('Default'),
+    'red' => t('Red'),
+    'green' => t('Green'),
+    'blue' => t('Blue'),
+    'orange' => t('Orange'),
+    'purple' => t('Purple'),
+    'steel-blue' => t('Steel Blue'),
+    'tiger-orange' => t('Tiger Orange'),
+    'wild-blue-yonder' => t('Wild Blue Yonder'),
+    'cinereous' => t('Cinereous'),
+    'laurel-green' => t('Laurel Green')
+  );
+  if (!$default) {
+    array_shift($items);
+  }
+
+  return $items;
+}
+
+/**
+ * Implements hook_field_widget_form_alter().
+ *
+ * Add a css class to adjustment form elements, to enable them to be targeted
+ * by the appropriate javascript.
+ */
+function sliderfield_field_widget_form_alter(&$element, &$form_state, $context) {
+  require_once('sliderfield_element_sliderfield.inc');
+  _sliderfield_sliderfield_widget_field_widget_form_alter($element, $form_state, $context);
+}
+
+/**
+ * Implements hook_views_api().
+ */
+function sliderfield_views_api() {
+  return array(
+    'api' => views_api_version(),
+    'path' => drupal_get_path('module', 'sliderfield') . '/views'
+  );
+}
+
+/**
+ * @param $field_name
+ * @return array
+ */
+function sliderfield_get_field_instances($field_name) {
+  $instances = array();
+  foreach (field_info_instances() as $type_bundles) {
+    foreach ($type_bundles as $bundle_instances) {
+      foreach ($bundle_instances as $fld_name => $instance) {
+        if ($fld_name == $field_name) {
+          $instances[] = $instance;
+        }
+      }
+    }
+  }
+  return $instances;
+}
+
+/**
+ * @param $form
+ * @param $form_state
+ */
+function __sliderfield_form_webform_component_callback($form, $form_state) {
+  module_load_include('inc', 'webform', 'components/number');
+  $commands = array();
+  $commands[] = ajax_command_replace('.edit-validation', drupal_render($form['validation']));
+  return array('#type' => 'ajax', '#commands' => $commands);
+}
+
+/**
+ * Validation of number edit form items.
+ */
+function __sliderfield_webform_edit_number_validate($element, &$form_state) {
+  module_load_include('inc', 'webform', 'components/number');
+  return _webform_edit_number_validate($element, $form_state);
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter ().
+ */
+function sliderfield_form_webform_component_edit_form_alter(&$form, &$form_state, $form_id) {
+  $type = drupal_array_get_nested_value($form, array('type', '#value'));
+  if ($type == 'number') {
+    $form['validation']['#attributes']['class'][] = 'edit-validation';
+    $form['display']['type']['#options']['slider'] = t('Slider');
+    $form['display']['type']['#ajax']['callback'] = '__sliderfield_form_webform_component_callback';
+    module_load_include('inc', 'sliderfield', 'sliderfield_element_sliderfield');
+
+    //Find the component and retrieve it saved/default settings
+    $cid = drupal_array_get_nested_value($form, array('cid', '#value'));
+    if ($cid) {
+      $component = drupal_array_get_nested_value($form['#node']->webform, array('components', $cid));
+    } else {
+      $component = array();
+    }
+
+    //Load sliderfield default settings
+    $default = _sliderfield_field_widget_info_sliderfield();
+    $default = reset($default);
+    $default['type'] = 'sliderfield';
+    if ($component) {
+      $default['settings']['sliderfield_settings'] = array_merge($default['settings']['sliderfield_settings'], $component['extra']);
+    }
+    $instance = array(
+      'widget' => $default
+    );
+
+    //Load sliderfield settings form and correct their path so they can be saved using webform api automatically
+    $form_slider_options = _sliderfield_field_widget_settings_form_sliderfield(NULL, $instance);
+    foreach ($form_slider_options['sliderfield_settings'] as $element_name => &$element) if (is_array($element) && isset($element['#type'])) {
+      $element['#parents'] = array('extra', $element_name);
+    }
+    $form = array_merge($form, $form_slider_options);
+    $form['sliderfield_settings']['#weight'] = $form['analysis']['#weight'] - 1;
+    unset($form['sliderfield_settings']['multi_value']);
+
+    //number component already has a step field so remove the one for sliderfield_settings
+    $form['validation']['step']['#element_validate'] = array_merge($form['sliderfield_settings']['step']['#element_validate'], $form['validation']['step']['#element_validate']);
+    $form['validation']['step']['#description'] .= ' ' . t('and also') . ' ' . $form['sliderfield_settings']['step']['#description'];
+    $display_type = drupal_array_get_nested_value($form_state, array('values', 'extra', 'type'));
+
+    if ($display_type == 'slider' || (empty($form_state['values']) && $form['display']['type']['#default_value'] == 'slider')) {
+      $form['validation']['step']['#required'] = TRUE;
+      $form['validation']['min']['#required'] = TRUE;
+      $form['validation']['max']['#required'] = TRUE;
+    }
+
+    foreach ($form as &$level1) {
+      if (is_array($level1)) {
+        foreach ($level1 as &$level2) {
+          if (isset($level2['#element_validate']) && is_array($level2['#element_validate']) && in_array('_webform_edit_number_validate',$level2['#element_validate'])) {
+            $level2['#element_validate'] = array('__sliderfield_webform_edit_number_validate');
+          }
+        }
+        if (isset($level1['#element_validate']) && is_array($level1['#element_validate']) && in_array('_webform_edit_number_validate',$level1['#element_validate'])) {
+          $level1['#element_validate'] = array('__sliderfield_webform_edit_number_validate');
+        }
+      }
+    }
+	$form['sliderfield_settings']['#states'] = array(
+      'visible' => array(
+        ':input[name="extra[type]"]' => array('value' => 'slider')
+      )
+	);
+
+    unset($form['sliderfield_settings']['step']);
+  }
+}
+
+/**
+ * Implements webform_component_render_alter().
+ */
+function sliderfield_webform_component_render_alter(&$element, $component) {
+  if ($component['type'] == 'number') {
+    $type = $component['extra']['type'];
+
+    if ($type == 'slider') {
+      module_load_include('inc', 'sliderfield', 'sliderfield_element_sliderfield');
+
+      $default = _sliderfield_field_widget_info_sliderfield();
+      $default = reset($default);
+      $default['type'] = 'sliderfield';
+      if ($component) {
+        $default['settings']['sliderfield_settings'] = array_merge($default['settings']['sliderfield_settings'], $component['extra']);
+      }
+      $instance = array(
+        'settings' => $default['settings'],
+        'widget' => $default
+      );
+
+      $instance['label'] = $component['name'];
+      $instance['required'] = $component['required'];
+      $instance['description'] = $component['extra']['description'];
+      $instance['settings']['min'] = $component['extra']['min'];
+      $instance['settings']['max'] = $component['extra']['max'];
+
+      $special_css_class = "edit-submitted-{$component['form_key']}-forsliderfield";
+      $instance['widget']['settings']['sliderfield_settings']['fields_to_sync_css_selector'] = '.' . $special_css_class;
+
+      $delta = 0;
+      $items = array($delta => array('value' => $component['value']));
+
+      $component['extra']['type'] = 'textfield';
+      module_load_include('inc', 'webform', 'components/number');
+      $element =_webform_render_number($component, $component['value']);
+      $element['#disabled'] = $component['extra']['disabled'];
+      $element['#theme_wrappers'] = array('sliderfield_webform_element');
+      $element['#attributes']['class'][] = $special_css_class;
+      $element['#title_display'] = 'none';
+      $element['#description'] = NULL;
+      $element['#type'] = 'hidden';
+      $element['#wrapper_attributes']['class'][] = 'sliderfield';
+      $element['#wrapper_attributes']['class'][] = 'webform-sliderfield';
+
+      $form = array();
+      $form_state = array();
+      $element_new = _sliderfield_field_widget_form($form, $form_state, NULL, $instance, NULL, $items, $delta, $element);
+      $element['value_field'] = $element_new['value'];
+      $element['value_field']['#parents'] = array('__sliderfield', 'submitted', $component['form_key']);
+    }
+  }
+}
+
+/**
+ *
+ */
+function theme_sliderfield_webform_element($variables) {
+  module_load_include('module', 'webform', 'webform');
+  $variables['element']['#webform_component']['type'] = 'textfield';
+  $elements['value_field'] = $variables['element']['value_field'];
+
+  return preg_replace('%</div> *$%i', drupal_render($elements) . '</div>', theme_webform_element($variables));
+}
+
+/**
+ * Slider field returns value in wrong format, correct that.
+ */
+function sliderfield_slider_validate(&$element, &$form_state) {
+  $element['#value'] = $element['#value']['value'];
+}
+
+/**
+ *
+ */
+function ___sliderfield_form_builder_webform_property_map_alter(&$map, &$component_type) {
+  if ($component_type == 'number') {
+    $map['properties']['type'] = array(
+	  'form_parents' => array('display', 'type'),
+	  'storage_parents' => array('extra', 'type')
+	);
+  }
+}
+
+/**
+ * Implements hook_webform_component_info().
+ */
+function ___sliderfield_webform_component_info() {
+  $components = array();
+  $components['slider'] = array(
+    'label'       => t('Slider'),
+    'description' => t('Slider.'),
+    'features'    => array(
+      // Add content to CSV downloads. Defaults to TRUE.
+      'csv'           => TRUE,
+      // Show this component in e-mailed submissions. Defaults to TRUE.
+      'email'         => TRUE,
+      // Allow this component to be used as an e-mail FROM or TO address.
+      // Defaults to FALSE.
+      'email_address' => FALSE,
+      // Allow this component to be used as an e-mail SUBJECT or FROM name.
+      // Defaults to FALSE.
+      'email_name'    => FALSE,
+      // This component may be toggled as required or not. Defaults to TRUE.
+      'required'      => TRUE,
+      // This component has a title that can be toggled as displayed or not.
+      'title_display' => TRUE,
+      // This component has a title that can be displayed inline.
+      'title_inline'  => TRUE,
+      // If this component can be used as a conditional SOURCE. All components
+      // may always be displayed conditionally, regardless of this setting.
+      // Defaults to TRUE.
+      'conditional'   => FALSE,
+      // If this component allows other components to be grouped within it
+      // (like a fieldset or tabs). Defaults to FALSE.
+      'group'         => FALSE,
+      // If this component can be used for SPAM analysis, usually with Mollom.
+      'spam_analysis' => FALSE,
+      // If this component saves a file that can be used as an e-mail
+      // attachment. Defaults to FALSE.
+      'attachment'    => FALSE,
+    ),
+    'file'        => 'sliderfield_webform_component.inc',
+  );
+  return $components;
+}
+
+/**
+ * Implements hook_webform_validator_alter().
+ */
+function ___slider_webform_validator_alter(&$validators) {
+  $validators['unique']['component_types'][] = 'slider';
+  $validators['oneoftwo']['component_types'][] = 'slider';
+  $validators['oneofseveral']['component_types'][] = 'slider';
+}
