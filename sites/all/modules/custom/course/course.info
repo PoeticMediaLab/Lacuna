@@ -1,0 +1,33 @@
+name = Lacuna Stories Course
+description = Course related functionality.
+package = Lacuna Stories
+core = 7.x
+
+dependencies[] = date
+dependencies[] = features
+dependencies[] = file
+dependencies[] = list
+dependencies[] = number
+dependencies[] = taxonomy
+dependencies[] = text
+
+features[features_api][] = api:2
+features[field_base][] = field_course_id
+features[field_base][] = field_course_password
+features[field_base][] = field_course_title
+features[field_base][] = field_department
+features[field_base][] = field_discipline
+features[field_base][] = field_end_date
+features[field_base][] = field_enrollment
+features[field_base][] = field_name
+features[field_base][] = field_registered_students
+features[field_base][] = field_secondary_course_id
+features[field_base][] = field_start_date
+#features[field_base][] = field_syllabus
+#features[field_base][] = field_syllabus_file
+features[field_base][] = field_third_course_id
+features[field_base][] = field_unregistered_students
+features[field_base][] = field_visibility
+features[taxonomy][] = number_of_classes
+features[taxonomy][] = number_of_weeks
+features[taxonomy][] = units_themes

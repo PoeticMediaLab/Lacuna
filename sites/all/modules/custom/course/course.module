@@ -1,0 +1,37 @@
+<?php
+
+define("COURSE_NODE_TYPE", 'course_or_other_group');
+
+/**
+ * Implements hook_menu().
+ */
+function course_menu() {
+  $items = array();
+  $items['createcourse'] = array(
+    'title' => 'Create a New Course',
+    'description' => 'course creation.',
+    'page callback' => 'course_create_authorize',
+    'access callback' => TRUE,
+    'type' => MENU_NORMAL_ITEM,
+    'file' => 'course.pages.inc',
+  );
+  $items['createcourse-2'] = array(
+    'title' => 'Creating a New Course',
+    'description' => 'course creation.',
+    'page callback' => 'course_create',
+    'access callback' => TRUE,
+    'type' => MENU_NORMAL_ITEM,
+    'file' => 'course.pages.inc',
+  );
+  $items['createcourse-3/%'] = array(
+    'title' => 'Set Up Materials',
+    'description' => 'Add course materials.',
+    'page callback' => 'course_set_up_materials',
+    'page arguments' => array(1),
+    'access callback' => TRUE,
+    'type' => MENU_NORMAL_ITEM,
+    'file' => 'course.pages.inc',
+  );
+
+  return $items;
+}
