@@ -33,5 +33,26 @@ function course_menu() {
     'file' => 'course.pages.inc',
   );
 
+  $items['admin/config/lacuna-courses'] = array(
+    'title' => 'Course Creation Settings',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('course_admin_form'),
+    'access arguments' => array('administer site configuration'),
+    'type' => MENU_NORMAL_ITEM,
+   );
+
   return $items;
+}
+
+
+function course_admin_form() {
+  $form = array();
+  $form['course_authcode'] = array(
+    '#type' => 'textfield',
+    '#title' => t('The authorization code Teachers and TAs need to create Lacuna Stories Courses'),
+    '#default_value' => variable_get('course_authcode', 's3kr3t'),
+    '#required' => TRUE,
+  );
+
+  return system_settings_form($form);
 }
