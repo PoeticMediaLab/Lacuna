@@ -5,8 +5,8 @@ package = Fields
 
 files[] = maxlength.test
 ; Information added by Drupal.org packaging script on 2015-03-11
-version = "7.x-3.1"
+version = "7.x-3.2"
 core = "7.x"
 project = "maxlength"
-datestamp = "1426090986"
+datestamp = "1426104788"
 
