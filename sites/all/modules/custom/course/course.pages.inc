@@ -27,7 +27,8 @@ function course_authcode_form($form, &$form_state) {
 }
 
 function course_authcode_form_submit($form, &$form_state) {
-  if ('s3kr3t' == $form['authcode']['#value']) {
+  $authcode = variable_get('course_authcode', 's3kr3t');
+  if ($authcode == $form['authcode']['#value']) {
     drupal_set_message("Your Course Setup Code was recognized, please contact a Lacuna Stories team member if you have any issues creating your course.");
     drupal_goto('createcourse-2');
   }
@@ -57,7 +58,7 @@ function course_create() {
   
   $form['group_access']['#access'] = FALSE;
   $form['additional_settings']['#access'] = FALSE;
-  unset($form['body'][LANGUAGE_NONE][0]['format']);
+  $form['body'][LANGUAGE_NONE][0]['format']['#access'] = FALSE;
   unset($form['actions']['preview']);
   $form['field_unregistered_students'][LANGUAGE_NONE][0]['value']['#value'] = 0;
   $form['actions']['submit']['#prefix'] = '<div>Send my information to the Lacuna Stories team to begin setting up my course!</div>';
@@ -141,23 +142,26 @@ function course_set_up_materials_form_submit($form, &$form_state) {
     $vocab = taxonomy_vocabulary_machine_name_load($voc_name);
     $max = $form_state['values'][$voc_name];
     for ($i=1; $i <= $max; $i++) {
-      course_create_taxo($vocab, $i);
+      course_create_taxo($vocab, $i, $i);
     }
   }
 
   # unit/theme tags
   $vocab = taxonomy_vocabulary_machine_name_load('units_themes');
+  $i = 0;
   foreach(explode(',', $form_state['values']['units_themes']) as $unit) {
-    course_create_taxo($vocab, $unit);
+    course_create_taxo($vocab, $unit, $i);
+    $i++;
   }
 }
 
-function course_create_taxo($vocab, $tag) {
+function course_create_taxo($vocab, $tag, $weight) {
   // check for existing term
   if (0 == count(taxonomy_get_term_by_name($tag, $vocab->machine_name))) {
     $term = new stdClass();
     $term->name = $tag;
     $term->vid = $vocab->vid;
+    $term->weight = $weight;
     taxonomy_term_save($term);
   }
 }
