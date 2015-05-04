@@ -38,7 +38,7 @@
             items: ['Link', 'Unlink']
           }, {
             name: 'insert',
-            items: ['Image2', 'oEmbed']
+            items: ['mage2', 'oembed']
           }
         ]
       });
@@ -54,7 +54,7 @@
       return Editor.annotation.text = CKEDITOR.instances[editor_instance].getData();
     };
 
-    RichText.prototype.showText = function(field, annotation) {
+    RichText.prototype.showText = function(Viewer) {
       var textDiv;
       textDiv = $(field.parentNode).find('div:first-of-type')[0];
       textDiv.innerHTML = annotation.text;

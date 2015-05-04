@@ -40,7 +40,7 @@ class Annotator.Plugin.RichText extends Annotator.Plugin
           { name: 'basicstyles', items: [ 'RemoveFormat' ] },
           { name: 'paragraph', groups: [ 'list', ], items: [ 'NumberedList', 'BulletedList'] },
           { name: 'links', items: [ 'Link', 'Unlink', ] },
-          { name: 'insert', items: [ 'Image2', 'oEmbed' ] },
+          { name: 'insert', items: [ 'mage2', 'oembed' ] },
         ]
       }
     )
@@ -52,7 +52,7 @@ class Annotator.Plugin.RichText extends Annotator.Plugin
     # Grab the user-created text, put in the right annotator field
     Editor.annotation.text = CKEDITOR.instances[editor_instance].getData()
 
-  showText: (field, annotation) =>
+  showText: (Viewer) =>
     textDiv = $(field.parentNode).find('div:first-of-type')[0]
     textDiv.innerHTML = annotation.text
     $(textDiv).addClass('richText-annotation')
