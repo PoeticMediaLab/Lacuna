@@ -6,14 +6,13 @@
 (function($) {
 
   Drupal.d3.linegraph = function (select, settings) {
-
     var labels = [],
-      key = settings.legend,
+      key = settings.legend || [],
       rows = settings.rows,
-      p = [10, 50, 70, 50],
-      w = 900 - p[1] - p[3],
-      h = 400,
-      chart = {w: w * .65, h: h - p[0] - p[2] },
+      p = settings.padding || [10, 50, 70, 50],
+      w = (settings.width || 900) - p[1] - p[3],
+      h = (settings.height || 400),
+      chart = settings.chart || {w: w * .60, h: h - p[0] - p[2] },
       legend = {w: w * .25, h:h},
       x = d3.scale.linear().domain([0,rows.length - 1]).range([20,chart.w]),
       y = d3.scale.linear().domain([0,maxValue(rows)]).range([chart.h, 0]),
@@ -52,7 +51,7 @@
     var circles = graph.selectAll("g.circles")
         .data(data)
       .enter().append("g")
-        .attr('class', function(d,i) { console.log(d); return 'circle-group-' + i; })
+        .attr('class', function(d,i) { return 'circle-group-' + i; })
         .attr("fill", function(d, i) { return d3.rgb(z(i)); });
 
     // Container for each circle to have a outer circle, a main one, and a rollover circle.
@@ -190,7 +189,9 @@
     var keys = legend.selectAll("g")
         .data(key)
       .enter().append("g")
-        .attr("transform", function(d,i) { return "translate(0," + d3.tileText(d,15) + ")"});
+        .attr("transform", function(d,i) { return "translate(0," + i*25 + ")"});
+        // FIXME
+//        .attr("transform", function(d,i) { return "translate(0," + d3.tileText(d,15) + ")"});
 
     keys.append("rect")
       .attr("fill", function(d,i) { return d3.rgb(z(i)); })

@@ -5,13 +5,52 @@
  */
 
 /**
+ * TODO:
+ *  - add library info alter to make "views_fields" an array by default so that we
+ *    we don't have to check if it exists.
+ *  - Add a default type as a string, and a default description so we don't have to check
+ *    those in the UI form either.
+ */
+
+/**
  * Style plugin to render a d3 visualization
  *
  * @ingroup views_style_plugins
  */
 class d3_views_plugin_style_d3 extends views_plugin_style {
-
+  /**
+   * Statically store all library info.
+   *
+   * @var array
+   */
   protected $libraries = array();
+ 
+  /**
+   * Statically store the current visualization.
+   *
+   * @var array
+   */
+  protected $vis = array();
+
+  /**
+   * Local instance of D3ViewsLibraryInfoController
+   *
+   * @var D3ViewsLibraryInfoController
+   */
+  protected $controller;
+
+  /**
+   * Override views_object::construct().
+   */
+  function construct() {
+    parent::construct();
+  }
+
+  function init(&$view, &$display, $options = NULL) {
+    parent::init($view, $display, $options);
+    $this->controller = d3_get_library_info_handler('views');
+    $this->controller->mapping->setPlugin($this);
+  }
 
   /**
    * Set default options.
@@ -20,7 +59,8 @@ class d3_views_plugin_style_d3 extends views_plugin_style {
     $options = parent::option_definition();
 
     $options['library'] = array('default' => FALSE);
-    $options['columns'] = array('default' => array());
+		$options['fields'] = array('default' => array());
+    $options['show_table'] = array('default' => FALSE);
 
     return $options;
   }
@@ -36,21 +76,51 @@ class d3_views_plugin_style_d3 extends views_plugin_style {
     // if the visualization's data requires it.
     $form['grouping']['#access'] = FALSE;
 
+    $handlers = $this->display->handler->get_handlers('field');
+
+    // Reload the library from $form_state if called by ajax.
+    $library = $this->getLibrary($form_state);
+    // Reset the library controller.
+    $this->controller->setLibrary($library);
+
     $form['library'] = array(
       '#title' => 'Library',
       '#description' => t('Select which d3 library you would like to use with this view. Note: For instructions on how to incorporate your custom library with views, see the README.txt.'),
       '#type' => 'select',
-      '#options' => $this->get_libraries(),
-      '#default_value' => $this->options['library'],
+      '#options' => $this->getLibraryOptions(),
+      '#default_value' => $this->controller->machineName(),
+      '#ajax' => array(
+        'path' => views_ui_build_form_url($form_state),
+      ),
     );
+  
+    $this->controller->mapping->form($form, $form_state);
+
+    // Additional settings.
+    $form['settings'] = array(
+      '#type' => 'container',
+      '#tree' => TRUE,
+    );
+    // Can eventually separate these out into different functions.
+    foreach ($this->controller->getSettings() as $key => $data) {
+      $form_element = !empty($data['_info']['form_element']) ? $data['_info']['form_element'] : array();
+      $form['settings'][$key] = $form_element + array(
+        '#type' => 'textfield',
+        '#default_value' => NULL,
+        '#title' => '',
+        '#description' => ''
+      );
+      if (!empty($this->options['settings'][$key])) {
+        $form['settings'][$key]['#default_value'] = $this->options['settings'][$key];
+      }
+    }
 
     $form['show_table'] = array(
-      '#title' => 'Show Debug Table',
+      '#title' => 'Show table',
       '#type' => 'checkbox',
       '#default_value' => $this->options['show_table'],
     );
 
-    $handlers = $this->display->handler->get_handlers('field');
     if (empty($handlers)) {
       $form['error_markup'] = array(
         '#markup' => '<div class="error messages">' . t('You need at least one field before you can configure your table settings') . '</div>',
@@ -61,147 +131,169 @@ class d3_views_plugin_style_d3 extends views_plugin_style {
     // Note: views UI registers this theme handler on our behalf. Your module
     // will have to register your theme handlers if you do stuff like this.
     $form['#theme'] = 'views_ui_style_d3_options_form';
-
-    // Create an array of allowed columns from the data we know:
-    $field_names = $this->display->handler->get_field_labels();
-
-    $form['columns'] = array(
-      '#tree' => TRUE,
-    );
-
-    foreach ($field_names as $field => $display) {
-
-      // Markup for the field name.
-      $form['columns'][$field]['name'] = array(
-        '#markup' => $field_names[$field],
-      );
-
-      $form['columns'][$field]['display'] = array(
-        '#type' => 'select',
-        '#options' => array(
-          'label' => t('Label'),
-          'display' => t('Display Value'),
-        ),
-        '#default_value' => isset($this->options['columns'][$field]['display']) ? $this->options['columns'][$field]['display'] : '',
-      );
-
-      $form['columns'][$field]['aggregate'] = array(
-        '#type' => 'select',
-        '#options' => array(
-          '_none' => t('None'),
-          'count' => t('Count'),
-          'count_dist' => t('Count DISTINCT'),
-          'sum' => t('Sum'),
-          'avg' => t('Average'),
-          'min' => t('Minimum'),
-          'max' => t('Maximum'),
-        ),
-        '#default_value' => isset($this->options['columns'][$field]['aggregate']) ? $this->options['columns'][$field]['aggregate'] : '',
-      );
-
-      $form['columns'][$field]['type'] = array(
-        '#type' => 'select',
-        '#options' => array(
-          '_none' => t('None'),
-          'column' => t('Column'),
-          'row' => t('Row label'),
-        ),
-        '#default_value' => isset($this->options['columns'][$field]['type']) ? $this->options['columns'][$field]['type'] : '',
-      );
-
-    }
-
-    // @TODO: It would be nice if this was triggered by ajax.
-    $form['demo'] = array(
-      '#type' => 'markup',
-      '#prefix' => '<div id="demo">',
-      '#markup' => '',
-      '#suffix' => '</div>',
-    );
-
   }
 
   /**
-   * Normalize a list of columns and row labels to use for the visualization.
+   * Get the current field mapping's aggregation setting.
    *
-   * In the example of a column chart, the column will be the
-   * name in the legend, and represent the meaning of the value of
-   * each bar. The row label will represent the X-Axis labels.
+   * @param string $key1
+   *   The base view field key.
+   * @param string $key2
+   *   For view fields that have sub-fields, this is the sub-field key.
+   *
+   * @return string
+   *   Setting for the particular aggregation, or FALSE.
+   */
+  function getAggregation($key1, $key2 = FALSE) {
+    if ($key2) {
+      return !empty($this->options['fields'][$key1][$key2]['aggregation'])
+        ? $this->options['fields'][$key1][$key2]['aggregation']
+        : FALSE;
+    }
+    return !empty($this->options['fields'][$key1]['aggregation'])
+      ? $this->options['fields'][$key1]['aggregation']
+      : FALSE;
+  }
+
+  /**
+   * Default value for a field mapping.
+   *
+   * @param string $key1
+   *   The base view field key.
+   * @param string $key2
+   *   For view fields that have sub-fields, this is the sub-field key.
    *
    * @return object
-   *   ->columns = array()
-   *     An array of column keys
-   *   ->labels = array()
-   *     An array of label keys
+   *   Object with field, and aggregation properties.
    */
-  function columns() {
-    // We want to cross reference with the fields associated with the view
-    // and maintain that order as well.
-    $columns = array();
-    foreach ($this->options['columns'] as $column => $info) {
-      if ($info['type'] == 'column') {
-        $columns[$column] = $info;
-      }
+  function getDefaultValues($key1, $key2 = NULL, $form_state = NULL) {
+    $default = new StdClass();
+    $default->field = FALSE;
+    $default->aggregation = FALSE;
+
+    $options = $this->getFieldOptions($form_state);
+    if (!is_null($key2)) {
+      return !empty($options[$key1][$key2]) ? (object) $options[$key1][$key2] : $default;
     }
-    return $columns;
+    return !empty($options[$key1]) ? (object) $options[$key1] : $default;
   }
 
   /**
-   * Cross reference with fields associated with the view and maintain order.
+   * Get data saved to views, or from form state for options.
    */
-  function row_labels() {
-    $row_labels = array();
-    foreach ($this->options['columns'] as $column => $info) {
-      if ($info['type'] == 'row') {
-        $row_labels[$column] = $info;
-      }
-    }
-    return $row_labels;
+  function getFieldOptions($form_state = NULL) {
+    $options = ($form_state && !empty($form_state['input']['style_options']))
+      ? $form_state['input']['style_options']
+      : $this->options;
+    return $options['fields'];
   }
 
   /**
-   * Helper function to return a count for each result row.
+   * Wrapper function to determine the methods to use, and execute it.
    */
-  function count(&$data, $field) {
+  function aggregate() {
+    $vis = &$this->getVis();
+    $map = $this->controller->mapping->getMapping();
+    $fields = $this->controller->getFields();
+    // Loop through mapping to get aggregation settings.
+    foreach ($map as $key => $values) {
+      // Has subfields.
+      if (is_array($values)) {
+        // Convert the settings to numeric to match the already numeric array.
+        $numeric = !empty($fields[$key]['_info']['data_type'])
+          && $fields[$key]['_info']['data_type'] == '2dnnv';
+        
+        $index = 0;
+        foreach ($values as $k => $v) {
+          // We have to pas the field name to the getAggregation function, whereas
+          // we need to pass the index to the aggregation function.
+          // Only if it's a numeric array.
+          if (($aggregation = $this->getAggregation($key, $k))
+            && method_exists($this, $aggregation . 'Multiple')) {
+            $k = ($numeric) ? $index : $k;
+            $vis[$key] = $this->{$aggregation . 'Multiple'}($vis[$key], $k);
+          }
+          $index++;
+        }
+      }
+      else {
+        if (($aggregation = $this->getAggregation($key))
+          && method_exists($this, $aggregation)) {
+          $vis[$key] = $this->{$aggregation}($vis[$key]);
+        }
+      }
+    }
+  }
+
+  /**
+   * Aggregation function for simple arrays.
+   */
+  function unique($data) {
+    return array_values(array_unique($data));
+  }
+
+  /**
+   * Aggregation function for multidimensional arrays.
+   */
+  function uniqueMultiple($data, $field_name) {
+    // TODO
+  }
+
+  /**
+   * Aggregation function for simple arrays.
+   */
+  function count($data) {
+    return array_count_values($data);
+  }
+
+  /**
+   * Aggregation function for multidimensional arrays.
+   */
+  function countMultiple($data, $field_name) {
     $counted = array();
-
-    foreach ($data as $row) {
-      $counted[$row[$field]][] = $row;
+    // Restructure to group by given $field_name.
+    foreach ($data as $datum) {
+      $counted[$datum[$field_name]][] = $datum;
+    }
+    // Loop through, count each subarray.
+    foreach ($counted as $field_id => &$items) {
+      $count = count($items);
+      // Grab the first item of each subarray with original values.
+      $items = reset($items);
+      $items[$field_name] = $count;
     }
 
-    $data = array();
-    foreach ($counted as $row) {
-      $values = $row[0];
-      $values[$field] = count($row);
+    return array_values($counted);
+  }
 
-      $data[] = $values;
-    }
+  function map($rows) {
+    $this->controller->mapping->map($rows);
   }
 
   /**
-   * Wrapper function to determine the method to use, and execute it.
+   * Additional functionality on data before it is passed to d3_draw.
+   *
+   * TODO: there is some chance this code could actually be put in
+   *       the D3LibraryInfoProcessor class itselfa s this functionality
+   *       wolud be the same for all libraries.
    */
-  function aggregate($data) {
-    foreach ($this->columns() as $column => $info) {
-      if (isset($info['aggregate']) && $info['aggregate'] != '_none') {
-        if (method_exists($this, $info['aggregate'])) {
-        $this->{$info['aggregate']}($data, $column);
-        }
-        else {
-          drupal_set_message(t('!method aggregation currently not supported', array('!method' => ucwords($info['aggregate']))), 'error');
+  function process() {
+    $vis = &$this->getVis();
+
+    // Add settings to visualization.
+    if (!empty($this->options['settings'])) {
+      foreach ($this->controller->getSettings() as $key => $setting)  {
+        if (isset($this->options['settings'][$key])) {
+          $vis[$key] = $this->options['settings'][$key];
         }
       }
     }
-    return $data;
-  }
-
-  function sum(&$data, $field) {
-   dsm($data); 
-   dsm($field);
   }
 
   /**
    * Render the display in this style.
+   *
+   * @see template_preprocess_d3_views_view_d3().
    */
   function render() {
     if ($this->uses_row_plugin() && empty($this->row_plugin)) {
@@ -209,247 +301,53 @@ class d3_views_plugin_style_d3 extends views_plugin_style {
       return;
     }
 
-    // Group the rows according to the grouping instructions, if specified.
-    $sets = $this->render_grouping(
-      $this->view->result,
-      $this->options['grouping'],
-      TRUE
-    );
-
-    // @TODO:
-    // - get rid of grouping
-    // - pass over to theme function, and preprocess
-    // - render the fields according to the options
-    $output = '';
-    foreach ($sets as $set) {
-      $output .= theme($this->theme_functions(),
-          array(
-            'view' => $this->view,
-            'options' => $this->options,
-            'rows' => $set['rows'],
-            'title' => $set['group'])
-          );
-    }
-    unset($this->view->row_index);
-    return $output;
+    $library = $this->getLibrary();
+    $this->controller->setLibrary($library);
+    // This is views theming, send this over to views preprocess.
+    return theme($this->theme_functions(), array(
+      'view' => $this->view,
+      'options' => $this->options,
+      'rows' => $this->render_fields($this->view->result),
+    ));
   }
 
   /**
-   * Get the raw field value.
+   * Send the vis to d3's theme handlers.
    *
-   * @param int $index
-   *   The index count of the row.
-   * @param string $field
-   *   The id of the field.
+   * @see template_preprocess_d3_views_view_d3().
    */
-  function get_field_value($index, $field) {
-    $this->view->row_index = $index;
-    $value = $this->view->field[$field]->get_value($this->view->result[$index]);
-    unset($this->view->row_index);
-    return $value;
+  function draw() {
+    return d3_draw($this->getVis());
   }
 
   /**
-   * Prepare raw view result for d3.
-   *
-   * @return array()
-   *   Multi-dimensional array of rows and fields.
+   * Get the current visualization by reference.
    */
-  function preprocess($rows) {
-    $data = array();
-    // An array for the grouped fields displays to show on the visualization
-    // for each of the fields associated with this view.
-    foreach ($rows as $index => $row) {
-      // Get the display name for the row label fields that were
-      // chosen on the options page.
-      $labels = array();
-      foreach ($this->columns()->labels as $label => $name) {
-        $labels[] = $this->get_field_label($index, $label);
-      }
-
-      // Create a new array for this data row, and start with the labels
-      // joined by a ' ' if necessary.
-      $data_row = array(implode(' ', $labels));
-      $data[] = array_values($data_row);
-    }
-
-    return $data;
-  }
-
-  /**
-   * Prepare library and d3_draw array.
-   *
-   * @param array $rows
-   *   Result array.
-   *
-   * @see preprocess()
-   * @see render()
-   */
-  function draw($rows) {
-    $columns = $this->columns();
-
-    $legend = array();
-    foreach ($columns as $column => $info) {
-      $legend[] = $this->view->field[$column]->label();
-    }
-    $this->get_libraries();
-    $type = $this->libraries[$this->options['library']]['js callback'];
-    $chart = array(
-      'id' => 'view-d3-vis-' . $this->view->dom_id,
-      'type' => $type,
-      'legend' => $legend,
-      'rows' => $rows,
-    );
-
-    return d3_draw($chart);
-  }
-
-  /**
-   * Get the rendered label for a particular field / row.
-   *
-   * @param int $index
-   *   Row index, defined by view result.
-   * @param string $field
-   *   Field name.
-   *
-   * @return string
-   *   Safe label.
-   */
-  function get_field_label($index, $field) {
-    $group_content = '';
-
-    if (isset($this->view->field[$field])) {
-      $group_content = $this->get_field($index, $field);
-      if ($this->view->field[$field]->options['label']) {
-        $group_content = $this->view->field[$field]->options['label'] . ': ' . $group_content;
-      }
-    }
-
-    return $group_content;
-  }
-
-  /**
-   * Group records as needed for rendering.
-   *
-   * @param array $records
-   *   An array of records from the view to group.
-   * @param array $groupings
-   *   An array of grouping instructions on which fields to group. If empty, the
-   *   result set will be given a single group with an empty string as a label.
-   * @param bool $group_rendered
-   *   Boolean value whether to use the rendered or the raw field value for
-   *   grouping. If set to NULL the return is structured as before
-   *   Views 7.x-3.0-rc2. After Views 7.x-3.0 this boolean is only used if
-   *   $groupings is an old-style string or if the rendered option is missing
-   *   for a grouping instruction.
-   *
-   * @return array
-   *   The grouped record set.
-   *   A nested set structure is generated if multiple grouping fields are used.
-   *
-   * @code
-   * array(
-   *   'grouping_field_1:grouping_1' => array(
-   *     'group' => 'grouping_field_1:content_1',
-   *     'rows' => array(
-   *       'grouping_field_2:grouping_a' => array(
-   *         'group' => 'grouping_field_2:content_a',
-   *         'rows' => array(
-   *           $row_index_1 => $row_1,
-   *           $row_index_2 => $row_2,
-   *           // ...
-   *         )
-   *       ),
-   *     ),
-   *   ),
-   *   'grouping_field_1:grouping_2' => array(
-   *     // ...
-   *   ),
-   * )
-   * @endcode
-   */
-  function render_grouping($records, $groupings = array(), $group_rendered = NULL) {
-    // This is for backward compability, when $groupings was a string containing
-    // the ID of a single field.
-    if (is_string($groupings)) {
-      $rendered = $group_rendered === NULL ? TRUE : $group_rendered;
-      $groupings = array(array('field' => $groupings, 'rendered' => $rendered));
-    }
-
-    // Make sure fields are rendered.
-    $this->render_fields($this->view->result);
-    $sets = array();
-    if ($groupings) {
-      foreach ($records as $index => $row) {
-        // Iterate through configured grouping fields to determine the
-        // hierarchically positioned set where the current row belongs to.
-        // While iterating, parent groups, that do not exist yet, are added.
-        $set = &$sets;
-        foreach ($groupings as $info) {
-          $field = $info['field'];
-          $rendered = isset($info['rendered']) ? $info['rendered'] : $group_rendered;
-          $rendered_strip = isset($info['rendered_strip']) ? $info['rendered_strip'] : FALSE;
-          $grouping = '';
-          $group_content = '';
-          // Group on the rendered version of the field, not the raw.  That way,
-          // we can control any special formatting of the grouping field through
-          // the admin or theme layer or anywhere else we'd like.
-          if (isset($this->view->field[$field])) {
-            $group_content = $this->get_field($index, $field);
-            if ($this->view->field[$field]->options['label']) {
-              $group_content = $this->view->field[$field]->options['label'] . ': ' . $group_content;
-            }
-            if ($rendered) {
-              $grouping = $group_content;
-              if ($rendered_strip) {
-                $group_content = $grouping = strip_tags(htmlspecialchars_decode($group_content));
-              }
-            }
-            else {
-              $grouping = $this->get_field_value($index, $field);
-              // Not all field handlers return a scalar value,
-              // for example: views_handler_field_field.
-              if (!is_scalar($grouping)) {
-                $grouping = md5(serialize($grouping));
-              }
-            }
-          }
-
-          // Create the group if it does not exist yet.
-          if (empty($set[$grouping])) {
-            $set[$grouping]['group'] = $group_content;
-            $set[$grouping]['rows'] = array();
-          }
-
-          // Move the set reference into the row set of the
-          // group we just determined.
-          $set = &$set[$grouping]['rows'];
-        }
-        // Add the row to the hierarchically positioned
-        // row set we just determined.
-        $set[$index] = $row;
-      }
-    }
-    else {
-      // Create a single group with an empty grouping field.
-      $sets[''] = array(
-        'group' => '',
-        'rows' => $records,
+  public function &getVis() {
+    if (!$this->vis) {
+      $libraries = $this->getLibraries();
+      $this->vis = array(
+        'id' => 'view-d3-vis-' . $this->view->dom_id,
+        'type' => $libraries[$this->options['library']]['js callback'],
       );
     }
+    return $this->vis;
+  }
 
-    // If this parameter isn't explicitely set modify the output to be fully
-    // backward compatible to code before Views 7.x-3.0-rc2.
-    // @TODO Remove this as soon as possible e.g. October 2020
-    if ($group_rendered === NULL) {
-      $old_style_sets = array();
-      foreach ($sets as $group) {
-        $old_style_sets[$group['group']] = $group['rows'];
-      }
-      $sets = $old_style_sets;
+  /**
+   * Get the fully loaded from the form, or current library.
+   *
+   * @param Array $form_state
+   *   Form API $form_state array.
+   */
+  function getLibrary($form_state = NULL) {
+		if (!empty($form_state['values']['style_options']['library'])) {
+      $library = $form_state['values']['style_options']['library'];
     }
-
-    return $sets;
+    else {
+      $library = $this->options['library'];
+    }
+    return !empty($library) ? libraries_load($library) : FALSE;
   }
 
   /**
@@ -458,21 +356,72 @@ class d3_views_plugin_style_d3 extends views_plugin_style {
    * @return array
    *   Array of library info keyed by library machine name.
    */
-  function get_libraries() {
+  function getLibraryOptions() {
+    $options = array();
+    foreach ($this->getLibraries() as $library) {
+      // We can match compatibility based on the views API version.
+      $library_name = $library['machine name'];
+      $options[$library_name] = $library['name'];
+    }
+    return $options;
+  }
+
+  /**
+   * Get d3 libraries basic info.
+   *
+   * WARNING: This does not return field / settings info. For that info
+   * a full libraries_load is needed.
+   */
+  function getLibraries() {
+    if (!empty($this->libraries)) {
+      return $this->libraries;
+    }
+
     $views_api_version = views_api_version();
     // List all d3 libraries.
     $libraries = d3_get_libraries();
-    $views_libraries = array();
 
+    $this->libraries = array();
     foreach ($libraries as $library) {
-      // We can match compatibility based on the views API version.
-      if (isset($library['views']) && $library['views'] <= $views_api_version) {
-        $library_name = $library['machine name'];
-        $views_libraries[$library_name] = $library['name'];
-        $this->libraries[$library_name] = $library;
+      // Skip if no views integration.
+      if (empty($library['views'])) {
+        continue;
+      }
+      // Assume library is compatible with any version if it is not specified.
+      if (empty($library['views']['version'])) {
+        $library['views']['version'] = $views_api_version;
+      }
+      if (empty($library['views']['fields'])) {
+        $library['views']['fields'] = array();
+      }
+      // Only add to the list if the version is compatible.
+      if ($library['views']['version'] <= $views_api_version) {
+        $this->libraries[$library['machine name']] = $library;
       }
     }
+    return $this->libraries;
+  }
 
-    return $views_libraries;
+  /**
+   * Check user field mapping matches library requirements.
+   */
+  function checkFieldType($handler, $field_type) {
+    $message = '';
+    switch ($field_type) {
+      case 'integer':
+        // If it's a numeric field handler, this passes.
+        if ($handler->definition['handler'] == 'views_handler_field_numeric') {
+          break;
+        }
+        // If it's a field API handler, and a number field type, this passes.
+        if ($handler->definition['handler'] == 'views_handler_field_field'
+          && $handler->field_info['type'] == 'number_integer') {
+          break;
+        }
+        // All other cases should fail.
+        $message = 'Error: numeric field required for integer type.';
+      break;
+    }
+    return '<span class="error">' . $message . '</span>';
   }
 }
