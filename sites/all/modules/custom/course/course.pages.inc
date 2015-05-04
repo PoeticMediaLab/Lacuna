@@ -39,7 +39,7 @@ function course_authcode_form_submit($form, &$form_state) {
 
 
 function course_form_alter(&$form, &$form_state, $form_id) {
-  if ("course_or_other_group_node_form" == $form_id ) {
+  if ("course_node_form" == $form_id ) {
     $form['#submit'] = array('course_create_form_submit');
   }
 }
@@ -147,8 +147,7 @@ function course_set_up_materials_form_submit($form, &$form_state) {
 
   # unit/theme tags
   $vocab = taxonomy_vocabulary_machine_name_load('units_themes');
-  $whitespace_commas = "/[\s,]+/";
-  foreach(preg_split($whitespace_commas, $form_state['values']['units_themes']) as $unit) {
+  foreach(explode(',', $form_state['values']['units_themes']) as $unit) {
     course_create_taxo($vocab, $unit);
   }
 }

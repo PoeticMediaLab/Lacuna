@@ -1,6 +1,6 @@
 <?php
 
-define("COURSE_NODE_TYPE", 'course_or_other_group');
+define("COURSE_NODE_TYPE", 'course');
 
 /**
  * Implements hook_menu().
