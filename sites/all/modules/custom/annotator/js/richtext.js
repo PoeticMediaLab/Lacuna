@@ -54,7 +54,12 @@
       return Editor.annotation.text = CKEDITOR.instances[editor_instance].getData();
     };
 
-    RichText.prototype.showText = function(Viewer) {};
+    RichText.prototype.showText = function(field, annotation) {
+      var textDiv;
+      textDiv = $(field.parentNode).find('div:first-of-type')[0];
+      textDiv.innerHTML = annotation.text;
+      $(textDiv).addClass('richText-annotation');
+    };
 
     return RichText;
 

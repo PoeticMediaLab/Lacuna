@@ -112,7 +112,7 @@ function _annotation_install_fields() {
   return array(
     'text' => array(
       'field_name' => 'field_annotation_text',
-      'type' => 'text_textarea'
+      'type' => 'text_long'
     ),
     'quote' => array(
       'field_name' => 'field_annotation_quote',

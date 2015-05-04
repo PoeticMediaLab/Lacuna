@@ -52,7 +52,10 @@ class Annotator.Plugin.RichText extends Annotator.Plugin
     # Grab the user-created text, put in the right annotator field
     Editor.annotation.text = CKEDITOR.instances[editor_instance].getData()
 
-  showText: (Viewer) =>
+  showText: (field, annotation) =>
+    textDiv = $(field.parentNode).find('div:first-of-type')[0]
+    textDiv.innerHTML = annotation.text
+    $(textDiv).addClass('richText-annotation')
     return
 
 
