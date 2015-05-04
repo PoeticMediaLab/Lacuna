@@ -33,7 +33,7 @@ function course_menu() {
     'file' => 'course.pages.inc',
   );
 
-  $items['admin/config/lacuna-courses'] = array(
+  $items['admin/config/content/lacuna-courses'] = array(
     'title' => 'Course Creation Settings',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('course_admin_form'),
