@@ -1067,28 +1067,35 @@ function media_element_pre_render($element) {
 }
 
 /**
- * Media thumbnail render function.
+ * Generates a thumbnail preview of a file.
  *
- * Returns a renderable array with the necessary classes to support a media
- * thumbnail. Also provides default fallback images if no image is available.
+ * Provides default fallback images if an image of the file cannot be generated.
  *
  * @param object $file
  *   A Drupal file object.
+ * @param boolean $link
+ *   (optional) Boolean indicating whether the thumbnail should be linked to the
+ *   file. Defaults to FALSE.
+ * @param string $view_mode
+ *   (optional) The view mode to use when rendering the thumbnail. Defaults to
+ *   'preview'.
  *
  * @return array
- *   Renderable array.
+ *   Renderable array suitable for drupal_render() with the necessary classes
+ *   and CSS to support a media thumbnail.
  */
-function media_get_thumbnail_preview($file, $link = NULL) {
+function media_get_thumbnail_preview($file, $link = FALSE, $view_mode = 'preview') {
   // If a file has an invalid type, allow file_view_file() to work.
   if (!file_type_is_enabled($file->type)) {
     $file->type = file_get_type($file);
   }
 
-  $preview = file_view_file($file, 'preview');
+  $preview = file_view_file($file, $view_mode);
   $preview['#show_names'] = TRUE;
   $preview['#add_link'] = $link;
   $preview['#theme_wrappers'][] = 'media_thumbnail';
   $preview['#attached']['css'][] = drupal_get_path('module', 'media') . '/css/media.css';
+
   return $preview;
 }
 

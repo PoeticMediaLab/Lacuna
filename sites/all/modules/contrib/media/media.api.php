@@ -99,6 +99,7 @@ function hook_media_browser_plugins_alter(&$plugin_output) {
  * @see media_set_browser_params()
  */
 function hook_media_browser_params_alter(&$stored_params) {
+  $stored_params['view_mode'] = 'custom';
   $stored_params['types'][] = 'document';
   unset($stored_params['enabledPlugins'][0]);
 }

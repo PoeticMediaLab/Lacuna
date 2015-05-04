@@ -323,7 +323,13 @@
   ml.tinymceChange = function(ed) {
     // CLone to avoid changing defaults
     var options = $.extend({}, ml.options[ed.editorId]);
+    /* The following lines take the text from the wysiwyg and
+      strip out some html and special characters so an accurate character
+      count can be taken. */
     var bodyContent = ml.tinymceGetData(ed);
+    bodyContent = bodyContent.replace(/&gt;/g, ' ');
+    bodyContent = bodyContent.replace(/&lt;/g, ' ');
+    bodyContent = bodyContent.replace(/&amp;/g, ' ');
     bodyContent = bodyContent.replace(/<\/?[^>]+(>|$)/g, "");
     bodyContent = bodyContent.replace(/\<p>/g, "");
     bodyContent = bodyContent.replace(/\<\/p>/g, "");

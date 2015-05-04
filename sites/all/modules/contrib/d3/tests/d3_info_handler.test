@@ -1,0 +1,67 @@
+<?php
+/**
+ * @file
+ * Definition of D3InfoHandlerTest.
+ */
+
+require_once(dirname(__FILE__) . '/../includes/D3LibraryInfoProcessor.inc');
+require_once(dirname(__FILE__) . '/../includes/D3LibraryInfoController.inc');
+require_once(dirname(__FILE__) . '/../includes/D3DataMapping.inc');
+
+/**
+ * Tests the library info handlers.
+ */
+class D3InfoHandlerTest extends DrupalUnitTestCase {
+  protected $library;
+
+  protected $controller;
+
+  public static function getInfo() {
+    return array(
+      'name' => 'D3 Info Handlers',
+      'description' => 'Test the library info handlers',
+      'group' => 'D3',
+    );
+  }
+
+  public function setUp() {
+    parent::setUp();
+    $this->enableModule('d3');
+    $this->library['machine name'] = 'simpletest_test_library';
+    $this->library['simpletest']['rows']['__array_type'] = '2dnnv';
+    $this->library['simpletest']['rows']['name'] = '{ type: integer }';
+    $this->library['simpletest']['x_axis_color']['__context'] = 'style_settings';
+    $this->library['simpletest']['x_axis_title']['field__'] = '{ type: string }';
+    $this->controller = d3_get_library_info_handler('simpletest');
+  }
+
+  /**
+   * Fake enables a module for the purpose of a unit test
+   *
+   * @param $name
+   *  The module's machine name (i.e. ctools not Chaos Tools)
+   */
+  protected function enableModule($name) {
+    $modules = module_list();
+    $modules[$name] = $name;
+    module_list(TRUE, FALSE, FALSE, $modules);
+  }
+
+  /**
+   * Test setting a library, and getting basic values.
+   */
+  function testLibraryInfoController() {
+    $this->controller->setLibrary($this->library);
+    $this->assertEqual('simpletest_test_library', $this->controller->machineName());
+  }
+
+  /**
+   * Test processing an info file.
+   */
+  function testLibraryInfoProcessor() {
+    $this->controller->setLibrary($this->library);
+    $this->controller->processor->process();
+    $this->assertNotNull($this->library['simpletest']['rows']['_info']);
+    $this->assertEqual($this->library['simpletest']['rows']['_info']['array_type'], '2dnnv');
+  }
+}

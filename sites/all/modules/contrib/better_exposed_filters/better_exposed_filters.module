@@ -180,3 +180,21 @@ function _better_exposed_filters_get_num_decimal_places($number) {
   $str = (string) $number;
   return strlen(substr(strrchr($str, '.'), 1));
 }
+
+/**
+ * Implements hook_preprocess_views_view().
+ */
+function better_exposed_filters_preprocess_views_view(&$variables) {
+  $filters = array();
+  foreach ($variables['view']->filter as $filter) {
+    if ($filter->options['exposed']) {
+      $identifier = $filter->options['is_grouped'] ? $filter->options['group_info']['identifier'] : $filter->options['expose']['identifier'];
+      $filters[$identifier] = array(
+        'required' => $filter->options['expose']['required'] ? TRUE : FALSE,
+      );
+    }
+  }
+
+  $bef_js['views'][$variables['view']->name]['displays'][$variables['view']->current_display]['filters'] = $filters;
+  drupal_add_js(array('better_exposed_filters' => $bef_js), 'setting');
+}
