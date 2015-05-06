@@ -13,7 +13,8 @@
     __extends(RichText, _super);
 
     function RichText() {
-      this.showText = __bind(this.showText, this);
+      this.convertText = __bind(this.convertText, this);
+      this.updateText = __bind(this.updateText, this);
       this.saveText = __bind(this.saveText, this);
       RichText.__super__.constructor.apply(this, arguments);
     }
@@ -45,8 +46,11 @@
       this.annotator.subscribe('annotationEditorSubmit', function(Editor) {
         return _this.saveText(Editor);
       });
+      this.annotator.subscribe('annotationEditorShown', function(Editor, annotation) {
+        return _this.updateText(Editor, annotation);
+      });
       return this.annotator.subscribe('annotationViewerShown', function(Viewer) {
-        return _this.showText(Viewer);
+        return _this.convertText(Viewer);
       });
     };
 
@@ -54,11 +58,20 @@
       return Editor.annotation.text = CKEDITOR.instances[editor_instance].getData();
     };
 
-    RichText.prototype.showText = function(Viewer) {
-      var textDiv;
-      textDiv = $(field.parentNode).find('div:first-of-type')[0];
-      textDiv.innerHTML = annotation.text;
-      $(textDiv).addClass('richText-annotation');
+    RichText.prototype.updateText = function(Editor, annotation) {
+      return CKEDITOR.instances[editor_instance].setData(Editor.annotation.text);
+    };
+
+    RichText.prototype.convertText = function(Viewer) {
+      var annotation, div, index, _results;
+      _results = [];
+      for (index in Viewer.annotations) {
+        div = $(Viewer.element[0]).find('div:first-of-type')[index];
+        annotation = Viewer.annotations[index];
+        annotation.text = annotation.text.replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"');
+        _results.push(div.innerHTML = annotation.text);
+      }
+      return _results;
     };
 
     return RichText;

@@ -28,9 +28,6 @@ editor_instance = 'annotator-field-0'
 
 class Annotator.Plugin.RichText extends Annotator.Plugin
 
-  # events:
-  #   'annotationEditorSubmit' : 'convertText'
-
   pluginInit: ->
     return unless Annotator.supported()
     editor = @annotator.editor
@@ -44,18 +41,27 @@ class Annotator.Plugin.RichText extends Annotator.Plugin
         ]
       }
     )
+
     @annotator.subscribe 'annotationEditorSubmit', (Editor) => @saveText(Editor)
-    @annotator.subscribe 'annotationViewerShown', (Viewer) => @showText(Viewer)
+    @annotator.subscribe 'annotationEditorShown', (Editor, annotation) => @updateText(Editor, annotation)
+    @annotator.subscribe 'annotationViewerShown', (Viewer) => @convertText(Viewer)
 
   # Convert the rich text field into something Annotator recognizes
   saveText: (Editor) =>
     # Grab the user-created text, put in the right annotator field
     Editor.annotation.text = CKEDITOR.instances[editor_instance].getData()
 
-  showText: (Viewer) =>
-    textDiv = $(field.parentNode).find('div:first-of-type')[0]
-    textDiv.innerHTML = annotation.text
-    $(textDiv).addClass('richText-annotation')
-    return
+  # load existing annotation text into the wysiwyg for updating
+  updateText: (Editor, annotation) =>
+    CKEDITOR.instances[editor_instance].setData(Editor.annotation.text)
 
+  # convert text back to HTML
+  convertText: (Viewer) =>
+    for index of Viewer.annotations
+      div = $(Viewer.element[0]).find('div:first-of-type')[index]
+      # reverse the HTML escaping by Annotator.Util.escape
+      # possibly dangerous, but trusting WYSIWYG input filters for content
+      annotation = Viewer.annotations[index]
+      annotation.text = annotation.text.replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"');
+      div.innerHTML = annotation.text
 
