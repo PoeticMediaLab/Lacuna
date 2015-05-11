@@ -1,6 +1,7 @@
 <?php
 
 define("COURSE_NODE_TYPE", 'course');
+define("BIBLIO_NODE_TYPE", 'biblio');
 
 /**
  * Implements hook_menu().
@@ -11,7 +12,7 @@ function course_menu() {
     'title' => 'Create a New Course',
     'description' => 'course creation.',
     'page callback' => 'course_create_authorize',
-    'access callback' => TRUE,
+    'access callback' => 'course_access',
     'type' => MENU_NORMAL_ITEM,
     'file' => 'course.pages.inc',
   );
@@ -19,7 +20,7 @@ function course_menu() {
     'title' => 'Creating a New Course',
     'description' => 'course creation.',
     'page callback' => 'course_create',
-    'access callback' => TRUE,
+    'access callback' => 'course_access',
     'type' => MENU_NORMAL_ITEM,
     'file' => 'course.pages.inc',
   );
@@ -28,7 +29,22 @@ function course_menu() {
     'description' => 'Add course materials.',
     'page callback' => 'course_set_up_materials',
     'page arguments' => array(1),
-    'access callback' => TRUE,
+    'access callback' => 'course_access',
+    'type' => MENU_NORMAL_ITEM,
+    'file' => 'course.pages.inc',
+  );
+  $items['createcourse-4'] = array(
+    'title' => 'Add Material',
+    'description' => 'Add course material.',
+    'page callback' => 'course_add_material',
+    'access callback' => 'course_access',
+    'type' => MENU_NORMAL_ITEM,
+    'file' => 'course.pages.inc',
+  );
+  $items['ajax/add-unit-term/%'] = array(
+    'page callback' => 'course_ajax_add_unit_term',
+    'page arguments' => array(2),
+    'access callback' => 'course_access',
     'type' => MENU_NORMAL_ITEM,
     'file' => 'course.pages.inc',
   );
@@ -44,6 +60,38 @@ function course_menu() {
   return $items;
 }
 
+/**
+ * check permissions and token to create a course
+ */
+function course_access() {
+  global $user;
+  $key = "Course_Auth_Code_User_" . $user->uid;
+
+  // ANON
+  if (user_is_anonymous()) {
+    drupal_set_message("You must be logged in to create a Lacuna Stories course.", 'status', FALSE);
+    drupal_goto('user/login', array('query' => array('destination' => 'createcourse')));
+  }
+  // NO PERMS
+  elseif (!user_access("create course content")) {
+    drupal_set_message("Please contact the Lacuna Stories Team, your user does not have access to create a course", 'error', FALSE);
+  }
+  // Check for the auth code key and compare them
+  elseif (($cache = cache_get($key)) && $_COOKIE['Drupal_visitor_' . $key] == $cache->data) {
+    // VALID
+    return TRUE;
+  }
+  // NO/MISMATCHED AUTHCODE
+  else {
+    // redirect if not on the auth code form
+    if (current_path() != 'createcourse') {
+      drupal_set_message("Please type in the Authorization Code before creating a Lacuna Stories Course", 'status', FALSE);
+      drupal_goto('createcourse');
+    }
+    // already on auth code form
+    return TRUE;
+  }
+}
 
 function course_admin_form() {
   $form = array();
