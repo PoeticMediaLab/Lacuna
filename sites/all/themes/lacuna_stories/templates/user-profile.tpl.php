@@ -71,7 +71,7 @@ function customPrintViewsBlock($blockName)
 			<?php print $user_profile["user_picture"]["#markup"]; ?>
 		</div>
 		<div id="how-I-Learn-space" class="profile-section">
-			<span class="caption">How I Learn</span>
+			<span class="caption">About My Case</span>
 			<div class="field-wrapper">
                 <?php   if(isset($field_how_i_learn)) print "<p>{$field_how_i_learn[0]["value"]} </p>";
                         else print "<p>Empty</p>"
@@ -117,7 +117,7 @@ function customPrintViewsBlock($blockName)
 			</div>
 		</div>
 		<div id="user-learning-goals-space" class="profile-section">
-			<span class="caption">Learning Goals</span>
+			<span class="caption">Collaboration Goals</span>
             <div class="field-wrapper">
                 <?php   if(isset($field_learning_goals))
                 {
