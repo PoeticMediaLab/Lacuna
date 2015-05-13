@@ -2530,7 +2530,7 @@ function lacuna_stories_content_types_field_default_field_instances() {
     ),
     'entity_type' => 'user',
     'field_name' => 'field_how_i_learn',
-    'label' => 'How I learn',
+    'label' => 'About My Case',
     'required' => 0,
     'settings' => array(
       'text_processing' => 0,
@@ -2564,7 +2564,7 @@ function lacuna_stories_content_types_field_default_field_instances() {
     ),
     'entity_type' => 'user',
     'field_name' => 'field_learning_goals',
-    'label' => 'Learning Goals',
+    'label' => 'Collaboration Goals',
     'required' => 0,
     'settings' => array(
       'text_processing' => 0,
@@ -2710,6 +2710,7 @@ function lacuna_stories_content_types_field_default_field_instances() {
   t('(In your browser, e.g. Safari, use Edit --> Paste and Match Style to avoid odd formatting, or else use the eraser button on highlighted text to clear formatting hanging on from the original source)');
   t('A reference to the annotated content');
   t('About Me');
+  t('About My Case');
   t('Add as many media files as necessary');
   t('Annotated Content');
   t('Annotation Text');
@@ -2722,6 +2723,7 @@ function lacuna_stories_content_types_field_default_field_instances() {
   t('Choose N/A or leave blank to make the artifact visible only to you.');
   t('Choose an icon to represent this blog post when browsing. All browsing icons on Lacuna Stories are portrait dimensions, so please try to choose this proportion of image or crop it yourself before uploading. If you upload a landscape image, it will likely become skewed in the automated cropping. Also make sure your image is larger than 220 pixels wide and 320 pixels tall. If not, you can change that in programs like Mac Preview by selecting TOOLS --> ADJUST SIZE and increase the pixels.');
   t('Choose an image to identify this annotation.');
+  t('Collaboration Goals');
   t('Comment');
   t('Course or group(s) joined');
   t('Date of Birth');
@@ -2736,7 +2738,6 @@ function lacuna_stories_content_types_field_default_field_instances() {
   t('Force');
   t('Gender');
   t('Genre');
-  t('How I learn');
   t('I Would Like This Artifact to be Visible to:');
   t('I would like this artifact to be viewable by:');
   t('If a text, insert the text of your artifact here.');
@@ -2745,7 +2746,6 @@ function lacuna_stories_content_types_field_default_field_instances() {
   t('In terms of primary orientation of the artifact under consideration, check those which apply.');
   t('Indicate the form and tone of the artifact.');
   t('Intercession: Lepsis, Metalepsis, or Syndialepsis?');
-  t('Learning Goals');
   t('Major/Degree');
   t('Media');
   t('Mode: Tragedy | Irony | Comedy | Pathos ');
