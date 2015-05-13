@@ -84,7 +84,6 @@ function lacuna_stories_permissions_user_default_permissions() {
       'ARC Member' => 'ARC Member',
       'Content Manager' => 'Content Manager',
       'administrator' => 'administrator',
-      'anonymous user' => 'anonymous user',
       'authenticated user' => 'authenticated user',
     ),
     'module' => 'biblio',
