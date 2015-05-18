@@ -51,6 +51,7 @@ function course_authcode_form_submit($form, &$form_state) {
 function course_form_alter(&$form, &$form_state, $form_id) {
   if ("course_node_form" == $form_id ) {
     $form['#submit'] = array('course_create_form_submit');
+    $form['actions']['submit']['#submit'][] = 'course_create_form_submit';
   }
 }
 
@@ -131,11 +132,12 @@ function course_set_up_materials_form($form, &$form_state) {
     '#type' => 'fieldset',
     '#title' => 'Assign Materials to Units/Themes',
   );
+  $require_units = (count($units))? FALSE: TRUE; // only require if there are no existing terms
   $form['units_themes']['term'] = array(
     '#type' => 'textfield',
     '#description' => "Add as individual units or themes to your course.",
     '#size' => 60,
-    '#required' => TRUE,
+    '#required' => $require_units,
   );
   $form['units_themes']['ajax_button'] = array(
     '#markup' => "<button class='form-submit' id='ajax-units'>Add Unit/Theme</button>",
@@ -158,7 +160,7 @@ function course_set_up_materials_form_submit($form, &$form_state) {
 
   # number of week tags
   $vocab = taxonomy_vocabulary_machine_name_load('number_of_weeks');
-  $max = $form_state['values'][$voc_name];
+  $max = $form_state['values']['number_of_weeks'];
   for ($i=1; $i <= $max; $i++) {
     course_create_taxo($vocab, $i, $i);
   }
@@ -171,7 +173,8 @@ function course_set_up_materials_form_submit($form, &$form_state) {
   drupal_goto('createcourse-4');
 }
 
-function course_ajax_add_unit_term($term) {
+function course_ajax_add_unit_term() {
+  $term = check_plain($_POST['term']);
   $vocab = taxonomy_vocabulary_machine_name_load('units_themes');
   course_create_taxo($vocab, $term);
   ajax_deliver();
@@ -179,7 +182,7 @@ function course_ajax_add_unit_term($term) {
 
 function course_create_taxo($vocab, $tag, $weight = 0) {
   // check for existing term
-  if (0 == count(taxonomy_get_term_by_name($tag, $vocab->machine_name))) {
+  if (0 == count(taxonomy_get_term_by_name($tag, $vocab->machine_name)) && !empty(trim($tag))) {
     $term = new stdClass();
     $term->name = $tag;
     $term->vid = $vocab->vid;
@@ -201,7 +204,7 @@ function course_numerical_vocab_term_max($vocab_machine_name) {
   return db_query('SELECT t.name
   FROM {taxonomy_vocabulary} v INNER JOIN {taxonomy_term_data} t ON v.vid=t.vid
   WHERE v.machine_name = :machine_name
-  ORDER BY CAST(t.name AS INTEGER) DESC
+  ORDER BY CAST(t.name AS INT) DESC
   LIMIT 1', array(':machine_name' => $vocab_machine_name))->fetchField();
 
 }

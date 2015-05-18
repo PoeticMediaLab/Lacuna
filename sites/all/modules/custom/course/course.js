@@ -7,11 +7,11 @@
       // createcourse-3
       terms = [];
       $(".term").each(function() {
-        terms.push($(this).text());
+        terms.push($(this).text().trim());
       });
       $('#ajax-units').click(function() {
-        if (new_term = $('#edit-term').val()) {
-          $.get("/ajax/add-unit-term/" + new_term, function() {});
+        if (new_term = $('#edit-term').val().trim()) {
+          $.post("/ajax/add-unit-term", {term: new_term});
           if (terms.indexOf(new_term) == -1) {
             $(".terms").append("<div class='term'>" + new_term + "</div>");
             terms.push(new_term);

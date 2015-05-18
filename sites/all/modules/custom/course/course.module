@@ -41,7 +41,7 @@ function course_menu() {
     'type' => MENU_NORMAL_ITEM,
     'file' => 'course.pages.inc',
   );
-  $items['ajax/add-unit-term/%'] = array(
+  $items['ajax/add-unit-term'] = array(
     'page callback' => 'course_ajax_add_unit_term',
     'page arguments' => array(2),
     'access callback' => 'course_access',
