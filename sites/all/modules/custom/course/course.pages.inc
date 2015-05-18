@@ -182,7 +182,8 @@ function course_ajax_add_unit_term() {
 
 function course_create_taxo($vocab, $tag, $weight = 0) {
   // check for existing term
-  if (0 == count(taxonomy_get_term_by_name($tag, $vocab->machine_name)) && !empty(trim($tag))) {
+  $tag = trim($tag);
+  if (0 == count(taxonomy_get_term_by_name($tag, $vocab->machine_name)) && !empty($tag)) {
     $term = new stdClass();
     $term->name = $tag;
     $term->vid = $vocab->vid;
