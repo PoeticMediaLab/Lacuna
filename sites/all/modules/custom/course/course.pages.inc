@@ -204,7 +204,7 @@ function course_numerical_vocab_term_max($vocab_machine_name) {
   return db_query('SELECT t.name
   FROM {taxonomy_vocabulary} v INNER JOIN {taxonomy_term_data} t ON v.vid=t.vid
   WHERE v.machine_name = :machine_name
-  ORDER BY CAST(t.name AS INT) DESC
+  ORDER BY CAST(t.name AS SIGNED) DESC
   LIMIT 1', array(':machine_name' => $vocab_machine_name))->fetchField();
 
 }
