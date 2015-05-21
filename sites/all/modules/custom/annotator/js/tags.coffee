@@ -128,12 +128,11 @@ class Annotator.Plugin.Tags extends Annotator.Plugin
   updateAutocompleteTags: (event, annotation) =>
     # update the autocomplete field in the Editor
     # based on any new tags
-    # Drupal.Annotator.data('annotator').plugins.Tags.input.autocomplete({source: Drupal.settings.annotator_tags})
     tags = Drupal.settings.annotator_tags
     for tag in annotation.tags
       if tag not in tags
         tags.push(tag)
-    @input.autocomplete({source: tags})
+    @input.catcomplete({source: tags})
 
   # Annotator.Viewer callback function. Updates the annotation display with tags
   # removes the field from the Viewer if there are no tags to display.
