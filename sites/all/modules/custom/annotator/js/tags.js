@@ -2,7 +2,8 @@
   var $,
     __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
     __hasProp = Object.prototype.hasOwnProperty,
-    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; },
+    __indexOf = Array.prototype.indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
 
   $ = jQuery;
 
@@ -11,6 +12,7 @@
     __extends(Tags, _super);
 
     function Tags() {
+      this.updateAutocompleteTags = __bind(this.updateAutocompleteTags, this);
       this.setAnnotationTags = __bind(this.setAnnotationTags, this);
       this.updateField = __bind(this.updateField, this);
       Tags.__super__.constructor.apply(this, arguments);
@@ -27,6 +29,10 @@
       stringifyTags: function(array) {
         return array.join(",");
       }
+    };
+
+    Tags.prototype.events = {
+      'annotationEditorSubmit': "updateAutocompleteTags"
     };
 
     Tags.prototype.field = null;
@@ -70,6 +76,19 @@
 
     Tags.prototype.setAnnotationTags = function(field, annotation) {
       return annotation.tags = this.parseTags(this.input.val());
+    };
+
+    Tags.prototype.updateAutocompleteTags = function(event, annotation) {
+      var tag, tags, _i, _len, _ref;
+      tags = Drupal.settings.annotator_tags;
+      _ref = annotation.tags;
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        tag = _ref[_i];
+        if (__indexOf.call(tags, tag) < 0) tags.push(tag);
+      }
+      return this.input.catcomplete({
+        source: tags
+      });
     };
 
     Tags.prototype.updateViewer = function(field, annotation) {
