@@ -84,7 +84,7 @@ function course_access() {
   // NO/MISMATCHED AUTHCODE
   else {
     // redirect if not on the auth code form
-    if (current_path() != 'createcourse') {
+    if (preg_match("/createcourse/", current_path()) && current_path() != 'createcourse') {
       drupal_set_message("Please type in the Authorization Code before creating a Lacuna Stories Course", 'status', FALSE);
       drupal_goto('createcourse');
     }
