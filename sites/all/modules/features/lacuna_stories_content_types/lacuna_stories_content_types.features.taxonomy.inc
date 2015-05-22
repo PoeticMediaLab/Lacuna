@@ -32,6 +32,29 @@ function lacuna_stories_content_types_taxonomy_default_vocabularies() {
         ),
       ),
     ),
+    'annotation_tags' => array(
+      'name' => 'Annotation Tags',
+      'machine_name' => 'annotation_tags',
+      'description' => 'User-generated tags for annotations',
+      'hierarchy' => 1,
+      'module' => 'annotation',
+      'weight' => 1,
+      'rdf_mapping' => array(
+        'rdftype' => array(
+          0 => 'skos:ConceptScheme',
+        ),
+        'name' => array(
+          'predicates' => array(
+            0 => 'dc:title',
+          ),
+        ),
+        'description' => array(
+          'predicates' => array(
+            0 => 'rdfs:comment',
+          ),
+        ),
+      ),
+    ),
     'genre_doc' => array(
       'name' => 'Genre - Materials',
       'machine_name' => 'genre_doc',

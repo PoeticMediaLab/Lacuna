@@ -118,5 +118,37 @@ function lacuna_stories_content_types_context_default_contexts() {
   t('thread');
   $export['stitchings_edit'] = $context;
 
+  $context = new stdClass();
+  $context->disabled = FALSE; /* Edit this to true to make a default context disabled initially */
+  $context->api_version = 3;
+  $context->name = 'tag_clouds';
+  $context->description = 'Show a tag cloud';
+  $context->tag = '';
+  $context->conditions = array(
+    'views' => array(
+      'values' => array(
+        'curate_tags' => 'curate_tags',
+      ),
+    ),
+  );
+  $context->reactions = array(
+    'block' => array(
+      'blocks' => array(
+        'tagclouds-1' => array(
+          'module' => 'tagclouds',
+          'delta' => '1',
+          'region' => 'sidebar_first',
+          'weight' => '-10',
+        ),
+      ),
+    ),
+  );
+  $context->condition_mode = 0;
+
+  // Translatables
+  // Included for use with string extractors like potx.
+  t('Show a tag cloud');
+  $export['tag_clouds'] = $context;
+
   return $export;
 }

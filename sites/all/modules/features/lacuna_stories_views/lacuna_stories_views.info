@@ -22,6 +22,7 @@ features[views_view][] = all_content
 features[views_view][] = all_emails
 features[views_view][] = bibliography
 features[views_view][] = cite_as
+features[views_view][] = curate_tags
 features[views_view][] = documents
 features[views_view][] = my_annotations_view
 features[views_view][] = my_content
