@@ -377,6 +377,9 @@ function lacuna_stories_content_types_strongarm() {
       'token' => array(
         'custom_settings' => FALSE,
       ),
+      'workflow_tab' => array(
+        'custom_settings' => FALSE,
+      ),
     ),
     'extra_fields' => array(
       'form' => array(),
@@ -456,7 +459,14 @@ function lacuna_stories_content_types_strongarm() {
       ),
     ),
     'extra_fields' => array(
-      'form' => array(),
+      'form' => array(
+        'title' => array(
+          'weight' => '0',
+        ),
+        'path' => array(
+          'weight' => '5',
+        ),
+      ),
       'display' => array(),
     ),
   );

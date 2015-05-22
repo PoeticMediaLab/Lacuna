@@ -99,3 +99,18 @@ input[type="submit"] {
   margin-left: auto;
   margin-right: auto;
 }
+
+// Display flag actions as buttons
+.view-curate-tags {
+  .flag-link-toggle {
+    @extend .lacuna-button;
+    @extend .lacuna-button-short;
+  }
+  .unflag-action {
+    @extend .lacuna-button-blue;
+    @extend .lacuna-button-short;
+  }
+  .flag-action {
+  }
+}
+
