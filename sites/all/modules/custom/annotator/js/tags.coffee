@@ -23,7 +23,7 @@ class Annotator.Plugin.Tags extends Annotator.Plugin
     # Configurable function which accepts an array of tags and
     # returns a string which will be used to fill the tags input.
     stringifyTags: (array) ->
-      array.join(",")
+      array.join(", ")
 
   events:
     'annotationEditorSubmit'    : "updateAutocompleteTags"

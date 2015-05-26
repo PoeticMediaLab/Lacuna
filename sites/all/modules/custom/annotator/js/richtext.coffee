@@ -32,15 +32,20 @@ class Annotator.Plugin.RichText extends Annotator.Plugin
     return unless Annotator.supported()
     editor = @annotator.editor
     CKEDITOR.replace(editor_instance, {
-      extraplugins: 'image2, oembed',
+      extraPlugins: 'lineutils,oembed,widget',
       toolbar: [
-          { name: 'basicstyles', items: [ 'RemoveFormat' ] },
-          { name: 'paragraph', groups: [ 'list', ], items: [ 'NumberedList', 'BulletedList'] },
-          { name: 'links', items: [ 'Link', 'Unlink', ] },
-          { name: 'insert', items: [ 'mage2', 'oembed' ] },
-        ]
+          { name: 'basicstyles', items: ['RemoveFormat', 'Bold', 'Italic'] },
+          { name: 'paragraph', items: ['NumberedList', 'BulletedList'] },
+          { name: 'links', items: ['Link', 'Unlink'] },
+          { name: 'insert', items: ['oembed'] },
+        ],
+      # removeButtons: 'Underline,Strike,Subscript,Superscript,Anchor',
+      removePlugins: 'elementspath,font,resize',
+      allowedContent: true,
+      format_tags: 'p;h1;h2;h3;pre'
       }
     )
+    CKEDITOR.editorConfig
 
     @annotator.subscribe 'annotationEditorSubmit', (Editor) => @saveText(Editor)
     @annotator.subscribe 'annotationEditorShown', (Editor, annotation) => @updateText(Editor, annotation)

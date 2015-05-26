@@ -25,24 +25,27 @@
       if (!Annotator.supported()) return;
       editor = this.annotator.editor;
       CKEDITOR.replace(editor_instance, {
-        extraplugins: 'image2, oembed',
+        extraPlugins: 'lineutils,oembed,widget',
         toolbar: [
           {
             name: 'basicstyles',
-            items: ['RemoveFormat']
+            items: ['RemoveFormat', 'Bold', 'Italic']
           }, {
             name: 'paragraph',
-            groups: ['list'],
             items: ['NumberedList', 'BulletedList']
           }, {
             name: 'links',
             items: ['Link', 'Unlink']
           }, {
             name: 'insert',
-            items: ['mage2', 'oembed']
+            items: ['oembed']
           }
-        ]
+        ],
+        removePlugins: 'elementspath,font,resize',
+        allowedContent: true,
+        format_tags: 'p;h1;h2;h3;pre'
       });
+      CKEDITOR.editorConfig;
       this.annotator.subscribe('annotationEditorSubmit', function(Editor) {
         return _this.saveText(Editor);
       });
