@@ -108,14 +108,11 @@
       return this.setSelectedCategory(category);
     };
 
-    Categories.prototype.saveCategory = function(event, annotation) {
+    Categories.prototype.saveCategory = function(Editor, annotation) {
       annotation.category = $(this.field).find('.' + this.options.classForSelectedCategory).html();
-      if ((annotation.text != null) && annotation.text.length > 0 && !(annotation.category != null)) {
-        window.alert('You did not choose a category, so the default has been chosen.');
+      if ((annotation.text != null) && (annotation.text.length > 0) && !(annotation.category != null)) {
+        window.alert("You did not choose a category, so the default '" + this.options.category[0] + "' has been chosen.");
         annotation.category = this.options.category[0];
-      }
-      if (!(annotation.category != null) || !annotation.text) {
-        annotation.category = this.options.emptyCategory;
       }
       return this.changeHighlightColors([annotation]);
     };

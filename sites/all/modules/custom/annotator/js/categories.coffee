@@ -5,7 +5,6 @@
 # @see Annotator module
 #
 # Mike Widner <mikewidner@stanford.edu>
-# Based on earlier plugin by Adi Singh
 #
 
 $ = jQuery;
@@ -98,16 +97,15 @@ class Annotator.Plugin.Categories extends Annotator.Plugin
     category = $(event.target).html()
     @setSelectedCategory category
 
-  saveCategory: (event, annotation) ->
-    # Find currently selected category; grab the string and save it
-    # We prepend the . to tell jQuery this is a class we're seeking
+  saveCategory: (Editor, annotation) ->
+    # Update display, provide warning about default
     annotation.category = $(@field).find('.' + @options.classForSelectedCategory).html()
-    if annotation.text? and annotation.text.length > 0 and !annotation.category?
-      # TODO: force a choice
-      window.alert('You did not choose a category, so the default has been chosen.')
-      annotation.category = @options.category[0]  # default is first category
-    if !annotation.category? or !annotation.text
-      annotation.category = @options.emptyCategory
+    # With CKEditor editor enabled, this will never fire
+    # But we'll keep it here just in case
+    # Validation of category choice occurs in the Annotation Store
+    if annotation.text? and (annotation.text.length > 0) and !annotation.category?
+      window.alert("You did not choose a category, so the default '#{@options.category[0]}' has been chosen.")
+      annotation.category = @options.category[0]
     @changeHighlightColors([annotation])
 
   highlightSelectedCategory: (event, annotation) ->

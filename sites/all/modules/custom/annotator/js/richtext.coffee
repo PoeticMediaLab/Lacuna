@@ -34,7 +34,7 @@ class Annotator.Plugin.RichText extends Annotator.Plugin
     CKEDITOR.replace(editor_instance, {
       extraPlugins: 'lineutils,oembed,widget',
       toolbar: [
-          { name: 'basicstyles', items: ['RemoveFormat', 'Bold', 'Italic'] },
+          { name: 'basicstyles', items: ['RemoveFormat'] },
           { name: 'paragraph', items: ['NumberedList', 'BulletedList'] },
           { name: 'links', items: ['Link', 'Unlink'] },
           { name: 'insert', items: ['oembed'] },
@@ -42,23 +42,23 @@ class Annotator.Plugin.RichText extends Annotator.Plugin
       # removeButtons: 'Underline,Strike,Subscript,Superscript,Anchor',
       removePlugins: 'elementspath,font,resize',
       allowedContent: true,
-      format_tags: 'p;h1;h2;h3;pre'
+      autoUpdateElement: true,
       }
     )
-    CKEDITOR.editorConfig
 
-    @annotator.subscribe 'annotationEditorSubmit', (Editor) => @saveText(Editor)
+    # @annotator.subscribe 'annotationEditorSubmit', (Editor, annotation) => @saveText(Editor, annotation)
     @annotator.subscribe 'annotationEditorShown', (Editor, annotation) => @updateText(Editor, annotation)
+    @annotator.subscribe 'annotationEditorSubmit', (Editor, annotation) => @saveText(Editor, annotation)
     @annotator.subscribe 'annotationViewerShown', (Viewer) => @convertText(Viewer)
 
-  # Convert the rich text field into something Annotator recognizes
-  saveText: (Editor) =>
-    # Grab the user-created text, put in the right annotator field
-    Editor.annotation.text = CKEDITOR.instances[editor_instance].getData()
+  saveText: (Editor, annotation) =>
+    # Grab the user-created text, put it in the correct annotator field
+    CKEDITOR.instances[editor_instance].updateElement()
+    annotation.text = CKEDITOR.instances[editor_instance].getData()
 
   # load existing annotation text into the wysiwyg for updating
   updateText: (Editor, annotation) =>
-    CKEDITOR.instances[editor_instance].setData(Editor.annotation.text)
+    CKEDITOR.instances[editor_instance].setData(annotation.text)
 
   # convert text back to HTML
   convertText: (Viewer) =>
@@ -67,6 +67,7 @@ class Annotator.Plugin.RichText extends Annotator.Plugin
       # reverse the HTML escaping by Annotator.Util.escape
       # possibly dangerous, but trusting WYSIWYG input filters for content
       annotation = Viewer.annotations[index]
-      annotation.text = annotation.text.replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"');
+      if annotation.text?
+        annotation.text = annotation.text.replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"');
       div.innerHTML = annotation.text
 

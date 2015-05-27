@@ -29,7 +29,7 @@
         toolbar: [
           {
             name: 'basicstyles',
-            items: ['RemoveFormat', 'Bold', 'Italic']
+            items: ['RemoveFormat']
           }, {
             name: 'paragraph',
             items: ['NumberedList', 'BulletedList']
@@ -43,26 +43,26 @@
         ],
         removePlugins: 'elementspath,font,resize',
         allowedContent: true,
-        format_tags: 'p;h1;h2;h3;pre'
-      });
-      CKEDITOR.editorConfig;
-      this.annotator.subscribe('annotationEditorSubmit', function(Editor) {
-        return _this.saveText(Editor);
+        autoUpdateElement: true
       });
       this.annotator.subscribe('annotationEditorShown', function(Editor, annotation) {
         return _this.updateText(Editor, annotation);
+      });
+      this.annotator.subscribe('annotationEditorSubmit', function(Editor, annotation) {
+        return _this.saveText(Editor, annotation);
       });
       return this.annotator.subscribe('annotationViewerShown', function(Viewer) {
         return _this.convertText(Viewer);
       });
     };
 
-    RichText.prototype.saveText = function(Editor) {
-      return Editor.annotation.text = CKEDITOR.instances[editor_instance].getData();
+    RichText.prototype.saveText = function(Editor, annotation) {
+      CKEDITOR.instances[editor_instance].updateElement();
+      return annotation.text = CKEDITOR.instances[editor_instance].getData();
     };
 
     RichText.prototype.updateText = function(Editor, annotation) {
-      return CKEDITOR.instances[editor_instance].setData(Editor.annotation.text);
+      return CKEDITOR.instances[editor_instance].setData(annotation.text);
     };
 
     RichText.prototype.convertText = function(Viewer) {
@@ -71,7 +71,9 @@
       for (index in Viewer.annotations) {
         div = $(Viewer.element[0]).find('div:first-of-type')[index];
         annotation = Viewer.annotations[index];
-        annotation.text = annotation.text.replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"');
+        if (annotation.text != null) {
+          annotation.text = annotation.text.replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"');
+        }
         _results.push(div.innerHTML = annotation.text);
       }
       return _results;
