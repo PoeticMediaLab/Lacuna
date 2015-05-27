@@ -160,21 +160,6 @@ function annotation_drupal_format($entity, $update = FALSE) {
     // unset($annotation->permissions);
   }
   $annotation->updated = REQUEST_TIME;
-  // Sanitize the category input
-  // Do it here because this counts as server-side validation
-  // Can't be done reliably in an Annotator plug
-  // @see https://lists.okfn.org/pipermail/annotator-dev/2014-May/000935.html
-  ddl($annotation);
-  if (empty($annotation->text)) {
-    // Just a highlight, no category
-    unset($annotation->category);
-  } elseif (empty($annotation->category)) {
-    // Text, but no category; choose the first one as default
-    $categories = taxonomy_vocabulary_machine_name_load(ANNOTATION_CATEGORY_TAXONOMY);
-    $category_terms = taxonomy_get_tree($categories->vid);
-    $annotation->category = $category_terms[0];
-  }
-  ddl($annotation);
 
   $fields = array_keys(field_info_instances('node', 'annotation'));
   foreach ($entity as $key => $val) {
@@ -212,6 +197,18 @@ function annotation_drupal_format($entity, $update = FALSE) {
           $annotation->{$key}[$annotation->language][0]['value'] = $val;
         }
     }
+  }
+  // Sanitize the category input (i.e., server-side validation)
+  // Can't be done reliably in an Annotator plugin
+  // @see https://lists.okfn.org/pipermail/annotator-dev/2014-May/000935.html
+  if (empty($annotation->text)) {
+    // Just a highlight, no category
+    unset($annotation->category);
+  } elseif (empty($annotation->category)) {
+    // Text, but no category; choose the first one as default
+    $categories = taxonomy_vocabulary_machine_name_load(ANNOTATION_CATEGORY_TAXONOMY);
+    $category_terms = taxonomy_get_tree($categories->vid);
+    $annotation->category[$annotation->language][0]['tid'] = $category_terms[0]->tid;
   }
 
   return($annotation);

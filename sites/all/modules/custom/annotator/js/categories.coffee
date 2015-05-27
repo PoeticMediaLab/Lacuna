@@ -101,7 +101,7 @@ class Annotator.Plugin.Categories extends Annotator.Plugin
     # Update display, provide warning about default
     annotation.category = $(@field).find('.' + @options.classForSelectedCategory).html()
     # With CKEditor editor enabled, this will never fire
-    # But we'll keep it here just in case
+    # But we'll keep it here just in case that plugin isn't on
     # Validation of category choice occurs in the Annotation Store
     if annotation.text? and (annotation.text.length > 0) and !annotation.category?
       window.alert("You did not choose a category, so the default '#{@options.category[0]}' has been chosen.")
