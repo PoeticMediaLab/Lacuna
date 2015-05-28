@@ -20,8 +20,9 @@
       if (typeof Drupal.Annotator.data('annotator') !== 'undefined') {
         Drupal.Annotator.data('annotator').plugins.Tags.input.catcomplete({
             minLength: 0,
+            // source: Drupal.settings.annotator_tags,
             source: function( request, response ) {
-              response( $.ui.catcomplete.filter(
+              response( $.ui.autocomplete.filter(
               Drupal.settings.annotator_tags, extractLast( request.term ) ) );
             },
             focus: function () {
