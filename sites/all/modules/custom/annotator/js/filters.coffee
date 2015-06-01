@@ -426,7 +426,7 @@ class View
     @i = $('#' + select.interface.wrapper)  # interface shortcut
     @Controller = Controller
     @Model = Model
-    @i.append('<h2>Select Annotations</h2>')
+    @i.append('<h2>Show Annotations</h2>')
     @drawPager(@Model.get('index'), @Model.get('total'))
     @i.append("<div id='#{select.button.default}'></div>")
     @drawButton(select.button.default, 'none', 'user')
@@ -437,7 +437,7 @@ class View
       @drawAutocomplete(filter, values)
     @i.append("<div id='#{select.button.reset}'></div>")
     @drawButton(select.button.reset, 'reset', 'reset')
-    @i.append("<div id='#{select.filters.active}'>Active Selections</div>")
+    @i.append("<div id='#{select.filters.active}'>Showing Only</div>")
     return
 
   update: () ->

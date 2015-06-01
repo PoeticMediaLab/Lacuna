@@ -198,6 +198,18 @@ function annotation_drupal_format($entity, $update = FALSE) {
         }
     }
   }
+  // Sanitize the category input (i.e., server-side validation)
+  // Can't be done reliably in an Annotator plugin
+  // @see https://lists.okfn.org/pipermail/annotator-dev/2014-May/000935.html
+  if (empty($annotation->text)) {
+    // Just a highlight, no category
+    unset($annotation->category);
+  } elseif (empty($annotation->category)) {
+    // Text, but no category; choose the first one as default
+    $categories = taxonomy_vocabulary_machine_name_load(ANNOTATION_CATEGORY_TAXONOMY);
+    $category_terms = taxonomy_get_tree($categories->vid);
+    $annotation->category[$annotation->language][0]['tid'] = $category_terms[0]->tid;
+  }
 
   return($annotation);
 }
