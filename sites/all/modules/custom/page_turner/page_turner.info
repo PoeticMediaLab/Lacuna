@@ -1,0 +1,6 @@
+name = Page Turner
+description = Break long blocks of text into multiple pages, provide ability to flip through these pages and create bookmarks.
+package = Lacuna Stories
+core = 7.x
+
+files[] = page_turner.module
