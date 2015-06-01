@@ -197,9 +197,6 @@ function _annotation_install_instances() {
       'widget' => array(
         'type' => 'text_textarea'
         ),
-      'settings' => array(
-        'text_processing' => '1'
-        )
     ),
     'quote' => array(
       'field_name' => 'field_annotation_quote',
@@ -275,4 +272,13 @@ function annotation_uninstall() {
     // drush_print('Deleting ' . $field['field_name']);
     field_delete_field($field['field_name']);
   }
+}
+/**
+ * Update 7100: Convert Annotation text field to Full HTML
+ */
+function annotation_update_7100() {
+  $instance_info = field_info_instance('node', 'text', 'annotation');
+  $instance_info['settings'] = array('text_processing' => 1);
+  $instance_info['format'] = 'full_html';
+  field_update_instance($instance_info);
 }
