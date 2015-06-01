@@ -1,9 +1,9 @@
 /* Provide autocompleted, categorized tags in Annotator window
-//  @see https://github.com/openannotation/annotator/issues/92#issuecomment-3985124
-//  @see https://jqueryui.com/autocomplete/#multiple-remote
-//  @see https://jqueryui.com/autocomplete/#categories
+// @see https://github.com/openannotation/annotator/issues/92#issuecomment-3985124
+// @see https://jqueryui.com/autocomplete/#multiple-remote
+// @see https://jqueryui.com/autocomplete/#categories
 //
-//  Mike Widner <mikewidner@stanford.edu>
+// Mike Widner <mikewidner@stanford.edu>
 */
 (function ($) {
   Drupal.behaviors.annotatorTags = {
@@ -20,12 +20,21 @@
       if (typeof Drupal.Annotator.data('annotator') !== 'undefined') {
         Drupal.Annotator.data('annotator').plugins.Tags.input.catcomplete({
             minLength: 0,
+            delay: 0,
+            // source: Drupal.settings.annotator_tags,
             source: function( request, response ) {
-              response( $.ui.catcomplete.filter(
+              // TODO: Create filter callback
+              // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/filter
+              // Get new data object
+              // check list from split(this.value)
+              // Pass it to catcomplete
+              // var data = Drupal.settings.annotator_tags.filter(
+              //   function( val ) {
+
+              //   });
+              // response(data);
+              response( $.ui.autocomplete.filter(
               Drupal.settings.annotator_tags, extractLast( request.term ) ) );
-            },
-            focus: function () {
-              $(this).catcomplete("search", "");
             },
             select: function( event, ui ) {
               var terms = split( this.value );
@@ -37,8 +46,11 @@
               terms.push( "" );
               this.value = terms.join( ", " );
               return false;
-            }
-        });
+            },
+        })
+          .focus(function () {
+              $(this).catcomplete("search", "");
+            });
       }
     }
   };
