@@ -27,7 +27,17 @@ function course_authcode_form($form, &$form_state) {
 }
 
 function course_authcode_form_submit($form, &$form_state) {
-  if ('s3kr3t' == $form['authcode']['#value']) {
+  $authcode = variable_get('course_authcode', 's3kr3t');
+  if ($authcode == $form['authcode']['#value']) {
+    // save a token for a week to ensure the Auth Code was entered on subsequent pages
+    // see course_access()
+    global $user;
+    $key = "Course_Auth_Code_User_" . $user->uid;
+    $token = md5(uniqid(rand(), true));
+    user_cookie_save(array($key => $token)); // their copy
+    $expiration = time() + (7 * 24 * 60 * 60); // seven days from now
+    cache_set($key, $token, 'cache', $expiration); // our copy
+
     drupal_set_message("Your Course Setup Code was recognized, please contact a Lacuna Stories team member if you have any issues creating your course.");
     drupal_goto('createcourse-2');
   }
@@ -39,8 +49,9 @@ function course_authcode_form_submit($form, &$form_state) {
 
 
 function course_form_alter(&$form, &$form_state, $form_id) {
-  if ("course_or_other_group_node_form" == $form_id ) {
+  if ("course_node_form" == $form_id ) {
     $form['#submit'] = array('course_create_form_submit');
+    $form['actions']['submit']['#submit'][] = 'course_create_form_submit';
   }
 }
 
@@ -54,14 +65,14 @@ function course_create() {
     'language' => LANGUAGE_NONE,
   );
   $form = drupal_get_form(COURSE_NODE_TYPE . '_node_form', $node);
-  
+
   $form['group_access']['#access'] = FALSE;
   $form['additional_settings']['#access'] = FALSE;
-  unset($form['body'][LANGUAGE_NONE][0]['format']);
+  $form['body'][LANGUAGE_NONE][0]['format']['#access'] = FALSE;
   unset($form['actions']['preview']);
   $form['field_unregistered_students'][LANGUAGE_NONE][0]['value']['#value'] = 0;
   $form['actions']['submit']['#prefix'] = '<div>Send my information to the Lacuna Stories team to begin setting up my course!</div>';
-  $path = drupal_get_path('module', 'course'); 
+  $path = drupal_get_path('module', 'course');
   $form['#attached']['css'] = array("$path/course.css");
   $form['#attached']['js'] = array("$path/course.js");
 
@@ -91,38 +102,50 @@ function course_create_form_submit($form, &$form_state) {
 
 function course_set_up_materials($nid) {
   $node = node_load($nid);
-  $output = "Thank you for submitting your course information to the Lacuna Stories team. You can now continue by indicating the course materials you'd like to host on Lacuna Stories, and to assign them for specific classes, weeks, or units. To continue, click \"Set Up Materials for <i>{$node->title}</i>\"<br />";
+  $output = "Thank you for submitting your course information to the Lacuna Stories team. You can now continue by indicating the course materials you'd like to host on Lacuna Stories, and to assign them for specific weeks or units. To continue, click \"Set Up Materials for <i>{$node->title}</i>\"<br />";
   $output .= "<br />";
   $output .= drupal_render(drupal_get_form('course_set_up_materials_form'));
-  $output .= "<br /><br />";
-  $output .= "<button>Add Material<span class='fa fa-plus'></span></button><br /><br />";
-  $output .= "<button>Done Adding Course Materials<span class='fa fa-check'></span></button><p><em>You can add more materials at any time</em></p><br /><br /><br />";
-  $output .= "VIEW OF COURSE MATERIALS";
   return $output;
 }
 
 function course_set_up_materials_form($form, &$form_state) {
-  $form['number_of_classes'] = array(
-    '#type' => 'select',
-    '#title' => 'Assign Materials to Individual Class Numbers',
-    '#options' => drupal_map_assoc(range(1,50)),
-    '#description' => "How many individual class sessions are there in your course?", 
-    '#required' => TRUE
-  );
+  // TODO make taxo course specific
+
+  // current taxo terms, if any
+  $number_of_weeks = course_numerical_vocab_term_max('number_of_weeks');
+  $units_vocab = taxonomy_vocabulary_machine_name_load('units_themes');
+  $units = array();
+  foreach (taxonomy_term_load_multiple(array(), array('vid' => $units_vocab->vid)) as $unit) {
+    $units[] = "<div class='term'>" . $unit->name . "</div>";
+  }
+  asort($units);
+
   $form['number_of_weeks'] = array(
     '#type' => 'select',
     '#title' => 'Assign Materials to Individual Weeks',
     '#options' => drupal_map_assoc(range(1,25)),
-    '#description' => "How many individual class weeks are there in your course?", 
+    '#description' => "How many individual class weeks are there in your course?",
+    '#default_value' => $number_of_weeks,
     '#required' => TRUE
   );
   $form['units_themes'] = array(
-    '#type' => 'textfield',
+    '#type' => 'fieldset',
     '#title' => 'Assign Materials to Units/Themes',
-    '#description' => "Add as individual units or themes to your course.", 
-    '#size' => 60,
-    '#required' => TRUE
   );
+  $require_units = (count($units))? FALSE: TRUE; // only require if there are no existing terms
+  $form['units_themes']['term'] = array(
+    '#type' => 'textfield',
+    '#description' => "Add as individual units or themes to your course.",
+    '#size' => 60,
+    '#required' => $require_units,
+  );
+  $form['units_themes']['ajax_button'] = array(
+    '#markup' => "<button class='form-submit' id='ajax-units'>Add Unit/Theme</button>",
+    '#suffix' => "<div class='terms'>" . implode('', $units) . "</div>",
+  );
+  $path = drupal_get_path('module', 'course');
+  $form['#attached']['css'] = array("$path/course.css");
+  $form['#attached']['js'] = array("$path/course.js");
 
   $form['submit'] = array(
     '#type' => 'submit',
@@ -135,30 +158,96 @@ function course_set_up_materials_form($form, &$form_state) {
 function course_set_up_materials_form_submit($form, &$form_state) {
   # add terms to vocabs
 
-  # numeric tags
-  $voc_names = array('number_of_classes', 'number_of_weeks', 'units_themes');
-  foreach(array('number_of_classes', 'number_of_weeks') as $voc_name) {
-    $vocab = taxonomy_vocabulary_machine_name_load($voc_name);
-    $max = $form_state['values'][$voc_name];
-    for ($i=1; $i <= $max; $i++) {
-      course_create_taxo($vocab, $i);
-    }
+  # number of week tags
+  $vocab = taxonomy_vocabulary_machine_name_load('number_of_weeks');
+  $max = $form_state['values']['number_of_weeks'];
+  for ($i=1; $i <= $max; $i++) {
+    course_create_taxo($vocab, $i, $i);
   }
 
   # unit/theme tags
   $vocab = taxonomy_vocabulary_machine_name_load('units_themes');
-  $whitespace_commas = "/[\s,]+/";
-  foreach(preg_split($whitespace_commas, $form_state['values']['units_themes']) as $unit) {
+  foreach(explode(',', $form_state['values']['units_themes']['term']) as $unit) {
     course_create_taxo($vocab, $unit);
   }
+  drupal_goto('createcourse-4');
 }
 
-function course_create_taxo($vocab, $tag) {
+function course_ajax_add_unit_term() {
+  $term = check_plain($_POST['term']);
+  $vocab = taxonomy_vocabulary_machine_name_load('units_themes');
+  course_create_taxo($vocab, $term);
+  ajax_deliver();
+}
+
+function course_create_taxo($vocab, $tag, $weight = 0) {
   // check for existing term
-  if (0 == count(taxonomy_get_term_by_name($tag, $vocab->machine_name))) {
+  $tag = trim($tag);
+  if (0 == count(taxonomy_get_term_by_name($tag, $vocab->machine_name)) && !empty($tag)) {
     $term = new stdClass();
     $term->name = $tag;
     $term->vid = $vocab->vid;
+    $term->weight = $weight;
     taxonomy_term_save($term);
   }
+}
+
+/**
+ * Get the largest term for a numerical vocabulary
+ *
+ * return integer or FALSE
+ */
+function course_numerical_vocab_term_max($vocab_machine_name) {
+  # simple guard to ensure numerical vocabularies
+  if ('number_of_weeks' != $vocab_machine_name) {
+    return FALSE;
+  }
+  return db_query('SELECT t.name
+  FROM {taxonomy_vocabulary} v INNER JOIN {taxonomy_term_data} t ON v.vid=t.vid
+  WHERE v.machine_name = :machine_name
+  ORDER BY CAST(t.name AS SIGNED) DESC
+  LIMIT 1', array(':machine_name' => $vocab_machine_name))->fetchField();
+
+}
+
+function course_add_material() {
+  $output = "<p>Please find your materials using the methods below, in the order they are assigned. You, as the instructor, are responsible for determining if the online or e-access materials you are assigning your students are available at your home institution. If they are, your students will likely not have to pay for these materials. Otherwise, they will be charged. This is a cumbersome part of digital course setup, but an important one. It also allows the Lacuna Stories team to most efficiently assist you securing materials not available from your institutions digital resources. If you have any questions at any time, please send a quick email to info@lacunastories.com and someone from our team will assist you.</p><br />";
+
+// There should be large number icons on the left, with each "stage" separated by a different background color (white/ light grey/ white) to clearly distinguish the stages instructors should go through. They are:
+  $output .= "<p>Add E-Access Material from my Institution. If your students have digital access to materials through your institution’s library, they may have free access to those same materials on Lacuna Stories. Save your students money!<button>Confrim E-Access Material</button></p>";
+
+  $output .= "<p>Request Copyright Permission. The Lacuna Stories team, in partnership with Study.Net, will obtain permission, directly from the publisher or an intermediary service, to use the material you identify.<button>Request Copyright Permission</button></p>";
+  //The same information requested by study.Net should appear here. Change "Periodical" to "Journal Article" and add categories "Video", "Newspaper Article," and the field "Chapters or Page numbers" for Book category. "Material Name to be Displayed" should be changed to "Material Name to Be Displayed to Students."
+
+  $output .= "<p>Add Lacuna Stories Archived Materials. These materials may be free or available for a fee for your students. In either case, these are already digitized and using these materials will save you or the Lacuna Stories team time.<button>Search Lacuna Stories</button></p>";
+//The "Search Lacuna Stories’ Materials Archive" button should lead to a list of all current materials, with a [Full text] or [excerpts] listed by each. They should be searchable and sortable by author and title. There should be a "+" button by each, which turns into a green checkmark when they are added. At the top and bottom of the page there should be a Save Selections and Return to Add Materials button.
+
+
+  global $user;
+  module_load_include('inc', 'node', 'node.pages');
+  $node = (object) array(
+    'uid' => $user->uid,
+    'name' => (isset($user->name) ? $user->name : ''),
+    'type' => BIBLIO_NODE_TYPE,
+    'language' => LANGUAGE_NONE,
+  );
+  $form = drupal_get_form(BIBLIO_NODE_TYPE . '_node_form', $node);
+
+  $form['additional_settings']['#access'] = FALSE;
+  $form['body'][LANGUAGE_NONE][0]['format']['#access'] = FALSE;
+  unset($form['actions']['preview']);
+  #$path = drupal_get_path('module', 'course');
+  #$form['#attached']['css'] = array("$path/course.css");
+  #$form['#attached']['js'] = array("$path/course.js");
+
+  return $output . drupal_render($form);
+
+//  $output .= l("Add Material<span class='fa fa-plus'></span>", "createcourse-4",
+//    array("html" => TRUE, 'attributes' => array('class' => 'form-submit course-add-material')));
+//  $output .= l("Done Adding Course Materials<span class='fa fa-check'></span>", "/",
+//    array("html" => TRUE, 'attributes' => array('class' => 'form-submit')));
+//  $output .= "<p><em>You can add more materials at any time</em></p><br /><br /><br />";
+//  $output .= "VIEW OF COURSE MATERIALS";
+
+
 }

@@ -361,6 +361,7 @@ function course_field_default_field_bases() {
   );
 
   // Exported field_base: 'field_syllabus'
+  /*
   $field_bases['field_syllabus'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -427,6 +428,7 @@ function course_field_default_field_bases() {
     'translatable' => 0,
     'type' => 'file',
   );
+  */
 
   // Exported field_base: 'field_third_course_id'
   $field_bases['field_third_course_id'] = array(

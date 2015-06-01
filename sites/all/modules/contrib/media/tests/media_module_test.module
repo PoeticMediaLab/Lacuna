@@ -11,7 +11,7 @@
 function media_module_test_media_browser_plugin_info() {
   // Allow tests to enable or disable this hook.
   if (!variable_get('media_module_test_media_browser_plugin_info', FALSE)) {
-    return;
+    return array();
   }
 
   $info['media_module_test'] = array(

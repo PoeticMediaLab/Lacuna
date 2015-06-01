@@ -24,7 +24,8 @@ function media_browser($selected = NULL) {
     }
     $files = file_load_multiple($fids);
     foreach ($files as $file) {
-      media_browser_build_media_item($file);
+      $view_mode = isset($params['view_mode']) ? $params['view_mode'] : 'preview';
+      media_browser_build_media_item($file, $view_mode);
     }
     $setting = array('media' => array('selectedMedia' => array_values($files)));
     drupal_add_js($setting, 'setting');
@@ -231,12 +232,13 @@ EOF;
 }
 
 /**
- * Adds properties to the file.
+ * Adds additional properties to a file which are needed by the browser JS code.
  *
- * Additional properties on this file are needed by the media browser JS code.
+ * @param object $file
+ *   A Drupal file object.
  */
-function media_browser_build_media_item($file) {
-  $preview = media_get_thumbnail_preview($file);
+function media_browser_build_media_item($file, $view_mode = 'preview') {
+  $preview = media_get_thumbnail_preview($file, NULL, $view_mode);
   $file->preview = drupal_render($preview);
   $file->url = file_create_url($file->uri);
 }
