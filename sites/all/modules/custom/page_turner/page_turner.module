@@ -93,3 +93,19 @@ function page_turner_admin_form($form, &$form_state) {
 
   return system_settings_form($form);
 }
+
+/**
+ * Implements hook_node_view()
+ */
+function page_turner_node_view($node, $view_mode, $langcode) {
+  // If the node is of a type chosen to use Page Turner
+  // Then enable the javascript for it
+  $active = FALSE;
+  $node_types = variable_get('page_turner_node_types');
+  // $node_types has 0 as value for keys that haven't been checked
+  // in the configuration options
+  if ($node_types[$node->type] && $view_mode == 'full') {
+    $active = TRUE;
+  }
+  drupal_add_js(array('page_turner_active' => $active), 'setting');
+}

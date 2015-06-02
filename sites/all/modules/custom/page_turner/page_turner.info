@@ -6,3 +6,4 @@ configure = admin/config/user-interface/page-turner
 
 files[] = page_turner.module
 files[] = page_turner.test
+files[] = js/page_turner.js
