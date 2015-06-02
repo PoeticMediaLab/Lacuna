@@ -1,0 +1,92 @@
+<?php
+/**
+ * @file
+ *
+ * A module to break long text into turnable pages.
+ *
+ * This module takes a long work and adds UI to make it
+ * possible for users to flip through it more like a book,
+ * to bookmark pages, and to return to those pages.
+ *
+ * Mike Widner <mikewidner@stanford.edu>
+ *
+ **/
+
+/**
+ * Implement hook_menu().
+ */
+function page_turner_menu() {
+  $items = array();
+  $items['admin/config/user-interface/page-turner'] = array(
+    'title' => 'Page Turner',
+    'type' => MENU_NORMAL_ITEM,
+    'description' => 'Configuration for the Page Turner module',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('page_turner_admin_form'),
+    'access arguments' => array('administer page_turner'),
+    );
+  return $items;
+}
+
+/**
+ * Implement hook_permission().
+ */
+function page_turner_permission() {
+    return array(
+    'administer page_turner' => array(
+      'title' => t('Administer Page Turner'),
+      'description' => t('May manage settings for Page Turner module.'),
+    ),
+    'use page_turner' => array(
+      'title' => t('Use Page Turner'),
+      'description' => t('May use Page Turner for viewing nodes.'),
+    ),
+  );
+}
+
+/**
+ * Form builder; Create and display Page Turner configuration
+ * settings form
+ **/
+function page_turner_admin_form($form, &$form_state) {
+  // Minimum length that should use Page Turner
+  $form['page_turner_minlength'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Minimum text length'),
+    '#description' => t('The minimum number of characters in a text for Page Turner to be active'),
+    '#size' => 20,
+    '#maxlength' => 40,
+    '#required' => TRUE,
+    '#default_value' => variable_get('page_turner_minlength',20000),
+    );
+
+  // Number of characters in a single page
+  $form['page_turner_pagelength'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Characters per page'),
+    '#description' => t('The number of characters that define a single "page" of text'),
+    '#size' => 20,
+    '#maxlength' => 40,
+    '#required' => TRUE,
+    '#default_value' => variable_get('page_turner_pagelength',3000),
+    );
+
+  // HTML elements that force a new page break
+  $form['page_turner_breaks'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Page break HTML elements'),
+    '#description' => t('A comma-separated list of HTML elements that indicate a page break'),
+    '#size' => 60,
+    '#maxlength' => 255,
+    '#required' => FALSE,
+    '#default_value' => variable_get('page_turner_breaks', 'h1,h2'),
+    );
+
+  // Submit button
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Save settings'),
+    );
+
+  return $form;
+}
