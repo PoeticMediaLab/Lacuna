@@ -5,6 +5,3 @@ core = 7.x
 
 files[] = page_turner.module
 files[] = page_turner.test
-
-dependencies[] = flag
-dependencies[] = lacuna_stories_content_types

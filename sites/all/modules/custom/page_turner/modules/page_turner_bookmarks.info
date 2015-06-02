@@ -1,0 +1,11 @@
+name = Page Turner Bookmarks
+description = Allows users to bookmark pages displayed by Page Turner
+package = Lacuna Stories
+core = 7.x
+
+files[] = page_turner_bookmarks.module
+files[] = page_turner_bookmarks.test
+
+dependencies[] = page_turner
+dependencies[] = lacuna_stories_content_types
+dependencies[] = flag

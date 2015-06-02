@@ -1,0 +1,32 @@
+<?php
+/**
+ * @file
+ *
+ * Installs Page Turner Bookmarks module
+ *
+ */
+
+
+/**
+ * Implements hook_install().
+ **/
+function page_turner_bookmarks_install() {
+  // Q1? Can I use default "Bookmarks" flag for this module?
+  // Q2? Can I even use Flags for this? We're looking not a per-node flags, but per-page flags, which are purely display
+  // A1: Probably not, because of Q2, but we can set values for flags in Flag API 3.x, which should be plenty to store the right page number
+  $bookmark_flag = flag_flag::factory_by_entity_type('node');
+  $bookmark_flag->name = 'page_turner_bookmark';
+  $bookmark_flag->title = 'Bookmark';
+  // LS specific content type
+  $bookmark_flag->types = array('document');
+  $bookmark_flag->flag_short = 'Bookmark';
+  $bookmark_flag->unflag_short = 'Unbookmark';
+
+  $bookmark_flag->global = FALSE;
+  $bookmark_flag->show_on_form = FALSE;
+  $bookmark_flag->show_on_node = TRUE;
+  $bookmark_flag->show_on_teaser = FALSE;
+  $bookmark_flag->link_type = 'toggle';
+
+  $bookmark_flag->save();
+}
