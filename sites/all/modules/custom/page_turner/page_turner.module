@@ -93,18 +93,3 @@ function page_turner_admin_form($form, &$form_state) {
 
   return system_settings_form($form);
 }
-
-/**
- * Implement hook_form_alter().
- */
-function page_turner_form_alter(&$form, &$form_state, $form_id) {
-  // Modify user account form to allow Page Turner disabling
-  if ($form_id == 'user_account_form') {
-    $form['page_turner_user_active'] = array(
-      '#type' => 'checkbox',
-      '#title' => t('Use Page Turner on long text'),
-      '#description' => t('Page Turner breaks long texts into single pages'),
-    );
-  }
-  return $form;
-}

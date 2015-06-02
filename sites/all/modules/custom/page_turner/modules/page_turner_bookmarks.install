@@ -16,9 +16,8 @@ function page_turner_bookmarks_install() {
   // A1: Probably not, because of Q2, but we can set values for flags in Flag API 3.x, which should be plenty to store the right page number
   $bookmark_flag = flag_flag::factory_by_entity_type('node');
   $bookmark_flag->name = 'page_turner_bookmark';
-  $bookmark_flag->title = 'Bookmark';
-  // LS specific content type
-  $bookmark_flag->types = array('document');
+  $bookmark_flag->title = 'Page Turner Bookmark';
+  $bookmark_flag->types = variable_get('page_turner_node_types');
   $bookmark_flag->flag_short = 'Bookmark';
   $bookmark_flag->unflag_short = 'Unbookmark';
 
@@ -29,4 +28,11 @@ function page_turner_bookmarks_install() {
   $bookmark_flag->link_type = 'toggle';
 
   $bookmark_flag->save();
+}
+
+/**
+ * Implements hook_uninstall()
+ **/
+function page_turner_bookmarks_uninstall() {
+
 }
