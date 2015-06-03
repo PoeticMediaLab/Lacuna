@@ -48,6 +48,8 @@ function page_turner_permission() {
  * Form builder; Create and display Page Turner configuration
  * settings form
  **/
+// TODO: Add validation that minlength and pagelength > 0 and
+// are numeric
 function page_turner_admin_form($form, &$form_state) {
   // Minimum length that should use Page Turner
   $form['page_turner_minlength'] = array(
@@ -99,13 +101,26 @@ function page_turner_admin_form($form, &$form_state) {
  */
 function page_turner_node_view($node, $view_mode, $langcode) {
   // If the node is of a type chosen to use Page Turner
+  // And user chooses to use it and has access
   // Then enable the javascript for it
+  global $user;
+  $current_user = user_load($user->uid);
   $active = FALSE;
   $node_types = variable_get('page_turner_node_types');
+
   // $node_types has 0 as value for keys that haven't been checked
   // in the configuration options
-  if ($node_types[$node->type] && $view_mode == 'full') {
+  if ($node_types[$node->type] &&
+      $view_mode == 'full' &&
+      $current_user->field_page_turner_active[LANGUAGE_NONE][0]['value'] &&
+      user_access('use page_turner'))
+  {
     $active = TRUE;
   }
+
+  // Pass settings to javascript
   drupal_add_js(array('page_turner_active' => $active), 'setting');
+  drupal_add_js(array('page_turner_minlength' => variable_get('page_turner_minlength')), 'setting');
+  drupal_add_js(array('page_turner_pagelength' => variable_get('page_turner_pagelength')), 'setting');
+  drupal_add_js(array('page_turner_breaks' => variable_get('page_turner_breaks')), 'setting');
 }
