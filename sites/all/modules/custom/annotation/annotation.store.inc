@@ -190,6 +190,14 @@ function annotation_drupal_format($entity, $update = FALSE) {
           $annotation->private[$annotation->language][0]['value'] = 0;
         }
         break;
+      case 'groups':
+        if (isset ($val['groups'])) {
+          foreach ($val['groups'] as $gid) {
+            $annotation->og_group_ref[$annotation->language][0]['target_id'] = $gid;
+          }
+        }
+        $annotation->group_content_access[$annotation->language][0]['value'] = $val['group_visibility'];
+        break;
       default:
         // Only prepare fields that exist in the annotation node
         if (in_array($key, $fields) & ($val != NULL) & !isset($annotation->{$key})) {
@@ -220,6 +228,11 @@ function annotation_drupal_format($entity, $update = FALSE) {
 function annotation_api_create() {
   if (annotation_access('create')) {
     $entity = annotation_api_from_stdin();
+    // Temporarily set group settings here until we are actually setting them in the annotator.js privacy plugin
+    $entity->groups = array (
+      'groups' => array(),
+      'group_visibility' => 1, // Private
+    );
     $annotation = annotation_drupal_format($entity);
     $annotation->comment = 2; // enable comments
     $annotation = node_submit($annotation);
