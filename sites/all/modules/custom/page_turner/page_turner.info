@@ -9,4 +9,4 @@ files[] = page_turner.test
 
 scripts[] = js/page_turner.js
 
-stylesheets[screen][] = css/page_turner.css
+stylesheets[all][] = css/page_turner.css
