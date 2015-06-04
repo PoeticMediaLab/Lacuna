@@ -102,7 +102,7 @@
         var page_length = content.innerHTML.length;
         if (page_length >= settings.page_turner.min_length) {
           add_pagers(content);
-          var pages = chunk_pages(content);
+          pages = chunk_pages(content);
           cur_page = get_current_page();
           var i;
           for (i = 0; i < pages.length; i++) {
