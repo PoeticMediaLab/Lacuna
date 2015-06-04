@@ -119,10 +119,10 @@ function page_turner_node_view($node, $view_mode, $langcode) {
   }
 
   // Pass settings to javascript
-  drupal_add_js(array('page_turner' =>
-    array('active' => $active,
-          'min_length' => variable_get('page_turner_min_length'),
-          'page_length' => variable_get('page_turner_page_length'),
-          'breaks' => variable_get('page_turner_breaks')
-          ), 'setting');
+  drupal_add_js(array('page_turner' => array(
+    'active' => $active,
+    'min_length' => variable_get('page_turner_min_length'),
+    'page_length' => variable_get('page_turner_page_length'),
+    'breaks' => variable_get('page_turner_breaks')
+    )), 'setting');
 }
