@@ -43,7 +43,7 @@ Event.prototype = {
 function PTModel(content, settings) {
     this._content = content;
     this._settings = settings.page_turner;
-    this._current_page = 1;
+    this._current_page = 0;
     this._pages = Array();
 }
 
@@ -154,8 +154,11 @@ function PTView(model, elements) {
   var _this = this;
 
   // Add our pager elements to DOM
-  $(this._elements.article).before('<div id="page-turner-prev" class="page-turner-bar fa fa-arrow-left"></div>');
-  $(this._elements.article).before('<div id="page-turner-next" class="page-turner-bar fa fa-arrow-right"></div>');
+  // Must be done first to bind click events
+  var navbar_id = this._elements.nav_bar.substring(1);
+  $(this._elements.article).before('<div id="' + navbar_id + '"></div>')
+  $(this._elements.nav_bar).append('<div id="page-turner-prev" class="page-turner-bar fa fa-3x fa-arrow-left"></div>');
+  $(this._elements.nav_bar).append('<div id="page-turner-next" class="page-turner-bar fa fa-3x fa-arrow-right"></div>');
 
   this.pager_clicked = new Event(this);
 
@@ -166,9 +169,9 @@ function PTView(model, elements) {
   });
 
   $(this._elements.page_prev).click(function () {
+    console.log('prev');
     _this.pager_clicked.notify({ direction: 'prev' });
   });
-
 }
 
 PTView.prototype = {
@@ -245,6 +248,7 @@ PTController.prototype = {
 
         view = new PTView(model, {
             'article': 'article.node',
+            'nav_bar': '#page-turner-nav',
             'page_next': '#page-turner-next',
             'page_prev': '#page-turner-prev',
           });
