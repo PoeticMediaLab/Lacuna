@@ -5,3 +5,18 @@
 .page-turner-hidden {
   display: none;
 }
+
+.page-turner-bar {
+  width: 20px;
+  height: 500px;
+}
+
+#page-turner-prev {
+  float: left;
+  margin-right: 5px;
+}
+
+#page-turner-next {
+  float: right;
+  margin-left: 5px;
+}

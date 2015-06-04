@@ -100,8 +100,8 @@ PTModel.prototype = {
   },  // END: _chunk_pages()
 
   page: function(page_num) {
-    if (page_num > this._pages.length) {
-      return this._pages[this._pages.length - 1];
+    if (page_num > this.page_total()) {
+      return this._pages[page_total() - 1];
     }
     if (page_num < 0) {
       return this._pages[0];
@@ -111,8 +111,8 @@ PTModel.prototype = {
 
   current_page: function(p) {
     if (p) {
-      if (p > this.page_total) {
-        p = this.page_total
+      if (p > this.page_total()) {
+        p = this.page_total();
       }
       if (p < 0) {
         p = 0;
@@ -122,9 +122,17 @@ PTModel.prototype = {
     return this._current_page;
   },
 
-  next_page: function() {},
+  next_page: function() {
+    if (this._current_page < this.page_total()) {
+      ++this._current_page;
+    }
+  },
 
-  prev_page: function() {},
+  prev_page: function() {
+    if (this._current_page > 0) {
+      --this._current_page;
+    }
+  },
 
   all_pages: function() {
     return this._pages;
@@ -143,30 +151,34 @@ PTModel.prototype = {
 function PTView(model, elements) {
   this._model = model;
   this._elements = elements;
-
-  this.page_forward = new Event(this);
-  this.page_back = new Event(this);
-
   var _this = this;
+
+  // Add our pager elements to DOM
+  $(this._elements.article).before('<div id="page-turner-prev" class="page-turner-bar fa fa-arrow-left"></div>');
+  $(this._elements.article).before('<div id="page-turner-next" class="page-turner-bar fa fa-arrow-right"></div>');
+
+  this.pager_clicked = new Event(this);
+
+  // Set up HTML listeners for page prev/next
+  $(this._elements.page_next).click(function () {
+    console.log('next');
+    _this.pager_clicked.notify({ direction: 'next' });
+  });
+
+  $(this._elements.page_prev).click(function () {
+    _this.pager_clicked.notify({ direction: 'prev' });
+  });
+
 }
 
 PTView.prototype = {
-  // Class is set in page_turner.css
   hide_page: function(page_num) {
+    // page-turner-hidden class is set in page_turner.css
     $(this._model.page(page_num)).addClass('page-turner-hidden');
   },
 
   show_page: function(page_num) {
     $(this._model.page(page_num)).removeClass('page-turner-hidden');
-  },
-
-  add_pagers: function() {
-    // draw the pagers
-  },
-
-  draw: function() {
-    // Do all my drawin'
-    this.add_pagers();
   },
 }; // END: PTView
 
@@ -178,6 +190,10 @@ function PTController(model, view) {
   this._model = model;
   this._view = view;
   var _this = this;
+
+  this._view.pager_clicked.attach(function(sender, args) {
+    _this.change_page(args);
+  });
 };
 
 PTController.prototype = {
@@ -193,10 +209,15 @@ PTController.prototype = {
     return 0;
   },
 
-  page_forward: function() {
-  },
-
-  page_back: function() {
+  change_page: function(args) {
+    this._view.hide_page(this._model.current_page());
+    if (args.direction == 'prev') {
+      this._model.prev_page();
+    }
+    if (args.direction == 'next') {
+      this._model.next_page();
+    }
+    this._view.show_page(this._model.current_page());
   },
 }; // END: PTController
 
@@ -221,15 +242,16 @@ PTController.prototype = {
 
         model = new PTModel(content, settings);
         model.init();
+
         view = new PTView(model, {
-            'main': $(content),
-            'page_forward': $('#pt_forward'),
-            'page_back': $('#pt_back')
+            'article': 'article.node',
+            'page_next': '#page-turner-next',
+            'page_prev': '#page-turner-prev',
           });
+
         controller = new PTController(model, view);
 
         // Initial page hiding
-        console.log(controller, model, view);
         var cur_page = controller.get_current_page()
         model.current_page(cur_page);
         var i;
@@ -238,7 +260,6 @@ PTController.prototype = {
             view.hide_page(i);
           }
         }
-        view.draw();
       } // END: main()
     } // END: attach
   }; // END: Drupal.behaviors.page_turner
