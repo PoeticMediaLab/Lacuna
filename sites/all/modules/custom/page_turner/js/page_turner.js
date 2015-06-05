@@ -160,17 +160,17 @@ function PTView(model, elements) {
   this.model = model;
   this.elements = elements;
   var _this = this;
-  draw_navbar(this.elements);
-  create_events(_this);
+  draw_navbar();
+  create_events();
 
   function draw_navbar(elements) {
     // Add our pager elements to DOM
     // Must be done first to bind click events
-    var navbar_id = elements.navbar.substring(1);
-    $(elements.article).before('<div id="' + navbar_id + '"></div>')
-    $(elements.navbar).append('<div id="page-turner-prev" class="page-turner-bar fa fa-3x fa-arrow-left"></div>');
+    var navbar_id = _this.elements.navbar.substring(1);
+    $(_this.elements.article).before('<div id="' + navbar_id + '"></div>')
+    $(_this.elements.navbar).append('<div id="page-turner-prev" class="page-turner-bar fa fa-3x fa-arrow-left"></div>');
 
-    _this.svg = d3.select(elements.navbar).append("svg");
+    _this.svg = d3.select(_this.elements.navbar).append("svg");
     _this.navbar = _this.svg
         .attr("width", "90%")
         .attr("height", "100%")
@@ -178,10 +178,10 @@ function PTView(model, elements) {
       .append("rect")
         .attr("id", navbar_id);
 
-    $(elements.navbar).append('<div id="page-turner-next" class="page-turner-bar fa fa-3x fa-arrow-right"></div>');
+    $(_this.elements.navbar).append('<div id="page-turner-next" class="page-turner-bar fa fa-3x fa-arrow-right"></div>');
   }
 
-  function create_events(_this) {
+  function create_events() {
     _this.pager_clicked = new Event(_this);
 
     // Set up HTML listeners for page prev/next
@@ -217,9 +217,12 @@ PTView.prototype = {
     // Move brush to the current page
   },
 
-  brush_move: function() {
-    var extent = this.brush.extent();
-    console.log(extent);
+  brush_move: function(_this) {
+    console.log(_this);
+    console.log(_this.brush);
+    // var extent = brush.extent();
+    // console.log(extent);
+    // console.log(_this.brush.extent());
   },
 
   brush_end: function() {
@@ -228,23 +231,21 @@ PTView.prototype = {
     console.log('brush end');
   },
 
-  calc_brush_width: function(_this) {
-    // Calculate brush width based on number of pages
-    return parseInt(d3.select(_this.elements.navbar).style('width'), 10) / _this.model.page_total();
-  },
-
   draw_brush: function(page_num) {
     // divide navbar into even sections, one per page
     // put brush over page_num
+    var navbar_width = parseInt(d3.select(this.elements.navbar).style('width'), 10);
     this.brush = d3.svg.brush()
-      .on("brush", this.brush_move)
-      .on("brushend", this.brush_end);
+      .x(d3.scale.linear().range([0, navbar_width]))
+      // Set initial extent here
+      .on("brush", this.brush_move(this))
+      .on("brushend", this.brush_end(this));
     this.svg.append("g")
         .attr("class", "page-turner-brush")
         .call(this.brush)
       .selectAll("rect")
         .attr("height", parseInt(d3.select(this.elements.navbar).style('height'), 10))
-        .attr("width", this.calc_brush_width(this))
+        .attr("width", navbar_width / this.model.page_total())
     ;
   },
 }; // END: PTView
