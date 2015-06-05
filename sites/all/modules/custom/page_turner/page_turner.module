@@ -102,7 +102,8 @@ function page_turner_admin_form($form, &$form_state) {
 function page_turner_node_view($node, $view_mode, $langcode) {
   // If the node is of a type chosen to use Page Turner
   // And user chooses to use it and has access
-  // Then enable the javascript for it
+  // And the page is long enough
+  // Then activate the Page Turner UI
   global $user;
   $current_user = user_load($user->uid);
   $active = FALSE;
@@ -115,15 +116,25 @@ function page_turner_node_view($node, $view_mode, $langcode) {
       $current_user->field_page_turner_active[LANGUAGE_NONE][0]['value'] &&
       user_access('use page_turner'))
   {
-    $active = TRUE;
+    $text_length = 0;
+    // Becuase I stupidly didn't use the default body field for documents
+    if ($node->type == 'document') {
+      $text_length = strlen($node->field_doc_text[LANGUAGE_NONE][0]['value']);
+    } else {
+      $text_length = strlen($node->body[LANGUAGE_NONE][0]['value']);
+    }
+    if ($text_length >= variable_get('page_turner_min_length')) {
+      $active = TRUE;
+    }
   }
 
-  // Pass settings to javascript
-  drupal_add_js(array('page_turner' => array(
-    'active' => $active,
-    'min_length' => variable_get('page_turner_min_length'),
-    'page_length' => variable_get('page_turner_page_length'),
-    'breaks' => variable_get('page_turner_breaks')
-    )), 'setting');
-  drupal_add_js(drupal_get_path('module', 'page_turner') . '/js/page_turner.js');
+  // Activate page_turner.js, pass settings
+  if ($active) {
+    drupal_add_js(array('page_turner' => array(
+      'page_length' => variable_get('page_turner_page_length'),
+      'breaks' => variable_get('page_turner_breaks')
+      )), 'setting');
+    drupal_add_js(libraries_get_path('d3') . '/d3.min.js');
+    drupal_add_js(drupal_get_path('module', 'page_turner') . '/js/page_turner.js');
+  }
 }

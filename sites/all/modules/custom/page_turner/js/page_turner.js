@@ -2,6 +2,7 @@
  * Page Turner hides/shows parts of a node
  * based on settings about character length
  *
+ * Mike Widner <mikewidner@stanford.edu>
  **/
 
  "use strict";
@@ -18,19 +19,19 @@
  * Observer object for event notification
  */
 function Event(sender) {
-  this._sender = sender;
-  this._listeners = [];
+  this.sender = sender;
+  this.listeners = [];
 }
 
 Event.prototype = {
   attach: function(listener) {
-    this._listeners.push(listener);
+    this.listeners.push(listener);
   },
   notify: function(args) {
     var index;
 
-    for (index = 0; index < this._listeners.length; index += 1) {
-      this._listeners[index](this._sender, args);
+    for (index = 0; index < this.listeners.length; index += 1) {
+      this.listeners[index](this.sender, args);
     }
   },
 }; // END: Event
@@ -41,12 +42,14 @@ Event.prototype = {
  * accessing pages by number, etc.
  **/
 function PTModel(content, settings) {
-  this._content = content;
-  this._settings = settings.page_turner;
-  this._current_page = 0;
-  this._pages = _chunk_pages(content, this._settings);
+  this.content = content;
+  this.settings = settings.page_turner;
+  this.index = 0;
+  var chunks = chunk_pages(content, this.settings);
+  this.pages = chunks.pages;
+  this.breaks = chunks.break_pages;
 
-  function _chunk_pages(content, settings) {
+  function chunk_pages(content, settings) {
     // Divide total content length by page length
     // And look for page break elements
     // Return array of page chunks
@@ -54,6 +57,7 @@ function PTModel(content, settings) {
     var t_len = 0;  // text length
     var breaks = settings.breaks.toLowerCase().split(',');
     var pages = Array();
+    var break_pages = Array();
 
     // Get to the real content
     while (content.childElementCount == 1) {
@@ -80,6 +84,7 @@ function PTModel(content, settings) {
           t_len = 0;
           page = Array(content[i]); // Include in the new page
         }
+        break_pages.push({page: pages.length + 1, content: content[i]});
       } else if (new_len <= settings.page_length) {
         t_len = new_len;
         page.push(content[i]);
@@ -91,19 +96,19 @@ function PTModel(content, settings) {
       }
     }
     pages.push(page); // whatever's left over
-    return pages;
+    return {pages: pages, break_pages: break_pages};
   }  // END: _chunk_pages()
 }
 
 PTModel.prototype = {
   page: function(page_num) {
     if (page_num > this.page_total()) {
-      return this._pages[page_total() - 1];
+      return this.pages[page_total() - 1];
     }
     if (page_num < 0) {
-      return this._pages[0];
+      return this.pages[0];
     }
-    return this._pages[page_num];
+    return this.pages[page_num];
   },
 
   current_page: function(p) {
@@ -114,29 +119,35 @@ PTModel.prototype = {
       if (p < 0) {
         p = 0;
       }
-      this._current_page = p;
+      this.index = p;
     }
-    return this._current_page;
+    return this.index;
   },
 
   next_page: function() {
-    if (this._current_page < this.page_total()) {
-      ++this._current_page;
+    if (this.index < this.page_total()) {
+      ++this.index;
     }
   },
 
   prev_page: function() {
-    if (this._current_page > 0) {
-      --this._current_page;
+    if (this.index > 0) {
+      --this.index;
     }
   },
 
   all_pages: function() {
-    return this._pages;
+    return this.pages;
+  },
+
+  all_breaks: function() {
+    // Returns a list of page numbers that are break points
+    // with their content (for hover tip display)
+    return this.break_pages;
   },
 
   page_total: function() {
-    return this._pages.length;
+    return this.pages.length;
   },
 }; // END: PTModel
 
@@ -146,39 +157,70 @@ PTModel.prototype = {
  * Draws user interface elements
  **/
 function PTView(model, elements) {
-  this._model = model;
-  this._elements = elements;
+  this.model = model;
+  this.elements = elements;
   var _this = this;
+  draw_navbar(this.elements);
+  create_events(_this);
 
-  // Add our pager elements to DOM
-  // Must be done first to bind click events
-  var navbar_id = this._elements.nav_bar.substring(1);
-  $(this._elements.article).before('<div id="' + navbar_id + '"></div>')
-  $(this._elements.nav_bar).append('<div id="page-turner-prev" class="page-turner-bar fa fa-3x fa-arrow-left"></div>');
-  $(this._elements.nav_bar).append('<div id="page-turner-next" class="page-turner-bar fa fa-3x fa-arrow-right"></div>');
+  function draw_navbar(elements) {
+    // Add our pager elements to DOM
+    // Must be done first to bind click events
+    var navbar_id = elements.nav_bar.substring(1);
+    $(elements.article).before('<div id="' + navbar_id + '"></div>')
+    $(elements.nav_bar).append('<div id="page-turner-prev" class="page-turner-bar fa fa-3x fa-arrow-left"></div>');
 
-  this.pager_clicked = new Event(this);
+    d3.select(elements.nav_bar).append("svg")
+        .attr("width", "90%")
+        .attr("height", "100%")
+      .append("g")
+      .append("rect")
+        .attr("id", navbar_id);
 
-  // Set up HTML listeners for page prev/next
-  $(this._elements.page_next).click(function () {
-    console.log('next');
-    _this.pager_clicked.notify({ direction: 'next' });
-  });
+    $(elements.nav_bar).append('<div id="page-turner-next" class="page-turner-bar fa fa-3x fa-arrow-right"></div>');
+  }
 
-  $(this._elements.page_prev).click(function () {
-    console.log('prev');
-    _this.pager_clicked.notify({ direction: 'prev' });
-  });
+  function create_events(_this) {
+    _this.pager_clicked = new Event(_this);
+
+    // Set up HTML listeners for page prev/next
+    $(_this.elements.page_next).click(function () {
+      _this.pager_clicked.notify({ direction: 'next' });
+    });
+
+    $(_this.elements.page_prev).click(function () {
+      _this.pager_clicked.notify({ direction: 'prev' });
+    });
+  }
 }
 
 PTView.prototype = {
   hide_page: function(page_num) {
     // page-turner-hidden class is set in page_turner.css
-    $(this._model.page(page_num)).addClass('page-turner-hidden');
+    $(this.model.page(page_num)).addClass('page-turner-hidden');
   },
 
   show_page: function(page_num) {
-    $(this._model.page(page_num)).removeClass('page-turner-hidden');
+    $(this.model.page(page_num)).removeClass('page-turner-hidden');
+  },
+
+  draw_page_number: function(page_num) {
+
+  },
+
+  draw_navbar_markers: function(pages) {
+    // Draw markers in navbar for given pages
+  },
+
+  update_brush: function(page_num) {
+    // Update the brush to be on the correct page
+  },
+
+  draw_brush: function(page_num) {
+    var pages = this.model.page_total();
+    // divide navbar into even sections, one per page
+    // put brush over page_num
+    console.log(page_num + ' of ' + pages);
   },
 }; // END: PTView
 
@@ -187,11 +229,11 @@ PTView.prototype = {
  * Handles user interactions
  **/
 function PTController(model, view) {
-  this._model = model;
-  this._view = view;
+  this.model = model;
+  this.view = view;
   var _this = this;
 
-  this._view.pager_clicked.attach(function(sender, args) {
+  this.view.pager_clicked.attach(function(sender, args) {
     _this.change_page(args);
   });
 };
@@ -210,56 +252,42 @@ PTController.prototype = {
   },
 
   change_page: function(args) {
-    this._view.hide_page(this._model.current_page());
+    this.view.hide_page(this.model.current_page());
     if (args.direction == 'prev') {
-      this._model.prev_page();
+      this.model.prev_page();
     }
     if (args.direction == 'next') {
-      this._model.next_page();
+      this.model.next_page();
     }
-    this._view.show_page(this._model.current_page());
+    this.view.show_page(this.model.current_page());
+    this.view.update_brush(this.model.current_page());
   },
 }; // END: PTController
 
 (function($) {
   Drupal.behaviors.page_turner = {
     attach: function (context, settings) {
-      // Check if we even need to do anything
-      if (settings.page_turner.active) {
-        // We assume here the body text is always the first field
-        var content = context.getElementsByTagName('article')[0].getElementsByClassName('field')[0];
-        var page_length = content.innerHTML.length;
-        if (page_length >= settings.page_turner.min_length) {
-          // Yup! Fire it up!
-          main(content, settings);
-        }
-      }
-
-      // Main loop
-      function main(content, settings) {
-        var model, view, controller;
-
-        model = new PTModel(content, settings);
-
+      // We assume here the body text is always the first field
+      var content = context.getElementsByTagName('article')[0].getElementsByClassName('field')[0];
+      var model = new PTModel(content, settings),
         view = new PTView(model, {
-            'article': 'article.node',
-            'nav_bar': '#page-turner-nav',
-            'page_next': '#page-turner-next',
-            'page_prev': '#page-turner-prev',
-          });
-
+          'article': 'article.node',
+          'nav_bar': '#page-turner-nav',
+          'page_next': '#page-turner-next',
+          'page_prev': '#page-turner-prev',
+        }),
         controller = new PTController(model, view);
 
-        // Initial page hiding
-        var cur_page = controller.get_current_page()
-        model.current_page(cur_page);
-        var i;
-        for (i = 0; i < model.page_total(); i++) {
-          if (i != cur_page) {
-            view.hide_page(i);
-          }
+      // Initial page hiding
+      var cur_page = controller.get_current_page();
+      model.current_page(cur_page);
+      var i;
+      for (i = 0; i < model.page_total(); i++) {
+        if (i != cur_page) {
+          view.hide_page(i);
         }
-      } // END: main()
+      }
+      view.draw_brush(cur_page);
     } // END: attach
   }; // END: Drupal.behaviors.page_turner
 })(jQuery);

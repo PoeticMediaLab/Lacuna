@@ -11,12 +11,18 @@
   height: 50px;
 }
 
+rect#page-turner-nav {
+  fill: rgba(240,240,240,.5);
+  stroke: none;
+}
+
 .page-turner-bar {
   cursor: pointer;
 }
 
 #page-turner-prev {
   float: left;
+  margin-right: 1%;
 }
 
 #page-turner-next {
