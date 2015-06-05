@@ -16,6 +16,11 @@ rect#page-turner-nav {
   stroke: none;
 }
 
+.page-turner-brush rect {
+  cursor: move;
+  fill: rgba(0,100,0, .3);
+}
+
 .page-turner-bar {
   cursor: pointer;
 }
