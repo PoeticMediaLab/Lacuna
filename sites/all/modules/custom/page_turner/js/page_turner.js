@@ -41,25 +41,19 @@ Event.prototype = {
  * accessing pages by number, etc.
  **/
 function PTModel(content, settings) {
-    this._content = content;
-    this._settings = settings.page_turner;
-    this._current_page = 0;
-    this._pages = Array();
-}
+  this._content = content;
+  this._settings = settings.page_turner;
+  this._current_page = 0;
+  this._pages = _chunk_pages(content, this._settings);
 
-PTModel.prototype = {
-  init: function() {
-    this._chunk_pages();
-  },
-
-  _chunk_pages: function() {
+  function _chunk_pages(content, settings) {
     // Divide total content length by page length
     // And look for page break elements
     // Return array of page chunks
     var page = Array(); // holds all elements in a page
     var t_len = 0;  // text length
-    var breaks = this._settings.breaks.toLowerCase().split(',');
-    var content = this._content;
+    var breaks = settings.breaks.toLowerCase().split(',');
+    var pages = Array();
 
     // Get to the real content
     while (content.childElementCount == 1) {
@@ -82,23 +76,26 @@ PTModel.prototype = {
           t_len = new_len;
         } else {
           // End of last page, start a new one
-          this._pages.push(page);
+          pages.push(page);
           t_len = 0;
           page = Array(content[i]); // Include in the new page
         }
-      } else if (new_len <= this._settings.page_length) {
+      } else if (new_len <= settings.page_length) {
         t_len = new_len;
         page.push(content[i]);
       } else if (page.length > 0) {
         // Start a new page
-        this._pages.push(page);
+        pages.push(page);
         t_len = content[i].textContent.length;
         page = Array(content[i]);
       }
     }
-    this._pages.push(page); // whatever's left over
-  },  // END: _chunk_pages()
+    pages.push(page); // whatever's left over
+    return pages;
+  }  // END: _chunk_pages()
+}
 
+PTModel.prototype = {
   page: function(page_num) {
     if (page_num > this.page_total()) {
       return this._pages[page_total() - 1];
@@ -243,7 +240,6 @@ PTController.prototype = {
         var model, view, controller;
 
         model = new PTModel(content, settings);
-        model.init();
 
         view = new PTView(model, {
             'article': 'article.node',
