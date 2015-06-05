@@ -227,7 +227,6 @@ PTController.prototype = {
 (function($) {
   Drupal.behaviors.page_turner = {
     attach: function (context, settings) {
-
       // Check if we even need to do anything
       if (settings.page_turner.active) {
         // We assume here the body text is always the first field
