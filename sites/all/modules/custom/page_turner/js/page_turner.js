@@ -157,32 +157,35 @@ PTModel.prototype = {
  * Draws user interface elements
  **/
 function PTView(model, elements) {
-  this.model = model;
-  this.elements = elements;
   var self = this;
+  self.model = model;
+  self.elements = elements;
+  self.navbar = {};
+  self.page = {};
   draw_navbar();
   create_events();
 
   function draw_navbar(elements) {
     // Add our pager elements to DOM
     // Must be done first to bind click events
-    var navbar_id = self.elements.navbar.substring(1);
-    $(self.elements.article).before('<div id="' + navbar_id + '"></div>')
+    self.navbar.id = self.elements.navbar.substring(1);
+    $(self.elements.article).before('<div id="' + self.navbar.id + '"></div>')
     $(self.elements.navbar).append('<div id="page-turner-prev" class="page-turner-bar fa fa-3x fa-arrow-left"></div>');
 
     self.svg = d3.select(self.elements.navbar).append("svg");
     self.navbar = self.svg
-        .attr("width", "90%")
+        .attr("width", "90%") // Note: affects width calculations
         .attr("height", "100%")
       .append("g")
       .append("rect")
-        .attr("id", navbar_id);
+        .attr("id", self.navbar.id);
 
     $(self.elements.navbar).append('<div id="page-turner-next" class="page-turner-bar fa fa-3x fa-arrow-right"></div>');
   }
 
   function create_events() {
     self.pager_clicked = new Event(self);
+    self.brush_moved = new Event(self);
 
     // Set up HTML listeners for page prev/next
     $(self.elements.page_next).click(function () {
@@ -220,30 +223,31 @@ PTView.prototype = {
   brush_end: function() {
     // Brush finished moving
     // Snap to a full page
-    console.log(this.brush.extent());
-    console.log('brush end');
+    var extent = this.brush.extent();
+    var ratio = this.navbar.width / this.page.width;
+    this.page.start = Math.ceil(ratio * extent[0]);
+    this.page.end = Math.ceil(ratio * extent[1]);
+    d3.select(this.elements.brush).transition()
+      .call(this.brush.extent([this.page.start / ratio, this.page.end / ratio]));
+    this.brush_moved.notify(this.page);  // notify controller
   },
 
   draw_brush: function(page_num) {
     // divide navbar into even sections, one per page
     // put brush over page_num
-    var navbar_width = parseInt(d3.select(this.elements.navbar).style('width'), 10);
-    var page_width = navbar_width / (this.model.page_total() - 1);
+    this.navbar.width = parseInt(d3.select(this.elements.navbar).style('width'), 10) * .9; // svg width = 90%
+    this.page.width = this.navbar.width / (this.model.page_total() - 1);
     this.brush = d3.svg.brush()
-      .x(d3.scale.linear().range([0, navbar_width]))
-      .extent(d3.extent([0, page_width]))
-      // Set initial extent here
-      // .on("brush", )
-      // .bind() preserves context for us
+      .x(d3.scale.linear().range([0, this.navbar.width]))
+      .extent([0, this.page.width / this.navbar.width])
       .on("brushend", this.brush_end.bind(this))
     ;
 
-    this.svg.append("g")
-        .attr("class", "page-turner-brush")
+    this.brush_g = this.svg.append("g")
+        .attr("id", this.elements.brush.substring(1))
         .call(this.brush)
       .selectAll("rect")
         .attr("height", parseInt(d3.select(this.elements.navbar).style('height'), 10))
-        .attr("width", page_width)
     ;
   },
 }; // END: PTView
@@ -259,6 +263,10 @@ function PTController(model, view) {
 
   this.view.pager_clicked.attach(function(sender, args) {
     self.change_page(args);
+  });
+
+  this.view.brush_moved.attach(function(sender, args) {
+    self.brush_moved(args);
   });
 };
 
@@ -286,6 +294,11 @@ PTController.prototype = {
     this.view.show_page(this.model.current_page());
     this.view.move_brush(this.model.current_page());
   },
+
+  brush_moved: function(page) {
+    console.log(page);
+    // create an integer range between page.start and page.end - 1
+  },
 }; // END: PTController
 
 (function($) {
@@ -299,6 +312,7 @@ PTController.prototype = {
           'navbar': '#page-turner-nav',
           'page_next': '#page-turner-next',
           'page_prev': '#page-turner-prev',
+          'brush': '#page-turner-brush'
         }),
         controller = new PTController(model, view);
 

@@ -16,9 +16,10 @@ rect#page-turner-nav {
   stroke: none;
 }
 
-.page-turner-brush rect {
-  /*cursor: move;*/
-  fill: rgba(0,100,0, .3);
+#page-turner-brush {
+  fill: rgba(136, 181, 81, .125);
+  stroke:rgb(136, 181, 81);
+  shape-rendering: crispEdges;
 }
 
 .page-turner-bar {
