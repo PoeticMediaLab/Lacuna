@@ -246,7 +246,7 @@ PTView.prototype = {
     // divide navbar into even sections, one per page
     // put brush over page_num
     this.navbar.width = parseInt(d3.select('#' + this.elements.navbar).style('width'), 10) * .9; // svg width = 90%
-    this.page.width = this.navbar.width / (this.model.page_total() - 1);
+    this.page.width = this.navbar.width / this.model.page_total();
     this.brush = d3.svg.brush()
       .x(d3.scale.linear().range([0, this.navbar.width]))
       .extent([0, this.page.width / this.navbar.width])
