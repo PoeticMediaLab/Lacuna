@@ -28,10 +28,10 @@ Event.prototype = {
     this.listeners.push(listener);
   },
   notify: function(args) {
-    var index, l;
+    var i, l;
 
-    for (index = 0, l = this.listeners.length; index < l; index += 1) {
-      this.listeners[index](this.sender, args);
+    for (i = 0, l = this.listeners.length; i < l; i++) {
+      this.listeners[i](this.sender, args);
     }
   },
 }; // END: Event
@@ -44,10 +44,10 @@ Event.prototype = {
 function PTModel(content, settings) {
   this.content = content;
   this.settings = settings.page_turner;
-  this.index = 0;
   var chunks = chunk_pages(content, this.settings);
-  this.pages = chunks.pages;
-  this.breaks = chunks.break_pages;
+  this.page = {start: 0, end: 1};   // current page range
+  this.pages = chunks.pages;        // content of all pages
+  this.breaks = chunks.break_pages; // content of break pages
 
   function chunk_pages(content, settings) {
     // Divide total content length by page length
@@ -101,7 +101,7 @@ function PTModel(content, settings) {
 }
 
 PTModel.prototype = {
-  page: function(page_num) {
+  get_page: function(page_num) {
     if (page_num > this.page_total()) {
       return this.pages[page_total() - 1];
     }
@@ -119,24 +119,34 @@ PTModel.prototype = {
       if (p < 0) {
         p = 0;
       }
-      this.index = p;
+      var diff = this.page.start - p;
+      this.page.start = p;
+      this.page.end += diff;
     }
-    return this.index;
+    return this.page.start;
   },
 
   next_page: function() {
-    if (this.index < this.page_total()) {
-      ++this.index;
+    if (this.page.end < this.page_total()) {
+      ++this.page.start;
+      ++this.page.end;
     }
   },
 
   prev_page: function() {
-    if (this.index > 0) {
-      --this.index;
+    if (this.page.start > 0) {
+      --this.page.start;
+      --this.page.end;
     }
   },
 
+  page_range: function() {
+    // Return current page range
+    return [this.page.start, this.page.end];
+  },
+
   all_pages: function() {
+    // Return all page content
     return this.pages;
   },
 
@@ -187,7 +197,7 @@ function PTView(model, elements) {
 
   function create_events() {
     self.pager_clicked = new Event(self);
-    self.brush_moved = new Event(self);
+    self.brush_moved = new Event(self);   // brush has moved
 
     // Set up HTML listeners for page prev/next
     $('#' + self.elements.page.next).click(function () {
@@ -203,11 +213,19 @@ function PTView(model, elements) {
 PTView.prototype = {
   hide_page: function(page_num) {
     // page-turner-hidden class is set in page_turner.css
-    $(this.model.page(page_num)).addClass(this.elements.hidden);
+    $(this.model.get_page(page_num)).addClass(this.elements.hidden);
+    // d3.selectAll(this.model.get_page(page_num)).classed(this.elements.hidden, true);
   },
 
   show_page: function(page_num) {
-    $(this.model.page(page_num)).removeClass(this.elements.hidden);
+    $(this.model.get_page(page_num)).removeClass(this.elements.hidden);
+  },
+
+  show_pages: function(range) {
+    var i;
+    for (i = range[0]; i < range[1]; i++) {
+      this.show_page(i);
+    }
   },
 
   hide_all_pages: function() {
@@ -226,20 +244,42 @@ PTView.prototype = {
     // Draw markers in navbar for given pages
   },
 
-  move_brush: function(page_num) {
-    // Move brush to the current page
+  extent_to_page: function(extent) {
+    // Convert an extent value to page number
+    return Math.ceil(this.ratio * extent);
   },
 
-  brush_end: function() {
-    // Brush finished moving
-    // Snap to a full page
-    var extent = this.brush.extent();
-    var ratio = this.navbar.width / this.page.width;
-    this.page.start = Math.ceil(ratio * extent[0]);
-    this.page.end = Math.ceil(ratio * extent[1]);
+  page_to_extent: function(page_num) {
+    // convert a page number to an extent value
+    return page_num / this.ratio;
+  },
+
+  snap_extent_to_page_edges: function(extent) {
+    // Adjust a given extent to snap to page boundaries
+    return [
+      this.page_to_extent(this.extent_to_page(extent[0])),
+      this.page_to_extent(this.extent_to_page(extent[1]))
+    ]
+  },
+
+  animate_brush: function(extent) {
     d3.select('#' + this.elements.brush).transition()
-      .call(this.brush.extent([this.page.start / ratio, this.page.end / ratio]));
-    this.brush_moved.notify(this.page);  // notify controller
+      .call(this.brush.extent(extent));
+  },
+
+  update_brush: function() {
+    // Model must have changed, update the brush
+    this.animate_brush([
+      this.page_to_extent(this.model.page.start),
+      this.page_to_extent(this.model.page.end)
+    ]);
+  },
+
+  move_brush: function() {
+    // Brush finished moving, snap to page boundaries, notify
+    var extent = this.snap_extent_to_page_edges(this.brush.extent());
+    this.animate_brush(extent);
+    this.brush_moved.notify(extent);  // notify listeners
   },
 
   draw_brush: function(page_num) {
@@ -247,10 +287,12 @@ PTView.prototype = {
     // put brush over page_num
     this.navbar.width = parseInt(d3.select('#' + this.elements.navbar).style('width'), 10) * .9; // svg width = 90%
     this.page.width = this.navbar.width / this.model.page_total();
+    this.ratio = this.navbar.width / this.page.width;
+
     this.brush = d3.svg.brush()
       .x(d3.scale.linear().range([0, this.navbar.width]))
       .extent([0, this.page.width / this.navbar.width])
-      .on("brushend", this.brush_end.bind(this))
+      .on("brushend", this.move_brush.bind(this))
     ;
 
     this.brush_g = this.svg.append("g")
@@ -301,18 +343,16 @@ PTController.prototype = {
     if (args.direction == 'next') {
       this.model.next_page();
     }
-    this.view.show_page(this.model.current_page());
-    this.view.move_brush(this.model.current_page());
+    this.view.show_pages(this.model.page_range());
+    this.view.update_brush();
   },
 
-  brush_moved: function(page) {
+  brush_moved: function(extent) {
     var i;
-    this.model.current_page(page.start);
+    this.model.page.start = this.view.extent_to_page(extent[0]);
+    this.model.page.end = this.view.extent_to_page(extent[1]);
     this.view.hide_all_pages();
-    for (i = page.start; i < page.end; i++) {
-      this.view.show_page(i);
-    }
-    // create an integer range between page.start and page.end - 1
+    this.view.show_pages(this.model.page_range());
   },
 }; // END: PTController
 
