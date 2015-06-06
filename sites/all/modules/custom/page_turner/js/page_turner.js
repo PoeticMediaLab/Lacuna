@@ -159,6 +159,8 @@ PTModel.prototype = {
 function PTView(model, elements) {
   var self = this;
   self.model = model;
+  // Elements we expect to add # when selecting
+  // so we can use them as ids w/o problems
   self.elements = elements;
   self.navbar = {};
   self.page = {};
@@ -168,19 +170,19 @@ function PTView(model, elements) {
   function draw_navbar(elements) {
     // Add our pager elements to DOM
     // Must be done first to bind click events
-    self.navbar.id = self.elements.navbar.substring(1);
-    $(self.elements.article).before('<div id="' + self.navbar.id + '"></div>')
-    $(self.elements.navbar).append('<div id="page-turner-prev" class="page-turner-bar fa fa-3x fa-arrow-left"></div>');
+    $(self.elements.article).before('<div id="' + self.elements.navbar + '"></div>');
+    var navbar = $('#' + self.elements.navbar);
+    navbar.append('<div id="' + self.elements.page.prev + '" class="page-turner-bar fa fa-3x fa-arrow-left"></div>');
 
-    self.svg = d3.select(self.elements.navbar).append("svg");
+    self.svg = d3.select('#' + self.elements.navbar).append("svg");
     self.navbar = self.svg
         .attr("width", "90%") // Note: affects width calculations
         .attr("height", "100%")
       .append("g")
       .append("rect")
-        .attr("id", self.navbar.id);
+        .attr("id", self.elements.navbar);
 
-    $(self.elements.navbar).append('<div id="page-turner-next" class="page-turner-bar fa fa-3x fa-arrow-right"></div>');
+    navbar.append('<div id="' + self.elements.page.next + '" class="page-turner-bar fa fa-3x fa-arrow-right"></div>');
   }
 
   function create_events() {
@@ -188,11 +190,11 @@ function PTView(model, elements) {
     self.brush_moved = new Event(self);
 
     // Set up HTML listeners for page prev/next
-    $(self.elements.page_next).click(function () {
+    $('#' + self.elements.page.next).click(function () {
       self.pager_clicked.notify({ direction: 'next' });
     });
 
-    $(self.elements.page_prev).click(function () {
+    $('#' + self.elements.page.prev).click(function () {
       self.pager_clicked.notify({ direction: 'prev' });
     });
   }
@@ -201,11 +203,15 @@ function PTView(model, elements) {
 PTView.prototype = {
   hide_page: function(page_num) {
     // page-turner-hidden class is set in page_turner.css
-    $(this.model.page(page_num)).addClass('page-turner-hidden');
+    $(this.model.page(page_num)).addClass(this.elements.hidden);
   },
 
   show_page: function(page_num) {
-    $(this.model.page(page_num)).removeClass('page-turner-hidden');
+    $(this.model.page(page_num)).removeClass(this.elements.hidden);
+  },
+
+  hide_all_pages: function() {
+    $(this.model.all_pages).addClass(this.elements.hidden);
   },
 
   draw_page_number: function(page_num) {
@@ -227,7 +233,7 @@ PTView.prototype = {
     var ratio = this.navbar.width / this.page.width;
     this.page.start = Math.ceil(ratio * extent[0]);
     this.page.end = Math.ceil(ratio * extent[1]);
-    d3.select(this.elements.brush).transition()
+    d3.select('#' + this.elements.brush).transition()
       .call(this.brush.extent([this.page.start / ratio, this.page.end / ratio]));
     this.brush_moved.notify(this.page);  // notify controller
   },
@@ -235,7 +241,7 @@ PTView.prototype = {
   draw_brush: function(page_num) {
     // divide navbar into even sections, one per page
     // put brush over page_num
-    this.navbar.width = parseInt(d3.select(this.elements.navbar).style('width'), 10) * .9; // svg width = 90%
+    this.navbar.width = parseInt(d3.select('#' + this.elements.navbar).style('width'), 10) * .9; // svg width = 90%
     this.page.width = this.navbar.width / (this.model.page_total() - 1);
     this.brush = d3.svg.brush()
       .x(d3.scale.linear().range([0, this.navbar.width]))
@@ -244,10 +250,10 @@ PTView.prototype = {
     ;
 
     this.brush_g = this.svg.append("g")
-        .attr("id", this.elements.brush.substring(1))
+        .attr("id", this.elements.brush)
         .call(this.brush)
       .selectAll("rect")
-        .attr("height", parseInt(d3.select(this.elements.navbar).style('height'), 10))
+        .attr("height", parseInt(d3.select('#' + this.elements.navbar).style('height'), 10))
     ;
   },
 }; // END: PTView
@@ -297,6 +303,11 @@ PTController.prototype = {
 
   brush_moved: function(page) {
     console.log(page);
+    var i;
+    this.model.current_page(page.start);
+    for (i = page.start; i < page.end; i++) {
+      this.view.show_page(i);
+    }
     // create an integer range between page.start and page.end - 1
   },
 }; // END: PTController
@@ -309,10 +320,13 @@ PTController.prototype = {
       var model = new PTModel(content, settings),
         view = new PTView(model, {
           'article': 'article.node',
-          'navbar': '#page-turner-nav',
-          'page_next': '#page-turner-next',
-          'page_prev': '#page-turner-prev',
-          'brush': '#page-turner-brush'
+          'navbar': 'page-turner-nav',
+          'page': {
+            'next': 'page-turner-next',
+            'prev': 'page-turner-prev',
+          },
+          'brush': 'page-turner-brush',
+          'hidden': 'page-turner-hidden'
         }),
         controller = new PTController(model, view);
 
