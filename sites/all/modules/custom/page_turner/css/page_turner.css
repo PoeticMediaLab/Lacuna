@@ -17,7 +17,7 @@ rect#page-turner-nav {
 }
 
 .page-turner-brush rect {
-  cursor: move;
+  /*cursor: move;*/
   fill: rgba(0,100,0, .3);
 }
 
