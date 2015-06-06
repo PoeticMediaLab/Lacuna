@@ -211,7 +211,11 @@ PTView.prototype = {
   },
 
   hide_all_pages: function() {
-    $(this.model.all_pages).addClass(this.elements.hidden);
+    var i, l;
+    var all_pages = this.model.all_pages();
+    for (i = 0, l = all_pages.length; i < l; i++) {
+      $(all_pages[i]).addClass(this.elements.hidden);
+    }
   },
 
   draw_page_number: function(page_num) {
@@ -302,9 +306,9 @@ PTController.prototype = {
   },
 
   brush_moved: function(page) {
-    console.log(page);
     var i;
     this.model.current_page(page.start);
+    this.view.hide_all_pages();
     for (i = page.start; i < page.end; i++) {
       this.view.show_page(i);
     }
