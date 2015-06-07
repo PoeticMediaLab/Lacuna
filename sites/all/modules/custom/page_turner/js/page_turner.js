@@ -127,16 +127,23 @@ PTModel.prototype = {
   },
 
   next_page: function() {
-    if (this.page.end < this.page_total()) {
-      ++this.page.start;
-      ++this.page.end;
+    var range = this.page.end - this.page.start;
+    var total = this.page_total();
+    this.page.start += range;
+    this.page.end += range;
+    if (this.page.end > total) {
+      this.page.start = total - range;
+      this.page.end = total;
     }
   },
 
   prev_page: function() {
-    if (this.page.start > 0) {
-      --this.page.start;
-      --this.page.end;
+    var range = this.page.end - this.page.start;
+    this.page.start -= range;
+    this.page.end -= range;
+    if (this.page.start < 0) {
+      this.page.start = 0;
+      this.page.end = range;
     }
   },
 
@@ -214,7 +221,6 @@ PTView.prototype = {
   hide_page: function(page_num) {
     // page-turner-hidden class is set in page_turner.css
     $(this.model.get_page(page_num)).addClass(this.elements.hidden);
-    // d3.selectAll(this.model.get_page(page_num)).classed(this.elements.hidden, true);
   },
 
   show_page: function(page_num) {
@@ -228,11 +234,17 @@ PTView.prototype = {
     }
   },
 
+  hide_pages: function(range) {
+    var i;
+    for (i = range[0]; i < range[1]; i++) {
+      this.hide_page(i);
+    }
+  },
+
   hide_all_pages: function() {
     var i, l;
-    var all_pages = this.model.all_pages();
-    for (i = 0, l = all_pages.length; i < l; i++) {
-      $(all_pages[i]).addClass(this.elements.hidden);
+    for (i = 0, l = this.model.page_total(); i < l; i++) {
+      this.hide_page(i);
     }
   },
 
@@ -336,7 +348,7 @@ PTController.prototype = {
   },
 
   change_page: function(args) {
-    this.view.hide_page(this.model.current_page());
+    this.view.hide_pages(this.model.page_range());
     if (args.direction == 'prev') {
       this.model.prev_page();
     }
