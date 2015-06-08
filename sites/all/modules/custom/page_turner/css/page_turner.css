@@ -22,6 +22,13 @@ rect#page-turner-nav {
   shape-rendering: crispEdges;
 }
 
+.page-turner-ticks line,
+.page-turner-ticks path {
+  fill: none;
+  stroke: rgba(0, 0, 0, .1);
+  shape-rendering: crispEdges;
+}
+
 .page-turner-bar {
   cursor: pointer;
 }

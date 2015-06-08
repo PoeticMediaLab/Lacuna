@@ -301,9 +301,30 @@ PTView.prototype = {
     this.page.width = this.navbar.width / this.model.page_total();
     this.ratio = this.navbar.width / this.page.width;
 
+    var height = parseInt(d3.select('#' + this.elements.navbar).style('height'), 10);
+    var x = d3.scale.linear().range([0, this.navbar.width]);
+
+    var tickValues = Array();
+    var i, l;
+    for (i = 0, l = this.model.page_total(); i < l; i++ ) {
+      tickValues.push((1 / this.ratio) * i);
+    }
+
+    // Draw ticks now that we have our ratios
+    this.svg.append("g")
+      .attr("class", "page-turner-ticks")
+      .attr("transform", "translate(0," + height + ")")
+      .call(d3.svg.axis()
+        .scale(x)
+        .orient("bottom")
+        .tickValues(tickValues)
+        .tickFormat("")
+        .tickSize(-height)
+      );
+
     this.brush = d3.svg.brush()
-      .x(d3.scale.linear().range([0, this.navbar.width]))
-      .extent([0, this.page.width / this.navbar.width])
+      .x(x)
+      .extent([0, 1 / this.ratio])
       .on("brushend", this.move_brush.bind(this))
     ;
 
@@ -311,7 +332,7 @@ PTView.prototype = {
         .attr("id", this.elements.brush)
         .call(this.brush)
       .selectAll("rect")
-        .attr("height", parseInt(d3.select('#' + this.elements.navbar).style('height'), 10))
+        .attr("height", height)
     ;
   },
 }; // END: PTView
