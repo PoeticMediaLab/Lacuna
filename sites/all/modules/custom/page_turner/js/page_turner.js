@@ -195,7 +195,7 @@ function PTView(model, elements) {
   draw_navbar();
   draw_navbar_ticks();
 
-  create_events(); // Must come *after* navbar created
+  create_events(); // Must come *after* navbar created for click binding
 
   // Update view when page numbers in model change
   self.model.page_changed.attach(
@@ -353,8 +353,8 @@ PTView.prototype = {
   snap_extent_to_page_edges: function(extent) {
     // Adjust a given extent to snap to page boundaries
     if (extent[0] == extent[1]) {
-      // we want to select at least one page
-      extent[1] += this.navbar.ratio;
+    //   // we want to select at least one page
+      extent[0] += 1 / this.navbar.ratio;
     }
     return [
       this.page_to_extent(this.extent_to_page(extent[0])),

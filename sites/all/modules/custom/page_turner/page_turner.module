@@ -81,7 +81,7 @@ function page_turner_admin_form($form, &$form_state) {
     '#size' => 60,
     '#maxlength' => 255,
     '#required' => FALSE,
-    '#default_value' => variable_get('page_turner_breaks', 'h1,h2'),
+    '#default_value' => variable_get('page_turner_breaks', 'h4'),
     );
 
   // Set which content types on which Page Turner should activate
