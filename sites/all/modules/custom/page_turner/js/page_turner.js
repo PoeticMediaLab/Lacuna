@@ -258,7 +258,7 @@ PTView.prototype = {
 
   extent_to_page: function(extent) {
     // Convert an extent value to page number
-    return Math.ceil(this.ratio * extent);
+    return Math.round(this.ratio * extent);
   },
 
   page_to_extent: function(page_num) {
