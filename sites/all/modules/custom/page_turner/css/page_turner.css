@@ -22,6 +22,10 @@ rect#page-turner-nav {
   shape-rendering: crispEdges;
 }
 
+#page-turner-pages {
+  float: right;
+}
+
 .page-turner-ticks line,
 .page-turner-ticks path {
   fill: none;

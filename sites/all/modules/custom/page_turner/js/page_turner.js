@@ -42,12 +42,15 @@ Event.prototype = {
  * accessing pages by number, etc.
  **/
 function PTModel(content, settings) {
-  this.content = content;
-  this.settings = settings.page_turner;
-  var chunks = chunk_pages(content, this.settings);
-  this.page = {start: 0, end: 1};   // current page range
-  this.pages = chunks.pages;        // content of all pages
-  this.breaks = chunks.break_pages; // indices of all break pages
+  var self = this;
+  self.content = content;
+  self.settings = settings.page_turner;
+  var chunks = chunk_pages(content, self.settings);
+  self.page = {start: 0, end: 1};   // current page range
+  self.pages = chunks.pages;        // content of all pages
+  self.breaks = chunks.break_pages; // indices of all break pages
+
+  self.page_changed = new Event(self);
 
   function chunk_pages(content, settings) {
     // Divide total content length by page length
@@ -122,6 +125,7 @@ PTModel.prototype = {
       var diff = p - this.page.start;
       this.page.start = p;
       this.page.end += diff;
+      this.page_changed.notify({start: this.page.start, end: this.page.end});
     }
     return this.page.start;
   },
@@ -135,6 +139,7 @@ PTModel.prototype = {
       this.page.start = total - range;
       this.page.end = total;
     }
+    this.page_changed.notify({start: this.page.start, end: this.page.end});
   },
 
   prev_page: function() {
@@ -145,11 +150,12 @@ PTModel.prototype = {
       this.page.start = 0;
       this.page.end = range;
     }
+    this.page_changed.notify({start: this.page.start, end: this.page.end});
   },
 
   page_range: function() {
     // Return current page range
-    return [this.page.start, this.page.end];
+    return {'start': this.page.start, 'end': this.page.end};
   },
 
   all_pages: function() {
@@ -184,11 +190,19 @@ function PTView(model, elements) {
   self.elements = elements;
   self.navbar = {};
   self.brush = {};
+  self.pages = {};  // current page(s)
 
   draw_navbar();
   draw_navbar_ticks();
 
   create_events(); // Must come *after* navbar created
+
+  // Update view when page numbers in model change
+  self.model.page_changed.attach(
+    function(sender, pages) {
+      self.update_brush(pages);
+      self.update_pages(pages);
+    });
 
   function draw_navbar(elements) {
     // Add our pager elements to DOM
@@ -197,7 +211,7 @@ function PTView(model, elements) {
       .insert('div', self.elements.content)
       .attr('id', self.elements.navbar);
 
-    navbar.append('div').attr('id', self.elements.page.prev)
+    navbar.append('div').attr('id', self.elements.pager.prev)
       .classed({'page-turner-bar': true,
                 'fa': true,
                 'fa-3x': true,
@@ -211,11 +225,14 @@ function PTView(model, elements) {
       .append("rect")
         .attr("id", self.elements.navbar);
 
-    navbar.append('div').attr('id', self.elements.page.next)
+    navbar.append('div').attr('id', self.elements.pager.next)
       .classed({'page-turner-bar': true,
                 'fa': true,
                 'fa-3x': true,
                 'fa-arrow-right': true});
+
+    // Add the "Page X of Y" div
+    d3.select('#' + self.elements.pages.loc).append('div').attr('id', self.elements.pages.id);
 
     // Set our sizing variables
     self.navbar.width = parseInt(d3.select('#' + self.elements.navbar).style('width'), 10) * .9; // svg width = 90%
@@ -255,11 +272,11 @@ function PTView(model, elements) {
     self.brush_moved = new Event(self);   // brush has moved
 
     // Set up HTML listeners for page prev/next
-    d3.select('#' + self.elements.page.next).on("click", function () {
+    d3.select('#' + self.elements.pager.next).on("click", function () {
       self.pager_clicked.notify({ direction: 'next' });
     });
 
-    d3.select('#' + self.elements.page.prev).on("click", function () {
+    d3.select('#' + self.elements.pager.prev).on("click", function () {
       self.pager_clicked.notify({ direction: 'prev' });
     });
   }
@@ -277,7 +294,7 @@ PTView.prototype = {
 
   show_pages: function(range) {
     var i;
-    for (i = range[0]; i < range[1]; i++) {
+    for (i = range.start; i < range.end; i++) {
       this.show_page(i);
     }
   },
@@ -296,8 +313,31 @@ PTView.prototype = {
     }
   },
 
-  draw_page_number: function(page_num) {
+  update_pages: function(pages) {
+    var i, l;
+    for (i = 0, l = this.model.page_total(); i < l; i++) {
+      if (i < pages.start || i > pages.end - 1) {
+        this.hide_page(i);
+      } else {
+        this.show_page(i);
+      }
+    }
+    this.update_page_numbers(pages);
+  },
 
+  update_page_numbers: function(pages) {
+    var text = 'Page';
+    var range = pages.end - pages.start > 1;
+    if (range) {
+      text += 's'
+    }
+    text += ' ';
+    text += pages.start + 1;  // humans count from 1
+    if (range) {
+      text += '–' + pages.end;
+    }
+    text += ' of ' + this.model.page_total();
+    d3.select('#' + this.elements.pages.id).text(text);
   },
 
   extent_to_page: function(extent) {
@@ -327,11 +367,11 @@ PTView.prototype = {
       .call(this.brush.extent(extent));
   },
 
-  update_brush: function() {
+  update_brush: function(pages) {
     // Model changed, update the brush
     this.animate_brush([
-      this.page_to_extent(this.model.page.start),
-      this.page_to_extent(this.model.page.end)
+      this.page_to_extent(pages.start),
+      this.page_to_extent(pages.end)
     ]);
   },
 
@@ -392,23 +432,26 @@ PTController.prototype = {
   },
 
   change_page: function(args) {
-    this.view.hide_pages(this.model.page_range());
+    // this.view.hide_pages(this.model.page_range());
     if (args.direction == 'prev') {
       this.model.prev_page();
     }
     if (args.direction == 'next') {
       this.model.next_page();
     }
-    this.view.show_pages(this.model.page_range());
-    this.view.update_brush();
+    // this.view.show_pages(this.model.page_range());
   },
 
   brush_moved: function(extent) {
     var i;
+    // TODO: Refactor to use notifications instead of direct calls
+    // for consistency, y'know
     this.model.page.start = this.view.extent_to_page(extent[0]);
     this.model.page.end = this.view.extent_to_page(extent[1]);
     this.view.hide_all_pages();
-    this.view.show_pages(this.model.page_range());
+    var pages = this.model.page_range()
+    this.view.show_pages(pages);
+    this.view.update_page_numbers(pages);
   },
 }; // END: PTController
 
@@ -420,8 +463,12 @@ PTController.prototype = {
       var model = new PTModel(content, settings),
         view = new PTView(model, {
           'content': 'article',
+          'pages': {
+            'loc': 'navigation',
+            'id': 'page-turner-pages'
+          },
           'navbar': 'page-turner-nav',
-          'page': {
+          'pager': {
             'next': 'page-turner-next',
             'prev': 'page-turner-prev',
           },
@@ -440,7 +487,8 @@ PTController.prototype = {
         }
       }
       var range = model.page_range();
-      view.draw_brush(cur_page, range[1] - range[0]);
+      view.draw_brush(cur_page, range.end - range.start);
+      view.update_page_numbers(range);
     } // END: attach
   }; // END: Drupal.behaviors.page_turner
 })();
