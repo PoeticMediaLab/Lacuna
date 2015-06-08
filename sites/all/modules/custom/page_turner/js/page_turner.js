@@ -119,7 +119,7 @@ PTModel.prototype = {
       if (p < 0) {
         p = 0;
       }
-      var diff = this.page.start - p;
+      var diff = p - this.page.start;
       this.page.start = p;
       this.page.end += diff;
     }
@@ -183,9 +183,12 @@ function PTView(model, elements) {
   // so we can use them as ids w/o problems
   self.elements = elements;
   self.navbar = {};
-  self.page = {};
+  self.brush = {};
+
   draw_navbar();
-  create_events();
+  draw_navbar_ticks();
+
+  create_events(); // Must come *after* navbar created
 
   function draw_navbar(elements) {
     // Add our pager elements to DOM
@@ -195,7 +198,7 @@ function PTView(model, elements) {
     navbar.append('<div id="' + self.elements.page.prev + '" class="page-turner-bar fa fa-3x fa-arrow-left"></div>');
 
     self.svg = d3.select('#' + self.elements.navbar).append("svg");
-    self.navbar = self.svg
+    self.navbar_svg = self.svg
         .attr("width", "90%") // Note: affects width calculations
         .attr("height", "100%")
       .append("g")
@@ -203,6 +206,38 @@ function PTView(model, elements) {
         .attr("id", self.elements.navbar);
 
     navbar.append('<div id="' + self.elements.page.next + '" class="page-turner-bar fa fa-3x fa-arrow-right"></div>');
+
+    // Set our sizing variables
+    self.navbar.width = parseInt(d3.select('#' + self.elements.navbar).style('width'), 10) * .9; // svg width = 90%
+    self.navbar.height = parseInt(d3.select('#' + self.elements.navbar).style('height'), 10);
+    self.navbar.x = d3.scale.linear().range([0, self.navbar.width]);
+    self.navbar.ratio = self.model.page_total();
+  }
+
+  function draw_navbar_ticks() {
+    // Draw tick marks in navbar
+    // Draw markers for page breaks
+    var tickValues = Array();
+    var i, l;
+    for (i = 0, l = self.model.page_total(); i < l; i++ ) {
+      tickValues.push((1 / self.navbar.ratio) * i);
+    }
+
+    // Draw ticks now that we have our ratios
+    self.svg.append("g")
+      .attr("class", "page-turner-ticks")
+      .attr("transform", "translate(0," + self.navbar.height + ")")
+      .call(d3.svg.axis()
+        .scale(self.navbar.x)
+        .orient("bottom")
+        .tickValues(tickValues)
+        .tickFormat("")
+        .tickSize(-self.navbar.height))
+      .selectAll(".tick")
+        .classed("page-turner-break", function (d) {
+          return self.model.is_break(self.navbar.ratio * d);
+        }.bind(self))
+    ;
   }
 
   function create_events() {
@@ -255,18 +290,14 @@ PTView.prototype = {
 
   },
 
-  draw_navbar_markers: function(pages) {
-    // Draw markers in navbar for given pages
-  },
-
   extent_to_page: function(extent) {
     // Convert an extent value to page number
-    return Math.round(this.ratio * extent);
+    return Math.round(this.navbar.ratio * extent);
   },
 
   page_to_extent: function(page_num) {
     // convert a page number to an extent value
-    return page_num / this.ratio;
+    return page_num / this.navbar.ratio;
   },
 
   snap_extent_to_page_edges: function(extent) {
@@ -283,7 +314,7 @@ PTView.prototype = {
   },
 
   update_brush: function() {
-    // Model must have changed, update the brush
+    // Model changed, update the brush
     this.animate_brush([
       this.page_to_extent(this.model.page.start),
       this.page_to_extent(this.model.page.end)
@@ -297,49 +328,20 @@ PTView.prototype = {
     this.brush_moved.notify(extent);  // notify listeners
   },
 
-  draw_brush: function(page_num) {
-    // divide navbar into even sections, one per page
-    // put brush over page_num
-    this.navbar.width = parseInt(d3.select('#' + this.elements.navbar).style('width'), 10) * .9; // svg width = 90%
-    this.page.width = this.navbar.width / this.model.page_total();
-    this.ratio = this.navbar.width / this.page.width;
-
-    var height = parseInt(d3.select('#' + this.elements.navbar).style('height'), 10);
-    var x = d3.scale.linear().range([0, this.navbar.width]);
-
-    var tickValues = Array();
-    var i, l;
-    for (i = 0, l = this.model.page_total(); i < l; i++ ) {
-      tickValues.push((1 / this.ratio) * i);
-    }
-
-    // Draw ticks now that we have our ratios
-    this.svg.append("g")
-      .attr("class", "page-turner-ticks")
-      .attr("transform", "translate(0," + height + ")")
-      .call(d3.svg.axis()
-        .scale(x)
-        .orient("bottom")
-        .tickValues(tickValues)
-        .tickFormat("")
-        .tickSize(-height))
-      .selectAll(".tick")
-        .classed("page-turner-break", function (d) {
-          return this.model.is_break(this.ratio * d);
-        }.bind(this))
-    ;
-
+  draw_brush: function(page_num, total_pages) {
+    // Draw the brush to given page and range
     this.brush = d3.svg.brush()
-      .x(x)
-      .extent([0, 1 / this.ratio])
+      .x(this.navbar.x)
+      .extent([this.page_to_extent(page_num),
+        (1 / this.navbar.ratio) * total_pages])
       .on("brushend", this.move_brush.bind(this))
     ;
 
-    this.brush_g = this.svg.append("g")
+    this.svg.append("g")
         .attr("id", this.elements.brush)
         .call(this.brush)
       .selectAll("rect")
-        .attr("height", height)
+        .attr("height", this.navbar.height)
     ;
   },
 }; // END: PTView
@@ -417,13 +419,14 @@ PTController.prototype = {
       // Initial page hiding
       var cur_page = controller.get_current_page();
       model.current_page(cur_page);
-      var i;
-      for (i = 0; i < model.page_total(); i++) {
+      var i, l;
+      for (i = 0, l = model.page_total(); i < l; i++) {
         if (i != cur_page) {
           view.hide_page(i);
         }
       }
-      view.draw_brush(cur_page);
+      var range = model.page_range();
+      view.draw_brush(cur_page, range[1] - range[0]);
     } // END: attach
   }; // END: Drupal.behaviors.page_turner
 })(jQuery);
