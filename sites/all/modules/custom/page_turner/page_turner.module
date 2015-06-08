@@ -134,7 +134,7 @@ function page_turner_node_view($node, $view_mode, $langcode) {
       'page_length' => variable_get('page_turner_page_length'),
       'breaks' => variable_get('page_turner_breaks')
       )), 'setting');
-    drupal_add_js(libraries_get_path('d3') . '/d3.js');
+    drupal_add_js(libraries_get_path('d3') . '/d3.min.js');
     drupal_add_js(drupal_get_path('module', 'page_turner') . '/js/page_turner.js');
   }
 }

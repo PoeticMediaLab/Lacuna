@@ -192,10 +192,16 @@ function PTView(model, elements) {
 
   function draw_navbar(elements) {
     // Add our pager elements to DOM
-    // Must be done first to bind click events
-    $(self.elements.article).before('<div id="' + self.elements.navbar + '"></div>');
-    var navbar = $('#' + self.elements.navbar);
-    navbar.append('<div id="' + self.elements.page.prev + '" class="page-turner-bar fa fa-3x fa-arrow-left"></div>');
+    // Must be done first so we can bind click events
+    var navbar = d3.select(document.getElementsByTagName(self.elements.content)[0].parentElement)
+      .insert('div', self.elements.content)
+      .attr('id', self.elements.navbar);
+
+    navbar.append('div').attr('id', self.elements.page.prev)
+      .classed({'page-turner-bar': true,
+                'fa': true,
+                'fa-3x': true,
+                'fa-arrow-left': true});
 
     self.svg = d3.select('#' + self.elements.navbar).append("svg");
     self.navbar_svg = self.svg
@@ -205,7 +211,11 @@ function PTView(model, elements) {
       .append("rect")
         .attr("id", self.elements.navbar);
 
-    navbar.append('<div id="' + self.elements.page.next + '" class="page-turner-bar fa fa-3x fa-arrow-right"></div>');
+    navbar.append('div').attr('id', self.elements.page.next)
+      .classed({'page-turner-bar': true,
+                'fa': true,
+                'fa-3x': true,
+                'fa-arrow-right': true});
 
     // Set our sizing variables
     self.navbar.width = parseInt(d3.select('#' + self.elements.navbar).style('width'), 10) * .9; // svg width = 90%
@@ -245,11 +255,11 @@ function PTView(model, elements) {
     self.brush_moved = new Event(self);   // brush has moved
 
     // Set up HTML listeners for page prev/next
-    $('#' + self.elements.page.next).click(function () {
+    d3.select('#' + self.elements.page.next).on("click", function () {
       self.pager_clicked.notify({ direction: 'next' });
     });
 
-    $('#' + self.elements.page.prev).click(function () {
+    d3.select('#' + self.elements.page.prev).on("click", function () {
       self.pager_clicked.notify({ direction: 'prev' });
     });
   }
@@ -258,11 +268,11 @@ function PTView(model, elements) {
 PTView.prototype = {
   hide_page: function(page_num) {
     // page-turner-hidden class is set in page_turner.css
-    $(this.model.get_page(page_num)).addClass(this.elements.hidden);
+    d3.selectAll(this.model.get_page(page_num)).classed(this.elements.hidden, true);
   },
 
   show_page: function(page_num) {
-    $(this.model.get_page(page_num)).removeClass(this.elements.hidden);
+    d3.selectAll(this.model.get_page(page_num)).classed(this.elements.hidden, false);
   },
 
   show_pages: function(range) {
@@ -302,6 +312,10 @@ PTView.prototype = {
 
   snap_extent_to_page_edges: function(extent) {
     // Adjust a given extent to snap to page boundaries
+    if (extent[0] == extent[1]) {
+      // we want to select at least one page
+      extent[1] += this.navbar.ratio;
+    }
     return [
       this.page_to_extent(this.extent_to_page(extent[0])),
       this.page_to_extent(this.extent_to_page(extent[1]))
@@ -398,14 +412,14 @@ PTController.prototype = {
   },
 }; // END: PTController
 
-(function($) {
+(function() {
   Drupal.behaviors.page_turner = {
     attach: function (context, settings) {
       // We assume here the body text is always the first field
       var content = context.getElementsByTagName('article')[0].getElementsByClassName('field')[0];
       var model = new PTModel(content, settings),
         view = new PTView(model, {
-          'article': 'article.node',
+          'content': 'article',
           'navbar': 'page-turner-nav',
           'page': {
             'next': 'page-turner-next',
@@ -429,4 +443,4 @@ PTController.prototype = {
       view.draw_brush(cur_page, range[1] - range[0]);
     } // END: attach
   }; // END: Drupal.behaviors.page_turner
-})(jQuery);
+})();
