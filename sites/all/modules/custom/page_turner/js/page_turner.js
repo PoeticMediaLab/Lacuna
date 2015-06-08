@@ -47,7 +47,7 @@ function PTModel(content, settings) {
   var chunks = chunk_pages(content, this.settings);
   this.page = {start: 0, end: 1};   // current page range
   this.pages = chunks.pages;        // content of all pages
-  this.breaks = chunks.break_pages; // content of break pages
+  this.breaks = chunks.break_pages; // indices of all break pages
 
   function chunk_pages(content, settings) {
     // Divide total content length by page length
@@ -84,7 +84,7 @@ function PTModel(content, settings) {
           t_len = 0;
           page = Array(content[i]); // Include in the new page
         }
-        break_pages.push({page: pages.length + 1, content: content[i]});
+        break_pages.push(pages.length);
       } else if (new_len <= settings.page_length) {
         t_len = new_len;
         page.push(content[i]);
@@ -159,8 +159,11 @@ PTModel.prototype = {
 
   all_breaks: function() {
     // Returns a list of page numbers that are break points
-    // with their content (for hover tip display)
-    return this.break_pages;
+    return this.breaks;
+  },
+
+  is_break: function(page_num) {
+    return this.breaks.indexOf(page_num) != -1;
   },
 
   page_total: function() {
@@ -319,8 +322,12 @@ PTView.prototype = {
         .orient("bottom")
         .tickValues(tickValues)
         .tickFormat("")
-        .tickSize(-height)
-      );
+        .tickSize(-height))
+      .selectAll(".tick")
+        .classed("page-turner-break", function (d) {
+          return this.model.is_break(this.ratio * d);
+        }.bind(this))
+    ;
 
     this.brush = d3.svg.brush()
       .x(x)

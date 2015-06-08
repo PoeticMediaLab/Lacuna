@@ -29,6 +29,12 @@ rect#page-turner-nav {
   shape-rendering: crispEdges;
 }
 
+.page-turner-break line,
+.page-turner-break path {
+  fill: none;
+  stroke: blue;
+}
+
 .page-turner-bar {
   cursor: pointer;
 }
