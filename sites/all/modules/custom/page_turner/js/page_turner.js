@@ -353,8 +353,11 @@ PTView.prototype = {
   snap_extent_to_page_edges: function(extent) {
     // Adjust a given extent to snap to page boundaries
     if (extent[0] == extent[1]) {
-    //   // we want to select at least one page
-      extent[0] += 1 / this.navbar.ratio;
+      // we want to select at least one page
+      return [
+        this.page_to_extent(Math.floor(this.navbar.ratio * extent[0])),
+        this.page_to_extent(Math.ceil(this.navbar.ratio * extent[1]))
+      ]
     }
     return [
       this.page_to_extent(this.extent_to_page(extent[0])),
@@ -443,14 +446,12 @@ PTController.prototype = {
   },
 
   brush_moved: function(extent) {
-    var i;
     // TODO: Refactor to use notifications instead of direct calls
     // for consistency, y'know
     this.model.page.start = this.view.extent_to_page(extent[0]);
     this.model.page.end = this.view.extent_to_page(extent[1]);
-    this.view.hide_all_pages();
     var pages = this.model.page_range()
-    this.view.show_pages(pages);
+    this.view.update_pages(pages);
     this.view.update_page_numbers(pages);
   },
 }; // END: PTController
