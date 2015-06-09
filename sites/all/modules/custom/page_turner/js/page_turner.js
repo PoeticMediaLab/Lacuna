@@ -3,6 +3,7 @@
  * based on settings about character length
  *
  * Mike Widner <mikewidner@stanford.edu>
+ *
  **/
 
  "use strict";
@@ -12,6 +13,17 @@
  * Some light weight MVC to avoid problems as complexity grows
  * @see
  * https://alexatnet.com/articles/model-view-controller-mvc-javascript
+ *
+ * Using jQuery events for observer
+ * Events:
+ *  page-turner-pager-clicked
+ *    Returns {start: NUM, end: NUM}
+ *
+ *  page-turner-brush-moved
+ *    Returns d3.brush.extent()
+ *
+ *  page-turner-navbar-created
+ *    Returns navbar selection
  *
  ******/
 
@@ -189,6 +201,8 @@ function PTView(model, elements) {
     var navbar = d3.select(document.getElementsByTagName(self.elements.content)[0].parentElement)
       .insert('div', self.elements.content)
       .attr('id', self.elements.navbar);
+
+    $(document).trigger('page-turner-navbar-created', navbar);
 
     navbar.append('div').attr('id', self.elements.pager.prev.id)
       .classed(self.elements.pager.prev.classes.join(' '), true);
