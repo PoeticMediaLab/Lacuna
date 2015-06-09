@@ -16,27 +16,6 @@
  ******/
 
 /**
- * Observer object for event notification
- */
-function Event(sender) {
-  this.sender = sender;
-  this.listeners = [];
-}
-
-Event.prototype = {
-  attach: function(listener) {
-    this.listeners.push(listener);
-  },
-  notify: function(args) {
-    var i, l;
-
-    for (i = 0, l = this.listeners.length; i < l; i++) {
-      this.listeners[i](this.sender, args);
-    }
-  },
-}; // END: Event
-
-/**
  * Page Turner Model
  * Handles turning HTML into pages
  * accessing pages by number, etc.
@@ -50,7 +29,7 @@ function PTModel(content, settings) {
   self.pages = chunks.pages;        // content of all pages
   self.breaks = chunks.break_pages; // indices of all break pages
 
-  self.page_changed = new Event(self);
+  // self.page_changed = new Event(self);
 
   function chunk_pages(content, settings) {
     // Divide total content length by page length
@@ -125,7 +104,7 @@ PTModel.prototype = {
       var diff = p - this.page.start;
       this.page.start = p;
       this.page.end += diff;
-      this.page_changed.notify({start: this.page.start, end: this.page.end});
+      $(document).trigger('page-turner-page-changed', {start: this.page.start, end: this.page.end});
     }
     return this.page.start;
   },
@@ -139,7 +118,7 @@ PTModel.prototype = {
       this.page.start = total - range;
       this.page.end = total;
     }
-    this.page_changed.notify({start: this.page.start, end: this.page.end});
+    $(document).trigger('page-turner-page-changed', {start: this.page.start, end: this.page.end});
   },
 
   prev_page: function() {
@@ -150,7 +129,7 @@ PTModel.prototype = {
       this.page.start = 0;
       this.page.end = range;
     }
-    this.page_changed.notify({start: this.page.start, end: this.page.end});
+    $(document).trigger('page-turner-page-changed', {start: this.page.start, end: this.page.end});
   },
 
   page_range: function() {
@@ -199,11 +178,10 @@ function PTView(model, elements) {
   create_events(); // Must come *after* navbar created for click binding
 
   // Update view when page numbers in model change
-  self.model.page_changed.attach(
-    function(sender, pages) {
-      self.update_brush(pages);
-      self.update_pages(pages);
-    });
+  $(document).bind('page-turner-page-changed', function(e, pages) {
+    self.update_brush(pages);
+    self.update_pages(pages);
+  });
 
   function draw_navbar(elements) {
     // Add our pager elements to DOM
@@ -274,16 +252,13 @@ function PTView(model, elements) {
   }
 
   function create_events() {
-    self.pager_clicked = new Event(self);
-    self.brush_moved = new Event(self);   // brush has moved
-
     // Set up HTML listeners for page prev/next
-    d3.select('#' + self.elements.pager.next.id).on("click", function () {
-      self.pager_clicked.notify({ direction: 'next' });
+    $('#' + self.elements.pager.next.id).on("click", function () {
+      $(document).trigger('page-turner-pager-clicked', { direction: 'next' });
     });
 
     d3.select('#' + self.elements.pager.prev.id).on("click", function () {
-      self.pager_clicked.notify({ direction: 'prev' });
+      $(document).trigger('page-turner-pager-clicked', { direction: 'prev' });
     });
   }
 }
@@ -387,7 +362,7 @@ PTView.prototype = {
     // Brush finished moving, snap to page boundaries, notify
     var extent = this.snap_extent_to_page_edges(this.brush.extent());
     this.animate_brush(extent);
-    this.brush_moved.notify(extent);  // notify listeners
+    $(document).trigger('page-turner-brush-moved', [extent]);
   },
 
   draw_brush: function(page_num, total_pages) {
@@ -406,6 +381,14 @@ PTView.prototype = {
         .attr("height", this.navbar.height)
     ;
   },
+
+  draw_bookmark: function(page_num, label) {
+    // Add a bookmark icon to the navbar
+  },
+
+  remove_bookmark: function(page_num, label) {
+    // Remove bookmark icon from navbar
+  },
 }; // END: PTView
 
 /**
@@ -417,12 +400,12 @@ function PTController(model, view) {
   this.view = view;
   var self = this;
 
-  this.view.pager_clicked.attach(function(sender, args) {
-    self.change_page(args);
+  $(document).bind('page-turner-pager-clicked', function(e, data) {
+    self.change_page(data);
   });
 
-  this.view.brush_moved.attach(function(sender, args) {
-    self.brush_moved(args);
+  $(document).bind('page-turner-brush-moved', function(e, data) {
+    self.brush_moved(data);
   });
 };
 
@@ -461,7 +444,7 @@ PTController.prototype = {
   },
 }; // END: PTController
 
-(function() {
+(function($) {
   Drupal.behaviors.page_turner = {
     attach: function (context, settings) {
       // We assume here the body text is always the first field
@@ -505,4 +488,4 @@ PTController.prototype = {
       view.update_page_numbers(range);
     } // END: attach
   }; // END: Drupal.behaviors.page_turner
-})();
+})(jQuery);
