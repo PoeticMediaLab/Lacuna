@@ -59,4 +59,7 @@ rect#page-turner-nav {
 
 .page-turner-number {
   text-align: center;
+  font-weight: normal;
+  padding-top: 20px;
+  padding-bottom: 5px;
 }

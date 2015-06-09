@@ -194,6 +194,7 @@ function PTView(model, elements) {
 
   draw_navbar();
   draw_navbar_ticks();
+  add_page_numbers();
 
   create_events(); // Must come *after* navbar created for click binding
 
@@ -263,10 +264,13 @@ function PTView(model, elements) {
 
   function add_page_numbers() {
     // Add page numbers at the bottom of every page
-    var selection = d3.selectAll(this.model.get_page(page_num));
-    // because selection is an array of arrays
-    // but we'll only get one result for each page, cuz they're unique
-    d3.select(selection[0][selection[0].length - 1]).append('div').text(page_num + 1).attr(this.elements.page_num);
+    var i, l;
+    for (i = 0, l = self.model.page_total(); i < l; i++) {
+      var selection = d3.selectAll(self.model.get_page(i));
+      // selectAll returns an array of arrays
+      // but we'll only get one result for each page, cuz they're unique
+      d3.select(selection[0][selection[0].length - 1]).append('div').classed(self.elements.page_num, true).text(i + 1);
+    }
   }
 
   function create_events() {
@@ -463,6 +467,7 @@ PTController.prototype = {
       // We assume here the body text is always the first field
       var content = context.getElementsByTagName('article')[0].getElementsByClassName('field')[0];
       var model = new PTModel(content, settings),
+      // Our selectors and ids; should probably make more consistent
         view = new PTView(model, {
           'content': 'article',
           'pages': {
