@@ -211,11 +211,8 @@ function PTView(model, elements) {
       .insert('div', self.elements.content)
       .attr('id', self.elements.navbar);
 
-    navbar.append('div').attr('id', self.elements.pager.prev)
-      .classed({'page-turner-bar': true,
-                'fa': true,
-                'fa-3x': true,
-                'fa-arrow-left': true});
+    navbar.append('div').attr('id', self.elements.pager.prev.id)
+      .classed(self.elements.pager.prev.classes.join(' '), true);
 
     self.svg = d3.select('#' + self.elements.navbar).append("svg");
     self.navbar_svg = self.svg
@@ -225,11 +222,8 @@ function PTView(model, elements) {
       .append("rect")
         .attr("id", self.elements.navbar);
 
-    navbar.append('div').attr('id', self.elements.pager.next)
-      .classed({'page-turner-bar': true,
-                'fa': true,
-                'fa-3x': true,
-                'fa-arrow-right': true});
+    navbar.append('div').attr('id', self.elements.pager.next.id)
+      .classed(self.elements.pager.next.classes.join(' '), true);
 
     // Add the "Page X of Y" div
     d3.select('#' + self.elements.pages.loc).append('div').attr('id', self.elements.pages.id);
@@ -267,16 +261,24 @@ function PTView(model, elements) {
     ;
   }
 
+  function add_page_numbers() {
+    // Add page numbers at the bottom of every page
+    var selection = d3.selectAll(this.model.get_page(page_num));
+    // because selection is an array of arrays
+    // but we'll only get one result for each page, cuz they're unique
+    d3.select(selection[0][selection[0].length - 1]).append('div').text(page_num + 1).attr(this.elements.page_num);
+  }
+
   function create_events() {
     self.pager_clicked = new Event(self);
     self.brush_moved = new Event(self);   // brush has moved
 
     // Set up HTML listeners for page prev/next
-    d3.select('#' + self.elements.pager.next).on("click", function () {
+    d3.select('#' + self.elements.pager.next.id).on("click", function () {
       self.pager_clicked.notify({ direction: 'next' });
     });
 
-    d3.select('#' + self.elements.pager.prev).on("click", function () {
+    d3.select('#' + self.elements.pager.prev.id).on("click", function () {
       self.pager_clicked.notify({ direction: 'prev' });
     });
   }
@@ -284,12 +286,11 @@ function PTView(model, elements) {
 
 PTView.prototype = {
   hide_page: function(page_num) {
-    // page-turner-hidden class is set in page_turner.css
-    d3.selectAll(this.model.get_page(page_num)).classed(this.elements.hidden, true);
+    d3.selectAll(this.model.get_page(page_num)).classed(this.elements.hidden, true); //.transition().style('opacity', 0);
   },
 
   show_page: function(page_num) {
-    d3.selectAll(this.model.get_page(page_num)).classed(this.elements.hidden, false);
+    d3.selectAll(this.model.get_page(page_num)).classed(this.elements.hidden, false); //.transition().style('opacity', 1);
   },
 
   show_pages: function(range) {
@@ -468,10 +469,17 @@ PTController.prototype = {
             'loc': 'navigation',
             'id': 'page-turner-pages'
           },
+          'page_num': 'page-turner-number',
           'navbar': 'page-turner-nav',
           'pager': {
-            'next': 'page-turner-next',
-            'prev': 'page-turner-prev',
+            'next': {
+              'id': 'page-turner-next',
+              'classes': ['page-turner-pager', 'fa', 'fa-arrow-right']
+            },
+            'prev': {
+              'id': 'page-turner-prev',
+              'classes': ['page-turner-pager', 'fa', 'fa-arrow-left']
+            },
           },
           'brush': 'page-turner-brush',
           'hidden': 'page-turner-hidden'

@@ -36,11 +36,16 @@ rect#page-turner-nav {
 .page-turner-break line,
 .page-turner-break path {
   fill: none;
-  stroke: blue;
+  stroke: black;
+  stroke-opacity: .5;
+  stroke-width: 3px;
 }
 
-.page-turner-bar {
+.page-turner-pager {
   cursor: pointer;
+  font-size: 3em !important;
+  vertical-align: middle;
+  display: inline-block;
 }
 
 #page-turner-prev {
@@ -50,4 +55,8 @@ rect#page-turner-nav {
 
 #page-turner-next {
   float: right;
+}
+
+.page-turner-number {
+  text-align: center;
 }
