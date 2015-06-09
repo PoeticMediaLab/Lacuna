@@ -14,7 +14,7 @@
  * @see
  * https://alexatnet.com/articles/model-view-controller-mvc-javascript
  *
- * Using jQuery events for observer
+ * Using jQuery events for Observer
  * Events:
  *  page-turner-pager-clicked
  *    Returns {start: NUM, end: NUM}
@@ -40,8 +40,6 @@ function PTModel(content, settings) {
   self.page = {start: 0, end: 1};   // current page range
   self.pages = chunks.pages;        // content of all pages
   self.breaks = chunks.break_pages; // indices of all break pages
-
-  // self.page_changed = new Event(self);
 
   function chunk_pages(content, settings) {
     // Divide total content length by page length
