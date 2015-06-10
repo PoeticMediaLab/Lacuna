@@ -33,11 +33,6 @@ function PTBModel() {
 
   load_bookmarks();
 
-  // When Page Turner creates navbar, save the selector for our use
-  $(document).bind('page-turner-navbar-created', function(e, data) {
-    self.navbar = data;
-  }.bind(self));
-
   function load_bookmarks() {
     // Load all our bookmark data
     $(document).trigger('page-turner-bookmark-loaded', self.bookmarks);
@@ -68,6 +63,10 @@ function PTBView(model, elements) {
 
   draw_elements(elements);
 
+  self.navbar = $('#' + self.elements.navbar.id);
+
+  // When bookmarks loaded, draw them; requires navbar to be created first
+  // Need to fire in order somehow
   $(document).bind('page-turner-bookmark-loaded', function(e, bookmarks) {
     self.draw_bookmarks(bookmarks);
   });
@@ -118,6 +117,9 @@ function PTBController(model, view) {
   var self = this;
   self.model = model;
   self.view = view;
+
+  $(document).bind('page-turner-bookmark-added');
+  $(document).bind('page-turner-bookmark-removed');
 }
 
 (function($) {
@@ -126,15 +128,25 @@ function PTBController(model, view) {
       var elements = {
         'bookmark' :
         {
+          'id': 'page-turner-bookmark',
           'classes' :
           [ 'page-turner-bookmark',
             'fa',
             'fa-bookmark-o'
           ]
         },
+        'bookmark_add' : {
+          'id' : '',
+        },
+        'bookmark_remove' : {
+          'id' : '',
+        },
         'bookmark-toggle' :
         {
           'id' : 'page-turner-bookmark-toggle',
+        },
+        'navbar' : {
+          'id' : 'page-turner-nav',
         },
       };
       var model = new PTBModel(),

@@ -84,3 +84,12 @@ function page_turner_bookmark_add() {
 function page_turner_bookmark_remove() {
 
 }
+
+/**
+ * Implements hook_node_view()
+ */
+function page_turner_bookmarks_node_view($node, $view_mode, $langcode) {
+  // Load the JS, but in the same group as our parent module and
+  // AFTER it's done loading (for events)
+  drupal_add_js(drupal_get_path('module', 'page_turner_bookmarks') . '/js/page_turner_bookmarks.js', array('group' => 'page_turner', 'weight' => 10));
+}
