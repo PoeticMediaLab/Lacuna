@@ -268,6 +268,23 @@ function PTView(model, elements) {
     d3.select('#' + self.elements.pager.prev.id).on("click", function () {
       $(document).trigger('page-turner-pager-clicked', { direction: 'prev' });
     });
+
+    // Turn pages on arrow key presses
+    document.addEventListener("keydown", function (event) {
+      if (event.defaultPrevented) {
+        return; // Should do nothing if the key event was already consumed.
+      }
+      switch (event.keyIdentifier) {
+        case "Left":
+          $(document).trigger('page-turner-pager-clicked', { direction: 'prev' });
+          break;
+        case "Right":
+          $(document).trigger('page-turner-pager-clicked', { direction: 'next' });
+        default:
+          return; // Quit when this doesn't handle the key event.
+      }
+      event.preventDefault();
+    }, true);
   }
 }
 
