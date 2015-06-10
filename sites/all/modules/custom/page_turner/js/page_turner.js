@@ -6,8 +6,6 @@
  *
  **/
 
- "use strict";
-
 /******
  *
  * Some light weight MVC to avoid problems as complexity grows
@@ -66,7 +64,7 @@ function PTModel(content, settings) {
       var new_len = t_len + content[i].textContent.length;
 
       if (is_break) {
-        if (t_len == 0) {
+        if (t_len === 0) {
           // Start of new page
           page.push(content[i]);
           t_len = new_len;
@@ -95,7 +93,7 @@ function PTModel(content, settings) {
 PTModel.prototype = {
   get_page: function(page_num) {
     if (page_num > this.page_total()) {
-      return this.pages[page_total() - 1];
+      return this.pages[this.page_total() - 1];
     }
     if (page_num < 0) {
       return this.pages[0];
@@ -193,14 +191,12 @@ function PTView(model, elements) {
     self.update_pages(pages);
   });
 
-  function draw_navbar(elements) {
+  function draw_navbar() {
     // Add our pager elements to DOM
     // Must be done first so we can bind click events
     var navbar = d3.select(document.getElementsByTagName(self.elements.content)[0].parentElement)
       .insert('div', self.elements.content)
       .attr('id', self.elements.navbar);
-
-    $(document).trigger('page-turner-navbar-created', navbar);
 
     navbar.append('div').attr('id', self.elements.pager.prev.id)
       .classed(self.elements.pager.prev.classes.join(' '), true);
@@ -321,7 +317,7 @@ PTView.prototype = {
     var text = 'Page';
     var range = pages.end - pages.start > 1;
     if (range) {
-      text += 's'
+      text += 's';
     }
     text += ' ';
     text += pages.start + 1;  // humans count from 1
@@ -349,12 +345,12 @@ PTView.prototype = {
       return [
         this.page_to_extent(Math.floor(this.navbar.ratio * extent[0])),
         this.page_to_extent(Math.ceil(this.navbar.ratio * extent[1]))
-      ]
+      ];
     }
     return [
       this.page_to_extent(this.extent_to_page(extent[0])),
       this.page_to_extent(this.extent_to_page(extent[1]))
-    ]
+    ];
   },
 
   animate_brush: function(extent) {
@@ -419,7 +415,7 @@ function PTController(model, view) {
   $(document).bind('page-turner-brush-moved', function(e, data) {
     self.brush_moved(data);
   });
-};
+}
 
 PTController.prototype = {
   get_current_page: function() {
@@ -450,13 +446,14 @@ PTController.prototype = {
     // for consistency, y'know
     this.model.page.start = this.view.extent_to_page(extent[0]);
     this.model.page.end = this.view.extent_to_page(extent[1]);
-    var pages = this.model.page_range()
+    var pages = this.model.page_range();
     this.view.update_pages(pages);
     this.view.update_page_numbers(pages);
   },
 }; // END: PTController
 
 (function($) {
+ "use strict";
   Drupal.behaviors.page_turner = {
     attach: function (context, settings) {
       // We assume here the body text is always the first field
