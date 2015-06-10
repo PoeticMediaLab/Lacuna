@@ -1,0 +1,35 @@
+<?php
+/**
+ * @file
+ *
+ * Installs Page Turner Bookmarks module
+ *
+ */
+
+
+/**
+ * Implements hook_install().
+ **/
+function page_turner_bookmarks_install() {
+  $bookmark_flag = flag_flag::factory_by_entity_type('node');
+  $bookmark_flag->name = 'page_turner_bookmark';
+  $bookmark_flag->title = 'Page Turner Bookmark';
+  $bookmark_flag->types = variable_get('page_turner_node_types');
+  $bookmark_flag->flag_short = 'Bookmark';
+  $bookmark_flag->unflag_short = 'Unbookmark';
+
+  $bookmark_flag->global = FALSE;
+  $bookmark_flag->show_on_form = FALSE;
+  $bookmark_flag->show_on_node = TRUE;
+  $bookmark_flag->show_on_teaser = FALSE;
+  $bookmark_flag->link_type = 'toggle';
+
+  $bookmark_flag->save();
+}
+
+/**
+ * Implements hook_uninstall()
+ **/
+function page_turner_bookmarks_uninstall() {
+
+}
