@@ -5,7 +5,7 @@
  *
  */
 
-define('ANNOTATION_TAXONOMY_NAME', 'tags'); // needs to match name in annotation.store.inc
+define('ANNOTATION_TAXONOMY_NAME', 'annotation_tags'); // needs to match name in annotation.store.inc
 define('ANNOTATION_CATEGORY_TAXONOMY', 'annotation_categories');  // for our Categories plugin
 
 // implements hook_node_info
@@ -111,22 +111,22 @@ function _annotation_create_taxonomy() {
 function _annotation_install_fields() {
   return array(
     'text' => array(
-      'field_name' => 'text',
+      'field_name' => 'field_annotation_text',
       'type' => 'text_long'
     ),
     'quote' => array(
-      'field_name' => 'quote',
+      'field_name' => 'field_annotation_quote',
       'type' => 'text_long',
       'settings' => array(
         'max_length' => ''
       ),
     ),
     'uri' => array(
-      'field_name' => 'uri',
+      'field_name' => 'field_annotation_uri',
       'type' => 'link_field',
     ),
     'tags' => array(
-      'field_name' => 'annotation_tags',
+      'field_name' => 'field_annotation_tags',
       'type' => 'taxonomy_term_reference',
       'cardinality' => FIELD_CARDINALITY_UNLIMITED,
       'settings' => array(
@@ -139,7 +139,7 @@ function _annotation_install_fields() {
       )
     ),
     'category' => array(
-      'field_name' => 'category',
+      'field_name' => 'field_annotation_category',
       'type' => 'taxonomy_term_reference',
       'cardinality' => 1,
       'settings' => array(
@@ -152,11 +152,11 @@ function _annotation_install_fields() {
       )
     ),
     'ranges' => array(
-      'field_name' => 'ranges',
+      'field_name' => 'field_annotation_ranges',
       'type' => 'text_long',
     ),
     'annotation_reference' => array(
-      'field_name' => 'annotation_reference',
+      'field_name' => 'field_annotation_reference',
       'cardinality' => 1,
       'type' => 'entityreference',
       'module' => 'entityreference',
@@ -171,7 +171,7 @@ function _annotation_install_fields() {
       )
     ),
     'private' => array(
-      'field_name' => 'private',
+      'field_name' => 'field_annotation_private',
       'type' => 'list_boolean',
       'cardinality' => 1,
       'not null' => TRUE,
@@ -190,26 +190,29 @@ function _annotation_install_fields() {
 function _annotation_install_instances() {
   return array(
     'text' => array(
-      'field_name' => 'text',
+      'field_name' => 'field_annotation_text',
       'label' => t('Annotation Text'),
       'description' => t('The annotation text'),
-      'required' => FALSE
+      'required' => FALSE,
+      'widget' => array(
+        'type' => 'text_textarea'
+        ),
     ),
     'quote' => array(
-      'field_name' => 'quote',
+      'field_name' => 'field_annotation_quote',
       'label' => t('Excerpt'),
       'description' => t('The text excerpt that was annotated'),
       'required' => TRUE
     ),
     'private' => array(
-      'field_name' => 'private',
+      'field_name' => 'field_annotation_private',
       'label' => t('Private'),
       'description' => t('Decide if this annotation is private or not'),
       'default_value' => array(0 => array('value' => 1)),
       'required' => TRUE,
     ),
     'uri' => array(
-      'field_name' => 'uri',
+      'field_name' => 'field_annotation_uri',
       'label' => t('URI'),
       'description' => t('The URI of the annotated work'),
       'required' => TRUE,
@@ -220,7 +223,7 @@ function _annotation_install_instances() {
         )
     ),
     'tags' => array(
-      'field_name' => 'annotation_tags',
+      'field_name' => 'field_annotation_tags',
       'label' => t('Tags'),
       'description' => t('Tags for an annotation'),
       'required' => FALSE,
@@ -229,7 +232,7 @@ function _annotation_install_instances() {
       ),
     ),
     'category' => array(
-      'field_name' => 'category',
+      'field_name' => 'field_annotation_category',
       'label' => t('Category'),
       'description' => t('What category of annotation this is'),
       'required' => FALSE,
@@ -238,7 +241,7 @@ function _annotation_install_instances() {
       )
     ),
     'ranges' => array(
-      'field_name' => 'ranges',
+      'field_name' => 'field_annotation_ranges',
       'label' => t('Ranges'),
       'description' => t('The ranges for the start and stop of a quote'),
       'required' => TRUE,
@@ -249,7 +252,7 @@ function _annotation_install_instances() {
         )
     ),
     'annotation_reference' => array(
-      'field_name'  => 'annotation_reference',
+      'field_name'  => 'field_annotation_reference',
       'label' => t('Annotated Content'),
       'description' => t('A reference to the annotated content'),
       'required' => TRUE,
@@ -269,4 +272,13 @@ function annotation_uninstall() {
     // drush_print('Deleting ' . $field['field_name']);
     field_delete_field($field['field_name']);
   }
+}
+/**
+ * Update 7100: Convert Annotation text field to Full HTML
+ */
+function annotation_update_7100() {
+  $instance_info = field_info_instance('node', 'text', 'annotation');
+  $instance_info['settings'] = array('text_processing' => 1);
+  $instance_info['format'] = 'full_html';
+  field_update_instance($instance_info);
 }
