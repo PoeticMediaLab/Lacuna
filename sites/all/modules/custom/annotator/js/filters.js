@@ -541,7 +541,7 @@
       this.i = $('#' + select.interface.wrapper);
       this.Controller = Controller;
       this.Model = Model;
-      this.i.append('<h2>Select Annotations</h2>');
+      this.i.append('<h2>Show Annotations</h2>');
       this.drawPager(this.Model.get('index'), this.Model.get('total'));
       this.i.append("<div id='" + select.button["default"] + "'></div>");
       this.drawButton(select.button["default"], 'none', 'user');
@@ -555,7 +555,7 @@
       }
       this.i.append("<div id='" + select.button.reset + "'></div>");
       this.drawButton(select.button.reset, 'reset', 'reset');
-      this.i.append("<div id='" + select.filters.active + "'>Active Selections</div>");
+      this.i.append("<div id='" + select.filters.active + "'>Showing Only</div>");
     };
 
     View.prototype.update = function() {};

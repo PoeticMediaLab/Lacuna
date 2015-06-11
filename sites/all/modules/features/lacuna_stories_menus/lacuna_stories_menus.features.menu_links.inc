@@ -168,6 +168,24 @@ function lacuna_stories_menus_menu_default_menu_links() {
     'weight' => -49,
     'customized' => 1,
   );
+  // Exported menu link: main-menu_curate-tags:curate-tags
+  $menu_links['main-menu_curate-tags:curate-tags'] = array(
+    'menu_name' => 'main-menu',
+    'link_path' => 'curate-tags',
+    'router_path' => 'curate-tags',
+    'link_title' => 'Curate Tags',
+    'options' => array(
+      'identifier' => 'main-menu_curate-tags:curate-tags',
+    ),
+    'module' => 'system',
+    'hidden' => 0,
+    'external' => 0,
+    'has_children' => 0,
+    'expanded' => 0,
+    'weight' => -48,
+    'customized' => 1,
+    'parent_identifier' => 'main-menu_manage:<nolink>',
+  );
   // Exported menu link: main-menu_explore:<nolink>
   $menu_links['main-menu_explore:<nolink>'] = array(
     'menu_name' => 'main-menu',
@@ -226,7 +244,7 @@ function lacuna_stories_menus_menu_default_menu_links() {
     'external' => 0,
     'has_children' => 1,
     'expanded' => 0,
-    'weight' => 5,
+    'weight' => -44,
     'customized' => 1,
   );
   // Exported menu link: main-menu_instructors-guide:node/29
@@ -285,9 +303,8 @@ function lacuna_stories_menus_menu_default_menu_links() {
     'external' => 0,
     'has_children' => 1,
     'expanded' => 0,
-    'weight' => -49,
+    'weight' => -45,
     'customized' => 1,
-    'parent_identifier' => 'main-menu_account:<nolink>',
   );
   // Exported menu link: main-menu_materials:materials
   $menu_links['main-menu_materials:materials'] = array(
@@ -527,6 +544,7 @@ function lacuna_stories_menus_menu_default_menu_links() {
   t('Connect');
   t('Contact');
   t('Create');
+  t('Curate Tags');
   t('Explore');
   t('FAQ');
   t('Help');
