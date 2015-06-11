@@ -21,7 +21,7 @@ function lacuna_stories_peer_groups_node_info() {
     'peer_group' => array(
       'name' => t('Peer Group'),
       'base' => 'node_content',
-      'description' => '',
+      'description' => t('Groups that students can create to share annotations with each other.'),
       'has_title' => '1',
       'title_label' => t('Title'),
       'help' => '',
