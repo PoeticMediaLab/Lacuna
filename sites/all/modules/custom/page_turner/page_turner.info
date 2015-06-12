@@ -1,0 +1,10 @@
+name = Page Turner
+description = Breaks long blocks of text into multiple pages
+package = Lacuna Stories
+core = 7.x
+configure = admin/config/user-interface/page-turner
+
+files[] = page_turner.module
+files[] = page_turner.test
+
+stylesheets[all][] = css/page_turner.css
