@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the Lacuna Stories Peer Groups feature.
+ */
+
+include_once 'lacuna_stories_peer_groups.features.inc';
