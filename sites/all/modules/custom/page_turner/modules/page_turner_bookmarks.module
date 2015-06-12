@@ -1,0 +1,17 @@
+<?php
+/**
+ * @file
+ *
+ * Allow book marking of Page Turner pages
+ *
+ **/
+
+/*
+ * Plan: because flags are per-entity, but we can save values
+ * use the values per entity, per user to store which page(s)
+ * have been bookmarked and to remove those bookmarks, when needed
+ * see: https://www.drupal.org/node/1748148#write-flagging-fields
+ * Example of multiple bookmarked pages in one node:
+ * $flagging->{'page'}['und'][0]['value'] = 1
+ * $flagging->{'page'}['und'][1]['value'] = 7
+ */

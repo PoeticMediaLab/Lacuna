@@ -1,0 +1,84 @@
+<?php
+/**
+ * @file
+ *
+ * Allow book marking of Page Turner pages
+ *
+ **/
+
+/*
+ * Plan: because flags are per-entity, but we can save values
+ * use the values per entity, per user to store which page(s)
+ * have been bookmarked and to remove those bookmarks, when needed
+ * see: https://www.drupal.org/node/1748148#write-flagging-fields
+ * Example of multiple bookmarked pages in one node:
+ * $flagging->{'page'}['und'][0]['value'] = 1
+ * $flagging->{'page'}['und'][1]['value'] = 7
+ */
+
+/**
+ * Implements hook_menu().
+ */
+function page_turner_bookmarks_menu() {
+  $items = array();
+  $content_types = variable_get('page_turner_node_types');
+  foreach ($content_types as $key => $value) {
+    // Expose button to page
+    if (!$value) {
+      $items[$key] = array(
+        'page callback' => 'page_turner_bookmark_ajax',
+        'type' => MENU_CALLBACK,
+      );
+    }
+  }
+
+  $items['admin/user-interface/page-turner/bookmark/add'] = array(
+    'page callback' => 'page_turner_bookmark_add',
+    'access arguments' => 'flag page_turner_bookmark',
+    'type' => MENU_CALLBACK,
+    );
+  $items['admin/user-interface/page-turner/bookmark/remove'] = array(
+    'page callback' => 'page_turner_bookmark_remove',
+    'access arguments' => 'unflag page_turner_bookmark',
+    'type' => MENU_CALLBACK,
+    );
+  return $items;
+}
+
+/**
+ * AJAX callback
+ * Creates commands for (un)bookmarking
+ */
+function page_turner_bookmark_ajax() {
+  $commands = array();
+
+  $selector = '#page-turner-bookmark';
+  $html = "";
+  print ajax_render($commands);
+  drupal_exit();
+}
+
+
+/**
+ * Menu callback
+ *
+ * Creates a new bookmark for the selected page(s)
+ **/
+function page_turner_bookmark_add() {
+  $wrapper = array();
+  $wrapper['#attached']['js'] = array(
+    drupal_get_path('module', 'page_turner_bookmarks')
+  );
+  $flag_name = 'page_turner_bookmark';
+  $flag_values = new stdClass();
+  $flag_values->{'pages'}[LANGUAGE_NONE][0]['value'] = '';
+}
+
+/**
+ * Menu callback
+ *
+ * Removes existing bookmark for the selected page(s)
+ **/
+function page_turner_bookmark_remove() {
+
+}
