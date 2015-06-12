@@ -29,13 +29,23 @@
  */
 function PTBModel() {
   var self = this;
-  self.bookmarks = Array();
+  self.bookmarks = [];
+  self.pages = {};  // {start: 0, end: 1}
 
   load_bookmarks();
+  bind_events();
 
   function load_bookmarks() {
     // Load all our bookmark data
-    $(document).trigger('page-turner-bookmark-loaded', self.bookmarks);
+    $(document).trigger('page-turner-bookmarks-loaded', self.bookmarks);
+  }
+
+  function bind_events() {
+    // Listen for page turn events and update our model
+    $(document).bind('page-turner-page-changed', function(e, pages) {
+      self.pages = pages;
+      console.log(self.pages);
+    });
   }
 }
 
@@ -67,7 +77,7 @@ function PTBView(model, elements) {
 
   // When bookmarks loaded, draw them; requires navbar to be created first
   // Need to fire in order somehow
-  $(document).bind('page-turner-bookmark-loaded', function(e, bookmarks) {
+  $(document).bind('page-turner-bookmarks-loaded', function(e, bookmarks) {
     self.draw_bookmarks(bookmarks);
   });
 
@@ -88,15 +98,26 @@ function PTBView(model, elements) {
 
   function draw_bookmarks(bookmarks) {
     // Draw all bookmarks
+    console.log('drawing bookmarks');
+  }
+
+  function draw_bookmark_button() {
+    $(self.elements.bookmark_button.container).append('<div id="' + self.elements.bookmark_button.id + '">Bookmark</div>');
+    $('#' + self.elements.bookmark_button.id).on('click', function (e) {
+      $(document).trigger('page-turner-bookmark-toggle', e);
+    });
   }
 
   function draw_elements() {
     // Draw all our necessary elements
     // 1. Draw toggle button
     //    a. Set click event
+    draw_bookmark_button();
+
     // 2. Draw all loaded bookmarks in navbar
     //    a. Set hover events for each bookmark
     //    b. Set click events
+    draw_bookmarks();
     // 3. Set toggle button state according to whether current page is bookmarked
     //    a. If a change, notify model
   }
@@ -120,6 +141,7 @@ function PTBController(model, view) {
 
   $(document).bind('page-turner-bookmark-added');
   $(document).bind('page-turner-bookmark-removed');
+  $(document).bind('page-turner-bookmark-toggle', function(e) {console.log('toggle', e);});
 }
 
 (function($) {
@@ -141,7 +163,11 @@ function PTBController(model, view) {
         'bookmark_remove' : {
           'id' : '',
         },
-        'bookmark-toggle' :
+        'bookmark_button' : {
+          'id' : 'page-turner-bookmark-button',
+          'container' : 'section.region-sidebar-second'
+        },
+        'bookmark_toggle' :
         {
           'id' : 'page-turner-bookmark-toggle',
         },
