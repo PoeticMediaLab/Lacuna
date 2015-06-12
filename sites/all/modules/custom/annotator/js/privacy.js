@@ -13,7 +13,7 @@
 
     function Privacy() {
       this.updateField = bind(this.updateField, this);
-      this.updateAutocompleteGroups = bind(this.updateAutocompleteGroups, this);
+      this.addPrivacy = bind(this.addPrivacy, this);
       this.setAnnotationGroups = bind(this.setAnnotationGroups, this);
       return Privacy.__super__.constructor.apply(this, arguments);
     }
@@ -25,7 +25,7 @@
     };
 
     Privacy.prototype.events = {
-      'annotationEditorShown': "updateAutocompleteGroups"
+      'annotationEditorShown': "addPrivacy"
     };
 
     Privacy.prototype.field = null;
@@ -37,8 +37,9 @@
         return;
       }
       return this.field = this.annotator.editor.addField({
-        label: Annotator._t('Privacy: what groups should see your annotations?'),
-        options: ['blue', 'pink', 'red']
+        label: Annotator._t('Privacy: what groups should see your annotations?')({
+          type: input
+        })
       });
     };
 
@@ -46,7 +47,7 @@
       return annotation.groups = this.input.val();
     };
 
-    Privacy.prototype.updateAutocompleteGroups = function(event, annotation) {
+    Privacy.prototype.addPrivacy = function(event, annotation) {
       var gid, group, groups, groups_html;
       groups_html = '';
       groups = Drupal.settings.annotator_groups;

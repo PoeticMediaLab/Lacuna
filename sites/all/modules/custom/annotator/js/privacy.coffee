@@ -10,7 +10,7 @@ class Annotator.Plugin.Privacy extends Annotator.Plugin
 	  privateClass: "annotator-privacy-private fa fa-lock"
 
 	events:
-		'annotationEditorShown'     : "updateAutocompleteGroups"
+		'annotationEditorShown'     : "addPrivacy"
 
 	field: null
 
@@ -21,8 +21,8 @@ class Annotator.Plugin.Privacy extends Annotator.Plugin
 
 		@field = @annotator.editor.addField({
 			label: Annotator._t('Privacy: what groups should see your annotations?')
+      type: checkboxes
 		#load: this.updateField
-			options: ['blue', 'pink', 'red']
 		#submit: this.setAnnotationGroups
 		})
 
@@ -33,7 +33,7 @@ class Annotator.Plugin.Privacy extends Annotator.Plugin
 	setAnnotationGroups: (field, annotation) =>
 		annotation.groups = @input.val()
 
-	updateAutocompleteGroups: (event, annotation) =>
+	addPrivacy: (event, annotation) =>
 		groups_html = ''
 		groups = Drupal.settings.annotator_groups
 		console.log groups
