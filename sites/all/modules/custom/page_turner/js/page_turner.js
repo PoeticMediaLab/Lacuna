@@ -9,19 +9,19 @@
 /******
  *
  * Some light weight MVC to avoid problems as complexity grows
- * @see
- * https://alexatnet.com/articles/model-view-controller-mvc-javascript
+ * @see https://alexatnet.com/articles/model-view-controller-mvc-javascript
  *
  * Using jQuery events for Observer
- * Events:
- *  page-turner-pager-clicked
+ * Events published:
+ *
+ *  page-turner-page-changed
  *    Returns {start: NUM, end: NUM}
+ *
+ *  page-turner-pager-clicked
+ *    Returns {direction: prev|next}
  *
  *  page-turner-brush-moved
  *    Returns d3.brush.extent()
- *
- *  page-turner-navbar-created
- *    Returns navbar selection
  *
  ******/
 
@@ -35,7 +35,7 @@ function PTModel(content, settings) {
   self.content = content;
   self.settings = settings.page_turner;
   var chunks = chunk_pages(content, self.settings);
-  self.page = {start: 0, end: 1};   // current page range
+  self._page_range = {start: 0, end: 1};   // current page range
   self.pages = chunks.pages;        // content of all pages
   self.breaks = chunks.break_pages; // indices of all break pages
 
@@ -43,7 +43,7 @@ function PTModel(content, settings) {
     // Divide total content length by page length
     // And look for page break elements
     // Return array of page chunks
-    var page = Array(); // holds all elements in a page
+    var page = []; // holds all elements in a page
     var t_len = 0;  // text length
     var breaks = settings.breaks.toLowerCase().split(',');
     var pages = Array();
@@ -109,40 +109,45 @@ PTModel.prototype = {
       if (p < 0) {
         p = 0;
       }
-      var diff = p - this.page.start;
-      this.page.start = p;
-      this.page.end += diff;
-      $(document).trigger('page-turner-page-changed', {start: this.page.start, end: this.page.end});
+      var diff = p - this._page_range.start;
+      this._page_range.start = p;
+      this._page_range.end += diff;
+      $(document).trigger('page-turner-page-changed', this._page_range);
     }
-    return this.page.start;
+    return this._page_range.start;
   },
 
   next_page: function() {
-    var range = this.page.end - this.page.start;
+    var range = this._page_range.end - this._page_range.start;
     var total = this.page_total();
-    this.page.start += range;
-    this.page.end += range;
-    if (this.page.end > total) {
-      this.page.start = total - range;
-      this.page.end = total;
+    this._page_range.start += range;
+    this._page_range.end += range;
+    if (this._page_range.end > total) {
+      this._page_range.start = total - range;
+      this._page_range.end = total;
     }
-    $(document).trigger('page-turner-page-changed', {start: this.page.start, end: this.page.end});
+    $(document).trigger('page-turner-page-changed', this._page_range);
   },
 
   prev_page: function() {
-    var range = this.page.end - this.page.start;
-    this.page.start -= range;
-    this.page.end -= range;
-    if (this.page.start < 0) {
-      this.page.start = 0;
-      this.page.end = range;
+    var range = this._page_range.end - this._page_range.start;
+    this._page_range.start -= range;
+    this._page_range.end -= range;
+    if (this._page_range.start < 0) {
+      this._page_range.start = 0;
+      this._page_range.end = range;
     }
-    $(document).trigger('page-turner-page-changed', {start: this.page.start, end: this.page.end});
+    $(document).trigger('page-turner-page-changed', this._page_range);
   },
 
-  page_range: function() {
+  page_range: function(pages) {
     // Return current page range
-    return {'start': this.page.start, 'end': this.page.end};
+    if (typeof pages !== 'undefined') {
+      this._page_range.start = pages.start;
+      this._page_range.end = pages.end;
+      $(document).trigger('page-turner-page-changed', this._page_range);
+    }
+    return this._page_range;
   },
 
   all_pages: function() {
@@ -407,13 +412,6 @@ PTView.prototype = {
     ;
   },
 
-  draw_bookmark: function(page_num, label) {
-    // Add a bookmark icon to the navbar
-  },
-
-  remove_bookmark: function(page_num, label) {
-    // Remove bookmark icon from navbar
-  },
 }; // END: PTView
 
 /**
@@ -459,13 +457,9 @@ PTController.prototype = {
   },
 
   brush_moved: function(extent) {
-    // TODO: Refactor to use notifications instead of direct calls
-    // for consistency, y'know
-    this.model.page.start = this.view.extent_to_page(extent[0]);
-    this.model.page.end = this.view.extent_to_page(extent[1]);
-    var pages = this.model.page_range();
-    this.view.update_pages(pages);
-    this.view.update_page_numbers(pages);
+    var pages = {'start': this.view.extent_to_page(extent[0]),
+                 'end': this.view.extent_to_page(extent[1])};
+    this.model.page_range(pages)
   },
 }; // END: PTController
 
