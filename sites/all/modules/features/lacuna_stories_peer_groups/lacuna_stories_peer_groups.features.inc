@@ -33,7 +33,7 @@ function lacuna_stories_peer_groups_node_info() {
       'base' => 'node_content',
       'description' => t('Groups that students can create to share annotations with each other.'),
       'has_title' => '1',
-      'title_label' => t('Title'),
+      'title_label' => t('Group Name'),
       'help' => '',
     ),
   );

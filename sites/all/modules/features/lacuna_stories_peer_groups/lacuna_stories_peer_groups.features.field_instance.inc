@@ -10,6 +10,62 @@
 function lacuna_stories_peer_groups_field_default_field_instances() {
   $field_instances = array();
 
+  // Exported field_instance: 'node-peer_group-group_access'
+  $field_instances['node-peer_group-group_access'] = array(
+    'bundle' => 'peer_group',
+    'default_value' => array(
+      0 => array(
+        'value' => 0,
+      ),
+    ),
+    'deleted' => 0,
+    'description' => '<br>
+Public Peer Groups show in the Peer Groups listing, where people can request to join. Non-members can see who the group members are.<br>
+Private Peer Groups cannot be seen by non-members in any way. You need to invite people into the group.<br>
+<br>
+This setting can be changed at any time.',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'list',
+        'settings' => array(),
+        'type' => 'list_default',
+        'weight' => 1,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'group_access',
+    'label' => 'Group Visibility',
+    'required' => 1,
+    'settings' => array(
+      'user_register_form' => FALSE,
+    ),
+    'view modes' => array(
+      'full' => array(
+        'label' => 'above',
+        'type' => 'options_onoff',
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'type' => 'options_onoff',
+      ),
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'options',
+      'settings' => array(),
+      'type' => 'options_buttons',
+      'weight' => 1,
+    ),
+    'widget_type' => 'options_select',
+  );
+
   // Exported field_instance: 'node-peer_group-group_group'
   $field_instances['node-peer_group-group_group'] = array(
     'bundle' => 'peer_group',
@@ -22,7 +78,7 @@ function lacuna_stories_peer_groups_field_default_field_instances() {
     'description' => 'Determine if this is an OG group.',
     'display' => array(
       'default' => array(
-        'label' => 'above',
+        'label' => 'hidden',
         'module' => 'og_ui',
         'settings' => array(
           'field_name' => FALSE,
@@ -41,7 +97,7 @@ function lacuna_stories_peer_groups_field_default_field_instances() {
     'entity_type' => 'node',
     'field_name' => 'group_group',
     'label' => 'Group',
-    'required' => FALSE,
+    'required' => 0,
     'settings' => array(
       'user_register_form' => FALSE,
     ),
@@ -58,20 +114,27 @@ function lacuna_stories_peer_groups_field_default_field_instances() {
       ),
     ),
     'widget' => array(
+      'active' => 1,
       'module' => 'options',
       'settings' => array(
         'display_label' => 0,
-        'og_hide' => TRUE,
+        'og_hide' => 1,
       ),
       'type' => 'options_onoff',
-      'weight' => 0,
+      'weight' => 2,
     ),
   );
 
   // Translatables
   // Included for use with string extractors like potx.
+  t('<br>
+Public Peer Groups show in the Peer Groups listing, where people can request to join. Non-members can see who the group members are.<br>
+Private Peer Groups cannot be seen by non-members in any way. You need to invite people into the group.<br>
+<br>
+This setting can be changed at any time.');
   t('Determine if this is an OG group.');
   t('Group');
+  t('Group Visibility');
 
   return $field_instances;
 }
