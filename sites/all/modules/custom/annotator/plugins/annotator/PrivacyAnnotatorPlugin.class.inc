@@ -36,10 +36,11 @@ class PrivacyAnnotatorPlugin extends AnnotatorPlugin {
       }
     }
 
-    $groups_total = array (
-      'course_groups' => $course_groups,
-      'peer_groups' => $peer_groups
-    );
+//    $groups_total = array (
+//      'course_groups' => $course_groups,
+//      'peer_groups' => $peer_groups
+//    );
+    $groups_total = array_replace ($course_groups, $peer_groups);
     #dpm ($groups_total, 'groups total');
 
     global $user;
