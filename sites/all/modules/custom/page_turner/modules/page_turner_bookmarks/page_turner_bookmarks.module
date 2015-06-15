@@ -18,6 +18,8 @@
  * $flagging->{'page'}['und'][1]['value'] = 7
  */
 
+define("PAGE_TURNER_BOOKMARK_FLAG", 'page_turner_bookmark'); // for consistency
+
 /**
  * Implements hook_menu().
  */
@@ -48,6 +50,24 @@ function page_turner_bookmarks_menu() {
 }
 
 /**
+ * Get PUT data from new bookmark request
+ * @see http://php.net/manual/en/features.file-upload.put-method.php
+ */
+function page_turner_bookmark_get_data() {
+	$json = '';
+	// PUT data comes in on the stdin stream
+	$put = fopen('php://input', 'r');
+	// Read the data 1 KB at a time and write to the file
+	while ($chunk = fread($put, 1024)) {
+		$json .= $chunk;
+	}
+	fclose($put);
+
+	$entity = (object) drupal_json_decode($json);
+	return $entity;
+}
+
+/**
  * AJAX callback
  * Creates commands for (un)bookmarking
  */
@@ -60,6 +80,22 @@ function page_turner_bookmark_ajax() {
   drupal_exit();
 }
 
+/**
+ * Menu callback
+ *
+ * Return list of current user's bookmarks
+ */
+function page_turner_bookmark_list($type, $id) {
+  global $user;
+	$source = drupal_lookup_path('source', $type . '/' . $id);
+	$node = menu_get_object('node', 1, $source);
+  $bookmarks = flag_get_flag(PAGE_TURNER_BOOKMARK_FLAG);
+
+	if ($bookmarks && $bookmarks->is_flagged($node->nid, $user->uid)) {
+		drupal_json_output($bookmarks);
+	}
+	drupal_json_output(array());
+}
 
 /**
  * Menu callback
@@ -67,13 +103,12 @@ function page_turner_bookmark_ajax() {
  * Creates a new bookmark for the selected page(s)
  **/
 function page_turner_bookmark_add() {
-  $wrapper = array();
-  $wrapper['#attached']['js'] = array(
-    drupal_get_path('module', 'page_turner_bookmarks')
-  );
-  $flag_name = 'page_turner_bookmark';
-  $flag_values = new stdClass();
-  $flag_values->{'pages'}[LANGUAGE_NONE][0]['value'] = '';
+	$data = page_turner_bookmark_get_data();
+	ddl($data);
+//  $flag_name = PAGE_TURNER_BOOKMARK_FLAG;
+//  $flag_values = new stdClass();
+//  $flag_values->{'pages'}[LANGUAGE_NONE][0]['value'] = $data;
+
 }
 
 /**
@@ -89,7 +124,13 @@ function page_turner_bookmark_remove() {
  * Implements hook_node_view()
  */
 function page_turner_bookmarks_node_view($node, $view_mode, $langcode) {
-  // Load the JS, but in the same group as our parent module and
-  // AFTER it's done loading (for events)
-  drupal_add_js(drupal_get_path('module', 'page_turner_bookmarks') . '/js/page_turner_bookmarks.js', array('group' => 'page_turner', 'weight' => 10));
+		// Load the JS, but in the same group as our parent module and
+		// AFTER it's done loading (for events)
+		global $user;
+		$source = drupal_lookup_path('source', $type . '/' . $id);
+		$bookmarks = flag_get_flag(PAGE_TURNER_BOOKMARK_FLAG);
+		if ($bookmarks && $bookmarks->is_flagged($node->nid, $user->uid)) {
+			drupal_add_js(array('page_turner_bookmarks' => $bookmarks), 'setting');
+		}
+		drupal_add_js(drupal_get_path('module', 'page_turner_bookmarks') . '/js/page_turner_bookmarks.js', array('group' => 'page_turner', 'weight' => 10));
 }

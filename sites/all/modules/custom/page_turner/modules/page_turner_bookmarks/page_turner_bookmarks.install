@@ -12,7 +12,7 @@
  **/
 function page_turner_bookmarks_install() {
   $bookmark_flag = flag_flag::factory_by_entity_type('node');
-  $bookmark_flag->name = 'page_turner_bookmark';
+  $bookmark_flag->name = PAGE_TURNER_BOOKMARK_FLAG;
   $bookmark_flag->title = 'Page Turner Bookmark';
   $bookmark_flag->types = variable_get('page_turner_node_types');
   $bookmark_flag->flag_short = 'Bookmark';
