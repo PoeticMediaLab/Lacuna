@@ -31,13 +31,13 @@
  * accessing pages by number, etc.
  **/
 function PTModel(content, settings) {
-  var self = this;
-  self.content = content;
-  self.settings = settings.page_turner;
-  var chunks = chunk_pages(content, self.settings);
-  self._page_range = {start: 0, end: 1};   // current page range
-  self.pages = chunks.pages;        // content of all pages
-  self.breaks = chunks.break_pages; // indices of all break pages
+    var self = this;
+    self.content = content;
+    self.settings = settings.page_turner;
+    var chunks = chunk_pages(content, self.settings);
+    self._page_range = {start: 0, end: 1};   // current page range
+    self.pages = chunks.pages;        // content of all pages
+    self.breaks = chunks.break_pages; // indices of all break pages
 
   function chunk_pages(content, settings) {
     // Divide total content length by page length

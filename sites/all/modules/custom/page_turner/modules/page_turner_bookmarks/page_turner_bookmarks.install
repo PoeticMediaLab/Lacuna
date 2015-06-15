@@ -23,6 +23,8 @@ function page_turner_bookmarks_install() {
   $bookmark_flag->show_on_node = TRUE;
   $bookmark_flag->show_on_teaser = FALSE;
   $bookmark_flag->link_type = 'toggle';
+//	$bookmark_flag->page_start = array();
+//	$bookmark_flag->page_end = array();
 
   $bookmark_flag->save();
 }

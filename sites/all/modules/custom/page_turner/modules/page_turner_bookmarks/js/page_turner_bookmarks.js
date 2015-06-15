@@ -30,17 +30,18 @@
 function PTBModel(bookmarks) {
     var self = this;
     self.bookmarks = bookmarks;
-    self.pages = {};  // {start: 0, end: 1}
+    self.pages = {start: 0, end: 1};  // Default starting values
 
     // Listen for page turn events and update our model
     $(document).bind('page-turner-page-changed', function(e, pages) {
-      self.pages = pages;
+        self.pages = pages;
         console.log(self.pages);
     });
 
     $(document).bind('page-turner-bookmark-added', function(e, pages) {
         self.bookmarks.push(pages);
     });
+    console.log(self);
 }
 
 PTBModel.prototype = {
@@ -155,11 +156,12 @@ PTBController.prototype = {
 
     bookmark_add: function() {
         // PUT data via AJAX
-        console.log({url: this.routes.add,
-            data: this.model.pages,
-            context: this});
         $.ajax({url: this.routes.add,
-            data: this.model.pages,
+            type: 'POST',
+            data: {
+                path: location.pathname.replace(this.routes.root, ''),
+                pages: this.model.pages
+            },
             context: this,
             success: function (data) {
                 console.log('success', data);

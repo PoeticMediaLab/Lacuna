@@ -25,16 +25,16 @@ define("PAGE_TURNER_BOOKMARK_FLAG", 'page_turner_bookmark'); // for consistency
  */
 function page_turner_bookmarks_menu() {
   $items = array();
-  $content_types = variable_get('page_turner_node_types');
-  foreach ($content_types as $key => $value) {
-    // Expose button to page
-    if (!$value) {
-      $items[$key] = array(
-        'page callback' => 'page_turner_bookmark_ajax',
-        'type' => MENU_CALLBACK,
-      );
-    }
-  }
+//  $content_types = variable_get('page_turner_node_types');
+//  foreach ($content_types as $key => $value) {
+//    // Expose button to page
+//    if (!$value) {
+//      $items[$key] = array(
+//        'page callback' => 'page_turner_bookmark_ajax',
+//        'type' => MENU_CALLBACK,
+//      );
+//    }
+//  }
 
   $items['admin/user-interface/page-turner/bookmark/add'] = array(
     'page callback' => 'page_turner_bookmark_add',
@@ -49,53 +49,42 @@ function page_turner_bookmarks_menu() {
   return $items;
 }
 
-/**
- * Get PUT data from new bookmark request
- * @see http://php.net/manual/en/features.file-upload.put-method.php
+/*
+ * Helper function: gets bookmark page ranges for current node
  */
-function page_turner_bookmark_get_data() {
-	$json = '';
-	// PUT data comes in on the stdin stream
-	$put = fopen('php://input', 'r');
-	// Read the data 1 KB at a time and write to the file
-	while ($chunk = fread($put, 1024)) {
-		$json .= $chunk;
+function page_turner_bookmark_pages_load($node) {
+	global $user;
+	$bookmarks = flag_get_flag(PAGE_TURNER_BOOKMARK_FLAG);
+	if ($bookmarks && $bookmarks->is_flagged($node->nid, $user->uid)) {
+		$pages = $bookmarks->{'pages'}[LANGUAGE_NONE];
 	}
-	fclose($put);
-
-	$entity = (object) drupal_json_decode($json);
-	return $entity;
+	return $pages || array();
 }
 
 /**
  * AJAX callback
  * Creates commands for (un)bookmarking
  */
-function page_turner_bookmark_ajax() {
-  $commands = array();
-
-  $selector = '#page-turner-bookmark';
-  $html = "";
-  print ajax_render($commands);
-  drupal_exit();
-}
+//function page_turner_bookmark_ajax() {
+//  $commands = array();
+//
+//  $selector = '#page-turner-bookmark';
+//  $html = "";
+//  print ajax_render($commands);
+//  drupal_exit();
+//}
 
 /**
  * Menu callback
  *
  * Return list of current user's bookmarks
  */
-function page_turner_bookmark_list($type, $id) {
-  global $user;
-	$source = drupal_lookup_path('source', $type . '/' . $id);
-	$node = menu_get_object('node', 1, $source);
-  $bookmarks = flag_get_flag(PAGE_TURNER_BOOKMARK_FLAG);
-
-	if ($bookmarks && $bookmarks->is_flagged($node->nid, $user->uid)) {
-		drupal_json_output($bookmarks);
-	}
-	drupal_json_output(array());
-}
+//function page_turner_bookmark_list($type, $id) {
+//	$source = drupal_lookup_path('source', $type . '/' . $id);
+//	$node = menu_get_object('node', 1, $source);
+//  $bookmarks = page_turner_bookmark_pages_load($node);
+//	drupal_json_output($bookmarks);
+//}
 
 /**
  * Menu callback
@@ -103,12 +92,19 @@ function page_turner_bookmark_list($type, $id) {
  * Creates a new bookmark for the selected page(s)
  **/
 function page_turner_bookmark_add() {
-	$data = page_turner_bookmark_get_data();
-	ddl($data);
-//  $flag_name = PAGE_TURNER_BOOKMARK_FLAG;
-//  $flag_values = new stdClass();
-//  $flag_values->{'pages'}[LANGUAGE_NONE][0]['value'] = $data;
-
+	$pages = $_POST['pages'];
+	$path = drupal_lookup_path('source', $_POST['path']);
+	$node = menu_get_object($type = 'node', $position = 1, $path);
+	ddl($path);
+	ddl($node);
+  $flag_values = new stdClass();
+  $flag_values->{'page_start'}[LANGUAGE_NONE][]['value'] = $pages['start'];
+	$flag_values->{'page_end'}[LANGUAGE_NONE][]['value'] = $pages['end'];
+	$bookmarks = flag_get_flag(PAGE_TURNER_BOOKMARK_FLAG);
+	// Add given page range to bookmark flag
+//	$bookmarks->flag('flag', $node->nid, NULL, FALSE, $flag_values);
+	ddl($bookmarks);
+	drupal_json_output();
 }
 
 /**
@@ -117,20 +113,17 @@ function page_turner_bookmark_add() {
  * Removes existing bookmark for the selected page(s)
  **/
 function page_turner_bookmark_remove() {
-
+	// TODO: Delete bookmark flag
 }
 
 /**
  * Implements hook_node_view()
  */
 function page_turner_bookmarks_node_view($node, $view_mode, $langcode) {
-		// Load the JS, but in the same group as our parent module and
-		// AFTER it's done loading (for events)
-		global $user;
-		$source = drupal_lookup_path('source', $type . '/' . $id);
-		$bookmarks = flag_get_flag(PAGE_TURNER_BOOKMARK_FLAG);
-		if ($bookmarks && $bookmarks->is_flagged($node->nid, $user->uid)) {
-			drupal_add_js(array('page_turner_bookmarks' => $bookmarks), 'setting');
-		}
-		drupal_add_js(drupal_get_path('module', 'page_turner_bookmarks') . '/js/page_turner_bookmarks.js', array('group' => 'page_turner', 'weight' => 10));
+	// Load the JS, but in the same group as our parent module and
+	// AFTER it's done loading (for events)
+	global $user;
+	$bookmarks = page_turner_bookmark_pages_load($node);
+	drupal_add_js(array('page_turner_bookmarks' => $bookmarks), 'setting');
+	drupal_add_js(drupal_get_path('module', 'page_turner_bookmarks') . '/js/page_turner_bookmarks.js', array('group' => 'page_turner', 'weight' => 10));
 }
