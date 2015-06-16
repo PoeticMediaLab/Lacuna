@@ -5,3 +5,34 @@
  */
 
 include_once 'lacuna_stories_peer_groups.features.inc';
+
+/**
+ * Add and Remove links for Members view in Peer Groups
+ */
+function lacuna_stories_peer_groups_add_members($view) {
+ $gid = $view->args[0];
+ global $user;
+ if (og_user_access('node', $gid, 'add user', $user)) {
+  return l ('Add Members',
+    '/group/node/' .$gid . '/admin/people/add-user',
+    array(
+      'query' => drupal_get_destination(),
+      'html' => true,
+    )
+  );
+ }
+}
+function lacuna_stories_peer_groups_member_links($row, $view) {
+ $gid = $view->args[0];
+ global $user;
+ if (og_user_access('node', $gid, 'manage members', $user)) {
+  return l (
+    'Remove Member',
+    '/group/node/' . $gid . '/admin/people/delete-membership/' . $row->id,
+    array(
+      'query' => drupal_get_destination(),
+      'html' => true,
+    )
+  );
+ }
+}
