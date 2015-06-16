@@ -8,16 +8,6 @@
  *
  **/
 
-/*
- * Plan: because flags are per-entity, but we can save values
- * use the values per entity, per user to store which page(s)
- * have been bookmarked and to remove those bookmarks, when needed
- * see: https://www.drupal.org/node/1748148#write-flagging-fields
- * Example of multiple bookmarked pages in one node:
- * $flagging->{'page'}['und'][0]['value'] = 1
- * $flagging->{'page'}['und'][1]['value'] = 7
- */
-
 define("PAGE_TURNER_BOOKMARK_FLAG", 'page_turner_bookmark'); // for consistency
 
 /**
@@ -25,24 +15,14 @@ define("PAGE_TURNER_BOOKMARK_FLAG", 'page_turner_bookmark'); // for consistency
  */
 function page_turner_bookmarks_menu() {
   $items = array();
-//  $content_types = variable_get('page_turner_node_types');
-//  foreach ($content_types as $key => $value) {
-//    // Expose button to page
-//    if (!$value) {
-//      $items[$key] = array(
-//        'page callback' => 'page_turner_bookmark_ajax',
-//        'type' => MENU_CALLBACK,
-//      );
-//    }
-//  }
 
   $items['admin/user-interface/page-turner/bookmark/add'] = array(
-    'page callback' => 'page_turner_bookmark_add',
+    'page callback' => 'page_turner_bookmarks_add',
     'access arguments' => 'flag page_turner_bookmark',
     'type' => MENU_CALLBACK,
     );
   $items['admin/user-interface/page-turner/bookmark/remove'] = array(
-    'page callback' => 'page_turner_bookmark_remove',
+    'page callback' => 'page_turner_bookmarks_remove',
     'access arguments' => 'unflag page_turner_bookmark',
     'type' => MENU_CALLBACK,
     );
@@ -50,58 +30,72 @@ function page_turner_bookmarks_menu() {
 }
 
 /*
- * Helper function: gets bookmark page ranges for current node
+ * Return bookmark page ranges for current node
  */
-function page_turner_bookmark_pages_load($node) {
+function page_turner_bookmarks_get_pages_marked($node) {
 	global $user;
-	$flag = flag_get_user_flags('node', $node->nid);
 	$pages = array();
-//	if ($bookmarks && $bookmarks->is_flagged($node->nid, $user->uid)) {
-//		if (isset($bookmarks->pages)) {
-//			$pages = $bookmarks->pages[LANGUAGE_NONE];
-//		}
-//	}
+	$flag = flag_get_user_flags('node', $node->nid);
+	if (isset($flag[PAGE_TURNER_BOOKMARK_FLAG])) {
+		$flagging_wrapper = entity_metadata_wrapper('flagging', $flag[PAGE_TURNER_BOOKMARK_FLAG]->flagging_id);
+		foreach ($flagging_wrapper->field_page_start->getIterator() as $delta => $value_wrapper) {
+			$pages[$delta]['start'] = $value_wrapper->value();
+		}
+		foreach ($flagging_wrapper->field_page_end->getIterator() as $delta => $value_wrapper) {
+			$pages[$delta]['end'] = $value_wrapper->value();
+		}
+	}
 	return $pages;
 }
 
 /**
- * AJAX callback
- * Creates commands for (un)bookmarking
+ * Parse _POST, Return array of page range and node context
  */
-//function page_turner_bookmark_ajax() {
-//  $commands = array();
-//
-//  $selector = '#page-turner-bookmark';
-//  $html = "";
-//  print ajax_render($commands);
-//  drupal_exit();
-//}
+function page_turner_bookmarks_parse_query() {
+	return array(
+		$_POST['pages'],
+		menu_get_object($type = 'node', $position = 1, drupal_lookup_path('source', $_POST['path']))
+	);
+}
+
 
 /**
- * Menu callback
- *
- * Return list of current user's bookmarks
+ * Return true if given page range has been bookmarked
  */
-//function page_turner_bookmark_list($type, $id) {
-//	$source = drupal_lookup_path('source', $type . '/' . $id);
-//	$node = menu_get_object('node', 1, $source);
-//  $bookmarks = page_turner_bookmark_pages_load($node);
-//	drupal_json_output($bookmarks);
-//}
-
+function page_turner_bookmarks_pages_marked($wrapper, $start, $end, &$delta = NULL) {
+	$matches = array();
+	foreach ($wrapper->field_page_start->getIterator() as $delta => $value_wrapper) {
+		$matches[$delta] = 0;
+		if ($start == $value_wrapper->value()) {
+			++$matches[$delta];
+		}
+	}
+	foreach ($wrapper->field_page_end->getIterator() as $delta => $value_wrapper) {
+		if ($end == $value_wrapper->value()) {
+			++$matches[$delta];
+		}
+	}
+	foreach ($matches as $delta => $count) {
+		// NB: Updates by-reference $delta in passing
+		if ($count == 2) {
+			return TRUE;
+		}
+	}
+	$delta = NULL;
+	return FALSE;
+}
 /**
  * Menu callback
  *
  * Creates a new bookmark for the selected page(s)
  **/
-function page_turner_bookmark_add() {
-	global $user;
-	$pages = $_POST['pages'];
-	$path = drupal_lookup_path('source', $_POST['path']);
-	$node = menu_get_object($type = 'node', $position = 1, $path);
+function page_turner_bookmarks_add() {
+	list($pages, $node) = page_turner_bookmarks_parse_query();
 	$bookmark_flag = flag_get_flag(PAGE_TURNER_BOOKMARK_FLAG);
 	$flag = flag_get_user_flags('node', $node->nid);
 
+	// TODO: Add exception handling, return success/failure as JSON
+	// try { } catch (EntityMetadataWrapperException $exc) {
 	if (isset($flag[PAGE_TURNER_BOOKMARK_FLAG])) {
 		$flagging_wrapper = entity_metadata_wrapper('flagging', $flag[PAGE_TURNER_BOOKMARK_FLAG]->flagging_id);
 	} else {
@@ -111,20 +105,22 @@ function page_turner_bookmark_add() {
 			'entity_type' => 'node',
 			'entity_id' => $node->nid,
 		);
-		ddl('creating new');
 		$flagging = entity_create('flagging', $values);
 		$flagging_wrapper = entity_metadata_wrapper('flagging', $flagging);
 	}
 
-	$flagging_wrapper->field_page_start[] = $pages['start'];
-	$flagging_wrapper->field_page_end[] = $pages['end'];
+	if (!page_turner_bookmarks_pages_marked($flagging_wrapper, $pages['start'], $pages['end'])) {
+		// Avoid duplicate bookmarks
+		$flagging_wrapper->field_page_start[] = $pages['start'];
+		$flagging_wrapper->field_page_end[] = $pages['end'];
 
-	if (!isset($flagging)) {
-		// Update existing bookmark flag
-		$flagging_wrapper->save();
-	} else {
-		// New bookmark flag
-		$bookmark_flag->flag('flag', $node->nid, NULL, FALSE, $flagging);
+		if (!isset($flagging)) {
+			// Update an existing bookmark flagging, but prevent duplicates
+			$flagging_wrapper->save();
+		} else {
+			// Save a new bookmark flag
+			$bookmark_flag->flag('flag', $node->nid, NULL, FALSE, $flagging);
+		}
 	}
 }
 
@@ -133,17 +129,35 @@ function page_turner_bookmark_add() {
  *
  * Removes existing bookmark for the selected page(s)
  **/
-function page_turner_bookmark_remove() {
-	// TODO: Delete bookmark flag
+function page_turner_bookmarks_remove() {
+	list($pages, $node) = page_turner_bookmarks_parse_query();
+	$flag = flag_get_user_flags('node', $node->nid);
+	if (isset($flag[PAGE_TURNER_BOOKMARK_FLAG])) {
+		$flagging_wrapper = entity_metadata_wrapper('flagging', $flag[PAGE_TURNER_BOOKMARK_FLAG]->flagging_id);
+		$delta = NULL;
+		if (page_turner_bookmarks_pages_marked($flagging_wrapper, $pages['start'], $pages['end'], $delta)) {
+			// Match found, delete it
+			$flagging_wrapper->field_page_start[$delta] = NULL;
+			$flagging_wrapper->field_page_end[$delta] = NULL;
+			$flagging_wrapper->save();
+
+			if ($flagging_wrapper->field_start_page->count() == 0) {
+				// Bookmark is now empty, unflag the node
+				$bookmark_flag = flag_get_flag(PAGE_TURNER_BOOKMARK_FLAG);
+				$bookmark_flag->flag('unflag', $node->nid);
+			}
+			drupal_json_output('TRUE');
+		}
+	}
+	drupal_json_output('FALSE');
+	drupal_exit();
 }
 
 /**
  * Implements hook_node_view()
  */
 function page_turner_bookmarks_node_view($node, $view_mode, $langcode) {
-	// Load the JS, but in the same group as our parent module and
-	// AFTER it's done loading (for events)
-	$bookmarks = page_turner_bookmark_pages_load($node);
+	$bookmarks = page_turner_bookmarks_get_pages_marked($node);
 	drupal_add_js(array('page_turner_bookmarks' => $bookmarks), 'setting');
 	drupal_add_js(drupal_get_path('module', 'page_turner_bookmarks') . '/js/page_turner_bookmarks.js', array('group' => 'page_turner', 'weight' => 10));
 }
