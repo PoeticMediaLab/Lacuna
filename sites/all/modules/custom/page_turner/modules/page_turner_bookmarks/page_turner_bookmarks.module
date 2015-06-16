@@ -54,13 +54,13 @@ function page_turner_bookmarks_menu() {
  */
 function page_turner_bookmark_pages_load($node) {
 	global $user;
-	$bookmarks = flag_get_flag(PAGE_TURNER_BOOKMARK_FLAG);
+	$flag = flag_get_user_flags('node', $node->nid);
 	$pages = array();
-	if ($bookmarks && $bookmarks->is_flagged($node->nid, $user->uid)) {
-		if (isset($bookmarks->pages)) {
-			$pages = $bookmarks->pages[LANGUAGE_NONE];
-		}
-	}
+//	if ($bookmarks && $bookmarks->is_flagged($node->nid, $user->uid)) {
+//		if (isset($bookmarks->pages)) {
+//			$pages = $bookmarks->pages[LANGUAGE_NONE];
+//		}
+//	}
 	return $pages;
 }
 
@@ -99,28 +99,33 @@ function page_turner_bookmark_add() {
 	$pages = $_POST['pages'];
 	$path = drupal_lookup_path('source', $_POST['path']);
 	$node = menu_get_object($type = 'node', $position = 1, $path);
-
-	$bookmarks = flag_get_flag(PAGE_TURNER_BOOKMARK_FLAG);
+	$bookmark_flag = flag_get_flag(PAGE_TURNER_BOOKMARK_FLAG);
 	$flag = flag_get_user_flags('node', $node->nid);
+
 	if (isset($flag[PAGE_TURNER_BOOKMARK_FLAG])) {
-		$flagging = $flag[PAGE_TURNER_BOOKMARK_FLAG];
+		$flagging_wrapper = entity_metadata_wrapper('flagging', $flag[PAGE_TURNER_BOOKMARK_FLAG]->flagging_id);
 	} else {
 		$values = array(
-			'fid' => $bookmarks->fid,
-			'entity_type' => 'flagging',
+			'flag_name' => PAGE_TURNER_BOOKMARK_FLAG,
+			'fid' => $bookmark_flag->fid,
+			'entity_type' => 'node',
 			'entity_id' => $node->nid,
-			'uid' => $user->uid
 		);
+		ddl('creating new');
 		$flagging = entity_create('flagging', $values);
+		$flagging_wrapper = entity_metadata_wrapper('flagging', $flagging);
 	}
 
-	// Create an entity metadata wrapper to add page values to flag
-	$flagging_wrapper = entity_metadata_wrapper('flagging', $flagging);
 	$flagging_wrapper->field_page_start[] = $pages['start'];
 	$flagging_wrapper->field_page_end[] = $pages['end'];
 
-	// Now update the flag
-	$bookmarks->flag('flag', $node->nid, NULL, FALSE, $flagging);
+	if (!isset($flagging)) {
+		// Update existing bookmark flag
+		$flagging_wrapper->save();
+	} else {
+		// New bookmark flag
+		$bookmark_flag->flag('flag', $node->nid, NULL, FALSE, $flagging);
+	}
 }
 
 /**
