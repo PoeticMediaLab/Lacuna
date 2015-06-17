@@ -3,22 +3,18 @@
  * Add/remove bookmarks to a page
  * Add/remove bookmark icons to the Page Turner navbar
  *
- * Mike Widner <mikewidner@stanford.edu>
+ * Uses jQuery for event pooling
  *
- **/
-
-/**
- *
- * Uses jQuery events
- *
- * Events:
- *  page-turner-bookmark-loaded
- *
+ * Events published:
  *  page-turner-bookmark-clicked
  *
  *  page-turner-bookmark-added
  *
  *  page-turner-bookmark-removed
+ *
+ *  page-turner-bookmark-toggled
+ *
+ * Mike Widner <mikewidner@stanford.edu>
  *
  **/
 
@@ -29,41 +25,60 @@
  */
 function PTBModel(bookmarks) {
     var self = this;
-    self.bookmarks = bookmarks;
+    self.bookmarks = bookmarks || []; // array of page range objects
     self.pages = {start: 0, end: 1};  // Default starting values
 
+    self.bookmarks.forEach(function (element, index, array) {
+        // Ensure our page numbers are integers, not strings
+        array[index].start = parseInt(element.start, 10);
+        array[index].end = parseInt(element.end, 10);
+    });
     // Listen for page turn events and update our model
     $(document).bind('page-turner-page-changed', function(e, pages) {
         self.pages = pages;
-        console.log(self.pages);
     });
 
     $(document).bind('page-turner-bookmark-added', function(e, pages) {
         self.bookmarks.push(pages);
     });
-    console.log(self);
+
+    $(document).bind('page-turner-bookmark-removed', function(e, pages) {
+        self.remove_bookmark(pages);
+    });
 }
 
 PTBModel.prototype = {
-    is_bookmarked: function() {
-    // return true if current page range is bookmarked
+    get_bookmarks: function() {
+        return this.bookmarks;
+    },
+
+    find_bookmark: function(pages) {
         var i, l;
         for (i = 0, l = this.bookmarks.length; i < l; i++) {
-            if (this.bookmarks[i].start === this.pages.start &&
-                this.bookmarks[i].end === this.pages.end) {
-                return true;
+            if (this.bookmarks[i].start === pages.start &&
+                this.bookmarks[i].end === pages.end) {
+                return this.bookmarks[i];
             }
         }
-        return false;
+        return [];
     },
 
-    add_bookmark: function() {
-    // Save a new bookmark w/ current page range
+    is_bookmarked: function(pages) {
+        // return true if current/given page range is bookmarked
+        if (typeof pages === 'undefined') {
+            pages = this.pages;
+        }
+        return this.find_bookmark(pages).length > 0;
     },
 
-    remove_bookmark: function() {
-    // Remove bookmark from current page range
-    },
+    remove_bookmark: function(pages) {
+        // Remove bookmark for current or given page range
+        if (typeof pages === 'undefined') {
+            pages = this.pages;
+        }
+        var bookmark = this.find_bookmark(pages);
+        this.bookmarks.splice(this.bookmarks.indexOf(bookmark), 1);
+    }
 };
 
 /**
@@ -72,60 +87,80 @@ PTBModel.prototype = {
  *
  */
 function PTBView(model, elements) {
-  var self = this;
-  self.model = model;
-  self.elements = elements;
+    var self = this;
+    self.model = model;
+    self.elements = elements;
 
-  draw_elements(elements);
+    draw_elements(elements);
 
-  self.navbar = $('#' + self.elements.navbar.id);
+    self.navbar = $('#' + self.elements.navbar.id);
 
-  // When a bookmark is clicked
-  $('#' + self.elements.bookmark.id).on('click', function (e) {
-      $(document).trigger('page-turner-bookmark-clicked', e);
+    $(document).bind('page-turner-bookmark-removed', function (e, pages) {
+        self.remove_bookmark(pages);
+        self.page_bookmarked(false);
     });
 
-  // When a bookmark is added
-  $('#' + self.elements.bookmark_add.id).on('click', function (e) {
-      $(document).trigger('page-turner-bookmark-added', e);
+    $(document).bind('page-turner-bookmark-added', function (e, pages) {
+        self.add_bookmark(pages);
+        self.page_bookmarked(true);
     });
 
-  // When a bookmark is removed
-  $('#' + self.elements.bookmark_remove.id).on('click', function (e) {
-      $(document).trigger('page-turner-bookmark-removed', e);
-    });
+    function draw_bookmarks() {
+        // Draw all bookmarks
+        self.model.get_bookmarks().forEach(function(pages) {
+            this.add_bookmark(pages);
+        }.bind(self));
+    }
 
-  function draw_bookmarks() {
-    // Draw all bookmarks
-  }
+    function draw_bookmark_button() {
+        // TODO: Load with correct button text
+        $(self.elements.bookmark_button.container).append('<span id="' + self.elements.bookmark_button.id + '">Bookmark</span>');
+        $("#" + self.elements.bookmark_button.id).on("click", function (e) {
+            $("#" + self.elements.bookmark_button.id).trigger("page-turner-bookmark-toggled", e);
+        });
+    }
 
-  function draw_bookmark_button() {
-    // TODO: Load with correct button text
-    $(self.elements.bookmark_button.container).append('<span id="' + self.elements.bookmark_button.id + '">Bookmark</span>');
-    $("#" + self.elements.bookmark_button.id).on("click", function (e) {
-      $("#" + self.elements.bookmark_button.id).trigger("page-turner-bookmark-toggled", e);
-    });
-  }
+    function draw_elements() {
+        // Draw all our necessary elements
+        // 1. Draw toggle button
+        //    a. Set click event
+        draw_bookmark_button();
 
-  function draw_elements() {
-    // Draw all our necessary elements
-    // 1. Draw toggle button
-    //    a. Set click event
-    draw_bookmark_button();
-
-    // 2. Draw all loaded bookmarks in navbar
-    //    a. Set hover events for each bookmark
-    //    b. Set click events
-    draw_bookmarks();
-    // 3. Set toggle button state according to whether current page is bookmarked
-    //    a. If a change, notify model
-  }
+        // 2. Draw all loaded bookmarks in navbar
+        //    a. Set hover events for each bookmark
+        //    b. Set click events
+        $('#' + self.elements.navbar.parent).attr('height', '150%');    // give us some room!
+        draw_bookmarks();
+        // 3. Set toggle button state according to whether current page is bookmarked
+        //    a. If a change, notify model
+    }
 }
 
 PTBView.prototype = {
-  toggle_bookmark: function() {
-    // Bookmark button clicked; toggle view text
-  },
+    page_bookmarked: function(active) {
+        if (active) {
+            $('#' + this.elements.bookmark_button.id).text('Remove Bookmark');
+        } else {
+            $('#' + this.elements.bookmark_button.id).text('Add Bookmark');
+        }
+    },
+    remove_bookmark: function(pages) {
+        // Remove bookmark icon from page range
+        $('#' + this.elements.bookmark.id + pages.join('-')).remove();
+    },
+
+    add_bookmark: function(pages) {
+        // draw bookmark icon on page ranges
+        // TODO: refactor to use jQuery, not d3 (no need to mix)?
+        d3.select($(this.elements.navbar.tick)[pages.start])
+            .append('text')
+            .attr('id', this.elements.bookmark.id + pages.start + '-' + pages.end)
+            .attr('font-family', 'FontAwesome')
+            .attr('font-size','24')
+            .text(function(d) { return '\uf097' })
+            .attr('y', '20')
+            .on('click', function(d) { $(document).trigger('page-turner-bookmark-clicked', this.id); });
+    }
 };
 
 /**
@@ -139,23 +174,25 @@ function PTBController(model, view, routes) {
     self.view = view;
     self.routes = routes;
 
-    $(document).bind('page-turner-bookmark-add', function (event) { self.bookmark_add(event) });
-    $(document).bind('page-turner-bookmark-remove', function (event) { self.bookmark_remove(event) });
     $("#" + self.view.elements.bookmark_button.id).bind('page-turner-bookmark-toggled', function (event) { self.bookmark_toggle(event) });
+
+    $(document).bind('page-turner-bookmark-clicked', function(event, id) { self.jump_to_bookmark(id); });
 }
 
 PTBController.prototype = {
     bookmark_toggle: function(event) {
-        console.log('bookmark toggled', event);
         if (this.model.is_bookmarked()) {
             this.bookmark_remove();
+            $(document).trigger('page-turner-bookmark-removed', this.model.pages);
         } else {
             this.bookmark_add();
+            $(document).trigger('page-turner-bookmark-added', this.model.pages);
         }
     },
 
     bookmark_add: function() {
-        // PUT data via AJAX
+        // Add bookmark with current page range
+        // Send Drupal the node's path, because it won't know it on POST
         $.ajax({url: this.routes.add,
             type: 'POST',
             data: {
@@ -164,13 +201,38 @@ PTBController.prototype = {
             },
             context: this,
             success: function (data) {
+                // TODO: do something on success, maybe draw new bookmark?
                 console.log('success', data);
             }
+            // TODO: Add a failure option
         });
     },
 
     bookmark_remove: function() {
-        // PUT delete request via AJAX
+        // delete bookmark with current page range
+        $.ajax({url: this.routes.remove,
+            type: 'POST',
+            data: {
+                path: location.pathname.replace(this.routes.root, ''),
+                pages: this.model.pages
+            },
+            context: this,
+            success: function (data) {
+                // TODO: do something on success, maybe draw new bookmark?
+                console.log('success removing', data);
+            }
+            // TODO: Add a failure option
+        });
+    },
+
+    jump_to_bookmark: function(id) {
+        // Jump to the page range specified by a given bookmark
+        // 1. parse id for page start and end
+        // 2. trigger page-turner-page-changed event with new range
+        var pages;
+        pages = id.replace(this.view.elements.bookmark.id, '').split('-');
+        $(document).trigger('page-turner-page-changed', {start: pages[0], end: pages[1]});
+        console.log(pages);
     }
 };
 
@@ -180,18 +242,15 @@ PTBController.prototype = {
         var elements = {
             'bookmark' :
             {
-              'id': 'page-turner-bookmark',
+              'id': 'page-turner-bookmark-id-',
               'classes' :
               [ 'page-turner-bookmark',
                 'fa',
                 'fa-bookmark-o'
               ]
             },
-            'bookmark_add' : {
-              'id' : '',
-            },
             'bookmark_remove' : {
-              'id' : '',
+                'class': 'page-turner-bookmark-remove'
             },
             'bookmark_button' : {
               'id' : 'page-turner-bookmark-button',
@@ -203,6 +262,8 @@ PTBController.prototype = {
             },
             'navbar' : {
               'id' : 'page-turner-nav',
+              'parent': 'page-turner-nav-parent',
+                'tick': 'g.tick'
             },
         };
         // Our AJAX route calls

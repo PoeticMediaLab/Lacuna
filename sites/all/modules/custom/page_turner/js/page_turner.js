@@ -208,6 +208,7 @@ function PTView(model, elements) {
 
     self.svg = d3.select('#' + self.elements.navbar).append("svg");
     self.navbar_svg = self.svg
+        .attr("id", self.elements.navbar_parent)
         .attr("width", "90%") // Note: affects width calculations
         .attr("height", "100%")
       .append("g")
@@ -478,6 +479,7 @@ PTController.prototype = {
             'id': 'page-turner-pages'
           },
           'page_num': 'page-turner-number',
+            'navbar_parent': 'page-turner-nav-parent',
           'navbar': 'page-turner-nav',
           'pager': {
             'next': {
