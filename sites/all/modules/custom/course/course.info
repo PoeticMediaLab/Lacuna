@@ -11,7 +11,6 @@ dependencies[] = options
 dependencies[] = strongarm
 dependencies[] = taxonomy
 dependencies[] = text
-
 features[ctools][] = strongarm:strongarm:1
 features[features_api][] = api:2
 features[field_base][] = field_course_id
@@ -46,6 +45,7 @@ features[field_instance][] = node-course-field_syllabus
 features[field_instance][] = node-course-field_third_course_id
 features[field_instance][] = node-course-field_unregistered_students
 features[field_instance][] = node-course-field_visibility
+features[field_instance][] = node-course-group_access
 features[field_instance][] = node-course-group_group
 features[field_instance][] = node-course-og_roles_permissions
 features[node][] = course
