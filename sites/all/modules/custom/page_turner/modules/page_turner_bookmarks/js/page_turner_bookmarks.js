@@ -52,19 +52,29 @@ PTBModel.prototype = {
         return this.bookmarks;
     },
 
+    find_bookmark: function(start) {
+        var i, l;
+        for (i = 0, l = this.bookmarks.length; i < l; i++) {
+            if (this.bookmarks[i].start === start) {
+                return this.bookmarks[i];
+            }
+        }
+        return false;
+    },
+
     is_bookmarked: function(pages) {
         // return true if current/given page range is bookmarked
         if (typeof pages === 'undefined') {
             pages = this.pages;
         }
-        var i, l;
-        for (i = 0, l = this.bookmarks.length; i < l; i++) {
-            if (this.bookmarks[i].start === pages.start&&
-                this.bookmarks[i].end === pages.end) {
-                return true;
-            }
+        if (this.find_bookmark(pages.start)) {
+            return true;
         }
         return false;
+    },
+
+    current_bookmark: function() {
+        return this.find_bookmark(this.pages.start);
     },
 
     remove_bookmark: function(pages) {
@@ -117,8 +127,10 @@ function PTBView(model, elements) {
     }
 
     function draw_bookmark_button() {
-        // TODO: Load with correct button text
-        $(self.elements.bookmark_button.container).append('<span id="' + self.elements.bookmark_button.id + '" class="' + self.elements.bookmark_button.classes.join(' ') + '"></span>');
+        $(self.elements.bookmark_button.container)
+            .append('<span id="' + self.elements.bookmark_button.id +
+            '" class="' + self.elements.bookmark_button.classes.join(' ') +
+            '"></span>');
         self.page_bookmarked(self.model.is_bookmarked());
         $("#" + self.elements.bookmark_button.id).on("click", function (e) {
             $("#" + self.elements.bookmark_button.id).trigger("page-turner-bookmark-toggled", e);
@@ -145,19 +157,30 @@ PTBView.prototype = {
     id_to_pages: function(id) {
         // Probably not the best place for this function
         var pages = id.replace(this.elements.bookmark.id, '').split('-');
-        return {start: parseInt(pages[0], 10), end: parseInt(pages[1], 10)}
+        var start = parseInt(pages[0], 10);
+        // We store the bookmark range, but changing it confuses people, so just go to one page
+        return {start: start, end: start + 1};
     },
 
     page_bookmarked: function(active) {
         if (active) {
-            $('#' + this.elements.bookmark_button.id).text('Remove Bookmark');
+            $('#' + this.elements.bookmark_button.id)
+                .text('Remove Bookmark')
+                .removeClass(this.elements.bookmark_add)
+                .addClass(this.elements.bookmark_remove);
+            // Below works, but clobbers brush animation
+            //$(document).trigger('page-turner-page-changed', this.model.current_bookmark());
         } else {
-            $('#' + this.elements.bookmark_button.id).text('Add Bookmark');
+            $('#' + this.elements.bookmark_button.id)
+                .text('Add Bookmark')
+                .removeClass(this.elements.bookmark_remove)
+                .addClass(this.elements.bookmark_add);
         }
     },
+
     remove_bookmark: function(pages) {
         // Remove bookmark icon from page range
-        $('#' + this.elements.bookmark.id + pages.join('-')).remove();
+        $('#' + this.elements.bookmark.id + pages.start + '-' + pages.end).remove();
     },
 
     add_bookmark: function(pages) {
@@ -195,8 +218,8 @@ function PTBController(model, view, routes) {
 PTBController.prototype = {
     bookmark_toggle: function(event) {
         if (this.model.is_bookmarked()) {
-            this.bookmark_remove();
             $(document).trigger('page-turner-bookmark-removed', this.model.pages);
+            this.bookmark_remove();
         } else {
             this.bookmark_add();
             $(document).trigger('page-turner-bookmark-added', this.model.pages);
@@ -252,28 +275,26 @@ PTBController.prototype = {
         var elements = {
             'bookmark' :
             {
-              'id': 'page-turner-bookmark-id-',
-              'classes' :
-              [ 'page-turner-bookmark',
-                //'fa',
-                //'fa-bookmark-o'
-              ]
+                'id': 'page-turner-bookmark-id-',
+                'classes' :
+                [
+                    'page-turner-bookmark',
+                    //'fa',
+                    //'fa-bookmark-o'
+                ]
             },
-            'bookmark_remove' : {
-                'class': 'page-turner-bookmark-remove'
-            },
+            'bookmark_remove' : 'page-turner-bookmark-remove',
+            'bookmark_add' : 'page-turner-bookmark-add',
             'bookmark_button' : {
-              'id' : 'page-turner-bookmark-button',
-              'container' : 'section.region-sidebar-second',
-                'classes': ['lacuna-button']
-            },
-            'bookmark_toggle' :
-            {
-              'id' : 'page-turner-bookmark-toggle',
+                'id' : 'page-turner-bookmark-button',
+                'container' : 'section.region-sidebar-second',
+                'classes': [
+                    'page-turner-bookmark-button'
+                ],
             },
             'navbar' : {
-              'id' : 'page-turner-nav',
-              'parent': 'page-turner-nav-parent',
+                'id' : 'page-turner-nav',
+                'parent': 'page-turner-nav-parent',
                 'tick': 'g.tick'
             },
         };
