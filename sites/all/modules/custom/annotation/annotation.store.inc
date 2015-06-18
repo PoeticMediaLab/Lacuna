@@ -181,24 +181,28 @@ function annotation_drupal_format($entity, $update = FALSE) {
         }
         break;
       case 'groups':
-        // @shiraz
-        // data should be valid, eg private || co-learners not private && co-learners, but maybe do server-side check too?
         // $annotation->group_content_access[$annotation->language][0]['value'] = $val['group_visibility'];
         if (isset($val)) {
           $has_groups = (in_array("CO-LEARNERS", $val))? TRUE: FALSE;
+          if ($has_groups) {
+            $users_groups = og_get_groups_by_user();
+          }
           foreach ($val as $gid) {
-            if ("INSTRUCTOR" == $gid) {
-              dpm("instructor");
-              // do something w/ privacy
-            }
             if ("PRIVATE" == $gid) {
-              dpm("private");
-              // do something w/ privacy
+              $annotation->private[$annotation->language][0] = array('value' => 1);
+              break; // If private is set there should be no other values, but break out of loop just in case of JS hacking
             }
-            if ($has_groups && is_numeric($gid)) {
-              dpm("group $gid");
-              // do something w/ privacy
-              $annotation->og_group_ref[$annotation->language][] = array('target_id' => $gid);
+            elseif ("INSTRUCTOR" == $gid) {
+              $annotation->private[$annotation->language][0] = array('value' => 0);
+            }
+            elseif ($has_groups) {
+              // Set to not private before we do the group check in case user checked CO-LEARNERS but did not check any groups
+              $annotation->private[$annotation->language][0] = array('value' => 0);
+              // In case the user hacked the JS, make sure they are only adding the annotation to groups they are a member of.
+              // This is in fact necessary because OG will not catch these (because it's the annotator, ie. system, creating the group ref here, not the user submitting the annotation, which OG would catch)
+              if (in_array($gid, $users_groups['node'])) {
+                $annotation->og_group_ref[$annotation->language][] = array('target_id' => $gid);
+              }
             }
           }
         }
