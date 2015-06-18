@@ -13,7 +13,12 @@ function lacuna_stories_peer_groups_user_default_permissions() {
   // Exported permission: 'create peer_group content'.
   $permissions['create peer_group content'] = array(
     'name' => 'create peer_group content',
-    'roles' => array(),
+    'roles' => array(
+      'Content Manager' => 'Content Manager',
+      'Instructor' => 'Instructor',
+      'Site Administrator' => 'Site Administrator',
+      'Student' => 'Student',
+    ),
     'module' => 'node',
   );
 
@@ -32,7 +37,9 @@ function lacuna_stories_peer_groups_user_default_permissions() {
     'name' => 'delete own peer_group content',
     'roles' => array(
       'Content Manager' => 'Content Manager',
+      'Instructor' => 'Instructor',
       'Site Administrator' => 'Site Administrator',
+      'Student' => 'Student',
     ),
     'module' => 'node',
   );
@@ -52,7 +59,9 @@ function lacuna_stories_peer_groups_user_default_permissions() {
     'name' => 'edit own peer_group content',
     'roles' => array(
       'Content Manager' => 'Content Manager',
+      'Instructor' => 'Instructor',
       'Site Administrator' => 'Site Administrator',
+      'Student' => 'Student',
     ),
     'module' => 'node',
   );
