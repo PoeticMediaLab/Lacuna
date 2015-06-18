@@ -18,19 +18,18 @@ class MediaYouTubeStreamWrapper extends MediaReadOnlyStreamWrapper {
 
   function getOriginalThumbnailPath() {
     $parts = $this->get_parameters();
-    $v = check_plain($parts['v']);
-    //  Attempt to pull a HD thumbnail from YouTube. If it exists pass it on
-    //  otherwise pass on the smaller one.
-    $thumbname = drupal_tempnam('temporary://', 'youtube');
-    $response = drupal_http_request('http://img.youtube.com/vi/' . $v . '/maxresdefault.jpg');
+    $uri = file_stream_wrapper_uri_normalize('youtube://v/' . check_plain($parts['v']));
+    $external_url = file_create_url($uri);
+    $oembed_url = url('http://www.youtube.com/oembed', array('query' => array('url' => $external_url, 'format' => 'json')));
+    $response = drupal_http_request($oembed_url);
+
     if (!isset($response->error)) {
-      file_unmanaged_save_data($response->data, $thumbname, $replace = FILE_EXISTS_REPLACE);
-    }
-    if ((filesize($thumbname)) == 0) {
-      return 'http://img.youtube.com/vi/' . $v . '/0.jpg';
+      $data = drupal_json_decode($response->data);
+      return $data['thumbnail_url'];
     }
     else {
-      return 'http://img.youtube.com/vi/' . $v . '/maxresdefault.jpg';
+      throw new Exception("Error Processing Request. (Error: {$response->code}, {$response->error})");
+      return;
     }
   }
 
