@@ -14,6 +14,11 @@
  *
  *  page-turner-bookmark-toggled
  *
+ *  page-turner-update-pages
+ *
+ *  Events subscribed to:
+ *      page-turner-page-changed
+ *
  * Mike Widner <mikewidner@stanford.edu>
  *
  **/
@@ -29,9 +34,8 @@ function PTBModel(bookmarks) {
     self.page = 0;  // Default starting page
 
     self.bookmarks.forEach(function (element, index, array) {
-        // Ensure our page numbers are integers, not strings
+        // Ensure our page numbers is an integers, not a string
         array[index] = parseInt(element, 10);
-        //array[index].end = parseInt(element.end, 10);
     });
 
     // Listen for page turn events and update our model
@@ -61,7 +65,7 @@ PTBModel.prototype = {
     },
 
     is_bookmarked: function(page) {
-        // return true if current/given page range is bookmarked
+        // return true if current/given page is bookmarked
         if (typeof page === 'undefined') {
             page = this.page;
         }
@@ -125,18 +129,9 @@ function PTBView(model, elements) {
     }
 
     function draw_elements() {
-        // Draw all our necessary elements
-        // 1. Draw toggle button
-        //    a. Set click event
         draw_bookmark_button();
-
-        // 2. Draw all loaded bookmarks in navbar
-        //    a. Set hover events for each bookmark
-        //    b. Set click events
         $('#' + self.elements.navbar.parent).attr('height', '150%');    // give us some room!
         draw_bookmarks();
-        // 3. Set toggle button state according to whether current page is bookmarked
-        //    a. If a change, notify model
     }
 }
 
@@ -191,7 +186,6 @@ function PTBController(model, view, routes) {
 
     $(document).bind('page-turner-bookmark-clicked', function(event, page) {
         $(document).trigger('page-turner-update-pages', {start: page, end: page + 1});
-        //$(document).trigger('page-turner-brush-moved', {start: page, end: page + 1});
     });
 }
 

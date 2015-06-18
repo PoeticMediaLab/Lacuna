@@ -453,14 +453,12 @@ PTController.prototype = {
   },
 
   change_page: function(args) {
-    // this.view.hide_pages(this.model.page_range());
     if (args.direction == 'prev') {
       this.model.prev_page();
     }
     if (args.direction == 'next') {
       this.model.next_page();
     }
-    // this.view.show_pages(this.model.page_range());
   },
 
   brush_moved: function(extent) {
