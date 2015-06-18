@@ -3,8 +3,7 @@
   var $,
     bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
     extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-    hasProp = {}.hasOwnProperty,
-    indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
+    hasProp = {}.hasOwnProperty;
 
   $ = jQuery;
 
@@ -12,9 +11,7 @@
     extend(Privacy, superClass);
 
     function Privacy() {
-      this.updateField = bind(this.updateField, this);
       this.addPrivacy = bind(this.addPrivacy, this);
-      this.setAnnotationGroups = bind(this.setAnnotationGroups, this);
       return Privacy.__super__.constructor.apply(this, arguments);
     }
 
@@ -25,7 +22,8 @@
     };
 
     Privacy.prototype.events = {
-      'annotationEditorShown': "addPrivacy"
+      'annotationEditorShown': "addPrivacy",
+      'annotationEditorSubmit': "savePrivacy"
     };
 
     Privacy.prototype.field = null;
@@ -36,33 +34,56 @@
       if (!Annotator.supported()) {
         return;
       }
-      return this.field = this.annotator.editor.addField({
-        label: Annotator._t('Privacy: what groups should see your annotations?')({
-          type: input
-        })
+      this.field = this.annotator.editor.addField({
+        label: Annotator._t('Privacy')
+      });
+      return this.annotator.viewer.addField({
+        load: this.updateViewer
       });
     };
 
-    Privacy.prototype.setAnnotationGroups = function(field, annotation) {
-      return annotation.groups = this.input.val();
-    };
-
     Privacy.prototype.addPrivacy = function(event, annotation) {
-      var gid, group, groups, groups_html;
-      groups_html = '';
+      var gid, group, groups, groups_html, i, len, privacy_html, privacy_type, ref;
+      groups_html = privacy_html = '';
+      ref = ["Private", "Instructor", "Co-Learners"];
+      for (i = 0, len = ref.length; i < len; i++) {
+        privacy_type = ref[i];
+        privacy_html += '<label class="privacy types">';
+        privacy_html += '<input type="checkbox" class="privacy-type" id="' + privacy_type + '" value="' + privacy_type + '" />';
+        privacy_html += privacy_type;
+        privacy_html += '</label>';
+      }
       groups = Drupal.settings.annotator_groups;
-      console.log(groups);
       for (gid in groups) {
         group = groups[gid];
-        if (indexOf.call(groups, gid) < 0) {
-          groups_html += '<span class="annotations-privacy-group' + gid + '">';
-          groups_html += group;
-          groups_html += '</span>';
-          groups.gid = group;
-        }
+        groups_html += '<label class="privacy groups">';
+        groups_html += '<input type="checkbox" class="privacy-group" value="' + gid + '" />';
+        groups_html += group;
+        groups_html += '</label>';
       }
-      console.log(groups_html);
-      return $(this.field).html(groups_html);
+      return $(this.field).html(privacy_html + groups_html);
+    };
+
+    Privacy.prototype.savePrivacy = function(event, annotation) {
+      var selected_groups;
+      selected_groups = [];
+      $('input.privacy-type[type=checkbox]').each(function() {
+        if ($(this).is(":checked")) {
+          selected_groups.push($(this).val().toUpperCase());
+          if ("Co-Learners" === $(this).attr("id")) {
+            return $('input.privacy-group[type=checkbox]').each(function() {
+              if ($(this).is(":checked")) {
+                return selected_groups.push($(this).val());
+              }
+            });
+          }
+        }
+      });
+      annotation.groups = selected_groups;
+      if ((annotation.text != null) && (annotation.text.length > 0) && 0 === annotation.groups.length) {
+        window.alert("You did not select a Privacy Setting, so the default 'Instructor' has been chosen.");
+        return annotation.groups = ["INSTRUCTOR"];
+      }
     };
 
     Privacy.prototype.updateViewer = function(field, annotation) {
@@ -77,10 +98,6 @@
       } else {
         return field.remove();
       }
-    };
-
-    Privacy.prototype.updateField = function(field, annotation) {
-      return console.log(field);
     };
 
     return Privacy;

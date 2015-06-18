@@ -180,23 +180,28 @@ function annotation_drupal_format($entity, $update = FALSE) {
           $annotation->ranges[$annotation->language][0]['value'] = json_encode($val);
         }
         break;
-      case 'permissions':
-        // ddl($val, 'permissions');
-        if (!empty($val['read']) && ($val['read'][0] == $user->uid)) {
-          // Default to private
-          $annotation->private[$annotation->language][0]['value'] = 1;
-        }
-        else {
-          $annotation->private[$annotation->language][0]['value'] = 0;
-        }
-        break;
       case 'groups':
-        if (isset ($val['groups'])) {
-          foreach ($val['groups'] as $gid) {
-            $annotation->og_group_ref[$annotation->language][0]['target_id'] = $gid;
+        // @shiraz
+        // data should be valid, eg private || co-learners not private && co-learners, but maybe do server-side check too?
+        // $annotation->group_content_access[$annotation->language][0]['value'] = $val['group_visibility'];
+        if (isset($val)) {
+          $has_groups = (in_array("CO-LEARNERS", $val))? TRUE: FALSE;
+          foreach ($val as $gid) {
+            if ("INSTRUCTOR" == $gid) {
+              dpm("instructor");
+              // do something w/ privacy
+            }
+            if ("PRIVATE" == $gid) {
+              dpm("private");
+              // do something w/ privacy
+            }
+            if ($has_groups && is_numeric($gid)) {
+              dpm("group $gid");
+              // do something w/ privacy
+              $annotation->og_group_ref[$annotation->language][] = array('target_id' => $gid);
+            }
           }
         }
-        $annotation->group_content_access[$annotation->language][0]['value'] = $val['group_visibility'];
         break;
       default:
         // Only prepare fields that exist in the annotation node
@@ -228,11 +233,6 @@ function annotation_drupal_format($entity, $update = FALSE) {
 function annotation_api_create() {
   if (annotation_access('create')) {
     $entity = annotation_api_from_stdin();
-    // Temporarily set group settings here until we are actually setting them in the annotator.js privacy plugin
-    $entity->groups = array (
-      'groups' => array(),
-      'group_visibility' => 1, // Private
-    );
     $annotation = annotation_drupal_format($entity);
     $annotation->comment = 2; // enable comments
     $annotation = node_submit($annotation);
@@ -463,6 +463,17 @@ function annotation_api_entity_prepare($entity, $op) {
           array_push($entity->tags, $term->name);
         }
       }
+      if (isset($entity->og_group_ref)) {
+        foreach($entity->og_group_ref[$entity->language] as $group) {
+          $group_node = node_load($group['target_id']);
+          $entity->groups[] = $group_node->title;
+        }
+      }
+
+      /////////////////////////////////////////////////////////////////////////////////////
+      //
+      // TODO: REVIEW
+      //
       if (isset($entity->private)) {
         // Format permissions for the Annotator Permissions plugin
         // We only implement "read" permissions right now
@@ -484,6 +495,11 @@ function annotation_api_entity_prepare($entity, $op) {
         array_push($entity->permissions['update'], $user->uid);
         array_push($entity->permissions['delete'], $user->uid);
       }
+      //
+      //
+      //
+      /////////////////////////////////////////////////////////////////////////////////////
+
       $entity->links[] = array(
         'href' => url('node/' . $entity->nid),
         'rel' => 'alternate',

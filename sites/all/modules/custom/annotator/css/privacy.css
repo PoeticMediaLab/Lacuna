@@ -3,15 +3,13 @@
  *
  ***/
 
-.annotator-privacy {
-  opacity: .5;
+.annotator-item label.privacy {
+  width: 95%;
+  padding-left: 5%;
+  display: block;
 }
- .annotator-privacy-public {
-  color: green;
-  display: block !important;
- }
-
- .annotator-privacy-private {
- 	color: firebrick;
-  display: block !important;
- }
+.annotator-item label.privacy.groups {
+  display: none;
+  padding-left: 10%;
+  width: 90%;
+}

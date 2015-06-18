@@ -41,10 +41,9 @@ class PrivacyAnnotatorPlugin extends AnnotatorPlugin {
 //      'peer_groups' => $peer_groups
 //    );
     $groups_total = array_replace ($course_groups, $peer_groups);
-    #dpm ($groups_total, 'groups total');
 
     global $user;
-    drupal_add_js(array('annotator_groups' => array ($user->uid => $groups_total)), 'setting');
+    drupal_add_js(array('annotator_groups' => $groups_total), 'setting');
 
     drupal_add_js(drupal_get_path('module', 'annotator') . '/js/annotator_privacy.js');
     drupal_add_js(drupal_get_path('module', 'annotator') . '/js/privacy.js');
