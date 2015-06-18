@@ -1,0 +1,21 @@
+<?php
+/**
+ * @file
+ *
+ * A test suite for Page Turner.
+ *
+ **/
+
+class AdminMenuTest extends DrupalWebTestCase {
+  public function getInfo() {
+    return array(
+      'name' => 'Administration menu test',
+      'description' => 'Test that Page Turner set up admin menu',
+      'group' => 'Page Turner',
+    );
+  }
+
+  public function testAdminMenu() {
+
+  }
+}
