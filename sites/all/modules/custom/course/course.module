@@ -67,6 +67,12 @@ function course_access() {
   global $user;
   $key = "Course_Auth_Code_User_" . $user->uid;
 
+  // we only want to check access when we are actually on a protected page
+  // not just when eg the link is displayed and the access functions are called.
+  if (!course_is_protected_page()) {
+    return TRUE;
+  }
+
   // ANON
   if (user_is_anonymous()) {
     drupal_set_message("You must be logged in to create a Lacuna Stories course.", 'status', FALSE);
@@ -83,14 +89,13 @@ function course_access() {
   }
   // NO/MISMATCHED AUTHCODE
   else {
-    // redirect if not on the auth code form
-    if (preg_match("/createcourse/", current_path()) && current_path() != 'createcourse') {
-      drupal_set_message("Please type in the Authorization Code before creating a Lacuna Stories Course", 'status', FALSE);
-      drupal_goto('createcourse');
-    }
-    // already on auth code form
-    return TRUE;
+    drupal_set_message("Please type in the Authorization Code before creating a Lacuna Stories Course", 'status', FALSE);
+    drupal_goto('createcourse');
   }
+}
+
+function course_is_protected_page() {
+  return (preg_match("/createcourse/", current_path()) && current_path() != 'createcourse');
 }
 
 function course_admin_form() {
