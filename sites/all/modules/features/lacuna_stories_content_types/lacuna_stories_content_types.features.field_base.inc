@@ -891,6 +891,9 @@ function lacuna_stories_content_types_field_default_field_bases() {
     'deleted' => 0,
     'entity_types' => array(),
     'field_name' => 'group_access',
+    'field_permissions' => array(
+      'type' => 0,
+    ),
     'indexes' => array(
       'value' => array(
         0 => 'value',
@@ -946,6 +949,9 @@ function lacuna_stories_content_types_field_default_field_bases() {
     'deleted' => 0,
     'entity_types' => array(),
     'field_name' => 'group_group',
+    'field_permissions' => array(
+      'type' => 0,
+    ),
     'indexes' => array(
       'value' => array(
         0 => 'value',
@@ -998,6 +1004,7 @@ function lacuna_stories_content_types_field_default_field_bases() {
         ),
         'target_bundles' => array(
           'course' => 'course',
+          'peer_group' => 'peer_group',
         ),
       ),
       'handler_submit' => 'Change handler',
