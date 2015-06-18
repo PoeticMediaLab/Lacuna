@@ -1,0 +1,159 @@
+; Packaging information for lacunastories_base
+name = "Lacunastories Base"
+description = "Installation profile for basic lacunastories site."
+exclusive = "1"
+core = "7.x"
+; ----------
+; Dependencies
+; ----------
+; Access control
+dependencies[] = content_access
+; Administration
+dependencies[] = admin_menu
+dependencies[] = admin_menu_toolbar
+dependencies[] = fpa
+dependencies[] = front_page
+dependencies[] = module_filter
+; Biblio
+dependencies[] = biblio
+; Chaos tool suite
+dependencies[] = ctools
+; Context
+dependencies[] = context
+dependencies[] = context_ui
+; Core
+dependencies[] = block
+dependencies[] = blog
+dependencies[] = color
+dependencies[] = comment
+dependencies[] = contact
+dependencies[] = contextual
+dependencies[] = dashboard
+dependencies[] = dblog
+dependencies[] = field
+dependencies[] = field_sql_storage
+dependencies[] = field_ui
+dependencies[] = file
+dependencies[] = filter
+dependencies[] = help
+dependencies[] = image
+dependencies[] = list
+dependencies[] = menu
+dependencies[] = node
+dependencies[] = number
+dependencies[] = options
+dependencies[] = path
+dependencies[] = php
+dependencies[] = rdf
+dependencies[] = search
+dependencies[] = shortcut
+dependencies[] = statistics
+dependencies[] = system
+dependencies[] = taxonomy
+dependencies[] = text
+dependencies[] = tracker
+dependencies[] = update
+dependencies[] = user
+; Date/Time
+dependencies[] = date
+dependencies[] = date_api
+dependencies[] = date_popup
+dependencies[] = date_views
+; Development
+dependencies[] = profiler_builder
+dependencies[] = profiler_builder_extras
+; Fields
+dependencies[] = entityreference
+dependencies[] = field_group
+dependencies[] = field_permissions
+dependencies[] = link
+dependencies[] = maxlength
+; Flags
+dependencies[] = flag
+dependencies[] = flag_actions
+; Input filters
+dependencies[] = wysiwyg_filter
+; Lacuna Stories
+dependencies[] = annotation
+dependencies[] = annotator
+dependencies[] = lacuna_visualizations
+dependencies[] = sewing_kit
+dependencies[] = user_account
+; Mail
+dependencies[] = notify
+; Media
+dependencies[] = file_entity
+dependencies[] = media
+dependencies[] = media_internet
+dependencies[] = media_migrate_file_types
+dependencies[] = media_vimeo
+dependencies[] = media_wysiwyg
+dependencies[] = media_wysiwyg_view_mode
+dependencies[] = media_youtube
+dependencies[] = plupload
+; Organic groups
+dependencies[] = og
+dependencies[] = og_access
+dependencies[] = og_ui
+dependencies[] = og_vocab
+; Other
+dependencies[] = advanced_help
+dependencies[] = backup_migrate
+dependencies[] = entity
+dependencies[] = entity_token
+dependencies[] = htmlpurifier
+dependencies[] = libraries
+dependencies[] = mediaelement
+dependencies[] = pathauto
+dependencies[] = publishcontent
+dependencies[] = realname
+dependencies[] = reg_with_pic
+dependencies[] = special_menu_items
+dependencies[] = strongarm
+dependencies[] = token
+; Rules
+dependencies[] = rules
+dependencies[] = rules_admin
+; Spam control
+dependencies[] = honeypot
+; Taxonomy
+dependencies[] = tagclouds
+; User interface
+dependencies[] = jquery_update
+dependencies[] = popup
+dependencies[] = popup_ui
+dependencies[] = superfish
+dependencies[] = wysiwyg
+; Views
+dependencies[] = better_exposed_filters
+dependencies[] = views
+dependencies[] = views_autocomplete_filters
+dependencies[] = views_bulk_operations
+dependencies[] = views_ui
+; Visualization
+dependencies[] = d3
+dependencies[] = graphapi
+; Webform
+dependencies[] = webform
+dependencies[] = webform_rules
+; Workflow
+dependencies[] = workflow
+dependencies[] = workflow_access
+dependencies[] = workflow_admin_ui
+dependencies[] = workflow_views
+dependencies[] = workflowfield
+; views
+dependencies[] = popup_views_integration
+; Features
+dependencies[] = features
+dependencies[] = course
+dependencies[] = lacuna_stories_content_types
+dependencies[] = lacuna_stories_irb_form
+dependencies[] = lacuna_stories_media
+dependencies[] = lacuna_stories_menus
+dependencies[] = lacuna_stories_permissions
+dependencies[] = lacuna_stories_rules
+dependencies[] = lacuna_stories_system
+dependencies[] = lacuna_stories_views
+dependencies[] = lacuna_stories_workflows
+
