@@ -13,7 +13,6 @@
  *
  * Using jQuery events for Observer
  * Events published:
- *
  *  page-turner-page-changed
  *    Returns {start: NUM, end: NUM}
  *
@@ -22,6 +21,10 @@
  *
  *  page-turner-brush-moved
  *    Returns d3.brush.extent()
+ *
+ * Events subscribed to:
+ *  page-turner-update-pages
+ *      Expects {start: NUM, end: NUM}
  *
  ******/
 
@@ -38,6 +41,8 @@ function PTModel(content, settings) {
     self._page_range = {start: 0, end: 1};   // current page range
     self.pages = chunks.pages;        // content of all pages
     self.breaks = chunks.break_pages; // indices of all break pages
+
+    $(document).bind('page-turner-update-pages', function(e, pages) { self.page_range(pages); });
 
   function chunk_pages(content, settings) {
     // Divide total content length by page length
@@ -143,9 +148,9 @@ PTModel.prototype = {
   page_range: function(pages) {
     // Return current page range
     if (typeof pages !== 'undefined') {
-      this._page_range.start = pages.start;
-      this._page_range.end = pages.end;
-      $(document).trigger('page-turner-page-changed', this._page_range);
+        this._page_range.start = pages.start;
+        this._page_range.end = pages.end;
+        $(document).trigger('page-turner-page-changed', this._page_range);
     }
     return this._page_range;
   },
@@ -282,12 +287,13 @@ function PTView(model, elements) {
       }
       switch (event.keyIdentifier) {
         case "Left":
-          $(document).trigger('page-turner-pager-clicked', { direction: 'prev' });
-          break;
+            $(document).trigger('page-turner-pager-clicked', { direction: 'prev' });
+            break;
         case "Right":
-          $(document).trigger('page-turner-pager-clicked', { direction: 'next' });
+            $(document).trigger('page-turner-pager-clicked', { direction: 'next' });
+            break;
         default:
-          return; // Quit when this doesn't handle the key event.
+            return; // Quit when this doesn't handle the key event.
       }
       event.preventDefault();
     }, true);
@@ -420,17 +426,17 @@ PTView.prototype = {
  * Handles user interactions
  **/
 function PTController(model, view) {
-  this.model = model;
-  this.view = view;
-  var self = this;
+    this.model = model;
+    this.view = view;
+    var self = this;
 
-  $(document).bind('page-turner-pager-clicked', function(e, data) {
-    self.change_page(data);
-  });
+    $(document).bind('page-turner-pager-clicked', function(e, data) {
+        self.change_page(data);
+    });
 
-  $(document).bind('page-turner-brush-moved', function(e, data) {
-    self.brush_moved(data);
-  });
+    $(document).bind('page-turner-brush-moved', function(e, data) {
+        self.brush_moved(data);
+    });
 }
 
 PTController.prototype = {

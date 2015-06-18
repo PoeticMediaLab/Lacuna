@@ -32,56 +32,43 @@ function page_turner_bookmarks_menu() {
 /*
  * Return bookmark page ranges for current node
  */
-function page_turner_bookmarks_get_pages_marked($node) {
+function page_turner_bookmarks_get_bookmarks($node) {
 	global $user;
-	$pages = array();
+	$bookmarks = array();
 	$flag = flag_get_user_flags('node', $node->nid);
 	if (isset($flag[PAGE_TURNER_BOOKMARK_FLAG])) {
 		$flagging_wrapper = entity_metadata_wrapper('flagging', $flag[PAGE_TURNER_BOOKMARK_FLAG]->flagging_id);
-		foreach ($flagging_wrapper->field_page_start->getIterator() as $delta => $value_wrapper) {
-			$pages[$delta]['start'] = $value_wrapper->value();
-		}
-		foreach ($flagging_wrapper->field_page_end->getIterator() as $delta => $value_wrapper) {
-			$pages[$delta]['end'] = $value_wrapper->value();
+		foreach ($flagging_wrapper->field_page as $page) {
+			$bookmarks[] = $page->value();
 		}
 	}
-	return $pages;
+	return $bookmarks;
 }
 
 /**
  * Parse _POST, Return array of page range and node context
  */
 function page_turner_bookmarks_parse_query() {
+	$page = $_POST['page'];
+	settype($page, 'integer');
 	return array(
-		$_POST['pages'],
+		$page,
 		menu_get_object($type = 'node', $position = 1, drupal_lookup_path('source', $_POST['path']))
 	);
 }
 
 
 /**
- * Return true if given page range has been bookmarked
+ * Return true if given page has been bookmarked
  */
-function page_turner_bookmarks_pages_marked($wrapper, $start, $end, &$delta = NULL) {
-	$matches = array();
-	foreach ($wrapper->field_page_start->getIterator() as $delta => $value_wrapper) {
-		$matches[$delta] = 0;
-		if ($start == $value_wrapper->value()) {
-			++$matches[$delta];
-		}
-	}
-	foreach ($wrapper->field_page_end->getIterator() as $delta => $value_wrapper) {
-		if ($end == $value_wrapper->value()) {
-			++$matches[$delta];
-		}
-	}
-	foreach ($matches as $delta => $count) {
-		// NB: Updates by-reference $delta in passing
-		if ($count == 2) {
+function page_turner_bookmarks_page_marked($wrapper, $page, &$delta = NULL) {
+	// Update $delta in passing for cases where we need that information
+	// and don't want to loop again
+	foreach ($wrapper->field_page->getIterator() as $delta => $bookmarked_page) {
+		if ($page == $bookmarked_page->value()) {
 			return TRUE;
 		}
 	}
-	$delta = NULL;
 	return FALSE;
 }
 /**
@@ -90,7 +77,7 @@ function page_turner_bookmarks_pages_marked($wrapper, $start, $end, &$delta = NU
  * Creates a new bookmark for the selected page(s)
  **/
 function page_turner_bookmarks_add() {
-	list($pages, $node) = page_turner_bookmarks_parse_query();
+	list($page, $node) = page_turner_bookmarks_parse_query();
 	$bookmark_flag = flag_get_flag(PAGE_TURNER_BOOKMARK_FLAG);
 	$flag = flag_get_user_flags('node', $node->nid);
 
@@ -109,10 +96,9 @@ function page_turner_bookmarks_add() {
 		$flagging_wrapper = entity_metadata_wrapper('flagging', $flagging);
 	}
 
-	if (!page_turner_bookmarks_pages_marked($flagging_wrapper, $pages['start'], $pages['end'])) {
+	if (!page_turner_bookmarks_page_marked($flagging_wrapper, $page)) {
 		// Avoid duplicate bookmarks
-		$flagging_wrapper->field_page_start[] = $pages['start'];
-		$flagging_wrapper->field_page_end[] = $pages['end'];
+		$flagging_wrapper->field_page[] = $page;
 
 		if (!isset($flagging)) {
 			// Update an existing bookmark flagging, but prevent duplicates
@@ -130,18 +116,18 @@ function page_turner_bookmarks_add() {
  * Removes existing bookmark for the selected page(s)
  **/
 function page_turner_bookmarks_remove() {
-	list($pages, $node) = page_turner_bookmarks_parse_query();
+	list($page, $node) = page_turner_bookmarks_parse_query();
 	$flag = flag_get_user_flags('node', $node->nid);
+
 	if (isset($flag[PAGE_TURNER_BOOKMARK_FLAG])) {
 		$flagging_wrapper = entity_metadata_wrapper('flagging', $flag[PAGE_TURNER_BOOKMARK_FLAG]->flagging_id);
 		$delta = NULL;
-		if (page_turner_bookmarks_pages_marked($flagging_wrapper, $pages['start'], $pages['end'], $delta)) {
+		if (page_turner_bookmarks_page_marked($flagging_wrapper, $page, $delta)) {
 			// Match found, delete it
-			$flagging_wrapper->field_page_start[$delta] = NULL;
-			$flagging_wrapper->field_page_end[$delta] = NULL;
+			$flagging_wrapper->field_page[$delta] = NULL;
 			$flagging_wrapper->save();
 
-			if ($flagging_wrapper->field_page_start->count() == 0) {
+			if ($flagging_wrapper->field_page->count() == 0) {
 				// Bookmark is now empty, unflag the node
 				$bookmark_flag = flag_get_flag(PAGE_TURNER_BOOKMARK_FLAG);
 				$bookmark_flag->flag('unflag', $node->nid);
@@ -157,7 +143,6 @@ function page_turner_bookmarks_remove() {
  * Implements hook_node_view()
  */
 function page_turner_bookmarks_node_view($node, $view_mode, $langcode) {
-	$bookmarks = page_turner_bookmarks_get_pages_marked($node);
-	drupal_add_js(array('page_turner_bookmarks' => $bookmarks), 'setting');
+	drupal_add_js(array('page_turner_bookmarks' => page_turner_bookmarks_get_bookmarks($node)), 'setting');
 	drupal_add_js(drupal_get_path('module', 'page_turner_bookmarks') . '/js/page_turner_bookmarks.js', array('group' => 'page_turner', 'weight' => 10));
 }
