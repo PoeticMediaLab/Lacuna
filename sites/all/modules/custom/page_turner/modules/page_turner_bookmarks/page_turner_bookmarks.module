@@ -141,7 +141,7 @@ function page_turner_bookmarks_remove() {
 			$flagging_wrapper->field_page_end[$delta] = NULL;
 			$flagging_wrapper->save();
 
-			if ($flagging_wrapper->field_start_page->count() == 0) {
+			if ($flagging_wrapper->field_page_start->count() == 0) {
 				// Bookmark is now empty, unflag the node
 				$bookmark_flag = flag_get_flag(PAGE_TURNER_BOOKMARK_FLAG);
 				$bookmark_flag->flag('unflag', $node->nid);
