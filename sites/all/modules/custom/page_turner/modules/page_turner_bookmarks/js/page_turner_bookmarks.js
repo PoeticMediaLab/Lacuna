@@ -34,7 +34,7 @@ function PTBModel(bookmarks) {
     self.page = 0;  // Default starting page
 
     self.bookmarks.forEach(function (element, index, array) {
-        // Ensure our page numbers is an integers, not a string
+        // Ensure our page numbers are integers, not strings
         array[index] = parseInt(element, 10);
     });
 
@@ -157,7 +157,8 @@ PTBView.prototype = {
 
     add_bookmark: function(page) {
         // draw bookmark icon on page ranges
-        // TODO: refactor to use jQuery, not d3 (no need to mix)?
+        // TODO: refactor to use jQuery, not d3 (no need to mix)
+        // TODO: refactor so attributes aren't hard-coded
         d3.select($(this.elements.navbar.tick)[page])
             .append('text')
             .attr('id', this.elements.bookmark.id + page)
@@ -165,7 +166,7 @@ PTBView.prototype = {
             .attr('font-size','24')
             .attr('cursor', 'pointer')
             .classed(this.elements.bookmark.classes.join(' '), true)
-            .text(function(d) { return '\uf097' })
+            .text(function(d) { return '\uf097' })  // font-awesome icon unicode for bookmark
             .attr('y', '20')
             .on('click', function(d) { $(document).trigger('page-turner-bookmark-clicked', page); });
     }
@@ -182,7 +183,7 @@ function PTBController(model, view, routes) {
     self.view = view;
     self.routes = routes;
 
-    $("#" + self.view.elements.bookmark_button.id).bind('page-turner-bookmark-toggled', function (event) { self.bookmark_toggle(event) });
+    $("#" + self.view.elements.bookmark_button.id).bind('page-turner-bookmark-toggled', function () { self.bookmark_toggle() });
 
     $(document).bind('page-turner-bookmark-clicked', function(event, page) {
         $(document).trigger('page-turner-update-pages', {start: page, end: page + 1});
@@ -190,7 +191,7 @@ function PTBController(model, view, routes) {
 }
 
 PTBController.prototype = {
-    bookmark_toggle: function(event) {
+    bookmark_toggle: function() {
         if (this.model.is_bookmarked()) {
             $(document).trigger('page-turner-bookmark-removed', this.model.page);
             this.bookmark_remove();
@@ -202,17 +203,16 @@ PTBController.prototype = {
 
     bookmark_add: function() {
         // Add bookmark with current page range
-        // Send Drupal the node's path, because it won't know it on POST
         $.ajax({url: this.routes.add,
             type: 'POST',
             data: {
+                // Send Drupal the node's path, because it won't know it on POST
                 path: location.pathname.replace(this.routes.root, ''),
                 page: this.model.page
             },
             context: this,
             success: function (data) {
                 // TODO: do something on success, maybe draw new bookmark?
-                console.log('success', data);
             }
             // TODO: Add a failure option
         });
@@ -224,7 +224,7 @@ PTBController.prototype = {
             type: 'POST',
             data: {
                 path: location.pathname.replace(this.routes.root, ''),
-                page: page
+                page: this.model.page
             },
             context: this,
             success: function (data) {
@@ -269,7 +269,6 @@ PTBController.prototype = {
         var routes = {};
         routes.root = settings.basePath;
         routes.base = routes.root + 'admin/user-interface/page-turner/bookmark/';
-        routes.load = routes.base + 'list/';
         routes.add = routes.base + 'add';
         routes.remove = routes.base + 'remove/';
 
