@@ -38,7 +38,7 @@ function page_turner_bookmarks_get_bookmarks($node) {
 	$flag = flag_get_user_flags('node', $node->nid);
 	if (isset($flag[PAGE_TURNER_BOOKMARK_FLAG])) {
 		$flagging_wrapper = entity_metadata_wrapper('flagging', $flag[PAGE_TURNER_BOOKMARK_FLAG]->flagging_id);
-		foreach ($flagging_wrapper->field_page as $page) {
+		foreach ($flagging_wrapper->field_bookmark_page as $page) {
 			$bookmarks[] = $page->value();
 		}
 	}
@@ -64,7 +64,7 @@ function page_turner_bookmarks_parse_query() {
 function page_turner_bookmarks_page_marked($wrapper, $page, &$delta = NULL) {
 	// Update $delta in passing for cases where we need that information
 	// and don't want to loop again
-	foreach ($wrapper->field_page->getIterator() as $delta => $bookmarked_page) {
+	foreach ($wrapper->field_bookmark_page->getIterator() as $delta => $bookmarked_page) {
 		if ($page == $bookmarked_page->value()) {
 			return TRUE;
 		}
@@ -79,10 +79,12 @@ function page_turner_bookmarks_page_marked($wrapper, $page, &$delta = NULL) {
 function page_turner_bookmarks_add() {
 	list($page, $node) = page_turner_bookmarks_parse_query();
 	$bookmark_flag = flag_get_flag(PAGE_TURNER_BOOKMARK_FLAG);
+	ddl($bookmark_flag);
 	$flag = flag_get_user_flags('node', $node->nid);
 
 	// TODO: Add exception handling, return success/failure as JSON
 	// try { } catch (EntityMetadataWrapperException $exc) {
+
 	if (isset($flag[PAGE_TURNER_BOOKMARK_FLAG])) {
 		$flagging_wrapper = entity_metadata_wrapper('flagging', $flag[PAGE_TURNER_BOOKMARK_FLAG]->flagging_id);
 	} else {
@@ -97,9 +99,8 @@ function page_turner_bookmarks_add() {
 	}
 
 	if (!page_turner_bookmarks_page_marked($flagging_wrapper, $page)) {
-		// Avoid duplicate bookmarks
-		$flagging_wrapper->field_page[] = $page;
-
+		// Avoid duplicate bookmarks; probably impossible because of client-side state
+		$flagging_wrapper->field_bookmark_page[] = $page;
 		if (!isset($flagging)) {
 			// Update an existing bookmark flagging, but prevent duplicates
 			$flagging_wrapper->save();
@@ -124,10 +125,10 @@ function page_turner_bookmarks_remove() {
 		$delta = NULL;
 		if (page_turner_bookmarks_page_marked($flagging_wrapper, $page, $delta)) {
 			// Match found, delete it
-			$flagging_wrapper->field_page[$delta] = NULL;
+			$flagging_wrapper->field_bookmark_page[$delta] = NULL;
 			$flagging_wrapper->save();
 
-			if ($flagging_wrapper->field_page->count() == 0) {
+			if ($flagging_wrapper->field_bookmark_page->count() == 0) {
 				// Bookmark is now empty, unflag the node
 				$bookmark_flag = flag_get_flag(PAGE_TURNER_BOOKMARK_FLAG);
 				$bookmark_flag->flag('unflag', $node->nid);
