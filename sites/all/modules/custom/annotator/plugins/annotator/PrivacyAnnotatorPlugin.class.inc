@@ -64,8 +64,8 @@ class PrivacyAnnotatorPlugin extends AnnotatorPlugin {
         'audience' => $audience,
         'groups' => $groups_total
       );
-      
-      drupal_add_js(array('annotator_groups' => $privacy_options), 'setting');
+
+      drupal_add_js(array('privacy_options' => $privacy_options), 'setting');
     }
 
     drupal_add_js(drupal_get_path('module', 'annotator') . '/js/annotator_privacy.js');
