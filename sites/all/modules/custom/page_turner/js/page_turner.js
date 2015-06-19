@@ -161,9 +161,7 @@ PTModel.prototype = {
             // Allow for just passing start page
             pages.end = pages.start + this._page_range.end - this._page_range.start;
         }
-        this._page_range.start = pages.start;
-        this._page_range.end = pages.end;
-        this._page_range = this.validate_page_range(this._page_range);
+        this._page_range = this.validate_page_range(pages);
         if (start_only && this._page_range.start != pages.start) {
             // Because that's *really* where we were asked to go; just shrink range
             this._page_range.start = pages.start;
