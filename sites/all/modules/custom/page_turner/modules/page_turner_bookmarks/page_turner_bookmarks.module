@@ -79,7 +79,6 @@ function page_turner_bookmarks_page_marked($wrapper, $page, &$delta = NULL) {
 function page_turner_bookmarks_add() {
 	list($page, $node) = page_turner_bookmarks_parse_query();
 	$bookmark_flag = flag_get_flag(PAGE_TURNER_BOOKMARK_FLAG);
-	ddl($bookmark_flag);
 	$flag = flag_get_user_flags('node', $node->nid);
 
 	// TODO: Add exception handling, return success/failure as JSON
