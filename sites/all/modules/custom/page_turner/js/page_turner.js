@@ -24,7 +24,7 @@
  *
  * Events subscribed to:
  *  page-turner-update-pages
- *      Expects {start: NUM, end: NUM}
+ *      Expects {start: NUM, [end: NUM]} (last optional)
  *
  ******/
 
@@ -122,34 +122,52 @@ PTModel.prototype = {
     return this._page_range.start;
   },
 
-  next_page: function() {
-    var range = this._page_range.end - this._page_range.start;
-    var total = this.page_total();
-    this._page_range.start += range;
-    this._page_range.end += range;
-    if (this._page_range.end > total) {
-      this._page_range.start = total - range;
-      this._page_range.end = total;
-    }
-    $(document).trigger('page-turner-page-changed', this._page_range);
-  },
+    validate_page_range: function(pages) {
+        var range = pages.end - pages.start;
+        var total = this.page_total();
 
-  prev_page: function() {
-    var range = this._page_range.end - this._page_range.start;
-    this._page_range.start -= range;
-    this._page_range.end -= range;
-    if (this._page_range.start < 0) {
-      this._page_range.start = 0;
-      this._page_range.end = range;
-    }
-    $(document).trigger('page-turner-page-changed', this._page_range);
-  },
+        if (pages.start < 0) {
+            pages.start = 0;
+            pages.end = range;
+        }
+        if (pages.end > total) {
+            pages.end = total;
+            pages.start = total - range;
+        }
+        return pages;
+    },
+
+    next_page: function() {
+        var range = this._page_range.end - this._page_range.start;
+        this._page_range.start += range;
+        this._page_range.end += range;
+        this._page_range = this.validate_page_range(this._page_range);
+        $(document).trigger('page-turner-page-changed', this._page_range);
+    },
+
+    prev_page: function() {
+        var range = this._page_range.end - this._page_range.start;
+        this._page_range.start -= range;
+        this._page_range.end -= range;
+        this._page_range = this.validate_page_range(this._page_range);
+        $(document).trigger('page-turner-page-changed', this._page_range);
+    },
 
   page_range: function(pages) {
     // Return current page range
     if (typeof pages !== 'undefined') {
+        var start_only = typeof pages.end === 'undefined';
+        if (start_only) {
+            // Allow for just passing start page
+            pages.end = pages.start + this._page_range.end - this._page_range.start;
+        }
         this._page_range.start = pages.start;
         this._page_range.end = pages.end;
+        this._page_range = this.validate_page_range(this._page_range);
+        if (start_only && this._page_range.start != pages.start) {
+            // Because that's *really* where we were asked to go; just shrink range
+            this._page_range.start = pages.start;
+        }
         $(document).trigger('page-turner-page-changed', this._page_range);
     }
     return this._page_range;

@@ -186,7 +186,7 @@ function PTBController(model, view, routes) {
     $("#" + self.view.elements.bookmark_button.id).bind('page-turner-bookmark-toggled', function () { self.bookmark_toggle() });
 
     $(document).bind('page-turner-bookmark-clicked', function(event, page) {
-        $(document).trigger('page-turner-update-pages', {start: page, end: page + 1});
+        $(document).trigger('page-turner-update-pages', {start: page});
     });
 }
 
