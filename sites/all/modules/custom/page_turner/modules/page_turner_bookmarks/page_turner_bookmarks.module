@@ -18,12 +18,12 @@ function page_turner_bookmarks_menu() {
 
   $items['admin/user-interface/page-turner/bookmark/add'] = array(
     'page callback' => 'page_turner_bookmarks_add',
-    'access arguments' => 'flag page_turner_bookmark',
+    'access arguments' => array('flag page_turner_bookmark'),
     'type' => MENU_CALLBACK,
     );
   $items['admin/user-interface/page-turner/bookmark/remove'] = array(
     'page callback' => 'page_turner_bookmarks_remove',
-    'access arguments' => 'unflag page_turner_bookmark',
+    'access arguments' => array('unflag page_turner_bookmark'),
     'type' => MENU_CALLBACK,
     );
   return $items;
