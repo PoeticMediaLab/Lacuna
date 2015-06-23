@@ -1,3 +1,11 @@
+/*  Tag autocomplete box set to 10 lines tall with scroll
+*   activated for overflow.
+*/
+.ui-autocomplete {
+  height: 10em;
+  overflow: scroll;
+}
+
 .ui-autocomplete-category {
   font-weight: bold;
   border-bottom: 1px solid black;
