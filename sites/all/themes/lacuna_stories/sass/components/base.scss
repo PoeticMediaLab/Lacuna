@@ -4,6 +4,14 @@ $link-color: #1588ba;
 $link-color-hover: #094762;
 $bg-color: #F8F8F8;
 
+/*  Adds 5em margins to left and right of document
+*   article page body text.
+*/
+article.node-document .field-type-text-long {
+  margin-left: 5em;
+  margin-right: 5em;
+}
+
 #name-and-slogan {
   font-size: 1em;
 }
