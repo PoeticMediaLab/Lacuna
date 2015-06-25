@@ -56,8 +56,8 @@ Drupal.wysiwyg.editor.detach.epiceditor = function (context, params, trigger) {
         $target.show();
         $('#' + $target.attr('id') + '-epiceditor').remove();
       });
+      $target.removeData('epiceditor');
     }
-    $target.removeData('epiceditor');
   });
 };
 

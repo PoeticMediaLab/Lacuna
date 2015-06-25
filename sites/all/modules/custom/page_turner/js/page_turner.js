@@ -6,24 +6,25 @@
  *
  **/
 
- "use strict";
-
 /******
  *
  * Some light weight MVC to avoid problems as complexity grows
- * @see
- * https://alexatnet.com/articles/model-view-controller-mvc-javascript
+ * @see https://alexatnet.com/articles/model-view-controller-mvc-javascript
  *
- * Using jQuery events for observer
- * Events:
- *  page-turner-pager-clicked
+ * Using jQuery events for Observer
+ * Events published:
+ *  page-turner-page-changed
  *    Returns {start: NUM, end: NUM}
+ *
+ *  page-turner-pager-clicked
+ *    Returns {direction: prev|next}
  *
  *  page-turner-brush-moved
  *    Returns d3.brush.extent()
  *
- *  page-turner-navbar-created
- *    Returns navbar selection
+ * Events subscribed to:
+ *  page-turner-update-pages
+ *      Expects {start: NUM, [end: NUM]} (last optional)
  *
  ******/
 
@@ -33,21 +34,21 @@
  * accessing pages by number, etc.
  **/
 function PTModel(content, settings) {
-  var self = this;
-  self.content = content;
-  self.settings = settings.page_turner;
-  var chunks = chunk_pages(content, self.settings);
-  self.page = {start: 0, end: 1};   // current page range
-  self.pages = chunks.pages;        // content of all pages
-  self.breaks = chunks.break_pages; // indices of all break pages
+    var self = this;
+    self.content = content;
+    self.settings = settings.page_turner;
+    var chunks = chunk_pages(content, self.settings);
+    self._page_range = {start: 0, end: 1};   // current page range
+    self.pages = chunks.pages;        // content of all pages
+    self.breaks = chunks.break_pages; // indices of all break pages
 
-  // self.page_changed = new Event(self);
+    $(document).bind('page-turner-update-pages', function(e, pages) { self.page_range(pages); });
 
   function chunk_pages(content, settings) {
     // Divide total content length by page length
     // And look for page break elements
     // Return array of page chunks
-    var page = Array(); // holds all elements in a page
+    var page = []; // holds all elements in a page
     var t_len = 0;  // text length
     var breaks = settings.breaks.toLowerCase().split(',');
     var pages = Array();
@@ -68,7 +69,7 @@ function PTModel(content, settings) {
       var new_len = t_len + content[i].textContent.length;
 
       if (is_break) {
-        if (t_len == 0) {
+        if (t_len === 0) {
           // Start of new page
           page.push(content[i]);
           t_len = new_len;
@@ -97,7 +98,7 @@ function PTModel(content, settings) {
 PTModel.prototype = {
   get_page: function(page_num) {
     if (page_num > this.page_total()) {
-      return this.pages[page_total() - 1];
+      return this.pages[this.page_total() - 1];
     }
     if (page_num < 0) {
       return this.pages[0];
@@ -113,40 +114,61 @@ PTModel.prototype = {
       if (p < 0) {
         p = 0;
       }
-      var diff = p - this.page.start;
-      this.page.start = p;
-      this.page.end += diff;
-      $(document).trigger('page-turner-page-changed', {start: this.page.start, end: this.page.end});
+      var diff = p - this._page_range.start;
+      this._page_range.start = p;
+      this._page_range.end += diff;
+      $(document).trigger('page-turner-page-changed', this._page_range);
     }
-    return this.page.start;
+    return this._page_range.start;
   },
 
-  next_page: function() {
-    var range = this.page.end - this.page.start;
-    var total = this.page_total();
-    this.page.start += range;
-    this.page.end += range;
-    if (this.page.end > total) {
-      this.page.start = total - range;
-      this.page.end = total;
-    }
-    $(document).trigger('page-turner-page-changed', {start: this.page.start, end: this.page.end});
-  },
+    validate_page_range: function(pages) {
+        var range = pages.end - pages.start;
+        var total = this.page_total();
 
-  prev_page: function() {
-    var range = this.page.end - this.page.start;
-    this.page.start -= range;
-    this.page.end -= range;
-    if (this.page.start < 0) {
-      this.page.start = 0;
-      this.page.end = range;
-    }
-    $(document).trigger('page-turner-page-changed', {start: this.page.start, end: this.page.end});
-  },
+        if (pages.start < 0) {
+            pages.start = 0;
+            pages.end = range;
+        }
+        if (pages.end > total) {
+            pages.end = total;
+            pages.start = total - range;
+        }
+        return pages;
+    },
 
-  page_range: function() {
+    next_page: function() {
+        var range = this._page_range.end - this._page_range.start;
+        this._page_range.start += range;
+        this._page_range.end += range;
+        this._page_range = this.validate_page_range(this._page_range);
+        $(document).trigger('page-turner-page-changed', this._page_range);
+    },
+
+    prev_page: function() {
+        var range = this._page_range.end - this._page_range.start;
+        this._page_range.start -= range;
+        this._page_range.end -= range;
+        this._page_range = this.validate_page_range(this._page_range);
+        $(document).trigger('page-turner-page-changed', this._page_range);
+    },
+
+  page_range: function(pages) {
     // Return current page range
-    return {'start': this.page.start, 'end': this.page.end};
+    if (typeof pages !== 'undefined') {
+        var start_only = typeof pages.end === 'undefined';
+        if (start_only) {
+            // Allow for just passing start page
+            pages.end = pages.start + this._page_range.end - this._page_range.start;
+        }
+        this._page_range = this.validate_page_range(pages);
+        if (start_only && this._page_range.start != pages.start) {
+            // Because that's *really* where we were asked to go; just shrink range
+            this._page_range.start = pages.start;
+        }
+        $(document).trigger('page-turner-page-changed', this._page_range);
+    }
+    return this._page_range;
   },
 
   all_pages: function() {
@@ -195,20 +217,19 @@ function PTView(model, elements) {
     self.update_pages(pages);
   });
 
-  function draw_navbar(elements) {
+  function draw_navbar() {
     // Add our pager elements to DOM
     // Must be done first so we can bind click events
     var navbar = d3.select(document.getElementsByTagName(self.elements.content)[0].parentElement)
       .insert('div', self.elements.content)
       .attr('id', self.elements.navbar);
 
-    $(document).trigger('page-turner-navbar-created', navbar);
-
     navbar.append('div').attr('id', self.elements.pager.prev.id)
       .classed(self.elements.pager.prev.classes.join(' '), true);
 
     self.svg = d3.select('#' + self.elements.navbar).append("svg");
     self.navbar_svg = self.svg
+        .attr("id", self.elements.navbar_parent)
         .attr("width", "90%") // Note: affects width calculations
         .attr("height", "100%")
       .append("g")
@@ -274,6 +295,24 @@ function PTView(model, elements) {
     d3.select('#' + self.elements.pager.prev.id).on("click", function () {
       $(document).trigger('page-turner-pager-clicked', { direction: 'prev' });
     });
+
+    // Turn pages on arrow key presses
+    document.addEventListener("keydown", function (event) {
+      if (event.defaultPrevented) {
+        return; // Should do nothing if the key event was already consumed.
+      }
+      switch (event.keyIdentifier) {
+        case "Left":
+            $(document).trigger('page-turner-pager-clicked', { direction: 'prev' });
+            break;
+        case "Right":
+            $(document).trigger('page-turner-pager-clicked', { direction: 'next' });
+            break;
+        default:
+            return; // Quit when this doesn't handle the key event.
+      }
+      event.preventDefault();
+    }, true);
   }
 }
 
@@ -323,7 +362,7 @@ PTView.prototype = {
     var text = 'Page';
     var range = pages.end - pages.start > 1;
     if (range) {
-      text += 's'
+      text += 's';
     }
     text += ' ';
     text += pages.start + 1;  // humans count from 1
@@ -351,12 +390,12 @@ PTView.prototype = {
       return [
         this.page_to_extent(Math.floor(this.navbar.ratio * extent[0])),
         this.page_to_extent(Math.ceil(this.navbar.ratio * extent[1]))
-      ]
+      ];
     }
     return [
       this.page_to_extent(this.extent_to_page(extent[0])),
       this.page_to_extent(this.extent_to_page(extent[1]))
-    ]
+    ];
   },
 
   animate_brush: function(extent) {
@@ -396,13 +435,6 @@ PTView.prototype = {
     ;
   },
 
-  draw_bookmark: function(page_num, label) {
-    // Add a bookmark icon to the navbar
-  },
-
-  remove_bookmark: function(page_num, label) {
-    // Remove bookmark icon from navbar
-  },
 }; // END: PTView
 
 /**
@@ -410,18 +442,18 @@ PTView.prototype = {
  * Handles user interactions
  **/
 function PTController(model, view) {
-  this.model = model;
-  this.view = view;
-  var self = this;
+    this.model = model;
+    this.view = view;
+    var self = this;
 
-  $(document).bind('page-turner-pager-clicked', function(e, data) {
-    self.change_page(data);
-  });
+    $(document).bind('page-turner-pager-clicked', function(e, data) {
+        self.change_page(data);
+    });
 
-  $(document).bind('page-turner-brush-moved', function(e, data) {
-    self.brush_moved(data);
-  });
-};
+    $(document).bind('page-turner-brush-moved', function(e, data) {
+        self.brush_moved(data);
+    });
+}
 
 PTController.prototype = {
   get_current_page: function() {
@@ -437,28 +469,23 @@ PTController.prototype = {
   },
 
   change_page: function(args) {
-    // this.view.hide_pages(this.model.page_range());
     if (args.direction == 'prev') {
       this.model.prev_page();
     }
     if (args.direction == 'next') {
       this.model.next_page();
     }
-    // this.view.show_pages(this.model.page_range());
   },
 
   brush_moved: function(extent) {
-    // TODO: Refactor to use notifications instead of direct calls
-    // for consistency, y'know
-    this.model.page.start = this.view.extent_to_page(extent[0]);
-    this.model.page.end = this.view.extent_to_page(extent[1]);
-    var pages = this.model.page_range()
-    this.view.update_pages(pages);
-    this.view.update_page_numbers(pages);
+    var pages = {'start': this.view.extent_to_page(extent[0]),
+                 'end': this.view.extent_to_page(extent[1])};
+    this.model.page_range(pages)
   },
 }; // END: PTController
 
 (function($) {
+ "use strict";
   Drupal.behaviors.page_turner = {
     attach: function (context, settings) {
       // We assume here the body text is always the first field
@@ -472,6 +499,7 @@ PTController.prototype = {
             'id': 'page-turner-pages'
           },
           'page_num': 'page-turner-number',
+            'navbar_parent': 'page-turner-nav-parent',
           'navbar': 'page-turner-nav',
           'pager': {
             'next': {

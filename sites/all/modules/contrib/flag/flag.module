@@ -59,12 +59,12 @@ function flag_entity_info() {
 /**
  * Loads a flagging entity.
  *
- * @param $flagging_id
+ * @param int $flagging_id
  *   The 'flagging_id' database serial column.
- * @param $reset
+ * @param bool $reset
  *   Whether to reset the DrupalDefaultEntityController cache.
  *
- * @return
+ * @return stdClass
  *   The entity object, or FALSE if it can't be found.
  */
 function flagging_load($flagging_id, $reset = FALSE) {
@@ -78,7 +78,7 @@ function flagging_load($flagging_id, $reset = FALSE) {
  *
  * Creates an unsaved flagging object for use with $flag->flag().
  *
- * @param $values
+ * @param array $values
  *   An array of values as described by the entity's property info. Only
  *   'flag_name' or 'fid' must be specified, since $flag->flag() does the rest.
  *
@@ -306,8 +306,8 @@ function flag_menu() {
     'title' => 'Flag',
     'page callback' => 'flag_page',
     'page arguments' => array(1, 2, 3),
-    'access callback' => 'user_access',
-    'access arguments' => array('access content'),
+    'access callback' => 'flag_page_access',
+    'access arguments' => array(1, 2, 3),
     'file' => 'includes/flag.pages.inc',
     'type' => MENU_CALLBACK,
   );
@@ -315,13 +315,26 @@ function flag_menu() {
     'title' => 'Flag confirm',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('flag_confirm', 2, 3, 4),
-    'access callback' => 'user_access',
-    'access arguments' => array('access content'),
+    'access callback' => 'flag_page_access',
+    'access arguments' => array(2, 3, 4),
     'file' => 'includes/flag.pages.inc',
     'type' => MENU_CALLBACK,
   );
 
   return $items;
+}
+
+/**
+ * Menu access callback for flagging pages.
+ *
+ * Same parameters as flag_page().
+ *
+ * @see flag_page()
+ * @see flag_confirm()
+ */
+function flag_page_access($action, $flag, $entity_id) {
+  $access = $flag->access($entity_id, $action);
+  return $access;
 }
 
 /**
@@ -348,9 +361,9 @@ function flag_admin_menu_map() {
 /**
  * Menu loader for '%flag' arguments.
  *
- * @param $flag_name
+ * @param string $flag_name
  *   The machine name of the flag.
- * @param $include_disabled
+ * @param bool $include_disabled
  *   (optional) Whether to return a disabled flag too. Normally only enabled
  *   flags are returned. Some menu items operate on disabled flags and in this
  *   case you need to turn on this switch by doing:
@@ -489,7 +502,7 @@ function flag_hook_info() {
 /**
  * Get a flag type definition.
  *
- * @param $entity_type
+ * @param string $entity_type
  *   (optional) The entity type to get the definition for, or NULL to return
  *   all flag types.
  *
