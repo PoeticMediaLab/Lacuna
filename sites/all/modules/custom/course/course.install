@@ -1,0 +1,12 @@
+<?php
+
+/**
+ * Implements hook_update().
+ */
+
+/**
+ * Delete the field field_visibility
+ */
+function course_update_7100() {
+  field_delete_field('field_visibility');
+}

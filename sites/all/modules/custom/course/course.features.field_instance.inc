@@ -703,49 +703,6 @@ function course_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-course-field_visibility'
-  $field_instances['node-course-field_visibility'] = array(
-    'bundle' => 'course',
-    'default_value' => array(
-      0 => array(
-        'value' => 0,
-      ),
-    ),
-    'deleted' => 0,
-    'description' => '',
-    'display' => array(
-      'default' => array(
-        'label' => 'above',
-        'module' => 'list',
-        'settings' => array(),
-        'type' => 'list_default',
-        'weight' => 17,
-      ),
-      'teaser' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
-      ),
-    ),
-    'entity_type' => 'node',
-    'field_name' => 'field_visibility',
-    'label' => 'Course Visibility: Would you like your current draft course to be visible to students, or to continue in "Instructor-Only" mode?',
-    'required' => 0,
-    'settings' => array(
-      'user_register_form' => FALSE,
-    ),
-    'widget' => array(
-      'active' => 1,
-      'module' => 'options',
-      'settings' => array(
-        'display_label' => 0,
-      ),
-      'type' => 'options_onoff',
-      'weight' => 47,
-    ),
-  );
-
   // Exported field_instance: 'node-course-group_access'
   $field_instances['node-course-group_access'] = array(
     'bundle' => 'course',
@@ -755,7 +712,7 @@ function course_field_default_field_instances() {
       ),
     ),
     'deleted' => 0,
-    'description' => '',
+    'description' => 'Would you like your current draft course to be visible to students, or to continue in "Instructor-Only" mode?',
     'display' => array(
       'default' => array(
         'label' => 'above',
@@ -773,8 +730,8 @@ function course_field_default_field_instances() {
     ),
     'entity_type' => 'node',
     'field_name' => 'group_access',
-    'label' => 'Group visibility',
-    'required' => TRUE,
+    'label' => 'Course Visibility',
+    'required' => 1,
     'settings' => array(
       'user_register_form' => FALSE,
     ),
@@ -789,6 +746,7 @@ function course_field_default_field_instances() {
       ),
     ),
     'widget' => array(
+      'active' => 1,
       'module' => 'options',
       'settings' => array(),
       'type' => 'options_buttons',
@@ -911,11 +869,10 @@ function course_field_default_field_instances() {
   t('Are all of your students registered with your institution?');
   t('Attachments');
   t('Course Description');
-  t('Course Visibility: Would you like your current draft course to be visible to students, or to continue in "Instructor-Only" mode?');
+  t('Course Visibility');
   t('Course access permissions');
   t('Determine if this is an OG group.');
   t('Group');
-  t('Group visibility');
   t('How many students will have library and e-reserve access that differs from your own?');
   t('If applicable, what is the secondary cross-listed course ID (with no spaces)?');
   t('If applicable, what is the third cross-listed course ID (with no spaces)?');
@@ -933,6 +890,7 @@ function course_field_default_field_instances() {
   t('What is your department?');
   t('What is your name?');
   t('What password would you like to create for students to register in your class?');
+  t('Would you like your current draft course to be visible to students, or to continue in "Instructor-Only" mode?');
   t('You can safely leave this set to the default. You would know if you needed to customize this part.');
   t('i.e. they have access to the same library and e-reserve materials as you');
 
