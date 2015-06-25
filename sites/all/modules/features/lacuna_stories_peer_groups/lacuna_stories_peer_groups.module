@@ -113,3 +113,12 @@ function lacuna_stories_peer_groups_listing_join_leave_link ($data, $view) {
   }
 }
 
+/**
+ * Implements hook_form_BASE_FORM_ID_alter().
+ *
+ * Hide the redundant "Request message" field from the group confirm form, since approval is not required to join open groups
+ */
+function lacuna_stories_peer_groups_form_og_ui_confirm_subscribe_alter(&$form, &$form_state) {
+  $form['og_membership_request']['#access'] = FALSE;
+}
+
