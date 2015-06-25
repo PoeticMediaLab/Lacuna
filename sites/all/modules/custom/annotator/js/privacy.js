@@ -87,17 +87,7 @@
     };
 
     Privacy.prototype.updateViewer = function(field, annotation) {
-      field = $(field);
-      if (annotation.groups && $.isArray(annotation.groups) && annotation.groups.length) {
-        return field.addClass('annotator-groups').html(function() {
-          var string;
-          return string = $.map(annotation.groups, function(group) {
-            return '<span class="annotator-group">' + Annotator.Util.escape(group) + '</span>';
-          }).join(' ');
-        });
-      } else {
-        return field.remove();
-      }
+      return field = $(field);
     };
 
     return Privacy;
