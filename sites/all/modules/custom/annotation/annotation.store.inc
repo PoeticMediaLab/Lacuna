@@ -101,26 +101,28 @@ function get_term_id($term_name, $taxonomy_name) {
 /**
  * Convert plain text tags into Drupal taxonomy terms
  **/
-function annotation_format_tags(&$entity) {
+function annotation_format_tags(&$entity, $tags) {
   // Load, create, and format taxonomy term references
   $taxonomy = taxonomy_vocabulary_machine_name_load(ANNOTATION_TAXONOMY_NAME);
-  $entity->annotation_tags = array(); // we'll be re-adding terms if they already exist
-  foreach (array_values($entity->tags) as $raw_tag) { // Annotator passes them as array
+  $entity->field_annotation_tags = array(); // we'll be re-adding terms if they already exist
+  foreach (array_values($tags) as $raw_tag) { // Annotator passes them as array
     $tid = NULL;
     // Expect comma-separated values
     $tags = explode(',', $raw_tag);
     foreach (array_values($tags) as $tag) {
       $tag = trim($tag);
-      $tid = get_term_id($tag, ANNOTATION_TAXONOMY_NAME);
-      if (!$tid) {
-        // add new term to taxonomy
-        $term = new stdClass();
-        $term->name = $tag;
-        $term->vid = $taxonomy->vid;
-        taxonomy_term_save($term);
-        $tid = $term->tid;
+      if (strlen($tag)) {
+        $tid = get_term_id($tag, ANNOTATION_TAXONOMY_NAME);
+        if (!$tid) {
+          // add new term to taxonomy
+          $term = new stdClass();
+          $term->name = $tag;
+          $term->vid = $taxonomy->vid;
+          taxonomy_term_save($term);
+          $tid = $term->tid;
+        }
+        $entity->field_annotation_tags[$entity->language][]['tid'] = $tid;
       }
-      $entity->field_annotation_tags[$entity->language][]['tid'] = $tid;
     }
   }
 }
@@ -165,8 +167,7 @@ function annotation_drupal_format($entity, $update = FALSE) {
   foreach ($entity as $key => $val) {
     switch($key) {
       case 'tags':
-        $annotation->field_annotation_tags = $entity->tags;
-        annotation_format_tags($annotation);
+        annotation_format_tags($annotation, $val);
         break;
       case 'category':
         // Categories are taxonomy references
