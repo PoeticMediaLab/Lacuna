@@ -102,6 +102,81 @@ function lacuna_stories_content_types_field_group_info() {
   $field_group = new stdClass();
   $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
   $field_group->api_version = 1;
+  $field_group->identifier = 'group_annotation_deprecated|node|annotation|default';
+  $field_group->group_name = 'group_annotation_deprecated';
+  $field_group->entity_type = 'node';
+  $field_group->bundle = 'annotation';
+  $field_group->mode = 'default';
+  $field_group->parent_name = '';
+  $field_group->data = array(
+    'label' => 'Deprecated Fields',
+    'weight' => '9',
+    'children' => array(
+      0 => 'annotation_reference',
+      1 => 'annotation_tags',
+      2 => 'category',
+      3 => 'private',
+      4 => 'quote',
+      5 => 'text',
+    ),
+    'format_type' => 'div',
+    'format_settings' => array(
+      'formatter' => 'collapsible',
+      'instance_settings' => array(
+        'description' => '',
+        'show_label' => 1,
+        'label_element' => 'h3',
+        'effect' => 'none',
+        'speed' => 'fast',
+        'classes' => 'group-annotation-deprecated field-group-div',
+        'id' => '',
+      ),
+    ),
+  );
+  $export['group_annotation_deprecated|node|annotation|default'] = $field_group;
+
+  $field_group = new stdClass();
+  $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
+  $field_group->api_version = 1;
+  $field_group->identifier = 'group_annotation_deprecated|node|annotation|form';
+  $field_group->group_name = 'group_annotation_deprecated';
+  $field_group->entity_type = 'node';
+  $field_group->bundle = 'annotation';
+  $field_group->mode = 'form';
+  $field_group->parent_name = '';
+  $field_group->data = array(
+    'label' => 'Deprecated Fields',
+    'weight' => '35',
+    'children' => array(
+      0 => 'annotation_reference',
+      1 => 'annotation_tags',
+      2 => 'category',
+      3 => 'private',
+      4 => 'quote',
+      5 => 'ranges',
+      6 => 'text',
+      7 => 'uri',
+    ),
+    'format_type' => 'div',
+    'format_settings' => array(
+      'formatter' => 'open',
+      'instance_settings' => array(
+        'description' => '',
+        'show_label' => 1,
+        'label_element' => 'h3',
+        'effect' => 'none',
+        'speed' => 'fast',
+        'classes' => 'group-annotation-deprecated field-group-div',
+        'required_fields' => 1,
+        'id' => '',
+      ),
+    ),
+  );
+  $export['group_annotation_deprecated|node|annotation|form'] = $field_group;
+
+  $field_group = new stdClass();
+  $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
+  $field_group->api_version = 1;
   $field_group->identifier = 'group_biographical|user|user|form';
   $field_group->group_name = 'group_biographical';
   $field_group->entity_type = 'user';
