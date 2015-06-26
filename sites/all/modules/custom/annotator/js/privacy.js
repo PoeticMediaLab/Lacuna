@@ -15,12 +15,6 @@
       return Privacy.__super__.constructor.apply(this, arguments);
     }
 
-    Privacy.prototype.options = {
-      privacyClass: "annotator-privacy",
-      publicClass: "annotator-privacy-public fa fa-unlock",
-      privateClass: "annotator-privacy-private fa fa-lock"
-    };
-
     Privacy.prototype.events = {
       'annotationEditorShown': "addPrivacy",
       'annotationEditorSubmit': "savePrivacy"
@@ -43,23 +37,37 @@
     };
 
     Privacy.prototype.addPrivacy = function(event, annotation) {
-      var gid, group, groups, groups_html, i, len, privacy_html, privacy_type, ref;
-      groups_html = privacy_html = '';
-      ref = ["Private", "Instructor", "Co-Learners"];
-      for (i = 0, len = ref.length; i < len; i++) {
-        privacy_type = ref[i];
-        privacy_html += '<label class="privacy types">';
-        privacy_html += '<input type="checkbox" class="privacy-type" id="' + privacy_type + '" value="' + privacy_type + '" />';
-        privacy_html += privacy_type;
-        privacy_html += '</label>';
+      var attr, checked, gid, group, group_object, group_type, groups, groups_html, i, j, len, len1, privacy_html, privacy_type, ref, ref1, settings;
+      settings = Drupal.settings.privacy_options;
+      if (annotation.privacy_options) {
+        ref = annotation.privacy_options;
+        for (i = 0, len = ref.length; i < len; i++) {
+          attr = ref[i];
+          console.log(attr);
+          settings[attr] = annotation.privacy_options[attr];
+        }
       }
-      groups = Drupal.settings.annotator_groups;
-      for (gid in groups) {
-        group = groups[gid];
-        groups_html += '<label class="privacy groups">';
-        groups_html += '<input type="checkbox" class="privacy-group" value="' + gid + '" />';
-        groups_html += group;
-        groups_html += '</label>';
+      console.log(settings);
+      groups_html = privacy_html = '';
+      privacy_html += '<span class="privacy types">';
+      ref1 = ["Private", "Instructor", "Co-Learners"];
+      for (j = 0, len1 = ref1.length; j < len1; j++) {
+        privacy_type = ref1[j];
+        checked = settings.audience[privacy_type.toLowerCase()] ? 'checked' : '';
+        privacy_html += '<span class="privacy-type ' + checked + '" id="' + privacy_type + '">' + privacy_type + '</span>';
+      }
+      privacy_html += '</span>';
+      groups = settings.groups;
+      for (group_type in groups) {
+        group_object = groups[group_type];
+        for (gid in group_object) {
+          group = group_object[gid];
+          groups_html += '<label class="privacy groups">';
+          checked = group.selected ? 'checked="checked"' : '';
+          groups_html += '<input type="checkbox" class="privacy-group ' + group_type + '" value="' + gid + '" ' + checked + ' />';
+          groups_html += group[0];
+          groups_html += '</label>';
+        }
       }
       return $(this.field).html(privacy_html + groups_html);
     };
@@ -67,8 +75,8 @@
     Privacy.prototype.savePrivacy = function(event, annotation) {
       var selected_groups;
       selected_groups = [];
-      $('input.privacy-type[type=checkbox]').each(function() {
-        if ($(this).is(":checked")) {
+      $('span.privacy-type').each(function() {
+        if ($(this).hasClass("checked")) {
           selected_groups.push($(this).val().toUpperCase());
           if ("Co-Learners" === $(this).attr("id")) {
             return $('input.privacy-group[type=checkbox]').each(function() {
@@ -87,7 +95,18 @@
     };
 
     Privacy.prototype.updateViewer = function(field, annotation) {
-      return field = $(field);
+      field = $(field);
+      console.log(annotation);
+      if (annotation.groups && $.isArray(annotation.groups) && annotation.groups.length) {
+        return field.addClass('annotator-groups').html(function() {
+          var string;
+          return string = $.map(annotation.groups, function(group) {
+            return '<span class="annotator-group">' + Annotator.Util.escape(group) + '</span>';
+          }).join(' ');
+        });
+      } else {
+        return field.remove();
+      }
     };
 
     return Privacy;

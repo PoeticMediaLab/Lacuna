@@ -4,11 +4,6 @@ $ = jQuery;
 
 class Annotator.Plugin.Privacy extends Annotator.Plugin
 
-  options:
-    privacyClass: "annotator-privacy"
-    publicClass: "annotator-privacy-public fa fa-unlock"
-    privateClass: "annotator-privacy-private fa fa-lock"
-
   events:
     'annotationEditorShown'   : "addPrivacy"
     'annotationEditorSubmit'  : "savePrivacy"
@@ -29,26 +24,37 @@ class Annotator.Plugin.Privacy extends Annotator.Plugin
     })
 
   addPrivacy: (event, annotation) =>
+    # default settings
+    settings = Drupal.settings.privacy_options
+
+    if annotation.privacy_options
+      for attr in annotation.privacy_options
+        console.log attr
+        settings[attr] = annotation.privacy_options[attr]
+
+    console.log settings
     groups_html = privacy_html = ''
 
+    privacy_html += '<span class="privacy types">'
     for privacy_type in ["Private", "Instructor", "Co-Learners"]
-      privacy_html += '<label class="privacy types">'
-      privacy_html += '<input type="checkbox" class="privacy-type" id="' + privacy_type + '" value="' + privacy_type + '" />'
-      privacy_html += privacy_type
-      privacy_html += '</label>'
+      checked = if settings.audience[privacy_type.toLowerCase()] then 'checked' else ''
+      privacy_html += '<span class="privacy-type ' + checked + '" id="' + privacy_type + '">' + privacy_type + '</span>'
+    privacy_html += '</span>'
 
-    groups = Drupal.settings.annotator_groups
-    for gid, group of groups
-      groups_html += '<label class="privacy groups">'
-      groups_html += '<input type="checkbox" class="privacy-group" value="' + gid + '" />'
-      groups_html += group
-      groups_html += '</label>'
+    groups = settings.groups
+    for group_type, group_object of groups
+      for gid, group of group_object
+        groups_html += '<label class="privacy groups">'
+        checked = if group.selected then 'checked="checked"' else ''
+        groups_html += '<input type="checkbox" class="privacy-group ' + group_type + '" value="' + gid + '" ' + checked + ' />'
+        groups_html += group[0]
+        groups_html += '</label>'
     $(@field).html(privacy_html + groups_html)
 
   savePrivacy: (event, annotation) ->
     selected_groups = []
-    $('input.privacy-type[type=checkbox]').each(->
-      if $(this).is(":checked")
+    $('span.privacy-type').each(->
+      if $(this).hasClass("checked")
         selected_groups.push($(this).val().toUpperCase())
         if "Co-Learners" == $(this).attr("id")
           $('input.privacy-group[type=checkbox]').each(->
@@ -64,7 +70,7 @@ class Annotator.Plugin.Privacy extends Annotator.Plugin
 
   updateViewer: (field, annotation) ->
     field = $(field)
-    # @Mike not sure how you want to display the group info, this is just a proof of concept listing the groups
+    console.log annotation
     if annotation.groups and $.isArray(annotation.groups) and annotation.groups.length
       field.addClass('annotator-groups').html(->
         string = $.map(annotation.groups,(group) ->

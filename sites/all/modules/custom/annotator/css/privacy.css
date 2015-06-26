@@ -3,13 +3,21 @@
  *
  ***/
 
-.annotator-item label.privacy {
-  width: 95%;
-  padding-left: 5%;
-  display: block;
+span.privacy.types .privacy-type {
+  padding: 7px;
+  margin: 1px 1px 0px;
+  -webkit-border-radius: 6px 6px 6px 6px;
+  -moz-border-radius: 6px 6px 6px 6px;
+  border-radius: 6px 6px 6px 6px;
+  color: #FFF;
+  background-color: #92a6c4;
+  cursor: pointer;
 }
-.annotator-item label.privacy.groups {
-  display: none;
-  padding-left: 10%;
-  width: 90%;
+span.privacy.types .privacy-type.checked {
+  background-color: #88b551;
+}
+label.privacy.groups {
+  width: 95%;
+  margin-left: 5%;
+  display: inline-block;
 }

@@ -478,13 +478,36 @@ function annotation_api_entity_prepare($annotation, $op) {
         }
       }
 
+			// Privacy
+      $entity->privacy_options['audience'] = array(
+        'private' => 1,
+        'co-learners' => 1,
+        'everyone' => 1,
+        'instructor' => 1,
+      );
+
       // Groups
       if (isset($annotation->og_group_ref)) {
         foreach($annotation->og_group_ref[$annotation->language] as $group) {
           $group_node = node_load($group['target_id']);
-          $entity->groups[] = $group_node->title;
+          if ($group_node->type == 'peer_group') {
+            $peer_groups[$group_node->nid]  = array(
+              $group_node->title,
+              'selected' => '1',
+            );
+          }
+          elseif ($group_node->type == 'course') {
+            $course_groups[$group_node->nid]  = array(
+              $group_node->title,
+              'selected' => '1',
+            );
+          }
         }
       }
+      $entity->privacy_options['groups'] = array(
+        'course_groups' => $course_groups,
+        'peer_groups' => $peer_groups,
+      );
 
       /////////////////////////////////////////////////////////////////////////////////////
       //
@@ -505,6 +528,8 @@ function annotation_api_entity_prepare($annotation, $op) {
           $entity->permissions['read'][] = $account->uid;
         }
       }
+
+			// Sharing
       // Currently not implemented: sharing edit permission
       $entity->permissions['update'][] = $account->uid;
       $entity->permissions['delete'][] = $account->uid;
