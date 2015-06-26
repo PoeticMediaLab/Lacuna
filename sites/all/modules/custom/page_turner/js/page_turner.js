@@ -44,55 +44,76 @@ function PTModel(content, settings) {
 
     $(document).bind('page-turner-update-pages', function(e, pages) { self.page_range(pages); });
 
-  function chunk_pages(content, settings) {
-    // Divide total content length by page length
-    // And look for page break elements
-    // Return array of page chunks
-    var page = []; // holds all elements in a page
-    var t_len = 0;  // text length
-    var breaks = settings.breaks.toLowerCase().split(',');
-    var pages = Array();
-    var break_pages = Array();
-
-    // Get to the real content
-    while (content.childElementCount == 1) {
-      content = content.childNodes[0];
-    }
-    content = content.children;
-
-    // Check that the current item is not a break point
-    // and that adding it wouldn't go over the text limit
-    var l = content.length;
-    var i;
-    for (i = 0; i < l; i++) {
-      var is_break = (breaks.indexOf(content[i].tagName.toLowerCase()) != -1);
-      var new_len = t_len + content[i].textContent.length;
-
-      if (is_break) {
-        if (t_len === 0) {
-          // Start of new page
-          page.push(content[i]);
-          t_len = new_len;
-        } else {
-          // End of last page, start a new one
-          pages.push(page);
-          t_len = 0;
-          page = Array(content[i]); // Include in the new page
+    function chunk_pages(content, settings) {
+        // Divide total content length by page length
+        // And look for page break elements
+        // Return array of page chunks
+        var page = []; // holds all elements in a page
+        var t_len = 0;  // text length
+        var breaks = {}; // {tagName: [classes]}
+        var pages = Array();
+        var break_pages = Array();
+        settings.breaks.toLowerCase().split(',').forEach(function(b) {
+            var tag = '';
+            var classes = [];
+            if (b.indexOf('.') != -1) {
+                // contains class(es) in selector
+                var parts = b.split('.');
+                tag = parts.splice(1,1);
+                classes = parts;
+            } else {
+                tag = b;
+            }
+            breaks[tag] = classes;
+        });
+        // Get to the real content
+        while (content.childElementCount == 1) {
+          content = content.childNodes[0];
         }
-        break_pages.push(pages.length);
-      } else if (new_len <= settings.page_length) {
-        t_len = new_len;
-        page.push(content[i]);
-      } else if (page.length > 0) {
-        // Start a new page
-        pages.push(page);
-        t_len = content[i].textContent.length;
-        page = Array(content[i]);
-      }
-    }
-    pages.push(page); // whatever's left over
-    return {pages: pages, break_pages: break_pages};
-  }  // END: _chunk_pages()
+        content = content.children;
+
+        // Check that the current item is not a break point
+        // and that adding it wouldn't go over the text limit
+        var l = content.length;
+        var i;
+        for (i = 0; i < l; i++) {
+          var is_break = function () {
+              var tag = content[i].tagName.toLowerCase();
+              for (b in breaks.keys()) {
+                  if ((tag == b) && (breaks[b].length > 0) {
+
+                  }
+              }
+              return (breaks.keys().indexOf(content[i].tagName.toLowerCase()) != -1) &&
+                  (break[]);
+          }
+          var new_len = t_len + content[i].textContent.length;
+
+          if (is_break) {
+            if (t_len === 0) {
+              // Start of new page
+              page.push(content[i]);
+              t_len = new_len;
+            } else {
+              // End of last page, start a new one
+              pages.push(page);
+              t_len = 0;
+              page = Array(content[i]); // Include in the new page
+            }
+            break_pages.push(pages.length);
+          } else if (new_len <= settings.page_length) {
+            t_len = new_len;
+            page.push(content[i]);
+          } else if (page.length > 0) {
+            // Start a new page
+            pages.push(page);
+            t_len = content[i].textContent.length;
+            page = Array(content[i]);
+          }
+        }
+        pages.push(page); // whatever's left over
+        return {pages: pages, break_pages: break_pages};
+    }  // END: _chunk_pages()
 }
 
 PTModel.prototype = {
