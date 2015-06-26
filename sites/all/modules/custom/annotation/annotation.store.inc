@@ -145,7 +145,7 @@ function annotation_drupal_format($entity, $update = FALSE) {
     $annotation->uri = array();
     $annotation->uri[$annotation->language][0]['url'] = $uri;  // formatted for Link field
     $annotation->uri[$annotation->language][0]['title'] = $node->title;
-    $annotation->annotation_reference[$annotation->language][] = array(
+    $annotation->field_annotation_reference[$annotation->language][] = array(
         'target_id' => (int) $node->nid,
         'target_type' => 'node'
     );
