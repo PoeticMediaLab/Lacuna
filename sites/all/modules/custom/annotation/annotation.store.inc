@@ -120,7 +120,7 @@ function annotation_format_tags(&$entity) {
         taxonomy_term_save($term);
         $tid = $term->tid;
       }
-      $entity->annotation_tags[$entity->language][]['tid'] = $tid;
+      $entity->field_annotation_tags[$entity->language][]['tid'] = $tid;
     }
   }
 }
@@ -165,19 +165,19 @@ function annotation_drupal_format($entity, $update = FALSE) {
   foreach ($entity as $key => $val) {
     switch($key) {
       case 'tags':
-        $annotation->tags = $entity->tags;
+        $annotation->field_annotation_tags = $entity->tags;
         annotation_format_tags($annotation);
         break;
       case 'category':
         // Categories are taxonomy references
         $tid = get_term_id($val, ANNOTATION_CATEGORY_TAXONOMY);
         if (isset($tid)) {
-          $annotation->category[$annotation->language][0]['tid'] = $tid;
+          $annotation->field_annotation_category[$annotation->language][0]['tid'] = $tid;
         }
         break;
       case 'ranges':
         if (!$update) {
-          $annotation->ranges[$annotation->language][0]['value'] = json_encode($val);
+          $annotation->field_annotation_ranges[$annotation->language][0]['value'] = json_encode($val);
         }
         break;
       case 'groups':
@@ -189,15 +189,15 @@ function annotation_drupal_format($entity, $update = FALSE) {
           }
           foreach ($val as $gid) {
             if ("PRIVATE" == $gid) {
-              $annotation->private[$annotation->language][0] = array('value' => 1);
+              $annotation->field_annotation_private[$annotation->language][0] = array('value' => 1);
               break; // If private is set there should be no other values, but break out of loop just in case of JS hacking
             }
             elseif ("INSTRUCTOR" == $gid) {
-              $annotation->private[$annotation->language][0] = array('value' => 0);
+              $annotation->field_annotation_private[$annotation->language][0] = array('value' => 0);
             }
             elseif ($has_groups) {
               // Set to not private before we do the group check in case user checked CO-LEARNERS but did not check any groups
-              $annotation->private[$annotation->language][0] = array('value' => 0);
+              $annotation->field_annotation_private[$annotation->language][0] = array('value' => 0);
               // In case the user hacked the JS, make sure they are only adding the annotation to groups they are a member of.
               // This is in fact necessary because OG will not catch these (because it's the annotator, ie. system, creating the group ref here, not the user submitting the annotation, which OG would catch)
               if (in_array($gid, $users_groups['node'])) {
@@ -209,23 +209,23 @@ function annotation_drupal_format($entity, $update = FALSE) {
         break;
       default:
         // Only prepare fields that exist in the annotation node
-        if (in_array($key, $fields) & ($val != NULL) & !isset($annotation->{$key})) {
-          $annotation->{$key} = array();
-          $annotation->{$key}[$annotation->language][0]['value'] = $val;
+        if (in_array('field_annotation_' . $key, $fields) & ($val != NULL) & !isset($annotation->{'field_annotation_' . $key})) {
+          $annotation->{'field_annotation_' . $key} = array();
+          $annotation->{'field_annotation_' . $key}[$annotation->language][0]['value'] = $val;
         }
     }
   }
   // Sanitize the category input (i.e., server-side validation)
   // Can't be done reliably in an Annotator plugin
   // @see https://lists.okfn.org/pipermail/annotator-dev/2014-May/000935.html
-  if (empty($annotation->text)) {
+  if (empty($annotation->field_annotation_text)) {
     // Just a highlight, no category
-    unset($annotation->category);
-  } elseif (empty($annotation->category)) {
+    unset($annotation->field_annotation_category);
+  } elseif (empty($annotation->field_annotation_category)) {
     // Text, but no category; choose the first one as default
     $categories = taxonomy_vocabulary_machine_name_load(ANNOTATION_CATEGORY_TAXONOMY);
     $category_terms = taxonomy_get_tree($categories->vid);
-    $annotation->category[$annotation->language][0]['tid'] = $category_terms[0]->tid;
+    $annotation->field_annotation_category[$annotation->language][0]['tid'] = $category_terms[0]->tid;
   }
 
   return($annotation);
@@ -376,12 +376,12 @@ function annotation_api_search() {
   // TODO: convert this to a term reference query
   if (is_array($tags)) {
     foreach($tags as $tag) {
-      $query->fieldCondition('annotation_tags', '"' . $tag . '"', 'LIKE');
+      $query->fieldCondition('field_annotation_tags', '"' . $tag . '"', 'LIKE');
     }
   }
   if ($category) {
     // This will need adjustment for explode/implode of categories
-    $query->fieldCondition('category', $category);
+    $query->fieldCondition('field_annotation_category', $category);
   }
 
   // Get the total
@@ -432,43 +432,55 @@ function annotation_api_from_stdin() {
 /**
  * Prepare entity for api usage
  */
-function annotation_api_entity_prepare($entity, $op) {
-  $entity->id = $entity->nid; // Annotator wants our nid in the id field
+function annotation_api_entity_prepare($annotation, $op) {
+  $entity = new stdClass();
+  $entity->id = $annotation->nid; // Annotator wants our nid in the id field
   global $user;
   switch($op) {
     case 'read':
-      $account = user_load($entity->uid);
+      $account = user_load($annotation->uid);
       $entity->user = array(
         'uid' => $account->uid,
         'name' => format_username($account),
         'roles' => array_values($account->roles),
         );
-      unset($entity->uid);
+
       // Translate Drupal-encoded content back into something Annotator.js can use
-      $entity->ranges = drupal_json_decode($entity->ranges[$entity->language][0]['value']);
-      if (isset($entity->text[$entity->language]) && count($entity->text[$entity->language])) {
-        $entity->text = $entity->text[$entity->language][0]['value'];
+
+      // Ranges
+      $entity->ranges = drupal_json_decode($annotation->field_annotation_ranges[$annotation->language][0]['value']);
+
+      // Text
+      if (isset($annotation->field_annotation_text[$annotation->language]) && count($annotation->field_annotation_text[$annotation->language])) {
+        $entity->text = $annotation->field_annotation_text[$annotation->language][0]['value'];
       } else {
         $entity->text = null; // Otherwise, Annotator chokes on an empty array
       }
-      $entity->quote = $entity->quote[$entity->language][0]['value'];
+
+      // Quote
+      $entity->quote = $annotation->field_annotation_quote[$annotation->language][0]['value'];
+
       // Category is for the Category plugin
       // Uses a Drupal taxonomy, like tags
-      if (isset($entity->category) && !empty($entity->category)) {
+      if (isset($annotation->field_annotation_category) && !empty($annotation->field_annotation_category)) {
         $category = taxonomy_term_load($entity->category[$entity->language][0]['tid']);
         if ($category) {
           $entity->category = $category->name;
         }
       }
-      if (isset($entity->annotation_tags[$entity->language])) {
+
+      // Tags
+      if (isset($annotation->field_annotation_tags[$annotation->language])) {
         $entity->tags = array();
-        foreach(array_values($entity->annotation_tags[$entity->language]) as $item) {
+        foreach(array_values($annotation->field_annotation_tags[$annotation->language]) as $item) {
           $term = taxonomy_term_load($item['tid']);
           array_push($entity->tags, $term->name);
         }
       }
-      if (isset($entity->og_group_ref)) {
-        foreach($entity->og_group_ref[$entity->language] as $group) {
+
+      // Groups
+      if (isset($annotation->og_group_ref)) {
+        foreach($annotation->og_group_ref[$annotation->language] as $group) {
           $group_node = node_load($group['target_id']);
           $entity->groups[] = $group_node->title;
         }
@@ -478,13 +490,15 @@ function annotation_api_entity_prepare($entity, $op) {
       //
       // TODO: REVIEW
       //
-      if (isset($entity->private)) {
+
+      //Private
+      if (isset($annotation->field_annotation_private)) {
         // Format permissions for the Annotator Permissions plugin
         // We only implement "read" permissions right now
         // This setting is strictly to respect the current checkbox settings
         // Drupal permissions control what is actually shown
         $entity->permissions = array();
-        if ($entity->private[$entity->language][0]['value'] == 0) {
+        if ($annotation->field_annotation_private[$annotation->language][0]['value'] == 0) {
           $entity->permissions['read'] = array();
         }
         else {
@@ -504,11 +518,13 @@ function annotation_api_entity_prepare($entity, $op) {
       //
       /////////////////////////////////////////////////////////////////////////////////////
 
+      // Links
       $entity->links[] = array(
-        'href' => url('node/' . $entity->nid),
+        'href' => url('node/' . $annotation->nid),
         'rel' => 'alternate',
         'type' => 'text/html',
         );
+
     break;
 
     // These two cases handled by annotation_drupal_format
