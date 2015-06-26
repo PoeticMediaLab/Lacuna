@@ -467,30 +467,36 @@ function annotation_api_entity_prepare($entity, $op) {
           array_push($entity->tags, $term->name);
         }
       }
+
+      $entity->privacy_options['audience'] = array(
+        'private' => 1,
+        'co-learners' => 1,
+        'everyone' => 1,
+        'instructor' => 1,
+      );
+
       if (isset($entity->og_group_ref)) {
         foreach($entity->og_group_ref[$entity->language] as $group) {
           $group_node = node_load($group['target_id']);
-          $entity->groups[] = $group_node->title;
+          if ($group_node->type == 'peer_group') {
+            $peer_groups[$group_node->nid]  = array(
+              $group_node->title,
+              'selected' => '1',
+            );
+          }
+          elseif ($group_node->type == 'course') {
+            $course_groups[$group_node->nid]  = array(
+              $group_node->title,
+              'selected' => '1',
+            );
+          }
         }
       }
+      $entity->privacy_options['groups'] = array(
+        'course_groups' => $course_groups,
+        'peer_groups' => $peer_groups,
+      );
 
-      /////////////////////////////////////////////////////////////////////////////////////
-      //
-      // TODO: REVIEW
-      //
-      if (isset($entity->private)) {
-        // Format permissions for the Annotator Permissions plugin
-        // We only implement "read" permissions right now
-        // This setting is strictly to respect the current checkbox settings
-        // Drupal permissions control what is actually shown
-        $entity->permissions = array();
-        if ($entity->private[$entity->language][0]['value'] == 0) {
-          $entity->permissions['read'] = array();
-        }
-        else {
-          $entity->permissions['read'][] = $account->uid;
-        }
-      }
       // Currently not implemented: sharing edit permission
       $entity->permissions['update'][] = $account->uid;
       $entity->permissions['delete'][] = $account->uid;
