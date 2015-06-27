@@ -4,7 +4,7 @@
  ***/
 
 span.privacy.types .privacy-type {
-  padding: 7px;
+  padding: 7px 6px;
   margin: 1px 1px 0px;
   -webkit-border-radius: 6px 6px 6px 6px;
   -moz-border-radius: 6px 6px 6px 6px;
@@ -20,4 +20,29 @@ label.privacy.groups {
   width: 95%;
   margin-left: 5%;
   display: inline-block;
+
+}
+.annotator-viewer .privacy-type {
+  padding: 7px 6px;
+  margin: 1px 1px 0px;
+  -webkit-border-radius: 6px 6px 6px 6px;
+  -moz-border-radius: 6px 6px 6px 6px;
+  border-radius: 6px 6px 6px 6px;
+  color: #FFF;
+  background-color: #88b551;
+}
+.annotator-viewer .privacy-group.checked {
+  padding: 7px 6px;
+  margin: 1px 1px 0px;
+  -webkit-border-radius: 6px 6px 6px 6px;
+  -moz-border-radius: 6px 6px 6px 6px;
+  border-radius: 6px 6px 6px 6px;
+  color: #FFF;
+  background-color: #88b551;
+}
+.annotator-viewer .privacy-group.peer_groups.checked {
+  background-color: #88b551;
+}
+.annotator-viewer .privacy-group.course_groups.checked {
+  background-color: #92a6c4;
 }

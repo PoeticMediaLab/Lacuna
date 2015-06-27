@@ -24,19 +24,13 @@ class Annotator.Plugin.Privacy extends Annotator.Plugin
     })
 
   addPrivacy: (event, annotation) =>
-    # default settings
-    settings = Drupal.settings.privacy_options
+    # use annotation's saved data if possible, otherwise use defaults
+    settings = if annotation.privacy_options then annotation.privacy_options else Drupal.settings.privacy_options
 
-    if annotation.privacy_options
-      for attr in annotation.privacy_options
-        console.log attr
-        settings[attr] = annotation.privacy_options[attr]
-
-    console.log settings
     groups_html = privacy_html = ''
 
     privacy_html += '<span class="privacy types">'
-    for privacy_type in ["Private", "Instructor", "Co-Learners"]
+    for privacy_type in ["Private", "Instructor", "Co-Learners", "Everyone"]
       checked = if settings.audience[privacy_type.toLowerCase()] then 'checked' else ''
       privacy_html += '<span class="privacy-type ' + checked + '" id="' + privacy_type + '">' + privacy_type + '</span>'
     privacy_html += '</span>'
@@ -52,32 +46,44 @@ class Annotator.Plugin.Privacy extends Annotator.Plugin
     $(@field).html(privacy_html + groups_html)
 
   savePrivacy: (event, annotation) ->
-    selected_groups = []
+    annotation.privacy_options = {}
+    course_groups = {}
+    peer_groups = {}
+    audience = {}
     $('span.privacy-type').each(->
+      type = $(this).attr("id").toLowerCase()
       if $(this).hasClass("checked")
-        selected_groups.push($(this).val().toUpperCase())
-        if "Co-Learners" == $(this).attr("id")
-          $('input.privacy-group[type=checkbox]').each(->
-            if $(this).is(":checked")
-              selected_groups.push($(this).val())
-          )
+        audience[type] = 1
+      else
+        audience[type] = 0
+      $('input.privacy-group[type=checkbox]').each(->
+        checked = if $(this).is(":checked") then 1 else 0
+        gid = $(this).val()
+        group_name = $(this).parent().val()
+        if $(this).hasClass("course_groups")
+          course_groups[gid] = 0: group_name, selected: checked
+        else
+          peer_groups[gid] = 0: group_name, selected: checked
+      )
     )
-    annotation.groups = selected_groups
-
-    if annotation.text? and (annotation.text.length > 0) and 0 == annotation.groups.length
-      window.alert("You did not select a Privacy Setting, so the default 'Instructor' has been chosen.")
-      annotation.groups = ["INSTRUCTOR"]
+    annotation.privacy_options.audience = audience
+    annotation.privacy_options.groups = {peer_groups: peer_groups, course_groups:  course_groups}
 
   updateViewer: (field, annotation) ->
-    field = $(field)
-    console.log annotation
-    if annotation.groups and $.isArray(annotation.groups) and annotation.groups.length
-      field.addClass('annotator-groups').html(->
-        string = $.map(annotation.groups,(group) ->
-          '<span class="annotator-group">' +
-            Annotator.Util.escape(group) +
-            '</span>'
-        ).join(' ')
-      )
-    else
-      field.remove()
+    audience = '<div class="privacy-types">'
+    for audience_type, checked of annotation.privacy_options.audience
+      if checked
+        audience += '<span class="privacy-type">' + audience_type + '</span>'
+        if 'co-learners' == audience_type
+          has_groups = true
+    audience += '</div>'
+    groups = ''
+    if has_groups
+      groups = '<div class="privacy-groups">'
+      for group_type, gid of annotation.privacy_options.groups
+        if gid
+          group = gid[Object.keys(gid)[0]]
+          if group && group.selected
+            groups += '<span class="privacy-group checked ' + group_type + '">' + group[0] + '</span>'
+      groups += '</div>'
+    $(field).addClass("privacy").html audience + groups
