@@ -11,10 +11,10 @@
           }
           if ($(this).hasClass("checked")) {
             if ("Private" == $(this).attr("id")) {
-              $(".privacy.types #Instructor, .privacy.types #Co-Learners").removeClass('checked');
+              $(".privacy.types #Instructor, .privacy.types #Co-Learners, .privacy.types #Everyone").removeClass('checked');
               $(".annotator-widget .privacy.groups").hide(500);
             }
-            if ("Instructor" == $(this).attr("id") || "Co-Learners" == $(this).attr("id")) {
+            if ("Instructor" == $(this).attr("id") || "Co-Learners" == $(this).attr("id") || "Everyone" == $(this).attr("id")) {
               $(".privacy.types #Private").removeClass('checked');
             }
           }
