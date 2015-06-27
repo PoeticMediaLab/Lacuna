@@ -69,7 +69,7 @@
       course_groups = {};
       peer_groups = {};
       audience = {};
-      $('span.privacy-type').each(function() {
+      $('.annotator-editor span.privacy-type').each(function() {
         var type;
         type = $(this).attr("id").toLowerCase();
         if ($(this).hasClass("checked")) {
@@ -77,7 +77,7 @@
         } else {
           audience[type] = 0;
         }
-        return $('input.privacy-group[type=checkbox]').each(function() {
+        return $('.annotator-editor input.privacy-group[type=checkbox]').each(function() {
           var checked, gid, group_name;
           checked = $(this).is(":checked") ? 1 : 0;
           gid = $(this).val();

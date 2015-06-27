@@ -50,13 +50,13 @@ class Annotator.Plugin.Privacy extends Annotator.Plugin
     course_groups = {}
     peer_groups = {}
     audience = {}
-    $('span.privacy-type').each(->
+    $('.annotator-editor span.privacy-type').each(->
       type = $(this).attr("id").toLowerCase()
       if $(this).hasClass("checked")
         audience[type] = 1
       else
         audience[type] = 0
-      $('input.privacy-group[type=checkbox]').each(->
+      $('.annotator-editor input.privacy-group[type=checkbox]').each(->
         checked = if $(this).is(":checked") then 1 else 0
         gid = $(this).val()
         group_name = $(this).parent().val()

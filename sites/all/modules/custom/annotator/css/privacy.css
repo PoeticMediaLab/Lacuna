@@ -12,6 +12,7 @@ span.privacy.types .privacy-type {
   color: #FFF;
   background-color: #92a6c4;
   cursor: pointer;
+  display: inline-block;
 }
 span.privacy.types .privacy-type.checked {
   background-color: #88b551;
@@ -30,6 +31,7 @@ label.privacy.groups {
   border-radius: 6px 6px 6px 6px;
   color: #FFF;
   background-color: #88b551;
+  display: inline-block;
 }
 .annotator-viewer .privacy-group.checked {
   padding: 7px 6px;
@@ -39,6 +41,7 @@ label.privacy.groups {
   border-radius: 6px 6px 6px 6px;
   color: #FFF;
   background-color: #88b551;
+  display: inline-block;
 }
 .annotator-viewer .privacy-group.peer_groups.checked {
   background-color: #88b551;

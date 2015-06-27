@@ -148,8 +148,8 @@ function annotation_drupal_format($entity, $update = FALSE) {
     $annotation->uri[$annotation->language][0]['url'] = $uri;  // formatted for Link field
     $annotation->uri[$annotation->language][0]['title'] = $node->title;
     $annotation->field_annotation_reference[$annotation->language][] = array(
-        'target_id' => (int) $node->nid,
-        'target_type' => 'node'
+      'target_id' => (int) $node->nid,
+      'target_type' => 'node'
     );
     $annotation->title = 'Annotation of ' . $node->title; // add document name and author?
   }
@@ -181,32 +181,36 @@ function annotation_drupal_format($entity, $update = FALSE) {
           $annotation->field_annotation_ranges[$annotation->language][0]['value'] = json_encode($val);
         }
         break;
-      case 'groups':
+      case 'privacy_options':
+        # NB: don't add groups unless the co-learners audience is 1,
+        # front-end will still send groups info w/ selections if only private or instructor are 1
+        dpm("Settings do not save in the backend yet, but this is what was submitted");
+        dpm($val);
         // $annotation->group_content_access[$annotation->language][0]['value'] = $val['group_visibility'];
-        if (isset($val)) {
-          $has_groups = (in_array("CO-LEARNERS", $val))? TRUE: FALSE;
-          if ($has_groups) {
-            $users_groups = og_get_groups_by_user();
-          }
-          foreach ($val as $gid) {
-            if ("PRIVATE" == $gid) {
-              $annotation->field_annotation_private[$annotation->language][0] = array('value' => 1);
-              break; // If private is set there should be no other values, but break out of loop just in case of JS hacking
-            }
-            elseif ("INSTRUCTOR" == $gid) {
-              $annotation->field_annotation_private[$annotation->language][0] = array('value' => 0);
-            }
-            elseif ($has_groups) {
-              // Set to not private before we do the group check in case user checked CO-LEARNERS but did not check any groups
-              $annotation->field_annotation_private[$annotation->language][0] = array('value' => 0);
-              // In case the user hacked the JS, make sure they are only adding the annotation to groups they are a member of.
-              // This is in fact necessary because OG will not catch these (because it's the annotator, ie. system, creating the group ref here, not the user submitting the annotation, which OG would catch)
-              if (in_array($gid, $users_groups['node'])) {
-                $annotation->og_group_ref[$annotation->language][] = array('target_id' => $gid);
-              }
-            }
-          }
-        }
+        #if (isset($val)) {
+        #  $has_groups = (in_array("CO-LEARNERS", $val))? TRUE: FALSE;
+        #  if ($has_groups) {
+        #    $users_groups = og_get_groups_by_user();
+        #  }
+        #  foreach ($val as $gid) {
+        #    if ("PRIVATE" == $gid) {
+        #      $annotation->field_annotation_private[$annotation->language][0] = array('value' => 1);
+        #      break; // If private is set there should be no other values, but break out of loop just in case of JS hacking
+        #    }
+        #    elseif ("INSTRUCTOR" == $gid) {
+        #      $annotation->field_annotation_private[$annotation->language][0] = array('value' => 0);
+        #    }
+        #    elseif ($has_groups) {
+        #      // Set to not private before we do the group check in case user checked CO-LEARNERS but did not check any groups
+        #      $annotation->field_annotation_private[$annotation->language][0] = array('value' => 0);
+        #      // In case the user hacked the JS, make sure they are only adding the annotation to groups they are a member of.
+        #      // This is in fact necessary because OG will not catch these (because it's the annotator, ie. system, creating the group ref here, not the user submitting the annotation, which OG would catch)
+        #      if (in_array($gid, $users_groups['node'])) {
+        #        $annotation->og_group_ref[$annotation->language][] = array('target_id' => $gid);
+        #      }
+        #    }
+        #  }
+        #}
         break;
       default:
         // Only prepare fields that exist in the annotation node
@@ -488,6 +492,7 @@ function annotation_api_entity_prepare($annotation, $op) {
       );
 
       // Groups
+      # NB: needs to send all possible groups not just referenced
       if (isset($annotation->og_group_ref)) {
         foreach($annotation->og_group_ref[$annotation->language] as $group) {
           $group_node = node_load($group['target_id']);
