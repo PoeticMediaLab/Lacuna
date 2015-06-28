@@ -241,6 +241,7 @@ function annotation_uninstall() {
     field_delete_field($field['field_name']);
   }
 }
+
 /**
  * Update 7100: Convert Annotation text field to Full HTML
  */
@@ -249,4 +250,11 @@ function annotation_update_7100() {
   $instance_info['settings'] = array('text_processing' => 1);
   $instance_info['format'] = 'full_html';
   field_update_instance($instance_info);
+}
+
+/**
+ * Copy values from old annotation fields to new ones.
+ */
+function annotation_update_7101() {
+  annotation_copy_field_values_to_drupal_standard_fields ();
 }

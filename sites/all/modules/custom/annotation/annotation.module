@@ -258,3 +258,84 @@ function annotation_node_access_records($node) {
   }
   // Return nothing if the node has not been marked private.
 }
+
+
+/**
+ * Copy values from old annotation fields to new ones.
+ * Called from annotation update hook
+ */
+function annotation_copy_field_values_to_drupal_standard_fields () {
+
+  $map = array (
+    'text' => array ('field_annotation_text', 'text_formatted'),
+    'quote' => array ('field_annotation_quote'),
+    'private' => array ('field_annotation_private'),
+    'annotation_tags' => array ('field_annotation_tags', 'tax_multi'),
+    'category' => array ('field_annotation_category', 'tax_single'),
+    'ranges' => array ('field_annotation_ranges'),
+    'annotation_reference' => array ('field_annotation_reference', 'entity_ref'),
+    'uri' => array ('field_annotation_uri'),
+  );
+
+  // Loop through all annotations
+  $query = new EntityFieldQuery();
+  $query->entityCondition('entity_type', 'node')
+    ->propertyCondition('status', 1)
+    ->propertyCondition('type', array('annotation'));
+  $result = $query->execute();
+  if (isset($result['node'])) {
+    $annotation_nids = array_keys($result['node']);
+    foreach ($annotation_nids as $annotation_nid) {
+      $annotation_wrapper = entity_metadata_wrapper('node', $annotation_nid);
+      print "\n" . $annotation_nid . ": " . $annotation_wrapper->label() . "\n";
+      $copied = 0;
+
+      // Loop through each field
+      foreach ($map as $old_field => $new_field_config) {
+        $new_field = $new_field_config[0];
+        $old_value = $annotation_wrapper->{$old_field}->value();
+        $new_value = $annotation_wrapper->{$new_field}->value();
+
+        // If the old field is populated, then copy it over
+        if (!is_null($old_value)) {
+          print 'Copying value of ' . $old_field . ' to ' . $new_field . "\n";
+          $copied = 1;
+
+          switch ($new_field_config[1]) {
+            case NULL:
+              $value_to_set = $old_value;
+              break;
+            case 'text_formatted':
+              $value_to_set = array ('value' => $old_value);
+              break;
+            case 'tax_single':
+              $value_to_set = $old_value->tid;
+              break;
+            case 'tax_multi':
+              $tids = array();
+              foreach ($old_value as $old_tax_obj) {
+                $tids[] = $old_tax_obj->tid;
+              }
+              $value_to_set = $tids;
+              break;
+            case 'entity_ref':
+              $value_to_set = $old_value->nid;
+              break;
+          }
+
+          // Set it
+          $annotation_wrapper->{$new_field}->set($value_to_set);
+
+        }
+      }
+
+      if ($copied) {
+        // Save the wrapper
+        $annotation_wrapper->save();
+      }
+      else {
+        print "Nothing copied\n";
+      }
+    }
+  }
+}
