@@ -468,7 +468,7 @@ function annotation_api_entity_prepare($annotation, $op) {
       // Category is for the Category plugin
       // Uses a Drupal taxonomy, like tags
       if (isset($annotation->field_annotation_category) && !empty($annotation->field_annotation_category)) {
-        $category = taxonomy_term_load($entity->category[$entity->language][0]['tid']);
+        $category = taxonomy_term_load($annotation->field_annotation_category[$annotation->language][0]['tid']);
         if ($category) {
           $entity->category = $category->name;
         }
