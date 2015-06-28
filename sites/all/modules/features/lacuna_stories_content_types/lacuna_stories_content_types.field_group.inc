@@ -121,16 +121,17 @@ function lacuna_stories_content_types_field_group_info() {
     ),
     'format_type' => 'div',
     'format_settings' => array(
-      'formatter' => 'collapsible',
+      'label' => 'Deprecated Fields',
       'instance_settings' => array(
+        'id' => '',
+        'classes' => 'group-annotation-deprecated field-group-div',
         'description' => '',
-        'show_label' => 1,
+        'show_label' => '1',
         'label_element' => 'h3',
         'effect' => 'none',
         'speed' => 'fast',
-        'classes' => 'group-annotation-deprecated field-group-div',
-        'id' => '',
       ),
+      'formatter' => 'collapsed',
     ),
   );
   $export['group_annotation_deprecated|node|annotation|default'] = $field_group;
@@ -159,17 +160,18 @@ function lacuna_stories_content_types_field_group_info() {
     ),
     'format_type' => 'div',
     'format_settings' => array(
-      'formatter' => 'open',
+      'label' => 'Deprecated Fields',
       'instance_settings' => array(
+        'required_fields' => 1,
+        'id' => '',
+        'classes' => 'group-annotation-deprecated field-group-div',
         'description' => '',
-        'show_label' => 1,
+        'show_label' => '1',
         'label_element' => 'h3',
         'effect' => 'none',
         'speed' => 'fast',
-        'classes' => 'group-annotation-deprecated field-group-div',
-        'required_fields' => 1,
-        'id' => '',
       ),
+      'formatter' => 'collapsed',
     ),
   );
   $export['group_annotation_deprecated|node|annotation|form'] = $field_group;
