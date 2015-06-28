@@ -157,10 +157,10 @@ function annotation_ctools_plugin_type() {
  **/
 function annotation_form_alter(&$form, &$form_state, $form_id) {
   if ($form_id == 'annotation_node_form') {
-    $form['ranges'] = array('#access' => FALSE);
-    $form['annotation_reference'] = array('#access' => FALSE);
-    $form['quote'] = array('#access' => FALSE);
-    $form['uri'] = array('#access' => FALSE);
+    $form['field_annotation_ranges'] = array('#access' => FALSE);
+    $form['field_annotation_reference'] = array('#access' => FALSE);
+    $form['field_annotation_quote'] = array('#access' => FALSE);
+    $form['field_annotation_uri'] = array('#access' => FALSE);
     // $form['category'] = array('#access' => FALSE);
   }
   return($form);
