@@ -221,7 +221,7 @@ function annotation_node_access_records($node) {
   // We only care about the node if it's been marked private. If not, it is
   // treated just like any other node and we completely ignore it.
   // We're using list_boolean as our privacy setting field
-  if (!empty($node->private) && $node->private[$node->language][0]['value'] == 1) {
+  if (!empty($node->field_annotation_private) && $node->field_annotation_private[$node->language][0]['value'] == 1) {
     $grants = array();
     $grants[] = array(
       'realm' => 'annotation_view',
