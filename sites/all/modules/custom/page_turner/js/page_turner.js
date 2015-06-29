@@ -50,22 +50,9 @@ function PTModel(content, settings) {
         // Return array of page chunks
         var page = []; // holds all elements in a page
         var t_len = 0;  // text length
-        var breaks = {}; // {tagName: [classes]}
-        var pages = Array();
-        var break_pages = Array();
-        settings.breaks.toLowerCase().split(',').forEach(function(b) {
-            var tag = '';
-            var classes = [];
-            if (b.indexOf('.') != -1) {
-                // contains class(es) in selector
-                var parts = b.split('.');
-                tag = parts.splice(1,1);
-                classes = parts;
-            } else {
-                tag = b;
-            }
-            breaks[tag] = classes;
-        });
+        var pages = [];
+        var break_pages = [];
+
         // Get to the real content
         while (content.childElementCount == 1) {
           content = content.childNodes[0];
@@ -76,40 +63,34 @@ function PTModel(content, settings) {
         // and that adding it wouldn't go over the text limit
         var l = content.length;
         var i;
+        var all_break_matches = Array.prototype.slice.call(document.querySelectorAll(settings.breaks));
+
         for (i = 0; i < l; i++) {
-          var is_break = function () {
-              var tag = content[i].tagName.toLowerCase();
-              for (b in breaks.keys()) {
-                  if ((tag == b) && (breaks[b].length > 0) {
-
-                  }
-              }
-              return (breaks.keys().indexOf(content[i].tagName.toLowerCase()) != -1) &&
-                  (break[]);
-          }
-          var new_len = t_len + content[i].textContent.length;
-
-          if (is_break) {
-            if (t_len === 0) {
-              // Start of new page
-              page.push(content[i]);
-              t_len = new_len;
-            } else {
-              // End of last page, start a new one
-              pages.push(page);
-              t_len = 0;
-              page = Array(content[i]); // Include in the new page
+            var is_break = all_break_matches.indexOf(content[i]) != -1;
+            var new_len = t_len + content[i].textContent.length;
+            if (is_break) {
+                if (t_len === 0) {
+                    // Start of new page
+                    page.push(content[i]);
+                    t_len = new_len;
+                } else {
+                    // End of last page, start a new one
+                    pages.push(page);
+                    t_len = 0;
+                    page = Array(content[i]); // Include in the new page
+                }
+                break_pages.push(pages.length);
             }
-            break_pages.push(pages.length);
-          } else if (new_len <= settings.page_length) {
-            t_len = new_len;
-            page.push(content[i]);
-          } else if (page.length > 0) {
-            // Start a new page
-            pages.push(page);
-            t_len = content[i].textContent.length;
-            page = Array(content[i]);
-          }
+            else if (new_len <= settings.page_length) {
+                t_len = new_len;
+                page.push(content[i]);
+            }
+            else if (page.length > 0) {
+                // Start a new page
+                pages.push(page);
+                t_len = content[i].textContent.length;
+                page = Array(content[i]);
+            }
         }
         pages.push(page); // whatever's left over
         return {pages: pages, break_pages: break_pages};
