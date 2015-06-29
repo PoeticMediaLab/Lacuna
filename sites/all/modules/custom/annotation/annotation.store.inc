@@ -545,29 +545,30 @@ function annotation_api_entity_prepare($annotation, $op) {
       // Groups
       $possible_groups = array();
 
-      if ($audience['co-learners'] == 1) {
-        if ($referenced_node = $annotation_wrapper->field_annotation_reference->value()) {
+      if ($referenced_node = $annotation_wrapper->field_annotation_reference->value()) {
 
-          // Get selected groups
+        // Get selected groups
+        $selected_groups = array();
+        if ($audience['co-learners'] == 1) {
           if (isset($annotation->og_group_ref)) {
-            $selected_groups = array();
             foreach ($annotation->og_group_ref[$annotation->language] as $group) {
               $selected_groups[] = $group['target_id'];
             }
           }
+        }
 
-          // Get possible groups, and unmark those that are not selected for this annotation
-          $possible_groups = annotation_get_possible_groups_for_document($referenced_node);
-          foreach ($possible_groups as $group_type => $group_type_possible_groups) {
-            foreach ($group_type_possible_groups as $group_nid => $group_properties) {
-              if (!in_array($group_nid, $selected_groups)) {
-                $possible_groups[$group_type][$group_nid]['selected'] = 0;
-              }
+        // Get possible groups, and unmark those that are not selected for this annotation
+        $possible_groups = annotation_get_possible_groups_for_document($referenced_node);
+        foreach ($possible_groups as $group_type => $group_type_possible_groups) {
+          foreach ($group_type_possible_groups as $group_nid => $group_properties) {
+            if (!in_array($group_nid, $selected_groups)) {
+              $possible_groups[$group_type][$group_nid]['selected'] = 0;
             }
           }
-          $entity->privacy_options['groups'] = $possible_groups;
         }
+        $entity->privacy_options['groups'] = $possible_groups;
       }
+
 
       // Set the privacy options
       $entity->privacy_options = array(
