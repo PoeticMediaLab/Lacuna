@@ -341,7 +341,7 @@ function lacuna_stories_content_types_strongarm() {
     'extra_fields' => array(
       'form' => array(
         'path' => array(
-          'weight' => '30',
+          'weight' => '10',
         ),
       ),
       'display' => array(),

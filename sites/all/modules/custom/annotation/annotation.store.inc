@@ -189,34 +189,52 @@ function annotation_drupal_format($entity, $update = FALSE) {
         dpm($val, 'selected privacy options');
 
         // Private
-        if ($val['private'] == 1) {
-          $annotation->field_annotation_private[$annotation->language][0] = array('value' => 1);
+        if ($val['audience']['private'] == 1) {
+          $annotation->field_annotation_private[$annotation->language][0]['value'] = 1; // private
+          $annotation->group_content_access[$annotation->language][0]['value'] = 2; // group membership required
+          $annotation->field_annotation_ins_viewable[$annotation->language][0]['value'] = 0; // not viewable by instructor
+          break;
         }
 
-        // Not private
-        else {
-          $annotation->field_annotation_private[$annotation->language][0] = array('value' => 0);
+        // Everyone
+        if ($val['audience']['everyone'] == 1) {
+          $annotation->field_annotation_private[$annotation->language][0]['value'] = 0; // not private
+          $annotation->group_content_access[$annotation->language][0]['value'] = 1; // group membership not required
+          break;
+        }
 
-          // Co-learners
-          if ($val['audience']['co-learners'] == 1) {
-            $users_groups = og_get_groups_by_user();
-            $possible_groups =  array_replace ($val['groups']['peer_groups'], $val['groups']['course_groups']);
-            $groups_to_set = array();
-            foreach ($possible_groups as $possible_group_nid => $possible_group_properties) {
-              if ($possible_group_properties['selected'] == 1) {
-                // In case the user hacked the JS, make sure they are only adding the annotation to groups they are a member of.
-                // This is in fact necessary because OG will not catch these (because it's the annotator, ie. system, creating the group ref here, not the user submitting the annotation, which OG would catch)
-                if (in_array($possible_group_nid, $users_groups['node'])) {
-                  $groups_to_set[] = array('target_id' => $possible_group_nid);
-                }
+        // Instructor
+        // Set some options, then proceed with the co-learners possibility
+        if ($val['audience']['instructor'] == 1) {
+          $annotation->field_annotation_private[$annotation->language][0]['value'] = 1; // not private
+          $annotation->group_content_access[$annotation->language][0]['value'] = 2; // group membership required
+          $annotation->field_annotation_ins_viewable[$annotation->language][0]['value'] = 1; // viewable by instructor
+        }
+        else {
+          $annotation->field_annotation_ins_viewable[$annotation->language][0]['value'] = 0;
+        }
+
+        // Co-learners
+        if ($val['audience']['co-learners'] == 1) {
+          $annotation->field_annotation_private[$annotation->language][0]['value'] = 0; // not private
+          $annotation->group_content_access[$annotation->language][0]['value'] = 2; // group membership required
+
+          // Set the groups
+          $users_groups = og_get_groups_by_user();
+          $possible_groups =  array_replace ($val['groups']['peer_groups'], $val['groups']['course_groups']);
+          $groups_to_set = array();
+          foreach ($possible_groups as $possible_group_nid => $possible_group_properties) {
+            if ($possible_group_properties['selected'] == 1) {
+              // In case the user hacked the JS, make sure they are only adding the annotation to groups they are a member of.
+              // This is in fact necessary because OG will not catch these (because it's the annotator, ie. system, creating the group ref here, not the user submitting the annotation, which OG would catch)
+              if (in_array($possible_group_nid, $users_groups['node'])) {
+                $groups_to_set[] = array('target_id' => $possible_group_nid);
               }
             }
-            $annotation->og_group_ref[$annotation->language] = $groups_to_set;
           }
+          $annotation->og_group_ref[$annotation->language] = $groups_to_set;
+          break;
         }
-
-        // TODO: Not sure if this field is relevant given our own permission handling. Leaving unset for now
-        // $annotation->group_content_access[$annotation->language][0]['value'] = $val['group_visibility'];
 
         break;
 
@@ -226,8 +244,11 @@ function annotation_drupal_format($entity, $update = FALSE) {
           $annotation->{'field_annotation_' . $key} = array();
           $annotation->{'field_annotation_' . $key}[$annotation->language][0]['value'] = $val;
         }
+        break;
+
     }
   }
+
   // Sanitize the category input (i.e., server-side validation)
   // Can't be done reliably in an Annotator plugin
   // @see https://lists.okfn.org/pipermail/annotator-dev/2014-May/000935.html
@@ -493,15 +514,48 @@ function annotation_api_entity_prepare($annotation, $op) {
       }
 
 			// Privacy options
+      $private = $annotation_wrapper->field_annotation_private->value();
+      $visibility = $annotation_wrapper->group_content_access->value();
+      $instructor_viewable = $annotation_wrapper->field_annotation_ins_viewable->value();
 
-      $entity->privacy_options['audience'] = array(
+      $audience = array(
         'private' => 0,
         'co-learners' => 1,
         'everyone' => 0,
         'instructor' => 0,
       );
 
+      if ($private == 1) {
+        $audience = array(
+          'private' => 1,
+          'co-learners' => 0,
+          'everyone' => 0,
+          'instructor' => 0,
+        );
+      }
+
+      if ($visibility == 1) {
+        $audience = array(
+          'private' => 0,
+          'co-learners' => 0,
+          'everyone' => 1,
+          'instructor' => 0,
+        );
+      }
+
+      if ($instructor_viewable == 1) {
+        $audience = array(
+          'private' => 0,
+          'co-learners' => 1,
+          'everyone' => 0,
+          'instructor' => 1,
+        );
+      }
+
+      // Todo: fix overlapping instructor / private / co-learners scenarios pending discussion with Mike
+
       // Groups
+      $possible_groups = array();
       if ($referenced_node = $annotation_wrapper->field_annotation_reference->value()) {
 
         // Get selected groups
@@ -517,7 +571,6 @@ function annotation_api_entity_prepare($annotation, $op) {
         foreach ($possible_groups as $group_type => $group_type_possible_groups) {
           foreach ($group_type_possible_groups as $group_nid => $group_properties) {
             if (!in_array($group_nid, $selected_groups)) {
-
               $possible_groups[$group_type][$group_nid]['selected'] = 0;
             }
           }
@@ -525,10 +578,16 @@ function annotation_api_entity_prepare($annotation, $op) {
         $entity->privacy_options['groups'] = $possible_groups;
       }
 
+      // Set the privacy options
+      $entity->privacy_options = array(
+        'audience' => $audience,
+        'groups' => $possible_groups
+      );
+
 
       /////////////////////////////////////////////////////////////////////////////////////
       //
-      // TODO: REVIEW
+      // TODO: REVIEW.. shiraz to discuss with Mike
       //
 
       //Private

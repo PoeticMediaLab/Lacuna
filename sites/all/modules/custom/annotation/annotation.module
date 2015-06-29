@@ -162,6 +162,20 @@ function annotation_form_alter(&$form, &$form_state, $form_id) {
     $form['field_annotation_quote'] = array('#access' => FALSE);
     $form['field_annotation_uri'] = array('#access' => FALSE);
     // $form['category'] = array('#access' => FALSE);
+
+    //  Only show the Instructor Viewable field if the annotation is set to private
+    $form['field_annotation_ins_viewable']['#states'] = array(
+      'visible' => array(
+        ':input[name="field_annotation_private[und]"]' => array('value' => '1')
+      )
+    );
+
+    //  Only show the Instructor Viewable field if the annotation is set to private
+    $form['group_content_access']['#states'] = array(
+      'visible' => array(
+        ':input[name="field_annotation_private[und]"]' => array('value' => '0')
+      )
+    );
   }
   return($form);
 }
@@ -214,49 +228,86 @@ function annotation_node_grants($account, $op) {
   if (($op == 'update' || $op == 'delete') && user_access('edit any private annotation', $account)) {
     $grants['annotation_edit'] = array(ANNOTATION_GRANT_ACCESS_ALL);
   }
+
+  // Instructors are granted view access to private annotations within their courses, if the annotation is marked as Instructor Viewable
+  if (in_array('Instructor', $account->roles)) {
+    $query = new EntityFieldQuery();
+    $query->entityCondition('entity_type', 'node')
+      ->entityCondition('bundle', 'course')
+      ->propertyCondition('uid', $account->uid)
+    ;
+    $result = $query->execute();
+    if ($courses_by_instructor = array_keys($result['node'])) {
+      $grants['annotation_instructor'] = $courses_by_instructor;
+    }
+  }
+
   return $grants;
 }
 
 function annotation_node_access_records($node) {
-  // We only care about the node if it's been marked private. If not, it is
-  // treated just like any other node and we completely ignore it.
-  // We're using list_boolean as our privacy setting field
-  if (!empty($node->field_annotation_private) && $node->field_annotation_private[$node->language][0]['value'] == 1) {
-    $grants = array();
-    $grants[] = array(
-      'realm' => 'annotation_view',
-      'gid' => ANNOTATION_GRANT_ACCESS_ALL,
-      'grant_view' => $node->status,
-      'grant_update' => 0,
-      'grant_delete' => 0,
-      'priority' => 100,
-    );
-    $grants[] = array(
-      'realm' => 'annotation_edit',
-      'gid' => ANNOTATION_GRANT_ACCESS_ALL,
-      'grant_view' => 1,
-      'grant_update' => 1,
-      'grant_delete' => 1,
-      'priority' => 100,
-    );
 
-    // For the annotation_author realm, the grant ID (gid) is
-    // equivalent to the node author's user ID (UID).
-    // We check the node UID so that we don't grant author privileges for
-    // anonymous nodes to anonymous users.
-    if ($node->uid) {
+  $grants = array();
+
+  if ($node->type == 'annotation') {
+    $annotation_wrapper = entity_metadata_wrapper('node', $node);
+
+		// We only care about the node if it's been marked private. If not, it is
+  	// treated just like any other node and we completely ignore it.
+    if ($annotation_wrapper->field_annotation_private->value() == 1) {
       $grants[] = array(
-        'realm' => 'annotation_author',
-        'gid' => $node->uid,
+        'realm' => 'annotation_view',
+        'gid' => ANNOTATION_GRANT_ACCESS_ALL,
+        'grant_view' => $node->status,
+        'grant_update' => 0,
+        'grant_delete' => 0,
+        'priority' => 100,
+      );
+      $grants[] = array(
+        'realm' => 'annotation_edit',
+        'gid' => ANNOTATION_GRANT_ACCESS_ALL,
         'grant_view' => 1,
         'grant_update' => 1,
         'grant_delete' => 1,
         'priority' => 100,
       );
+
+      // For the annotation_author realm, the grant ID (gid) is
+      // equivalent to the node author's user ID (UID).
+      // We check the node UID so that we don't grant author privileges for
+      // anonymous nodes to anonymous users.
+      if ($node->uid) {
+        $grants[] = array(
+          'realm' => 'annotation_author',
+          'gid' => $node->uid,
+          'grant_view' => 1,
+          'grant_update' => 1,
+          'grant_delete' => 1,
+          'priority' => 100,
+        );
+      }
+
+      // Instructors can view private annotations within their courses if they are marked as "Instructor Viewable"
+      if ($annotation_wrapper->field_annotation_ins_viewable->value() == 1) {
+        if ($referenced_node = $annotation_wrapper->field_annotation_reference->value()) {
+          if ($groups_for_annotation = annotation_get_possible_groups_for_document($referenced_node)) {
+            $course_nids = array_keys($groups_for_annotation['course_groups']);
+            foreach ($course_nids as $course_nid) {
+              $grants[] = array(
+                'realm' => 'annotation_instructor',
+                'gid' => $course_nid,
+                'grant_view' => 1,
+                'grant_update' => 0,
+                'grant_delete' => 0,
+                'priority' => 100,
+              );
+            }
+          }
+        }
+      }
     }
     return $grants;
   }
-  // Return nothing if the node has not been marked private.
 }
 
 
@@ -344,38 +395,39 @@ function annotation_copy_field_values_to_drupal_standard_fields () {
 // Groups are marked as selected (the default for new annotations). If editing an existing annotation, unselected groups should be unmarked as selected.
 function annotation_get_possible_groups_for_document ($document_node) {
   $document_wrapper = entity_metadata_wrapper('node', $document_node);
-  $user_groups = og_get_groups_by_user();
-  $user_groups = array_keys($user_groups['node']);
+  if ($user_groups = og_get_groups_by_user()) {
+    $user_groups = array_keys($user_groups['node']);
 
-  // Course groups - for the current document that user is a member of
-  $course_groups = array();
-  $doc_groups = $document_wrapper->og_group_ref->value();
-  if (count($doc_groups)) {
-    foreach ($doc_groups as $doc_group) { // Documents can belong to multiple courses
-      if (in_array($doc_group->nid, $user_groups)) { // User must be in course
-        $course_groups [$doc_group->nid] = array(
-          $doc_group->title,
+    // Course groups - for the current document that user is a member of
+    $course_groups = array();
+    $doc_groups = $document_wrapper->og_group_ref->value();
+    if (count($doc_groups)) {
+      foreach ($doc_groups as $doc_group) { // Documents can belong to multiple courses
+        if (in_array($doc_group->nid, $user_groups)) { // User must be in course
+          $course_groups [$doc_group->nid] = array(
+            $doc_group->title,
+            'selected' => 1
+          );
+        }
+      }
+    }
+
+
+    // Peer groups -- all user's peer groups
+    $peer_groups = array();
+    foreach ($user_groups as $user_group) {
+      $node = node_load($user_group);
+      if ($node->type == 'peer_group') {
+        $peer_groups[$user_group] = array(
+          $node->title,
           'selected' => 1
         );
       }
     }
+
+    return array(
+      'course_groups' => $course_groups,
+      'peer_groups' => $peer_groups
+    );
   }
-
-
-  // Peer groups -- all user's peer groups
-  $peer_groups = array();
-  foreach ($user_groups as $user_group) {
-    $node = node_load($user_group);
-    if ($node->type == 'peer_group') {
-      $peer_groups[$user_group] = array(
-        $node->title,
-        'selected' => 1
-      );
-    }
-  }
-
-  return array(
-    'course_groups' => $course_groups,
-    'peer_groups' => $peer_groups
-  );
 }

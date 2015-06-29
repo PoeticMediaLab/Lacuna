@@ -52,7 +52,6 @@ function lacuna_stories_permissions_user_default_permissions() {
     'name' => 'access any private annotation',
     'roles' => array(
       'Content Manager' => 'Content Manager',
-      'Instructor' => 'Instructor',
       'Site Administrator' => 'Site Administrator',
     ),
     'module' => 'annotation',
