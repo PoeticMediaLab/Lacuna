@@ -39,7 +39,7 @@ function debug_to_console( $data ) {
         <p class="submitted response-user-information">
           <?php print $user_picture; ?>
           <div class="username-and-date">
-            <?php print $user; ?>
+            <?php print $name; ?>
             <span class="date-month-day-year">
               <?php print format_date($timestamp = $created,
                                       $type = 'medium', 
