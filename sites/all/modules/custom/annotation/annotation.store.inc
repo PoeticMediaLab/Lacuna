@@ -187,27 +187,35 @@ function annotation_drupal_format($entity, $update = FALSE) {
 
       case 'privacy_options':
 
+
+        // Set the audience field to empty, to be set below
+        $annotation->field_annotation_audience[$annotation->language] = array ();
+
+        // Restrict any permission-granting fields, then set otherwise below depending on audience (ie. here we restrict, below we open up)
+        $annotation->group_content_access[$annotation->language][0]['value'] = 2; // group membership required
+        $annotation->og_group_ref[$annotation->language] = array(); // not in any groups
+        $annotation->field_annotation_ins_viewable_co[$annotation->language] = array(); // not viewable by any instructors
+
+
         // Private
         if ($val['audience']['private'] == 1) {
-          $annotation->field_annotation_private[$annotation->language][0]['value'] = 1; // private
-          $annotation->group_content_access[$annotation->language][0]['value'] = 2; // group membership required
-          $annotation->field_annotation_ins_viewable[$annotation->language][0]['value'] = 0; // not viewable by instructor
-          break;
+          $annotation->field_annotation_audience[$annotation->language][]['value'] = 'private'; // set the audience field
+          break; // private is mutually exclusive
         }
 
         // Everyone
         if ($val['audience']['everyone'] == 1) {
-          $annotation->field_annotation_private[$annotation->language][0]['value'] = 0; // not private
+          $annotation->field_annotation_audience[$annotation->language][]['value'] = 'everyone'; // set the audience field
           $annotation->group_content_access[$annotation->language][0]['value'] = 1; // group membership not required
-          break;
+          break; // everyone is mutually exclusive
         }
 
         // Instructor
         // Set some options, then proceed with the co-learners possibility
         if ($val['audience']['instructor'] == 1) {
-          $annotation->field_annotation_private[$annotation->language][0]['value'] = 1; // not private
-          $annotation->group_content_access[$annotation->language][0]['value'] = 2; // group membership required
-          $annotation->field_annotation_ins_viewable[$annotation->language][0]['value'] = 1; // viewable by instructor
+          $annotation->field_annotation_audience[$annotation->language][]['value'] = 'instructor'; // set the audience field
+
+          // Set the "Instructor Viewable by Instructors of these Courses" values, which are picked up by the instructor grant.
           if ($annotation_courses = array_keys ($val['groups']['course_groups'])) {
             if (count($annotation_courses) > 1) {
               // Todo: if instructor is chosen, and an annotation is on a document in more than one course (that the user is a member of), an extra courses dropdown should appear to let the user select *which* instructors
@@ -220,16 +228,12 @@ function annotation_drupal_format($entity, $update = FALSE) {
             }
           }
 
-
-        }
-        else {
-          $annotation->field_annotation_ins_viewable[$annotation->language][0]['value'] = 0;
+        // Do not break out of 'instructor' condition, because co-learners can also be chosen
         }
 
         // Co-learners
         if ($val['audience']['co-learners'] == 1) {
-          $annotation->field_annotation_private[$annotation->language][0]['value'] = 0; // not private
-          $annotation->group_content_access[$annotation->language][0]['value'] = 2; // group membership required
+          $annotation->field_annotation_audience[$annotation->language][]['value'] = 'co-learners'; // set (or add on to, if "instructor" was also chosen) the audience field
 
           // Set the groups
           $users_groups = og_get_groups_by_user();
@@ -526,68 +530,43 @@ function annotation_api_entity_prepare($annotation, $op) {
       }
 
 			// Privacy options
-      $private = $annotation_wrapper->field_annotation_private->value();
-      $visibility = $annotation_wrapper->group_content_access->value();
-      $instructor_viewable = $annotation_wrapper->field_annotation_ins_viewable->value();
 
-      $audience = array(
+      // Audience
+      $audience_values = $annotation_wrapper->field_annotation_audience->value();$audience = array(
         'private' => 0,
-        'co-learners' => 1,
+        'co-learners' => 0,
         'everyone' => 0,
         'instructor' => 0,
       );
-
-      if ($private == 1) {
-        $audience = array(
-          'private' => 1,
-          'co-learners' => 0,
-          'everyone' => 0,
-          'instructor' => 0,
-        );
+      foreach ($audience_values as $audience_value) {
+        $audience[$audience_value] = 1;
       }
-
-      if ($visibility == 1) {
-        $audience = array(
-          'private' => 0,
-          'co-learners' => 0,
-          'everyone' => 1,
-          'instructor' => 0,
-        );
-      }
-
-      if ($instructor_viewable == 1) {
-        $audience = array(
-          'private' => 0,
-          'co-learners' => 1,
-          'everyone' => 0,
-          'instructor' => 1,
-        );
-      }
-
-      // Todo: fix overlapping instructor / private / co-learners scenarios pending discussion with Mike
 
       // Groups
       $possible_groups = array();
-      if ($referenced_node = $annotation_wrapper->field_annotation_reference->value()) {
 
-        // Get selected groups
-        if (isset($annotation->og_group_ref)) {
-          $selected_groups = array();
-          foreach ($annotation->og_group_ref[$annotation->language] as $group) {
-            $selected_groups[] = $group['target_id'];
-          }
-        }
+      if ($audience['co-learners'] == 1) {
+        if ($referenced_node = $annotation_wrapper->field_annotation_reference->value()) {
 
-        // Get possible groups, and unmark those that are not selected for this annotation
-        $possible_groups = annotation_get_possible_groups_for_document($referenced_node);
-        foreach ($possible_groups as $group_type => $group_type_possible_groups) {
-          foreach ($group_type_possible_groups as $group_nid => $group_properties) {
-            if (!in_array($group_nid, $selected_groups)) {
-              $possible_groups[$group_type][$group_nid]['selected'] = 0;
+          // Get selected groups
+          if (isset($annotation->og_group_ref)) {
+            $selected_groups = array();
+            foreach ($annotation->og_group_ref[$annotation->language] as $group) {
+              $selected_groups[] = $group['target_id'];
             }
           }
+
+          // Get possible groups, and unmark those that are not selected for this annotation
+          $possible_groups = annotation_get_possible_groups_for_document($referenced_node);
+          foreach ($possible_groups as $group_type => $group_type_possible_groups) {
+            foreach ($group_type_possible_groups as $group_nid => $group_properties) {
+              if (!in_array($group_nid, $selected_groups)) {
+                $possible_groups[$group_type][$group_nid]['selected'] = 0;
+              }
+            }
+          }
+          $entity->privacy_options['groups'] = $possible_groups;
         }
-        $entity->privacy_options['groups'] = $possible_groups;
       }
 
       // Set the privacy options
@@ -595,41 +574,6 @@ function annotation_api_entity_prepare($annotation, $op) {
         'audience' => $audience,
         'groups' => $possible_groups
       );
-
-
-      /////////////////////////////////////////////////////////////////////////////////////
-      //
-      // TODO: REVIEW.. shiraz to discuss with Mike
-      //
-
-      //Private
-      if (isset($annotation->field_annotation_private)) {
-        // Format permissions for the Annotator Permissions plugin
-        // We only implement "read" permissions right now
-        // This setting is strictly to respect the current checkbox settings
-        // Drupal permissions control what is actually shown
-        $entity->permissions = array();
-        if ($annotation->field_annotation_private[$annotation->language][0]['value'] == 0) {
-          $entity->permissions['read'] = array();
-        }
-        else {
-          $entity->permissions['read'][] = $account->uid;
-        }
-      }
-
-			// Sharing
-      // Currently not implemented: sharing edit permission
-      $entity->permissions['update'][] = $account->uid;
-      $entity->permissions['delete'][] = $account->uid;
-      // Check privileges, but don't duplicate uids
-      if (user_access('edit any annotations') && $user->uid != $account->uid) {
-        array_push($entity->permissions['update'], $user->uid);
-        array_push($entity->permissions['delete'], $user->uid);
-      }
-      //
-      //
-      //
-      /////////////////////////////////////////////////////////////////////////////////////
 
       // Links
       $entity->links[] = array(
