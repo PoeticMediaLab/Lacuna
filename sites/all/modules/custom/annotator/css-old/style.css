@@ -1,0 +1,22 @@
+.annotator-editor .annotator-widget .annotator-listing .annotator-item {
+	line-height: 2.5em;
+}
+
+.annotator-notice,
+.annotator-filter *,
+.annotator-widget * {
+  /*font-family: inherit !important;*/
+}
+
+/***
+ *
+ * Next rule overrides the "style='display: none'"
+ * that gets added *inline* to our annotator-checkbox element
+ * by some well-hidden piece of code that I've not been able to track down
+ *
+ * Mike Widner <mikewidner@stanford.edu>
+ *
+ ***/
+li.annotator-checkbox[style] {
+  display: block !important;
+}

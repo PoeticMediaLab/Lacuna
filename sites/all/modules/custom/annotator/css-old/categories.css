@@ -1,0 +1,54 @@
+/***
+ * Annotator Categories Plugin CSS.
+ * Some code from Zhila and some from Adi's original plugin
+ ***/
+
+.annotator-categories {
+    border-top: solid 1px #eee;
+}
+
+.annotator-category:hover {
+    cursor: pointer;
+}
+
+.annotator-categories h4{
+    font-size: 13px;
+    display: block;
+    margin: 5px 0px 5px 5px;
+}
+
+.annotator-viewer ul li .annotator-category {
+    text-align: center;
+    width: 33%;
+}
+
+.annotator-category {
+    padding: 7px;
+    margin: 1px 1px 0px;
+    -webkit-border-radius: 6px 6px 6px 6px;
+    -moz-border-radius: 6px 6px 6px 6px;
+    border-radius: 6px 6px 6px 6px;
+    color: black;
+    display: inline-block;
+    background-color: rgba(255, 255, 10, .3);
+}
+
+.annotator-category-none {
+
+}
+
+.annotator-category-0,
+.annotator-category-1,
+.annotator-category-2,
+.annotator-category-3,
+.annotator-category-4,
+.annotator-category-5,
+.annotator-category-6,
+.annotator-category-7
+{
+    background-color: rgba(22,147,165, .2);
+}
+
+.annotator-category-selected {
+    background-color: rgba(196,223,44,1) !important;
+}

@@ -1,0 +1,16 @@
+.ui-autocomplete-category {
+  font-weight: bold;
+  border-bottom: 1px solid black;
+  padding-bottom: 5px;
+  margin-top: 10px;
+  text-transform: uppercase;
+  font-size: small;
+  max-height: 200px;
+  overflow-y: auto;
+  /* prevent horizontal scrollbar */
+  overflow-x: hidden;
+}
+
+.annotator-tags-item {
+  font-size: smaller;
+}

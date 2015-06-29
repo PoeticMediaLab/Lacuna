@@ -1,0 +1,17 @@
+/***
+ * Annotator Privacy Plugin CSS.
+ *
+ ***/
+
+.annotator-privacy {
+  opacity: .5;
+}
+ .annotator-privacy-public {
+  color: green;
+  display: block !important;
+ }
+
+ .annotator-privacy-private {
+ 	color: firebrick;
+  display: block !important;
+ }
