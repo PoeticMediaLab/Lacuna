@@ -61,12 +61,11 @@ function PTModel(content, settings) {
 
         // Check that the current item is not a break point
         // and that adding it wouldn't go over the text limit
+        var all_breaks = Array.prototype.slice.call(document.querySelectorAll(settings.breaks));
         var l = content.length;
         var i;
-        var all_break_matches = Array.prototype.slice.call(document.querySelectorAll(settings.breaks));
-
         for (i = 0; i < l; i++) {
-            var is_break = all_break_matches.indexOf(content[i]) != -1;
+            var is_break = all_breaks.indexOf(content[i]) != -1;
             var new_len = t_len + content[i].textContent.length;
             if (is_break) {
                 if (t_len === 0) {
