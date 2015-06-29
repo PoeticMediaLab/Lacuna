@@ -161,7 +161,7 @@ function annotation_form_alter(&$form, &$form_state, $form_id) {
     $form['field_annotation_reference'] = array('#access' => FALSE);
     $form['field_annotation_quote'] = array('#access' => FALSE);
     $form['field_annotation_uri'] = array('#access' => FALSE);
-    // $form['category'] = array('#access' => FALSE);
+    $form['field_annotation_ins_viewable_co'] = array('#access' => FALSE);
 
     //  Only show the Instructor Viewable field if the annotation is set to private
     $form['field_annotation_ins_viewable']['#states'] = array(
@@ -287,22 +287,17 @@ function annotation_node_access_records($node) {
         );
       }
 
-      // Instructors can view private annotations within their courses if they are marked as "Instructor Viewable"
-      if ($annotation_wrapper->field_annotation_ins_viewable->value() == 1) {
-        if ($referenced_node = $annotation_wrapper->field_annotation_reference->value()) {
-          if ($groups_for_annotation = annotation_get_possible_groups_for_document($referenced_node)) {
-            $course_nids = array_keys($groups_for_annotation['course_groups']);
-            foreach ($course_nids as $course_nid) {
-              $grants[] = array(
-                'realm' => 'annotation_instructor',
-                'gid' => $course_nid,
-                'grant_view' => 1,
-                'grant_update' => 0,
-                'grant_delete' => 0,
-                'priority' => 100,
-              );
-            }
-          }
+      // Instructors can view private annotations within their courses if the annotation has the course selected in "Instructor Viewable by Instructors of these Courses"
+      if ($courses = $annotation_wrapper->field_annotation_ins_viewable_co->value()) {
+        foreach ($courses as $course) {
+          $grants[] = array(
+            'realm' => 'annotation_instructor',
+            'gid' => $course->nid,
+            'grant_view' => 1,
+            'grant_update' => 0,
+            'grant_delete' => 0,
+            'priority' => 100,
+          );
         }
       }
     }

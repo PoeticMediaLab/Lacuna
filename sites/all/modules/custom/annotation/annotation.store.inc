@@ -186,7 +186,6 @@ function annotation_drupal_format($entity, $update = FALSE) {
         break;
 
       case 'privacy_options':
-        dpm($val, 'selected privacy options');
 
         // Private
         if ($val['audience']['private'] == 1) {
@@ -209,6 +208,19 @@ function annotation_drupal_format($entity, $update = FALSE) {
           $annotation->field_annotation_private[$annotation->language][0]['value'] = 1; // not private
           $annotation->group_content_access[$annotation->language][0]['value'] = 2; // group membership required
           $annotation->field_annotation_ins_viewable[$annotation->language][0]['value'] = 1; // viewable by instructor
+          if ($annotation_courses = array_keys ($val['groups']['course_groups'])) {
+            if (count($annotation_courses) > 1) {
+              // Todo: if instructor is chosen, and an annotation is on a document in more than one course (that the user is a member of), an extra courses dropdown should appear to let the user select *which* instructors
+            }
+            foreach ($annotation_courses as $annotation_course) {
+              $annotation->field_annotation_ins_viewable_co[$annotation->language][] = array(
+                'target_id' => $annotation_course,
+                'target_type' => 'node'
+              );
+            }
+          }
+
+
         }
         else {
           $annotation->field_annotation_ins_viewable[$annotation->language][0]['value'] = 0;
