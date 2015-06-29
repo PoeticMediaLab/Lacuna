@@ -110,7 +110,7 @@ function lacuna_stories_content_types_field_group_info() {
   $field_group->parent_name = '';
   $field_group->data = array(
     'label' => 'Deprecated Fields',
-    'weight' => '9',
+    'weight' => '8',
     'children' => array(
       0 => 'annotation_reference',
       1 => 'annotation_tags',
@@ -149,14 +149,16 @@ function lacuna_stories_content_types_field_group_info() {
     'label' => 'Deprecated Fields',
     'weight' => '12',
     'children' => array(
-      0 => 'annotation_reference',
-      1 => 'annotation_tags',
-      2 => 'category',
-      3 => 'private',
-      4 => 'quote',
-      5 => 'ranges',
-      6 => 'text',
-      7 => 'uri',
+      0 => 'field_annotation_private',
+      1 => 'annotation_reference',
+      2 => 'annotation_tags',
+      3 => 'category',
+      4 => 'private',
+      5 => 'quote',
+      6 => 'ranges',
+      7 => 'text',
+      8 => 'uri',
+      9 => 'field_annotation_ins_viewable',
     ),
     'format_type' => 'div',
     'format_settings' => array(
