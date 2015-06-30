@@ -21,11 +21,8 @@ function lacuna_stories_permissions_strongarm() {
       2 => 4,
     ),
     'view' => array(
-      0 => 2,
-      1 => 5,
-      2 => 6,
-      3 => 3,
-      4 => 4,
+      0 => 3,
+      1 => 4,
     ),
     'priority' => '-1',
   );

@@ -110,7 +110,7 @@ function lacuna_stories_content_types_field_group_info() {
   $field_group->parent_name = '';
   $field_group->data = array(
     'label' => 'Deprecated Fields',
-    'weight' => '8',
+    'weight' => '9',
     'children' => array(
       0 => 'annotation_reference',
       1 => 'annotation_tags',
