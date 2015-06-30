@@ -47,16 +47,6 @@ function lacuna_stories_permissions_user_default_permissions() {
     'module' => 'webform',
   );
 
-  // Exported permission: 'access any private annotation'.
-  $permissions['access any private annotation'] = array(
-    'name' => 'access any private annotation',
-    'roles' => array(
-      'Content Manager' => 'Content Manager',
-      'Site Administrator' => 'Site Administrator',
-    ),
-    'module' => 'annotation',
-  );
-
   // Exported permission: 'access backup and migrate'.
   $permissions['access backup and migrate'] = array(
     'name' => 'access backup and migrate',
@@ -1633,15 +1623,6 @@ function lacuna_stories_permissions_user_default_permissions() {
       'Site Administrator' => 'Site Administrator',
     ),
     'module' => 'node',
-  );
-
-  // Exported permission: 'edit any private annotation'.
-  $permissions['edit any private annotation'] = array(
-    'name' => 'edit any private annotation',
-    'roles' => array(
-      'Site Administrator' => 'Site Administrator',
-    ),
-    'module' => 'annotation',
   );
 
   // Exported permission: 'edit any thread content'.

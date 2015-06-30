@@ -161,95 +161,57 @@ function annotation_form_alter(&$form, &$form_state, $form_id) {
     $form['field_annotation_reference'] = array('#access' => FALSE);
     $form['field_annotation_quote'] = array('#access' => FALSE);
     $form['field_annotation_uri'] = array('#access' => FALSE);
+    // The audience/group fields should be hidden from here. Otherwise we have to do a fair bit of logic on them similar to what we do in the JS.
+    $form['field_annotation_audience'] = array('#access' => FALSE);
+    $form['og_group_ref'] = array('#access' => FALSE);
     $form['field_annotation_ins_viewable_co'] = array('#access' => FALSE);
     $form['group_content_access'] = array('#access' => FALSE);
-
-
   }
   return($form);
 }
 
-/**
- * Implements hook_node_validate().
- */
-function annotation_node_validate($node, $form, &$form_state) {
-  if ($node->type == 'annotation') {
-
-    // Prevent setting audience field to multi val except for co-learners and instructor which are allowed to both be set
-    $audience = $form['field_annotation_audience'][LANGUAGE_NONE]['#value'];
-    if (count ($audience) > 1) {
-      if (in_array('everyone', $audience)) {
-        form_set_error ('field_annotation_audience', '"Everyone" can only be chosen if no other audience values are set.');
-      }
-      if (in_array('private', $audience)) {
-        form_set_error ('field_annotation_audience', '"Private" can only be chosen if no other audience values are set.');
-      }
-    }
-  }
-}
-
-/**
- * Implements hook_node_presave().
- */
-function annotation_node_presave($node) {
-
-  if ($node->type == 'annotation') {
-
-    // Unset groups if audience is co-learners is not selected, in case set from the node form
-    $annotation_wrapper = entity_metadata_wrapper ('node', $node);
-    $audience = $annotation_wrapper->field_annotation_audience->value();
-    if (!in_array('co-learners', $audience)) {
-      $node->og_group_ref[$node->language] = array();
-    }
-  }
-}
-
 /***
+ * Annotation permissions are handled by:
  *
- * Set privacy on annotation nodes
- * Draws heavily on node_access_example.module
- * Translates the Annotator Permission module settings for each annotation
- * into access controls on the Annotation nodes themselves
- * so that Drupal will respect the user's preferences for each annotation
- *
- *
- *  Mike Widner <mikewidner@stanford.edu>
+ * 1. node access (core) @ admin/people/permissions -> node -> annotation (perms other than view)
+ * 2. content_access (contrib) @ admin/structure/types/manage/annotation/access (view perms and perms other than view)
+ * 3. og_access (contrib) -- group_content_access field (view perm) and @ admin/config/group/permissions/node/course (perms other than view)
+ * 4. the two node grants below (view perm)
  *
  ***/
 
-// adds a few permissions beyond the default ones for a node type
-function annotation_permission() {
-  return array(
-    'access any private annotation' => array(
-      'title' => t('Access any private annotation'),
-      'description' => t('May view annotations of other users even if marked private.'),
-    ),
-    'edit any private annotation' => array(
-      'title' => t('Edit any private annotation'),
-      'description' => t('May edit annotations of other users even if marked private.'),
-    ),
-  );
-}
+/***
+ * Annotation view grants for "everyone" and "instructor" audience options
+ *
+ * @see http://www.phase2technology.com/blog/drupal-7-node-access-grants-locks-and-keys/
+ * Don't use hook_node_access()
+ *
+ ***/
 
-// @see http://www.phase2technology.com/blog/drupal-7-node-access-grants-locks-and-keys/
-// Don't use hook_node_access()
 function annotation_node_grants($account, $op) {
-  $grants = array();
 
-  // Instructors can view private annotations within their courses if the annotation has the course selected in "Instructor Viewable by Instructors of these Courses"
-  if (in_array('Instructor', $account->roles)) {
-    $query = new EntityFieldQuery();
-    $query->entityCondition('entity_type', 'node')
-      ->entityCondition('bundle', 'course')
-      ->propertyCondition('uid', $account->uid)
-    ;
-    $result = $query->execute();
-    if ($courses_by_instructor = array_keys($result['node'])) {
-      $grants['annotation_instructor'] = $courses_by_instructor;
+  if ($op == 'view') {
+    $grants = array();
+
+    // "Everyone" grant
+    if (in_array ('authenticated user', $account->roles)) {
+      $grants['annotation_everyone'] = array(1);
     }
-  }
 
-  return $grants;
+    // Instructors can view private annotations within their courses if the annotation has the course selected in "Instructor Viewable by Instructors of these Courses"
+    if (in_array('Instructor', $account->roles)) {
+      $query = new EntityFieldQuery();
+      $query->entityCondition('entity_type', 'node')
+        ->entityCondition('bundle', 'course')
+        ->propertyCondition('uid', $account->uid);
+      $result = $query->execute();
+      if ($courses_by_instructor = array_keys($result['node'])) {
+        $grants['annotation_instructor'] = $courses_by_instructor;
+      }
+    }
+
+    return $grants;
+  }
 }
 
 function annotation_node_access_records($node) {
@@ -257,6 +219,19 @@ function annotation_node_access_records($node) {
 
   if ($node->type == 'annotation') {
     $annotation_wrapper = entity_metadata_wrapper('node', $node);
+
+    // "Everyone" grant
+    $audience = $annotation_wrapper->field_annotation_audience->value();
+    if (in_array('everyone', $audience)) {
+      $grants[] = array(
+        'realm' => 'annotation_everyone',
+        'gid' => 1,
+        'grant_view' => 1,
+        'grant_update' => 0,
+        'grant_delete' => 0,
+        'priority' => 100,
+      );
+    }
 
     // Instructors can view private annotations within their courses if the annotation has the course selected in "Instructor Viewable by Instructors of these Courses"
     if ($courses = $annotation_wrapper->field_annotation_ins_viewable_co->value()) {

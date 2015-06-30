@@ -280,7 +280,7 @@ function lacuna_stories_content_types_field_default_field_instances() {
         'module' => 'taxonomy',
         'settings' => array(),
         'type' => 'taxonomy_term_reference_link',
-        'weight' => 6,
+        'weight' => 7,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -522,7 +522,7 @@ function lacuna_stories_content_types_field_default_field_instances() {
           'link' => FALSE,
         ),
         'type' => 'entityreference_label',
-        'weight' => 7,
+        'weight' => 8,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -562,7 +562,7 @@ function lacuna_stories_content_types_field_default_field_instances() {
         'module' => 'taxonomy',
         'settings' => array(),
         'type' => 'taxonomy_term_reference_link',
-        'weight' => 5,
+        'weight' => 6,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -688,9 +688,10 @@ function lacuna_stories_content_types_field_default_field_instances() {
     'display' => array(
       'default' => array(
         'label' => 'above',
+        'module' => 'list',
         'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 9,
+        'type' => 'list_default',
+        'weight' => 5,
       ),
       'teaser' => array(
         'label' => 'above',
