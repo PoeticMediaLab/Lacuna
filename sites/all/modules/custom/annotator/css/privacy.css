@@ -17,12 +17,18 @@ span.privacy.types .privacy-type {
 span.privacy.types .privacy-type.checked {
   background-color: #88b551;
 }
-label.privacy.groups {
+form.annotator-widget .privacy-groups {
+  display: none;
+}
+form.annotator-widget .privacy-groups.show-groups {
+  display: block;
+}
+label.privacy.group {
   width: 95%;
   margin-left: 5%;
   display: inline-block;
-
 }
+
 .annotator-viewer .privacy-type {
   padding: 7px 6px;
   margin: 1px 1px 0px;

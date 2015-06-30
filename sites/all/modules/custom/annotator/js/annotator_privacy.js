@@ -7,15 +7,19 @@
         $(document).on( "click", "form.annotator-widget .privacy.types .privacy-type", function(e) {
           $(this).toggleClass("checked");
           if ("Co-Learners" == $(this).attr("id")) {
-            $(".annotator-widget .privacy.groups").toggle(500);
+            $(".annotator-widget .privacy-groups").addClass("show-groups");
           }
           if ($(this).hasClass("checked")) {
             if ("Private" == $(this).attr("id")) {
               $(".privacy.types #Instructor, .privacy.types #Co-Learners, .privacy.types #Everyone").removeClass('checked');
-              $(".annotator-widget .privacy.groups").hide(500);
+              $(".annotator-widget .privacy-groups").removeClass("show-groups");
             }
-            if ("Instructor" == $(this).attr("id") || "Co-Learners" == $(this).attr("id") || "Everyone" == $(this).attr("id")) {
-              $(".privacy.types #Private").removeClass('checked');
+            if ("Everyone" == $(this).attr("id")) {
+              $(".privacy.types #Instructor, .privacy.types #Co-Learners, .privacy.types #Private").removeClass('checked');
+              $(".annotator-widget .privacy-groups").removeClass("show-groups");
+            }
+            if ("Instructor" == $(this).attr("id") || "Co-Learners" == $(this).attr("id")) {
+              $(".privacy.types #Private, .privacy.types #Everyone").removeClass('checked');
             }
           }
         });

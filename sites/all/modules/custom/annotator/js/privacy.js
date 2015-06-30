@@ -37,14 +37,17 @@
     };
 
     Privacy.prototype.addPrivacy = function(event, annotation) {
-      var checked, gid, group, group_object, group_type, groups, groups_html, i, len, privacy_html, privacy_type, ref, settings;
+      var checked, gid, group, group_object, group_type, groups, groups_html, j, len, privacy_html, privacy_type, ref, settings, show_groups;
       settings = annotation.privacy_options ? annotation.privacy_options : Drupal.settings.privacy_options;
-      groups_html = privacy_html = '';
+      groups_html = privacy_html = show_groups = '';
       privacy_html += '<span class="privacy types">';
       ref = ["Private", "Instructor", "Co-Learners", "Everyone"];
-      for (i = 0, len = ref.length; i < len; i++) {
-        privacy_type = ref[i];
+      for (j = 0, len = ref.length; j < len; j++) {
+        privacy_type = ref[j];
         checked = settings.audience[privacy_type.toLowerCase()] ? 'checked' : '';
+        if ("Co-Learners" === privacy_type && "checked" === checked) {
+          show_groups = 'show-groups';
+        }
         privacy_html += '<span class="privacy-type ' + checked + '" id="' + privacy_type + '">' + privacy_type + '</span>';
       }
       privacy_html += '</span>';
@@ -53,13 +56,14 @@
         group_object = groups[group_type];
         for (gid in group_object) {
           group = group_object[gid];
-          groups_html += '<label class="privacy groups">';
+          groups_html += '<label class="privacy group">';
           checked = group.selected ? 'checked="checked"' : '';
           groups_html += '<input type="checkbox" class="privacy-group ' + group_type + '" value="' + gid + '" ' + checked + ' />';
           groups_html += group[0];
           groups_html += '</label>';
         }
       }
+      groups_html = '<span class="privacy-groups ' + show_groups + '">' + groups_html + '</span>';
       return $(this.field).html(privacy_html + groups_html);
     };
 
@@ -103,35 +107,38 @@
     };
 
     Privacy.prototype.updateViewer = function(field, annotation) {
-      var audience, audience_type, checked, gid, group, group_type, groups, has_groups, ref, ref1;
-      audience = '<div class="privacy-types">';
-      ref = annotation.privacy_options.audience;
-      for (audience_type in ref) {
-        checked = ref[audience_type];
-        if (checked) {
-          audience += '<span class="privacy-type">' + audience_type + '</span>';
-          if ('co-learners' === audience_type) {
-            has_groups = true;
-          }
-        }
-      }
-      audience += '</div>';
-      groups = '';
-      if (has_groups) {
-        groups = '<div class="privacy-groups">';
-        ref1 = annotation.privacy_options.groups;
-        for (group_type in ref1) {
-          gid = ref1[group_type];
-          if (gid) {
-            group = gid[Object.keys(gid)[0]];
-            if (group && group.selected) {
-              groups += '<span class="privacy-group checked ' + group_type + '">' + group[0] + '</span>';
+      var audience, audience_type, checked, gid, gids, group, group_type, groups, has_groups, i, ref, ref1;
+      if (annotation.privacy_options) {
+        audience = '<div class="privacy-types">';
+        ref = annotation.privacy_options.audience;
+        for (audience_type in ref) {
+          checked = ref[audience_type];
+          if (checked) {
+            audience += '<span class="privacy-type">' + audience_type + '</span>';
+            if ('co-learners' === audience_type) {
+              has_groups = true;
             }
           }
         }
-        groups += '</div>';
+        audience += '</div>';
+        groups = '';
+        if (has_groups) {
+          groups = '<div class="privacy-groups">';
+          i = 0;
+          ref1 = annotation.privacy_options.groups;
+          for (group_type in ref1) {
+            gids = ref1[group_type];
+            for (gid in gids) {
+              group = gids[gid];
+              if (group && group.selected) {
+                groups += '<span class="privacy-group checked ' + group_type + '">' + group[0] + '</span>';
+              }
+            }
+          }
+          groups += '</div>';
+        }
+        return $(field).addClass("privacy").html(audience + groups);
       }
-      return $(field).addClass("privacy").html(audience + groups);
     };
 
     return Privacy;
