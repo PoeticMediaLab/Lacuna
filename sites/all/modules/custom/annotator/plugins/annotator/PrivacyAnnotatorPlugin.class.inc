@@ -23,10 +23,12 @@ class PrivacyAnnotatorPlugin extends AnnotatorPlugin {
         );
 
         $groups = annotation_get_possible_groups_for_document($current_node);
+        $instructor_groups = $groups['course_groups'];
 
         $privacy_options = array(
           'audience' => $audience,
-          'groups' => $groups
+          'groups' => $groups,
+          'instructor_groups' => $instructor_groups
         );
 
         drupal_add_js(array('privacy_options' => $privacy_options), 'setting');

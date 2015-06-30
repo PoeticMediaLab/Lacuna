@@ -187,7 +187,6 @@ function annotation_drupal_format($entity, $update = FALSE) {
 
       case 'privacy_options':
 
-
         // Set the audience field to empty, to be set below
         $annotation->field_annotation_audience[$annotation->language] = array ();
 
@@ -210,23 +209,28 @@ function annotation_drupal_format($entity, $update = FALSE) {
           break; // everyone is mutually exclusive
         }
 
+        // Used by both instructor and co-learners options
+        $users_groups = og_get_groups_by_user();
+
         // Instructor
         // Set some options, then proceed with the co-learners possibility
         if ($val['audience']['instructor'] == 1) {
           $annotation->field_annotation_audience[$annotation->language][]['value'] = 'instructor'; // set the audience field
 
           // Set the "Instructor Viewable by Instructors of these Courses" values, which are picked up by the instructor grant.
-          if ($annotation_courses = array_keys ($val['groups']['course_groups'])) {
-            if (count($annotation_courses) > 1) {
-              // Todo: if instructor is chosen, and an annotation is on a document in more than one course (that the user is a member of), an extra courses dropdown should appear to let the user select *which* instructors
-            }
-            foreach ($annotation_courses as $annotation_course) {
-              $annotation->field_annotation_ins_viewable_co[$annotation->language][] = array(
-                'target_id' => $annotation_course,
-                'target_type' => 'node'
-              );
+          $possible_instructor_groups =  $val['instructor_groups'];
+          $instructor_groups_to_set = array();
+          foreach ($possible_instructor_groups as $possible_instructor_group_nid => $possible_instructor_group_properties) {
+
+            if ($possible_instructor_group_properties['selected'] == 1) {
+              // In case the user hacked the JS, make sure they are only adding the annotation to groups they are a member of.
+              // This is in fact necessary because OG will not catch these (because it's the annotator, ie. system, creating the group ref here, not the user submitting the annotation, which OG would catch)
+              if (in_array($possible_instructor_group_nid, $users_groups['node'])) {
+                $instructor_groups_to_set[] = array('target_id' => $possible_instructor_group_nid);
+              }
             }
           }
+          $annotation->field_annotation_ins_viewable_co[$annotation->language] = $instructor_groups_to_set;
 
         // Do not break out of 'instructor' condition, because co-learners can also be chosen
         }
@@ -236,7 +240,6 @@ function annotation_drupal_format($entity, $update = FALSE) {
           $annotation->field_annotation_audience[$annotation->language][]['value'] = 'co-learners'; // set (or add on to, if "instructor" was also chosen) the audience field
 
           // Set the groups
-          $users_groups = og_get_groups_by_user();
           $possible_groups =  array_replace ($val['groups']['peer_groups'], $val['groups']['course_groups']);
           $groups_to_set = array();
           foreach ($possible_groups as $possible_group_nid => $possible_group_properties) {
@@ -542,11 +545,13 @@ function annotation_api_entity_prepare($annotation, $op) {
         $audience[$audience_value] = 1;
       }
 
-      // Groups
+      // Co-Learners Groups and Instructor Groups
       $possible_groups = array();
+      $possible_instructor_groups = array();
 
       if ($referenced_node = $annotation_wrapper->field_annotation_reference->value()) {
 
+         // Groups
         // Get selected groups
         $selected_groups = array();
         if ($audience['co-learners'] == 1) {
@@ -556,7 +561,6 @@ function annotation_api_entity_prepare($annotation, $op) {
             }
           }
         }
-
         // Get possible groups, and unmark those that are not selected for this annotation
         $possible_groups = annotation_get_possible_groups_for_document($referenced_node);
         foreach ($possible_groups as $group_type => $group_type_possible_groups) {
@@ -566,14 +570,33 @@ function annotation_api_entity_prepare($annotation, $op) {
             }
           }
         }
-        $entity->privacy_options['groups'] = $possible_groups;
+
+        // Instructor groups
+        // Get selected instructor groups
+        $selected_instructor_groups = array();
+        if ($audience['instructor'] == 1) {
+          if (isset($annotation->og_group_ref)) {
+            foreach ($annotation->field_annotation_ins_viewable_co[$annotation->language] as $group) {
+              $selected_instructor_groups[] = $group['target_id'];
+            }
+          }
+        }
+        // Get possible instructor groups, and unmark those that are not selected for this annotation
+        $possible_instructor_groups = $possible_groups['course_groups'];
+        foreach ($possible_instructor_groups as $group_nid => $group_properties) {
+          if (!in_array($group_nid, $selected_instructor_groups)) {
+            $possible_instructor_groups[$group_nid]['selected'] = 0;
+          }
+        }
+
       }
 
 
       // Set the privacy options
       $entity->privacy_options = array(
         'audience' => $audience,
-        'groups' => $possible_groups
+        'groups' => $possible_groups,
+        'instructor_groups' => $possible_instructor_groups
       );
 
       // Links
