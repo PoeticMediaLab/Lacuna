@@ -7,7 +7,7 @@
         $(document).on( "click", "form.annotator-widget .privacy.types .privacy-type", function(e) {
           $(this).toggleClass("checked");
           if ("Co-Learners" == $(this).attr("id")) {
-            $(".annotator-widget .privacy-groups").addClass("show-groups");
+            $(".annotator-widget .privacy-groups").toggleClass("show-groups");
           }
           if ($(this).hasClass("checked")) {
             if ("Private" == $(this).attr("id")) {
