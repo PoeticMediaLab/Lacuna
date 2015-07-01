@@ -14,22 +14,32 @@ class PrivacyAnnotatorPlugin extends AnnotatorPlugin {
       $current_node = node_load(arg(1));
       if ($current_node->type == 'document') {
 
-        // Main audience value
-        $audience = array(
-          'private' => 0,
-          'instructor' => 0,
-          'co-learners' => 1,
-          'everyone' => 0
-        );
 
-        $groups = annotation_get_possible_groups_for_document($current_node);
-        $instructor_groups = $groups['course_groups'];
+        // Check for default privacy options for this user for this document
+        global $user;
+        if (isset ($user->data['annotation_privacy_defaults'][$current_node->nid])) {
+          $privacy_options = $user->data['annotation_privacy_defaults'][$current_node->nid];
+        }
 
-        $privacy_options = array(
-          'audience' => $audience,
-          'groups' => $groups,
-          'instructor_groups' => $instructor_groups
-        );
+        // No default privacy options default for this user for this document, so use general default
+        else {
+          // Main audience value
+          $audience = array(
+            'private' => 0,
+            'instructor' => 0,
+            'co-learners' => 1,
+            'everyone' => 0
+          );
+
+          $groups = annotation_get_possible_groups_for_document($current_node);
+          $instructor_groups = $groups['course_groups'];
+
+          $privacy_options = array(
+            'audience' => $audience,
+            'groups' => $groups,
+            'instructor_groups' => $instructor_groups
+          );
+        }
 
         drupal_add_js(array('privacy_options' => $privacy_options), 'setting');
       }

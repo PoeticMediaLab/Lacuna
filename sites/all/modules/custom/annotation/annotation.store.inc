@@ -162,6 +162,7 @@ function annotation_drupal_format($entity, $update = FALSE) {
     // unset($annotation->permissions);
   }
   $annotation->updated = REQUEST_TIME;
+  $document_nid = $annotation->field_annotation_reference[$annotation->language][0]['target_id'];
 
   $fields = array_keys(field_info_instances('node', 'annotation'));
   foreach ($entity as $key => $val) {
@@ -186,6 +187,15 @@ function annotation_drupal_format($entity, $update = FALSE) {
         break;
 
       case 'privacy_options':
+
+        // Save these privacy options as the default for this user for new annotations on this document
+        $privacy_defaults = array();
+        if (isset ($user->data['annotation_privacy_defaults'])) {
+          $privacy_defaults = $user->data['annotation_privacy_defaults'];
+        }
+        $privacy_defaults['annotation_privacy_defaults'][$document_nid] = $val;
+        user_save ($user, array ('data' => $privacy_defaults));
+
 
         // Set the audience field to empty, to be set below
         $annotation->field_annotation_audience[$annotation->language] = array ();
