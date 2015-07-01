@@ -193,6 +193,13 @@ function annotation_drupal_format($entity, $update = FALSE) {
         if (isset ($user->data['annotation_privacy_defaults'])) {
           $privacy_defaults = $user->data['annotation_privacy_defaults'];
         }
+
+        // temporarily use course groups for instructor groups until JS is done
+        $val['instructor_groups'] = $val['groups']['course_groups'];
+        foreach ($val['instructor_groups'] as &$temp_instructor_group) {
+          $temp_instructor_group['selected'] = ($val['audience']['instructor'] == 1) ? 1 : 0;
+        }
+
         $privacy_defaults['annotation_privacy_defaults'][$document_nid] = $val;
         user_save ($user, array ('data' => $privacy_defaults));
 
@@ -229,18 +236,15 @@ function annotation_drupal_format($entity, $update = FALSE) {
 
           // Set the "Instructor Viewable by Instructors of these Courses" values, which are picked up by the instructor grant.
           $possible_instructor_groups =  $val['instructor_groups'];
-          $possible_instructor_groups = $val['groups']['course_groups']; // temporarily use course groups for instructor groups until JS is done
           $instructor_groups_to_set = array();
           foreach ($possible_instructor_groups as $possible_instructor_group_nid => $possible_instructor_group_properties) {
-
-            // Temporarily use all course groups as instructor groups until JS is done
-            // if ($possible_instructor_group_properties['selected'] == 1) {
+            if ($possible_instructor_group_properties['selected'] == 1) {
               // In case the user hacked the JS, make sure they are only adding the annotation to groups they are a member of.
               // This is in fact necessary because OG will not catch these (because it's the annotator, ie. system, creating the group ref here, not the user submitting the annotation, which OG would catch)
               if (in_array($possible_instructor_group_nid, $users_groups['node'])) {
                 $instructor_groups_to_set[] = array('target_id' => $possible_instructor_group_nid);
               }
-            // }
+            }
           }
           $annotation->field_annotation_ins_viewable_co[$annotation->language] = $instructor_groups_to_set;
 
