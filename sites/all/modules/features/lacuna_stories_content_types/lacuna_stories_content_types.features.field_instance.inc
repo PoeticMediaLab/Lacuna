@@ -231,6 +231,43 @@ function lacuna_stories_content_types_field_default_field_instances() {
     ),
   );
 
+  // Exported field_instance: 'node-annotation-field_annotation_audience'
+  $field_instances['node-annotation-field_annotation_audience'] = array(
+    'bundle' => 'annotation',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'list',
+        'settings' => array(),
+        'type' => 'list_default',
+        'weight' => 2,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_annotation_audience',
+    'label' => 'Audience',
+    'required' => 1,
+    'settings' => array(
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'options',
+      'settings' => array(),
+      'type' => 'options_buttons',
+      'weight' => 2,
+    ),
+  );
+
   // Exported field_instance: 'node-annotation-field_annotation_category'
   $field_instances['node-annotation-field_annotation_category'] = array(
     'bundle' => 'annotation',
@@ -267,6 +304,91 @@ function lacuna_stories_content_types_field_default_field_instances() {
       ),
       'type' => 'taxonomy_autocomplete',
       'weight' => 5,
+    ),
+  );
+
+  // Exported field_instance: 'node-annotation-field_annotation_ins_viewable'
+  $field_instances['node-annotation-field_annotation_ins_viewable'] = array(
+    'bundle' => 'annotation',
+    'default_value' => array(
+      0 => array(
+        'value' => 0,
+      ),
+    ),
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 11,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_annotation_ins_viewable',
+    'label' => 'Instructor Viewable',
+    'required' => 0,
+    'settings' => array(
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'options',
+      'settings' => array(
+        'display_label' => 0,
+      ),
+      'type' => 'options_buttons',
+      'weight' => 10,
+    ),
+  );
+
+  // Exported field_instance: 'node-annotation-field_annotation_ins_viewable_co'
+  $field_instances['node-annotation-field_annotation_ins_viewable_co'] = array(
+    'bundle' => 'annotation',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => 'If Instructor Viewable is checked, instructors for which courses should be able to view this?',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'entityreference',
+        'settings' => array(
+          'link' => FALSE,
+        ),
+        'type' => 'entityreference_label',
+        'weight' => 4,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_annotation_ins_viewable_co',
+    'label' => 'Instructor Viewable by Instructors of these Courses',
+    'required' => 0,
+    'settings' => array(
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'entityreference',
+      'settings' => array(
+        'match_operator' => 'CONTAINS',
+        'path' => '',
+        'size' => 60,
+      ),
+      'type' => 'entityreference_autocomplete',
+      'weight' => 4,
     ),
   );
 
@@ -554,6 +676,115 @@ function lacuna_stories_content_types_field_default_field_instances() {
       'module' => 'link',
       'settings' => array(),
       'type' => 'link_field',
+      'weight' => 3,
+    ),
+  );
+
+  // Exported field_instance: 'node-annotation-group_content_access'
+  $field_instances['node-annotation-group_content_access'] = array(
+    'bundle' => 'annotation',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'list',
+        'settings' => array(),
+        'type' => 'list_default',
+        'weight' => 5,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'group_content_access',
+    'label' => 'Public Visibility',
+    'required' => 1,
+    'settings' => array(
+      'user_register_form' => FALSE,
+    ),
+    'view modes' => array(
+      'full' => array(
+        'label' => 'above',
+        'type' => 'list_default',
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'type' => 'list_default',
+      ),
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'options',
+      'settings' => array(),
+      'type' => 'options_select',
+      'weight' => 5,
+    ),
+    'widget_type' => 'options_select',
+  );
+
+  // Exported field_instance: 'node-annotation-og_group_ref'
+  $field_instances['node-annotation-og_group_ref'] = array(
+    'bundle' => 'annotation',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'og_ui',
+        'settings' => array(),
+        'type' => 'og_list_default',
+        'weight' => 3,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'og_group_ref',
+    'label' => 'Groups',
+    'required' => 0,
+    'settings' => array(
+      'behaviors' => array(
+        'og_widget' => array(
+          'access_override' => 0,
+          'admin' => array(
+            'widget_type' => 'entityreference_autocomplete',
+          ),
+          'default' => array(
+            'widget_type' => 'options_select',
+          ),
+          'status' => TRUE,
+        ),
+      ),
+      'user_register_form' => FALSE,
+    ),
+    'view modes' => array(
+      'full' => array(
+        'custom settings' => FALSE,
+        'label' => 'Full',
+        'type' => 'og_list_default',
+      ),
+      'teaser' => array(
+        'custom settings' => FALSE,
+        'label' => 'Teaser',
+        'type' => 'og_list_default',
+      ),
+    ),
+    'widget' => array(
+      'active' => 0,
+      'module' => 'og',
+      'settings' => array(),
+      'type' => 'og_complex',
       'weight' => 3,
     ),
   );
@@ -1883,48 +2114,6 @@ function lacuna_stories_content_types_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-course-field_syllabus'
-  $field_instances['node-course-field_syllabus'] = array(
-    'bundle' => 'course',
-    'deleted' => 0,
-    'description' => '',
-    'display' => array(
-      'default' => array(
-        'label' => 'above',
-        'module' => 'file',
-        'settings' => array(),
-        'type' => 'file_default',
-        'weight' => 16,
-      ),
-      'teaser' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
-      ),
-    ),
-    'entity_type' => 'node',
-    'field_name' => 'field_syllabus',
-    'label' => 'If you have a syllabus for your course, please upload it now. You can update your syllabus at any time.',
-    'required' => 0,
-    'settings' => array(
-      'description_field' => 0,
-      'file_directory' => '',
-      'file_extensions' => 'txt pdf doc docx',
-      'max_filesize' => '',
-      'user_register_form' => FALSE,
-    ),
-    'widget' => array(
-      'active' => 1,
-      'module' => 'file',
-      'settings' => array(
-        'progress_indicator' => 'throbber',
-      ),
-      'type' => 'file_generic',
-      'weight' => 46,
-    ),
-  );
-
   // Exported field_instance: 'node-course-field_third_course_id'
   $field_instances['node-course-field_third_course_id'] = array(
     'bundle' => 'course',
@@ -2054,6 +2243,57 @@ function lacuna_stories_content_types_field_default_field_instances() {
     ),
   );
 
+  // Exported field_instance: 'node-course-group_access'
+  $field_instances['node-course-group_access'] = array(
+    'bundle' => 'course',
+    'default_value' => array(
+      0 => array(
+        'value' => 0,
+      ),
+    ),
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'list',
+        'settings' => array(),
+        'type' => 'list_default',
+        'weight' => 2,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'group_access',
+    'label' => 'Group visibility',
+    'required' => TRUE,
+    'settings' => array(
+      'user_register_form' => FALSE,
+    ),
+    'view modes' => array(
+      'full' => array(
+        'label' => 'above',
+        'type' => 'options_onoff',
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'type' => 'options_onoff',
+      ),
+    ),
+    'widget' => array(
+      'module' => 'options',
+      'settings' => array(),
+      'type' => 'options_buttons',
+      'weight' => 32,
+    ),
+    'widget_type' => 'options_select',
+  );
+
   // Exported field_instance: 'node-course-group_group'
   $field_instances['node-course-group_group'] = array(
     'bundle' => 'course',
@@ -2172,7 +2412,7 @@ function lacuna_stories_content_types_field_default_field_instances() {
         'label' => 'inline',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 5,
+        'weight' => 6,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -2255,9 +2495,8 @@ function lacuna_stories_content_types_field_default_field_instances() {
     'display' => array(
       'default' => array(
         'label' => 'inline',
-        'module' => 'taxonomy',
         'settings' => array(),
-        'type' => 'taxonomy_term_reference_plain',
+        'type' => 'hidden',
         'weight' => 13,
       ),
       'teaser' => array(
@@ -2337,7 +2576,7 @@ function lacuna_stories_content_types_field_default_field_instances() {
         'label' => 'hidden',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 7,
+        'weight' => 8,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -2447,9 +2686,8 @@ function lacuna_stories_content_types_field_default_field_instances() {
     'display' => array(
       'default' => array(
         'label' => 'inline',
-        'module' => 'taxonomy',
         'settings' => array(),
-        'type' => 'taxonomy_term_reference_plain',
+        'type' => 'hidden',
         'weight' => 15,
       ),
       'teaser' => array(
@@ -2484,9 +2722,8 @@ function lacuna_stories_content_types_field_default_field_instances() {
     'display' => array(
       'default' => array(
         'label' => 'inline',
-        'module' => 'taxonomy',
         'settings' => array(),
-        'type' => 'taxonomy_term_reference_plain',
+        'type' => 'hidden',
         'weight' => 11,
       ),
       'teaser' => array(
@@ -2521,9 +2758,8 @@ function lacuna_stories_content_types_field_default_field_instances() {
     'display' => array(
       'default' => array(
         'label' => 'inline',
-        'module' => 'taxonomy',
         'settings' => array(),
-        'type' => 'taxonomy_term_reference_plain',
+        'type' => 'hidden',
         'weight' => 14,
       ),
       'teaser' => array(
@@ -2561,9 +2797,8 @@ function lacuna_stories_content_types_field_default_field_instances() {
     'display' => array(
       'default' => array(
         'label' => 'inline',
-        'module' => 'taxonomy',
         'settings' => array(),
-        'type' => 'taxonomy_term_reference_plain',
+        'type' => 'hidden',
         'weight' => 10,
       ),
       'teaser' => array(
@@ -2602,10 +2837,9 @@ function lacuna_stories_content_types_field_default_field_instances() {
     'display' => array(
       'default' => array(
         'label' => 'above',
-        'module' => 'list',
         'settings' => array(),
-        'type' => 'list_default',
-        'weight' => 16,
+        'type' => 'hidden',
+        'weight' => 5,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -2650,11 +2884,8 @@ function lacuna_stories_content_types_field_default_field_instances() {
     'display' => array(
       'default' => array(
         'label' => 'inline',
-        'module' => 'entityreference',
-        'settings' => array(
-          'link' => 1,
-        ),
-        'type' => 'entityreference_label',
+        'settings' => array(),
+        'type' => 'hidden',
         'weight' => 9,
       ),
       'teaser' => array(
@@ -3448,13 +3679,17 @@ function lacuna_stories_content_types_field_default_field_instances() {
   t('Gender');
   t('Genre');
   t('Group');
+  t('Group visibility');
+  t('Groups');
   t('How I Learn');
   t('How many students will have library and e-reserve access that differs from your own?');
+  t('If Instructor Viewable is checked, instructors for which courses should be able to view this?');
   t('If applicable, what is the secondary cross-listed course ID (with no spaces)?');
   t('If applicable, what is the third cross-listed course ID (with no spaces)?');
   t('If there is a PDF or other file version of this document, attach it here.');
-  t('If you have a syllabus for your course, please upload it now. You can update your syllabus at any time.');
   t('Image');
+  t('Instructor Viewable');
+  t('Instructor Viewable by Instructors of these Courses');
   t('Learning Goals');
   t('Major/Degree');
   t('Media');
@@ -3465,6 +3700,7 @@ function lacuna_stories_content_types_field_default_field_instances() {
   t('Post Icon');
   t('Priority');
   t('Private');
+  t('Public Visibility');
   t('Quote');
   t('Ranges');
   t('References to the content stitched together');
