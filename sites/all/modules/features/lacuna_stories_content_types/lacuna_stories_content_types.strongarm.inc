@@ -380,9 +380,19 @@ function lacuna_stories_content_types_strongarm() {
       'workflow_tab' => array(
         'custom_settings' => FALSE,
       ),
+      'diff_standard' => array(
+        'custom_settings' => FALSE,
+      ),
+      'revision' => array(
+        'custom_settings' => FALSE,
+      ),
     ),
     'extra_fields' => array(
-      'form' => array(),
+      'form' => array(
+        'path' => array(
+          'weight' => '11',
+        ),
+      ),
       'display' => array(),
     ),
   );
@@ -459,14 +469,7 @@ function lacuna_stories_content_types_strongarm() {
       ),
     ),
     'extra_fields' => array(
-      'form' => array(
-        'title' => array(
-          'weight' => '0',
-        ),
-        'path' => array(
-          'weight' => '5',
-        ),
-      ),
+      'form' => array(),
       'display' => array(),
     ),
   );

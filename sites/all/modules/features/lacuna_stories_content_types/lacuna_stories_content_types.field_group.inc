@@ -55,7 +55,7 @@ function lacuna_stories_content_types_field_group_info() {
       1 => 'field_tags',
       2 => 'field_medium',
     ),
-    'format_type' => 'fieldset',
+    'format_type' => 'hidden',
     'format_settings' => array(
       'label' => 'About',
       'instance_settings' => array(
@@ -178,7 +178,7 @@ function lacuna_stories_content_types_field_group_info() {
       1 => 'field_unit',
       2 => 'og_group_ref',
     ),
-    'format_type' => 'fieldset',
+    'format_type' => 'hidden',
     'format_settings' => array(
       'label' => 'Course',
       'instance_settings' => array(
