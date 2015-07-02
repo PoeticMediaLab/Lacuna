@@ -55,7 +55,7 @@ function wysiwyg_schema() {
         'description' => 'The {filter_format}.format of the text format.',
         'type' => 'varchar',
         'length' => 255,
-        'not null' => FALSE,
+        'not null' => TRUE,
       ),
       'status' => array(
         'description' => 'Boolean indicating whether the format is enabled by default.',
@@ -66,9 +66,9 @@ function wysiwyg_schema() {
         'size' => 'tiny',
       ),
     ),
+    'primary key' => array('uid', 'format'),
     'indexes' => array(
       'uid' => array('uid'),
-      'format' => array('format'),
     ),
     'foreign keys' => array(
       'uid' => array(
@@ -351,4 +351,25 @@ function wysiwyg_update_7202() {
         ->execute();
     }
   }
+}
+
+/**
+ * Add primary index to {wysiwyg_user}.
+ */
+function wysiwyg_update_7203() {
+  db_drop_index('wysiwyg_user', 'uid');
+  db_drop_index('wysiwyg_user', 'format');
+  db_change_field('wysiwyg_user', 'format', 'format',
+    array(
+      'type' => 'varchar',
+      'length' => 255,
+      'not null' => TRUE,
+    ),
+    array(
+      'primary key' => array('uid', 'format'),
+      'indexes' => array(
+        'uid' => array('uid'),
+      ),
+    )
+  );
 }
