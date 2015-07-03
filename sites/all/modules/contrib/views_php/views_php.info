@@ -3,6 +3,8 @@ description = Allows the usage of PHP to construct a view.
 package = Views
 core = 7.x
 dependencies[] = views
+; Tests
+files[] = views_php.test
 ; Views handlers
 files[] = plugins/views/views_php_handler_area.inc
 files[] = plugins/views/views_php_handler_field.inc
