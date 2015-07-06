@@ -22,7 +22,6 @@ class FiltersAnnotatorPlugin extends AnnotatorPlugin {
     // TODO: check for existing Filters block
     // If not present, create it? (or maybe too many hits every time?)
     drupal_add_js(array('annotator_filters' => (array) $settings), 'setting');
-    drupal_add_css(drupal_get_path('module', 'annotator') . '/css/filters.css');
     drupal_add_library('system', 'ui.autocomplete', TRUE);
     drupal_add_css('//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css', $type='external');
     drupal_add_js(drupal_get_path('module', 'annotator') . '/js/annotator_filters.js');
