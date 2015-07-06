@@ -69,7 +69,7 @@ function lacunastories_base_create_publication_state_workflow() {
       'transitions' => array (
         array (
           'sid' => $s3,
-          'target_sid' => $s3
+          'target_sid' => $s1
         ),
       ),
     ),
