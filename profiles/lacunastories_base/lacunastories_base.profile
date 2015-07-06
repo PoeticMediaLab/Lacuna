@@ -91,6 +91,9 @@ function lacunastories_base_install_tasks($install_state) {
     'lacunastories_base_set_annotator_settings' => array(),
     'lacunastories_base_default_tax_terms' => array(),
     'lacunastories_base_create_publication_state_workflow' => array(),
+    'lacunastories_base_late_feature_and_module_enabling' => array(),
+    'lacunastories_base_revert_features_final' => array(),
+
 
   );
   return $tasks;
@@ -421,4 +424,21 @@ function lacunastories_base_create_publication_state_workflow() {
     }
   }
 
+}
+
+// Enable any modules or features that need to be enabled after other installation tasks are done
+function lacunastories_base_late_feature_and_module_enabling () {
+  $enable = array(
+    'lacuna_stories_views', // this needs to happen late because it is dependent on lacuna_stories_workflows, which can only be enabled late
+    'lacuna_stories_workflows', // this needs to happen after the workflow is created
+  );
+  module_enable($enable);
+}
+
+// ensure features are reverted since things have been done since the initial reversion in hook_install
+function lacunastories_base_revert_features_final () {
+  // Do it twice with a cache clear inbetween to make sure we get everything
+  features_revert();
+  drupal_flush_all_caches();
+  features_revert();
 }

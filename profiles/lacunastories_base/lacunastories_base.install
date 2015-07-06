@@ -123,25 +123,16 @@ function lacunastories_base_install() {
   db_insert('users_roles')
     ->fields(array('uid' => 1, 'rid' => $admin_role->rid))
     ->execute();
+
   // Update the menu router information.
   menu_rebuild();
-  // revert features to ensure they are all installed
-  $features = array(
-    'course',
-    'lacuna_stories_peer_groups',
-    'lacuna_stories_content_types',
-    'lacuna_stories_irb_form',
-    'lacuna_stories_media',
-    'lacuna_stories_menus',
-    'lacuna_stories_permissions',
-    'lacuna_stories_rules',
-    'lacuna_stories_system',
-    'lacuna_stories_workflows',
-    'lacuna_stories_views'
-  );
-  features_revert($features);
+
+  // revert all thus-far enabled features (features which were enabled by setting as a dependency in the profile info file)
+  features_revert();
+
   // ignore any rebuild messages
   node_access_needs_rebuild(FALSE);
+
   // ignore any other install messages
   drupal_get_messages();
 
