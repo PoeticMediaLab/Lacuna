@@ -14,6 +14,8 @@ function lacunastories_base_install_tasks($install_state) {
     'lacunastories_base_set_superfish_settings' => array(),
     'lacunastories_base_set_media_settings' => array(),
     'lacunastories_base_create_publication_state_workflow' => array(),
+    'lacunastories_base_default_tax_terms' => array(),
+
   );
   return $tasks;
 }
@@ -386,4 +388,31 @@ function lacunastories_base_set_superfish_settings(){
 // set media settings
 function lacunastories_base_set_media_settings(){
   variable_set("file_entity_file_upload_wizard_skip_scheme", 1); // this is actually a file entity setting but is available on the media form at admin/config/media/file-settings
+}
+
+// set default taxonomy terms
+function lacunastories_base_default_tax_terms () {
+  $taxonomy = array(
+    'priority' => array(
+      'Required',
+      'Suggested',
+      'Supplementary',
+    ),
+    'medium' => array(
+      'Fiction',
+      'Journalism',
+      'Scholarship',
+      'Art',
+    ),
+  );
+  foreach ($taxonomy as $vocabulary_name => $terms) {
+    // Add a default term to the vocabulary.
+    $vocabulary = taxonomy_vocabulary_machine_name_load($vocabulary_name);
+    foreach ($terms as $term) {
+      taxonomy_term_save((object) array(
+        'name' => $term,
+        'vid' => $vocabulary->vid,
+      ));
+    }
+  }
 }
