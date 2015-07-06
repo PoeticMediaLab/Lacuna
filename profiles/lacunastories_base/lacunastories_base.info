@@ -145,6 +145,7 @@ dependencies[] = workflowfield
 dependencies[] = popup_views_integration
 ; Features
 dependencies[] = features
+dependencies[] = diff
 dependencies[] = course
 dependencies[] = lacuna_stories_content_types
 dependencies[] = lacuna_stories_irb_form
