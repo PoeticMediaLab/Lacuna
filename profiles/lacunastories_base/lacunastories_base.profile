@@ -92,7 +92,8 @@ function lacunastories_base_create_publication_state_workflow() {
       $from = $transition['sid'];
       $to = $transition['target_sid'];
       $transition_obj = $workflow->createTransition($from->sid, $to->sid);
-      $transition_obj->label = '"' . $from->name . '" to "' . $to->name . '"';
+      //$transition_obj->label = '"' . $from->name . '" to "' . $to->name . '"';
+      $transition_obj->label = $to->name;
 
       // Assign roles for the transition
       $rids_to_assign = array();
