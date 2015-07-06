@@ -55,10 +55,6 @@ function lacunastories_base_create_publication_state_workflow() {
       'roles' => array(-1, 'Site Administrator', 'Content Manager', 'Instructor', 'Student'),
       'transitions' => array (
         array (
-          'sid' => $s2,
-          'target_sid' => $s2
-        ),
-        array (
           'sid' => $s3,
           'target_sid' => $s3
         ),
