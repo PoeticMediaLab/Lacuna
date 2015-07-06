@@ -90,7 +90,6 @@ dependencies[] = media_vimeo
 dependencies[] = media_wysiwyg
 dependencies[] = media_wysiwyg_view_mode
 dependencies[] = media_youtube
-dependencies[] = plupload
 ; Organic groups
 dependencies[] = og
 dependencies[] = og_access
