@@ -994,17 +994,6 @@ function lacuna_stories_permissions_user_default_permissions() {
     'module' => 'node',
   );
 
-  // Exported permission: 'delete any application files'.
-  $permissions['delete any application files'] = array(
-    'name' => 'delete any application files',
-    'roles' => array(
-      'Content Manager' => 'Content Manager',
-      'Instructor' => 'Instructor',
-      'Site Administrator' => 'Site Administrator',
-    ),
-    'module' => 'file_entity',
-  );
-
   // Exported permission: 'delete any article content'.
   $permissions['delete any article content'] = array(
     'name' => 'delete any article content',
@@ -1148,17 +1137,6 @@ function lacuna_stories_permissions_user_default_permissions() {
       'Student' => 'Student',
     ),
     'module' => 'node',
-  );
-
-  // Exported permission: 'delete own application files'.
-  $permissions['delete own application files'] = array(
-    'name' => 'delete own application files',
-    'roles' => array(
-      'Content Manager' => 'Content Manager',
-      'Instructor' => 'Instructor',
-      'Site Administrator' => 'Site Administrator',
-    ),
-    'module' => 'file_entity',
   );
 
   // Exported permission: 'delete own article content'.
@@ -1393,17 +1371,6 @@ function lacuna_stories_permissions_user_default_permissions() {
     'module' => 'admin_menu',
   );
 
-  // Exported permission: 'download any application files'.
-  $permissions['download any application files'] = array(
-    'name' => 'download any application files',
-    'roles' => array(
-      'Content Manager' => 'Content Manager',
-      'Instructor' => 'Instructor',
-      'Site Administrator' => 'Site Administrator',
-    ),
-    'module' => 'file_entity',
-  );
-
   // Exported permission: 'download any audio files'.
   $permissions['download any audio files'] = array(
     'name' => 'download any audio files',
@@ -1440,17 +1407,6 @@ function lacuna_stories_permissions_user_default_permissions() {
   // Exported permission: 'download any video files'.
   $permissions['download any video files'] = array(
     'name' => 'download any video files',
-    'roles' => array(
-      'Content Manager' => 'Content Manager',
-      'Instructor' => 'Instructor',
-      'Site Administrator' => 'Site Administrator',
-    ),
-    'module' => 'file_entity',
-  );
-
-  // Exported permission: 'download own application files'.
-  $permissions['download own application files'] = array(
-    'name' => 'download own application files',
     'roles' => array(
       'Content Manager' => 'Content Manager',
       'Instructor' => 'Instructor',
@@ -1530,17 +1486,6 @@ function lacuna_stories_permissions_user_default_permissions() {
       'Site Administrator' => 'Site Administrator',
     ),
     'module' => 'annotator',
-  );
-
-  // Exported permission: 'edit any application files'.
-  $permissions['edit any application files'] = array(
-    'name' => 'edit any application files',
-    'roles' => array(
-      'Content Manager' => 'Content Manager',
-      'Instructor' => 'Instructor',
-      'Site Administrator' => 'Site Administrator',
-    ),
-    'module' => 'file_entity',
   );
 
   // Exported permission: 'edit any article content'.
@@ -1795,17 +1740,6 @@ function lacuna_stories_permissions_user_default_permissions() {
       'Student' => 'Student',
     ),
     'module' => 'annotator',
-  );
-
-  // Exported permission: 'edit own application files'.
-  $permissions['edit own application files'] = array(
-    'name' => 'edit own application files',
-    'roles' => array(
-      'Content Manager' => 'Content Manager',
-      'Instructor' => 'Instructor',
-      'Site Administrator' => 'Site Administrator',
-    ),
-    'module' => 'file_entity',
   );
 
   // Exported permission: 'edit own article content'.
