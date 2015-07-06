@@ -85,12 +85,21 @@ function lacunastories_base_install() {
   db_delete('block')->condition('module', 'system')->execute();
   db_delete('block')->condition('module', 'user')->execute();
   // add in our blocks defined above
-  $query = db_insert('block')->fields(array('module', 'delta', 'theme', 'status', 'weight', 'region', 'pages', 'cache'));
+  $query = db_insert('block')->fields(array(
+    'module',
+    'delta',
+    'theme',
+    'status',
+    'weight',
+    'region',
+    'pages',
+    'cache'
+  ));
   foreach ($blocks as $block) {
     $query->values($block);
   }
   $query->execute();
-  
+
   // From shortcut.install, add shortcuts to the default set on install
   $shortcut_set = shortcut_set_load(SHORTCUT_DEFAULT_SET_NAME);
   $shortcut_set->links = NULL;
@@ -136,202 +145,4 @@ function lacunastories_base_install() {
   // ignore any other install messages
   drupal_get_messages();
 
-  lacunastories_base_create_research_consent_webform();
-  lacunastories_base_create_basic_pages();
-  lacunastories_base_set_basic_pages_permissions();
-  lacunastories_base_manage_theme_settings();     // hide main_menu(it belongs to superfish) and secondary_menu  
-  lacunastories_base_set_jquery_default();  // set JQuery version to 1.7
-  lacunastories_base_set_superfish_settings();  
-}
-
-/*
-  Creating Digital research consent webform.
- */
-function lacunastories_base_create_research_consent_webform()
-{
-  $node = new stdClass();
-  $node->type = 'webform';
-  node_object_prepare($node);
-  $node->title    = 'Digital Research Consent Form';
-  $node->language = LANGUAGE_NONE; // Or other language.
-  $node->body[$node->language][0]['value'] = file_get_contents(DRUPAL_ROOT . "/profiles/lacunastories_base/basic pages/consent_form.html");;
-  $node->body[$node->language][0]['format']  = 'full_html';
-  $node->uid = 1;     // Set admin as author
-  $node->promote = 0; // Do not put this node to front page.
-  $node->comment = 1; // Closed the comment.
-   
-  // Create the webform components.
-  $components = array(
-    0 => array(
-    'name' => 'By checking the “agree” box below, you agree to allowing your anonymized user data reflecting site usage and/or survey responses to be used for research purposes.',
-    'form_key' => 'agree',
-    'type' => 'select',
-    'mandatory' => 0,
-    'weight' => 0,
-    'pid' => 0,
-    'extra' => array (
-      'items' => "yes|Agree\nno|Disagree",
-      'multiple' => 0,
-      'title_display' => 'before',
-      'private' => 0,
-      'aslist' => 0,
-      'optrand' => 0,
-      'conditional_operator' => '=',
-    ),
-    ),
-    1 => array(
-    'name' => 'I am at least 18 years old',
-    'form_key' => 'over_18',
-    'type' => 'select',
-    'mandatory' => 1,
-    'weight' => 1,
-    'pid' => 0,
-    'extra' => array (
-      'items' => "no|No\nyes|Yes",
-      'multiple' => 0,
-      'title_display' => 'before',
-      'private' => 0,
-      'aslist' => 0,
-      'optrand' => 0,
-      'conditional_operator' => '=',
-    ),
-    ),
-  );
-   
-  // Setup notification email.
-  $emails = array(
-   //  0 => array(
-    // 'email' => 'abc@def.com',
-    // 'subject' => 'default',
-    // 'from_name' => 'default',
-    // 'from_address' => 'default',
-    // 'template' => 'default',
-    // 'excluded_components' => array(),
-   //  ),
-  );
-   
-  // Attach the webform to the node.
-  $node->webform = array(
-    'confirmation' => '',
-    'confirmation_format' => NULL,
-    'redirect_url' => '<confirmation>',
-    'status' => '1',
-    'block' => '0',
-    'teaser' => '0',
-    'allow_draft' => '0',
-    'auto_save' => '0',
-    'submit_notice' => '1',
-    'submit_text' => '',
-    'submit_limit' => '-1', // User can submit more than once.
-    'submit_interval' => '-1',
-    'total_submit_limit' => '-1',
-    'total_submit_interval' => '-1',
-    'record_exists' => TRUE,
-    'roles' => array(
-    0 => '1', // Anonymous user can submit this webform.
-    1 => '2', // Authenticated user can submit this webform.
-    ),
-    'emails' => $emails,
-    'components' => $components,
-  );
-  
-  $node->menu['enabled'] = TRUE;
-  $node->menu['link_title'] = $node->title;
-  $node->menu['description'] = ''; // Needed even if empty to avoid notices.   
-  $node = node_submit($node); // Prepare node for a submit
-  node_save($node); 
-}
-
-
-/*
-  Creating basic pages like FAQ, "About This Course", etc.
- */
-function lacunastories_base_create_basic_pages()
-{
-  $content[0]["title"] = "About This Course";
-  $content[0]["body"] = file_get_contents(DRUPAL_ROOT . "/profiles/lacunastories_base/basic pages/about_this_course.html");
-  
-  $content[1]["title"] = "FAQ";
-  $content[1]["body"] = file_get_contents(DRUPAL_ROOT . "/profiles/lacunastories_base/basic pages/faq.html");;
-
-  $content[2]["title"] = "Instructor's Guide";
-  $content[2]["body"] = file_get_contents(DRUPAL_ROOT . "/profiles/lacunastories_base/basic pages/instructors_guide.html");
-
-  $content[3]["title"] = "Student User Guide";
-  $content[3]["body"] = file_get_contents(DRUPAL_ROOT . "/profiles/lacunastories_base/basic pages/student_user_guide.html");;
-
-  foreach($content as $page)
-  {
-    $node = new stdClass(); // We create a new node object
-    $node->type = "page"; // Or any other content type you want
-    $node->title = $page["title"];
-    $node->language = LANGUAGE_NONE; // Or any language code if Locale module is enabled. More on this below *
-    $node->body[$node->language][0]['format']  = 'full_html'; 
-    $node->body[$node->language][0]['value'] = $page["body"];
-    $node->menu['enabled'] = TRUE;
-    $node->menu['link_title'] = $node->title;
-    $node->menu['description'] = ''; // Needed even if empty to avoid notices.   
-
-    node_object_prepare($node); // Set some default values.
-    $node->uid = 1; // Or any id you wish
-    $node = node_submit($node); // Prepare node for a submit
-    node_save($node); // After this call we'll get a nid    
-  }
-}
-
-/*
-  Currently changes permissions for page "Instructor's Guide" only. But the same code can be used to change permissions for other pages too.
- */
-function lacunastories_base_set_basic_pages_permissions()
-{
-  content_access_set_settings(array("per_node" => 1), "page");    // turn per_node content_access 1, for basic pages
-  $instructor = user_role_load_by_name("Instructor")->rid;
-
-  $settings = array(
-    'view' => array($instructor),
-    'view_own' => array(),
-    'update' => array(),
-    'update_own' => array(),
-    'delete' => array(),
-    'delete_own' => array()
-  );
-
-  $query = new EntityFieldQuery();
-  $entities = $query->entityCondition('entity_type', 'node')
-    ->propertyCondition('type', 'page')
-    ->propertyCondition('title', "Instructor's Guide")
-    ->propertyCondition('status', 1)
-    ->range(0,1)
-    ->execute();
-
-  $nid = array_keys($entities['node'])[0];
-  $node = node_load($nid);
-  
-  content_access_save_per_node_settings($node, $settings);
-  // Apply new settings.
-  node_access_acquire_grants($node);
-
-  module_invoke_all('per_node', $settings);
-  node_access_rebuild();  // rebuild for changes to make effect
-}
-
-//  toggle off main_menu and secondary_menu 
-function lacunastories_base_manage_theme_settings()
-{
-  $ts = variable_get("theme_settings");
-  $ts["toggle_main_menu"] = 0;
-  $ts["toggle_secondary_menu"] = 0;
-  variable_set("theme_settings", $ts);
-}
-
-// set jquery version.
-function lacunastories_base_set_jquery_default()
-{
-  variable_set('jquery_update_jquery_version', '1.7');
-}
-
-// set style for superfish
-function lacunastories_base_set_superfish_settings(){
-    variable_set("superfish_style_1", "white");
-    variable_set("superfish_shadow_1", 0);
 }
