@@ -57,7 +57,9 @@ function annotation_api_index() {
     $query->entityCondition('bundle', 'annotation');
     $records = $query->execute();
     foreach ($records as $rid => $record) {
-      $records[$rid] = annotation_api_entity_prepare($record, 'read');
+      if ($annotation_prepared = annotation_api_entity_prepare($record, 'read')) {
+        $records[$rid] = $annotation_prepared;
+      }
     }
     // Send response
     return drupal_json_output(array_values($records));
@@ -327,9 +329,10 @@ function annotation_api_create() {
 function annotation_api_read($id) {
   if ($annotation = node_load($id)) {
     if (annotation_access('view', $annotation)) {
-      $record = annotation_api_entity_prepare($annotation, 'read');
-      // Send response
-      return drupal_json_output($record);
+      if ($record = annotation_api_entity_prepare($annotation, 'read')) {
+        // Send response
+        return drupal_json_output($record);
+      }
     }
   }
   return FALSE;
@@ -472,7 +475,9 @@ function annotation_api_search() {
   }
 
   foreach ($records as $rid => $record) {
-    $records[$rid] = annotation_api_entity_prepare($record, 'read');
+    if ($annotation_prepared = annotation_api_entity_prepare($record, 'read')) {
+      $records[$rid] = $annotation_prepared;
+    }
   }
 
   $output = array(
@@ -521,6 +526,10 @@ function annotation_api_entity_prepare($annotation, $op) {
       // Translate Drupal-encoded content back into something Annotator.js can use
 
       // Ranges
+      // If for some reason an annotation gets saved without a range (this can happen on if an annotation is not created correctly), then we need to fail out here with NULL. Otherwise any subsequent good annotations (that have a range) on the page will not load either.
+      if (!isset($annotation->field_annotation_ranges[$annotation->language][0]['value'])) {
+        return;
+      }
       $entity->ranges = drupal_json_decode($annotation->field_annotation_ranges[$annotation->language][0]['value']);
 
       // Text
