@@ -14,6 +14,9 @@ function lacuna_stories_content_types_ctools_plugin_api($module = NULL, $api = N
   if ($module == "field_group" && $api == "field_group") {
     return array("version" => "1");
   }
+  if ($module == "file_entity" && $api == "file_type") {
+    return array("version" => "1");
+  }
   if ($module == "strongarm" && $api == "strongarm") {
     return array("version" => "1");
   }
