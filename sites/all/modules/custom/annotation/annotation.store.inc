@@ -290,11 +290,14 @@ function annotation_drupal_format($entity, $update = FALSE) {
   if (empty($annotation->field_annotation_text)) {
     // Just a highlight, no category
     unset($annotation->field_annotation_category);
-  } elseif (empty($annotation->field_annotation_category)) {
-    // Text, but no category; choose the first one as default
+  }
+  elseif (empty($annotation->field_annotation_category)) {
+    // Text, but no category; choose the first one as default, if it exists
     $categories = taxonomy_vocabulary_machine_name_load(ANNOTATION_CATEGORY_TAXONOMY);
     $category_terms = taxonomy_get_tree($categories->vid);
-    $annotation->field_annotation_category[$annotation->language][0]['tid'] = $category_terms[0]->tid;
+    if (count($category_terms)) {
+      $annotation->field_annotation_category[$annotation->language][0]['tid'] = $category_terms[0]->tid;
+    }
   }
 
   return($annotation);
