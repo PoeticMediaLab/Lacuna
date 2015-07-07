@@ -372,11 +372,11 @@ function lacunastories_base_create_publication_state_workflow() {
       ),
     ),
     array (
-      'roles' => array(-1, 'Site Administrator', 'Content Manager'),
+      'roles' => array('Site Administrator', 'Content Manager'),
       'transitions' => array (
         array (
           'sid' => $s3,
-          'target_sid' => $s1
+          'target_sid' => $s2
         ),
       ),
     ),
@@ -438,7 +438,9 @@ function lacunastories_base_late_feature_and_module_enabling () {
 // ensure features are reverted since things have been done since the initial reversion in hook_install
 function lacunastories_base_revert_features_final () {
   // Do it twice with a cache clear inbetween to make sure we get everything
+  features_rebuild();
   features_revert();
   drupal_flush_all_caches();
+  features_rebuild();
   features_revert();
 }

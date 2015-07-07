@@ -128,6 +128,7 @@ function lacunastories_base_install() {
   menu_rebuild();
 
   // revert all thus-far enabled features (features which were enabled by setting as a dependency in the profile info file)
+  features_rebuild();
   features_revert();
 
   // ignore any rebuild messages
