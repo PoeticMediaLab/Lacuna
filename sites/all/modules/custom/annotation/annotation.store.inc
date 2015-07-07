@@ -227,7 +227,9 @@ function annotation_api_create() {
     $annotation->id = $annotation->nid; // set ID for Annotator
     // Send response
     // ddl($annotation, 'create');
-    return drupal_json_output($annotation);
+    $record = annotation_api_entity_prepare($annotation, 'read');
+
+    return drupal_json_output($record);
   }
   return FALSE;
 }
