@@ -327,6 +327,10 @@ function lacunastories_base_default_tax_terms () {
       'Scholarship',
       'Art',
     ),
+    'annotation_categories' => array(
+      'Comment',
+      'Question',
+    ),
   );
   foreach ($taxonomy as $vocabulary_name => $terms) {
     // Add a default term to the vocabulary.
