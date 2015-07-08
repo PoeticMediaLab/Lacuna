@@ -1132,9 +1132,8 @@ function lacuna_stories_permissions_user_default_permissions() {
     'name' => 'delete own annotation content',
     'roles' => array(
       'Content Manager' => 'Content Manager',
-      'Instructor' => 'Instructor',
       'Site Administrator' => 'Site Administrator',
-      'Student' => 'Student',
+      'authenticated user' => 'authenticated user',
     ),
     'module' => 'node',
   );
@@ -1758,9 +1757,8 @@ function lacuna_stories_permissions_user_default_permissions() {
     'name' => 'edit own annotation content',
     'roles' => array(
       'Content Manager' => 'Content Manager',
-      'Instructor' => 'Instructor',
       'Site Administrator' => 'Site Administrator',
-      'Student' => 'Student',
+      'authenticated user' => 'authenticated user',
     ),
     'module' => 'node',
   );
