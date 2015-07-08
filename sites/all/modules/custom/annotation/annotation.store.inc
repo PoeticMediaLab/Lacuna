@@ -203,6 +203,7 @@ function annotation_drupal_format($entity, $update = FALSE) {
         }
 
         $privacy_defaults['annotation_privacy_defaults'][$document_nid] = $val;
+        $user = user_load ($user->uid); // Global user does not contain OG memberships, so saving that will lose them for the user. Load the user first and use that (see: https://www.drupal.org/node/1502916#comment-6444954).
         user_save ($user, array ('data' => $privacy_defaults));
 
 
