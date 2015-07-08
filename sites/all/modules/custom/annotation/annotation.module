@@ -173,12 +173,25 @@ function annotation_form_alter(&$form, &$form_state, $form_id) {
 }
 
 /***
+ *
  * Annotation permissions are handled by:
  *
  * 1. node access (core) @ admin/people/permissions -> node -> annotation (perms other than view)
  * 2. content_access (contrib) @ admin/structure/types/manage/annotation/access (view perms and perms other than view)
  * 3. og_access (contrib) -- group_content_access field (view perm) and @ admin/config/group/permissions/node/course (perms other than view)
  * 4. the two node grants below (view perm)
+ *
+ * Specifically, how each annotation view audience is handled:
+ *
+ * 1. Private -- Least amount of perm handling. Falls unto content_access.
+ * 2. Everyone -- Custom grant annotation_everyone grants access to all authenticated users.
+ * 3. Instructor -- Custom grant annotation_instructor grants access to instructors of selected instructor courses.
+ * 4. Co-learners -- og_access grants access to the selected groups (course and peer groups).
+ * 5. Instructor + Co-learners --
+ *    a) Selected instructor courses which are also selected as co-learner course are handled as #4.
+ *    b) Selected instructor courses which are not also selected as co-learner course are handled as #3.
+ *    c) Unselected instructor courses which are selected as co-learner course are handled as #4.
+ *    d) Unselected instructor courses which are not selected as co-learner courses are handled as #1.
  *
  ***/
 
@@ -232,7 +245,7 @@ function annotation_node_access_records($node) {
 
     // Instructors can view private annotations within their courses if the annotation has the course selected in "Instructor Viewable by Instructors of these Courses"
     if ($courses = $annotation_wrapper->field_annotation_ins_viewable_co->value()) {
-      // If a selected instructor-viewable course is also selected as one of the co-learner courses, then we do not create this lock (grant), or else students of the course will not be able to view the annotation. We simply skip it and it falls onto the other perm systems.
+      // If a selected instructor-viewable course is also selected as one of the co-learner courses, then we do not create this lock (grant), or else students of the course will not be able to view the annotation. We simply skip it and it falls onto to og_access.
       $co_learner_group_nids = array();
       $co_learner_group_nodes = $annotation_wrapper->og_group_ref->value();
       if (count($co_learner_group_nodes)) {
