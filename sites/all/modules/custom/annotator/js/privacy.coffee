@@ -61,7 +61,8 @@ class Annotator.Plugin.Privacy extends Annotator.Plugin
       $('.annotator-editor input.privacy-group[type=checkbox]').each(->
         checked = if $(this).is(":checked") then 1 else 0
         gid = $(this).val()
-        group_name = $(this).parent().val()
+        parent = $(this).parent()
+        group_name = parent[0].textContent
         if $(this).hasClass("course_groups")
           course_groups[gid] = 0: group_name, selected: checked
         else

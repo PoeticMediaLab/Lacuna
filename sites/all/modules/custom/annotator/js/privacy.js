@@ -82,10 +82,11 @@
           audience[type] = 0;
         }
         return $('.annotator-editor input.privacy-group[type=checkbox]').each(function() {
-          var checked, gid, group_name;
+          var checked, gid, group_name, parent;
           checked = $(this).is(":checked") ? 1 : 0;
           gid = $(this).val();
-          group_name = $(this).parent().val();
+          parent = $(this).parent();
+          group_name = parent[0].textContent;
           if ($(this).hasClass("course_groups")) {
             return course_groups[gid] = {
               0: group_name,
