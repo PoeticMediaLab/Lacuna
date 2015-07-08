@@ -232,15 +232,25 @@ function annotation_node_access_records($node) {
 
     // Instructors can view private annotations within their courses if the annotation has the course selected in "Instructor Viewable by Instructors of these Courses"
     if ($courses = $annotation_wrapper->field_annotation_ins_viewable_co->value()) {
+      // If a selected instructor-viewable course is also selected as one of the co-learner courses, then we do not create this lock (grant), or else students of the course will not be able to view the annotation. We simply skip it and it falls onto the other perm systems.
+      $co_learner_group_nids = array();
+      $co_learner_group_nodes = $annotation_wrapper->og_group_ref->value();
+      if (count($co_learner_group_nodes)) {
+        foreach ($co_learner_group_nodes as $co_learner_group_node) {
+          $co_learner_group_nids[] = $co_learner_group_node->nid;
+        }
+      }
       foreach ($courses as $course) {
-        $grants[] = array(
-          'realm' => 'annotation_instructor',
-          'gid' => $course->nid,
-          'grant_view' => 1,
-          'grant_update' => 0,
-          'grant_delete' => 0,
-          'priority' => 100,
-        );
+        if (!in_array($course->nid, $co_learner_group_nids)) {
+          $grants[] = array(
+            'realm' => 'annotation_instructor',
+            'gid' => $course->nid,
+            'grant_view' => 1,
+            'grant_update' => 0,
+            'grant_delete' => 0,
+            'priority' => 100,
+          );
+        }
       }
     }
   }
