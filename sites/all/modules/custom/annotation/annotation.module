@@ -472,7 +472,12 @@ function _annotation_courses_by_instructor ($account) {
     ->entityCondition('bundle', 'course')
     ->propertyCondition('uid', $account->uid);
   $result = $query->execute();
-  return array_keys($result['node']);
+  if (isset ($result['node'])) {
+    return array_keys($result['node']);
+  }
+  else {
+    return array();
+  }
 }
 
 // Return reformatted course title with dates to help differentiate between same courses between semesters
