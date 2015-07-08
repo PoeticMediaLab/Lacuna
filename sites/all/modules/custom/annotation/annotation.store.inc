@@ -228,7 +228,6 @@ function annotation_api_create() {
     // Send response
     // ddl($annotation, 'create');
     $record = annotation_api_entity_prepare($annotation, 'read');
-
     return drupal_json_output($record);
   }
   return FALSE;
