@@ -8,7 +8,7 @@
 /**
  * Annotation API main endpoint
  */
-define('ANNOTATION_TAXONOMY_NAME', 'tags'); // needs to match name in annotation.install
+define('ANNOTATION_TAXONOMY_NAME', 'annotation_tags'); // needs to match name in annotation.install
 define('ANNOTATION_CATEGORY_TAXONOMY', 'annotation_categories');
 
 function annotation_api_endpoint($id = NULL) {

@@ -7,7 +7,7 @@ class TagsAnnotatorPlugin extends AnnotatorPlugin {
   public function setup() {
     // MLW - Load tags for autocomplete in Annotator window
     // Possible refactor for speed? EFQ is slower than db_select
-    $tags = taxonomy_vocabulary_machine_name_load('tags');
+    $tags = taxonomy_vocabulary_machine_name_load('annotation_tags');
     $query = new EntityFieldQuery();
     $result = $query->entityCondition('entity_type', 'taxonomy_term')
       ->propertyCondition('vid', (int) $tags->vid, '=')
