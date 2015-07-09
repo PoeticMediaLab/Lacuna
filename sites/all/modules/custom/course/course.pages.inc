@@ -251,3 +251,17 @@ function course_add_material() {
 
 
 }
+
+function course_switch_course($gid) {
+  if ($group = node_load ($gid)) {
+    if ($group->type == 'course') {
+      if (og_is_member('node', $gid)) {
+        global $user;
+        $user = user_load ($user->uid); // Global user does not contain OG memberships, so saving that will lose them for the user. Load the user first and use that (see: https://www.drupal.org/node/1502916#comment-6444954).
+        user_save ($user, array ('data' => array ('current-course' => $gid)));
+        drupal_goto ('node/'. $gid);
+      }
+    }
+  }
+  drupal_access_denied();
+}

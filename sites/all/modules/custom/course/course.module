@@ -54,7 +54,6 @@ function course_menu() {
     'type' => MENU_NORMAL_ITEM,
     'file' => 'course.pages.inc',
   );
-
   $items['admin/config/content/lacuna-courses'] = array(
     'title' => 'Course Creation Settings',
     'page callback' => 'drupal_get_form',
@@ -62,7 +61,14 @@ function course_menu() {
     'access arguments' => array('administer site configuration'),
     'type' => MENU_NORMAL_ITEM,
    );
-
+  $items['switch-course/%'] = array(
+    'title' => 'Switch Courses',
+    'page callback' => 'course_switch_course',
+    'page arguments' => array(1),
+    'access callback' => 'course_access',
+    'type' => MENU_NORMAL_ITEM,
+    'file' => 'course.pages.inc',
+  );
   return $items;
 }
 
@@ -114,4 +120,16 @@ function course_admin_form() {
   );
 
   return system_settings_form($form);
+}
+
+function course_select_course_link ($row) {
+  $gid = $row->nid;
+  $title = $row->title;
+  global $user;
+  if ($current_course = $user->data['current-course']) {
+    if ($gid == $current_course) {
+      $title .= " (current course)";
+    }
+  }
+  return l ($title, 'switch-course/' . $gid);
 }
