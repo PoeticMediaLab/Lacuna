@@ -105,25 +105,31 @@ function get_term_id($term_name, $taxonomy_name) {
  **/
 function annotation_format_tags(&$entity, $tags) {
   // Load, create, and format taxonomy term references
-  $taxonomy = taxonomy_vocabulary_machine_name_load(ANNOTATION_TAXONOMY_NAME);
-  $entity->field_annotation_tags = array(); // we'll be re-adding terms if they already exist
-  foreach (array_values($tags) as $raw_tag) { // Annotator passes them as array
-    $tid = NULL;
-    // Expect comma-separated values
-    $tags = explode(',', $raw_tag);
-    foreach (array_values($tags) as $tag) {
-      $tag = trim($tag);
-      if (strlen($tag)) {
-        $tid = get_term_id($tag, ANNOTATION_TAXONOMY_NAME);
-        if (!$tid) {
-          // add new term to taxonomy
-          $term = new stdClass();
-          $term->name = $tag;
-          $term->vid = $taxonomy->vid;
-          taxonomy_term_save($term);
-          $tid = $term->tid;
+
+  // The tag gets set to the current group context, since tags are per course
+  global $user;
+  if ($current_course = $user->data['current-course']) {
+    $taxonomy = taxonomy_vocabulary_machine_name_load(ANNOTATION_TAXONOMY_NAME);
+    $entity->field_annotation_tags = array(); // we'll be re-adding terms if they already exist
+    foreach (array_values($tags) as $raw_tag) { // Annotator passes them as array
+      $tid = NULL;
+      // Expect comma-separated values
+      $tags = explode(',', $raw_tag);
+      foreach (array_values($tags) as $tag) {
+        $tag = trim($tag);
+        if (strlen($tag)) {
+          $tid = get_term_id($tag, ANNOTATION_TAXONOMY_NAME);
+          if (!$tid) {
+            // add new term to taxonomy
+            $term = new stdClass();
+            $term->name = $tag;
+            $term->vid = $taxonomy->vid;
+            $term->field_annotation_tag_course[$entity->language][0]['target_id'] = $current_course;
+            taxonomy_term_save($term);
+            $tid = $term->tid;
+          }
+          $entity->field_annotation_tags[$entity->language][]['tid'] = $tid;
         }
-        $entity->field_annotation_tags[$entity->language][]['tid'] = $tid;
       }
     }
   }

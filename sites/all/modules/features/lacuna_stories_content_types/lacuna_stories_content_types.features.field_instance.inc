@@ -2415,6 +2415,43 @@ function lacuna_stories_content_types_field_default_field_instances() {
     ),
   );
 
+  // Exported field_instance:
+  // 'taxonomy_term-annotation_tags-field_annotation_tag_course'
+  $field_instances['taxonomy_term-annotation_tags-field_annotation_tag_course'] = array(
+    'bundle' => 'annotation_tags',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'entityreference',
+        'settings' => array(
+          'link' => FALSE,
+        ),
+        'type' => 'entityreference_label',
+        'weight' => 1,
+      ),
+    ),
+    'entity_type' => 'taxonomy_term',
+    'field_name' => 'field_annotation_tag_course',
+    'label' => 'Course(s)',
+    'required' => FALSE,
+    'settings' => array(
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'module' => 'entityreference',
+      'settings' => array(
+        'match_operator' => 'CONTAINS',
+        'path' => '',
+        'size' => 60,
+      ),
+      'type' => 'entityreference_autocomplete',
+      'weight' => 32,
+    ),
+  );
+
   // Exported field_instance: 'user-user-field_about_me'
   $field_instances['user-user-field_about_me'] = array(
     'bundle' => 'user',
@@ -2816,6 +2853,7 @@ function lacuna_stories_content_types_field_default_field_instances() {
   t('Choose an icon to represent this blog post when browsing. All browsing icons on Lacuna Stories are portrait dimensions, so please try to choose this proportion of image or crop it yourself before uploading. If you upload a landscape image, it will likely become skewed in the automated cropping. Also make sure your image is larger than 220 pixels wide and 320 pixels tall. If not, you can change that in programs like Mac Preview by selecting TOOLS --> ADJUST SIZE and increase the pixels.');
   t('Comment');
   t('Course');
+  t('Course(s)');
   t('Course(s) Enrolled');
   t('Cover Image');
   t('Date of Birth');
