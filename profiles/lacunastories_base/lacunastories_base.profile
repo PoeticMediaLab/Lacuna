@@ -330,6 +330,8 @@ function lacunastories_base_default_tax_terms () {
     'annotation_categories' => array(
       'Comment',
       'Question',
+      'Analyze',
+      'Compare'
     ),
   );
   foreach ($taxonomy as $vocabulary_name => $terms) {
