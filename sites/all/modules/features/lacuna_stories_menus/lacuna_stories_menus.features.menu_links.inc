@@ -10,25 +10,6 @@
 function lacuna_stories_menus_menu_default_menu_links() {
   $menu_links = array();
 
-  // Exported menu link: main-menu_about-this-course:node/27
-  $menu_links['main-menu_about-this-course:node/27'] = array(
-    'menu_name' => 'main-menu',
-    'link_path' => 'node/27',
-    'router_path' => 'node/%',
-    'link_title' => 'About This Course',
-    'options' => array(
-      'identifier' => 'main-menu_about-this-course:node/27',
-      'attributes' => array(),
-    ),
-    'module' => 'menu',
-    'hidden' => 0,
-    'external' => 0,
-    'has_children' => 0,
-    'expanded' => 0,
-    'weight' => 5,
-    'customized' => 1,
-    'parent_identifier' => 'main-menu_explore:<nolink>',
-  );
   // Exported menu link: main-menu_account:<nolink>
   $menu_links['main-menu_account:<nolink>'] = array(
     'menu_name' => 'main-menu',
@@ -578,7 +559,6 @@ function lacuna_stories_menus_menu_default_menu_links() {
   );
   // Translatables
   // Included for use with string extractors like potx.
-  t('About This Course');
   t('Account');
   t('All Content');
   t('All Emails');

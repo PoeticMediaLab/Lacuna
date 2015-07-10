@@ -270,3 +270,11 @@ function course_switch_course($gid) {
 function course_blank_page() {
   return ' ';
 }
+
+// The about course callback, simply redirects to the user's currently selected course
+function course_about_course() {
+  global $user;
+  if ($current_course = $user->data['current-course']) {
+    drupal_goto('node/' . $current_course);
+  }
+}

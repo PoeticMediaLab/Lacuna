@@ -76,6 +76,14 @@ function course_menu() {
     'type' => MENU_SUGGESTED_ITEM,
     'file' => 'course.pages.inc',
   );
+  // "About This Course" callback. Link is defined separately in the feature.
+  $items['about-course'] = array(
+    'title' => 'About This Course',
+    'page callback' => 'course_about_course',
+    'access callback' => 'course_check_course_selected',
+    'type' => MENU_NORMAL_ITEM,
+    'file' => 'course.pages.inc',
+  );
   return $items;
 }
 
@@ -182,5 +190,13 @@ function courses_views_headers ($view) {
         break;
     }
     return '<h2>' . $output . '</h2>';
+  }
+}
+
+// Check if a course is selected. Used by menu callbacks, etc.
+function course_check_course_selected () {
+  global $user;
+  if (isset ($user->data['current-course'])) {
+    return TRUE;
   }
 }
