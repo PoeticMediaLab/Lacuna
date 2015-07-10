@@ -125,11 +125,31 @@ function course_admin_form() {
 function course_select_course_link ($row) {
   $gid = $row->nid;
   $title = $row->title;
-  global $user;
-  if ($current_course = $user->data['current-course']) {
-    if ($gid == $current_course) {
-      $title .= " (current course)";
+  // Todo: if the following remains uncommented then do a rewrite within the view row without PHP
+  //  global $user;
+  //  if ($current_course = $user->data['current-course']) {
+  //    if ($gid == $current_course) {
+  //      $title .= " (current course)";
+  //    }
+  //  }
+  return l ($title, 'switch-course/' . $gid);
+}
+
+/**
+ * Implements hook_views_query_alter().
+ */
+function course_views_query_alter(&$view, &$query) {
+  if($view->name == "courses") {
+    switch ($view->current_display) {
+      case 'not_enrolled':
+        // This cannot be done in the view. It needs to be done in a query alter. See: https://www.drupal.org/node/596860#comment-10030507
+        $query->add_where_expression (2, 'node.nid NOT IN (SELECT gid FROM og_membership WHERE etid = ***CURRENT_USER***)');
+        break;
+      case 'enrolled':
+      case 'select_course':
+        // This could be done in the view. Doing here for simplicity.
+        $query->add_where_expression (2, 'node.nid IN (SELECT gid FROM og_membership WHERE etid = ***CURRENT_USER***)');
+        break;
     }
   }
-  return l ($title, 'switch-course/' . $gid);
 }

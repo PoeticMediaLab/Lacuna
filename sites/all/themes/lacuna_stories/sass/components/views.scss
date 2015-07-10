@@ -143,7 +143,14 @@ $views-link-hover-color: #1588BA;
   margin-top: 0px;
   margin-right: 80px;
 }
-
+.view-courses {
+  li.views-fluid-grid-item {
+    width: 32%;
+  }
+  div.views-fluid-grid h3 {
+    text-align: left;
+  }
+}
 table.views-table {
   width: 100%;
 }
