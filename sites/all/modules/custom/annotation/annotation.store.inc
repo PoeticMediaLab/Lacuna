@@ -140,7 +140,8 @@ function annotation_drupal_format($entity, $update = FALSE) {
     $annotation->language = LANGUAGE_NONE;
     // Get real Drupal URL of the annotated content, plus our base path
     $result = annotation_sanitize_uri($entity->uri);
-    $uri = $result['root'] . $result['path'];
+    // save the annotation with relative path only
+    $uri = /* $result['root'] . */ $result['path'];
     $node = menu_get_object($type = 'node', $position = 1, $result['path']);
     $annotation->uri = array();
     $annotation->uri[$annotation->language][0]['url'] = $uri;  // formatted for Link field
@@ -321,7 +322,8 @@ function annotation_api_search() {
   $category= isset($_GET['category'])     ? $_GET['category']        : NULL;
 
   $uri_result = annotation_sanitize_uri($uri);  // get the Drupal path
-  $uri = $uri_result['root'] . $uri_result['path'];
+  // lookup annotation by relative path only
+  $uri = /* $uri_result['root'] . */ $uri_result['path'];
   // Initiate query
   $query = new EntityFieldQuery();
   $query->entityCondition('entity_type', 'node')
