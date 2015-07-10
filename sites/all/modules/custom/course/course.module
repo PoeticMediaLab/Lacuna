@@ -157,20 +157,50 @@ function course_select_course_link ($row, $view) {
  * Implements hook_views_query_alter().
  */
 function course_views_query_alter(&$view, &$query) {
-  if($view->name == "courses") {
-    switch ($view->current_display) {
-      case 'not_enrolled':
-        // This cannot be done in the view. It needs to be done in a query alter. See: https://www.drupal.org/node/596860#comment-10030507
-        $query->add_where_expression (2, 'node.nid NOT IN (SELECT gid FROM og_membership WHERE etid = ***CURRENT_USER***)');
-        break;
-      case 'enrolled':
-      case 'select_course':
-        // This could be done in the view. Doing here for simplicity.
-        $query->add_where_expression (2, 'node.nid IN (SELECT gid FROM og_membership WHERE etid = ***CURRENT_USER***)');
-        break;
-    }
+  switch ($view->name) {
+
+    case 'courses':
+      if($view->name == "courses") {
+        switch ($view->current_display) {
+          case 'not_enrolled':
+            // This cannot be done in the view. It needs to be done in a query alter. See: https://www.drupal.org/node/596860#comment-10030507
+            $query->add_where_expression(2, 'node.nid NOT IN (SELECT gid FROM og_membership WHERE etid = ***CURRENT_USER***)');
+            break;
+          case 'enrolled':
+          case 'select_course':
+            // This could be done in the view. Doing here for simplicity.
+            $query->add_where_expression(2, 'node.nid IN (SELECT gid FROM og_membership WHERE etid = ***CURRENT_USER***)');
+            break;
+        }
+      }
+      break;
+
+    case 'people':
+      // Filter the People view according to course.
+      // Way easier this way than with a custom views filter, and equally performant.
+      if ($current_course = course_get_selected_course()) {
+        $query->add_where_expression(2, 'users.uid IN (SELECT etid FROM og_membership WHERE gid = ' . $current_course . ')');
+      }
+      break;
   }
 }
+
+
+/**
+ * Implements hook_views_pre_render().
+ */
+function course_views_pre_render(&$view) {
+  switch ($view->name) {
+
+    case 'people':
+      if ($current_course = course_get_selected_course()) {
+        $course = node_load($current_course);
+        $view->build_info['title'] = "People in " . $course->title;
+      }
+      break;
+  }
+}
+
 
 // Set the header on the courses views.
 function courses_views_headers ($view) {
