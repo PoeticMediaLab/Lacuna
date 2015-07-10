@@ -69,6 +69,13 @@ function course_menu() {
     'type' => MENU_NORMAL_ITEM,
     'file' => 'course.pages.inc',
   );
+  // Empty home (front) page, added onto via context
+  $items['home'] = array(
+    'page callback' => 'course_blank_page',
+    'access callback' => TRUE,
+    'type' => MENU_SUGGESTED_ITEM,
+    'file' => 'course.pages.inc',
+  );
   return $items;
 }
 
@@ -122,10 +129,13 @@ function course_admin_form() {
   return system_settings_form($form);
 }
 
-function course_select_course_link ($row) {
+// Dynamic link from the course listings sets context or not before going to the course node
+function course_select_course_link ($row, $view) {
   $gid = $row->nid;
   $title = $row->title;
-  // Todo: if the following remains uncommented then do a rewrite within the view row without PHP
+  if ($view->current_display == 'not_enrolled') {
+    return l($title, 'node/' . $gid);
+  };
   //  global $user;
   //  if ($current_course = $user->data['current-course']) {
   //    if ($gid == $current_course) {
@@ -151,5 +161,26 @@ function course_views_query_alter(&$view, &$query) {
         $query->add_where_expression (2, 'node.nid IN (SELECT gid FROM og_membership WHERE etid = ***CURRENT_USER***)');
         break;
     }
+  }
+}
+
+// Set the header on the courses views.
+function courses_views_headers ($view) {
+  if($view->name == "courses") {
+    $output = "";
+    switch ($view->current_display) {
+      case 'not_enrolled':
+        if (user_is_logged_in()) {
+          $output = 'Not Enrolled'; // anons get no header because they only see the one view, making the header redundant
+        }
+        break;
+      case 'enrolled':
+        $output = 'Enrolled';
+        break;
+      case 'select_course':
+        $output = "Select Course";
+        break;
+    }
+    return '<h2>' . $output . '</h2>';
   }
 }

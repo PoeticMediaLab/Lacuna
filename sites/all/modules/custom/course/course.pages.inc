@@ -265,3 +265,8 @@ function course_switch_course($gid) {
   }
   drupal_access_denied();
 }
+
+// blank page
+function course_blank_page() {
+  return ' ';
+}
