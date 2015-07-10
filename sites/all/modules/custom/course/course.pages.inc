@@ -273,8 +273,7 @@ function course_blank_page() {
 
 // The about course callback, simply redirects to the user's currently selected course
 function course_about_course() {
-  global $user;
-  if ($current_course = $user->data['current-course']) {
+  if ($current_course = course_get_selected_course()) {
     drupal_goto('node/' . $current_course);
   }
 }

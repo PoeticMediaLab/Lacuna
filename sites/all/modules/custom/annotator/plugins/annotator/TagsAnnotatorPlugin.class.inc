@@ -8,8 +8,7 @@ class TagsAnnotatorPlugin extends AnnotatorPlugin {
     $loaded_tags = array();
 
     // Get the course context to know which tags to load into the annotator. If there is no context set (which should never happen when creating/editing an annotation) then do not load any tags.
-    global $user;
-    if ($current_course = $user->data['current-course']) {
+    if ($current_course = course_get_selected_course()) {
       // MLW - Load tags for autocomplete in Annotator window
 
       // Possible refactor for speed? EFQ is slower than db_select -- Shiraz recommends stay with EFQ. The EFQ load increase is minimal relative to other stuff that's going on, and the abstraction is strongly encouraged in Drupal land. EFQs were added to D7 specifically for this kind of use case. If performance is a concern, not having the annotator plugins load on every page load seems like a higher priority.

@@ -107,8 +107,7 @@ function annotation_format_tags(&$entity, $tags) {
   // Load, create, and format taxonomy term references
 
   // The tag gets set to the current group context, since tags are per course
-  global $user;
-  if ($current_course = $user->data['current-course']) {
+  if ($current_course = course_get_selected_course()) {
     $taxonomy = taxonomy_vocabulary_machine_name_load(ANNOTATION_TAXONOMY_NAME);
     $entity->field_annotation_tags = array(); // we'll be re-adding terms if they already exist
     foreach (array_values($tags) as $raw_tag) { // Annotator passes them as array

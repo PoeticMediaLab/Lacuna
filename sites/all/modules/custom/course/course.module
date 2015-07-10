@@ -80,7 +80,7 @@ function course_menu() {
   $items['about-course'] = array(
     'title' => 'About This Course',
     'page callback' => 'course_about_course',
-    'access callback' => 'course_check_course_selected',
+    'access callback' => 'course_get_selected_course',
     'type' => MENU_NORMAL_ITEM,
     'file' => 'course.pages.inc',
   );
@@ -193,10 +193,10 @@ function courses_views_headers ($view) {
   }
 }
 
-// Check if a course is selected. Used by menu callbacks, etc.
-function course_check_course_selected () {
+// Get the currently selected course
+function course_get_selected_course () {
   global $user;
-  if (isset ($user->data['current-course'])) {
-    return TRUE;
+  if ($current_course = $user->data['current-course']) {
+    return $current_course;
   }
 }
