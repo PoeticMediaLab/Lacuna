@@ -61,6 +61,9 @@ article.node-document .field-type-text-long {
   background-color: $bg-color;
   box-shadow: none;
   padding-bottom: 100px;
+  //  added to remove gutter on the right at some smaller window
+  //  resize positions
+  overflow-x: hidden;
 }
 
 b {
