@@ -38,7 +38,6 @@ dependencies[] = views
 dependencies[] = wysiwyg
 dependencies[] = wysiwyg_filter
 features[context][] = annotation_filters
-features[context][] = bibliography
 features[context][] = stitchings_edit
 features[context][] = tag_clouds
 features[ctools][] = context:context:3
