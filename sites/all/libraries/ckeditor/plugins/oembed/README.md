@@ -18,7 +18,6 @@ http://w8tcha.github.com/CKEditor-oEmbed-Plugin/
 * Blip - oEmbed
 * Hulu - oEmbed
 * Vimeo - oEmbed
-* Nooledge - oEmbed
 * National film board of Canada - oEmbed
 * Qik - oEmbed
 * Dotsub - oEmbed

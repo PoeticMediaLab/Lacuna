@@ -25,6 +25,7 @@ dependencies[] = link
 dependencies[] = list
 dependencies[] = media
 dependencies[] = media_wysiwyg
+dependencies[] = number
 dependencies[] = og
 dependencies[] = og_ui
 dependencies[] = options
