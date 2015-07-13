@@ -12,7 +12,6 @@
 // - http://www.adequatelygood.com/2010/3/JavaScript-Module-Pattern-In-Depth
 (function ($, Drupal, window, document, undefined) {
 
-
 // To understand behaviors, see https://drupal.org/node/756722#behaviors
 Drupal.behaviors.mobileSupport = {
   attach: function(context, settings) {
@@ -23,8 +22,10 @@ Drupal.behaviors.mobileSupport = {
     *   that should cover most touchscreen devices.
     */
     if (window.ontouchstart != undefined) {
-      $('.view-display-id-materials .field-content a').mouseover(function(event) {
+      $('.view-display-id-materials .field-content a').each(function() {
+        this.mouseover(function(event) {
           $(event.target).trigger('click');
+        });
       });
     }
   }
