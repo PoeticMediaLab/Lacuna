@@ -326,6 +326,27 @@ function lacuna_stories_menus_menu_default_menu_links() {
     'customized' => 1,
     'parent_identifier' => 'main-menu_explore:<nolink>',
   );
+  // Exported menu link: main-menu_my-courses:my-courses
+  $menu_links['main-menu_my-courses:my-courses'] = array(
+    'menu_name' => 'main-menu',
+    'link_path' => 'my-courses',
+    'router_path' => 'my-courses',
+    'link_title' => 'My Courses',
+    'options' => array(
+      'attributes' => array(
+        'title' => '',
+      ),
+      'identifier' => 'main-menu_my-courses:my-courses',
+    ),
+    'module' => 'system',
+    'hidden' => 0,
+    'external' => 0,
+    'has_children' => 0,
+    'expanded' => 0,
+    'weight' => -49,
+    'customized' => 1,
+    'parent_identifier' => 'main-menu_account:<nolink>',
+  );
   // Exported menu link: main-menu_my-profile:user
   $menu_links['main-menu_my-profile:user'] = array(
     'menu_name' => 'main-menu',
@@ -423,24 +444,6 @@ function lacuna_stories_menus_menu_default_menu_links() {
     'expanded' => 0,
     'weight' => -47,
     'customized' => 1,
-  );
-  // Exported menu link: main-menu_research-consent:node/67
-  $menu_links['main-menu_research-consent:node/67'] = array(
-    'menu_name' => 'main-menu',
-    'link_path' => 'node/67',
-    'router_path' => 'node/%',
-    'link_title' => 'Research Consent',
-    'options' => array(
-      'identifier' => 'main-menu_research-consent:node/67',
-    ),
-    'module' => 'menu',
-    'hidden' => 0,
-    'external' => 0,
-    'has_children' => 0,
-    'expanded' => 0,
-    'weight' => 0,
-    'customized' => 0,
-    'parent_identifier' => 'main-menu_account:<nolink>',
   );
   // Exported menu link: main-menu_responses-map:visualization/responses
   $menu_links['main-menu_responses-map:visualization/responses'] = array(
@@ -575,12 +578,12 @@ function lacuna_stories_menus_menu_default_menu_links() {
   t('Logout');
   t('Manage');
   t('Materials');
+  t('My Courses');
   t('My Profile');
   t('My Writing');
   t('Peer Groups');
   t('People');
   t('Reflect');
-  t('Research Consent');
   t('Responses');
   t('Responses Map');
   t('Sewing Kit');

@@ -88,7 +88,7 @@ function course_views_default_views() {
   $handler->display->display_options['fields']['php']['element_type'] = 'h3';
   $handler->display->display_options['fields']['php']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['php']['use_php_setup'] = 0;
-  $handler->display->display_options['fields']['php']['php_output'] = '<?php print course_select_course_link ($row, $view); ?>';
+  $handler->display->display_options['fields']['php']['php_output'] = '<?php print course_switch_course_link ($row, $view); ?>';
   $handler->display->display_options['fields']['php']['use_php_click_sortable'] = '0';
   $handler->display->display_options['fields']['php']['php_click_sortable'] = '';
   /* Field: User: Name */
@@ -127,9 +127,14 @@ function course_views_default_views() {
     'course' => 'course',
   );
 
-  /* Display: Select Course page */
-  $handler = $view->new_display('page', 'Select Course page', 'select_course');
-  $handler->display->display_options['path'] = 'select-course';
+  /* Display: My Courses page */
+  $handler = $view->new_display('page', 'My Courses page', 'my_courses');
+  $handler->display->display_options['path'] = 'my-courses';
+  $handler->display->display_options['menu']['type'] = 'normal';
+  $handler->display->display_options['menu']['title'] = 'My Courses';
+  $handler->display->display_options['menu']['weight'] = '0';
+  $handler->display->display_options['menu']['context'] = 0;
+  $handler->display->display_options['menu']['context_only_inline'] = 0;
 
   /* Display: Enrolled block */
   $handler = $view->new_display('block', 'Enrolled block', 'enrolled');

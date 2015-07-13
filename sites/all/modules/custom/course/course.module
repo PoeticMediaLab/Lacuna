@@ -138,7 +138,7 @@ function course_admin_form() {
 }
 
 // Dynamic link from the course listings sets context or not before going to the course node
-function course_select_course_link ($row, $view) {
+function course_switch_course_link ($row, $view) {
   $gid = $row->nid;
   $title = $row->title;
   if ($view->current_display == 'not_enrolled') {
@@ -167,7 +167,7 @@ function course_views_query_alter(&$view, &$query) {
             $query->add_where_expression(2, 'node.nid NOT IN (SELECT gid FROM og_membership WHERE etid = ***CURRENT_USER***)');
             break;
           case 'enrolled':
-          case 'select_course':
+          case 'my_courses':
             // This could be done in the view. Doing here for simplicity.
             $query->add_where_expression(2, 'node.nid IN (SELECT gid FROM og_membership WHERE etid = ***CURRENT_USER***)');
             break;
@@ -215,7 +215,7 @@ function courses_views_headers ($view) {
       case 'enrolled':
         $output = 'Enrolled';
         break;
-      case 'select_course':
+      case 'my_courses':
         $output = "Select Course";
         break;
     }
