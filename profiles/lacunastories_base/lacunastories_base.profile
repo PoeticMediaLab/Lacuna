@@ -199,21 +199,19 @@ function lacunastories_base_create_research_consent_webform()
 
 
 /*
-  Creating basic pages like FAQ, "About This Course", etc.
+  Creating basic pages like FAQ, "Instructor's Guide", etc.
  */
 function lacunastories_base_create_basic_pages()
 {
-  $content[0]["title"] = "About This Course";
-  $content[0]["body"] = file_get_contents(DRUPAL_ROOT . "/profiles/lacunastories_base/basic pages/about_this_course.html");
 
-  $content[1]["title"] = "FAQ";
-  $content[1]["body"] = file_get_contents(DRUPAL_ROOT . "/profiles/lacunastories_base/basic pages/faq.html");;
+  $content[0]["title"] = "FAQ";
+  $content[0]["body"] = file_get_contents(DRUPAL_ROOT . "/profiles/lacunastories_base/basic pages/faq.html");;
 
-  $content[2]["title"] = "Instructor's Guide";
-  $content[2]["body"] = file_get_contents(DRUPAL_ROOT . "/profiles/lacunastories_base/basic pages/instructors_guide.html");
+  $content[1]["title"] = "Instructor's Guide";
+  $content[1]["body"] = file_get_contents(DRUPAL_ROOT . "/profiles/lacunastories_base/basic pages/instructors_guide.html");
 
-  $content[3]["title"] = "Student User Guide";
-  $content[3]["body"] = file_get_contents(DRUPAL_ROOT . "/profiles/lacunastories_base/basic pages/student_user_guide.html");;
+  $content[2]["title"] = "Student User Guide";
+  $content[2]["body"] = file_get_contents(DRUPAL_ROOT . "/profiles/lacunastories_base/basic pages/student_user_guide.html");;
 
   foreach($content as $page)
   {
