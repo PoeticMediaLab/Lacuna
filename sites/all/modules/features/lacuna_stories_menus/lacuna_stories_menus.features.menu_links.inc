@@ -384,6 +384,27 @@ function lacuna_stories_menus_menu_default_menu_links() {
     'customized' => 1,
     'parent_identifier' => 'main-menu_create:<nolink>',
   );
+  // Exported menu link: main-menu_peer-groups:peer-groups
+  $menu_links['main-menu_peer-groups:peer-groups'] = array(
+    'menu_name' => 'main-menu',
+    'link_path' => 'peer-groups',
+    'router_path' => 'peer-groups',
+    'link_title' => 'Peer Groups',
+    'options' => array(
+      'attributes' => array(
+        'title' => '',
+      ),
+      'identifier' => 'main-menu_peer-groups:peer-groups',
+    ),
+    'module' => 'menu',
+    'hidden' => 0,
+    'external' => 0,
+    'has_children' => 0,
+    'expanded' => 0,
+    'weight' => -47,
+    'customized' => 1,
+    'parent_identifier' => 'main-menu_connect:<nolink>',
+  );
   // Exported menu link: main-menu_people:people
   $menu_links['main-menu_people:people'] = array(
     'menu_name' => 'main-menu',
@@ -576,6 +597,7 @@ function lacuna_stories_menus_menu_default_menu_links() {
   t('Materials');
   t('My Profile');
   t('My Writing');
+  t('Peer Groups');
   t('People');
   t('Reflect');
   t('Research Consent');
