@@ -6,8 +6,38 @@
 @import "init";
 
 #page {
+
   //  added to remove gutter on the right at some smaller window
   //  resize positions
   overflow-x: hidden;
+
+}
+
+#block-superfish-1 {
+
+    /*
+    *   Added as part of making header menu work on smaller screens.
+    */
+   margin-bottom: 0px;
+
+}
+
+#superfish-1 {
+
+    /*
+    *   Added as part of making header menu work on smaller screens.
+    */
+   padding-bottom: 0px;
+   margin-bottom: 0px;
+   margin-top: 0px;
+
+}
+
+#course-name {
+
+    /*
+    *   Added as part of making header menu work on smaller screens.
+    */
+    padding-left: 10px;
 
 }
