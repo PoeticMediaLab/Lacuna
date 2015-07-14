@@ -234,13 +234,16 @@ function course_get_selected_course () {
  */
 function course_node_validate ($node, $form, &$form_state) {
 
-  // Ensure that multi-term courses are in consecutive terms
-  $terms = $form_state['values']['field_course_term'][$node->language];
-  if (count($terms) == 2) {
-    $term1 = $terms[0]['value'];
-    $term2 = $terms[1]['value'];
-    if (($term1 == 'Fall' && $term2 == 'Spring') OR ($term1 = 'Winter' && $term2 == 'Summer')) {
-      form_set_error ('field_course_term', t('Multi-term courses must be in consecutive terms.')); // Todo: get this to highlight the term field in the failed form submission. Not sure what's up.
+  if ($node->type == 'course') {
+    
+    // Ensure that multi-term courses are in consecutive terms
+    $terms = $form_state['values']['field_course_term'][$node->language];
+    if (count($terms) == 2) {
+      $term1 = $terms[0]['value'];
+      $term2 = $terms[1]['value'];
+      if (($term1 == 'Fall' && $term2 == 'Spring') OR ($term1 = 'Winter' && $term2 == 'Summer')) {
+        form_set_error('field_course_term', t('Multi-term courses must be in consecutive terms.')); // Todo: get this to highlight the term field in the failed form submission. Not sure what's up.
+      }
     }
   }
 }
