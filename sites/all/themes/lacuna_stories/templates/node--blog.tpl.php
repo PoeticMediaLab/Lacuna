@@ -43,9 +43,9 @@ function debug_to_console( $data ) {
             <br>
             <span class="date-month-day-year">
               <?php print format_date($timestamp = $created,
-                                      $type = 'medium', 
-                                      $format = 'F jS, Y', 
-                                      $timezone = NULL, 
+                                      $type = 'medium',
+                                      $format = 'F jS, Y',
+                                      $timezone = NULL,
                                       $langcode = NULL); ?>
             </span>
           </div>
