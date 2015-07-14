@@ -1210,8 +1210,8 @@ function lacuna_stories_permissions_user_default_permissions() {
     'name' => 'delete own document content',
     'roles' => array(
       'Content Manager' => 'Content Manager',
-      'Instructor' => 'Instructor',
       'Site Administrator' => 'Site Administrator',
+      'authenticated user' => 'authenticated user',
     ),
     'module' => 'node',
   );
@@ -1859,8 +1859,8 @@ function lacuna_stories_permissions_user_default_permissions() {
     'name' => 'edit own document content',
     'roles' => array(
       'Content Manager' => 'Content Manager',
-      'Instructor' => 'Instructor',
       'Site Administrator' => 'Site Administrator',
+      'authenticated user' => 'authenticated user',
     ),
     'module' => 'node',
   );
