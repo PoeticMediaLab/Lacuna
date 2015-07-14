@@ -166,6 +166,7 @@ function course_switch_course_link ($row, $view) {
 function course_views_query_alter(&$view, &$query) {
   switch ($view->name) {
 
+    // Filter courses views for enrolled and not enrolled
     case 'courses':
       if($view->name == "courses") {
         switch ($view->current_display) {
@@ -174,18 +175,23 @@ function course_views_query_alter(&$view, &$query) {
             $query->add_where_expression(2, 'node.nid NOT IN (SELECT gid FROM og_membership WHERE etid = ***CURRENT_USER***)');
             break;
           case 'enrolled':
-            // This could be done in the view. Doing here for simplicity.
+            // This could be done in the view. Doing here for simplicity and organization.
             $query->add_where_expression(2, 'node.nid IN (SELECT gid FROM og_membership WHERE etid = ***CURRENT_USER***)');
             break;
         }
       }
       break;
 
+    // Filter course-specific views to the course context
+    // Way easier this way than with a custom views filters, and equally performant.
     case 'people':
-      // Filter the People view according to course.
-      // Way easier this way than with a custom views filter, and equally performant.
       if ($current_course = course_get_selected_course()) {
         $query->add_where_expression(2, 'users.uid IN (SELECT etid FROM og_membership WHERE gid = ' . $current_course . ')');
+      }
+      break;
+    case 'responses':
+      if ($current_course = course_get_selected_course()) {
+        $query->add_where_expression(2, 'node.nid IN (SELECT etid FROM og_membership WHERE gid = ' . $current_course . ')');
       }
       break;
   }
@@ -198,10 +204,12 @@ function course_views_query_alter(&$view, &$query) {
 function course_views_pre_render(&$view) {
   switch ($view->name) {
 
+    // Tweak titles of course-specific views to show the course name
     case 'people':
+    case 'responses':
       if ($current_course = course_get_selected_course()) {
         $course = node_load($current_course);
-        $view->set_title ("People in " . $course->title);
+        $view->set_title (ucfirst ($view->name) . ' in ' . $course->title);
       }
       break;
 
@@ -235,7 +243,7 @@ function course_get_selected_course () {
 function course_node_validate ($node, $form, &$form_state) {
 
   if ($node->type == 'course') {
-    
+
     // Ensure that multi-term courses are in consecutive terms
     $terms = $form_state['values']['field_course_term'][$node->language];
     if (count($terms) == 2) {
