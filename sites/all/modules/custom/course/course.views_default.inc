@@ -66,6 +66,18 @@ function course_views_default_views() {
   $handler->display->display_options['relationships']['uid']['table'] = 'node';
   $handler->display->display_options['relationships']['uid']['field'] = 'uid';
   $handler->display->display_options['relationships']['uid']['required'] = TRUE;
+  /* Field: Content: Course Image */
+  $handler->display->display_options['fields']['field_course_image']['id'] = 'field_course_image';
+  $handler->display->display_options['fields']['field_course_image']['table'] = 'field_data_field_course_image';
+  $handler->display->display_options['fields']['field_course_image']['field'] = 'field_course_image';
+  $handler->display->display_options['fields']['field_course_image']['label'] = '';
+  $handler->display->display_options['fields']['field_course_image']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['field_course_image']['click_sort_column'] = 'fid';
+  $handler->display->display_options['fields']['field_course_image']['settings'] = array(
+    'image_style' => 'medium',
+    'image_link' => '',
+  );
+  $handler->display->display_options['fields']['field_course_image']['group_column'] = 'entity_id';
   /* Field: Content: Title */
   $handler->display->display_options['fields']['title']['id'] = 'title';
   $handler->display->display_options['fields']['title']['table'] = 'node';
