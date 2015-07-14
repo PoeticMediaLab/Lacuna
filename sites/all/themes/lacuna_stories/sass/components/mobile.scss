@@ -1,17 +1,13 @@
 /*
 *   Styles to enhance general site navigation on mobile
-*   devices.  Conditionally loaded in case of
+*   devices or smaller screen widths.
 */
 
 @import "init";
 
-//  styles for non-retina iPad
-@media only screen
-and (min-device-width : 768px)
-and (max-device-width : 1024px)  {
-
-    //  nothing here yet – prioritizing making site-wide changes
-    //  that fix issues on iPad for a more consistent, responsive
-    //  design.
+#page {
+  //  added to remove gutter on the right at some smaller window
+  //  resize positions
+  overflow-x: hidden;
 
 }
