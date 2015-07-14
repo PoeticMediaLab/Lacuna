@@ -86,6 +86,12 @@ function course_strongarm() {
       'workflow_tab' => array(
         'custom_settings' => FALSE,
       ),
+      'diff_standard' => array(
+        'custom_settings' => FALSE,
+      ),
+      'revision' => array(
+        'custom_settings' => FALSE,
+      ),
     ),
     'extra_fields' => array(
       'form' => array(
@@ -93,7 +99,7 @@ function course_strongarm() {
           'weight' => '0',
         ),
         'path' => array(
-          'weight' => '5',
+          'weight' => '6',
         ),
       ),
       'display' => array(),
