@@ -24,8 +24,14 @@ article.node-document .field-type-text-long {
 }
 
 .header__name-and-slogan {
-  float: none !important;
-  margin-top: 50px;
+
+  /*
+  *   Changed from
+  *     float: none !important;
+  *     margin-top: 50px;
+  *   as part of making header menus work on smaller window widths.
+  */
+
 }
 
 #site-name {
@@ -44,8 +50,15 @@ body {
 }
 
 #main {
-  padding-top: 0px !important;
-  top: -50px !important;
+
+  /*
+  *   Changed from
+  *     padding-top: 0px !important;
+  *     top: -50px !important;
+  *   as part of making header menus work on smaller window widths.
+  */
+  padding-top: 1rem;
+
 }
 
 #page {
