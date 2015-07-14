@@ -38,18 +38,12 @@ function course_views_default_views() {
   $handler->display->display_options['style_options']['box_shadow'] = '0';
   $handler->display->display_options['style_options']['border_radius'] = '0';
   $handler->display->display_options['row_plugin'] = 'fields';
-  /* Header: Global: PHP */
-  $handler->display->display_options['header']['php']['id'] = 'php';
-  $handler->display->display_options['header']['php']['table'] = 'views';
-  $handler->display->display_options['header']['php']['field'] = 'php';
-  $handler->display->display_options['header']['php']['empty'] = TRUE;
-  $handler->display->display_options['header']['php']['php_output'] = '<?php print courses_views_headers($view);?>';
   /* No results behavior: Global: Text area */
   $handler->display->display_options['empty']['area']['id'] = 'area';
   $handler->display->display_options['empty']['area']['table'] = 'views';
   $handler->display->display_options['empty']['area']['field'] = 'area';
   $handler->display->display_options['empty']['area']['empty'] = TRUE;
-  $handler->display->display_options['empty']['area']['content'] = 'You are not enrolled in any courses.';
+  $handler->display->display_options['empty']['area']['content'] = 'No courses.';
   $handler->display->display_options['empty']['area']['format'] = 'filtered_html';
   /* Relationship: OG membership: OG membership from Node group */
   $handler->display->display_options['relationships']['og_membership_rel_group']['id'] = 'og_membership_rel_group';
@@ -124,6 +118,26 @@ function course_views_default_views() {
   $handler->display->display_options['sorts']['created']['table'] = 'node';
   $handler->display->display_options['sorts']['created']['field'] = 'created';
   $handler->display->display_options['sorts']['created']['order'] = 'DESC';
+  /* Contextual filter: Content: Year (field_course_year) */
+  $handler->display->display_options['arguments']['field_course_year_value']['id'] = 'field_course_year_value';
+  $handler->display->display_options['arguments']['field_course_year_value']['table'] = 'field_data_field_course_year';
+  $handler->display->display_options['arguments']['field_course_year_value']['field'] = 'field_course_year_value';
+  $handler->display->display_options['arguments']['field_course_year_value']['default_action'] = 'default';
+  $handler->display->display_options['arguments']['field_course_year_value']['default_argument_type'] = 'global_filter_field';
+  $handler->display->display_options['arguments']['field_course_year_value']['summary']['number_of_records'] = '0';
+  $handler->display->display_options['arguments']['field_course_year_value']['summary']['format'] = 'default_summary';
+  $handler->display->display_options['arguments']['field_course_year_value']['summary_options']['items_per_page'] = '25';
+  $handler->display->display_options['arguments']['field_course_year_value']['limit'] = '0';
+  /* Contextual filter: Content: Term (field_course_term) */
+  $handler->display->display_options['arguments']['field_course_term_value']['id'] = 'field_course_term_value';
+  $handler->display->display_options['arguments']['field_course_term_value']['table'] = 'field_data_field_course_term';
+  $handler->display->display_options['arguments']['field_course_term_value']['field'] = 'field_course_term_value';
+  $handler->display->display_options['arguments']['field_course_term_value']['default_action'] = 'default';
+  $handler->display->display_options['arguments']['field_course_term_value']['default_argument_type'] = 'global_filter_field';
+  $handler->display->display_options['arguments']['field_course_term_value']['summary']['number_of_records'] = '0';
+  $handler->display->display_options['arguments']['field_course_term_value']['summary']['format'] = 'default_summary';
+  $handler->display->display_options['arguments']['field_course_term_value']['summary_options']['items_per_page'] = '25';
+  $handler->display->display_options['arguments']['field_course_term_value']['limit'] = '0';
   /* Filter criterion: Content: Published */
   $handler->display->display_options['filters']['status']['id'] = 'status';
   $handler->display->display_options['filters']['status']['table'] = 'node';
@@ -139,32 +153,26 @@ function course_views_default_views() {
     'course' => 'course',
   );
 
-  /* Display: My Courses page */
-  $handler = $view->new_display('page', 'My Courses page', 'my_courses');
-  $handler->display->display_options['path'] = 'my-courses';
-  $handler->display->display_options['menu']['type'] = 'normal';
-  $handler->display->display_options['menu']['title'] = 'My Courses';
-  $handler->display->display_options['menu']['weight'] = '0';
-  $handler->display->display_options['menu']['context'] = 0;
-  $handler->display->display_options['menu']['context_only_inline'] = 0;
-
   /* Display: Enrolled block */
   $handler = $view->new_display('block', 'Enrolled block', 'enrolled');
-  $handler->display->display_options['defaults']['empty'] = FALSE;
-
-  /* Display: Not Enrolled block */
-  $handler = $view->new_display('block', 'Not Enrolled block', 'not_enrolled');
-  $handler->display->display_options['defaults']['access'] = FALSE;
-  $handler->display->display_options['access']['type'] = 'none';
-  $handler->display->display_options['defaults']['footer'] = FALSE;
+  $handler->display->display_options['defaults']['title'] = FALSE;
+  $handler->display->display_options['title'] = 'Enrolled';
   $handler->display->display_options['defaults']['empty'] = FALSE;
   /* No results behavior: Global: Text area */
   $handler->display->display_options['empty']['area']['id'] = 'area';
   $handler->display->display_options['empty']['area']['table'] = 'views';
   $handler->display->display_options['empty']['area']['field'] = 'area';
   $handler->display->display_options['empty']['area']['empty'] = TRUE;
-  $handler->display->display_options['empty']['area']['content'] = 'There are no courses you are not enrolled in.';
+  $handler->display->display_options['empty']['area']['content'] = 'No courses.';
   $handler->display->display_options['empty']['area']['format'] = 'filtered_html';
+
+  /* Display: Not Enrolled block */
+  $handler = $view->new_display('block', 'Not Enrolled block', 'not_enrolled');
+  $handler->display->display_options['defaults']['title'] = FALSE;
+  $handler->display->display_options['title'] = 'Not Enrolled';
+  $handler->display->display_options['defaults']['access'] = FALSE;
+  $handler->display->display_options['access']['type'] = 'none';
+  $handler->display->display_options['defaults']['footer'] = FALSE;
   $export['courses'] = $view;
 
   return $export;

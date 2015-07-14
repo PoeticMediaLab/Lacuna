@@ -26,15 +26,55 @@ function course_context_default_contexts() {
   $context->reactions = array(
     'block' => array(
       'blocks' => array(
+        'global_filter-global_filter_1' => array(
+          'module' => 'global_filter',
+          'delta' => 'global_filter_1',
+          'region' => 'content',
+          'weight' => '-10',
+        ),
         'views-courses-enrolled' => array(
           'module' => 'views',
           'delta' => 'courses-enrolled',
           'region' => 'content',
-          'weight' => '-10',
+          'weight' => '-9',
         ),
         'views-courses-not_enrolled' => array(
           'module' => 'views',
           'delta' => 'courses-not_enrolled',
+          'region' => 'content',
+          'weight' => '-8',
+        ),
+      ),
+    ),
+  );
+  $context->condition_mode = 0;
+  $export['frontpage'] = $context;
+
+  $context = new stdClass();
+  $context->disabled = FALSE; /* Edit this to true to make a default context disabled initially */
+  $context->api_version = 3;
+  $context->name = 'my_courses';
+  $context->description = '';
+  $context->tag = '';
+  $context->conditions = array(
+    'path' => array(
+      'values' => array(
+        'my-courses' => 'my-courses',
+      ),
+    ),
+  );
+  $context->reactions = array(
+    'block' => array(
+      'blocks' => array(
+        'global_filter-global_filter_1' => array(
+          'module' => 'global_filter',
+          'delta' => 'global_filter_1',
+          'region' => 'content',
+          'weight' => '-10',
+        ),
+        'views-courses-enrolled' => array(
+          'module' => 'views',
+          'delta' => 'courses-enrolled',
           'region' => 'content',
           'weight' => '-9',
         ),
@@ -42,7 +82,7 @@ function course_context_default_contexts() {
     ),
   );
   $context->condition_mode = 0;
-  $export['frontpage'] = $context;
+  $export['my_courses'] = $context;
 
   return $export;
 }

@@ -110,6 +110,73 @@ function course_strongarm() {
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
+  $strongarm->name = 'global_filters';
+  $strongarm->value = array(
+    1 => array(
+      'name' => 'field_course_year',
+      'block' => 'global_filter_1',
+      'uses_view' => '0',
+      'field' => 'field_course_year',
+      'view' => '',
+      'widget' => 'select',
+      'convert_to_range' => 0,
+      'label' => 'Year',
+      'option_all_text' => '',
+      'confirm_question' => '',
+      'set_on_select' => 1,
+      'global_field_or_view_default' => '',
+      'global_php_default' => '',
+    ),
+    2 => array(
+      'name' => 'field_course_term',
+      'block' => 'global_filter_1',
+      'uses_view' => '0',
+      'field' => 'field_course_term',
+      'view' => '',
+      'widget' => 'select',
+      'convert_to_range' => 0,
+      'label' => 'Term',
+      'option_all_text' => '',
+      'confirm_question' => '',
+      'set_on_select' => 1,
+      'global_field_or_view_default' => '',
+      'global_php_default' => '',
+    ),
+    3 => array(
+      'name' => '',
+      'block' => NULL,
+      'uses_view' => NULL,
+      'field' => NULL,
+      'view' => NULL,
+      'widget' => NULL,
+      'convert_to_range' => NULL,
+      'label' => NULL,
+      'option_all_text' => NULL,
+      'confirm_question' => NULL,
+      'set_on_select' => NULL,
+      'global_field_or_view_default' => NULL,
+      'global_php_default' => NULL,
+    ),
+  );
+  $export['global_filters'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'global_filter_legacy_parameters_set';
+  $strongarm->value = TRUE;
+  $export['global_filter_legacy_parameters_set'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'htmlpurifier_version_current';
+  $strongarm->value = '4.6.0';
+  $export['htmlpurifier_version_current'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
   $strongarm->name = 'menu_options_course';
   $strongarm->value = array(
     0 => 'main-menu',

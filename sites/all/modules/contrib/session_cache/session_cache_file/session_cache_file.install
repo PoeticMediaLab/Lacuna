@@ -1,0 +1,65 @@
+<?php
+
+/**
+ * @file
+ * session_cache_file.install
+ */
+
+/**
+ * Implements hook_requirements().
+ */
+function session_cache_file_requirements($phase) {
+  if ($phase != 'runtime') {
+    return;
+  }
+  $t = get_t();
+  $requirements['session_cache_file']['title'] = $t('Session Cache File cache');
+  $session_cache_root = session_cache_file_directory();
+  if ($session_cache_root) {
+    $requirements['session_cache_file']['value'] = $t('Installed at %path', array('%path' => $session_cache_root));
+    $requirements['session_cache_file']['severity'] = REQUIREMENT_OK;
+  }
+  else {
+    $requirements['session_cache_file']['value'] = $t('Not set or could not be created. Check directory permissions or re-configure <a href="@url">here</a>.', array('@url' => url('admin/config/media/file-system')));
+    $requirements['session_cache_file']['severity'] = REQUIREMENT_ERROR;
+  }
+  return $requirements;
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function session_cache_file_uninstall() {
+  require_once 'session_cache_file.module';
+  $session_cache_root = session_cache_file_directory();
+  if ($session_cache_root) {
+    // Delete session cache root and all directories and files below it.
+    session_cache_file_rrmdir($session_cache_root);
+  }
+}
+
+/**
+ * Recursively delete a directory and all files in it.
+ *
+ * PHP's rmdir() only deletes if the directory is empty.
+ *
+ * @param string $dir
+ *   The directory to be removed with all its contents.
+ */
+function session_cache_file_rrmdir($dir) {
+  if (is_dir($dir)) {
+    $files = scandir($dir);
+    foreach ($files as $file) {
+      if ($file != '.' && $file != '..') {
+        if (is_dir("$dir/$file")) {
+          session_cache_file_rrmdir("$dir/$file");
+        }
+        else {
+          unlink("$dir/$file");
+        }
+      }
+    }
+    return rmdir($dir);
+  }
+  return FALSE;
+}
