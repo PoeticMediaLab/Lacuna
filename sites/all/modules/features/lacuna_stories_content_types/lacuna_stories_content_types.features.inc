@@ -14,6 +14,9 @@ function lacuna_stories_content_types_ctools_plugin_api($module = NULL, $api = N
   if ($module == "field_group" && $api == "field_group") {
     return array("version" => "1");
   }
+  if ($module == "file_entity" && $api == "file_type") {
+    return array("version" => "1");
+  }
   if ($module == "strongarm" && $api == "strongarm") {
     return array("version" => "1");
   }
@@ -49,11 +52,11 @@ function lacuna_stories_content_types_flag_default_flags() {
     'show_on_form' => 0,
     'access_author' => '',
     'show_contextual_link' => 0,
-    'api_version' => 3,
     'module' => 'lacuna_stories_content_types',
     'locked' => array(
       0 => 'name',
     ),
+    'api_version' => 3,
   );
   return $flags;
 
@@ -100,14 +103,6 @@ function lacuna_stories_content_types_node_info() {
       'name' => t('Article'),
       'base' => 'node_content',
       'description' => t('Use <em>articles</em> for time-sensitive content like news, press releases or blog posts.'),
-      'has_title' => '1',
-      'title_label' => t('Title'),
-      'help' => '',
-    ),
-    'course' => array(
-      'name' => t('Course'),
-      'base' => 'node_content',
-      'description' => t('A specific course, used to give a group of enrolled students access to materials.'),
       'has_title' => '1',
       'title_label' => t('Title'),
       'help' => '',

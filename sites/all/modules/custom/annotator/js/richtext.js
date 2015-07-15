@@ -28,9 +28,6 @@
         extraPlugins: 'lineutils,oembed,widget',
         toolbar: [
           {
-            name: 'basicstyles',
-            items: ['RemoveFormat']
-          }, {
             name: 'paragraph',
             items: ['NumberedList', 'BulletedList']
           }, {

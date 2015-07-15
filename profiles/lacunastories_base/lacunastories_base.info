@@ -90,7 +90,6 @@ dependencies[] = media_vimeo
 dependencies[] = media_wysiwyg
 dependencies[] = media_wysiwyg_view_mode
 dependencies[] = media_youtube
-dependencies[] = plupload
 ; Organic groups
 dependencies[] = og
 dependencies[] = og_access
@@ -101,6 +100,7 @@ dependencies[] = advanced_help
 dependencies[] = backup_migrate
 dependencies[] = entity
 dependencies[] = entity_token
+dependencies[] = file_entity
 dependencies[] = htmlpurifier
 dependencies[] = libraries
 dependencies[] = mediaelement
@@ -146,7 +146,9 @@ dependencies[] = workflowfield
 dependencies[] = popup_views_integration
 ; Features
 dependencies[] = features
+dependencies[] = diff
 dependencies[] = course
+dependencies[] = lacuna_stories_peer_groups
 dependencies[] = lacuna_stories_content_types
 dependencies[] = lacuna_stories_irb_form
 dependencies[] = lacuna_stories_media
@@ -154,6 +156,4 @@ dependencies[] = lacuna_stories_menus
 dependencies[] = lacuna_stories_permissions
 dependencies[] = lacuna_stories_rules
 dependencies[] = lacuna_stories_system
-dependencies[] = lacuna_stories_views
-dependencies[] = lacuna_stories_workflows
 

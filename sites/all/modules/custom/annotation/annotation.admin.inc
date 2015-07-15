@@ -98,9 +98,9 @@ function annotation_admin_content($form, $form_state) {
   foreach ($annotations as $annotation) {
     $annotation_type = annotation_type_load($annotation->type);
     $options[$annotation->id] = array(
-      'text' => $annotation->text,
-      'quote' => $annotation->quote,
-      'uri' => l($annotation->uri, $annotation->uri),
+      'text' => $annotation->field_annotation_text,
+      'quote' => $annotation->field_annotation_quote,
+      'uri' => l($annotation->field_annotation_uri, $annotation->field_annotation_uri),
       'type' => $annotation_type->label,
       'author' => theme('username', array('account' => $accounts[$annotation->uid])),
       'timestamp' => format_date($annotation->updated, 'short'),
