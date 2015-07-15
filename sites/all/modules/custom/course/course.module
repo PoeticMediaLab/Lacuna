@@ -229,9 +229,15 @@ function course_views_pre_render(&$view) {
     // Tweak titles of course-specific views to show the course name
     case 'people':
     case 'responses':
+    case 'documents':
+      $title_map = array (
+        'people' => 'People',
+        'responses' => 'Responses',
+        'documents' => 'Materials',
+      );
       if ($current_course = course_get_selected_course()) {
         $course = node_load($current_course);
-        $view->set_title (ucfirst ($view->name) . ' in ' . $course->title);
+        $view->set_title ($title_map[$view->name] . ' in ' . $course->title);
       }
       break;
 
