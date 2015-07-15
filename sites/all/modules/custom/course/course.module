@@ -190,8 +190,10 @@ function course_views_query_alter(&$view, &$query) {
       }
       break;
     case 'responses':
+    case 'documents':
       if ($current_course = course_get_selected_course()) {
         $query->add_where_expression(2, 'node.nid IN (SELECT etid FROM og_membership WHERE gid = ' . $current_course . ')');
+        $query->group_operator = 'AND'; // For some reason which I can't find in its settings, Better Exposed Filters is changing the query group_operator to OR in the Documents (Materials) view only (not in responses view), which ORs our add_where_expression, producing a result set that includes all memberships in the current course (bad). This fixes that, but keep an eye out for weird behaviour with the Documents (Materials) exposed filters.
       }
       break;
   }
