@@ -2,7 +2,16 @@
 
 $link-color: #1588ba;
 $link-color-hover: #094762;
-$bg-color: #F8F8F8;
+//$bg-color: #F8F8F8;
+//$bg-color: #eee;
+$bg-color: white;
+
+body {
+  // font-family defined in _init
+  background-color: $bg-color;
+  line-height: 1.5em;
+  box-shadow: none;
+}
 
 /*  Adds 5em margins to left and right of document
 *   article page body text.
@@ -10,6 +19,7 @@ $bg-color: #F8F8F8;
 article.node-document .field-type-text-long {
   margin-left: 5em;
   margin-right: 5em;
+  min-height: 800px;
 }
 
 #name-and-slogan {
@@ -37,11 +47,6 @@ article.node-document .field-type-text-long {
   font-weight: normal;
 }
 
-body {
-  // font-family defined in _init
-  background-color: $bg-color;
-  line-height: 1.5em;
-}
 
 #main {
   padding-top: 0px !important;
@@ -53,8 +58,8 @@ body {
   padding: 15px;
   margin: auto;
   position: relative;
-  background-color: white;
-  box-shadow: 0px 0px 10px #888888;
+  background-color: $bg-color;
+  box-shadow: none;
   padding-bottom: 100px;
 }
 
@@ -78,6 +83,10 @@ article.node {
   font-family: $base-serif-font-family;
   font-size: 18px;
   line-height: 1.5em;
+  background-color: $bg-color;
+  border: solid 1px gray;
+  box-shadow: 0px 0px 10px #888888;
+  margin-top: 1.5em;
 }
 
 /* fix to avoid drop down menu overwrite of message pane */

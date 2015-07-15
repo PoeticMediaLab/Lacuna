@@ -1,7 +1,5 @@
 <?php
 /**
  * @file
- * Code for the Lacuna Stories Workflows feature.
+ * Drupal needs this blank file.
  */
-
-include_once 'lacuna_stories_workflows.features.inc';

@@ -663,7 +663,7 @@ function wysiwyg_get_css() {
 
   $files = array();
   foreach (drupal_add_css() as $filepath => $info) {
-    if ($info['group'] >= CSS_THEME && $info['type'] != 'inline' && $info['media'] != 'print') {
+    if ($info['group'] >= CSS_THEME && $info['type'] != 'inline' && $info['media'] != 'print' && file_exists($filepath)) {
       $files[] = file_create_url($filepath);
     }
   }

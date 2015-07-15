@@ -61,7 +61,6 @@ features[file_display][] = video__media_large__file_field_mediaelement_audio
 features[file_display][] = video__media_large__file_field_mediaelement_video
 features[file_display][] = video__media_large__file_image
 features[file_display][] = video__media_large__media_vimeo_image
-features[file_display][] = video__media_large__media_vimeo_video
 features[file_display][] = video__media_large__media_youtube_image
 features[file_display][] = video__wysiwyg__file_field_file_default
 features[file_display][] = video__wysiwyg__file_field_file_download_link
