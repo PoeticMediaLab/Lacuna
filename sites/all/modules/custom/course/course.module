@@ -197,6 +197,20 @@ function course_views_query_alter(&$view, &$query) {
   }
 }
 
+/**
+ * Implements hook_views_pre_build().
+ */
+function course_views_pre_build(&$view) {
+  switch($view->name) {
+
+    // Set default value for exposed filter to the course context
+    case 'sewing-kit':
+      if ($current_course = course_get_selected_course()) {
+        $view->display_handler->handlers['filter']['og_group_ref_target_id']->value = array($current_course);
+      }
+      break;
+  }
+}
 
 /**
  * Implements hook_views_pre_render().
