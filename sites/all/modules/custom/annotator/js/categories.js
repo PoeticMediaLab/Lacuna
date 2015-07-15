@@ -128,7 +128,7 @@
       if (annotation.category == null) {
         annotation.category = this.options.emptyCategory;
       }
-      categoryHTML = "";
+      categoryHTML = "<div class='annotator-category-label'> Category </div> ";
       _ref = this.options.category;
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         category = _ref[_i];

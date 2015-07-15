@@ -115,7 +115,7 @@ class Annotator.Plugin.Categories extends Annotator.Plugin
     if !annotation.category?
       annotation.category = @options.emptyCategory
 
-    categoryHTML = ""
+    categoryHTML = "<div class='annotator-category-label'> Category </div> "
     for category in @options.category
       categoryHTML += '<span class="' + @options.categoryClass
       categoryHTML += ' ' + @options.categoryColorClasses[category] + '">'
