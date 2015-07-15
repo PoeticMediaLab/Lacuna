@@ -41,3 +41,13 @@
     padding-left: 10px;
 
 }
+
+body {
+
+    /*
+    *   Stops the body from resizing smaller than 600px; scrollbars
+    *   will appear.
+    */
+    min-width: 600px;
+
+}
