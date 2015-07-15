@@ -1,3 +1,427 @@
+/*	Annotator CSS styles – migrated from annotator/css  */
+
+
+/* ----------------------------------------------------------------
+*	Categories styles
+*	from annotator/css/categories.css
+*
+* Annotator Categories Plugin CSS.
+* Some code from Zhila and some from Adi's original plugin
+*
+*/
+
+.annotator-categories {
+    border-top: solid 1px #eee;
+}
+
+.annotator-category:hover {
+    cursor: pointer;
+}
+
+.annotator-categories h4{
+    font-size: 13px;
+    display: block;
+    margin: 5px 0px 5px 5px;
+}
+
+.annotator-viewer ul li .annotator-category {
+    text-align: center;
+    width: 33%;
+}
+
+.annotator-category {
+    padding: 7px;
+    margin: 1px 1px 0px;
+    -webkit-border-radius: 6px 6px 6px 6px;
+    -moz-border-radius: 6px 6px 6px 6px;
+    border-radius: 6px 6px 6px 6px;
+    color: black;
+    display: inline-block;
+    background-color: rgba(255, 255, 10, .3);
+}
+
+.annotator-category-none {
+
+}
+
+.annotator-category-0,
+.annotator-category-1,
+.annotator-category-2,
+.annotator-category-3,
+.annotator-category-4,
+.annotator-category-5,
+.annotator-category-6,
+.annotator-category-7
+{
+    background-color: rgba(22,147,165, .2);
+}
+
+.annotator-category-selected {
+    background-color: rgba(196,223,44,1) !important;
+}
+
+
+/* ----------------------------------------------------------------
+*	Comment styles
+*	from annotator/css/comment.css
+*/
+
+.annotator-comment {
+  display: block !important;
+  width: 100%;
+}
+
+
+/* ----------------------------------------------------------------
+*	Filters styles
+*	from annotator/css/filters.css
+*/
+
+#annotation-filters-wrapper {
+  position: fixed;
+  font-size: 12px;
+  border: 1px solid rgb(200, 200, 200);
+  moz-border-radius: 5px;
+  webkit-border-radius: 5px;
+  border-radius: 5px;
+  padding: 2px;
+  /*width: 14%;*/
+  min-width: 14em;
+  max-width: 16em;
+}
+
+#annotation-filters {
+  position: relative;
+}
+
+@media (max-width: 959px) {
+  #annotation-filters {
+    width: 20%;
+  }
+  #af-pager-controls {
+    font-size: xx-large;
+  }
+  i.af-pager {
+    padding-right: 10% !important;
+  }
+}
+
+@media (min-width: 960px) and (max-width: 1099px) {
+  #annotation-filters {
+    width: 15%;
+  }
+  #af-pager-controls {
+    font-size: large;
+  }
+  i.af-pager {
+  }
+}
+
+@media (max-height: 768px) {
+  #annotation-filters {
+    top: 20%;
+  }
+}
+
+@media (min-width: 1100px) {
+  #annotation-filters {
+    width: 13%;
+  }
+}
+
+section.region-sidebar-second h2 {
+  text-align: center;
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
+section.region-sidebar-second input[type="checkbox"] {
+  margin: 10% 5% 10% 20%;
+}
+
+#af-active {
+  text-align: center;
+}
+
+.region-sidebar-second div#block-block-1 {
+  background-color: transparent;
+  border: none;
+}
+
+.af-title {
+  margin-left: 50px;
+  font-weight: bold;
+}
+
+.af-button {
+  cursor: pointer;
+  display: inline-block;
+  color: black;
+  padding: 0px;
+  margin: 0px 6px 15px 6px;
+  text-align: center;
+  font-variant: small-caps;
+  width: 25%;
+  background-repeat: repeat-x;
+  border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+  background-color: #92a6c4;
+  background-image: linear-gradient(to bottom, #92a6c4, #39404a);
+  color: #FFFFFF;
+  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+  -moz-border-bottom-colors: none;
+  -moz-border-left-colors: none;
+  -moz-border-right-colors: none;
+  -moz-border-top-colors: none;
+  border-image: none;
+  border-radius: 4px 4px 4px 4px;
+  border-style: solid;
+  border-width: 1px;
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.2) inset, 0 1px 2px rgba(0, 0, 0, 0.05);
+  margin-bottom: 0;
+  text-align: center;
+  vertical-align: middle;
+  font-weight: normal;
+  font-size: 14px;
+  margin-right: 5px;
+}
+
+.af-button:hover {
+  background-color: #39404a;
+}
+
+.af-button-active:hover {
+  background-color: #88b551;
+  color: #FFFFFF;
+  background-position: 0 -15px;
+  text-decoration: none;
+  transition: background-position 0.1s linear 0s;
+}
+
+.af-button-active {
+  background-color: #c4df2c;
+  background-image: linear-gradient(to bottom, #c4df2c, #88b551);
+}
+
+#af-button-reset {
+  width: 90%;
+  margin-bottom: 5%;
+  margin-left: auto;
+  margin-right: auto;
+  display: block;
+}
+
+.af-annotation-hide {
+  background-color: transparent !important;
+}
+
+#af-button-user {
+}
+
+.af-filter-active {
+  display: block;
+  text-transform: capitalize;
+  width: 100%;
+  padding-left: 10%;
+  cursor: pointer;
+}
+
+.af-wrapper {
+  white-space: nowrap;
+  width: 100%;
+}
+
+#af-filter-active {
+  text-align: center;
+  font-weight: bold;
+  font-size: 12pt;
+}
+
+label.af-autocomplete-label {
+  display: inline-block !important;
+  text-align: right;
+  width: 35%;
+  padding-right: 5px;
+  font-weight: normal;
+  font-size: 9pt;
+}
+
+label.af-autocomplete-label:first-letter {
+  text-transform: capitalize;
+}
+
+input.af-autocomplete.ui-autocomplete-input {
+  display: inline-block;
+  width: 60%;
+}
+
+#af-pager-wrapper {
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  display: block;
+}
+
+#af-pager-controls {
+  padding-left: 20px;
+  width: 100%;
+}
+
+#af-pager-count {
+  text-align: center;
+  display: block;
+}
+
+i.af-pager {
+  cursor: pointer;
+  margin-right: 20%;
+}
+
+
+/* ----------------------------------------------------------------
+*	Privacy styles
+*	from annotator/css/privacy.css
+*
+*	Annotator Privacy Plugin CSS
+*/
+
+.annotator-privacy {
+  opacity: .5;
+}
+ .annotator-privacy-public {
+  color: green;
+  display: block !important;
+ }
+
+ .annotator-privacy-private {
+ 	color: firebrick;
+  display: block !important;
+ }
+
+
+/* ----------------------------------------------------------------
+*	Rich Text Annotator styles
+*	from annotator/css/richText-annotator.css
+*/
+
+.annotator-viewer div:first-of-type.richText-annotation *,
+.annotator-viewer div:first-of-type.richText-annotation{
+	font-style: normal;
+	font-weight: inherit;
+	text-align: inherit;
+}
+.annotator-viewer div:first-of-type.richText-annotation{
+	padding-top: 22px;
+}
+
+/* Fix in the tinymce */
+.annotator-viewer div:first-of-type.richText-annotation strong{
+	font-weight: bold;
+}
+.annotator-viewer div:first-of-type.richText-annotation em{
+	font-style: italic;
+}
+
+.mceEditor {
+	z-index:3000000000!important; /*To fix full-screen problems*/
+}
+
+
+/* Some change in the design of Annotator */
+.annotator-editor .annotator-widget{
+	min-width: 250px;
+}
+
+/* Fix to show icons */
+.annotator-editor a:after {
+	content: none;
+}
+
+.mceSeparator {
+	display: none !important;
+}
+
+table.mceLayout {
+	/* !important because TinyMCE theme sets its own value */
+	width: 100% !important;
+}
+
+table.mceToolbar {
+	display: inline-table;
+}
+
+.mceEditor.defaultSkin td.mceToolbar {
+	/* Shrink the toolbar to a decent height */
+	line-height: 10px;
+}
+
+
+/* ----------------------------------------------------------------
+*	Rich Text styles
+*	from annotator/css/richtext.css
+*/
+
+/* Some change in the design of Annotator */
+.annotator-editor .annotator-widget{
+  min-width: 250px;
+}
+
+/* Fix to show icons */
+.annotator-editor a:after {
+  content: none;
+}
+
+
+/* ----------------------------------------------------------------
+*	Style styles (?)
+*	from annotator/css/style.css
+*/
+
+.annotator-editor .annotator-widget .annotator-listing .annotator-item {
+	line-height: 2.5em;
+}
+
+.annotator-notice,
+.annotator-filter *,
+.annotator-widget * {
+  /*font-family: inherit !important;*/
+}
+
+/***
+ *
+ * Next rule overrides the "style='display: none'"
+ * that gets added *inline* to our annotator-checkbox element
+ * by some well-hidden piece of code that I've not been able to track down
+ *
+ * Mike Widner <mikewidner@stanford.edu>
+ *
+ ***/
+li.annotator-checkbox[style] {
+  display: block !important;
+}
+
+
+/* ----------------------------------------------------------------
+*	Tags styles
+*	from annotator/css/tags.css
+*/
+
+.ui-autocomplete-category {
+  font-weight: bold;
+  border-bottom: 1px solid black;
+  padding-bottom: 5px;
+  margin-top: 10px;
+  text-transform: uppercase;
+  font-size: small;
+  max-height: 200px;
+  overflow-y: auto;
+  /* prevent horizontal scrollbar */
+  overflow-x: hidden;
+}
+
+.annotator-tags-item {
+  font-size: smaller;
+}
+
 #annotation-filters-wrapper {
   background-color: rgba(120,206,253,.1);
   box-shadow: 2px 2px 5px gray;
