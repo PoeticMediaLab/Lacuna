@@ -216,6 +216,12 @@ function course_views_pre_build(&$view) {
  * Implements hook_views_pre_render().
  */
 function course_views_pre_render(&$view) {
+
+  // User-contributed JS that prevents autosubmit on text views exposed text field filters for (while typing, still autosubmits on tab or enter). See https://www.drupal.org/node/1217948#comment-9233357
+  // TODO: For now I have this loading on all views, but we may wish to only load for the specific views where this is needed
+  // TODO: This is not not specific to courses. Once we have a general core feature, move this there
+  drupal_add_js(drupal_get_path('module', 'course') . '/js/prevent-auto-submit.js', array('weight' => 10));
+
   switch ($view->name) {
 
     // Tweak titles of course-specific views to show the course name
