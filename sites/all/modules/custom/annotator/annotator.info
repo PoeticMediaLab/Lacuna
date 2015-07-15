@@ -9,7 +9,6 @@ files[] = includes/AnnotatorPlugin.class.inc
 files[] = plugins/annotator/AuthAnnotatorPlugin.class.inc
 files[] = plugins/annotator/I18nAnnotatorPlugin.class.inc
 files[] = plugins/annotator/MarkdownAnnotatorPlugin.class.inc
-files[] = plugins/annotator/PermissionsAnnotatorPlugin.class.inc
 files[] = plugins/annotator/TagsAnnotatorPlugin.class.inc
 files[] = plugins/annotator/UnsupportedAnnotatorPlugin.class.inc
 files[] = plugins/annotator/CategoriesAnnotatorPlugin.class.inc

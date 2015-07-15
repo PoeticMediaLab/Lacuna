@@ -57,7 +57,9 @@ function annotation_api_index() {
     $query->entityCondition('bundle', 'annotation');
     $records = $query->execute();
     foreach ($records as $rid => $record) {
-      $records[$rid] = annotation_api_entity_prepare($record, 'read');
+      if ($annotation_prepared = annotation_api_entity_prepare($record, 'read')) {
+        $records[$rid] = $annotation_prepared;
+      }
     }
     // Send response
     return drupal_json_output(array_values($records));
@@ -101,26 +103,28 @@ function get_term_id($term_name, $taxonomy_name) {
 /**
  * Convert plain text tags into Drupal taxonomy terms
  **/
-function annotation_format_tags(&$entity) {
+function annotation_format_tags(&$entity, $tags) {
   // Load, create, and format taxonomy term references
   $taxonomy = taxonomy_vocabulary_machine_name_load(ANNOTATION_TAXONOMY_NAME);
-  $entity->annotation_tags = array(); // we'll be re-adding terms if they already exist
-  foreach (array_values($entity->tags) as $raw_tag) { // Annotator passes them as array
+  $entity->field_annotation_tags = array(); // we'll be re-adding terms if they already exist
+  foreach (array_values($tags) as $raw_tag) { // Annotator passes them as array
     $tid = NULL;
     // Expect comma-separated values
     $tags = explode(',', $raw_tag);
     foreach (array_values($tags) as $tag) {
       $tag = trim($tag);
-      $tid = get_term_id($tag, ANNOTATION_TAXONOMY_NAME);
-      if (!$tid) {
-        // add new term to taxonomy
-        $term = new stdClass();
-        $term->name = $tag;
-        $term->vid = $taxonomy->vid;
-        taxonomy_term_save($term);
-        $tid = $term->tid;
+      if (strlen($tag)) {
+        $tid = get_term_id($tag, ANNOTATION_TAXONOMY_NAME);
+        if (!$tid) {
+          // add new term to taxonomy
+          $term = new stdClass();
+          $term->name = $tag;
+          $term->vid = $taxonomy->vid;
+          taxonomy_term_save($term);
+          $tid = $term->tid;
+        }
+        $entity->field_annotation_tags[$entity->language][]['tid'] = $tid;
       }
-      $entity->annotation_tags[$entity->language][]['tid'] = $tid;
     }
   }
 }
@@ -145,9 +149,9 @@ function annotation_drupal_format($entity, $update = FALSE) {
     $annotation->uri = array();
     $annotation->uri[$annotation->language][0]['url'] = $uri;  // formatted for Link field
     $annotation->uri[$annotation->language][0]['title'] = $node->title;
-    $annotation->annotation_reference[$annotation->language][] = array(
-        'target_id' => (int) $node->nid,
-        'target_type' => 'node'
+    $annotation->field_annotation_reference[$annotation->language][] = array(
+      'target_id' => (int) $node->nid,
+      'target_type' => 'node'
     );
     $annotation->title = 'Annotation of ' . $node->title; // add document name and author?
   }
@@ -160,55 +164,143 @@ function annotation_drupal_format($entity, $update = FALSE) {
     // unset($annotation->permissions);
   }
   $annotation->updated = REQUEST_TIME;
+  $document_nid = $annotation->field_annotation_reference[$annotation->language][0]['target_id'];
 
   $fields = array_keys(field_info_instances('node', 'annotation'));
   foreach ($entity as $key => $val) {
     switch($key) {
+
       case 'tags':
-        $annotation->tags = $entity->tags;
-        annotation_format_tags($annotation);
+        annotation_format_tags($annotation, $val);
         break;
+
       case 'category':
         // Categories are taxonomy references
         $tid = get_term_id($val, ANNOTATION_CATEGORY_TAXONOMY);
         if (isset($tid)) {
-          $annotation->category[$annotation->language][0]['tid'] = $tid;
+          $annotation->field_annotation_category[$annotation->language][0]['tid'] = $tid;
         }
         break;
+
       case 'ranges':
         if (!$update) {
-          $annotation->ranges[$annotation->language][0]['value'] = json_encode($val);
+          $annotation->field_annotation_ranges[$annotation->language][0]['value'] = json_encode($val);
         }
         break;
-      case 'permissions':
-        // ddl($val, 'permissions');
-        if (!empty($val['read']) && ($val['read'][0] == $user->uid)) {
-          // Default to private
-          $annotation->private[$annotation->language][0]['value'] = 1;
+
+      case 'privacy_options':
+
+        // Save these privacy options as the default for this user for new annotations on this document
+        $privacy_defaults = array();
+        if (isset ($user->data['annotation_privacy_defaults'])) {
+          $privacy_defaults = $user->data['annotation_privacy_defaults'];
         }
-        else {
-          $annotation->private[$annotation->language][0]['value'] = 0;
+
+        // temporarily use course groups for instructor groups until JS is done
+        $val['instructor_groups'] = $val['groups']['course_groups'];
+        foreach ($val['instructor_groups'] as &$temp_instructor_group) {
+          $temp_instructor_group['selected'] = ($val['audience']['instructor'] == 1) ? 1 : 0;
         }
+
+        $privacy_defaults['annotation_privacy_defaults'][$document_nid] = $val;
+        $user = user_load ($user->uid); // Global user does not contain OG memberships, so saving that will lose them for the user. Load the user first and use that (see: https://www.drupal.org/node/1502916#comment-6444954).
+        user_save ($user, array ('data' => $privacy_defaults));
+
+
+        // Set the audience field to empty, to be set below
+        $annotation->field_annotation_audience[$annotation->language] = array ();
+
+        // Restrict any permission-granting fields, then set otherwise below depending on audience (ie. here we restrict, below we open up)
+        $annotation->group_content_access[$annotation->language][0]['value'] = 2; // group membership required
+        $annotation->og_group_ref[$annotation->language] = array(); // not in any groups
+        $annotation->field_annotation_ins_viewable_co[$annotation->language] = array(); // not viewable by any instructors
+
+
+        // Private
+        if ($val['audience']['private'] == 1) {
+          $annotation->field_annotation_audience[$annotation->language][]['value'] = 'private'; // set the audience field
+          break; // private is mutually exclusive
+        }
+
+        // Everyone
+        if ($val['audience']['everyone'] == 1) {
+          $annotation->field_annotation_audience[$annotation->language][]['value'] = 'everyone'; // set the audience field
+          $annotation->group_content_access[$annotation->language][0]['value'] = 1; // group membership not required
+          break; // everyone is mutually exclusive
+        }
+
+        // Used by both instructor and co-learners options
+        $users_groups = og_get_groups_by_user();
+
+        // Instructor
+        // Set some options, then proceed with the co-learners possibility
+        if ($val['audience']['instructor'] == 1) {
+          $annotation->field_annotation_audience[$annotation->language][]['value'] = 'instructor'; // set the audience field
+
+          // Set the "Instructor Viewable by Instructors of these Courses" values, which are picked up by the instructor grant.
+          $possible_instructor_groups =  $val['instructor_groups'];
+          $instructor_groups_to_set = array();
+          foreach ($possible_instructor_groups as $possible_instructor_group_nid => $possible_instructor_group_properties) {
+            if ($possible_instructor_group_properties['selected'] == 1) {
+              // In case the user hacked the JS, make sure they are only adding the annotation to groups they are a member of.
+              // This is in fact necessary because OG will not catch these (because it's the annotator, ie. system, creating the group ref here, not the user submitting the annotation, which OG would catch)
+              if (in_array($possible_instructor_group_nid, $users_groups['node'])) {
+                $instructor_groups_to_set[] = array('target_id' => $possible_instructor_group_nid);
+              }
+            }
+          }
+          $annotation->field_annotation_ins_viewable_co[$annotation->language] = $instructor_groups_to_set;
+
+        // Do not break out of 'instructor' condition, because co-learners can also be chosen
+        }
+
+        // Co-learners
+        if ($val['audience']['co-learners'] == 1) {
+          $annotation->field_annotation_audience[$annotation->language][]['value'] = 'co-learners'; // set (or add on to, if "instructor" was also chosen) the audience field
+
+          // Set the groups
+          $possible_groups =  array_replace ($val['groups']['peer_groups'], $val['groups']['course_groups']);
+          $groups_to_set = array();
+          foreach ($possible_groups as $possible_group_nid => $possible_group_properties) {
+            if ($possible_group_properties['selected'] == 1) {
+              // In case the user hacked the JS, make sure they are only adding the annotation to groups they are a member of.
+              // This is in fact necessary because OG will not catch these (because it's the annotator, ie. system, creating the group ref here, not the user submitting the annotation, which OG would catch)
+              if (in_array($possible_group_nid, $users_groups['node'])) {
+                $groups_to_set[] = array('target_id' => $possible_group_nid);
+              }
+            }
+          }
+          $annotation->og_group_ref[$annotation->language] = $groups_to_set;
+          break;
+        }
+
         break;
+
       default:
         // Only prepare fields that exist in the annotation node
-        if (in_array($key, $fields) & ($val != NULL) & !isset($annotation->{$key})) {
-          $annotation->{$key} = array();
-          $annotation->{$key}[$annotation->language][0]['value'] = $val;
+        if (in_array('field_annotation_' . $key, $fields) & ($val != NULL) & !isset($annotation->{'field_annotation_' . $key})) {
+          $annotation->{'field_annotation_' . $key} = array();
+          $annotation->{'field_annotation_' . $key}[$annotation->language][0]['value'] = $val;
         }
+        break;
+
     }
   }
+
   // Sanitize the category input (i.e., server-side validation)
   // Can't be done reliably in an Annotator plugin
   // @see https://lists.okfn.org/pipermail/annotator-dev/2014-May/000935.html
-  if (empty($annotation->text)) {
+  if (empty($annotation->field_annotation_text)) {
     // Just a highlight, no category
-    unset($annotation->category);
-  } elseif (empty($annotation->category)) {
-    // Text, but no category; choose the first one as default
+    unset($annotation->field_annotation_category);
+  }
+  elseif (empty($annotation->field_annotation_category)) {
+    // Text, but no category; choose the first one as default, if it exists
     $categories = taxonomy_vocabulary_machine_name_load(ANNOTATION_CATEGORY_TAXONOMY);
     $category_terms = taxonomy_get_tree($categories->vid);
-    $annotation->category[$annotation->language][0]['tid'] = $category_terms[0]->tid;
+    if (count($category_terms)) {
+      $annotation->field_annotation_category[$annotation->language][0]['tid'] = $category_terms[0]->tid;
+    }
   }
 
   return($annotation);
@@ -240,9 +332,10 @@ function annotation_api_create() {
 function annotation_api_read($id) {
   if ($annotation = node_load($id)) {
     if (annotation_access('view', $annotation)) {
-      $record = annotation_api_entity_prepare($annotation, 'read');
-      // Send response
-      return drupal_json_output($record);
+      if ($record = annotation_api_entity_prepare($annotation, 'read')) {
+        // Send response
+        return drupal_json_output($record);
+      }
     }
   }
   return FALSE;
@@ -361,12 +454,12 @@ function annotation_api_search() {
   // TODO: convert this to a term reference query
   if (is_array($tags)) {
     foreach($tags as $tag) {
-      $query->fieldCondition('annotation_tags', '"' . $tag . '"', 'LIKE');
+      $query->fieldCondition('field_annotation_tags', '"' . $tag . '"', 'LIKE');
     }
   }
   if ($category) {
     // This will need adjustment for explode/implode of categories
-    $query->fieldCondition('category', $category);
+    $query->fieldCondition('field_annotation_category', $category);
   }
 
   // Get the total
@@ -385,7 +478,9 @@ function annotation_api_search() {
   }
 
   foreach ($records as $rid => $record) {
-    $records[$rid] = annotation_api_entity_prepare($record, 'read');
+    if ($annotation_prepared = annotation_api_entity_prepare($record, 'read')) {
+      $records[$rid] = $annotation_prepared;
+    }
   }
 
   $output = array(
@@ -417,67 +512,131 @@ function annotation_api_from_stdin() {
 /**
  * Prepare entity for api usage
  */
-function annotation_api_entity_prepare($entity, $op) {
-  $entity->id = $entity->nid; // Annotator wants our nid in the id field
+function annotation_api_entity_prepare($annotation, $op) {
+  $entity = new stdClass();
+  $entity->id = $annotation->nid; // Annotator wants our nid in the id field
+  $annotation_wrapper = entity_metadata_wrapper ('node', $annotation);
   global $user;
   switch($op) {
     case 'read':
-      $account = user_load($entity->uid);
+      $account = user_load($annotation->uid);
       $entity->user = array(
         'uid' => $account->uid,
         'name' => format_username($account),
         'roles' => array_values($account->roles),
         );
-      unset($entity->uid);
+
       // Translate Drupal-encoded content back into something Annotator.js can use
-      $entity->ranges = drupal_json_decode($entity->ranges[$entity->language][0]['value']);
-      if (isset($entity->text[$entity->language]) && count($entity->text[$entity->language])) {
-        $entity->text = $entity->text[$entity->language][0]['value'];
+
+      // Ranges
+      // If for some reason an annotation gets saved without a range (this can happen on if an annotation is not created correctly), then we need to fail out here with NULL. Otherwise any subsequent good annotations (that have a range) on the page will not load either.
+      if (!isset($annotation->field_annotation_ranges[$annotation->language][0]['value'])) {
+        return;
+      }
+      $entity->ranges = drupal_json_decode($annotation->field_annotation_ranges[$annotation->language][0]['value']);
+
+      // Text
+      if (isset($annotation->field_annotation_text[$annotation->language]) && count($annotation->field_annotation_text[$annotation->language])) {
+        $entity->text = $annotation->field_annotation_text[$annotation->language][0]['value'];
       } else {
         $entity->text = null; // Otherwise, Annotator chokes on an empty array
       }
-      $entity->quote = $entity->quote[$entity->language][0]['value'];
+
+      // Quote
+      $entity->quote = $annotation->field_annotation_quote[$annotation->language][0]['value'];
+
       // Category is for the Category plugin
       // Uses a Drupal taxonomy, like tags
-      if (isset($entity->category) && !empty($entity->category)) {
-        $category = taxonomy_term_load($entity->category[$entity->language][0]['tid']);
+      if (isset($annotation->field_annotation_category) && !empty($annotation->field_annotation_category)) {
+        $category = taxonomy_term_load($annotation->field_annotation_category[$annotation->language][0]['tid']);
         if ($category) {
           $entity->category = $category->name;
         }
       }
-      if (isset($entity->annotation_tags[$entity->language])) {
+
+      // Tags
+      if (isset($annotation->field_annotation_tags[$annotation->language])) {
         $entity->tags = array();
-        foreach(array_values($entity->annotation_tags[$entity->language]) as $item) {
+        foreach(array_values($annotation->field_annotation_tags[$annotation->language]) as $item) {
           $term = taxonomy_term_load($item['tid']);
           array_push($entity->tags, $term->name);
         }
       }
-      if (isset($entity->private)) {
-        // Format permissions for the Annotator Permissions plugin
-        // We only implement "read" permissions right now
-        // This setting is strictly to respect the current checkbox settings
-        // Drupal permissions control what is actually shown
-        $entity->permissions = array();
-        if ($entity->private[$entity->language][0]['value'] == 0) {
-          $entity->permissions['read'] = array();
-        }
-        else {
-          $entity->permissions['read'][] = $account->uid;
-        }
+
+			// Privacy options
+
+      // Audience
+      $audience_values = $annotation_wrapper->field_annotation_audience->value();$audience = array(
+        'private' => 0,
+        'co-learners' => 0,
+        'everyone' => 0,
+        'instructor' => 0,
+      );
+      foreach ($audience_values as $audience_value) {
+        $audience[$audience_value] = 1;
       }
-      // Currently not implemented: sharing edit permission
-      $entity->permissions['update'][] = $account->uid;
-      $entity->permissions['delete'][] = $account->uid;
-      // Check privileges, but don't duplicate uids
-      if (user_access('edit any annotations') && $user->uid != $account->uid) {
-        array_push($entity->permissions['update'], $user->uid);
-        array_push($entity->permissions['delete'], $user->uid);
+
+      // Co-Learners Groups and Instructor Groups
+      $possible_groups = array();
+      $possible_instructor_groups = array();
+
+      if ($referenced_node = $annotation_wrapper->field_annotation_reference->value()) {
+
+         // Groups
+        // Get selected groups
+        $selected_groups = array();
+        if ($audience['co-learners'] == 1) {
+          if (isset($annotation->og_group_ref)) {
+            foreach ($annotation->og_group_ref[$annotation->language] as $group) {
+              $selected_groups[] = $group['target_id'];
+            }
+          }
+        }
+        // Get possible groups, and unmark those that are not selected for this annotation
+        $possible_groups = annotation_get_possible_groups_for_document($referenced_node);
+        foreach ($possible_groups as $group_type => $group_type_possible_groups) {
+          foreach ($group_type_possible_groups as $group_nid => $group_properties) {
+            if (!in_array($group_nid, $selected_groups)) {
+              $possible_groups[$group_type][$group_nid]['selected'] = 0;
+            }
+          }
+        }
+
+        // Instructor groups
+        // Get selected instructor groups
+        $selected_instructor_groups = array();
+        if ($audience['instructor'] == 1) {
+          if (isset($annotation->og_group_ref)) {
+            foreach ($annotation->field_annotation_ins_viewable_co[$annotation->language] as $group) {
+              $selected_instructor_groups[] = $group['target_id'];
+            }
+          }
+        }
+        // Get possible instructor groups, and unmark those that are not selected for this annotation
+        $possible_instructor_groups = $possible_groups['course_groups'];
+        foreach ($possible_instructor_groups as $group_nid => $group_properties) {
+          if (!in_array($group_nid, $selected_instructor_groups)) {
+            $possible_instructor_groups[$group_nid]['selected'] = 0;
+          }
+        }
+
       }
+
+
+      // Set the privacy options
+      $entity->privacy_options = array(
+        'audience' => $audience,
+        'groups' => $possible_groups,
+        'instructor_groups' => $possible_instructor_groups
+      );
+
+      // Links
       $entity->links[] = array(
-        'href' => url('node/' . $entity->nid),
+        'href' => url('node/' . $annotation->nid),
         'rel' => 'alternate',
         'type' => 'text/html',
         );
+
     break;
 
     // These two cases handled by annotation_drupal_format

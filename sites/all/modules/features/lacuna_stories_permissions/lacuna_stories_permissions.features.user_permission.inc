@@ -49,17 +49,6 @@ function lacuna_stories_permissions_user_default_permissions() {
     'module' => 'webform',
   );
 
-  // Exported permission: 'access any private annotation'.
-  $permissions['access any private annotation'] = array(
-    'name' => 'access any private annotation',
-    'roles' => array(
-      'Content Manager' => 'Content Manager',
-      'Instructor' => 'Instructor',
-      'Site Administrator' => 'Site Administrator',
-    ),
-    'module' => 'annotation',
-  );
-
   // Exported permission: 'access backup and migrate'.
   $permissions['access backup and migrate'] = array(
     'name' => 'access backup and migrate',
@@ -1137,9 +1126,8 @@ function lacuna_stories_permissions_user_default_permissions() {
     'name' => 'delete own annotation content',
     'roles' => array(
       'Content Manager' => 'Content Manager',
-      'Instructor' => 'Instructor',
       'Site Administrator' => 'Site Administrator',
-      'Student' => 'Student',
+      'authenticated user' => 'authenticated user',
     ),
     'module' => 'node',
   );
@@ -1586,15 +1574,6 @@ function lacuna_stories_permissions_user_default_permissions() {
     'module' => 'node',
   );
 
-  // Exported permission: 'edit any private annotation'.
-  $permissions['edit any private annotation'] = array(
-    'name' => 'edit any private annotation',
-    'roles' => array(
-      'Site Administrator' => 'Site Administrator',
-    ),
-    'module' => 'annotation',
-  );
-
   // Exported permission: 'edit any thread content'.
   $permissions['edit any thread content'] = array(
     'name' => 'edit any thread content',
@@ -1728,9 +1707,8 @@ function lacuna_stories_permissions_user_default_permissions() {
     'name' => 'edit own annotation content',
     'roles' => array(
       'Content Manager' => 'Content Manager',
-      'Instructor' => 'Instructor',
       'Site Administrator' => 'Site Administrator',
-      'Student' => 'Student',
+      'authenticated user' => 'authenticated user',
     ),
     'module' => 'node',
   );

@@ -25,42 +25,16 @@ function annotation_node_info() {
 // implements hook_node_type_insert()
 function annotation_node_type_insert($content_type) {
   if ($content_type->type == 'annotation') {
-    // add the taxonomy for tags
+
+    // Add the taxonomy for tags
     if (!taxonomy_vocabulary_machine_name_load(ANNOTATION_TAXONOMY_NAME)) {
-      _annotation_create_taxonomy(ANNOTATION_TAXONOMY_NAME);
+      _annotation_create_tags_taxonomy();
     }
 
     // Add taxonomy for categories
-    // TODO: Refactor taxonomy creation to look like field/instance creation
-    // Move to Annotator module -- fits with categories plugin?
+    // TODO: Move to Annotator module -- fits with categories plugin?
     if (!taxonomy_vocabulary_machine_name_load(ANNOTATION_CATEGORY_TAXONOMY)) {
-      $t = get_t();
-      $taxonomy = new stdClass();
-      $taxonomy->name = $t('Annotation Categories');
-      $taxonomy->machine_name = ANNOTATION_CATEGORY_TAXONOMY;
-      $taxonomy->description = $t('Categories for annotations');
-      $taxonomy->hierarchy = 1;
-      $taxonomy->module = 'annotation';
-      $taxonomy->weight = 1;
-      taxonomy_vocabulary_save($taxonomy);
-
-      // Create a field
-      $field = array(
-        'field_name' => 'label',
-        'type' => 'text',
-      );
-
-      field_create_field($field);
-
-      // Attach the field to our taxonomy entity
-      $instance = array(
-          'field_name' => 'label',
-          'entity_type' => 'taxonomy_term',
-          'bundle' => ANNOTATION_CATEGORY_TAXONOMY,
-          'description' => $t('Name of the category'),
-          'required' => TRUE
-      );
-      field_create_instance($instance);
+      _annotation_create_categories_taxonomy();
     }
 
     // Create all our fields for the Annotation node type
@@ -77,7 +51,7 @@ function annotation_node_type_insert($content_type) {
   }
 }
 
-function _annotation_create_taxonomy() {
+function _annotation_create_tags_taxonomy() {
   $t = get_t();
   $taxonomy = new stdClass();
   $taxonomy->name = $t('Annotation Tags');
@@ -87,24 +61,18 @@ function _annotation_create_taxonomy() {
   $taxonomy->module = 'annotation';
   $taxonomy->weight = 1;
   taxonomy_vocabulary_save($taxonomy);
+}
 
-  // Create a field
-  $field = array(
-    'field_name' => 'annotation_tag',
-    'type' => 'text',
-  );
-
-  field_create_field($field);
-
-  // Attach the field to our taxonomy entity
-  $instance = array(
-      'field_name' => 'annotation_tag',
-      'entity_type' => 'taxonomy_term',
-      'bundle' => ANNOTATION_TAXONOMY_NAME,
-      'description' => $t('Description'),
-      'required' => TRUE
-  );
-  field_create_instance($instance);
+function _annotation_create_categories_taxonomy() {
+  $t = get_t();
+  $taxonomy = new stdClass();
+  $taxonomy->name = $t('Annotation Categories');
+  $taxonomy->machine_name = ANNOTATION_CATEGORY_TAXONOMY;
+  $taxonomy->description = $t('Categories for annotations');
+  $taxonomy->hierarchy = 1;
+  $taxonomy->module = 'annotation';
+  $taxonomy->weight = 1;
+  taxonomy_vocabulary_save($taxonomy);
 }
 
 // Define the fields for our annotation
@@ -273,6 +241,7 @@ function annotation_uninstall() {
     field_delete_field($field['field_name']);
   }
 }
+
 /**
  * Update 7100: Convert Annotation text field to Full HTML
  */
@@ -281,4 +250,11 @@ function annotation_update_7100() {
   $instance_info['settings'] = array('text_processing' => 1);
   $instance_info['format'] = 'full_html';
   field_update_instance($instance_info);
+}
+
+/**
+ * Copy values from old annotation fields to new ones.
+ */
+function annotation_update_7101() {
+  annotation_copy_field_values_to_drupal_standard_fields ();
 }
