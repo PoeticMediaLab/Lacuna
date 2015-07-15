@@ -500,26 +500,6 @@ function lacuna_stories_media_file_default_displays() {
 
   $file_display = new stdClass();
   $file_display->api_version = 1;
-  $file_display->name = 'video__media_large__media_vimeo_video';
-  $file_display->weight = 0;
-  $file_display->status = TRUE;
-  $file_display->settings = array(
-    'width' => '640',
-    'height' => '360',
-    'color' => '',
-    'protocol_specify' => 0,
-    'protocol' => 'https://',
-    'autoplay' => 0,
-    'loop' => 0,
-    'title' => 1,
-    'byline' => 1,
-    'portrait' => 1,
-    'api' => 0,
-  );
-  $export['video__media_large__media_vimeo_video'] = $file_display;
-
-  $file_display = new stdClass();
-  $file_display->api_version = 1;
   $file_display->name = 'video__media_large__media_youtube_image';
   $file_display->weight = 0;
   $file_display->status = FALSE;

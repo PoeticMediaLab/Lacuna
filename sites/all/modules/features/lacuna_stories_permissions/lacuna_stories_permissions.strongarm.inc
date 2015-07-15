@@ -17,15 +17,12 @@ function lacuna_stories_permissions_strongarm() {
   $strongarm->value = array(
     'view_own' => array(
       0 => 2,
-      1 => 3,
-      2 => 4,
+      1 => 5,
+      2 => 3,
     ),
     'view' => array(
-      0 => 2,
-      1 => 5,
-      2 => 6,
-      3 => 3,
-      4 => 4,
+      0 => 5,
+      1 => 3,
     ),
     'priority' => '-1',
   );

@@ -54,19 +54,19 @@ function annotation_access($op, $entity = NULL, $account = NULL, $entity_type = 
   switch ($op) {
     case 'create':
       return user_access('administer nodes', $account)
-          || user_access('create annotation content', $account);
+      || user_access('create annotation content', $account);
     case 'view':
       return ($entity->uid == $account->uid)
-          || user_access('administer nodes', $account)
-          || (($entity->status == 1) && user_access('access content', $account));
+      || user_access('administer nodes', $account)
+      || (($entity->status == 1) && user_access('access content', $account));
     case 'edit':
       return user_access('administer nodes', $account)
-          || user_access('edit any annotation content', $account)
-          || (($entity->uid == $account->uid) && user_access('edit own annotation content', $account));
+      || user_access('edit any annotation content', $account)
+      || (($entity->uid == $account->uid) && user_access('edit own annotation content', $account));
     case 'delete':
       return user_access('administer nodes', $account)
-          || user_access('delete any annotation content', $account)
-          || (($entity->uid == $account->uid) && user_access('delete own annotation content', $account));
+      || user_access('delete any annotation content', $account)
+      || (($entity->uid == $account->uid) && user_access('delete own annotation content', $account));
   }
 }
 
@@ -156,105 +156,451 @@ function annotation_ctools_plugin_type() {
  * Hide fields that users should not be able to edit
  **/
 function annotation_form_alter(&$form, &$form_state, $form_id) {
+
   if ($form_id == 'annotation_node_form') {
-    $form['ranges'] = array('#access' => FALSE);
-    $form['annotation_reference'] = array('#access' => FALSE);
-    $form['quote'] = array('#access' => FALSE);
-    $form['uri'] = array('#access' => FALSE);
-    // $form['category'] = array('#access' => FALSE);
+    $form['field_annotation_ranges'] = array('#access' => FALSE);
+    $form['field_annotation_reference'] = array('#access' => FALSE);
+    $form['field_annotation_quote'] = array('#access' => FALSE);
+    $form['field_annotation_uri'] = array('#access' => FALSE);
+    // The audience/group fields should be hidden from here. Otherwise we have to do a fair bit of logic on them similar to what we do in the JS.
+    $form['field_annotation_audience'] = array('#access' => FALSE);
+    $form['og_group_ref'] = array('#access' => FALSE);
+    $form['field_annotation_ins_viewable_co'] = array('#access' => FALSE);
+    $form['group_content_access'] = array('#access' => FALSE);
   }
+
   return($form);
 }
 
 /***
  *
- * Set privacy on annotation nodes
- * Draws heavily on node_access_example.module
- * Translates the Annotator Permission module settings for each annotation
- * into access controls on the Annotation nodes themselves
- * so that Drupal will respect the user's preferences for each annotation
+ * Annotation permissions are handled by:
  *
+ * 1. node access (core) @ admin/people/permissions -> node -> annotation (perms other than view)
+ * 2. content_access (contrib) @ admin/structure/types/manage/annotation/access (view perms and perms other than view)
+ * 3. og_access (contrib) -- group_content_access field (view perm) and @ admin/config/group/permissions/node/course (perms other than view)
+ * 4. the two node grants below (view perm)
  *
- *  Mike Widner <mikewidner@stanford.edu>
+ * Specifically, how each annotation view audience is handled:
+ *
+ * 1. Private -- Least amount of perm handling. Falls unto content_access.
+ * 2. Everyone -- Custom grant annotation_everyone grants access to all authenticated users.
+ * 3. Instructor -- Custom grant annotation_instructor grants access to instructors of selected instructor courses.
+ * 4. Co-learners -- og_access grants access to the selected groups (course and peer groups).
+ * 5. Instructor + Co-learners --
+ *    a) Selected instructor courses which are also selected as co-learner course are handled as #4.
+ *    b) Selected instructor courses which are not also selected as co-learner course are handled as #3.
+ *    c) Unselected instructor courses which are selected as co-learner course are handled as #4.
+ *    d) Unselected instructor courses which are not selected as co-learner courses are handled as #1.
  *
  ***/
 
-// adds a few permissions beyond the default ones for a node type
-function annotation_permission() {
-  return array(
-    'access any private annotation' => array(
-      'title' => t('Access any private annotation'),
-      'description' => t('May view annotations of other users even if marked private.'),
-    ),
-    'edit any private annotation' => array(
-      'title' => t('Edit any private annotation'),
-      'description' => t('May edit annotations of other users even if marked private.'),
-    ),
-  );
+/***
+ * Annotation view grants for "everyone" and "instructor" audience options
+ *
+ * @see http://www.phase2technology.com/blog/drupal-7-node-access-grants-locks-and-keys/
+ * Don't use hook_node_access()
+ *
+ ***/
+
+function annotation_node_grants($account, $op) {
+
+  if ($op == 'view') {
+    $grants = array();
+
+    // "Everyone" grant
+    if (in_array ('authenticated user', $account->roles)) {
+      $grants['annotation_everyone'] = array(1);
+    }
+
+    // Instructors can view private annotations within their courses if the annotation has the course selected in "Instructor Viewable by Instructors of these Courses"
+    if (in_array('Instructor', $account->roles)) {
+      if ($courses_by_instructor = _annotation_courses_by_instructor($account)) {
+        $grants['annotation_instructor'] = $courses_by_instructor;
+      }
+    }
+
+    return $grants;
+  }
 }
 
-// @see http://www.phase2technology.com/blog/drupal-7-node-access-grants-locks-and-keys/
-// Don't use hook_node_access()
-// Use hook_node_grants()
-// So that's what we're doing here
-define('ANNOTATION_GRANT_ACCESS_ALL', 7);
-function annotation_node_grants($account, $op) {
+function annotation_node_access_records($node) {
   $grants = array();
-  // Grant users access to their own annotations
-  if ($account->uid) {
-    $grants['annotation_author'] = array($account->uid);
-  }
 
-  // If "access any private annotation" is allowed to the account,
-  // grant view, update, or delete as necessary.
-  if ($op == 'view' && user_access('access any private annotation', $account)) {
-    $grants['annotation_view'] = array(ANNOTATION_GRANT_ACCESS_ALL);
-  }
+  if ($node->type == 'annotation') {
+    $annotation_wrapper = entity_metadata_wrapper('node', $node);
 
-  if (($op == 'update' || $op == 'delete') && user_access('edit any private annotation', $account)) {
-    $grants['annotation_edit'] = array(ANNOTATION_GRANT_ACCESS_ALL);
+    // "Everyone" grant
+    $audience = $annotation_wrapper->field_annotation_audience->value();
+    if (in_array('everyone', $audience)) {
+      $grants[] = array(
+        'realm' => 'annotation_everyone',
+        'gid' => 1,
+        'grant_view' => 1,
+        'grant_update' => 0,
+        'grant_delete' => 0,
+        'priority' => 100,
+      );
+    }
+
+    // Instructors can view private annotations within their courses if the annotation has the course selected in "Instructor Viewable by Instructors of these Courses"
+    if ($courses = $annotation_wrapper->field_annotation_ins_viewable_co->value()) {
+      // If a selected instructor-viewable course is also selected as one of the co-learner courses, then we do not create this lock (grant), or else students of the course will not be able to view the annotation. We simply skip it and it falls onto to og_access.
+      $co_learner_group_nids = array();
+      $co_learner_group_nodes = $annotation_wrapper->og_group_ref->value();
+      if (count($co_learner_group_nodes)) {
+        foreach ($co_learner_group_nodes as $co_learner_group_node) {
+          $co_learner_group_nids[] = $co_learner_group_node->nid;
+        }
+      }
+      foreach ($courses as $course) {
+        if (!in_array($course->nid, $co_learner_group_nids)) {
+          $grants[] = array(
+            'realm' => 'annotation_instructor',
+            'gid' => $course->nid,
+            'grant_view' => 1,
+            'grant_update' => 0,
+            'grant_delete' => 0,
+            'priority' => 100,
+          );
+        }
+      }
+    }
   }
   return $grants;
 }
 
-function annotation_node_access_records($node) {
-  // We only care about the node if it's been marked private. If not, it is
-  // treated just like any other node and we completely ignore it.
-  // We're using list_boolean as our privacy setting field
-  if (!empty($node->private) && $node->private[$node->language][0]['value'] == 1) {
-    $grants = array();
-    $grants[] = array(
-      'realm' => 'annotation_view',
-      'gid' => ANNOTATION_GRANT_ACCESS_ALL,
-      'grant_view' => $node->status,
-      'grant_update' => 0,
-      'grant_delete' => 0,
-      'priority' => 100,
-    );
-    $grants[] = array(
-      'realm' => 'annotation_edit',
-      'gid' => ANNOTATION_GRANT_ACCESS_ALL,
-      'grant_view' => 1,
-      'grant_update' => 1,
-      'grant_delete' => 1,
-      'priority' => 100,
-    );
 
-    // For the annotation_author realm, the grant ID (gid) is
-    // equivalent to the node author's user ID (UID).
-    // We check the node UID so that we don't grant author privileges for
-    // anonymous nodes to anonymous users.
-    if ($node->uid) {
-      $grants[] = array(
-        'realm' => 'annotation_author',
-        'gid' => $node->uid,
-        'grant_view' => 1,
-        'grant_update' => 1,
-        'grant_delete' => 1,
-        'priority' => 100,
-      );
+/**
+ * Copy values from old annotation fields to new ones.
+ * Called from annotation update hook
+ */
+function annotation_copy_field_values_to_drupal_standard_fields () {
+
+  $map = array (
+    'text' => array ('field_annotation_text', 'text_formatted'),
+    'quote' => array ('field_annotation_quote'),
+    'private' => array ('field_annotation_private'),
+    'annotation_tags' => array ('field_annotation_tags', 'tax_multi'),
+    'category' => array ('field_annotation_category', 'tax_single'),
+    'ranges' => array ('field_annotation_ranges'),
+    'annotation_reference' => array ('field_annotation_reference', 'entity_ref'),
+    'uri' => array ('field_annotation_uri'),
+  );
+
+  // Loop through all annotations
+  $query = new EntityFieldQuery();
+  $query->entityCondition('entity_type', 'node')
+    ->propertyCondition('status', 1)
+    ->propertyCondition('type', array('annotation'));
+  $result = $query->execute();
+  if (isset($result['node'])) {
+    $annotation_nids = array_keys($result['node']);
+    foreach ($annotation_nids as $annotation_nid) {
+      $annotation_wrapper = entity_metadata_wrapper('node', $annotation_nid);
+      print "\n" . $annotation_nid . ": " . $annotation_wrapper->label() . "\n";
+      $copied = 0;
+
+      // Loop through each field
+      foreach ($map as $old_field => $new_field_config) {
+        $new_field = $new_field_config[0];
+        $old_value = $annotation_wrapper->{$old_field}->value();
+        $new_value = $annotation_wrapper->{$new_field}->value();
+
+        // If the old field is populated, then copy it over
+        if (!is_null($old_value)) {
+          print 'Copying value of ' . $old_field . ' to ' . $new_field . "\n";
+          $copied = 1;
+
+          switch ($new_field_config[1]) {
+            case NULL:
+              $value_to_set = $old_value;
+              break;
+            case 'text_formatted':
+              $value_to_set = array ('value' => $old_value);
+              break;
+            case 'tax_single':
+              $value_to_set = $old_value->tid;
+              break;
+            case 'tax_multi':
+              $tids = array();
+              foreach ($old_value as $old_tax_obj) {
+                $tids[] = $old_tax_obj->tid;
+              }
+              $value_to_set = $tids;
+              break;
+            case 'entity_ref':
+              $value_to_set = $old_value->nid;
+              break;
+          }
+
+          // Set it
+          $annotation_wrapper->{$new_field}->set($value_to_set);
+
+        }
+      }
+
+      if ($copied) {
+        // Save the wrapper
+        $annotation_wrapper->save();
+      }
+      else {
+        print "Nothing copied\n";
+      }
     }
-    return $grants;
   }
-  // Return nothing if the node has not been marked private.
+}
+
+// Get possible groups for a document annotation
+// Groups are marked as selected (the default for new annotations). If editing an existing annotation, unselected groups should be unmarked as selected.
+function annotation_get_possible_groups_for_document ($document_node) {
+  $document_wrapper = entity_metadata_wrapper('node', $document_node);
+  if ($user_groups = og_get_groups_by_user()) {
+    $user_groups = array_keys($user_groups['node']);
+
+    // Course groups - for the current document that user is a member of
+    $course_groups = array();
+    $doc_groups = $document_wrapper->og_group_ref->value();
+    if (count($doc_groups)) {
+      foreach ($doc_groups as $doc_group) { // Documents can belong to multiple courses
+        if (in_array($doc_group->nid, $user_groups)) { // User must be in course
+          $course_groups [$doc_group->nid] = array(
+            $doc_group->title,
+            'selected' => 1
+          );
+        }
+      }
+    }
+
+
+    // Peer groups -- all user's peer groups
+    $peer_groups = array();
+    foreach ($user_groups as $user_group) {
+      $node = node_load($user_group);
+      if ($node->type == 'peer_group') {
+        $peer_groups[$user_group] = array(
+          $node->title,
+          'selected' => 1
+        );
+      }
+    }
+
+    return array(
+      'course_groups' => $course_groups,
+      'peer_groups' => $peer_groups
+    );
+  }
+}
+
+
+/**
+ * Annotation views bulk operation custom action and course selection form
+ */
+function annotation_action_info() {
+  return array(
+    'annotation_bulk_add_courses' => array(
+      'type' => 'node',
+      'label' => t('Add to Course'),
+      'behavior' => array('changes_property'),
+      'configurable' => FALSE,
+      'vbo_configurable' => TRUE,
+      'triggers' => array('any'),
+    ),
+
+    'annotation_bulk_remove_courses' => array(
+      'type' => 'node',
+      'label' => t('Remove from Course'),
+      'behavior' => array('changes_property'),
+      'configurable' => FALSE,
+      'vbo_configurable' => FALSE,
+      'triggers' => array('any'),
+    ),
+  );
+}
+
+function annotation_bulk_add_courses_form($settings, &$form_state) {
+  $form = array();
+  global $user;
+  $courses = _annotation_courses_by_instructor ($user);
+  if ($filtered_course = check_plain ($settings['view']->exposed_input['og_group_ref_target_id'])) {
+    $courses = array_diff($courses, [$filtered_course]);
+  }
+  $titled_courses = _annotation_add_dates_to_course_titles ($courses);
+  $form['courses'] = array(
+    '#type' => 'select',
+    '#chosen' => TRUE,
+    '#title' => t('Select the course to add the annotations to'),
+    '#options' => $titled_courses,
+    '#required' => TRUE,
+    #'#default_value' => isset($settings['settings']['courses']) ? $settings['settings']['courses'] : '',
+  );
+  return $form;
+}
+
+function annotation_bulk_add_courses_submit($form, $form_state) {
+  $return['selected_courses'] = $form_state['values']['courses'];
+  return $return;
+}
+
+function annotation_bulk_add_courses(&$node, $context) {
+  return annotation_bulk_add_remove_courses($node, $context, 'add');
+}
+
+function annotation_bulk_remove_courses(&$node, $context) {
+  $context['selected_courses'] = array (
+    check_plain ($context['view_info']['exposed_input']['og_group_ref_target_id'])
+  );
+  return annotation_bulk_add_remove_courses($node, $context, 'remove');
+}
+
+function annotation_bulk_add_remove_courses(&$node, $context, $op) {
+
+  // Filter the selected groups in case of form being hacked
+  $user_groups = og_get_groups_by_user();
+  $user_groups = array_keys($user_groups['node']);
+  $courses_to_change = array();
+  foreach ($context['selected_courses'] as $selected_course) {
+    if (in_array($selected_course, $user_groups)) {
+      if ($selected_course) {
+        $courses_to_change[] = $selected_course;
+      }
+    }
+  }
+
+  // Build the groups to set
+  $annotation_wrapper = entity_metadata_wrapper('node', $node);
+  $groups_to_set = array();
+  $existing_group = $annotation_wrapper->og_group_ref->value();
+  foreach ($existing_group as $existing_group) {
+    $groups_to_set[] = $existing_group->nid;
+  }
+  if ($op == 'add') {
+    $groups_to_set = array_unique(array_merge($groups_to_set, $courses_to_change));
+  }
+  elseif ($op == 'remove') {
+    $groups_to_set = array_diff ($groups_to_set, $courses_to_change);
+  }
+
+  // Set the groups
+  $annotation_wrapper->og_group_ref->set ($groups_to_set);
+  $annotation_wrapper->save();
+}
+
+
+// Get courses by instructor
+// Currently instructor is whomever the course author is. This will change when we add an instructor field to annotations, to allow for assistant instructors
+function _annotation_courses_by_instructor ($account) {
+  $query = new EntityFieldQuery();
+  $query->entityCondition('entity_type', 'node')
+    ->entityCondition('bundle', 'course')
+    ->propertyCondition('uid', $account->uid);
+  $result = $query->execute();
+  if (isset ($result['node'])) {
+    return array_keys($result['node']);
+  }
+  else {
+    return array();
+  }
+}
+
+// Return reformatted course title with dates to help differentiate between same courses between semesters
+function _annotation_add_dates_to_course_titles ($groups) {
+  $re_titled_groups = array();
+  foreach ($groups as $group) {
+    $group_wrapper = entity_metadata_wrapper('node', $group);
+    $group_title = $group_wrapper->title->value();
+    if ($group_wrapper->type->value() == 'course') {
+      $start = date('Y-m-d', $group_wrapper->field_start_date->value());
+      $end = date('Y-m-d', $group_wrapper->field_end_date->value());
+      $date = $start;
+      if ($start <> $end) {
+        $date = $start . ' to ' . $end;
+      }
+      $group_title .= ' (' . $date . ')';
+    }
+    $re_titled_groups[$group_wrapper->nid->value()] = $group_title;
+  }
+  return $re_titled_groups;
+}
+
+// Helper function for bulk annotation view
+function annotation_get_groups_with_annotation ($data, $bundle) {
+
+  $groups = array(
+    "Your Courses" => array(),
+    "Other Courses" => array(),
+    "Peer Groups" => array(),
+  );
+  $private_groups = 0;
+  global $user;
+  $annotation_wrapper = entity_metadata_wrapper('node', $data->nid);
+  $groups_per_annotation = $annotation_wrapper->og_group_ref->value();
+  foreach ($groups_per_annotation as $group_per_annotation) {
+    if (node_access ('view', $group_per_annotation)) {
+      if ($group_per_annotation->type == 'course') {
+        if ($group_per_annotation->uid == $user->uid) {
+          $groups["Your Courses"][] = $group_per_annotation;
+        }
+        else {
+          $groups["Other Courses"][] = $group_per_annotation;
+        }
+      }
+      elseif ($group_per_annotation->type == 'peer_group') {
+        $groups["Peer Groups"][] = $group_per_annotation->nid;
+      }
+    }
+    else {
+      $private_groups++;
+    }
+  }
+
+  $output = "";
+  foreach ($groups as $group_type_header => $group_type_groups) {
+    if (count ($group_type_groups)) {
+      $output .= '<div class = "annotation-groups">' . $group_type_header . '</div>';
+      $formatted_groups = _annotation_add_dates_to_course_titles($group_type_groups);
+      foreach ($formatted_groups as $group_nid => $group_title) {
+        $output .= l($group_title, 'node/' . $group_nid) . '<br/>';
+      }
+    }
+  }
+  return $output;
+}
+
+// Alter the annotations bulk update filter to only show instructor's courses, and to use the chosen widget
+function annotation_form_views_exposed_form_alter(&$form, &$form_state) {
+  if ($form['#id'] == 'views-exposed-form-bulk-update-annotations-page') {
+    $form['og_group_ref_target_id']['#chosen'] = TRUE;
+    global $user;
+    $courses = _annotation_courses_by_instructor ($user);
+    $titled_courses = _annotation_add_dates_to_course_titles ($courses);
+    $titled_courses = array('All' => '- Any -') + $titled_courses;
+    $form['og_group_ref_target_id']['#options'] = $titled_courses;
+
+  }
+}
+
+// Collapsible instructions for using the bulk annotation edit
+function annotation_bulk_update_instructions () {
+
+  $content = '
+<ol>
+<li>Select a course to show its annotations.</li>
+<li>To update all annotations for the selected course, check the top-left box. If there are more annotations than fit on the page, press "Select all x rows in this view".</li>
+<li>To update individual annotations only, select their individual checkboxes.</li>
+<li>Click either "Add to Course" or "Remove from Course" to add/remove the selected annotations.</li>
+<li>If adding annotations, select the course that you would like the annotations to be added to then click "Next".</li>
+</ol>
+<p>Note:  You can only add or remove annotations to or from your own course, even if those annotations are also in courses taught by other instructors and/or in Peer Groups.</p>
+
+';
+
+  return theme(
+    'ctools_collapsible',
+    array(
+      'handle' => 'Instructions',
+      'content' => $content,
+      'collapsed' => TRUE
+    )
+  );
 }

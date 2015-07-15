@@ -1,4 +1,10 @@
 <?php
+/**
+ * @file
+ * Code for the Lacuna Stories Course feature.
+ */
+
+include_once 'course.features.inc';
 
 define("COURSE_NODE_TYPE", 'course');
 define("BIBLIO_NODE_TYPE", 'biblio');
