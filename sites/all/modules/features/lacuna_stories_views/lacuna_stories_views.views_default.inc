@@ -2492,11 +2492,19 @@ function lacuna_stories_views_views_default_views() {
   $handler->display->display_options['filters']['field_display_name_value']['expose']['remember_roles'] = array(
     2 => '2',
     1 => 0,
+    5 => 0,
     3 => 0,
     4 => 0,
-    5 => 0,
     6 => 0,
+    7 => 0,
   );
+  $handler->display->display_options['filters']['field_display_name_value']['expose']['autocomplete_filter'] = 1;
+  $handler->display->display_options['filters']['field_display_name_value']['expose']['autocomplete_items'] = '10';
+  $handler->display->display_options['filters']['field_display_name_value']['expose']['autocomplete_min_chars'] = '0';
+  $handler->display->display_options['filters']['field_display_name_value']['expose']['autocomplete_field'] = 'field_display_name';
+  $handler->display->display_options['filters']['field_display_name_value']['expose']['autocomplete_raw_suggestion'] = 1;
+  $handler->display->display_options['filters']['field_display_name_value']['expose']['autocomplete_raw_dropdown'] = 1;
+  $handler->display->display_options['filters']['field_display_name_value']['expose']['autocomplete_dependent'] = 0;
 
   /* Display: Page */
   $handler = $view->new_display('page', 'Page', 'page');
