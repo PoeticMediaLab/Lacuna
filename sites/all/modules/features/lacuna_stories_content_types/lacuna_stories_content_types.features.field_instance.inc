@@ -137,7 +137,7 @@ function lacuna_stories_content_types_field_default_field_instances() {
     'entity_type' => 'node',
     'field_name' => 'annotation_reference',
     'label' => 'Annotated Content',
-    'required' => TRUE,
+    'required' => FALSE,
     'settings' => array(
       'user_register_form' => FALSE,
     ),
