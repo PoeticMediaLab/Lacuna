@@ -9,19 +9,17 @@ a.nolink {
   color: black;
 }
 
-
-//  for compatibility with new Superfish
-
 #block-superfish-1, #block-superfish-2 {
  float: right;
  padding-right: 50px;
  font-size: 1em;
  font-family: $base-font-family;
+ margin-bottom: 0px;
 }
 
 #superfish-1, #superfish-2 {
- padding-bottom: 100px;
- margin-top: -80px;
+ padding-bottom: 0px;
+ margin-top: 0px;
 }
 
 /* Superfish dropdown menu rules */
