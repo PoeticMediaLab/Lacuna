@@ -507,7 +507,8 @@ PTController.prototype = {
 
     check_if_annotation_visible: function(annotation) {
         // If invisible, jump to correct page
-        if (annotation.highlights[0].parentNode.classList.contains(this.view.elements.hidden)) {
+        var parent_node = annotation.highlights[0].parentNode;
+        if (parent_node.classList.contains(this.view.elements.hidden)) {
             var page = this.model.find_page_that_contains(parent_node);
             this.model.current_page(page);
         }
