@@ -26,6 +26,9 @@
  *  page-turner-update-pages
  *      Expects {start: NUM, [end: NUM]} (last optional)
  *
+ *  annotation-filters-paged
+ *    expects annotation object
+ *
  ******/
 
 /**
@@ -188,6 +191,20 @@ PTModel.prototype = {
   page_total: function() {
     return this.pages.length;
   },
+
+    find_page_that_contains: function(el) {
+        var i,
+            l = this.page_total();
+        for (i = 0; i < l; i++) {
+            var j,k;
+            for (j = 0, k = this.pages[i].length; j < k; j++) {
+                if (el === this.pages[i][j]) {
+                    return i;
+                }
+            }
+        }
+        return undefined;
+    }
 }; // END: PTModel
 
 /**
@@ -453,35 +470,49 @@ function PTController(model, view) {
     $(document).bind('page-turner-brush-moved', function(e, data) {
         self.brush_moved(data);
     });
+
+    $(document).bind('annotation-filters-paged', function(e, annotation) {
+       self.check_if_annotation_visible(annotation);
+    });
 }
 
 PTController.prototype = {
-  get_current_page: function() {
-    var queries = window.location.search.substring(1).split('&');
-    var i, l;
-    for (i = 0, l = queries.length; i < l; i++) {
-      var params = queries[i].split('=');
-      if (params[0] == 'page') {
-        return params[1] - 1; // Because humans count from 1
-      }
-    }
-    return 0;
-  },
+    get_current_page: function() {
+        var queries = window.location.search.substring(1).split('&'),
+            i,
+            l;
+        for (i = 0, l = queries.length; i < l; i++) {
+          var params = queries[i].split('=');
+          if (params[0] == 'page') {
+            return params[1] - 1; // Because humans count from 1
+          }
+        }
+        return 0;
+    },
 
-  change_page: function(args) {
-    if (args.direction == 'prev') {
-      this.model.prev_page();
-    }
-    if (args.direction == 'next') {
-      this.model.next_page();
-    }
-  },
+    change_page: function(args) {
+        if (args.direction == 'prev') {
+          this.model.prev_page();
+        }
+        if (args.direction == 'next') {
+          this.model.next_page();
+        }
+    },
 
-  brush_moved: function(extent) {
-    var pages = {'start': this.view.extent_to_page(extent[0]),
-                 'end': this.view.extent_to_page(extent[1])};
-    this.model.page_range(pages)
-  },
+    brush_moved: function(extent) {
+        var pages = {'start': this.view.extent_to_page(extent[0]),
+                     'end': this.view.extent_to_page(extent[1])};
+        this.model.page_range(pages)
+    },
+
+    check_if_annotation_visible: function(annotation) {
+        // If invisible, jump to correct page
+        var parent_node = annotation.highlights[0].parentNode;
+        if (parent_node.classList.contains(this.view.elements.hidden)) {
+            var page = this.model.find_page_that_contains(parent_node);
+            this.model.current_page(page);
+        }
+    }
 }; // END: PTController
 
 (function($) {

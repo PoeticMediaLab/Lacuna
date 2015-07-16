@@ -210,6 +210,7 @@
           index = total;
       }
       this.Model.set('index', index);
+      $(document).trigger('annotation-filters-paged', this.Model.annotation());
       this.View.drawPagerCount();
       return this.View.scrollTo(this.Model.annotation());
     };
@@ -320,6 +321,7 @@
 
     Model.prototype.toggleHighlights = function() {
       var id, _i, _len, _ref;
+      $(document).trigger('annotation-filters-changed');
       this.state.showHighlights = !this.state.showHighlights;
       if (this.state.showHighlights) {
         this.removeFilter('highlights', 'highlights');
@@ -491,6 +493,7 @@
 
     Model.prototype.filterAnnotations = function(filter, value) {
       var annotation, currentValue, _i, _j, _len, _len2, _ref, _ref2;
+      $(document).trigger('annotation-filters-changed');
       this.activateFilter(filter, value);
       if (filter === 'none') {
         _ref = this.state.annotations;
