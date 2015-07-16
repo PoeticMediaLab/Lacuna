@@ -12,13 +12,20 @@
 // - http://www.adequatelygood.com/2010/3/JavaScript-Module-Pattern-In-Depth
 (function ($, Drupal, window, document, undefined) {
 
-
 // To understand behaviors, see https://drupal.org/node/756722#behaviors
-Drupal.behaviors.my_custom_behavior = {
+Drupal.behaviors.mobileSupport = {
   attach: function(context, settings) {
 
-    // Place your code here.
-
+    /*
+    *   Added listener to fire click event instead of just mouseover when
+    *   front-page material is tapped.  Conditional is a check for tablet
+    *   that should cover most touchscreen devices.
+    */
+    if (window.ontouchstart !== undefined) {
+      $('.view-display-id-materials .field-content a').mouseover(function(event) {
+        $(event.target).trigger('click');
+      });
+    }
   }
 };
 

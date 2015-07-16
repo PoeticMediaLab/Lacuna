@@ -17,7 +17,6 @@ function annotator_init() {
     }
     drupal_add_js(array('annotator' => array('element' => variable_get('annotator_element','.node'))), 'setting');
     drupal_add_js(drupal_get_path('module', 'annotator') . '/js/annotator.js');
-    drupal_add_css(drupal_get_path('module', 'annotator') . '/css/style.css');
     annotator_execute_plugins();
   }
 }

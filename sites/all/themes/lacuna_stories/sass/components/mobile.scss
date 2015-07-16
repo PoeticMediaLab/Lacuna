@@ -1,0 +1,53 @@
+/*
+*   Styles to enhance general site navigation on mobile
+*   devices or smaller screen widths.
+*/
+
+@import "init";
+
+#page {
+
+  //  added to remove gutter on the right at some smaller window
+  //  resize positions
+  overflow-x: hidden;
+
+}
+
+#block-superfish-1 {
+
+    /*
+    *   Added as part of making header menu work on smaller screens.
+    */
+   margin-bottom: 0px;
+
+}
+
+#superfish-1 {
+
+    /*
+    *   Added as part of making header menu work on smaller screens.
+    */
+   padding-bottom: 0px;
+   margin-bottom: 0px;
+   margin-top: 0px;
+
+}
+
+#course-name {
+
+    /*
+    *   Added as part of making header menu work on smaller screens.
+    */
+    padding-left: 10px;
+
+}
+
+body {
+
+    /*
+    *   Stops the body from resizing smaller than 600px; scrollbars
+    *   will appear.
+    */
+    min-width: 600px;
+
+}

@@ -5,4 +5,5 @@ sites/*/settings*.php
 sites/*/files
 sites/*/private
 
-sites/all/themes/lacuna_stories/.sass-cache/
+sites/all/themes/lacuna_stories/.sass-cache
+sites/all/modules/contrib/plupload/*
