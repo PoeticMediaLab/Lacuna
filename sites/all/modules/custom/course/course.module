@@ -151,12 +151,12 @@ function course_switch_course_link ($row, $view) {
   if ($view->current_display == 'not_enrolled') {
     return l($title, 'node/' . $gid);
   };
-  //  global $user;
-  //  if ($current_course = $user->data['current-course']) {
-  //    if ($gid == $current_course) {
-  //      $title .= " (current course)";
-  //    }
-  //  }
+    global $user;
+    if ($current_course = $user->data['current-course']) {
+      if ($gid == $current_course) {
+        $title .= " (current course)";
+      }
+    }
   return l ($title, 'switch-course/' . $gid);
 }
 
