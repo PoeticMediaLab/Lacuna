@@ -238,23 +238,45 @@ function course_views_pre_render(&$view) {
   }
 }
 
-/*
- * Implements hook_form_views_exposed_form_alter
+/**
+ * Implements hook_form_FORM_ID_alter().
  */
 function course_form_views_exposed_form_alter(&$form, &$form_state) {
   if ($form['#id'] == 'views-exposed-form-sewing-kit-page') {
 
-    // Set default value for exposed group filter to the course context
-    $form['og_group_ref_target_id']['#default_value'] = array (course_get_selected_course());
+    // Set default value for group filter to the course context
+    $default_course = course_get_selected_course();
+    $form['og_group_ref_target_id']['#default_value'] = array ($default_course);
 
-    // Restrict the exposed group filter options to groups the user is a member of
-    $options = array();
+    // Restrict the group filter options to groups the user is a member of
+    $group_options = array();
     $groups = og_get_groups_by_user();
     foreach ($groups['node'] as $gid) {
       $group = node_load ($gid);
-      $options[$gid] = $group->title;
+      $group_options[$gid] = $group->title;
     }
-    $form['og_group_ref_target_id']['#options'] = $options;
+    $form['og_group_ref_target_id']['#options'] = $group_options;
+
+    // Restrict the tag filter options to tags on annotations for selected groups only (tags are group-specific)
+    $selected_groups = $form_state['input']['og_group_ref_target_id'];
+    if (!$selected_groups) {
+      $selected_groups = array ($default_course);
+    }
+    $query = new EntityFieldQuery();
+    $query->entityCondition('entity_type', 'taxonomy_term');
+    $query->entityCondition('bundle', 'annotation_tags');
+    $query->fieldCondition('field_annotation_tag_course', 'target_id', $selected_groups);
+    $records = $query->execute();
+    $group_tag_options = array();
+    if (count($records['taxonomy_term'])) {
+      $group_tag_options = array_keys ($records['taxonomy_term']);
+    }
+    foreach ($form['field_annotation_tags_tid']['#options'] as $existing_tag_option_tid => $existing_tag_option_name) {
+      if (!in_array($existing_tag_option_tid, $group_tag_options)) {
+        unset ($form['field_annotation_tags_tid']['#options'][$existing_tag_option_tid]);
+      }
+    }
+
   }
 }
 
