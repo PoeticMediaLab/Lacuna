@@ -12,20 +12,21 @@ a.nolink {
 
 #block-superfish-1 {
   float: right;
-  padding-right: 50px;
   font-size: 1em;
   font-family: $base-font-family;
+  margin-bottom: 0px;
 }
 
 #superfish-1 {
-  padding-bottom: 100px;
-  margin-top: -80px;
+  padding-bottom: 0;
+  margin-top: 0px;
 }
 
 /* Superfish dropdown menu rules */
 .sf-menu {
   font-size: 12pt;
   background-color: $menu-color;
+  margin-bottom: 0px;
 
   li {
     list-style-type: none;
