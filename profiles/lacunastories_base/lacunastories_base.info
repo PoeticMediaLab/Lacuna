@@ -98,6 +98,7 @@ dependencies[] = og_vocab
 ; Other
 dependencies[] = advanced_help
 dependencies[] = backup_migrate
+dependencies[] = chosen
 dependencies[] = entity
 dependencies[] = entity_token
 dependencies[] = file_entity
