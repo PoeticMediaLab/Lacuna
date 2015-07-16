@@ -185,16 +185,12 @@ function course_views_query_alter(&$view, &$query) {
     // Filter course-specific views to the course context
     // Way easier this way than with a custom views filters, and equally performant.
     case 'people':
-      if ($current_course = course_get_selected_course()) {
-        $query->add_where_expression(2, 'users.uid IN (SELECT etid FROM og_membership WHERE gid = ' . $current_course . ')');
-      }
+      $query->add_where_expression(2, 'users.uid IN (SELECT etid FROM og_membership WHERE gid = ' . course_get_selected_course() . ')');
       break;
     case 'responses':
     case 'documents':
-      if ($current_course = course_get_selected_course()) {
-        $query->add_where_expression(2, 'node.nid IN (SELECT etid FROM og_membership WHERE gid = ' . $current_course . ')');
-        $query->group_operator = 'AND'; // For some reason which I can't find in its settings, Better Exposed Filters is changing the query group_operator to OR in the Documents (Materials) view only (not in responses view), which ORs our add_where_expression, producing a result set that includes all memberships in the current course (bad). This fixes that, but keep an eye out for weird behaviour with the Documents (Materials) exposed filters.
-      }
+      $query->add_where_expression(2, 'node.nid IN (SELECT etid FROM og_membership WHERE gid = ' . course_get_selected_course() . ')');
+      $query->group_operator = 'AND'; // For some reason which I can't find in its settings, Better Exposed Filters is changing the query group_operator to OR in the Documents (Materials) view only (not in responses view), which ORs our add_where_expression, producing a result set that includes all memberships in the current course (bad). This fixes that, but keep an eye out for weird behaviour with the Documents (Materials) exposed filters.
       break;
   }
 }
@@ -207,9 +203,7 @@ function course_views_pre_build(&$view) {
 
     // Set default value for exposed filter to the course context
     case 'sewing-kit':
-      if ($current_course = course_get_selected_course()) {
-        $view->display_handler->handlers['filter']['og_group_ref_target_id']->value = array($current_course);
-      }
+      $view->display_handler->handlers['filter']['og_group_ref_target_id']->value = array(course_get_selected_course());
       break;
   }
 }

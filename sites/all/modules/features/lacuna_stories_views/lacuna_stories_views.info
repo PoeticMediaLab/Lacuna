@@ -12,6 +12,7 @@ dependencies[] = popup
 dependencies[] = popup_ui
 dependencies[] = popup_views_integration
 dependencies[] = views
+dependencies[] = views_php
 features[context][] = cite_as
 features[context][] = stitchings
 features[ctools][] = context:context:3
