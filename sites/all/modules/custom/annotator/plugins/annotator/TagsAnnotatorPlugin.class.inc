@@ -44,6 +44,5 @@ class TagsAnnotatorPlugin extends AnnotatorPlugin {
     // drupal_add_library('system', 'ui.autocomplete', TRUE);
     drupal_add_js(drupal_get_path('module', 'annotator') . '/js/annotator_tags.js', array('weight' => 11));
     drupal_add_js(drupal_get_path('module', 'annotator') . '/js/tags.js', array('weight' => 12));
-    drupal_add_css(drupal_get_path('module', 'annotator') . '/css/tags.css');
   }
 }
