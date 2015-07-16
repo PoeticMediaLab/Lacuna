@@ -140,7 +140,8 @@ function annotation_drupal_format($entity, $update = FALSE) {
     $annotation->language = LANGUAGE_NONE;
     // Get real Drupal URL of the annotated content, plus our base path
     $result = annotation_sanitize_uri($entity->uri);
-    $uri = $result['root'] . $result['path'];
+    // save the annotation with relative path only
+    $uri = /* $result['root'] . */ $result['path'];
     $node = menu_get_object($type = 'node', $position = 1, $result['path']);
     $annotation->uri = array();
     $annotation->uri[$annotation->language][0]['url'] = $uri;  // formatted for Link field
@@ -321,7 +322,8 @@ function annotation_api_search() {
   $category= isset($_GET['category'])     ? $_GET['category']        : NULL;
 
   $uri_result = annotation_sanitize_uri($uri);  // get the Drupal path
-  $uri = $uri_result['root'] . $uri_result['path'];
+  // lookup annotation by relative path only
+  $uri = /* $uri_result['root'] . */ $uri_result['path'];
   // Initiate query
   $query = new EntityFieldQuery();
   $query->entityCondition('entity_type', 'node')
@@ -353,7 +355,10 @@ function annotation_api_search() {
     // Note: The URL field is provided by the Link module (https://www.drupal.org/project/link)
     // This module has several values for each entry, not stored in the "value" column
     // Instead, stored in the "url" column - MLW
-    $query->fieldCondition('uri', 'url', $uri, '=');
+    //
+    // Query for a match in the path, not the root URL, just so
+    // old annotations don't disappear.
+    $query->fieldCondition('uri', 'url', '%'.$uri, 'LIKE');
   }
 
   // TODO: convert this to a term reference query
