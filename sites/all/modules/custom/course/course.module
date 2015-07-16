@@ -196,19 +196,6 @@ function course_views_query_alter(&$view, &$query) {
 }
 
 /**
- * Implements hook_views_pre_build().
- */
-function course_views_pre_build(&$view) {
-  switch($view->name) {
-
-    // Set default value for exposed filter to the course context
-    case 'sewing-kit':
-      $view->display_handler->handlers['filter']['og_group_ref_target_id']->value = array(course_get_selected_course());
-      break;
-  }
-}
-
-/**
  * Implements hook_views_pre_render().
  */
 function course_views_pre_render(&$view) {
@@ -251,6 +238,26 @@ function course_views_pre_render(&$view) {
   }
 }
 
+/*
+ * Implements hook_form_views_exposed_form_alter
+ */
+function course_form_views_exposed_form_alter(&$form, &$form_state) {
+  if ($form['#id'] == 'views-exposed-form-sewing-kit-page') {
+
+    // Set default value for exposed group filter to the course context
+    $form['og_group_ref_target_id']['#default_value'] = array (course_get_selected_course());
+
+    // Restrict the exposed group filter options to groups the user is a member of
+    $options = array();
+    $groups = og_get_groups_by_user();
+    foreach ($groups['node'] as $gid) {
+      $group = node_load ($gid);
+      $options[$gid] = $group->title;
+    }
+    $form['og_group_ref_target_id']['#options'] = $options;
+  }
+}
+
 // Get the currently selected course
 function course_get_selected_course () {
   global $user;
@@ -275,22 +282,5 @@ function course_node_validate ($node, $form, &$form_state) {
         form_set_error('field_course_term', t('Multi-term courses must be in consecutive terms.')); // Todo: get this to highlight the term field in the failed form submission. Not sure what's up.
       }
     }
-  }
-}
-
-/*
- * Implements hook_form_views_exposed_form_alter
- */
-function course_form_views_exposed_form_alter(&$form, &$form_state) {
-  if ($form['#id'] == 'views-exposed-form-sewing-kit-page') {
-
-    // Restrict the exposed group options to groups the user is a member of
-    $options = array();
-    $groups = og_get_groups_by_user();
-    foreach ($groups['node'] as $gid) {
-      $group = node_load ($gid);
-      $options[$gid] = $group->title;
-    }
-    $form['og_group_ref_target_id']['#options'] = $options;
   }
 }
