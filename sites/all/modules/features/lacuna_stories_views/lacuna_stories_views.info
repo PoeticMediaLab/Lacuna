@@ -36,3 +36,4 @@ features[views_view][] = threads
 features[views_view][] = user_s_comments
 features[views_view][] = user_s_responses
 project path = sites/all/modules/features
+files[] = lacuna_stories_views_handler_filter_author_select.inc
