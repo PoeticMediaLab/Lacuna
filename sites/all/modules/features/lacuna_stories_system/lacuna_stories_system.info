@@ -10,7 +10,6 @@ dependencies[] = advanced_help
 dependencies[] = annotation
 dependencies[] = annotator
 dependencies[] = backup_migrate
-dependencies[] = better_exposed_filters
 dependencies[] = biblio
 dependencies[] = blog
 dependencies[] = comment

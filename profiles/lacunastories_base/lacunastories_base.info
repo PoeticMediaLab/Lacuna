@@ -126,9 +126,7 @@ dependencies[] = popup_ui
 dependencies[] = superfish
 dependencies[] = wysiwyg
 ; Views
-dependencies[] = better_exposed_filters
 dependencies[] = views
-dependencies[] = views_autocomplete_filters
 dependencies[] = views_bulk_operations
 dependencies[] = views_ui
 ; Visualization

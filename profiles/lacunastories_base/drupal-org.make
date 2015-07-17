@@ -175,14 +175,8 @@ projects[superfish][subdir] = "contrib"
 projects[wysiwyg][version] = "2.x-dev"
 projects[wysiwyg][subdir] = "contrib"
 
-projects[better_exposed_filters][version] = "3.2"
-projects[better_exposed_filters][subdir] = "contrib"
-
 projects[views][version] = "3.11"
 projects[views][subdir] = "contrib"
-
-projects[views_autocomplete_filters][version] = "1.2"
-projects[views_autocomplete_filters][subdir] = "contrib"
 
 projects[views_bulk_operations][version] = "3.2"
 projects[views_bulk_operations][subdir] = "contrib"
