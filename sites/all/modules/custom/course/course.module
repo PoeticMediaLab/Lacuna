@@ -244,6 +244,18 @@ function course_views_pre_render(&$view) {
 function course_form_views_exposed_form_alter(&$form, &$form_state) {
   if ($form['#id'] == 'views-exposed-form-sewing-kit-page') {
 
+    // Use ajax to update the tag options based on the selected course
+    // Note: views patch required to get exposed filters to work with ajax callbacks: https://www.drupal.org/node/1183418#comment-8476481
+    if(!empty($form_state['values'])) {
+      $form_state['input'] = array_merge($form_state['input'], $form_state['values']);
+    }
+    $form['og_group_ref_target_id']['#ajax'] = array(
+      'callback' => '_course_ajax_update_tags_filter_when_course_changed',
+      'wrapper' => 'tags_wrapper',
+    );
+    $form['field_annotation_tags_tid']['#prefix'] = '<div id="tags_wrapper">';
+    $form['field_annotation_tags_tid']['#suffix'] = '</div>';
+
     // Set default value for group filter to the course context
     $default_course = course_get_selected_course();
     $form['og_group_ref_target_id']['#default_value'] = array ($default_course);
@@ -278,6 +290,10 @@ function course_form_views_exposed_form_alter(&$form, &$form_state) {
     }
 
   }
+}
+
+function _course_ajax_update_tags_filter_when_course_changed($form, $form_state) {
+  return $form['field_annotation_tags_tid'];
 }
 
 // Get the currently selected course
