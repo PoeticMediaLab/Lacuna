@@ -21,6 +21,7 @@ features[features_api][] = api:2
 features[views_view][] = all_content
 features[views_view][] = all_emails
 features[views_view][] = bibliography
+features[views_view][] = bulk_update_annotations
 features[views_view][] = cite_as
 features[views_view][] = curate_tags
 features[views_view][] = documents

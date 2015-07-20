@@ -1,9 +1,0 @@
-/* Some change in the design of Annotator */
-.annotator-editor .annotator-widget{
-  min-width: 250px;
-}
-
-/* Fix to show icons */
-.annotator-editor a:after {
-  content: none;
-}

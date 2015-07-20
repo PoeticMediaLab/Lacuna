@@ -2,6 +2,9 @@
 
 CKEDITOR.disableAutoInline = true;
 
+// Exclude every id starting with 'cke_' in ajax_html_ids during AJAX requests.
+Drupal.wysiwyg.excludeIdSelectors.wysiwyg_ckeditor = ['[id^="cke_"]'];
+
 Drupal.wysiwyg.editor.init.ckeditor = function(settings) {
   // Plugins must only be loaded once. Only the settings from the first format
   // will be used but they're identical anyway.
