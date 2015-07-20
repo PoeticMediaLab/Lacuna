@@ -246,9 +246,9 @@ function PTView(model, elements) {
         .style("padding-top", self.offset + "px");
 
     // Add the "Page X of Y" div
-    d3.select('#' + self.elements.pages.loc).append('div').attr('id', self.elements.pages.id + '-container').append('span').attr('id', self.elements.pages.id);
-      d3.select('#' + self.elements.pages.id + '-container').append('input').attr('type', 'text').attr('id', self.elements.pages.id + '-input').attr('size', 5);
-      d3.select('#' + self.elements.pages.id + '-container').append('span').attr('id', self.elements.pages.total).text(' of ' + self.model.page_total());;
+    d3.select('#' + self.elements.pages.loc).append('div').attr('id', self.elements.pages.container).append('span').attr('id', self.elements.pages.id);
+      d3.select('#' + self.elements.pages.container).append('input').attr('type', 'text').attr('id', self.elements.pages.input).attr('size', 5);
+      d3.select('#' + self.elements.pages.container).append('span').attr('id', self.elements.pages.total).text(' of ' + self.model.page_total());;
 
     // Set our sizing variables
     self.navbar.width = parseInt(d3.select('#' + self.elements.navbar).style('width'), 10) * .9; // svg width = 90%
@@ -506,6 +506,7 @@ PTController.prototype = {
           'content': 'article',
           'pages': {
             'loc': 'navigation',
+            'container': 'page-turner-pages-container',
             'id': 'page-turner-pages',
             'input': 'page-turner-pages-input',
             'total': 'page-turner-pages-total'
