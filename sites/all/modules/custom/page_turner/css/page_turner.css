@@ -17,9 +17,11 @@ rect#page-turner-nav {
 }
 
 #page-turner-brush {
-  fill: rgba(136, 181, 81, .125);
-  stroke:rgb(136, 181, 81);
+  fill: transparent;
+  stroke: rgba(136, 181, 81, .5);
+  stroke-width: 4px;
   shape-rendering: crispEdges;
+  height: 60px;
 }
 
 #page-turner-pages {

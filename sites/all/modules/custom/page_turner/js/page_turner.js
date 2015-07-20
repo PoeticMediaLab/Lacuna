@@ -206,6 +206,7 @@ function PTView(model, elements) {
   self.brush = {};
   self.pages = {};  // current page(s)
 
+    self.offset = 10;    // for a y-axis offset
   draw_navbar();
   draw_navbar_ticks();
   add_page_numbers();
@@ -226,7 +227,8 @@ function PTView(model, elements) {
       .attr('id', self.elements.navbar);
 
     navbar.append('div').attr('id', self.elements.pager.prev.id)
-      .classed(self.elements.pager.prev.classes.join(' '), true);
+        .classed(self.elements.pager.prev.classes.join(' '), true)
+        .style("padding-top", self.offset + "px");;
 
     self.svg = d3.select('#' + self.elements.navbar).append("svg");
     self.navbar_svg = self.svg
@@ -235,10 +237,13 @@ function PTView(model, elements) {
         .attr("height", "100%")
       .append("g")
       .append("rect")
-        .attr("id", self.elements.navbar);
+        .attr("id", self.elements.navbar)
+        .attr("y", self.offset)
+    ;
 
     navbar.append('div').attr('id', self.elements.pager.next.id)
-      .classed(self.elements.pager.next.classes.join(' '), true);
+        .classed(self.elements.pager.next.classes.join(' '), true)
+        .style("padding-top", self.offset + "px");
 
     // Add the "Page X of Y" div
     d3.select('#' + self.elements.pages.loc).append('div').attr('id', self.elements.pages.id);
@@ -262,7 +267,7 @@ function PTView(model, elements) {
     // Draw ticks now that we have our ratios
     self.svg.append("g")
       .attr("class", "page-turner-ticks")
-      .attr("transform", "translate(0," + self.navbar.height + ")")
+      .attr("transform", "translate(0," + (self.navbar.height + self.offset) + ")")
       .call(d3.svg.axis()
         .scale(self.navbar.x)
         .orient("bottom")
@@ -432,7 +437,8 @@ PTView.prototype = {
         .attr("id", this.elements.brush)
         .call(this.brush)
       .selectAll("rect")
-        .attr("height", this.navbar.height)
+        .attr("height", this.navbar.height + this.offset)
+        .attr("y", this.offset / 2)
     ;
   },
 
