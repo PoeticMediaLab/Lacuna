@@ -17,15 +17,20 @@ rect#page-turner-nav {
 }
 
 #page-turner-brush {
-  fill: transparent;
-  stroke: rgba(136, 181, 81, .5);
-  stroke-width: 4px;
+  fill: rgba(200,200,200, .1);
+  stroke: rgba(100, 100, 100, .75);
+  stroke-width: 1px;
   shape-rendering: crispEdges;
   height: 60px;
 }
 
-#page-turner-pages {
+#page-turner-pages-container {
   float: right;
+  font-size: 12px;
+}
+
+#page-turner-pages-input {
+  text-align: center;
 }
 
 .page-turner-ticks line,

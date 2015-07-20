@@ -246,7 +246,9 @@ function PTView(model, elements) {
         .style("padding-top", self.offset + "px");
 
     // Add the "Page X of Y" div
-    d3.select('#' + self.elements.pages.loc).append('div').attr('id', self.elements.pages.id);
+    d3.select('#' + self.elements.pages.loc).append('div').attr('id', self.elements.pages.id + '-container').append('span').attr('id', self.elements.pages.id);
+      d3.select('#' + self.elements.pages.id + '-container').append('input').attr('type', 'text').attr('id', self.elements.pages.id + '-input').attr('size', 5);
+      d3.select('#' + self.elements.pages.id + '-container').append('span').attr('id', self.elements.pages.total).text(' of ' + self.model.page_total());;
 
     // Set our sizing variables
     self.navbar.width = parseInt(d3.select('#' + self.elements.navbar).style('width'), 10) * .9; // svg width = 90%
@@ -365,18 +367,19 @@ PTView.prototype = {
   },
 
   update_page_numbers: function(pages) {
-    var text = 'Page';
+    var text = 'Page',
+        input;
     var range = pages.end - pages.start > 1;
     if (range) {
       text += 's';
     }
     text += ' ';
-    text += pages.start + 1;  // humans count from 1
+    input = pages.start + 1;  // humans count from 1
     if (range) {
-      text += '–' + pages.end;
+      input += '–' + pages.end;
     }
-    text += ' of ' + this.model.page_total();
     d3.select('#' + this.elements.pages.id).text(text);
+    d3.select('#' + this.elements.pages.input).attr('value', input);
   },
 
   extent_to_page: function(extent) {
@@ -437,8 +440,8 @@ PTView.prototype = {
         .attr("id", this.elements.brush)
         .call(this.brush)
       .selectAll("rect")
-        .attr("height", this.navbar.height + this.offset)
-        .attr("y", this.offset / 2)
+        .attr("height", this.navbar.height)
+        .attr("y", this.offset)
     ;
   },
 
@@ -503,7 +506,9 @@ PTController.prototype = {
           'content': 'article',
           'pages': {
             'loc': 'navigation',
-            'id': 'page-turner-pages'
+            'id': 'page-turner-pages',
+            'input': 'page-turner-pages-input',
+            'total': 'page-turner-pages-total'
           },
           'page_num': 'page-turner-number',
             'navbar_parent': 'page-turner-nav-parent',

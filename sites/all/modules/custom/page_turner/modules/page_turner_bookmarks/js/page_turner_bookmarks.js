@@ -164,9 +164,10 @@ PTBView.prototype = {
             .attr('id', this.elements.bookmark.id + page)
             .classed(this.elements.bookmark.classes.join(' '), true)
             .attr("x1", 0)
+            //.attr("y1", -parseInt(d3.select('#' + this.elements.navbar.id).style('height'), 10))
             .attr("y1", 0)
             .attr("x2", 0)
-            .attr("y2", 20)
+            .attr("y2", 25)
             .on('click', function(d) { $(document).trigger('page-turner-bookmark-clicked', page); });
     }
 };
@@ -251,11 +252,11 @@ PTBController.prototype = {
             'bookmark_add' : 'page-turner-bookmark-add',
             'bookmark_button' : {
                 'id' : 'page-turner-bookmark-button',
-                'container' : 'section.region-sidebar-second',
+                'container' : 'div#page-turner-pages-container',
                 'classes': [
                     'page-turner-bookmark-button',
-                    'fa',
-                    'fa-bookmark'
+                    //'fa',
+                    //'fa-bookmark'
                 ],
             },
             'navbar' : {
