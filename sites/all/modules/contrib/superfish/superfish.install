@@ -20,15 +20,15 @@ function superfish_enable() {
   drupal_set_message(check_plain('To use Superfish go to the administer blocks page and enable a Superfish block.'));
 }
 
-
 /**
  * Implements hook_requirements().
  */
 function superfish_requirements($phase) {
   $requirements = array();
   if ($phase == 'runtime') {
-    // Ensure translations do not break at install time
+    // Ensure translations do not break at install time.
     $t = get_t();
+    // Ensure the Superfish library is present.
     $requirements['superfish']['title'] = $t('Superfish library');
     if (module_exists('libraries') && function_exists('libraries_get_libraries')) {
       $library = libraries_get_libraries();
@@ -47,10 +47,50 @@ function superfish_requirements($phase) {
     else {
       $requirements['superfish']['value'] = $t('Not installed');
       $requirements['superfish']['severity'] = REQUIREMENT_ERROR;
-      $requirements['superfish']['description'] = $t('Please download the Superfish library from !link.', array('!link' => l('http://drupal.org/project/superfish', 'http://drupal.org/project/superfish')));
+      $requirements['superfish']['description'] = $t('Please download the Superfish library from !link.', array('!link' => l($t('Superfish project homepage'), 'http://drupal.org/project/superfish')));
+    }
+
+    // Check the uploaded Superfish library version.
+    if (superfish_library_version() != '1.2-beta2') {
+      $requirements['superfish']['value'] = $t('Not supported');
+      $requirements['superfish']['severity'] = REQUIREMENT_ERROR;
+      $requirements['superfish']['description'] = $t('The Superfish library requires an update. You can find the update instructions on !link.', array('!link' => l($t('Superfish project homepage'), 'http://drupal.org/project/superfish')));
     }
   }
   return $requirements;
+}
+
+/**
+ * A function to check the Superfish library version.
+ */
+function superfish_library_version() {
+  // Ensure the Libraries API module is installed and working.
+  if (module_exists('libraries') && function_exists('libraries_get_path') && libraries_get_path('superfish') != '') {
+    $directory = libraries_get_path('superfish');
+  }
+  // Otherwise use the default directory.
+  elseif (file_exists('profiles/' . drupal_get_profile() . '/libraries/superfish')) {
+    $directory = 'profiles/' . drupal_get_profile() . '/libraries/superfish';
+  }
+  else {
+    $directory = 'sites/all/libraries/superfish';
+  }
+
+  // Get the library version.
+  if (file_exists($directory . '/VERSION')) {
+    $version = file_get_contents($directory . '/VERSION');
+    // Removing blank lines and white spaces.
+    $version = preg_replace("/(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+/", "\n", trim($version));
+    if (!empty($version)) {
+      return $version;
+    }
+    else {
+      return '';
+    }
+  }
+  else {
+    return '';
+  }
 }
 
 /**
