@@ -76,13 +76,6 @@ function course_menu() {
     'type' => MENU_SUGGESTED_ITEM,
     'file' => 'course.pages.inc',
   );
-  // Empty my-courses page, added onto via context
-  $items['my-courses'] = array(
-    'page callback' => 'course_blank_page',
-    'access callback' => TRUE,
-    'type' => MENU_SUGGESTED_ITEM,
-    'file' => 'course.pages.inc',
-  );
   // "About This Course" callback. Link is defined separately in the feature.
   $items['about-course'] = array(
     'title' => 'About This Course',
@@ -226,12 +219,6 @@ function course_views_pre_render(&$view) {
       // "Not Enrolled" title is redundant when anon is viewing (front page), so hide the title
       if (user_is_anonymous()) {
         $view->set_title(' '); // space required
-      }
-      // "Enrolled" title is redundant when on the my-courses page, so hide the title
-      elseif ($view->current_display == 'enrolled') {
-        if (array_key_exists ('my_courses', context_active_contexts())) {
-          $view->set_title(' '); // space required
-        }
       }
       break;
 
