@@ -545,10 +545,10 @@ PTController.prototype = {
 
     parse_page_number_input: function(el) {
         var value, pages;
-        // Strip returns, spaces, and non-numeric or dash characters
-        value = el.innerHTML.replace(/[\n\r ]/g, '').replace(/(<br ?\/?>)*/g, '').replace(/[^\d-]/g,'');
-        pages = value.split('-');
-        if (pages.length >= 2) {
+        // Strip returns, spaces, and non-numeric or dash characters, replaces hyphen with endash
+        value = el.innerHTML.replace(/[\n\r ]/g, '').replace(/(<br ?\/?>)*/g, '').replace(/[^\d-–]/g,'').replace(/-/g, '–');
+        pages = value.split('–');
+        if (pages.length == 2) {
             pages = this.model.page_range({start: parseInt(pages[0], 10) - 1, end: parseInt(pages[1], 10)});
         } else if (value.match(/^\d+$/)) {
             // Reset the page range to 1, if one is already set
