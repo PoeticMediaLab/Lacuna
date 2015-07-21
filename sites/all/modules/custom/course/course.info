@@ -152,6 +152,7 @@ features[variable][] = menu_parent_course
 features[variable][] = node_options_course
 features[variable][] = node_preview_course
 features[variable][] = node_submitted_course
+features[variable][] = pathauto_node_course_pattern
 features[variable][] = site_frontpage
 features[views_view][] = courses
 project path = sites/all/modules/custom
