@@ -232,131 +232,133 @@ PTModel.prototype = {
  * Draws user interface elements
  **/
 function PTView(model, elements) {
-  var self = this;
-  self.model = model;
-  // Elements we expect to add # when selecting
-  // so we can use them as ids w/o problems
-  self.elements = elements;
-  self.navbar = {};
-  self.brush = {};
-  self.pages = {};  // current page(s)
+    var self = this;
+    self.model = model;
+    // Elements we expect to add # when selecting
+    // so we can use them as ids w/o problems
+    self.elements = elements;
+    self.navbar = {};
+    self.brush = {};
+    self.pages = {};  // current page(s)
 
     self.offset = 10;    // for a y-axis offset
-  draw_navbar();
-  draw_navbar_ticks();
-  add_page_numbers();
+    draw_navbar();
+    draw_navbar_ticks();
+    draw_page_x_of_y();
+    add_page_numbers();
+    create_events(); // Must come *after* navbar created for click binding
 
-  create_events(); // Must come *after* navbar created for click binding
-
-  // Update view when page numbers in model change
-  $(document).bind('page-turner-page-changed', function(e, pages) {
-    self.update_brush(pages);
-    self.update_pages(pages);
-  });
-
-  function draw_navbar() {
-    // Add our pager elements to DOM
-    // Must be done first so we can bind click events
-    var navbar = d3.select(document.getElementsByTagName(self.elements.content)[0].parentElement)
-      .insert('div', self.elements.content)
-      .attr('id', self.elements.navbar);
-
-    navbar.append('div').attr('id', self.elements.pager.prev.id)
-        .classed(self.elements.pager.prev.classes.join(' '), true)
-        .style("padding-top", self.offset + "px");;
-
-    self.svg = d3.select('#' + self.elements.navbar).append("svg");
-    self.navbar_svg = self.svg
-        .attr("id", self.elements.navbar_parent)
-        .attr("width", "90%") // Note: affects width calculations
-        .attr("height", "100%")
-      .append("g")
-      .append("rect")
-        .attr("id", self.elements.navbar)
-        .attr("y", self.offset)
-    ;
-
-    navbar.append('div').attr('id', self.elements.pager.next.id)
-        .classed(self.elements.pager.next.classes.join(' '), true)
-        .style("padding-top", self.offset + "px");
-
-    // Add the "Page X of Y" div
-    d3.select('#' + self.elements.pages.loc).append('div').attr('id', self.elements.pages.container).append('span').attr('id', self.elements.pages.id);
-      d3.select('#' + self.elements.pages.container).append('span').attr('contenteditable', true).attr('id', self.elements.pages.numbers);
-      d3.select('#' + self.elements.pages.container).append('span').attr('id', self.elements.pages.total).text(' of ' + self.model.page_total());;
-
-    // Set our sizing variables
-    self.navbar.width = parseInt(d3.select('#' + self.elements.navbar).style('width'), 10) * .9; // svg width = 90%
-    self.navbar.height = parseInt(d3.select('#' + self.elements.navbar).style('height'), 10);
-    self.navbar.x = d3.scale.linear().range([0, self.navbar.width]);
-    self.navbar.ratio = self.model.page_total();
-  }
-
-  function draw_navbar_ticks() {
-    // Draw tick marks in navbar
-    // Draw markers for page breaks
-    var tickValues = Array();
-    var i, l;
-    for (i = 0, l = self.model.page_total(); i < l; i++ ) {
-      tickValues.push((1 / self.navbar.ratio) * i);
-    }
-
-    // Draw ticks now that we have our ratios
-    self.svg.append("g")
-      .attr("class", "page-turner-ticks")
-      .attr("transform", "translate(0," + (self.navbar.height + self.offset) + ")")
-      .call(d3.svg.axis()
-        .scale(self.navbar.x)
-        .orient("bottom")
-        .tickValues(tickValues)
-        .tickFormat("")
-        .tickSize(-self.navbar.height))
-      .selectAll(".tick")
-        .classed("page-turner-break", function (d) {
-          return self.model.is_break(self.navbar.ratio * d);
-        }.bind(self))
-    ;
-  }
-
-  function add_page_numbers() {
-    // Add page numbers at the bottom of every page
-    var i, l;
-    for (i = 0, l = self.model.page_total(); i < l; i++) {
-      var selection = d3.selectAll(self.model.get_page(i));
-      // selectAll returns an array of arrays
-      // but we'll only get one result for each page, cuz they're unique
-      d3.select(selection[0][selection[0].length - 1]).append('div').classed(self.elements.page_num, true).text(i + 1);
-    }
-  }
-
-  function create_events() {
-    // Set up HTML listeners for page prev/next
-    $('#' + self.elements.pager.next.id).on("click", function () {
-      $(document).trigger('page-turner-pager-clicked', { direction: 'next' });
+    // Update view when page numbers in model change
+    $(document).bind('page-turner-page-changed', function(e, pages) {
+        self.update_brush(pages);
+        self.update_pages(pages);
     });
 
-    d3.select('#' + self.elements.pager.prev.id).on("click", function () {
-      $(document).trigger('page-turner-pager-clicked', { direction: 'prev' });
-    });
+    function draw_navbar() {
+        // Add our pager elements to DOM
+        // Must be done first so we can bind click events
+        var navbar = d3.select(document.getElementsByTagName(self.elements.content)[0].parentElement)
+          .insert('div', self.elements.content)
+          .attr('id', self.elements.navbar);
 
-    // Turn pages on arrow key presses
-    document.addEventListener("keydown", function (event) {
-      if (event.defaultPrevented) {
-        return; // Should do nothing if the key event was already consumed.
-      }
-      switch (event.keyIdentifier) {
-        case "Left":
-            $(document).trigger('page-turner-pager-clicked', { direction: 'prev' });
-            break;
-        case "Right":
+        navbar.append('div').attr('id', self.elements.pager.prev.id)
+            .classed(self.elements.pager.prev.classes.join(' '), true)
+            .style("padding-top", self.offset + "px");;
+
+        self.svg = d3.select('#' + self.elements.navbar).append("svg");
+        self.navbar_svg = self.svg
+            .attr("id", self.elements.navbar_parent)
+            .attr("width", "90%") // Note: affects width calculations
+            .attr("height", "100%")
+          .append("g")
+          .append("rect")
+            .attr("id", self.elements.navbar)
+            .attr("y", self.offset)
+        ;
+
+        navbar.append('div').attr('id', self.elements.pager.next.id)
+            .classed(self.elements.pager.next.classes.join(' '), true)
+            .style("padding-top", self.offset + "px");
+
+        // Set our sizing variables
+        self.navbar.width = parseInt(d3.select('#' + self.elements.navbar).style('width'), 10) * .9; // svg width = 90%
+        self.navbar.height = parseInt(d3.select('#' + self.elements.navbar).style('height'), 10);
+        self.navbar.x = d3.scale.linear().range([0, self.navbar.width]);
+        self.navbar.ratio = self.model.page_total();
+    }
+
+    function draw_page_x_of_y() {
+        // Add the "Page X of Y" div
+        d3.select('#' + self.elements.pages.loc).append('div').attr('id', self.elements.pages.container).append('span').attr('id', self.elements.pages.id);
+        d3.select('#' + self.elements.pages.container).append('span').attr('contenteditable', true).attr('id', self.elements.pages.numbers);
+        d3.select('#' + self.elements.pages.container).append('span').attr('id', self.elements.pages.total).text(' of ' + self.model.page_total());
+    }
+
+    function draw_navbar_ticks() {
+        // Draw tick marks in navbar
+        // Draw markers for page breaks
+        var tickValues = Array();
+        var i, l;
+        for (i = 0, l = self.model.page_total(); i < l; i++ ) {
+          tickValues.push((1 / self.navbar.ratio) * i);
+        }
+
+        // Draw ticks now that we have our ratios
+        self.svg.append("g")
+          .attr("class", "page-turner-ticks")
+          .attr("transform", "translate(0," + (self.navbar.height + self.offset) + ")")
+          .call(d3.svg.axis()
+            .scale(self.navbar.x)
+            .orient("bottom")
+            .tickValues(tickValues)
+            .tickFormat("")
+            .tickSize(-self.navbar.height))
+          .selectAll(".tick")
+            .classed("page-turner-break", function (d) {
+              return self.model.is_break(self.navbar.ratio * d);
+            }.bind(self))
+        ;
+    }
+
+    function add_page_numbers() {
+        // Add page numbers at the bottom of every page
+        var i, l;
+        for (i = 0, l = self.model.page_total(); i < l; i++) {
+          var selection = d3.selectAll(self.model.get_page(i));
+          // selectAll returns an array of arrays
+          // but we'll only get one result for each page, cuz they're unique
+          d3.select(selection[0][selection[0].length - 1]).append('div').classed(self.elements.page_num, true).text(i + 1);
+        }
+    }
+
+    function create_events() {
+        // Set up HTML listeners for page prev/next
+        $('#' + self.elements.pager.next.id).on("click", function () {
             $(document).trigger('page-turner-pager-clicked', { direction: 'next' });
-            break;
-        default:
-            return; // Quit when this doesn't handle the key event.
-      }
-      event.preventDefault();
-    }, true);
-  }
+        });
+
+        d3.select('#' + self.elements.pager.prev.id).on("click", function () {
+            $(document).trigger('page-turner-pager-clicked', { direction: 'prev' });
+        });
+
+        // Turn pages on arrow key presses
+        document.addEventListener("keydown", function (event) {
+            if (event.defaultPrevented) {
+                return; // Should do nothing if the key event was already consumed.
+            }
+            switch (event.keyIdentifier) {
+                case "Left":
+                    $(document).trigger('page-turner-pager-clicked', { direction: 'prev' });
+                    break;
+                case "Right":
+                    $(document).trigger('page-turner-pager-clicked', { direction: 'next' });
+                    break;
+                default:
+                    return; // Quit when this doesn't handle the key event.
+            }
+            event.preventDefault();
+        }, true);
+    }
 }
 
 PTView.prototype = {
