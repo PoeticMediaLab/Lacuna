@@ -63,19 +63,6 @@ function lacunastories_base_block_view($delta)
 }
 
 /**
- * Implementing hook_block_info_alter
- * enabling superfish 1 block for main menu.
- */
-function lacunastories_base_block_info_alter(&$blocks, $theme, $code_blocks){
-    $regions = system_region_list($theme, REGIONS_VISIBLE);
-    if(array_key_exists('header', $regions)){
-        $blocks['superfish'][1]['status'] = 1;    
-        $blocks['superfish'][1]['region'] = 'header';    
-        $blocks['superfish'][1]['title'] = "<none>";
-    }
-}
-
-/**
  * Implements hook_install_tasks().
  * Profile install tasks run after the main profile installation in lacunastories_base_install
  */
@@ -86,7 +73,6 @@ function lacunastories_base_install_tasks($install_state) {
     'lacunastories_base_set_basic_pages_permissions' => array(),
     'lacunastories_base_manage_theme_settings' => array(), // hide main_menu(it belongs to superfish) and secondary_menu
     'lacunastories_base_set_jquery_default' => array(), // set JQuery version to 1.7
-    'lacunastories_base_set_superfish_settings' => array(),
     'lacunastories_base_set_media_settings' => array(),
     'lacunastories_base_set_annotator_settings' => array(),
     'lacunastories_base_default_tax_terms' => array(),
@@ -281,12 +267,6 @@ function lacunastories_base_manage_theme_settings()
 function lacunastories_base_set_jquery_default()
 {
   variable_set('jquery_update_jquery_version', '1.7');
-}
-
-// set style for superfish
-function lacunastories_base_set_superfish_settings(){
-  variable_set("superfish_style_1", "white");
-  variable_set("superfish_shadow_1", 0);
 }
 
 // set media settings
