@@ -604,8 +604,109 @@ function lacuna_stories_menus_menu_default_menu_links() {
     'customized' => 1,
     'parent_identifier' => 'main-menu_create:<nolink>',
   );
+  // Exported menu link: menu-institutional-menu_about:http://lacunastories.com/
+  $menu_links['menu-institutional-menu_about:http://lacunastories.com/'] = array(
+    'menu_name' => 'menu-institutional-menu',
+    'link_path' => 'http://lacunastories.com/',
+    'router_path' => '',
+    'link_title' => 'About',
+    'options' => array(
+      'attributes' => array(
+        'title' => '',
+      ),
+      'identifier' => 'menu-institutional-menu_about:http://lacunastories.com/',
+    ),
+    'module' => 'menu',
+    'hidden' => 0,
+    'external' => 1,
+    'has_children' => 0,
+    'expanded' => 1,
+    'weight' => -50,
+    'customized' => 1,
+  );
+  // Exported menu link: menu-institutional-menu_courses:<front>
+  $menu_links['menu-institutional-menu_courses:<front>'] = array(
+    'menu_name' => 'menu-institutional-menu',
+    'link_path' => '<front>',
+    'router_path' => '',
+    'link_title' => 'Courses',
+    'options' => array(
+      'attributes' => array(
+        'title' => '',
+      ),
+      'identifier' => 'menu-institutional-menu_courses:<front>',
+    ),
+    'module' => 'menu',
+    'hidden' => 0,
+    'external' => 1,
+    'has_children' => 0,
+    'expanded' => 0,
+    'weight' => 0,
+    'customized' => 1,
+  );
+  // Exported menu link: menu-institutional-menu_log-in:user/login
+  $menu_links['menu-institutional-menu_log-in:user/login'] = array(
+    'menu_name' => 'menu-institutional-menu',
+    'link_path' => 'user/login',
+    'router_path' => 'user/login',
+    'link_title' => 'Log In',
+    'options' => array(
+      'attributes' => array(
+        'title' => '',
+      ),
+      'identifier' => 'menu-institutional-menu_log-in:user/login',
+    ),
+    'module' => 'menu',
+    'hidden' => 0,
+    'external' => 0,
+    'has_children' => 0,
+    'expanded' => 0,
+    'weight' => 0,
+    'customized' => 1,
+  );
+  // Exported menu link: menu-institutional-menu_log-out:user/logout
+  $menu_links['menu-institutional-menu_log-out:user/logout'] = array(
+    'menu_name' => 'menu-institutional-menu',
+    'link_path' => 'user/logout',
+    'router_path' => 'user/logout',
+    'link_title' => 'Log Out',
+    'options' => array(
+      'attributes' => array(
+        'title' => '',
+      ),
+      'identifier' => 'menu-institutional-menu_log-out:user/logout',
+    ),
+    'module' => 'menu',
+    'hidden' => 0,
+    'external' => 0,
+    'has_children' => 0,
+    'expanded' => 0,
+    'weight' => 0,
+    'customized' => 1,
+  );
+  // Exported menu link: menu-institutional-menu_register:user/register
+  $menu_links['menu-institutional-menu_register:user/register'] = array(
+    'menu_name' => 'menu-institutional-menu',
+    'link_path' => 'user/register',
+    'router_path' => 'user/register',
+    'link_title' => 'Register',
+    'options' => array(
+      'attributes' => array(
+        'title' => '',
+      ),
+      'identifier' => 'menu-institutional-menu_register:user/register',
+    ),
+    'module' => 'menu',
+    'hidden' => 0,
+    'external' => 0,
+    'has_children' => 0,
+    'expanded' => 0,
+    'weight' => 0,
+    'customized' => 1,
+  );
   // Translatables
   // Included for use with string extractors like potx.
+  t('About');
   t('About This Course');
   t('Account');
   t('All Content');
@@ -622,6 +723,8 @@ function lacuna_stories_menus_menu_default_menu_links() {
   t('FAQ');
   t('Help');
   t('Instructor\'s Guide');
+  t('Log In');
+  t('Log Out');
   t('Logout');
   t('Manage');
   t('Materials');
@@ -630,6 +733,7 @@ function lacuna_stories_menus_menu_default_menu_links() {
   t('Peer Groups');
   t('People');
   t('Reflect');
+  t('Register');
   t('Responses');
   t('Responses Map');
   t('Sewing Kit');
