@@ -5,6 +5,7 @@ package = Lacuna Stories
 version = 7.x-1.0
 project = lacuna_stories_menus
 dependencies[] = context
+dependencies[] = contextphp
 dependencies[] = ctools
 dependencies[] = features
 dependencies[] = menu

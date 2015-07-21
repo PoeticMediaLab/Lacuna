@@ -50,6 +50,20 @@ function lacuna_stories_menus_context_default_contexts() {
         '<front>' => '<front>',
       ),
     ),
+    'php' => array(
+      'values' => array(
+        0 => TRUE,
+      ),
+      'options' => array(
+        'phpcode' => 'if (!course_get_selected_course()) return TRUE;
+',
+      ),
+    ),
+    'user' => array(
+      'values' => array(
+        'anonymous user' => 'anonymous user',
+      ),
+    ),
   );
   $context->reactions = array(
     'block' => array(
@@ -63,7 +77,7 @@ function lacuna_stories_menus_context_default_contexts() {
       ),
     ),
   );
-  $context->condition_mode = 1;
+  $context->condition_mode = 0;
   $export['institutional_context'] = $context;
 
   return $export;
