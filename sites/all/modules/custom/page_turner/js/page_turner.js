@@ -26,6 +26,9 @@
  *  page-turner-update-pages
  *      Expects {start: NUM, [end: NUM]} (last optional)
  *
+ *  annotation-filters-paged
+ *    expects annotation object
+ *
  ******/
 
 /**
@@ -108,7 +111,7 @@ PTModel.prototype = {
   },
 
   current_page: function(p) {
-    if (p) {
+    if (typeof p !== 'undefined') {
       if (p > this.page_total()) {
         p = this.page_total();
       }
@@ -189,6 +192,20 @@ PTModel.prototype = {
   page_total: function() {
     return this.pages.length;
   },
+
+    find_page_that_contains: function(el) {
+        var i,
+            l = this.page_total();
+        for (i = 0; i < l; i++) {
+            var j,k;
+            for (j = 0, k = this.pages[i].length; j < k; j++) {
+                if (el === this.pages[i][j]) {
+                    return i;
+                }
+            }
+        }
+        return undefined;
+    }
 }; // END: PTModel
 
 /**
@@ -463,45 +480,74 @@ function PTController(model, view) {
     $(document).bind('page-turner-brush-moved', function(e, data) {
         self.brush_moved(data);
     });
+
+    $(document).bind('annotation-filters-paged', function(e, annotation) {
+       self.check_if_annotation_visible(annotation);
+    });
 }
 
 PTController.prototype = {
-  get_current_page: function() {
-    var queries = window.location.search.substring(1).split('&');
-    var i, l;
-    for (i = 0, l = queries.length; i < l; i++) {
-      var params = queries[i].split('=');
-      if (params[0] == 'page') {
-        return params[1] - 1; // Because humans count from 1
-      }
-    }
-    return 0;
-  },
+    get_current_page: function() {
+        var queries = window.location.search.substring(1).split('&'),
+            i,
+            l;
+        for (i = 0, l = queries.length; i < l; i++) {
+          var params = queries[i].split('=');
+          if (params[0] == 'page') {
+            return params[1] - 1; // Because humans count from 1
+          }
+        }
+        return 0;
+    },
 
-  change_page: function(args) {
-    if (args.direction == 'prev') {
-      this.model.prev_page();
-    }
-    if (args.direction == 'next') {
-      this.model.next_page();
-    }
-  },
+    change_page: function(args) {
+        if (args.direction == 'prev') {
+          this.model.prev_page();
+        }
+        if (args.direction == 'next') {
+          this.model.next_page();
+        }
+    },
 
-  brush_moved: function(extent) {
-    var pages = {'start': this.view.extent_to_page(extent[0]),
-                 'end': this.view.extent_to_page(extent[1])};
-    this.model.page_range(pages)
-  },
+    brush_moved: function(extent) {
+        var pages = {'start': this.view.extent_to_page(extent[0]),
+                     'end': this.view.extent_to_page(extent[1])};
+        this.model.page_range(pages)
+    },
+
+    check_if_annotation_visible: function(annotation) {
+        // If invisible, jump to correct page
+        var parents = [],
+            parent_node = annotation.highlights[0].parentNode;
+        while (parent_node) {
+            parents.push(parent_node);
+            parent_node = parent_node.parentNode;
+        }
+        var i,
+            l = parents.length;
+        for (i = 0; i < l; i++) {
+            parent_node = parents[i];
+            if (parent_node.tagName.toLowerCase() == this.view.elements.content.toLowerCase()) {
+                // We've gone high enough; page is currently showing
+                break;
+            }
+            if (parent_node.classList.contains(this.view.elements.hidden)) {
+                var page = this.model.find_page_that_contains(parent_node);
+                this.model.current_page(page);
+                break;
+            }
+        }
+    }
 }; // END: PTController
 
 (function($) {
  "use strict";
   Drupal.behaviors.page_turner = {
     attach: function (context, settings) {
-      // We assume here the body text is always the first field
-      var content = context.getElementsByTagName('article')[0].getElementsByClassName('field')[0];
-      var model = new PTModel(content, settings),
-      // Our selectors and ids; should probably make more consistent
+        // We assume here the body text is always the first field
+        var content = context.getElementsByTagName('article')[0].getElementsByClassName('field')[0];
+        var model = new PTModel(content, settings),
+        // Our selectors and ids; should probably make more consistent
         view = new PTView(model, {
           'content': 'article',
           'pages': {
@@ -529,18 +575,20 @@ PTController.prototype = {
         }),
         controller = new PTController(model, view);
 
-      // Initial page hiding
-      var cur_page = controller.get_current_page();
-      model.current_page(cur_page);
-      var i, l;
-      for (i = 0, l = model.page_total(); i < l; i++) {
-        if (i != cur_page) {
-          view.hide_page(i);
+        // Initial page hiding
+        var cur_page = controller.get_current_page();
+        if (cur_page > 0) {
+            model.current_page(cur_page);
         }
-      }
-      var range = model.page_range();
-      view.draw_brush(cur_page, range.end - range.start);
-      view.update_page_numbers(range);
+        var i, l;
+        for (i = 0, l = model.page_total(); i < l; i++) {
+            if (i != cur_page) {
+              view.hide_page(i);
+            }
+        }
+        var range = model.page_range();
+        view.draw_brush(cur_page, range.end - range.start);
+        view.update_page_numbers(range);
     } // END: attach
   }; // END: Drupal.behaviors.page_turner
 })(jQuery);
