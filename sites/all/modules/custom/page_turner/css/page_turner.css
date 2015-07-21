@@ -27,10 +27,12 @@ rect#page-turner-nav {
 #page-turner-pages-container {
   float: right;
   font-size: 12px;
+  cursor: default;
 }
 
-#page-turner-pages-input {
-  text-align: center;
+#page-turner-pages-numbers {
+  text-align: end;
+  cursor: text;
 }
 
 .page-turner-ticks line,

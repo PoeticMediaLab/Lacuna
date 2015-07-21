@@ -127,9 +127,26 @@ PTModel.prototype = {
   },
 
     validate_page_range: function(pages) {
-        var range = pages.end - pages.start;
-        var total = this.page_total();
-
+        var range,
+            total = this.page_total();
+        pages.start = parseInt(pages.start, 10);
+        if (isNaN(pages.start)) {
+            pages.start = 0;
+        }
+        pages.end = parseInt(pages.end, 10);
+        if (isNaN(pages.end)) {
+            pages.end = pages.start;
+        }
+        if (pages.start > pages.end) {
+            // swap them!
+            var tmp = pages.start;
+            pages.start = pages.end;
+            pages.end = tmp;
+        }
+        if (pages.start == pages.end) {
+            ++pages.end;
+        }
+        range = pages.end - pages.start;
         if (pages.start < 0) {
             pages.start = 0;
             pages.end = range;
@@ -157,23 +174,24 @@ PTModel.prototype = {
         $(document).trigger('page-turner-page-changed', this._page_range);
     },
 
-  page_range: function(pages) {
-    // Return current page range
-    if (typeof pages !== 'undefined') {
-        var start_only = typeof pages.end === 'undefined';
-        if (start_only) {
-            // Allow for just passing start page
-            pages.end = pages.start + this._page_range.end - this._page_range.start;
+    page_range: function(pages) {
+        // Get/set current page range
+        if (typeof pages !== 'undefined') {
+            var start_only = isNaN(pages.end);
+            pages = this.validate_page_range(pages);
+            if (start_only) {
+                // Allow for just passing start page
+                pages.end = pages.start + this._page_range.end - this._page_range.start;
+            }
+            this._page_range = pages;
+            if (start_only && this._page_range.start != pages.start) {
+                // Because that's *really* where we were asked to go; just shrink range
+                this._page_range.start = pages.start;
+            }
+            $(document).trigger('page-turner-page-changed', this._page_range);
         }
-        this._page_range = this.validate_page_range(pages);
-        if (start_only && this._page_range.start != pages.start) {
-            // Because that's *really* where we were asked to go; just shrink range
-            this._page_range.start = pages.start;
-        }
-        $(document).trigger('page-turner-page-changed', this._page_range);
-    }
-    return this._page_range;
-  },
+        return this._page_range;
+    },
 
   all_pages: function() {
     // Return all page content
@@ -264,7 +282,7 @@ function PTView(model, elements) {
 
     // Add the "Page X of Y" div
     d3.select('#' + self.elements.pages.loc).append('div').attr('id', self.elements.pages.container).append('span').attr('id', self.elements.pages.id);
-      d3.select('#' + self.elements.pages.container).append('input').attr('type', 'text').attr('id', self.elements.pages.input).attr('size', 5);
+      d3.select('#' + self.elements.pages.container).append('span').attr('contenteditable', true).attr('id', self.elements.pages.numbers);
       d3.select('#' + self.elements.pages.container).append('span').attr('id', self.elements.pages.total).text(' of ' + self.model.page_total());;
 
     // Set our sizing variables
@@ -385,18 +403,18 @@ PTView.prototype = {
 
   update_page_numbers: function(pages) {
     var text = 'Page',
-        input;
+        page_numbers;
     var range = pages.end - pages.start > 1;
     if (range) {
       text += 's';
     }
     text += ' ';
-    input = pages.start + 1;  // humans count from 1
+    page_numbers = pages.start + 1;  // humans count from 1
     if (range) {
-      input += '–' + pages.end;
+      page_numbers += '–' + pages.end;
     }
     d3.select('#' + this.elements.pages.id).text(text);
-    d3.select('#' + this.elements.pages.input).attr('value', input);
+    d3.select('#' + this.elements.pages.numbers).text(page_numbers);
   },
 
   extent_to_page: function(extent) {
@@ -484,6 +502,20 @@ function PTController(model, view) {
     $(document).bind('annotation-filters-paged', function(e, annotation) {
        self.check_if_annotation_visible(annotation);
     });
+
+    // When a user manually enters page numbers
+    document.getElementById(this.view.elements.pages.numbers).addEventListener('input', function() {
+        var timer = null;
+        clearTimeout(timer);
+        timer = setTimeout(function() {
+            if (this.dataset.running) {
+                return;
+            }    // prevent an update loop
+            this.dataset.running = true;
+            self.parse_page_number_input(this);
+        }.bind(this), 1000);
+        delete this.dataset.running;
+    }, false);
 }
 
 PTController.prototype = {
@@ -507,6 +539,25 @@ PTController.prototype = {
         if (args.direction == 'next') {
           this.model.next_page();
         }
+    },
+
+    parse_page_number_input: function(el) {
+        var value, pages;
+        // Strip returns, spaces, and non-numeric or dash characters
+        value = el.innerHTML.replace(/[\n\r ]/g, '').replace(/(<br ?\/?>)*/g, '').replace(/[^\d-]/g,'');
+        pages = value.split('-');
+        if (pages.length >= 2) {
+            pages = this.model.page_range({start: parseInt(pages[0], 10) - 1, end: parseInt(pages[1], 10)});
+        } else if (value.match(/^\d+$/)) {
+            // Reset the page range to 1, if one is already set
+            value = parseInt(value, 10);
+            pages = {start: (value - 1), end: value}; // we count from zero
+            pages = this.model.page_range(pages);
+        } else {
+            // do nothing; it's not valid input yet
+            return;
+        }
+        this.view.update_page_numbers(pages);
     },
 
     brush_moved: function(extent) {
@@ -554,7 +605,7 @@ PTController.prototype = {
             'loc': 'navigation',
             'container': 'page-turner-pages-container',
             'id': 'page-turner-pages',
-            'input': 'page-turner-pages-input',
+            'numbers': 'page-turner-pages-numbers',
             'total': 'page-turner-pages-total'
           },
           'page_num': 'page-turner-number',
