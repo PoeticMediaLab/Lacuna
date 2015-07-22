@@ -175,10 +175,7 @@ function lacunastories_base_create_research_consent_webform()
     'emails' => $emails,
     'components' => $components,
   );
-
-  $node->menu['enabled'] = TRUE;
-  $node->menu['link_title'] = $node->title;
-  $node->menu['description'] = ''; // Needed even if empty to avoid notices.
+  
   $node = node_submit($node); // Prepare node for a submit
   node_save($node);
 }
