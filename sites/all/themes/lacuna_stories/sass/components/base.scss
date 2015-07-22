@@ -11,6 +11,9 @@ body {
   background-color: $bg-color;
   line-height: 1.5em;
   box-shadow: none;
+
+  //  added min window width
+  min-width: 600px;
 }
 
 /*  Adds 5em margins to left and right of document
@@ -34,8 +37,12 @@ article.node-document .field-type-text-long {
 }
 
 .header__name-and-slogan {
-  float: none !important;
-  margin-top: 50px;
+  /*
+  *   Changed from
+  *     float: none !important;
+  *     margin-top: 50px;
+  *   as part of making header menus work on smaller window widths.
+  */
 }
 
 #site-name {
@@ -49,8 +56,14 @@ article.node-document .field-type-text-long {
 
 
 #main {
-  padding-top: 0px !important;
-  top: -50px !important;
+  /*
+  *   Changed from
+  *     padding-top: 0px !important;
+  *     top: -50px !important;
+  *   as part of making header menus work on smaller window widths.
+  */
+  padding-top: 1rem;
+
 }
 
 #page {
@@ -61,6 +74,18 @@ article.node-document .field-type-text-long {
   background-color: $bg-color;
   box-shadow: none;
   padding-bottom: 100px;
+  //  added to remove gutter on the right at some smaller window
+  //  resize positions
+  overflow-x: hidden;
+}
+
+#course-name {
+
+    /*
+    *   Added as part of making header menu work on smaller screens.
+    */
+    padding-left: 10px;
+
 }
 
 b {
