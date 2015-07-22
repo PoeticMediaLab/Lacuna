@@ -1,5 +1,7 @@
 <?php
 /**
  * @file
- * Drupal needs this blank file.
+ * Code for the Lacuna Stories Menus feature.
  */
+
+include_once 'lacuna_stories_menus.features.inc';
