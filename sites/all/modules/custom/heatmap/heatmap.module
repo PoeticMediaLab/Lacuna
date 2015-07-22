@@ -1,5 +1,7 @@
 <?php
 /*
+ * @file
+ *
  * Display a heatmap of annotations
  * Initial d3 code by Rhea Pokorny
  *
@@ -39,21 +41,21 @@ function heatmap_permission() {
  */
 function heatmap_libraries_info() {
 	$libraries = array();
-	$libraries['xpath'] = array(
-		'name' => 'XPath',
-		'vendor url' => '',
-		'download url' => '',
-		'version arguments' => array(
-			'file' => '',
-			'pattern' => '//',
-			'lines' => 2,
-		),
-		'files' => array(
-			'js' => array(
-				'filename.js',
-			),
-		),
-	);
+//	$libraries['xpath'] = array(
+//		'name' => 'XPath',
+//		'vendor url' => '',
+//		'download url' => '',
+//		'version arguments' => array(
+//			'file' => '',
+//			'pattern' => '//',
+//			'lines' => 2,
+//		),
+//		'files' => array(
+//			'js' => array(
+//				'filename.js',
+//			),
+//		),
+//	);
 	return $libraries;
 }
 /*
@@ -78,10 +80,7 @@ function heatmap_admin_form($form, &$form_state) {
 function heatmap_node_view($node, $view_mode, $langcode) {
 	$node_types = variable_get('heatmap_content_types');
 	if ($node_types[$node->type] && $view_mode == 'full') {
-		libraries_load('xpath');
 		libraries_load('d3');
-		drupal_add_js(drupal_get_path('module', 'heatmap') . '/js/heatmap.js',
-			array('group' => 'heatmap', 'weight' => -10)
-		);
+		drupal_add_js(drupal_get_path('module', 'heatmap') . '/js/heatmap.js');
 	}
 }
