@@ -63,6 +63,15 @@ a.nolink {
       // background-color: $menu-active-color !important;
     }
   }
+
+  &.sf-style-white {
+
+    margin-bottom: 0px;
+
+    span.nolink {
+      border: none;
+    }
+  }
 }
 
 .sf-depth-2 {

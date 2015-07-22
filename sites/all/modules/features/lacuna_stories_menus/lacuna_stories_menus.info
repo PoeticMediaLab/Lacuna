@@ -60,5 +60,6 @@ features[variable][] = superfish_shadow_2
 features[variable][] = superfish_style_1
 features[variable][] = superfish_style_2
 features[menu_links][] = main-menu_write-a-response:node/add/blog
+features[variable][] = superfish_arrow_1
 features[variable][] = superfish_smallbp_1
 project path = sites/all/modules/features

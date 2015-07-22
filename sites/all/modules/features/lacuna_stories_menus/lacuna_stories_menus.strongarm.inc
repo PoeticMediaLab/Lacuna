@@ -44,7 +44,9 @@ function lacuna_stories_menus_strongarm() {
   $strongarm->name = 'superfish_style_1';
   $strongarm->value = 'white';
   $export['superfish_style_1'] = $strongarm;
-
+  $strongarm->name = 'superfish_arrow_1';
+  $strongarm->value = 0;
+  $export['superfish_arrow_1'] = $strongarm;
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
