@@ -1,10 +1,3 @@
-// TODO: check for existing SVG element for page turner navbar
-// if there, horizontal mode; if not, vertical
-// TODO: Listen to filter events and trigger redraw
-// TODO: select only for shown annotations, not all
-// TODO: Refactor to use a persistent array of checked nodes, not by modifying the DOM with classes
-
-
 (function () {
     'use strict';
 
@@ -44,6 +37,8 @@
                     lCount += curN.length;
                 } else {
                     //add "checked" class to indicate that element node has been visited.
+                    // TODO: Refactor to use a persistent array of checked nodes, not by modifying the DOM with classes
+
                     curN.classList.add("checked");
 
                     //adds one to annotation count if it is an annotation element
@@ -62,10 +57,12 @@
             }
 
 //counts the annotations associated with a particular node by counting the number of direct ancestors that are annotations
+            // TODO: Listen to filter events and trigger redraw
             function countAnnotations(curN) {
                 var count = 0;
                 var node = curN;
                 while (node != null && node != articleNode) {
+                    // TODO: select only for shown annotations, not all
                     if (node.nodeType != Node.TEXT_NODE && node.tagName == "SPAN") count++;
                     node = node.parentNode;
                 }
@@ -128,10 +125,13 @@
             var graphH = (horizontal) ? height : width;
             var graphW = (horizontal) ? width : height;
 
-            //please put this somewhere else, I'm just testing
-            var svgContainer = d3.select('#header').append('svg')
-                .attr('width', graphW)
-                .attr('height', graphH);
+            // TODO: Check for existence of page-turner
+            // TODO: if not there, add along side of document instead
+            var svgContainer = d3.select('#page-turner-nav-parent')
+                //.append('svg')
+                //.attr('width', graphW)
+                //.attr('height', graphH);
+            ;
 
             //creates a group element to contain all the rectangles in the bar chart. if horizontal, rotates the elements
             var group = svgContainer.append('g')
