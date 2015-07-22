@@ -2426,7 +2426,10 @@ function lacuna_stories_views_views_default_views() {
   $handler->display->display_options['exposed_form']['options']['input_required'] = 0;
   $handler->display->display_options['exposed_form']['options']['text_input_required_format'] = 'filtered_html';
   $handler->display->display_options['pager']['type'] = 'full';
-  $handler->display->display_options['pager']['options']['items_per_page'] = '25';
+  $handler->display->display_options['pager']['options']['items_per_page'] = '50';
+  $handler->display->display_options['pager']['options']['offset'] = '0';
+  $handler->display->display_options['pager']['options']['id'] = '0';
+  $handler->display->display_options['pager']['options']['quantity'] = '9';
   $handler->display->display_options['style_plugin'] = 'default';
   $handler->display->display_options['row_plugin'] = 'fields';
   /* Relationship: Content: Author */
@@ -2515,25 +2518,6 @@ function lacuna_stories_views_views_default_views() {
   $handler->display->display_options['filters']['field_genre_tid']['type'] = 'select';
   $handler->display->display_options['filters']['field_genre_tid']['vocabulary'] = 'genre_response';
   $handler->display->display_options['filters']['field_genre_tid']['error_message'] = FALSE;
-  /* Filter criterion: Broken/missing handler */
-  $handler->display->display_options['filters']['field_topics_tid']['id'] = 'field_topics_tid';
-  $handler->display->display_options['filters']['field_topics_tid']['table'] = 'field_data_field_topics';
-  $handler->display->display_options['filters']['field_topics_tid']['field'] = 'field_topics_tid';
-  $handler->display->display_options['filters']['field_topics_tid']['exposed'] = TRUE;
-  $handler->display->display_options['filters']['field_topics_tid']['expose']['operator_id'] = 'field_topics_tid_op';
-  $handler->display->display_options['filters']['field_topics_tid']['expose']['label'] = 'Limit by Topic';
-  $handler->display->display_options['filters']['field_topics_tid']['expose']['operator'] = 'field_topics_tid_op';
-  $handler->display->display_options['filters']['field_topics_tid']['expose']['identifier'] = 'field_topics_tid';
-  $handler->display->display_options['filters']['field_topics_tid']['expose']['remember'] = TRUE;
-  $handler->display->display_options['filters']['field_topics_tid']['expose']['multiple'] = TRUE;
-  $handler->display->display_options['filters']['field_topics_tid']['expose']['remember_roles'] = array(
-    2 => '2',
-    1 => 0,
-    3 => 0,
-    4 => 0,
-    5 => 0,
-    6 => 0,
-  );
   /* Filter criterion: User: Display Name (field_display_name) */
   $handler->display->display_options['filters']['field_display_name_value']['id'] = 'field_display_name_value';
   $handler->display->display_options['filters']['field_display_name_value']['table'] = 'field_data_field_display_name';
