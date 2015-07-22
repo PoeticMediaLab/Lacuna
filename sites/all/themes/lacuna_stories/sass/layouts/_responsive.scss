@@ -173,7 +173,86 @@ $zen-auto-include-item-base: false;
  * Changed from 5 by MLW
  * Did not target all cases, so probably needs fixing
  */
-@media all and (min-width: 960px) {
+@media all and (min-width: 960px) and (max-width: 1235px) {
+
+  $zen-column-count: 6;
+
+  /**
+   * The layout when there is only one sidebar, the left one.
+   */
+  .sidebar-first {
+    /* Span 5 columns, starting in 2nd column from left. */
+    #content {
+      @include zen-grid-item(5, 2);
+    }
+
+    /* Span 1 column, starting in 1st column from left. */
+    .region-sidebar-first {
+      @include zen-grid-item(1, 1);
+    }
+  }
+
+  /**
+   * The layout when there is only one sidebar, the right one.
+   */
+  .sidebar-second {
+    /* Span 5 columns, starting in 1st column from left. */
+    #content {
+      @include zen-grid-item(5, 1);
+    }
+
+    /* Span 1 column, starting in 6th column from left. */
+    .region-sidebar-second {
+      @include zen-grid-item(1, 6);
+    }
+  }
+
+  /**
+   * The layout when there is only one sidebar, the right one.
+   */
+  .node-type-document.sidebar-second {
+
+    $zen-column-count: 5;
+
+    /* Span 4 columns, starting in 1st column from left. */
+    #content {
+      @include zen-grid-item(4, 1);
+    }
+
+    /* Span 2 columns, starting in 5th column from left. */
+    .region-sidebar-second {
+      @include zen-grid-item(1, 5);
+    }
+  }
+
+  /**
+   * The layout when there are two sidebars.
+   */
+  .two-sidebars {
+    /* Span 3 columns, starting in 2nd column from left. */
+    #content {
+      @include zen-grid-item(3, 2);
+    }
+
+    /* Span 1 column, starting in 1st column from left. */
+    .region-sidebar-first {
+      @include zen-grid-item(1, 1);
+    }
+
+    /* Span 1 column, starting in 5th column from left. */
+    .region-sidebar-second {
+      @include zen-grid-item(1, 6);
+    }
+  }
+}
+
+/**
+ * Use 6 grid columns for larger screens.
+ * Changed from 5 by MLW
+ * Changed to 1235+px by CML
+ * Did not target all cases, so probably needs fixing
+ */
+@media all and (min-width: 1235px) {
 
   $zen-column-count: 6;
 
