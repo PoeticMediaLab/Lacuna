@@ -647,7 +647,7 @@ function lacuna_visualizations_annotation_dashboard_data() {
     $data->u_id = $annotation->uid;
 
     // For readability
-    $target_id = $annotation->annotation_reference[$annotation->language][0]['target_id'];
+    $target_id = $annotation->field_annotation_reference[$annotation->language][0]['target_id'];
     $data->doc_id = $target_id;
     if (!array_key_exists($target_id, $documentNames)) {
       $document = node_load($target_id);
