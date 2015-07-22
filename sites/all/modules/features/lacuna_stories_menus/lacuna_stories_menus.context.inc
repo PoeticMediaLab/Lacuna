@@ -55,7 +55,9 @@ function lacuna_stories_menus_context_default_contexts() {
         0 => TRUE,
       ),
       'options' => array(
-        'phpcode' => 'if (!course_get_selected_course()) return TRUE;
+        'phpcode' => ' global $user;
+ if (!isset($user->data[\'current-course\'])) return TRUE;
+
 ',
       ),
     ),
