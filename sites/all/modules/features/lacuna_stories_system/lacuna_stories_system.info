@@ -31,7 +31,6 @@ dependencies[] = field_ui
 dependencies[] = flag
 dependencies[] = flag_actions
 dependencies[] = fpa
-dependencies[] = front_page
 dependencies[] = graphapi
 dependencies[] = honeypot
 dependencies[] = image

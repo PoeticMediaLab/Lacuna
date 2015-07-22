@@ -12,7 +12,6 @@ dependencies[] = content_access
 dependencies[] = admin_menu
 dependencies[] = admin_menu_toolbar
 dependencies[] = fpa
-dependencies[] = front_page
 dependencies[] = module_filter
 ; Biblio
 dependencies[] = biblio

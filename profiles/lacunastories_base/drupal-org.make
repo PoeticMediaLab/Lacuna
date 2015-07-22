@@ -13,9 +13,6 @@ projects[admin_menu][subdir] = "contrib"
 projects[fpa][version] = "2.6"
 projects[fpa][subdir] = "contrib"
 
-projects[front][version] = "2.4"
-projects[front][subdir] = "contrib"
-
 projects[module_filter][version] = "2.0"
 projects[module_filter][subdir] = "contrib"
 
