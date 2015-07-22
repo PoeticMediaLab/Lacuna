@@ -22,7 +22,6 @@ dependencies[] = context
 dependencies[] = context_ui
 ; Core
 dependencies[] = block
-dependencies[] = blog
 dependencies[] = color
 dependencies[] = comment
 dependencies[] = contact

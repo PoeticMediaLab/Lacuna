@@ -161,7 +161,7 @@ function lacuna_stories_views_views_default_views() {
     'document' => 'document',
     'image' => 'image',
     'music_video' => 'music_video',
-    'blog' => 'blog',
+    'response' => 'response',
     'thread' => 'thread',
     'video' => 'video',
   );
@@ -1310,7 +1310,7 @@ function lacuna_stories_views_views_default_views() {
     'forum' => 'forum',
     'image' => 'image',
     'music_video' => 'music_video',
-    'blog' => 'blog',
+    'response' => 'response',
     'thread' => 'thread',
     'video' => 'video',
     'webform' => 'webform',
@@ -1530,7 +1530,7 @@ function lacuna_stories_views_views_default_views() {
   $handler->display->display_options['filters']['type']['table'] = 'node';
   $handler->display->display_options['filters']['type']['field'] = 'type';
   $handler->display->display_options['filters']['type']['value'] = array(
-    'blog' => 'blog',
+    'response' => 'response',
     'thread' => 'thread',
   );
   $handler->display->display_options['filters']['type']['exposed'] = TRUE;
@@ -1553,7 +1553,7 @@ function lacuna_stories_views_views_default_views() {
   $handler->display->display_options['filters']['type_1']['table'] = 'node';
   $handler->display->display_options['filters']['type_1']['field'] = 'type';
   $handler->display->display_options['filters']['type_1']['value'] = array(
-    'blog' => 'blog',
+    'response' => 'response',
     'thread' => 'thread',
   );
 
@@ -1728,7 +1728,7 @@ function lacuna_stories_views_views_default_views() {
   $handler->display->display_options['filters']['type']['table'] = 'node';
   $handler->display->display_options['filters']['type']['field'] = 'type';
   $handler->display->display_options['filters']['type']['value'] = array(
-    'blog' => 'blog',
+    'response' => 'response',
   );
   /* Filter criterion: Content: Genre (field_genre) */
   $handler->display->display_options['filters']['field_genre_tid']['id'] = 'field_genre_tid';
@@ -2515,7 +2515,7 @@ function lacuna_stories_views_views_default_views() {
   $handler->display->display_options['filters']['type']['table'] = 'node';
   $handler->display->display_options['filters']['type']['field'] = 'type';
   $handler->display->display_options['filters']['type']['value'] = array(
-    'blog' => 'blog',
+    'response' => 'response',
   );
 
   /* Display: Block */

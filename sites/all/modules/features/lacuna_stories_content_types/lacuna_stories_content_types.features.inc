@@ -123,6 +123,14 @@ function lacuna_stories_content_types_node_info() {
       'title_label' => t('Title'),
       'help' => '',
     ),
+    'response' => array(
+      'name' => t('Response'),
+      'base' => 'node_content',
+      'description' => '',
+      'has_title' => '1',
+      'title_label' => t('Title'),
+      'help' => '',
+    ),
     'thread' => array(
       'name' => t('Thread'),
       'base' => 'node_content',

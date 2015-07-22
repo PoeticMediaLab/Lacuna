@@ -44,15 +44,15 @@ function course_og_features_default_permissions() {
     ),
   );
 
-  // Exported og permission: 'node:course:create blog content'
-  $permissions['node:course:create blog content'] = array(
+  // Exported og permission: 'node:course:create document content'
+  $permissions['node:course:create document content'] = array(
     'roles' => array(
       'administrator member' => 'administrator member',
     ),
   );
 
-  // Exported og permission: 'node:course:create document content'
-  $permissions['node:course:create document content'] = array(
+  // Exported og permission: 'node:course:create response content'
+  $permissions['node:course:create response content'] = array(
     'roles' => array(
       'administrator member' => 'administrator member',
     ),
@@ -65,15 +65,15 @@ function course_og_features_default_permissions() {
     ),
   );
 
-  // Exported og permission: 'node:course:delete any blog content'
-  $permissions['node:course:delete any blog content'] = array(
+  // Exported og permission: 'node:course:delete any document content'
+  $permissions['node:course:delete any document content'] = array(
     'roles' => array(
       'administrator member' => 'administrator member',
     ),
   );
 
-  // Exported og permission: 'node:course:delete any document content'
-  $permissions['node:course:delete any document content'] = array(
+  // Exported og permission: 'node:course:delete any response content'
+  $permissions['node:course:delete any response content'] = array(
     'roles' => array(
       'administrator member' => 'administrator member',
     ),
@@ -87,16 +87,16 @@ function course_og_features_default_permissions() {
     ),
   );
 
-  // Exported og permission: 'node:course:delete own blog content'
-  $permissions['node:course:delete own blog content'] = array(
+  // Exported og permission: 'node:course:delete own document content'
+  $permissions['node:course:delete own document content'] = array(
     'roles' => array(
       'administrator member' => 'administrator member',
       'member' => 'member',
     ),
   );
 
-  // Exported og permission: 'node:course:delete own document content'
-  $permissions['node:course:delete own document content'] = array(
+  // Exported og permission: 'node:course:delete own response content'
+  $permissions['node:course:delete own response content'] = array(
     'roles' => array(
       'administrator member' => 'administrator member',
       'member' => 'member',
@@ -141,15 +141,15 @@ function course_og_features_default_permissions() {
     ),
   );
 
-  // Exported og permission: 'node:course:publish any blog content'
-  $permissions['node:course:publish any blog content'] = array(
+  // Exported og permission: 'node:course:publish any content'
+  $permissions['node:course:publish any content'] = array(
     'roles' => array(
       'administrator member' => 'administrator member',
     ),
   );
 
-  // Exported og permission: 'node:course:publish any content'
-  $permissions['node:course:publish any content'] = array(
+  // Exported og permission: 'node:course:publish any response content'
+  $permissions['node:course:publish any response content'] = array(
     'roles' => array(
       'administrator member' => 'administrator member',
     ),
@@ -169,15 +169,15 @@ function course_og_features_default_permissions() {
     ),
   );
 
-  // Exported og permission: 'node:course:publish editable blog content'
-  $permissions['node:course:publish editable blog content'] = array(
+  // Exported og permission: 'node:course:publish editable content'
+  $permissions['node:course:publish editable content'] = array(
     'roles' => array(
       'administrator member' => 'administrator member',
     ),
   );
 
-  // Exported og permission: 'node:course:publish editable content'
-  $permissions['node:course:publish editable content'] = array(
+  // Exported og permission: 'node:course:publish editable response content'
+  $permissions['node:course:publish editable response content'] = array(
     'roles' => array(
       'administrator member' => 'administrator member',
     ),
@@ -197,8 +197,8 @@ function course_og_features_default_permissions() {
     ),
   );
 
-  // Exported og permission: 'node:course:publish own blog content'
-  $permissions['node:course:publish own blog content'] = array(
+  // Exported og permission: 'node:course:publish own response content'
+  $permissions['node:course:publish own response content'] = array(
     'roles' => array(
       'administrator member' => 'administrator member',
     ),
@@ -230,15 +230,15 @@ function course_og_features_default_permissions() {
     ),
   );
 
-  // Exported og permission: 'node:course:unpublish any blog content'
-  $permissions['node:course:unpublish any blog content'] = array(
+  // Exported og permission: 'node:course:unpublish any content'
+  $permissions['node:course:unpublish any content'] = array(
     'roles' => array(
       'administrator member' => 'administrator member',
     ),
   );
 
-  // Exported og permission: 'node:course:unpublish any content'
-  $permissions['node:course:unpublish any content'] = array(
+  // Exported og permission: 'node:course:unpublish any response content'
+  $permissions['node:course:unpublish any response content'] = array(
     'roles' => array(
       'administrator member' => 'administrator member',
     ),
@@ -258,15 +258,15 @@ function course_og_features_default_permissions() {
     ),
   );
 
-  // Exported og permission: 'node:course:unpublish editable blog content'
-  $permissions['node:course:unpublish editable blog content'] = array(
+  // Exported og permission: 'node:course:unpublish editable content'
+  $permissions['node:course:unpublish editable content'] = array(
     'roles' => array(
       'administrator member' => 'administrator member',
     ),
   );
 
-  // Exported og permission: 'node:course:unpublish editable content'
-  $permissions['node:course:unpublish editable content'] = array(
+  // Exported og permission: 'node:course:unpublish editable response content'
+  $permissions['node:course:unpublish editable response content'] = array(
     'roles' => array(
       'administrator member' => 'administrator member',
     ),
@@ -286,8 +286,8 @@ function course_og_features_default_permissions() {
     ),
   );
 
-  // Exported og permission: 'node:course:unpublish own blog content'
-  $permissions['node:course:unpublish own blog content'] = array(
+  // Exported og permission: 'node:course:unpublish own response content'
+  $permissions['node:course:unpublish own response content'] = array(
     'roles' => array(
       'administrator member' => 'administrator member',
     ),
@@ -314,15 +314,15 @@ function course_og_features_default_permissions() {
     ),
   );
 
-  // Exported og permission: 'node:course:update any blog content'
-  $permissions['node:course:update any blog content'] = array(
+  // Exported og permission: 'node:course:update any document content'
+  $permissions['node:course:update any document content'] = array(
     'roles' => array(
       'administrator member' => 'administrator member',
     ),
   );
 
-  // Exported og permission: 'node:course:update any document content'
-  $permissions['node:course:update any document content'] = array(
+  // Exported og permission: 'node:course:update any response content'
+  $permissions['node:course:update any response content'] = array(
     'roles' => array(
       'administrator member' => 'administrator member',
     ),
@@ -343,16 +343,16 @@ function course_og_features_default_permissions() {
     ),
   );
 
-  // Exported og permission: 'node:course:update own blog content'
-  $permissions['node:course:update own blog content'] = array(
+  // Exported og permission: 'node:course:update own document content'
+  $permissions['node:course:update own document content'] = array(
     'roles' => array(
       'administrator member' => 'administrator member',
       'member' => 'member',
     ),
   );
 
-  // Exported og permission: 'node:course:update own document content'
-  $permissions['node:course:update own document content'] = array(
+  // Exported og permission: 'node:course:update own response content'
+  $permissions['node:course:update own response content'] = array(
     'roles' => array(
       'administrator member' => 'administrator member',
       'member' => 'member',

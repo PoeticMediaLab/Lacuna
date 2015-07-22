@@ -19,7 +19,7 @@ function lacuna_stories_content_types_context_default_contexts() {
   $context->conditions = array(
     'node' => array(
       'values' => array(
-        'blog' => 'blog',
+        'response' => 'response',
         'document' => 'document',
         'image' => 'image',
         'music_video' => 'music_video',
