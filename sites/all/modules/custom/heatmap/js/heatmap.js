@@ -127,14 +127,14 @@
 
             // TODO: Check for existence of page-turner
             // TODO: if not there, add along side of document instead
-            var svgContainer = d3.select('#page-turner-nav-parent')
+            var svgContainer = d3.select('#page-turner-nav-parent');
                 //.append('svg')
                 //.attr('width', graphW)
                 //.attr('height', graphH);
             ;
 
             //creates a group element to contain all the rectangles in the bar chart. if horizontal, rotates the elements
-            var group = svgContainer.append('g')
+            var group = svgContainer.insert('g', ':first-child')
                 .attr('transform', function () {
                     if (horizontal) return 'rotate(0)'
                     else return 'translate(0, -50) rotate(90, 0, 50)';
