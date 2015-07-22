@@ -266,9 +266,16 @@ function PTView(model, elements) {
             .style("padding-top", self.offset + "px");;
 
         self.svg = d3.select('#' + self.elements.navbar).append("svg");
+
+        //  Detect window width for small screens.
+        var width;
+        if (window.innerWidth < 768) width = "83%";
+        else if (window.innerWidth > 1200) width = "90%";
+        else width = "86%";
+
         self.navbar_svg = self.svg
             .attr("id", self.elements.navbar_parent)
-            .attr("width", "90%") // Note: affects width calculations
+            .attr("width", width) // Note: affects width calculations
             .attr("height", "100%")
           .append("g")
           .append("rect")
