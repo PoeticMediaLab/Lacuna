@@ -7,6 +7,7 @@ configure = admin/config/user-interface/heatmap
 files[] = heatmap.module
 
 dependencies[] = d3
+dependencies[] = annotator
 ; TODO: require the XPath library
 
 stylesheets[all][] = css/heatmap.css
