@@ -1,7 +1,7 @@
 ; Packaging information for lacunastories_base
 name = "Lacunastories Base"
 description = "Installation profile for basic lacunastories site."
-exclusive = "1"
+exclusive = TRUE
 core = "7.x"
 ; ----------
 ; Dependencies
