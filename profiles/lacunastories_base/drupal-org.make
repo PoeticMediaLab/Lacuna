@@ -175,6 +175,9 @@ projects[superfish][subdir] = "contrib"
 projects[wysiwyg][version] = "2.x-dev"
 projects[wysiwyg][subdir] = "contrib"
 
+projects[better_exposed_filters][version] = "3.2"
+projects[better_exposed_filters][subdir] = "contrib"
+
 projects[views][version] = "3.11"
 projects[views][subdir] = "contrib"
 
