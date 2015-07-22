@@ -1,0 +1,87 @@
+<?php
+/*
+ * Display a heatmap of annotations
+ * Initial d3 code by Rhea Pokorny
+ *
+ * Drupal integration by Mike Widner <mikewidner@stanford.edu>
+ */
+
+/*
+ * Implements hook_menu().
+ */
+function heatmap_menu() {
+	$items = array();
+	$items['admin/config/user-interface/heatmap'] = array(
+		'title' => 'Heatmap',
+		'type' => MENU_NORMAL_ITEM,
+		'description' => 'Configuration for the heatmap module',
+		'page callback' => 'drupal_get_form',
+		'page arguments' => array('heatmap_admin_form'),
+		'access arguments' => array('administer heatmap'),
+	);
+	return $items;
+}
+
+/**
+ * Implement hook_permission().
+ */
+function heatmap_permission() {
+	return array(
+		'administer heatmap' => array(
+			'title' => t('Administer Heatmap'),
+			'description' => t('May manage settings for Heatmap module.'),
+		),
+	);
+}
+
+/*
+ * Implements hook_libraries_info().
+ */
+function heatmap_libraries_info() {
+	$libraries = array();
+	$libraries['xpath'] = array(
+		'name' => 'XPath',
+		'vendor url' => '',
+		'download url' => '',
+		'version arguments' => array(
+			'file' => '',
+			'pattern' => '//',
+			'lines' => 2,
+		),
+		'files' => array(
+			'js' => array(
+				'filename.js',
+			),
+		),
+	);
+	return $libraries;
+}
+/*
+ * Implements hook_admin_form().
+ */
+function heatmap_admin_form($form, &$form_state) {
+	$form = array();
+	// Set which content types on which Heatmap should appear
+	$form['heatmap_content_types'] = array(
+		'#type' => 'checkboxes',
+		'#title' => t('Content Types'),
+		'#description' => t('Select which content types should include an annotation heatmap'),
+		'#options' => node_type_get_names(),
+		'#default_value' => variable_get('heatmap_content_types'),
+	);
+	return system_settings_form($form);
+}
+
+/**
+ * Implements hook_node_view().
+ */
+function heatmap_node_view($node, $view_mode, $langcode) {
+	$node_types = variable_get('heatmap_content_types');
+	if ($node_types[$node->type] && $view_mode == 'full') {
+		libraries_load('xpath');
+		libraries_load('d3');
+		drupal_add_js(drupal_get_path('module', 'heatmap') . '/js/heatmap.js',
+			array('group' => 'heatmap', 'weight' => -10)
+		);
+	}
+}

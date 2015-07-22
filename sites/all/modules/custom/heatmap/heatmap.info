@@ -1,0 +1,12 @@
+name = Heatmap
+description = Displays a heatmap of annotations
+package = Lacuna Stories
+core = 7.x
+configure = admin/config/user-interface/heatmap
+
+files[] = heatmap.module
+
+dependencies[] = d3
+; TODO: require the XPath library
+
+stylesheets[all][] = css/heatmap.css
