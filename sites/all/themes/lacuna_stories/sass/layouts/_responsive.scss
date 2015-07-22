@@ -79,6 +79,7 @@ $zen-auto-include-item-base: false;
 @media all and (min-width: 480px) and (max-width: 959px) {
 
   $zen-column-count: 4;
+  $zen-gutter-width: 50px;
 
   /**
    * The layout when there is only one sidebar, the left one.
@@ -98,7 +99,7 @@ $zen-auto-include-item-base: false;
   /**
    * The layout when there is only one sidebar, the right one.
    */
-  .sidebar-second {
+  :not(.node-type-document).sidebar-second {
     /* Span 3 columns, starting in 1st column from left. */
     #content {
       @include zen-grid-item(3, 1);
@@ -108,6 +109,22 @@ $zen-auto-include-item-base: false;
     .region-sidebar-second {
       @include zen-grid-item(1, 4);
     }
+  }
+
+  /**
+   * The layout when there is only one sidebar, the right one.
+   * For pages that are 'document' types and need the mobile
+   * annotator filters.
+   */
+  .node-type-document.sidebar-second {
+
+    $zen-column-count: 3;
+
+    /* Span 3 columns, starting in 1st column from left. */
+    #content {
+      @include zen-grid-item(3, 1);
+    }
+
   }
 
   /**
