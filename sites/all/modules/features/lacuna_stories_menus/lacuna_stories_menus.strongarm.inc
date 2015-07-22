@@ -51,6 +51,9 @@ function lacuna_stories_menus_strongarm() {
   $strongarm->name = 'superfish_style_2';
   $strongarm->value = 'white';
   $export['superfish_style_2'] = $strongarm;
+  $strongarm->name = 'superfish_smallbp_1';
+  $strongarm->value = '960';
+  $export['superfish_smallbp_1'] = $strongarm;
 
   return $export;
 }
