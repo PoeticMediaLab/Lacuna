@@ -328,10 +328,9 @@ function annotation_copy_field_values_to_drupal_standard_fields () {
   }
 }
 
-// Get possible groups for a node's annotation
-// Groups are marked as selected (the default for new annotations). If editing an existing annotation, unselected groups should be unmarked as selected.
-function annotation_get_possible_groups_for_node ($node) {
-  $node_wrapper = entity_metadata_wrapper('node', $node);
+// Build peer groups array chunk
+// Peer groups are marked as not selected (the default for new annotations).
+function annotation_build_peer_groups () {
   if ($user_groups = og_get_groups_by_user()) {
     $user_groups = array_keys($user_groups['node']);
 
@@ -342,11 +341,10 @@ function annotation_get_possible_groups_for_node ($node) {
       if ($group->type == 'peer_group') {
         $peer_groups[$user_group] = array(
           $group->title,
-          'selected' => 1
+          'selected' => 0
         );
       }
     }
-
     return array(
       'peer_groups' => $peer_groups
     );

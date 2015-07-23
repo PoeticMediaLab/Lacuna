@@ -173,6 +173,7 @@ function annotation_drupal_format($entity, $update = FALSE) {
 
   $fields = array_keys(field_info_instances('node', 'annotation'));
   foreach ($entity as $key => $val) {
+
     switch($key) {
 
       case 'tags':
@@ -554,7 +555,8 @@ function annotation_api_entity_prepare($annotation, $op) {
 			// Privacy options
 
       // Audience
-      $audience_values = $annotation_wrapper->field_annotation_audience->value();$audience = array(
+      $audience_values = $annotation_wrapper->field_annotation_audience->value();
+      $audience = array(
         'private' => 0,
         'peer-groups' => 0,
         'everyone' => 0,
@@ -564,38 +566,30 @@ function annotation_api_entity_prepare($annotation, $op) {
         $audience[$audience_value] = 1;
       }
 
-      // Peer-Groups Groups and Instructor Groups
-      $possible_groups = array();
-
-      if ($referenced_node = $annotation_wrapper->field_annotation_reference->value()) {
-
-        // Groups
-        // Get selected groups
-        $selected_groups = array();
-        if ($audience['peer-groups'] == 1) {
-          if (isset($annotation->og_group_ref)) {
-            foreach ($annotation->og_group_ref[$annotation->language] as $group) {
-              $selected_groups[] = $group['target_id'];
-            }
+      // Peer Groups
+      // Get selected groups
+      $selected_groups = array();
+      if ($audience['peer-groups'] == 1) {
+        if (isset($annotation->og_group_ref)) {
+          foreach ($annotation->og_group_ref[$annotation->language] as $group) {
+            $selected_groups[] = $group['target_id'];
           }
         }
-        // Get possible groups, and unmark those that are not selected for this annotation
-        $possible_groups = annotation_get_possible_groups_for_node($referenced_node);
-        foreach ($possible_groups as $group_type => $group_type_possible_groups) {
-          foreach ($group_type_possible_groups as $group_nid => $group_properties) {
-            if (!in_array($group_nid, $selected_groups)) {
-              $possible_groups[$group_type][$group_nid]['selected'] = 0;
-            }
-          }
-        }
-
       }
-
+      // Get built peer groups, and mark those that are selected for this annotation
+      $built_peer_groups = annotation_build_peer_groups();
+      foreach ($built_peer_groups as $group_type => $group_type_possible_groups) {
+        foreach ($group_type_possible_groups as $group_nid => $group_properties) {
+          if (in_array($group_nid, $selected_groups)) {
+            $built_peer_groups[$group_type][$group_nid]['selected'] = 1;
+          }
+        }
+      }
 
       // Set the privacy options
       $entity->privacy_options = array(
         'audience' => $audience,
-        'groups' => $possible_groups,
+        'groups' => $built_peer_groups,
       );
 
       // Links
