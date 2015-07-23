@@ -49,7 +49,31 @@ function lacuna_stories_peer_groups_menu() {
     'access arguments' => array('create peer_group content'),
     'type' => MENU_SUGGESTED_ITEM,
   );
+  $items['join-peer-group/%'] = array(
+    'title' => 'Join Peer Group',
+    'page callback' => 'lacuna_stories_peer_groups_join_peer_group',
+    'page arguments' => array(1),
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+  );
   return $items;
+}
+
+
+function lacuna_stories_peer_groups_join_peer_group($gid) {
+  if ($group = node_load ($gid)) {
+    if ($group->type == 'peer_group') {
+      global $user;
+      og_group('node', $gid, array(
+        "entity_type" => "user",
+        "entity" => $user,
+        "membership type" => OG_MEMBERSHIP_TYPE_DEFAULT
+      ));
+      og_role_grant('node', $gid, $user->uid, 3);
+      drupal_goto ('peer-groups');
+    }
+  }
+  drupal_access_denied();
 }
 
 // Page callback. Currently the entirety of the Peer Group listing page is generated here.
@@ -90,14 +114,7 @@ function lacuna_stories_peer_groups_views_query_alter(&$view, &$query) {
  */
 function lacuna_stories_peer_groups_listing_join_leave_link ($data, $view) {
   if ($view->current_display == 'unjoined_peer_groups') {
-    return l(
-      'Join',
-      '/group/node/' . $data->nid . '/subscribe/og_user_node1',
-      array(
-        'query' => drupal_get_destination(),
-        'html' => TRUE,
-      )
-    );
+    return l('Join', '/join-peer-group/' . $data->nid);
   }
   elseif ($view->current_display == 'joined_peer_groups') {
     return l(
