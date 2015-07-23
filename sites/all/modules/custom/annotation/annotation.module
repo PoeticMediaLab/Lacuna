@@ -158,15 +158,15 @@ function annotation_ctools_plugin_type() {
 function annotation_form_alter(&$form, &$form_state, $form_id) {
 
   if ($form_id == 'annotation_node_form') {
-//    $form['field_annotation_ranges'] = array('#access' => FALSE);
-//    $form['field_annotation_reference'] = array('#access' => FALSE);
-//    $form['field_annotation_quote'] = array('#access' => FALSE);
-//    $form['field_annotation_uri'] = array('#access' => FALSE);
-//    // The audience/group fields should be hidden from here. Otherwise we have to do a fair bit of logic on them similar to what we do in the JS.
-//    $form['field_annotation_audience'] = array('#access' => FALSE);
-//    $form['og_group_ref'] = array('#access' => FALSE);
-//    $form['field_annotation_ins_viewable_co'] = array('#access' => FALSE);
-//    $form['group_content_access'] = array('#access' => FALSE);
+    $form['field_annotation_ranges'] = array('#access' => FALSE);
+    $form['field_annotation_reference'] = array('#access' => FALSE);
+    $form['field_annotation_quote'] = array('#access' => FALSE);
+    $form['field_annotation_uri'] = array('#access' => FALSE);
+    // The audience/group fields should be hidden from here. Otherwise we have to do a fair bit of logic on them similar to what we do in the JS.
+    $form['field_annotation_audience'] = array('#access' => FALSE);
+    $form['og_group_ref'] = array('#access' => FALSE);
+    $form['field_annotation_ins_viewable_co'] = array('#access' => FALSE);
+    $form['group_content_access'] = array('#access' => FALSE);
   }
 
   return($form);
