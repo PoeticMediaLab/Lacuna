@@ -41,11 +41,11 @@
       settings = annotation.privacy_options ? annotation.privacy_options : Drupal.settings.privacy_options;
       groups_html = privacy_html = show_groups = '';
       privacy_html += '<span class="privacy types">';
-      ref = ["Private", "Instructor", "Co-Learners", "Everyone"];
+      ref = ["Private", "Instructor", "Peer-Groups", "Everyone"];
       for (j = 0, len = ref.length; j < len; j++) {
         privacy_type = ref[j];
         checked = settings.audience[privacy_type.toLowerCase()] ? 'checked' : '';
-        if ("Co-Learners" === privacy_type && "checked" === checked) {
+        if ("Peer-Groups" === privacy_type && "checked" === checked) {
           show_groups = 'show-groups';
         }
         privacy_html += '<span class="privacy-type ' + checked + '" id="' + privacy_type + '">' + privacy_type + '</span>';
@@ -68,9 +68,8 @@
     };
 
     Privacy.prototype.savePrivacy = function(event, annotation) {
-      var audience, course_groups, peer_groups;
+      var audience, peer_groups;
       annotation.privacy_options = {};
-      course_groups = {};
       peer_groups = {};
       audience = {};
       $('.annotator-editor span.privacy-type').each(function() {
@@ -87,23 +86,15 @@
           gid = $(this).val();
           parent = $(this).parent();
           group_name = parent[0].textContent;
-          if ($(this).hasClass("course_groups")) {
-            return course_groups[gid] = {
-              0: group_name,
-              selected: checked
-            };
-          } else {
-            return peer_groups[gid] = {
-              0: group_name,
-              selected: checked
-            };
-          }
+          return peer_groups[gid] = {
+            0: group_name,
+            selected: checked
+          };
         });
       });
       annotation.privacy_options.audience = audience;
       return annotation.privacy_options.groups = {
-        peer_groups: peer_groups,
-        course_groups: course_groups
+        peer_groups: peer_groups
       };
     };
 
@@ -116,7 +107,7 @@
           checked = ref[audience_type];
           if (checked) {
             audience += '<span class="privacy-type">' + audience_type + '</span>';
-            if ('co-learners' === audience_type) {
+            if ('peer-groups' === audience_type) {
               has_groups = true;
             }
           }

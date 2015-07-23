@@ -567,7 +567,7 @@ function lacuna_stories_views_views_default_views() {
   $handler->display->display_options['filters']['field_annotation_audience_value']['table'] = 'field_data_field_annotation_audience';
   $handler->display->display_options['filters']['field_annotation_audience_value']['field'] = 'field_annotation_audience_value';
   $handler->display->display_options['filters']['field_annotation_audience_value']['value'] = array(
-    'co-learners' => 'co-learners',
+    'peer-groups' => 'peer-groups',
   );
   /* Filter criterion: Content: Groups (og_group_ref) */
   $handler->display->display_options['filters']['og_group_ref_target_id']['id'] = 'og_group_ref_target_id';

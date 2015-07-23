@@ -158,15 +158,15 @@ function annotation_ctools_plugin_type() {
 function annotation_form_alter(&$form, &$form_state, $form_id) {
 
   if ($form_id == 'annotation_node_form') {
-    $form['field_annotation_ranges'] = array('#access' => FALSE);
-    $form['field_annotation_reference'] = array('#access' => FALSE);
-    $form['field_annotation_quote'] = array('#access' => FALSE);
-    $form['field_annotation_uri'] = array('#access' => FALSE);
-    // The audience/group fields should be hidden from here. Otherwise we have to do a fair bit of logic on them similar to what we do in the JS.
-    $form['field_annotation_audience'] = array('#access' => FALSE);
-    $form['og_group_ref'] = array('#access' => FALSE);
-    $form['field_annotation_ins_viewable_co'] = array('#access' => FALSE);
-    $form['group_content_access'] = array('#access' => FALSE);
+//    $form['field_annotation_ranges'] = array('#access' => FALSE);
+//    $form['field_annotation_reference'] = array('#access' => FALSE);
+//    $form['field_annotation_quote'] = array('#access' => FALSE);
+//    $form['field_annotation_uri'] = array('#access' => FALSE);
+//    // The audience/group fields should be hidden from here. Otherwise we have to do a fair bit of logic on them similar to what we do in the JS.
+//    $form['field_annotation_audience'] = array('#access' => FALSE);
+//    $form['og_group_ref'] = array('#access' => FALSE);
+//    $form['field_annotation_ins_viewable_co'] = array('#access' => FALSE);
+//    $form['group_content_access'] = array('#access' => FALSE);
   }
 
   return($form);
@@ -179,24 +179,19 @@ function annotation_form_alter(&$form, &$form_state, $form_id) {
  * 1. node access (core) @ admin/people/permissions -> node -> annotation (perms other than view)
  * 2. content_access (contrib) @ admin/structure/types/manage/annotation/access (view perms and perms other than view)
  * 3. og_access (contrib) -- group_content_access field (view perm) and @ admin/config/group/permissions/node/course (perms other than view)
- * 4. the two node grants below (view perm)
+ * 4. the instructor view grant below (view perm)
  *
  * Specifically, how each annotation view audience is handled:
  *
  * 1. Private -- Least amount of perm handling. Falls unto content_access.
- * 2. Everyone -- Custom grant annotation_everyone grants access to all authenticated users.
- * 3. Instructor -- Custom grant annotation_instructor grants access to instructors of selected instructor courses.
- * 4. Co-learners -- og_access grants access to the selected groups (course and peer groups).
- * 5. Instructor + Co-learners --
- *    a) Selected instructor courses which are also selected as co-learner course are handled as #4.
- *    b) Selected instructor courses which are not also selected as co-learner course are handled as #3.
- *    c) Unselected instructor courses which are selected as co-learner course are handled as #4.
- *    d) Unselected instructor courses which are not selected as co-learner courses are handled as #1.
+ * 2. Instructor -- Custom grant annotation_instructor grants access to instructor(s) of selected instructor courses.
+ * 3. Peer Groups -- og_group_ref gets set to the selected peer group(s), og_access grants access to peer group members
+ * 4. Everyone -- og_group_ref gets set to the current course, og_access grants access to course members
  *
  ***/
 
 /***
- * Annotation view grants for "everyone" and "instructor" audience options
+ * Annotation view grant for "instructor" audience option
  *
  * @see http://www.phase2technology.com/blog/drupal-7-node-access-grants-locks-and-keys/
  * Don't use hook_node_access()
@@ -207,11 +202,6 @@ function annotation_node_grants($account, $op) {
 
   if ($op == 'view') {
     $grants = array();
-
-    // "Everyone" grant
-    if (in_array ('authenticated user', $account->roles)) {
-      $grants['annotation_everyone'] = array(1);
-    }
 
     // Instructors can view private annotations within their courses if the annotation has the course selected in "Instructor Viewable by Instructors of these Courses"
     if (in_array('Instructor', $account->roles)) {
@@ -229,19 +219,6 @@ function annotation_node_access_records($node) {
 
   if ($node->type == 'annotation') {
     $annotation_wrapper = entity_metadata_wrapper('node', $node);
-
-    // "Everyone" grant
-    $audience = $annotation_wrapper->field_annotation_audience->value();
-    if (in_array('everyone', $audience)) {
-      $grants[] = array(
-        'realm' => 'annotation_everyone',
-        'gid' => 1,
-        'grant_view' => 1,
-        'grant_update' => 0,
-        'grant_delete' => 0,
-        'priority' => 100,
-      );
-    }
 
     // Instructors can view private annotations within their courses if the annotation has the course selected in "Instructor Viewable by Instructors of these Courses"
     if ($courses = $annotation_wrapper->field_annotation_ins_viewable_co->value()) {
@@ -358,21 +335,6 @@ function annotation_get_possible_groups_for_node ($node) {
   if ($user_groups = og_get_groups_by_user()) {
     $user_groups = array_keys($user_groups['node']);
 
-    // Course groups - for the current node that user is a member of
-    $course_groups = array();
-    $node_groups = $node_wrapper->og_group_ref->value();
-    if (count($node_groups)) {
-      foreach ($node_groups as $node_group) { // Nodes can belong to multiple courses
-        if (in_array($node_group->nid, $user_groups)) { // User must be in course
-          $course_groups [$node_group->nid] = array(
-            $node_group->title,
-            'selected' => 1
-          );
-        }
-      }
-    }
-
-
     // Peer groups -- all user's peer groups
     $peer_groups = array();
     foreach ($user_groups as $user_group) {
@@ -386,7 +348,6 @@ function annotation_get_possible_groups_for_node ($node) {
     }
 
     return array(
-      'course_groups' => $course_groups,
       'peer_groups' => $peer_groups
     );
   }

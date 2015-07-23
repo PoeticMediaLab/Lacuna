@@ -199,7 +199,7 @@ function lacuna_stories_content_types_field_default_field_bases() {
       'allowed_values' => array(
         'private' => 'Private',
         'instructor' => 'Instructor',
-        'co-learners' => 'Co-Learners',
+        'peer-groups' => 'Peer-Groups',
         'everyone' => 'Everyone',
       ),
       'allowed_values_function' => '',

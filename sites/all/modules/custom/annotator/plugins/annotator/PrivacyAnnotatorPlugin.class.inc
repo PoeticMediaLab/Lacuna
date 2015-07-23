@@ -23,17 +23,15 @@ class PrivacyAnnotatorPlugin extends AnnotatorPlugin {
       $audience = array(
         'private' => 0,
         'instructor' => 0,
-        'co-learners' => 1,
-        'everyone' => 0
+        'peer-groups' => 0,
+        'everyone' => 1
       );
 
       $groups = annotation_get_possible_groups_for_node($annotatable_node);
-      $instructor_groups = $groups['course_groups'];
 
       $privacy_options = array(
         'audience' => $audience,
         'groups' => $groups,
-        'instructor_groups' => $instructor_groups
       );
     }
 
