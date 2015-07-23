@@ -271,7 +271,6 @@ class Model
     # Return true if highlights should be shown
     # Note: they have their own filter type
     # Otherwise, they'll collide with the "real" categories
-    $(document).trigger('annotation-filters-changed')
     @state.showHighlights = !@state.showHighlights
     if @state.showHighlights
       @removeFilter('highlights', 'highlights')
@@ -401,7 +400,6 @@ class Model
   filterAnnotations: (filter, value) ->
     # Look for matches of filter type
     # Update list of filters
-    $(document).trigger('annotation-filters-changed')
     @activateFilter(filter, value)
     if filter == 'none'
       for annotation in @state.annotations
@@ -420,7 +418,6 @@ class Model
         else if currentValue != value
           @addToFilter(filter, value, annotation.id)
     @computeFilters()
-
 
 ### View methods ###
 class View
@@ -535,10 +532,12 @@ class View
   showAnnotations: (ids) ->
     for id in ids
       $('.' + select.annotation + id).removeClass(select.hide)
+    $(document).trigger('annotation-filters-changed') # fire after DOM changed
 
   hideAnnotations: (ids) ->
     for id in ids
       $('.' + select.annotation + id).addClass(select.hide)
+    $(document).trigger('annotation-filters-changed') # fire after DOM changed
 
   drawAnnotations: () ->
     @showAnnotations(@Model.getShown())
