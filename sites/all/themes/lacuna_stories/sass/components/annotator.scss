@@ -665,8 +665,10 @@ li.annotator-checkbox[style] {
 }
 
 /* Editor Overrides */
+//  added 'not' clause because otherwise this style overrides
+//  the 'display: none;' needed to hide the editor.
 
-.annotator-touch-editor {
+.annotator-touch-editor:not(.annotator-hide) {
   position: fixed;
   top: -1000px !important;
   left: 0 !important;
