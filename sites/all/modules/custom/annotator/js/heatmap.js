@@ -17,7 +17,12 @@
       }
     };
 
+    Heatmap.prototype.selector = {
+      hidden: 'af-annotation-hide'
+    };
+
     Heatmap.prototype.pluginInit = function() {
+      if (!Annotator.Plugin.Filters) return;
       this.heatmap = $(this.html.element);
       $(this.layout.container).prepend(this.html.element);
       if (!((typeof d3 !== "undefined" && d3 !== null) || (this.d3 != null))) {
@@ -29,10 +34,13 @@
     };
 
     function Heatmap(element, options) {
-      this.updateHeatmap = __bind(this.updateHeatmap, this);      Heatmap.__super__.constructor.call(this, element, options);
+      this.updateHeatmap = __bind(this.updateHeatmap, this);
+      this.calculateDensity = __bind(this.calculateDensity, this);      Heatmap.__super__.constructor.call(this, element, options);
       this.d3 = d3;
       this.layout = options.layout;
       this.heatmapContainer = document.querySelector(this.layout.container);
+      this.density = [];
+      this.ids = [];
     }
 
     Heatmap.prototype._setupListeners = function() {
@@ -46,6 +54,14 @@
       return $(document).bind('annotation-filters-changed', this.updateHeatmap);
     };
 
+    Heatmap.prototype.calculateDensity = function(annotations) {
+      return this.density = [];
+    };
+
+    Heatmap.prototype.skipHidden = function(annotation) {
+      if (!annotation.classList.contains(this.selector.hidden)) return annotation;
+    };
+
     Heatmap.prototype.updateHeatmap = function() {
       var annotations;
       if (typeof d3 === "undefined" || d3 === null) return;
@@ -53,7 +69,9 @@
         this.layout.width = this.heatmapContainer.offsetWidth;
       }
       this.layout.height = this.heatmapContainer.offsetHeight;
-      return annotations = this.annotator.element.find('.annotator-hl:not(.af-annotation-hide)');
+      annotations = document.querySelectorAll(".annotator-hl:not(." + this.selector.hidden + ")");
+      annotations = Array.prototype.slice.call(annotations);
+      return console.log(annotations);
     };
 
     return Heatmap;
