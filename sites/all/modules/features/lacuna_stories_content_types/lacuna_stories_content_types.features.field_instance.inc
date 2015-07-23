@@ -1575,7 +1575,7 @@ function lacuna_stories_content_types_field_default_field_instances() {
     'bundle' => 'document',
     'default_value' => array(
       0 => array(
-        'value' => 0,
+        'value' => 2,
       ),
     ),
     'deleted' => 0,
