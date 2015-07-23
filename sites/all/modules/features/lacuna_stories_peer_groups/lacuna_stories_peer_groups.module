@@ -76,13 +76,11 @@ function lacuna_stories_peer_groups_views_query_alter(&$view, &$query) {
   if($view->name == "peer_groups") {
     // This cannot be done in the view. It needs to be done in a query alter. See: https://www.drupal.org/node/596860#comment-10030507
     if ($view->current_display == 'unjoined_peer_groups') {
-      $query->add_where_expression (2, 'node.nid NOT IN (SELECT gid FROM og_membership WHERE etid = ***CURRENT_USER***)'
-      );
+      $query->add_where_expression (2, 'node.nid NOT IN (SELECT gid FROM og_membership WHERE etid = ***CURRENT_USER***)');
     }
     // This could be done in the view. Doing here for simplicity.
     elseif ($view->current_display == 'joined_peer_groups') {
-      $query->add_where_expression (2, 'node.nid IN (SELECT gid FROM og_membership WHERE etid = ***CURRENT_USER***)'
-      );
+      $query->add_where_expression (2, 'node.nid IN (SELECT gid FROM og_membership WHERE etid = ***CURRENT_USER***)');
     }
   }
 }

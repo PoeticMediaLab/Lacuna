@@ -141,6 +141,7 @@ features[variable][] = comment_default_per_page_course
 features[variable][] = comment_form_location_course
 features[variable][] = comment_preview_course
 features[variable][] = comment_subject_field_course
+features[variable][] = content_access_course
 features[variable][] = field_bundle_settings_node__course
 features[variable][] = global_filter_legacy_parameters_set
 features[variable][] = global_filters

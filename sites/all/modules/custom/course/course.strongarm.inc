@@ -139,6 +139,25 @@ function course_strongarm() {
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
+  $strongarm->name = 'content_access_course';
+  $strongarm->value = array(
+    'view_own' => array(
+      0 => 2,
+      1 => 5,
+      2 => 3,
+    ),
+    'view' => array(
+      0 => 2,
+      1 => 5,
+      2 => 3,
+    ),
+    'priority' => '5',
+  );
+  $export['content_access_course'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
   $strongarm->name = 'field_bundle_settings_node__course';
   $strongarm->value = array(
     'view_modes' => array(

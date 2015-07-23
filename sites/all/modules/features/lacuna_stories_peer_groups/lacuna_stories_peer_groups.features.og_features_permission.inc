@@ -12,12 +12,16 @@ function lacuna_stories_peer_groups_og_features_default_permissions() {
 
   // Exported og permission: 'node:peer_group:add user'
   $permissions['node:peer_group:add user'] = array(
-    'roles' => array(),
+    'roles' => array(
+      'administrator member' => 'administrator member',
+    ),
   );
 
   // Exported og permission: 'node:peer_group:administer group'
   $permissions['node:peer_group:administer group'] = array(
-    'roles' => array(),
+    'roles' => array(
+      'administrator member' => 'administrator member',
+    ),
   );
 
   // Exported og permission: 'node:peer_group:administer taxonomy'
@@ -27,12 +31,17 @@ function lacuna_stories_peer_groups_og_features_default_permissions() {
 
   // Exported og permission: 'node:peer_group:approve and deny subscription'
   $permissions['node:peer_group:approve and deny subscription'] = array(
-    'roles' => array(),
+    'roles' => array(
+      'administrator member' => 'administrator member',
+    ),
   );
 
   // Exported og permission: 'node:peer_group:create annotation content'
   $permissions['node:peer_group:create annotation content'] = array(
-    'roles' => array(),
+    'roles' => array(
+      'administrator member' => 'administrator member',
+      'member' => 'member',
+    ),
   );
 
   // Exported og permission: 'node:peer_group:create document content'
@@ -47,7 +56,9 @@ function lacuna_stories_peer_groups_og_features_default_permissions() {
 
   // Exported og permission: 'node:peer_group:delete any annotation content'
   $permissions['node:peer_group:delete any annotation content'] = array(
-    'roles' => array(),
+    'roles' => array(
+      'administrator member' => 'administrator member',
+    ),
   );
 
   // Exported og permission: 'node:peer_group:delete any document content'
@@ -62,7 +73,10 @@ function lacuna_stories_peer_groups_og_features_default_permissions() {
 
   // Exported og permission: 'node:peer_group:delete own annotation content'
   $permissions['node:peer_group:delete own annotation content'] = array(
-    'roles' => array(),
+    'roles' => array(
+      'administrator member' => 'administrator member',
+      'member' => 'member',
+    ),
   );
 
   // Exported og permission: 'node:peer_group:delete own document content'
@@ -87,17 +101,23 @@ function lacuna_stories_peer_groups_og_features_default_permissions() {
 
   // Exported og permission: 'node:peer_group:manage members'
   $permissions['node:peer_group:manage members'] = array(
-    'roles' => array(),
+    'roles' => array(
+      'administrator member' => 'administrator member',
+    ),
   );
 
   // Exported og permission: 'node:peer_group:manage permissions'
   $permissions['node:peer_group:manage permissions'] = array(
-    'roles' => array(),
+    'roles' => array(
+      'administrator member' => 'administrator member',
+    ),
   );
 
   // Exported og permission: 'node:peer_group:manage roles'
   $permissions['node:peer_group:manage roles'] = array(
-    'roles' => array(),
+    'roles' => array(
+      'administrator member' => 'administrator member',
+    ),
   );
 
   // Exported og permission: 'node:peer_group:publish any annotation content'
@@ -231,7 +251,9 @@ function lacuna_stories_peer_groups_og_features_default_permissions() {
 
   // Exported og permission: 'node:peer_group:update any annotation content'
   $permissions['node:peer_group:update any annotation content'] = array(
-    'roles' => array(),
+    'roles' => array(
+      'administrator member' => 'administrator member',
+    ),
   );
 
   // Exported og permission: 'node:peer_group:update any document content'
@@ -246,12 +268,17 @@ function lacuna_stories_peer_groups_og_features_default_permissions() {
 
   // Exported og permission: 'node:peer_group:update group'
   $permissions['node:peer_group:update group'] = array(
-    'roles' => array(),
+    'roles' => array(
+      'administrator member' => 'administrator member',
+    ),
   );
 
   // Exported og permission: 'node:peer_group:update own annotation content'
   $permissions['node:peer_group:update own annotation content'] = array(
-    'roles' => array(),
+    'roles' => array(
+      'administrator member' => 'administrator member',
+      'member' => 'member',
+    ),
   );
 
   // Exported og permission: 'node:peer_group:update own document content'

@@ -178,7 +178,7 @@ function annotation_form_alter(&$form, &$form_state, $form_id) {
  *
  * 1. node access (core) @ admin/people/permissions -> node -> annotation (perms other than view)
  * 2. content_access (contrib) @ admin/structure/types/manage/annotation/access (view perms and perms other than view)
- * 3. og_access (contrib) -- group_content_access field (view perm) and @ admin/config/group/permissions/node/course (perms other than view)
+ * 3. og_access (contrib) -- group_content_access field (view perm) and @ admin/config/group/permissions/node/course / admin/config/group/permissions/node/peer_group (perms other than view)
  * 4. the instructor view grant below (view perm)
  *
  * Specifically, how each annotation view audience is handled:
