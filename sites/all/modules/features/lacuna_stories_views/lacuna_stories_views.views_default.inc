@@ -1730,7 +1730,7 @@ function lacuna_stories_views_views_default_views() {
   $handler->display->display_options['filters']['type']['value'] = array(
     'response' => 'response',
   );
-  /* Filter criterion: Content: Genre (field_genre) */
+  /* Filter criterion: : field_genre (field_genre) */
   $handler->display->display_options['filters']['field_genre_tid']['id'] = 'field_genre_tid';
   $handler->display->display_options['filters']['field_genre_tid']['table'] = 'field_data_field_genre';
   $handler->display->display_options['filters']['field_genre_tid']['field'] = 'field_genre_tid';
@@ -1802,7 +1802,6 @@ function lacuna_stories_views_views_default_views() {
   $handler->display->display_options['query']['type'] = 'views_query';
   $handler->display->display_options['exposed_form']['type'] = 'basic';
   $handler->display->display_options['exposed_form']['options']['reset_button'] = TRUE;
-  $handler->display->display_options['exposed_form']['options']['reset_button_label'] = 'View All';
   $handler->display->display_options['exposed_form']['options']['autosubmit'] = TRUE;
   $handler->display->display_options['pager']['type'] = 'none';
   $handler->display->display_options['pager']['options']['offset'] = '0';
@@ -1906,6 +1905,11 @@ function lacuna_stories_views_views_default_views() {
   $handler->display->display_options['relationships']['uid']['table'] = 'node';
   $handler->display->display_options['relationships']['uid']['field'] = 'uid';
   $handler->display->display_options['relationships']['uid']['required'] = TRUE;
+  /* Relationship: Entity Reference: Referenced Entity */
+  $handler->display->display_options['relationships']['field_annotation_reference_target_id']['id'] = 'field_annotation_reference_target_id';
+  $handler->display->display_options['relationships']['field_annotation_reference_target_id']['table'] = 'field_data_field_annotation_reference';
+  $handler->display->display_options['relationships']['field_annotation_reference_target_id']['field'] = 'field_annotation_reference_target_id';
+  $handler->display->display_options['relationships']['field_annotation_reference_target_id']['label'] = 'Annotated Content';
   /* Field: Bulk operations: Content */
   $handler->display->display_options['fields']['views_bulk_operations']['id'] = 'views_bulk_operations';
   $handler->display->display_options['fields']['views_bulk_operations']['table'] = 'node';
@@ -1924,12 +1928,27 @@ function lacuna_stories_views_views_default_views() {
       'label' => '',
     ),
   );
-  /* Field: User: Display Name */
-  $handler->display->display_options['fields']['field_display_name']['id'] = 'field_display_name';
-  $handler->display->display_options['fields']['field_display_name']['table'] = 'field_data_field_display_name';
-  $handler->display->display_options['fields']['field_display_name']['field'] = 'field_display_name';
-  $handler->display->display_options['fields']['field_display_name']['relationship'] = 'uid';
-  $handler->display->display_options['fields']['field_display_name']['label'] = 'Author';
+  /* Field: Content: Audience */
+  $handler->display->display_options['fields']['field_annotation_audience']['id'] = 'field_annotation_audience';
+  $handler->display->display_options['fields']['field_annotation_audience']['table'] = 'field_data_field_annotation_audience';
+  $handler->display->display_options['fields']['field_annotation_audience']['field'] = 'field_annotation_audience';
+  $handler->display->display_options['fields']['field_annotation_audience']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['field_annotation_audience']['delta_offset'] = '0';
+  /* Field: Content: Groups */
+  $handler->display->display_options['fields']['og_group_ref']['id'] = 'og_group_ref';
+  $handler->display->display_options['fields']['og_group_ref']['table'] = 'og_membership';
+  $handler->display->display_options['fields']['og_group_ref']['field'] = 'og_group_ref';
+  $handler->display->display_options['fields']['og_group_ref']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['og_group_ref']['settings'] = array(
+    'link' => 0,
+  );
+  $handler->display->display_options['fields']['og_group_ref']['delta_offset'] = '0';
+  /* Field: Content: Excerpt */
+  $handler->display->display_options['fields']['field_annotation_quote']['id'] = 'field_annotation_quote';
+  $handler->display->display_options['fields']['field_annotation_quote']['table'] = 'field_data_field_annotation_quote';
+  $handler->display->display_options['fields']['field_annotation_quote']['field'] = 'field_annotation_quote';
+  $handler->display->display_options['fields']['field_annotation_quote']['alter']['max_length'] = '150';
+  $handler->display->display_options['fields']['field_annotation_quote']['alter']['trim'] = TRUE;
   /* Field: Content: Annotation Text */
   $handler->display->display_options['fields']['field_annotation_text']['id'] = 'field_annotation_text';
   $handler->display->display_options['fields']['field_annotation_text']['table'] = 'field_data_field_annotation_text';
@@ -1937,32 +1956,23 @@ function lacuna_stories_views_views_default_views() {
   $handler->display->display_options['fields']['field_annotation_text']['alter']['max_length'] = '150';
   $handler->display->display_options['fields']['field_annotation_text']['alter']['trim'] = TRUE;
   $handler->display->display_options['fields']['field_annotation_text']['type'] = 'text_plain';
-  /* Field: Content: Excerpt */
-  $handler->display->display_options['fields']['field_annotation_quote']['id'] = 'field_annotation_quote';
-  $handler->display->display_options['fields']['field_annotation_quote']['table'] = 'field_data_field_annotation_quote';
-  $handler->display->display_options['fields']['field_annotation_quote']['field'] = 'field_annotation_quote';
-  $handler->display->display_options['fields']['field_annotation_quote']['alter']['max_length'] = '150';
-  $handler->display->display_options['fields']['field_annotation_quote']['alter']['trim'] = TRUE;
-  /* Field: Content: Category */
-  $handler->display->display_options['fields']['field_annotation_category']['id'] = 'field_annotation_category';
-  $handler->display->display_options['fields']['field_annotation_category']['table'] = 'field_data_field_annotation_category';
-  $handler->display->display_options['fields']['field_annotation_category']['field'] = 'field_annotation_category';
-  $handler->display->display_options['fields']['field_annotation_category']['type'] = 'taxonomy_term_reference_plain';
+  /* Field: User: Display Name */
+  $handler->display->display_options['fields']['field_display_name']['id'] = 'field_display_name';
+  $handler->display->display_options['fields']['field_display_name']['table'] = 'field_data_field_display_name';
+  $handler->display->display_options['fields']['field_display_name']['field'] = 'field_display_name';
+  $handler->display->display_options['fields']['field_display_name']['relationship'] = 'uid';
+  $handler->display->display_options['fields']['field_display_name']['label'] = 'Annotator';
   /* Field: Content: Tags */
   $handler->display->display_options['fields']['field_annotation_tags']['id'] = 'field_annotation_tags';
   $handler->display->display_options['fields']['field_annotation_tags']['table'] = 'field_data_field_annotation_tags';
   $handler->display->display_options['fields']['field_annotation_tags']['field'] = 'field_annotation_tags';
   $handler->display->display_options['fields']['field_annotation_tags']['type'] = 'taxonomy_term_reference_plain';
   $handler->display->display_options['fields']['field_annotation_tags']['delta_offset'] = '0';
-  /* Field: Content: Groups */
-  $handler->display->display_options['fields']['og_group_ref']['id'] = 'og_group_ref';
-  $handler->display->display_options['fields']['og_group_ref']['table'] = 'og_membership';
-  $handler->display->display_options['fields']['og_group_ref']['field'] = 'og_group_ref';
-  $handler->display->display_options['fields']['og_group_ref']['label'] = 'Courses and Peer Groups';
-  $handler->display->display_options['fields']['og_group_ref']['settings'] = array(
-    'link' => 1,
-  );
-  $handler->display->display_options['fields']['og_group_ref']['delta_offset'] = '0';
+  /* Field: Content: Category */
+  $handler->display->display_options['fields']['field_annotation_category']['id'] = 'field_annotation_category';
+  $handler->display->display_options['fields']['field_annotation_category']['table'] = 'field_data_field_annotation_category';
+  $handler->display->display_options['fields']['field_annotation_category']['field'] = 'field_annotation_category';
+  $handler->display->display_options['fields']['field_annotation_category']['type'] = 'taxonomy_term_reference_plain';
   /* Field: Content: Annotated Content */
   $handler->display->display_options['fields']['field_annotation_reference']['id'] = 'field_annotation_reference';
   $handler->display->display_options['fields']['field_annotation_reference']['table'] = 'field_data_field_annotation_reference';
@@ -1970,6 +1980,25 @@ function lacuna_stories_views_views_default_views() {
   $handler->display->display_options['fields']['field_annotation_reference']['settings'] = array(
     'link' => 1,
   );
+  /* Field: Content: Groups */
+  $handler->display->display_options['fields']['og_group_ref_1']['id'] = 'og_group_ref_1';
+  $handler->display->display_options['fields']['og_group_ref_1']['table'] = 'og_membership';
+  $handler->display->display_options['fields']['og_group_ref_1']['field'] = 'og_group_ref';
+  $handler->display->display_options['fields']['og_group_ref_1']['relationship'] = 'field_annotation_reference_target_id';
+  $handler->display->display_options['fields']['og_group_ref_1']['label'] = 'Course';
+  $handler->display->display_options['fields']['og_group_ref_1']['settings'] = array(
+    'link' => 1,
+  );
+  $handler->display->display_options['fields']['og_group_ref_1']['delta_offset'] = '0';
+  /* Field: Global: PHP */
+  $handler->display->display_options['fields']['php']['id'] = 'php';
+  $handler->display->display_options['fields']['php']['table'] = 'views';
+  $handler->display->display_options['fields']['php']['field'] = 'php';
+  $handler->display->display_options['fields']['php']['label'] = 'Shared With';
+  $handler->display->display_options['fields']['php']['use_php_setup'] = 0;
+  $handler->display->display_options['fields']['php']['php_output'] = '<?php print course_sewing_kit_shared_with ($data) ?>';
+  $handler->display->display_options['fields']['php']['use_php_click_sortable'] = '0';
+  $handler->display->display_options['fields']['php']['php_click_sortable'] = '';
   /* Sort criterion: Content: Post date */
   $handler->display->display_options['sorts']['created']['id'] = 'created';
   $handler->display->display_options['sorts']['created']['table'] = 'node';
@@ -1994,13 +2023,13 @@ function lacuna_stories_views_views_default_views() {
   $handler->display->display_options['filters']['og_group_ref_target_id']['id'] = 'og_group_ref_target_id';
   $handler->display->display_options['filters']['og_group_ref_target_id']['table'] = 'og_membership';
   $handler->display->display_options['filters']['og_group_ref_target_id']['field'] = 'og_group_ref_target_id';
+  $handler->display->display_options['filters']['og_group_ref_target_id']['relationship'] = 'field_annotation_reference_target_id';
   $handler->display->display_options['filters']['og_group_ref_target_id']['group'] = 1;
   $handler->display->display_options['filters']['og_group_ref_target_id']['exposed'] = TRUE;
   $handler->display->display_options['filters']['og_group_ref_target_id']['expose']['operator_id'] = 'og_group_ref_target_id_op';
-  $handler->display->display_options['filters']['og_group_ref_target_id']['expose']['label'] = 'Limit by Courses and Peer Groups';
+  $handler->display->display_options['filters']['og_group_ref_target_id']['expose']['label'] = 'Course';
   $handler->display->display_options['filters']['og_group_ref_target_id']['expose']['operator'] = 'og_group_ref_target_id_op';
   $handler->display->display_options['filters']['og_group_ref_target_id']['expose']['identifier'] = 'og_group_ref_target_id';
-  $handler->display->display_options['filters']['og_group_ref_target_id']['expose']['multiple'] = TRUE;
   $handler->display->display_options['filters']['og_group_ref_target_id']['expose']['remember_roles'] = array(
     2 => '2',
     1 => 0,
@@ -2010,53 +2039,6 @@ function lacuna_stories_views_views_default_views() {
     6 => 0,
     7 => 0,
   );
-  /* Filter criterion: Content: Category (field_annotation_category) */
-  $handler->display->display_options['filters']['field_annotation_category_tid']['id'] = 'field_annotation_category_tid';
-  $handler->display->display_options['filters']['field_annotation_category_tid']['table'] = 'field_data_field_annotation_category';
-  $handler->display->display_options['filters']['field_annotation_category_tid']['field'] = 'field_annotation_category_tid';
-  $handler->display->display_options['filters']['field_annotation_category_tid']['group'] = 1;
-  $handler->display->display_options['filters']['field_annotation_category_tid']['exposed'] = TRUE;
-  $handler->display->display_options['filters']['field_annotation_category_tid']['expose']['operator_id'] = 'field_annotation_category_tid_op';
-  $handler->display->display_options['filters']['field_annotation_category_tid']['expose']['label'] = 'Limit by Category';
-  $handler->display->display_options['filters']['field_annotation_category_tid']['expose']['operator'] = 'field_annotation_category_tid_op';
-  $handler->display->display_options['filters']['field_annotation_category_tid']['expose']['identifier'] = 'field_annotation_category_tid';
-  $handler->display->display_options['filters']['field_annotation_category_tid']['expose']['multiple'] = TRUE;
-  $handler->display->display_options['filters']['field_annotation_category_tid']['expose']['remember_roles'] = array(
-    2 => '2',
-    1 => 0,
-    5 => 0,
-    3 => 0,
-    4 => 0,
-    6 => 0,
-    7 => 0,
-  );
-  $handler->display->display_options['filters']['field_annotation_category_tid']['reduce_duplicates'] = TRUE;
-  $handler->display->display_options['filters']['field_annotation_category_tid']['type'] = 'select';
-  $handler->display->display_options['filters']['field_annotation_category_tid']['vocabulary'] = 'annotation_categories';
-  /* Filter criterion: Content: Tags (field_annotation_tags) */
-  $handler->display->display_options['filters']['field_annotation_tags_tid']['id'] = 'field_annotation_tags_tid';
-  $handler->display->display_options['filters']['field_annotation_tags_tid']['table'] = 'field_data_field_annotation_tags';
-  $handler->display->display_options['filters']['field_annotation_tags_tid']['field'] = 'field_annotation_tags_tid';
-  $handler->display->display_options['filters']['field_annotation_tags_tid']['group'] = 1;
-  $handler->display->display_options['filters']['field_annotation_tags_tid']['exposed'] = TRUE;
-  $handler->display->display_options['filters']['field_annotation_tags_tid']['expose']['operator_id'] = 'field_annotation_tags_tid_op';
-  $handler->display->display_options['filters']['field_annotation_tags_tid']['expose']['label'] = 'Limit by Tags';
-  $handler->display->display_options['filters']['field_annotation_tags_tid']['expose']['operator'] = 'field_annotation_tags_tid_op';
-  $handler->display->display_options['filters']['field_annotation_tags_tid']['expose']['identifier'] = 'field_annotation_tags_tid';
-  $handler->display->display_options['filters']['field_annotation_tags_tid']['expose']['multiple'] = TRUE;
-  $handler->display->display_options['filters']['field_annotation_tags_tid']['expose']['remember_roles'] = array(
-    2 => '2',
-    1 => 0,
-    5 => 0,
-    3 => 0,
-    4 => 0,
-    6 => 0,
-    7 => 0,
-  );
-  $handler->display->display_options['filters']['field_annotation_tags_tid']['reduce_duplicates'] = TRUE;
-  $handler->display->display_options['filters']['field_annotation_tags_tid']['type'] = 'select';
-  $handler->display->display_options['filters']['field_annotation_tags_tid']['vocabulary'] = 'annotation_tags';
-  $handler->display->display_options['filters']['field_annotation_tags_tid']['error_message'] = FALSE;
   /* Filter criterion: Content: Author (select list) */
   $handler->display->display_options['filters']['author_select']['id'] = 'author_select';
   $handler->display->display_options['filters']['author_select']['table'] = 'node';
@@ -2064,10 +2046,9 @@ function lacuna_stories_views_views_default_views() {
   $handler->display->display_options['filters']['author_select']['group'] = 1;
   $handler->display->display_options['filters']['author_select']['exposed'] = TRUE;
   $handler->display->display_options['filters']['author_select']['expose']['operator_id'] = 'author_select_op';
-  $handler->display->display_options['filters']['author_select']['expose']['label'] = 'Limit by Author';
+  $handler->display->display_options['filters']['author_select']['expose']['label'] = 'Annotator';
   $handler->display->display_options['filters']['author_select']['expose']['operator'] = 'author_select_op';
   $handler->display->display_options['filters']['author_select']['expose']['identifier'] = 'author_select';
-  $handler->display->display_options['filters']['author_select']['expose']['multiple'] = TRUE;
   $handler->display->display_options['filters']['author_select']['expose']['remember_roles'] = array(
     2 => '2',
     1 => 0,
@@ -2084,11 +2065,77 @@ function lacuna_stories_views_views_default_views() {
   $handler->display->display_options['filters']['field_annotation_reference_target_id']['group'] = 1;
   $handler->display->display_options['filters']['field_annotation_reference_target_id']['exposed'] = TRUE;
   $handler->display->display_options['filters']['field_annotation_reference_target_id']['expose']['operator_id'] = 'field_annotation_reference_target_id_op';
-  $handler->display->display_options['filters']['field_annotation_reference_target_id']['expose']['label'] = 'Limit by Annotated Content';
+  $handler->display->display_options['filters']['field_annotation_reference_target_id']['expose']['label'] = 'Annotated Content';
   $handler->display->display_options['filters']['field_annotation_reference_target_id']['expose']['operator'] = 'field_annotation_reference_target_id_op';
   $handler->display->display_options['filters']['field_annotation_reference_target_id']['expose']['identifier'] = 'field_annotation_reference_target_id';
   $handler->display->display_options['filters']['field_annotation_reference_target_id']['expose']['multiple'] = TRUE;
   $handler->display->display_options['filters']['field_annotation_reference_target_id']['expose']['remember_roles'] = array(
+    2 => '2',
+    1 => 0,
+    5 => 0,
+    3 => 0,
+    4 => 0,
+    6 => 0,
+    7 => 0,
+  );
+  /* Filter criterion: Content: Tags (field_annotation_tags) */
+  $handler->display->display_options['filters']['field_annotation_tags_tid']['id'] = 'field_annotation_tags_tid';
+  $handler->display->display_options['filters']['field_annotation_tags_tid']['table'] = 'field_data_field_annotation_tags';
+  $handler->display->display_options['filters']['field_annotation_tags_tid']['field'] = 'field_annotation_tags_tid';
+  $handler->display->display_options['filters']['field_annotation_tags_tid']['group'] = 1;
+  $handler->display->display_options['filters']['field_annotation_tags_tid']['exposed'] = TRUE;
+  $handler->display->display_options['filters']['field_annotation_tags_tid']['expose']['operator_id'] = 'field_annotation_tags_tid_op';
+  $handler->display->display_options['filters']['field_annotation_tags_tid']['expose']['label'] = 'Tags';
+  $handler->display->display_options['filters']['field_annotation_tags_tid']['expose']['operator'] = 'field_annotation_tags_tid_op';
+  $handler->display->display_options['filters']['field_annotation_tags_tid']['expose']['identifier'] = 'field_annotation_tags_tid';
+  $handler->display->display_options['filters']['field_annotation_tags_tid']['expose']['multiple'] = TRUE;
+  $handler->display->display_options['filters']['field_annotation_tags_tid']['expose']['remember_roles'] = array(
+    2 => '2',
+    1 => 0,
+    5 => 0,
+    3 => 0,
+    4 => 0,
+    6 => 0,
+    7 => 0,
+  );
+  $handler->display->display_options['filters']['field_annotation_tags_tid']['reduce_duplicates'] = TRUE;
+  $handler->display->display_options['filters']['field_annotation_tags_tid']['type'] = 'select';
+  $handler->display->display_options['filters']['field_annotation_tags_tid']['vocabulary'] = 'annotation_tags';
+  $handler->display->display_options['filters']['field_annotation_tags_tid']['error_message'] = FALSE;
+  /* Filter criterion: Content: Category (field_annotation_category) */
+  $handler->display->display_options['filters']['field_annotation_category_tid']['id'] = 'field_annotation_category_tid';
+  $handler->display->display_options['filters']['field_annotation_category_tid']['table'] = 'field_data_field_annotation_category';
+  $handler->display->display_options['filters']['field_annotation_category_tid']['field'] = 'field_annotation_category_tid';
+  $handler->display->display_options['filters']['field_annotation_category_tid']['group'] = 1;
+  $handler->display->display_options['filters']['field_annotation_category_tid']['exposed'] = TRUE;
+  $handler->display->display_options['filters']['field_annotation_category_tid']['expose']['operator_id'] = 'field_annotation_category_tid_op';
+  $handler->display->display_options['filters']['field_annotation_category_tid']['expose']['label'] = 'Category';
+  $handler->display->display_options['filters']['field_annotation_category_tid']['expose']['operator'] = 'field_annotation_category_tid_op';
+  $handler->display->display_options['filters']['field_annotation_category_tid']['expose']['identifier'] = 'field_annotation_category_tid';
+  $handler->display->display_options['filters']['field_annotation_category_tid']['expose']['multiple'] = TRUE;
+  $handler->display->display_options['filters']['field_annotation_category_tid']['expose']['remember_roles'] = array(
+    2 => '2',
+    1 => 0,
+    5 => 0,
+    3 => 0,
+    4 => 0,
+    6 => 0,
+    7 => 0,
+  );
+  $handler->display->display_options['filters']['field_annotation_category_tid']['reduce_duplicates'] = TRUE;
+  $handler->display->display_options['filters']['field_annotation_category_tid']['type'] = 'select';
+  $handler->display->display_options['filters']['field_annotation_category_tid']['vocabulary'] = 'annotation_categories';
+  /* Filter criterion: Content: Audience (field_annotation_audience) */
+  $handler->display->display_options['filters']['field_annotation_audience_value']['id'] = 'field_annotation_audience_value';
+  $handler->display->display_options['filters']['field_annotation_audience_value']['table'] = 'field_data_field_annotation_audience';
+  $handler->display->display_options['filters']['field_annotation_audience_value']['field'] = 'field_annotation_audience_value';
+  $handler->display->display_options['filters']['field_annotation_audience_value']['exposed'] = TRUE;
+  $handler->display->display_options['filters']['field_annotation_audience_value']['expose']['operator_id'] = 'field_annotation_audience_value_op';
+  $handler->display->display_options['filters']['field_annotation_audience_value']['expose']['label'] = 'Shared With';
+  $handler->display->display_options['filters']['field_annotation_audience_value']['expose']['operator'] = 'field_annotation_audience_value_op';
+  $handler->display->display_options['filters']['field_annotation_audience_value']['expose']['identifier'] = 'field_annotation_audience_value';
+  $handler->display->display_options['filters']['field_annotation_audience_value']['expose']['multiple'] = TRUE;
+  $handler->display->display_options['filters']['field_annotation_audience_value']['expose']['remember_roles'] = array(
     2 => '2',
     1 => 0,
     5 => 0,

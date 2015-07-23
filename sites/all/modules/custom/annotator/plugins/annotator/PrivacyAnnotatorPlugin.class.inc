@@ -9,7 +9,7 @@ class PrivacyAnnotatorPlugin extends AnnotatorPlugin {
 
     // Build annotator.js privacy options
 
-    $annotatable_node = annotator_check_annotatable_node();
+    $annotatable_node =  annotator_check_annotatable_node();
 
     // Check for default privacy options for this user for this node
     global $user;

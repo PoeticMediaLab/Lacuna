@@ -230,11 +230,17 @@ function course_views_pre_render(&$view) {
 function course_views_pre_build(&$view) {
   switch($view->name) {
 
-    // Set default value for groups exposed filter to the course context
     case 'sewing-kit':
+
+      // Set some default values on the exposed filters for Course and Annotator
+      // There is a bug that prevents clearing default values (ie. searching for all) when the exposed filter is multivalued (see: https://www.drupal.org/node/2452729), so for now I have set these two filters to single value.
       $current_course = course_get_selected_course();
       $view->display_handler->handlers['filter']['og_group_ref_target_id']->value = array($current_course=>$current_course);
+      global $user;
+      $view->display_handler->handlers['filter']['author_select']->value = array($user->uid => $user->uid);
+
       break;
+
   }
 }
 
@@ -245,51 +251,59 @@ function course_views_pre_build(&$view) {
 function course_form_views_exposed_form_alter(&$form, &$form_state) {
   if ($form['#id'] == 'views-exposed-form-sewing-kit-page') {
 
-    // Use ajax to update the tag options based on the selected course
-    // Note: views patch required to get exposed filters to work with ajax callbacks: https://www.drupal.org/node/1183418#comment-8476481
-    if(!empty($form_state['values'])) {
-      $form_state['input'] = array_merge($form_state['input'], $form_state['values']);
-    }
-    $form['og_group_ref_target_id']['#ajax'] = array(
-      'callback' => '_course_ajax_update_tags_filter_when_course_changed',
-      'wrapper' => 'tags_wrapper',
-    );
-    $form['field_annotation_tags_tid']['#prefix'] = '<div id="tags_wrapper">';
-    $form['field_annotation_tags_tid']['#suffix'] = '</div>';
-
-    // Restrict the group filter options to groups the user is a member of
-    $group_options = array();
+    // Restrict the group filter options to (a) courses, (b) that the user is a member of
+    $group_options = array('All' => '- Any -');
     $groups = og_get_groups_by_user();
     foreach ($groups['node'] as $gid) {
-      $group = node_load ($gid);
-      $group_options[$gid] = $group->title;
+      $group = node_load($gid);
+      if ($group->type == 'course') {
+        $group_options[$gid] = $group->title;
+      }
     }
     $form['og_group_ref_target_id']['#options'] = $group_options;
 
-    // Restrict the tag filter options to tags on annotations for selected groups only (tags are group-specific)
-    $group_tag_options = array();
-    $selected_groups = $form_state['input']['og_group_ref_target_id'];
-    if ($selected_groups) {
-      $query = new EntityFieldQuery();
-      $query->entityCondition('entity_type', 'taxonomy_term');
-      $query->entityCondition('bundle', 'annotation_tags');
-      $query->fieldCondition('field_annotation_tag_course', 'target_id', $selected_groups);
-      $records = $query->execute();
-      if (count($records['taxonomy_term'])) {
-        $group_tag_options = array_keys($records['taxonomy_term']);
-      }
-    }
-    foreach ($form['field_annotation_tags_tid']['#options'] as $existing_tag_option_tid => $existing_tag_option_name) {
-      if (!in_array($existing_tag_option_tid, $group_tag_options)) {
-        unset ($form['field_annotation_tags_tid']['#options'][$existing_tag_option_tid]);
-      }
-    }
+//    // Restrict the tag filter options to tags on annotations for selected groups only (tags are group-specific)
+//    $group_tag_options = array();
+//    $selected_groups = $form_state['input']['og_group_ref_target_id'];
+//    if ($selected_groups) {
+//      $query = new EntityFieldQuery();
+//      $query->entityCondition('entity_type', 'taxonomy_term');
+//      $query->entityCondition('bundle', 'annotation_tags');
+//      $query->fieldCondition('field_annotation_tag_course', 'target_id', $selected_groups);
+//      $records = $query->execute();
+//      if (count($records)) {
+//        $group_tag_options = array_keys($records['taxonomy_term']);
+//      }
+//    }
+//    foreach ($form['field_annotation_tags_tid']['#options'] as $existing_tag_option_tid => $existing_tag_option_name) {
+//      if (!in_array($existing_tag_option_tid, $group_tag_options)) {
+//        unset ($form['field_annotation_tags_tid']['#options'][$existing_tag_option_tid]);
+//      }
+//    }
 
   }
 }
 
-function _course_ajax_update_tags_filter_when_course_changed($form, $form_state) {
-  return $form['field_annotation_tags_tid'];
+// Shared With field in the Sewing Kit view, merges the Audience field and Peer Groups values (when applicable) into a single column to save space
+function course_sewing_kit_shared_with ($data) {
+  $lines = array();
+  foreach ($data->field_field_annotation_audience as $audience) {
+    $audience_val = $audience['rendered']['#markup'];
+    if ($audience['raw']['value'] == 'peer-groups') {
+      $peer_groups = array();
+      foreach ($data->field_og_group_ref as $group) {
+        if ($group['raw']['entity']->type == 'peer_group') {
+          $peer_groups[] = $group['rendered']['#markup'];
+        }
+      }
+      $audience_val .= ' (' . implode (', ', $peer_groups) . ')';
+    }
+    $lines[] = $audience_val;
+  }
+  $output = implode (', ', $lines);
+  if ($output) {
+    return $output;
+  }
 }
 
 // Get the currently selected course
