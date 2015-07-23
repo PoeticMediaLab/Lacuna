@@ -158,7 +158,7 @@ function annotation_drupal_format($entity, $update = FALSE) {
       'target_id' => (int) $node->nid,
       'target_type' => 'node'
     );
-    $annotation->title = 'Annotation of ' . $node->title; // add document name and author?
+    $annotation->title = 'Annotation of ' . $node->title; // add node author?
   }
   else {
     $annotation = node_load($entity->id);
@@ -596,7 +596,7 @@ function annotation_api_entity_prepare($annotation, $op) {
           }
         }
         // Get possible groups, and unmark those that are not selected for this annotation
-        $possible_groups = annotation_get_possible_groups_for_document($referenced_node);
+        $possible_groups = annotation_get_possible_groups_for_node($referenced_node);
         foreach ($possible_groups as $group_type => $group_type_possible_groups) {
           foreach ($group_type_possible_groups as $group_nid => $group_properties) {
             if (!in_array($group_nid, $selected_groups)) {

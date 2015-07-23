@@ -10,15 +10,18 @@ function annotator_init() {
     if (module_exists('locale')) {
       drupal_add_library('annotator', 'jsgettext', TRUE);
     }*/
-    $library = libraries_load('annotator');
-    if ($library['loaded'] == FALSE) {
-      drupal_set_message($library['error message'], 'error');
-      return 'Please download and install ' . l( $library['name'], $library['download url'] ) . '!';
+    // Only load the annotator and its plugins if we are on an annotatable node
+    if (annotator_check_annotatable_node()) {
+      $library = libraries_load('annotator');
+      if ($library['loaded'] == FALSE) {
+        drupal_set_message($library['error message'], 'error');
+        return 'Please download and install ' . l($library['name'], $library['download url']) . '!';
+      }
+      drupal_add_js(array('annotator' => array('element' => variable_get('annotator_element', '.node'))), 'setting');
+      drupal_add_js(drupal_get_path('module', 'annotator') . '/js/annotator.js');
+      drupal_add_css(drupal_get_path('module', 'annotator') . '/css/style.css');
+      annotator_execute_plugins();
     }
-    drupal_add_js(array('annotator' => array('element' => variable_get('annotator_element','.node'))), 'setting');
-    drupal_add_js(drupal_get_path('module', 'annotator') . '/js/annotator.js');
-    drupal_add_css(drupal_get_path('module', 'annotator') . '/css/style.css');
-    annotator_execute_plugins();
   }
 }
 
@@ -148,5 +151,24 @@ function annotator_execute_plugins($annotation = NULL, $op = NULL) {
  * Implements hook_TYPE_alter().
  */
 function annotator_annotation_alter($entity, $op) {
-  annotator_execute_plugins($entity, $op);
+  // Only load the annotator and its plugins if we are on an annotatable node
+  if (annotator_check_annotatable_node()) {
+    annotator_execute_plugins($entity, $op);
+  }
+}
+
+/**
+ * Check if we are currently on an annotatable node
+ * If so, return the node.
+ */
+function annotator_check_annotatable_node () {
+
+  if (arg(0) == 'node' && is_numeric (arg(1))) {
+    $current_node = node_load(arg(1));
+    $anno_ref_field = field_info_field('field_annotation_reference');
+    $annotatable_types = $anno_ref_field['settings']['handler_settings']['target_bundles'];
+    if (in_array($current_node->type, $annotatable_types)) {
+      return $current_node;
+    }
+  }
 }
