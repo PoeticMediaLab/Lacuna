@@ -262,24 +262,30 @@ function course_form_views_exposed_form_alter(&$form, &$form_state) {
     }
     $form['og_group_ref_target_id']['#options'] = $group_options;
 
-//    // Restrict the tag filter options to tags on annotations for selected groups only (tags are group-specific)
-//    $group_tag_options = array();
-//    $selected_groups = $form_state['input']['og_group_ref_target_id'];
-//    if ($selected_groups) {
-//      $query = new EntityFieldQuery();
-//      $query->entityCondition('entity_type', 'taxonomy_term');
-//      $query->entityCondition('bundle', 'annotation_tags');
-//      $query->fieldCondition('field_annotation_tag_course', 'target_id', $selected_groups);
-//      $records = $query->execute();
-//      if (count($records)) {
-//        $group_tag_options = array_keys($records['taxonomy_term']);
-//      }
-//    }
-//    foreach ($form['field_annotation_tags_tid']['#options'] as $existing_tag_option_tid => $existing_tag_option_name) {
-//      if (!in_array($existing_tag_option_tid, $group_tag_options)) {
-//        unset ($form['field_annotation_tags_tid']['#options'][$existing_tag_option_tid]);
-//      }
-//    }
+    // Restrict the tag filter options to tags on annotations on documents in courses in which the user is a member. Otherwise we will have inapplicable tags here even with no filters set. Plus tags may be considered private content.
+    $group_tag_options = array();
+
+    $user_groups = array_keys(og_get_groups_by_user (NULL, 'node'));
+    $course_groups = array();
+    foreach ($user_groups as $user_group) {
+      $group = node_load($user_group);
+      if ($group->type == 'course') {
+        $course_groups[] = $user_group;
+      }
+    }
+    $query = new EntityFieldQuery();
+    $query->entityCondition('entity_type', 'taxonomy_term');
+    $query->entityCondition('bundle', 'annotation_tags');
+    $query->fieldCondition('field_annotation_tag_course', 'target_id', $course_groups, 'IN');
+    $records = $query->execute();
+    if (count($records)) {
+      $group_tag_options = array_keys($records['taxonomy_term']);
+    }
+    foreach ($form['field_annotation_tags_tid']['#options'] as $existing_tag_option_tid => $existing_tag_option_name) {
+      if (!in_array($existing_tag_option_tid, $group_tag_options)) {
+        unset ($form['field_annotation_tags_tid']['#options'][$existing_tag_option_tid]);
+      }
+    }
 
   }
 }
