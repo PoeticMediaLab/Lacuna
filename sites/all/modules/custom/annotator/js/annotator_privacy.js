@@ -6,19 +6,19 @@
         // need to use .on for future DOM elements, 1.5.1 has .delegate
         $(document).on( "click", "form.annotator-widget .privacy.types .privacy-type", function(e) {
           $(this).toggleClass("checked");
-          if ("Co-Learners" == $(this).attr("id")) {
+          if ("Peer-Groups" == $(this).attr("id")) {
             $(".annotator-widget .privacy-groups").toggleClass("show-groups");
           }
           if ($(this).hasClass("checked")) {
             if ("Private" == $(this).attr("id")) {
-              $(".privacy.types #Instructor, .privacy.types #Co-Learners, .privacy.types #Everyone").removeClass('checked');
+              $(".privacy.types #Instructor, .privacy.types #Peer-Groups, .privacy.types #Everyone").removeClass('checked');
               $(".annotator-widget .privacy-groups").removeClass("show-groups");
             }
             if ("Everyone" == $(this).attr("id")) {
-              $(".privacy.types #Instructor, .privacy.types #Co-Learners, .privacy.types #Private").removeClass('checked');
+              $(".privacy.types #Instructor, .privacy.types #Peer-Groups, .privacy.types #Private").removeClass('checked');
               $(".annotator-widget .privacy-groups").removeClass("show-groups");
             }
-            if ("Instructor" == $(this).attr("id") || "Co-Learners" == $(this).attr("id")) {
+            if ("Instructor" == $(this).attr("id") || "Peer-Groups" == $(this).attr("id")) {
               $(".privacy.types #Private, .privacy.types #Everyone").removeClass('checked');
             }
           }

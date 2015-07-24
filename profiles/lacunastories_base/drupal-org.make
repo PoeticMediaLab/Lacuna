@@ -13,9 +13,6 @@ projects[admin_menu][subdir] = "contrib"
 projects[fpa][version] = "2.6"
 projects[fpa][subdir] = "contrib"
 
-projects[front][version] = "2.4"
-projects[front][subdir] = "contrib"
-
 projects[module_filter][version] = "2.0"
 projects[module_filter][subdir] = "contrib"
 
@@ -180,9 +177,6 @@ projects[better_exposed_filters][subdir] = "contrib"
 
 projects[views][version] = "3.11"
 projects[views][subdir] = "contrib"
-
-projects[views_autocomplete_filters][version] = "1.2"
-projects[views_autocomplete_filters][subdir] = "contrib"
 
 projects[views_bulk_operations][version] = "3.2"
 projects[views_bulk_operations][subdir] = "contrib"

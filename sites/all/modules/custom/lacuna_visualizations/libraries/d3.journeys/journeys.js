@@ -691,7 +691,7 @@
 				// append a g element, put a circle in it.
 				node.enter().append("g")
 				.append("circle")
-				  .attr("class", "blog")
+				  .attr("class", "response")
 				  .attr("fill", function(d) {
 					for(var i = 0; i < userNamesColors.length; i++){
 						if(userNamesColors[i][0] == d.data.author){
@@ -716,7 +716,7 @@
 				})
 					;
 
-				node.attr("class", "blog")
+				node.attr("class", "response")
 					; 
 
 				var exitSelection = node.exit();
@@ -733,8 +733,8 @@
 					.remove()
 					;
 
-				// only blogPosts are moveable -- document nodes are fixed.
-				graph.selectAll(".blog")
+				// only responses are moveable -- document nodes are fixed.
+				graph.selectAll(".response")
 					.call(force.drag);
 				
 				// aw, let's let 'em move biblio posts, too.

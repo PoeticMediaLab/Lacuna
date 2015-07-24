@@ -325,7 +325,7 @@
 
 	// div containing: 
 	// 1. various toggleable features (biblio circle... more to come)
-	// 2. selectable names of all students w/ blog posts. 
+	// 2. selectable names of all students w/ responses.
 	var controlPanelDiv = d3.select("#" + settings.id).append("div")
 		.classed("controlPanelDiv", true)
 		.style("height", "70%")
@@ -806,8 +806,8 @@
 					.remove()
 					;
 
-				// only blogPosts are moveable -- document nodes are fixed.
-				graph.selectAll(".blog")
+				// only responses are moveable -- document nodes are fixed.
+				graph.selectAll(".response")
 					.call(force.drag);
 				
 				// aw, let's let 'em move biblio posts, too.

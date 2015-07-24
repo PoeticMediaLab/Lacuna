@@ -284,18 +284,63 @@ i.af-pager {
 *	Annotator Privacy Plugin CSS
 */
 
-.annotator-privacy {
-  opacity: .5;
-}
- .annotator-privacy-public {
-  color: green;
-  display: block !important;
- }
+/***
+ * Annotator Privacy Plugin CSS.
+ *
+ ***/
 
- .annotator-privacy-private {
- 	color: firebrick;
-  display: block !important;
- }
+span.privacy.types .privacy-type {
+  padding: 7px 6px;
+  margin: 1px 1px 0px;
+  -webkit-border-radius: 6px 6px 6px 6px;
+  -moz-border-radius: 6px 6px 6px 6px;
+  border-radius: 6px 6px 6px 6px;
+  color: #FFF;
+  background-color: #92a6c4;
+  cursor: pointer;
+  display: inline-block;
+}
+span.privacy.types .privacy-type.checked {
+  background-color: #88b551;
+}
+form.annotator-widget .privacy-groups {
+  display: none;
+}
+form.annotator-widget .privacy-groups.show-groups {
+  display: block;
+}
+label.privacy.group {
+  width: 95%;
+  margin-left: 5%;
+  display: inline-block;
+}
+
+.annotator-viewer .privacy-type {
+  padding: 7px 6px;
+  margin: 1px 1px 0px;
+  -webkit-border-radius: 6px 6px 6px 6px;
+  -moz-border-radius: 6px 6px 6px 6px;
+  border-radius: 6px 6px 6px 6px;
+  color: #FFF;
+  background-color: #88b551;
+  display: inline-block;
+}
+.annotator-viewer .privacy-group.checked {
+  padding: 7px 6px;
+  margin: 1px 1px 0px;
+  -webkit-border-radius: 6px 6px 6px 6px;
+  -moz-border-radius: 6px 6px 6px 6px;
+  border-radius: 6px 6px 6px 6px;
+  color: #FFF;
+  background-color: #88b551;
+  display: inline-block;
+}
+.annotator-viewer .privacy-group.peer_groups.checked {
+  background-color: #88b551;
+}
+.annotator-viewer .privacy-group.course_groups.checked {
+  background-color: #92a6c4;
+}
 
 
 /* ----------------------------------------------------------------
