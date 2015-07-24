@@ -12,20 +12,6 @@ if (!function_exists("system_form_install_configure_form_alter")) {
 }
 
 /**
- * Implements hook_form_alter().
- *
- * Select the current install profile by default.
- */
-if (!function_exists("system_form_install_select_profile_form_alter")) {
-  function system_form_install_select_profile_form_alter(&$form, $form_state) {
-    foreach ($form['profile'] as $key => $element) {
-      $form['profile'][$key]['#value'] = 'lacunastories_base';
-    }
-  }
-}
-
-
-/**
  * Implementing hook_block_info
  * Adding neccessary blocks:
  * 1. a phoney empty block to activate second sidebar
@@ -63,19 +49,6 @@ function lacunastories_base_block_view($delta)
 }
 
 /**
- * Implementing hook_block_info_alter
- * enabling superfish 1 block for main menu.
- */
-function lacunastories_base_block_info_alter(&$blocks, $theme, $code_blocks){
-    $regions = system_region_list($theme, REGIONS_VISIBLE);
-    if(array_key_exists('header', $regions)){
-        $blocks['superfish'][1]['status'] = 1;    
-        $blocks['superfish'][1]['region'] = 'header';    
-        $blocks['superfish'][1]['title'] = "<none>";
-    }
-}
-
-/**
  * Implements hook_install_tasks().
  * Profile install tasks run after the main profile installation in lacunastories_base_install
  */
@@ -86,7 +59,6 @@ function lacunastories_base_install_tasks($install_state) {
     'lacunastories_base_set_basic_pages_permissions' => array(),
     'lacunastories_base_manage_theme_settings' => array(), // hide main_menu(it belongs to superfish) and secondary_menu
     'lacunastories_base_set_jquery_default' => array(), // set JQuery version to 1.7
-    'lacunastories_base_set_superfish_settings' => array(),
     'lacunastories_base_set_media_settings' => array(),
     'lacunastories_base_set_annotator_settings' => array(),
     'lacunastories_base_default_tax_terms' => array(),
@@ -189,31 +161,26 @@ function lacunastories_base_create_research_consent_webform()
     'emails' => $emails,
     'components' => $components,
   );
-
-  $node->menu['enabled'] = TRUE;
-  $node->menu['link_title'] = $node->title;
-  $node->menu['description'] = ''; // Needed even if empty to avoid notices.
+  
   $node = node_submit($node); // Prepare node for a submit
   node_save($node);
 }
 
 
 /*
-  Creating basic pages like FAQ, "About This Course", etc.
+  Creating basic pages like FAQ, "Instructor's Guide", etc.
  */
 function lacunastories_base_create_basic_pages()
 {
-  $content[0]["title"] = "About This Course";
-  $content[0]["body"] = file_get_contents(DRUPAL_ROOT . "/profiles/lacunastories_base/basic pages/about_this_course.html");
 
-  $content[1]["title"] = "FAQ";
-  $content[1]["body"] = file_get_contents(DRUPAL_ROOT . "/profiles/lacunastories_base/basic pages/faq.html");;
+  $content[0]["title"] = "FAQ";
+  $content[0]["body"] = file_get_contents(DRUPAL_ROOT . "/profiles/lacunastories_base/basic pages/faq.html");;
 
-  $content[2]["title"] = "Instructor's Guide";
-  $content[2]["body"] = file_get_contents(DRUPAL_ROOT . "/profiles/lacunastories_base/basic pages/instructors_guide.html");
+  $content[1]["title"] = "Instructor's Guide";
+  $content[1]["body"] = file_get_contents(DRUPAL_ROOT . "/profiles/lacunastories_base/basic pages/instructors_guide.html");
 
-  $content[3]["title"] = "Student User Guide";
-  $content[3]["body"] = file_get_contents(DRUPAL_ROOT . "/profiles/lacunastories_base/basic pages/student_user_guide.html");;
+  $content[2]["title"] = "Student User Guide";
+  $content[2]["body"] = file_get_contents(DRUPAL_ROOT . "/profiles/lacunastories_base/basic pages/student_user_guide.html");;
 
   foreach($content as $page)
   {
@@ -283,12 +250,6 @@ function lacunastories_base_manage_theme_settings()
 function lacunastories_base_set_jquery_default()
 {
   variable_set('jquery_update_jquery_version', '1.7');
-}
-
-// set style for superfish
-function lacunastories_base_set_superfish_settings(){
-  variable_set("superfish_style_1", "white");
-  variable_set("superfish_shadow_1", 0);
 }
 
 // set media settings

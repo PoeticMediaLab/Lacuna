@@ -5,6 +5,8 @@
  * Perform actions to set up the site for this profile.
  */
 function lacunastories_base_install() {
+  // Set error display to none. Developers should change this value after installing.
+  variable_set('error_level', 0);
   // Enable some lacunastories_base blocks.
   $default_theme = 'lacuna_stories';
   $admin_theme = 'seven';
@@ -27,8 +29,7 @@ function lacunastories_base_install() {
     ->execute();
   variable_set('theme_default', $default_theme);
   variable_set('admin_theme', $admin_theme);
-  // activate admin theme when editing a node
-  variable_set('node_admin_theme', '1');
+  variable_set('node_admin_theme', '0');
   $blocks = array(
     array(
       'module' => 'system',

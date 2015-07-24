@@ -1,7 +1,7 @@
 ; Packaging information for lacunastories_base
 name = "Lacunastories Base"
 description = "Installation profile for basic lacunastories site."
-exclusive = "1"
+exclusive = TRUE
 core = "7.x"
 ; ----------
 ; Dependencies
@@ -12,7 +12,6 @@ dependencies[] = content_access
 dependencies[] = admin_menu
 dependencies[] = admin_menu_toolbar
 dependencies[] = fpa
-dependencies[] = front_page
 dependencies[] = module_filter
 ; Biblio
 dependencies[] = biblio
@@ -23,7 +22,6 @@ dependencies[] = context
 dependencies[] = context_ui
 ; Core
 dependencies[] = block
-dependencies[] = blog
 dependencies[] = color
 dependencies[] = comment
 dependencies[] = contact
@@ -98,6 +96,7 @@ dependencies[] = og_vocab
 ; Other
 dependencies[] = advanced_help
 dependencies[] = backup_migrate
+dependencies[] = chosen
 dependencies[] = entity
 dependencies[] = entity_token
 dependencies[] = file_entity
@@ -127,7 +126,6 @@ dependencies[] = wysiwyg
 ; Views
 dependencies[] = better_exposed_filters
 dependencies[] = views
-dependencies[] = views_autocomplete_filters
 dependencies[] = views_bulk_operations
 dependencies[] = views_ui
 ; Visualization

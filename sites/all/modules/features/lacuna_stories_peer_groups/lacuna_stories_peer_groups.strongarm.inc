@@ -66,15 +66,15 @@ function lacuna_stories_peer_groups_strongarm() {
   $strongarm->value = array(
     'view_own' => array(
       0 => 2,
-      1 => 3,
-      2 => 4,
+      1 => 5,
+      2 => 3,
     ),
     'view' => array(
       0 => 2,
-      1 => 3,
-      2 => 4,
+      1 => 5,
+      2 => 3,
     ),
-    'priority' => '-10',
+    'priority' => '-1',
   );
   $export['content_access_peer_group'] = $strongarm;
 

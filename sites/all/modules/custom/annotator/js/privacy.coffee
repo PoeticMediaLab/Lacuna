@@ -29,9 +29,9 @@ class Annotator.Plugin.Privacy extends Annotator.Plugin
     groups_html = privacy_html = show_groups = ''
 
     privacy_html += '<span class="privacy types">'
-    for privacy_type in ["Private", "Instructor", "Co-Learners", "Everyone"]
+    for privacy_type in ["Private", "Instructor", "Peer-Groups", "Everyone"]
       checked = if settings.audience[privacy_type.toLowerCase()] then 'checked' else ''
-      if "Co-Learners" == privacy_type && "checked" == checked
+      if "Peer-Groups" == privacy_type && "checked" == checked
         show_groups = 'show-groups'
       privacy_html += '<span class="privacy-type ' + checked + '" id="' + privacy_type + '">' + privacy_type + '</span>'
     privacy_html += '</span>'
@@ -49,7 +49,6 @@ class Annotator.Plugin.Privacy extends Annotator.Plugin
 
   savePrivacy: (event, annotation) ->
     annotation.privacy_options = {}
-    course_groups = {}
     peer_groups = {}
     audience = {}
     $('.annotator-editor span.privacy-type').each(->
@@ -63,14 +62,11 @@ class Annotator.Plugin.Privacy extends Annotator.Plugin
         gid = $(this).val()
         parent = $(this).parent()
         group_name = parent[0].textContent
-        if $(this).hasClass("course_groups")
-          course_groups[gid] = 0: group_name, selected: checked
-        else
-          peer_groups[gid] = 0: group_name, selected: checked
+        peer_groups[gid] = 0: group_name, selected: checked
       )
     )
     annotation.privacy_options.audience = audience
-    annotation.privacy_options.groups = {peer_groups: peer_groups, course_groups:  course_groups}
+    annotation.privacy_options.groups = {peer_groups: peer_groups}
 
   updateViewer: (field, annotation) ->
     if annotation.privacy_options
@@ -78,7 +74,7 @@ class Annotator.Plugin.Privacy extends Annotator.Plugin
       for audience_type, checked of annotation.privacy_options.audience
         if checked
           audience += '<span class="privacy-type">' + audience_type + '</span>'
-          if 'co-learners' == audience_type
+          if 'peer-groups' == audience_type
             has_groups = true
       audience += '</div>'
       groups = ''

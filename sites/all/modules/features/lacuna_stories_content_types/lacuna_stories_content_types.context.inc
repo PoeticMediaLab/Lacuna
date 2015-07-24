@@ -19,7 +19,7 @@ function lacuna_stories_content_types_context_default_contexts() {
   $context->conditions = array(
     'node' => array(
       'values' => array(
-        'blog' => 'blog',
+        'response' => 'response',
         'document' => 'document',
         'image' => 'image',
         'music_video' => 'music_video',
@@ -49,38 +49,6 @@ function lacuna_stories_content_types_context_default_contexts() {
   t('Annotation Filters');
   t('materials');
   $export['annotation_filters'] = $context;
-
-  $context = new stdClass();
-  $context->disabled = FALSE; /* Edit this to true to make a default context disabled initially */
-  $context->api_version = 3;
-  $context->name = 'bibliography';
-  $context->description = 'Add bibliography to About this Course page';
-  $context->tag = '';
-  $context->conditions = array(
-    'path' => array(
-      'values' => array(
-        'content/about-course' => 'content/about-course',
-      ),
-    ),
-  );
-  $context->reactions = array(
-    'block' => array(
-      'blocks' => array(
-        'views-bibliography-block' => array(
-          'module' => 'views',
-          'delta' => 'bibliography-block',
-          'region' => 'content',
-          'weight' => '10',
-        ),
-      ),
-    ),
-  );
-  $context->condition_mode = 0;
-
-  // Translatables
-  // Included for use with string extractors like potx.
-  t('Add bibliography to About this Course page');
-  $export['bibliography'] = $context;
 
   $context = new stdClass();
   $context->disabled = FALSE; /* Edit this to true to make a default context disabled initially */
