@@ -18,13 +18,11 @@ function lacuna_stories_rules_default_rules_configuration() {
       "IF" : [
         { "webform_has_id" : {
             "form_id" : [ "form_id" ],
-            "selected_webform" : { "value" : { "webform-client-form-67" : "webform-client-form-67" } }
+            "selected_webform" : { "value" : { "webform-client-form-1" : "webform-client-form-1" } }
           }
         }
       ],
-      "DO" : [
-        { "drupal_message" : { "message" : "\\u003Cspan id=\\u0022irb-complete-message\\u0022\\u003EBegin \\u003Ca href=\\u0022[site:url]\\u0022\\u003EExploring Materials\\u003C\\/a\\u003E\\u003C\\/span\\u003E" } }
-      ]
+      "DO" : [ { "redirect" : { "url" : "[site:url]" } } ]
     }
   }');
   $items['rules_notice_about_annotations_on_responses'] = entity_import('rules_config', '{ "rules_notice_about_annotations_on_responses" : {
