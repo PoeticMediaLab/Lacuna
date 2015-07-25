@@ -533,6 +533,12 @@ li.annotator-checkbox[style] {
   -webkit-user-select: none;
   -moz-user-select: none;
   user-select: none;
+
+  &.annotator-cancel, &.annotator-save {
+    padding-right: 30px;
+    padding-left: 30px;
+  }
+
 }
 
 .annotator-touch-widget .annotator-button[disabled] {
@@ -692,13 +698,13 @@ li.annotator-checkbox[style] {
 .annotator-touch-editor .annotator-touch-widget {
   pointer-events: all;
   position: relative;
-  width: 80%;
-  max-width: 680px;
+  width: 50%;
+  max-width: 400px;
 }
 
 .annotator-touch-editor .annotator-touch-widget-inner {
   position: static;
-  width: auto;
+  width: auto !important;
   padding: 0;
   background: #fff;
 }
