@@ -20,7 +20,7 @@ class Annotator.Plugin.Privacy extends Annotator.Plugin
     })
 
     @annotator.viewer.addField({
-      load: this.updateViewer
+      load: @updateViewer
     })
 
   addPrivacy: (event, annotation) =>
@@ -28,6 +28,7 @@ class Annotator.Plugin.Privacy extends Annotator.Plugin
     settings = if annotation.privacy_options then annotation.privacy_options else Drupal.settings.privacy_options
     groups_html = privacy_html = show_groups = ''
 
+    # NOTE: Listener and logic for selecting these spans is in annotator_privacy.js, not this file
     privacy_html += '<span class="annotator-privacy-types">'
     for privacy_type in ["Private", "Instructor", "Peer-Groups", "Everyone"]
       checked = if settings.audience[privacy_type.toLowerCase()] then 'checked' else ''
@@ -39,7 +40,7 @@ class Annotator.Plugin.Privacy extends Annotator.Plugin
     groups = settings.groups
     for group_type, group_object of groups
       for gid, group of group_object
-        groups_html += '<label class="privacy group">'
+        groups_html += '<label class="annotator-privacy-group">'
         checked = if group.selected then 'checked="checked"' else ''
         groups_html += '<input type="checkbox" class="annotator-privacy-group ' + group_type + '" value="' + gid + '" ' + checked + ' />'
         groups_html += group[0]
@@ -69,21 +70,21 @@ class Annotator.Plugin.Privacy extends Annotator.Plugin
     annotation.privacy_options.groups = {peer_groups: peer_groups}
 
   updateViewer: (field, annotation) ->
-    if annotation.privacy_options
-      audience = '<div class="annotator-privacy-types">'
-      for audience_type, checked of annotation.privacy_options.audience
-        if checked
-          audience += '<span class="annotator-privacy-type">' + audience_type + '</span>'
-          if 'peer-groups' == audience_type
-            has_groups = true
-      audience += '</div>'
-      groups = ''
-      if has_groups
-        groups = '<div class="annotator-privacy-groups">'
-        i = 0
-        for group_type, gids of annotation.privacy_options.groups
-          for gid, group of gids
-            if group && group.selected
-              groups += '<span class="annotator-privacy-group checked ' + group_type + '">' + group[0] + '</span>'
-        groups += '</div>'
-      $(field).addClass("privacy").html audience + groups
+    if annotation.privacy_options?
+        audience = '<div class="annotator-privacy-types">'
+        for audience_type, checked of annotation.privacy_options.audience
+          if checked
+            audience += '<span class="annotator-privacy-type">' + audience_type + '</span>'
+            if 'peer-groups' == audience_type
+              has_groups = true
+        audience += '</div>'
+        groups = ''
+        if has_groups
+          groups = '<div class="annotator-privacy-groups">'
+          i = 0
+          for group_type, gids of annotation.privacy_options.groups
+            for gid, group of gids
+              if group && group.selected
+                groups += '<span class="annotator-privacy-group checked ' + group_type + '">' + group[0] + '</span>'
+          groups += '</div>'
+        $(field).addClass("annotator-privacy").html audience + groups
