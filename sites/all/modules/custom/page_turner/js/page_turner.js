@@ -51,25 +51,26 @@ function PTModel(content, settings) {
         // Divide total content length by page length
         // And look for page break elements
         // Return array of page chunks
-        var page = []; // holds all elements in a page
-        var t_len = 0;  // text length
-        var pages = [];
-        var break_pages = [];
+        var page = [], // holds all elements in a page
+            t_len = 0,  // text length
+            pages = [],
+            break_pages = [];
 
         // Get to the real content
-        while (content.childElementCount == 1) {
+        while (content.childElementCount === 1) {
           content = content.childNodes[0];
         }
         content = content.children;
 
         // Check that the current item is not a break point
         // and that adding it wouldn't go over the text limit
-        var all_breaks = Array.prototype.slice.call(document.querySelectorAll(settings.breaks));
-        var l = content.length;
-        var i;
+        var all_breaks = Array.prototype.slice.call(document.querySelectorAll(settings.breaks)),
+            l = content.length,
+            i;
+        //page.push(content[0]);  // initialize first page
         for (i = 0; i < l; i++) {
-            var is_break = all_breaks.indexOf(content[i]) != -1;
-            var new_len = t_len + content[i].textContent.length;
+            var is_break = all_breaks.indexOf(content[i]) != -1,
+                new_len = t_len + content[i].textContent.length;
             if (is_break) {
                 if (t_len === 0) {
                     // Start of new page
@@ -91,6 +92,9 @@ function PTModel(content, settings) {
                 // Start a new page
                 pages.push(page);
                 t_len = content[i].textContent.length;
+                page = Array(content[i]);
+            }
+            else {
                 page = Array(content[i]);
             }
         }
