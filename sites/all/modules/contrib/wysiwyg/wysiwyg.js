@@ -284,6 +284,11 @@ Drupal.wysiwygAttach = function(context, fieldId) {
   // Detach any previous editor instance if enabled, else remove the grippie.
   detachFromField(context, {'editor': previousEditor, 'status': previousStatus, 'field': fieldId, 'resizable': fieldInfo.resizable}, 'unload');
   if (doSummary) {
+    // Summary instances may have a different status if no real editor was
+    // attached yet because the field was hidden.
+    if (Drupal.wysiwyg.instances[fieldInfo.summary]) {
+      previousStatus = Drupal.wysiwyg.instances[fieldInfo.summary]['status'];
+    }
     detachFromField(context, {'editor': previousEditor, 'status': previousStatus, 'field': fieldInfo.summary, 'resizable': fieldInfo.resizable}, 'unload');
   }
   // Store this field id, so (external) plugins can use it.
@@ -298,13 +303,17 @@ Drupal.wysiwygAttach = function(context, fieldId) {
   attachToField(context, {'status': fieldInfo.enabled, 'editor': editor, 'field': fieldId, 'format': fieldInfo.activeFormat, 'resizable': fieldInfo.resizable}, editorSettings);
   // Attach to summary field.
   if (doSummary) {
-    // If the summary wrapper is hidden, attach when it's made visible.
+    // If the summary wrapper is visible, attach immediately.
     if ($('#' + fieldInfo.summary).parents('.text-summary-wrapper').is(':visible')) {
       attachToField(context, {'status': fieldInfo.enabled, 'editor': editor, 'field': fieldInfo.summary, 'format': fieldInfo.activeFormat, 'resizable': fieldInfo.resizable}, editorSettings);
     }
     else {
+      // Attach an instance of the 'none' editor to have consistency while the
+      // summary is hidden, then switch to a real editor instance when shown.
+      attachToField(context, {'status': false, 'editor': editor, 'field': fieldInfo.summary, 'format': fieldInfo.activeFormat, 'resizable': fieldInfo.resizable}, editorSettings);
       // Unbind any existing click handler to avoid double toggling.
       $('#' + fieldId).parents('.text-format-wrapper').find('.link-edit-summary').unbind('click.wysiwyg').bind('click.wysiwyg', function () {
+        detachFromField(context, {'status': false, 'editor': editor, 'field': fieldInfo.summary, 'format': fieldInfo.activeFormat, 'resizable': fieldInfo.resizable}, editorSettings);
         attachToField(context, {'status': fieldInfo.enabled, 'editor': editor, 'field': fieldInfo.summary, 'format': fieldInfo.activeFormat, 'resizable': fieldInfo.resizable}, editorSettings);
         $(this).unbind('click.wysiwyg');
       });
@@ -392,6 +401,11 @@ Drupal.wysiwygDetach = function (context, fieldId, trigger) {
   if (fieldInfo.summary && Drupal.wysiwyg.instances[fieldInfo.summary]) {
     // The "Edit summary" click handler could re-enable the editor by mistake.
     $('#' + fieldId).parents('.text-format-wrapper').find('.link-edit-summary').unbind('click.wysiwyg');
+    // Summary instances may have a different status if no real editor was
+    // attached yet because the field was hidden.
+    if (Drupal.wysiwyg.instances[fieldInfo.summary]) {
+      previousStatus = Drupal.wysiwyg.instances[fieldInfo.summary]['status'];
+    }
     detachFromField(context, {'editor': editor, 'status': previousStatus, 'field': fieldInfo.summary, 'resizable': fieldInfo.resizable}, trigger);
     if (trigger == 'unload') {
       attachToField(context, {'editor': editor, 'status': false, 'format': fieldInfo.activeFormat, 'field': fieldInfo.summary, 'resizable': fieldInfo.resizable});
@@ -591,6 +605,33 @@ function callbackWrapper(name, context) {
   }
   return function () {
     return obj[func].apply(context, arguments);
+  }
+}
+
+var oldBeforeSerialize = (Drupal.ajax ? Drupal.ajax.prototype.beforeSerialize : false);
+if (oldBeforeSerialize) {
+  /**
+   * Filter the ajax_html_ids list sent in AJAX requests.
+   *
+   * This overrides part of the form serializer to not include ids we know will
+   * not collide because editors are removed before those ids are reused.
+   *
+   * This avoids hitting like max_input_vars, which defaults to 1000,
+   * even with just a few active editor instances.
+   */
+  Drupal.ajax.prototype.beforeSerialize = function (element, options) {
+    var ret = oldBeforeSerialize.call(this, element, options);
+    var excludeSelectors = [];
+    $.each(Drupal.wysiwyg.excludeIdSelectors, function () {
+      if ($.isArray(this)) {
+        excludeSelectors = excludeSelectors.concat(this);
+      }
+    });
+    options.data['ajax_html_ids[]'] = [];
+    $('[id]:not(' + excludeSelectors.join(',') + ')').each(function () {
+     options.data['ajax_html_ids[]'].push(this.id);
+    });
+    return ret;
   }
 }
 

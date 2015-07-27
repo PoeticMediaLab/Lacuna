@@ -37,11 +37,18 @@ ul#ui-id-1.ui-autocomplete {
 }
 
 // Hide the "Username's blog" text on responses
-li.blog_usernames_blog {
+li.response_usernames_response {
   display: none !important;
 }
 
 // Hide the "Text Format" stuff when creating a thread
 fieldset#edit-thread-description-format {
   display: none;
+}
+
+// The XX reads statistic
+li.statistics_counter {
+  float: right;
+  margin-bottom: 1em;
+  margin-right: 2em;
 }

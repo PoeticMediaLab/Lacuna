@@ -32,7 +32,7 @@ function lacuna_stories_rules_default_rules_configuration() {
       "PLUGIN" : "reaction rule",
       "OWNER" : "rules",
       "REQUIRES" : [ "rules" ],
-      "ON" : { "node_insert--blog" : { "bundle" : "blog" } },
+      "ON" : { "node_insert--response" : { "bundle" : "response" } },
       "DO" : [
         { "drupal_message" : {
             "message" : "Your response has been saved. Please note: if you make changes to your response, any annotations already made on this piece may disappear or be in the wrong location. To avoid this issue, you can set your response to \\u0022Unpublished\\u0022 until you are ready to share it with others. To do so, visit the \\u003Ca href=\\u0022\\/my-writing\\u0022\\u003EMy Writing\\u003C\\/a\\u003E page.",
@@ -80,7 +80,7 @@ function lacuna_stories_rules_default_rules_configuration() {
       "IF" : [
         { "node_is_of_type" : {
             "node" : [ "node:annotation-reference" ],
-            "type" : { "value" : { "blog" : "blog", "thread" : "thread" } }
+            "type" : { "value" : { "response" : "response", "thread" : "thread" } }
           }
         },
         { "NOT data_is" : { "data" : [ "node:private" ], "value" : 1 } },

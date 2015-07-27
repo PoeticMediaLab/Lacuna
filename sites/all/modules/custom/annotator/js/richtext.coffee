@@ -34,7 +34,6 @@ class Annotator.Plugin.RichText extends Annotator.Plugin
     CKEDITOR.replace(editor_instance, {
       extraPlugins: 'lineutils,oembed,widget',
       toolbar: [
-          { name: 'basicstyles', items: ['RemoveFormat'] },
           { name: 'paragraph', items: ['NumberedList', 'BulletedList'] },
           { name: 'links', items: ['Link', 'Unlink'] },
           { name: 'insert', items: ['oembed'] },

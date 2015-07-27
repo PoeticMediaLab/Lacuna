@@ -7,7 +7,6 @@
 class TouchAnnotatorPlugin extends AnnotatorPlugin {
   public function setup() {
     $settings = $this->settings();
-    drupal_add_css(drupal_get_path('module', 'annotator') . '/css/annotator.touch.css');
     drupal_add_js(drupal_get_path('module', 'annotator') . '/js/annotator_touch.js');
     // Note: touch.js must be loaded first, other classes rely on it being defined
     drupal_add_js(drupal_get_path('module', 'annotator') . '/js/touch.js');

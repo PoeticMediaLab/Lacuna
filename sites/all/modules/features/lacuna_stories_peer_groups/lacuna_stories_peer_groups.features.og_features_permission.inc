@@ -38,12 +38,10 @@ function lacuna_stories_peer_groups_og_features_default_permissions() {
 
   // Exported og permission: 'node:peer_group:create annotation content'
   $permissions['node:peer_group:create annotation content'] = array(
-    'roles' => array(),
-  );
-
-  // Exported og permission: 'node:peer_group:create blog content'
-  $permissions['node:peer_group:create blog content'] = array(
-    'roles' => array(),
+    'roles' => array(
+      'administrator member' => 'administrator member',
+      'member' => 'member',
+    ),
   );
 
   // Exported og permission: 'node:peer_group:create document content'
@@ -51,14 +49,16 @@ function lacuna_stories_peer_groups_og_features_default_permissions() {
     'roles' => array(),
   );
 
-  // Exported og permission: 'node:peer_group:delete any annotation content'
-  $permissions['node:peer_group:delete any annotation content'] = array(
+  // Exported og permission: 'node:peer_group:create response content'
+  $permissions['node:peer_group:create response content'] = array(
     'roles' => array(),
   );
 
-  // Exported og permission: 'node:peer_group:delete any blog content'
-  $permissions['node:peer_group:delete any blog content'] = array(
-    'roles' => array(),
+  // Exported og permission: 'node:peer_group:delete any annotation content'
+  $permissions['node:peer_group:delete any annotation content'] = array(
+    'roles' => array(
+      'administrator member' => 'administrator member',
+    ),
   );
 
   // Exported og permission: 'node:peer_group:delete any document content'
@@ -66,18 +66,26 @@ function lacuna_stories_peer_groups_og_features_default_permissions() {
     'roles' => array(),
   );
 
-  // Exported og permission: 'node:peer_group:delete own annotation content'
-  $permissions['node:peer_group:delete own annotation content'] = array(
+  // Exported og permission: 'node:peer_group:delete any response content'
+  $permissions['node:peer_group:delete any response content'] = array(
     'roles' => array(),
   );
 
-  // Exported og permission: 'node:peer_group:delete own blog content'
-  $permissions['node:peer_group:delete own blog content'] = array(
-    'roles' => array(),
+  // Exported og permission: 'node:peer_group:delete own annotation content'
+  $permissions['node:peer_group:delete own annotation content'] = array(
+    'roles' => array(
+      'administrator member' => 'administrator member',
+      'member' => 'member',
+    ),
   );
 
   // Exported og permission: 'node:peer_group:delete own document content'
   $permissions['node:peer_group:delete own document content'] = array(
+    'roles' => array(),
+  );
+
+  // Exported og permission: 'node:peer_group:delete own response content'
+  $permissions['node:peer_group:delete own response content'] = array(
     'roles' => array(),
   );
 
@@ -100,12 +108,16 @@ function lacuna_stories_peer_groups_og_features_default_permissions() {
 
   // Exported og permission: 'node:peer_group:manage permissions'
   $permissions['node:peer_group:manage permissions'] = array(
-    'roles' => array(),
+    'roles' => array(
+      'administrator member' => 'administrator member',
+    ),
   );
 
   // Exported og permission: 'node:peer_group:manage roles'
   $permissions['node:peer_group:manage roles'] = array(
-    'roles' => array(),
+    'roles' => array(
+      'administrator member' => 'administrator member',
+    ),
   );
 
   // Exported og permission: 'node:peer_group:publish any annotation content'
@@ -113,13 +125,13 @@ function lacuna_stories_peer_groups_og_features_default_permissions() {
     'roles' => array(),
   );
 
-  // Exported og permission: 'node:peer_group:publish any blog content'
-  $permissions['node:peer_group:publish any blog content'] = array(
+  // Exported og permission: 'node:peer_group:publish any content'
+  $permissions['node:peer_group:publish any content'] = array(
     'roles' => array(),
   );
 
-  // Exported og permission: 'node:peer_group:publish any content'
-  $permissions['node:peer_group:publish any content'] = array(
+  // Exported og permission: 'node:peer_group:publish any response content'
+  $permissions['node:peer_group:publish any response content'] = array(
     'roles' => array(),
   );
 
@@ -133,13 +145,13 @@ function lacuna_stories_peer_groups_og_features_default_permissions() {
     'roles' => array(),
   );
 
-  // Exported og permission: 'node:peer_group:publish editable blog content'
-  $permissions['node:peer_group:publish editable blog content'] = array(
+  // Exported og permission: 'node:peer_group:publish editable content'
+  $permissions['node:peer_group:publish editable content'] = array(
     'roles' => array(),
   );
 
-  // Exported og permission: 'node:peer_group:publish editable content'
-  $permissions['node:peer_group:publish editable content'] = array(
+  // Exported og permission: 'node:peer_group:publish editable response content'
+  $permissions['node:peer_group:publish editable response content'] = array(
     'roles' => array(),
   );
 
@@ -153,8 +165,8 @@ function lacuna_stories_peer_groups_og_features_default_permissions() {
     'roles' => array(),
   );
 
-  // Exported og permission: 'node:peer_group:publish own blog content'
-  $permissions['node:peer_group:publish own blog content'] = array(
+  // Exported og permission: 'node:peer_group:publish own response content'
+  $permissions['node:peer_group:publish own response content'] = array(
     'roles' => array(),
   );
 
@@ -180,13 +192,13 @@ function lacuna_stories_peer_groups_og_features_default_permissions() {
     'roles' => array(),
   );
 
-  // Exported og permission: 'node:peer_group:unpublish any blog content'
-  $permissions['node:peer_group:unpublish any blog content'] = array(
+  // Exported og permission: 'node:peer_group:unpublish any content'
+  $permissions['node:peer_group:unpublish any content'] = array(
     'roles' => array(),
   );
 
-  // Exported og permission: 'node:peer_group:unpublish any content'
-  $permissions['node:peer_group:unpublish any content'] = array(
+  // Exported og permission: 'node:peer_group:unpublish any response content'
+  $permissions['node:peer_group:unpublish any response content'] = array(
     'roles' => array(),
   );
 
@@ -200,13 +212,13 @@ function lacuna_stories_peer_groups_og_features_default_permissions() {
     'roles' => array(),
   );
 
-  // Exported og permission: 'node:peer_group:unpublish editable blog content'
-  $permissions['node:peer_group:unpublish editable blog content'] = array(
+  // Exported og permission: 'node:peer_group:unpublish editable content'
+  $permissions['node:peer_group:unpublish editable content'] = array(
     'roles' => array(),
   );
 
-  // Exported og permission: 'node:peer_group:unpublish editable content'
-  $permissions['node:peer_group:unpublish editable content'] = array(
+  // Exported og permission: 'node:peer_group:unpublish editable response content'
+  $permissions['node:peer_group:unpublish editable response content'] = array(
     'roles' => array(),
   );
 
@@ -220,8 +232,8 @@ function lacuna_stories_peer_groups_og_features_default_permissions() {
     'roles' => array(),
   );
 
-  // Exported og permission: 'node:peer_group:unpublish own blog content'
-  $permissions['node:peer_group:unpublish own blog content'] = array(
+  // Exported og permission: 'node:peer_group:unpublish own response content'
+  $permissions['node:peer_group:unpublish own response content'] = array(
     'roles' => array(),
   );
 
@@ -239,16 +251,18 @@ function lacuna_stories_peer_groups_og_features_default_permissions() {
 
   // Exported og permission: 'node:peer_group:update any annotation content'
   $permissions['node:peer_group:update any annotation content'] = array(
-    'roles' => array(),
-  );
-
-  // Exported og permission: 'node:peer_group:update any blog content'
-  $permissions['node:peer_group:update any blog content'] = array(
-    'roles' => array(),
+    'roles' => array(
+      'administrator member' => 'administrator member',
+    ),
   );
 
   // Exported og permission: 'node:peer_group:update any document content'
   $permissions['node:peer_group:update any document content'] = array(
+    'roles' => array(),
+  );
+
+  // Exported og permission: 'node:peer_group:update any response content'
+  $permissions['node:peer_group:update any response content'] = array(
     'roles' => array(),
   );
 
@@ -261,16 +275,19 @@ function lacuna_stories_peer_groups_og_features_default_permissions() {
 
   // Exported og permission: 'node:peer_group:update own annotation content'
   $permissions['node:peer_group:update own annotation content'] = array(
-    'roles' => array(),
-  );
-
-  // Exported og permission: 'node:peer_group:update own blog content'
-  $permissions['node:peer_group:update own blog content'] = array(
-    'roles' => array(),
+    'roles' => array(
+      'administrator member' => 'administrator member',
+      'member' => 'member',
+    ),
   );
 
   // Exported og permission: 'node:peer_group:update own document content'
   $permissions['node:peer_group:update own document content'] = array(
+    'roles' => array(),
+  );
+
+  // Exported og permission: 'node:peer_group:update own response content'
+  $permissions['node:peer_group:update own response content'] = array(
     'roles' => array(),
   );
 
