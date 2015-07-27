@@ -1,0 +1,59 @@
+/* CSS for Global Filter module */
+
+/* Inline some widgets */
+.global-filter .form-checkboxes .form-item,
+.global-filter .form-radios .form-item,
+.global-filter .global-filter-links li {
+  display: inline-block;
+}
+.global-filter .start-date-wrapper,
+.global-filter .end-date-wrapper {
+  display: inline;
+}
+
+/* Inline simple textfields and simple selects, but not multi-selects */
+.global-filter .form-item.form-type-select,
+.global-filter .form-item.form-type-textfield {
+  display: inline-block;
+}
+.global-filter .global-filter-set-multiselect,
+.global-filter .global-filter-set-all {
+  display: block;
+}
+
+/* Prevent range and date_text widget inputs from growing excessively long */
+.global-filter .form-item-from input,
+.global-filter .form-item-to input,
+.global-filter .form-type-date-popup input,
+.global-filter .form-type-date-text input {
+  max-width: 156px; /* same as date_popup */
+}
+.global-filter .form-item-from,
+.global-filter .form-item-to {
+  padding-left: 10px;
+  padding-right: 10px;
+}
+/* Textfields have tendency to extend beyond RHS of container, if narrow */
+.global-filter input {
+  max-width: 100%;
+}
+
+/* Links widget */
+.global-filter .global-filter-links {
+  margin-left: 0;
+}
+.global-filter .global-filter-links li {
+  margin-right: 2em;
+}
+.global-filter .global-filter-links a.active {
+  font-weight: bold;
+}
+.global-filter .suffix {
+  display: none;
+  font-style: italic;
+}
+/* To horizontally line-up vertical sliders */
+.global-filter .field-widget-slide-with-style-slider {
+  display: inline-block; /* block may be better for horizontal */
+  margin-right: 0.5em;
+}
