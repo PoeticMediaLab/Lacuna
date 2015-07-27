@@ -160,14 +160,14 @@ PTBView.prototype = {
         // TODO: refactor to use jQuery, not d3 (no need to mix)
         // TODO: refactor so attributes aren't hard-coded
         d3.select($(this.elements.navbar.tick)[page])
-            .append('text')
+            .append('line')
             .attr('id', this.elements.bookmark.id + page)
-            .attr('font-family', 'FontAwesome')
-            .attr('font-size','24')
-            .attr('cursor', 'pointer')
             .classed(this.elements.bookmark.classes.join(' '), true)
-            .text(function(d) { return '\uf097' })  // font-awesome icon unicode for bookmark
-            .attr('y', '20')
+            .attr("x1", 0)
+            //.attr("y1", -parseInt(d3.select('#' + this.elements.navbar.id).style('height'), 10))
+            .attr("y1", 0)
+            .attr("x2", 0)
+            .attr("y2", 25)
             .on('click', function(d) { $(document).trigger('page-turner-bookmark-clicked', page); });
     }
 };
@@ -252,11 +252,11 @@ PTBController.prototype = {
             'bookmark_add' : 'page-turner-bookmark-add',
             'bookmark_button' : {
                 'id' : 'page-turner-bookmark-button',
-                'container' : 'section.region-sidebar-second',
+                'container' : 'div#page-turner-pages-container',
                 'classes': [
                     'page-turner-bookmark-button',
-                    'fa',
-                    'fa-bookmark'
+                    //'fa',
+                    //'fa-bookmark'
                 ],
             },
             'navbar' : {

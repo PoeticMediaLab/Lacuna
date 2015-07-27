@@ -3,4 +3,4 @@ api = 2
 
 libraries[superfish][directory_name] = superfish
 libraries[superfish][download][type] = get
-libraries[superfish][download][url] = https://github.com/mehrpadin/Superfish-for-Drupal/zipball/master
+libraries[superfish][download][url] = https://github.com/mehrpadin/Superfish-for-Drupal/archive/1.x.zip
