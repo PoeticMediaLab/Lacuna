@@ -14,12 +14,14 @@ class Annotator.Plugin.Heatmap extends Annotator.Plugin
   selector:
     annotation: 'annotator-hl'
     hidden: 'af-annotation-hide'  # Annotation Filter hidden/filtered out annotation
+    heatmap: '#annotation-heatmap'
+    bar: 'annotation-heatmap-bar'
 
   # Initializes the heatmap plugin
   pluginInit: ->
     return unless Annotator.Plugin.Filters # Must have the annotation IDs the filters add
-    $(@layout.container).prepend(@html.element)
-    @heatmapContainer = $(@html.element)
+    $('#' + @layout.containerID).prepend(@html.element)
+    @heatmapContainer = d3.select(@selector.heatmap)
 
     unless d3? or @d3?
         console.error('d3.js is required to use the heatmap plugin')
@@ -61,11 +63,9 @@ class Annotator.Plugin.Heatmap extends Annotator.Plugin
   calculateDimensions: (node) =>
     @layout.length = node.textContent.length;
     if @layout.orientation == 'horizontal'
-      @layout.width = @heatmapContainer.offsetWidth
-    @layout.height = @heatmapContainer.offsetHeight
-    @chart = d3.select(@heatmapContainer)
-      .append('g')
-      .attr('id', 'annotation-heatmap')
+      @layout.width = document.getElementById(@layout.containerID).offsetWidth
+    @layout.height = document.getElementById(@layout.containerID).offsetHeight
+    @heatmapContainer
       .style('width', @layout.width)
       .style('height', @layout.height)
 
@@ -108,35 +108,37 @@ class Annotator.Plugin.Heatmap extends Annotator.Plugin
     return total
 
   updateChart: =>
-    console.log(@chart)
-
     colors = d3.scale.linear()
-      .domain([0, 2, 6, 10, d3.max(@bins)])
-      .range(["#eff3ff","#bdd7e7","#6baed6","#3182bd","#08519c"])
+      .domain([0, d3.max(@bins)])
+#      .range(["#eff3ff", "#08519c"])
+      .range(['blue', 'green'])
 
     y = d3.scale.linear()
-      .domain([0, 2, 6, 10, d3.max(@bins)])
-      .range([0, @layout.height / 2, @layout.height, @layout.height * 2, @layout.height * 4])
+      .domain([0, d3.max(@bins)])
+      .range([0, @layout.height])
 
-    heatmap = @chart.selectAll('rect.heatmap')
+    console.log(y(0), y(1), y(2), y(3), y(4))
+    barWidth = @layout.width / @bins.length
+
+    heatmap = @heatmapContainer.selectAll("rect.#{@selector.bar}")
       .data(@bins)
 
-    barWidth = @layout.width / @bins.length
+    heatmap.exit().remove() # remove stale bars
+
     heatmap.enter().append('rect')
       .style('fill', colors)
-      .classed('heatmap', true)
-      .attr('width', barWidth)
+      .classed(@selector.bar, true)
+
+    heatmap.attr('width', barWidth)
       .attr('x', (d, i) =>
         return barWidth * i
       )
-    .attr('height', (d) =>
-      return y(d)
-    )
-    .attr('y', (d) =>
-      return @layout.height - y(d)
-    )
-
-    heatmap.exit().remove()
+      .attr('height', (d) =>
+        return y(d)
+      )
+      .attr('y', (d) =>
+        return @layout.height - y(d)
+      )
 
 # Update the heatmap
   update: =>

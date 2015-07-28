@@ -17,13 +17,15 @@
 
     Heatmap.prototype.selector = {
       annotation: 'annotator-hl',
-      hidden: 'af-annotation-hide'
+      hidden: 'af-annotation-hide',
+      heatmap: '#annotation-heatmap',
+      bar: 'annotation-heatmap-bar'
     };
 
     Heatmap.prototype.pluginInit = function() {
       if (!Annotator.Plugin.Filters) return;
-      $(this.layout.container).prepend(this.html.element);
-      this.heatmapContainer = $(this.html.element);
+      $('#' + this.layout.containerID).prepend(this.html.element);
+      this.heatmapContainer = d3.select(this.selector.heatmap);
       if (!((typeof d3 !== "undefined" && d3 !== null) || (this.d3 != null))) {
         return console.error('d3.js is required to use the heatmap plugin');
       } else {
@@ -60,10 +62,10 @@
     Heatmap.prototype.calculateDimensions = function(node) {
       this.layout.length = node.textContent.length;
       if (this.layout.orientation === 'horizontal') {
-        this.layout.width = this.heatmapContainer.offsetWidth;
+        this.layout.width = document.getElementById(this.layout.containerID).offsetWidth;
       }
-      this.layout.height = this.heatmapContainer.offsetHeight;
-      return this.chart = d3.select(this.heatmapContainer).append('g').attr('id', 'annotation-heatmap').style('width', this.layout.width).style('height', this.layout.height);
+      this.layout.height = document.getElementById(this.layout.containerID).offsetHeight;
+      return this.heatmapContainer.style('width', this.layout.width).style('height', this.layout.height);
     };
 
     Heatmap.prototype.configureBins = function(length) {
@@ -116,19 +118,20 @@
     Heatmap.prototype.updateChart = function() {
       var barWidth, colors, heatmap, y,
         _this = this;
-      console.log(this.chart);
-      colors = d3.scale.linear().domain([0, 2, 6, 10, d3.max(this.bins)]).range(["#eff3ff", "#bdd7e7", "#6baed6", "#3182bd", "#08519c"]);
-      y = d3.scale.linear().domain([0, 2, 6, 10, d3.max(this.bins)]).range([0, this.layout.height / 2, this.layout.height, this.layout.height * 2, this.layout.height * 4]);
-      heatmap = this.chart.selectAll('rect.heatmap').data(this.bins);
+      colors = d3.scale.linear().domain([0, d3.max(this.bins)]).range(['blue', 'green']);
+      y = d3.scale.linear().domain([0, d3.max(this.bins)]).range([0, this.layout.height]);
+      console.log(y(0), y(1), y(2), y(3), y(4));
       barWidth = this.layout.width / this.bins.length;
-      heatmap.enter().append('rect').style('fill', colors).classed('heatmap', true).attr('width', barWidth).attr('x', function(d, i) {
+      heatmap = this.heatmapContainer.selectAll("rect." + this.selector.bar).data(this.bins);
+      heatmap.exit().remove();
+      heatmap.enter().append('rect').style('fill', colors).classed(this.selector.bar, true);
+      return heatmap.attr('width', barWidth).attr('x', function(d, i) {
         return barWidth * i;
       }).attr('height', function(d) {
         return y(d);
       }).attr('y', function(d) {
         return _this.layout.height - y(d);
       });
-      return heatmap.exit().remove();
     };
 
     Heatmap.prototype.update = function() {
