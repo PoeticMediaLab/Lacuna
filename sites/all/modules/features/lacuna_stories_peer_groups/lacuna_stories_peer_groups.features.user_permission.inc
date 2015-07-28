@@ -37,9 +37,8 @@ function lacuna_stories_peer_groups_user_default_permissions() {
     'name' => 'delete own peer_group content',
     'roles' => array(
       'Content Manager' => 'Content Manager',
-      'Instructor' => 'Instructor',
       'Site Administrator' => 'Site Administrator',
-      'Student' => 'Student',
+      'authenticated user' => 'authenticated user',
     ),
     'module' => 'node',
   );
@@ -59,9 +58,8 @@ function lacuna_stories_peer_groups_user_default_permissions() {
     'name' => 'edit own peer_group content',
     'roles' => array(
       'Content Manager' => 'Content Manager',
-      'Instructor' => 'Instructor',
       'Site Administrator' => 'Site Administrator',
-      'Student' => 'Student',
+      'authenticated user' => 'authenticated user',
     ),
     'module' => 'node',
   );

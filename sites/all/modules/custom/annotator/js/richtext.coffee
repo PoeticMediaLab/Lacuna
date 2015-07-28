@@ -61,12 +61,13 @@ class Annotator.Plugin.RichText extends Annotator.Plugin
 
   # convert text back to HTML
   convertText: (Viewer) =>
-    for index of Viewer.annotations
-      div = $(Viewer.element[0]).find('div:first-of-type')[index]
+    # Annotator adds the controls, then the next sibling is the div with the text in it
+    divList = $(Viewer.element[0]).find('span.annotator-controls').next()
+    for index, annotation of Viewer.annotations
       # reverse the HTML escaping by Annotator.Util.escape
       # possibly dangerous, but trusting WYSIWYG input filters for content
-      annotation = Viewer.annotations[index]
       if annotation.text?
         annotation.text = annotation.text.replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"');
-      div.innerHTML = annotation.text
+        # Match the correct text to the correct div by index
+        divList[index].innerHTML = annotation.text
 

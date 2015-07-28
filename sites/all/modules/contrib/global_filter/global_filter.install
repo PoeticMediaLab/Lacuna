@@ -1,0 +1,38 @@
+<?php
+
+/**
+ * @file
+ * Install and uninstall hooks for the Global Filter module.
+ */
+
+/**
+ * Implements hook_install().
+ *
+ * Set the module weight a bit lower to make sure that certain modules can
+ * timely read our updated session filter data and act upon the new filter
+ * values, eg by denying access, before other modules continue processing the
+ * click.
+ */
+function global_filter_install() {
+  db_update('system')
+    ->fields(array('weight' => -5))
+    ->condition('name', 'global_filter')
+    ->execute();
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function global_filter_uninstall() {
+  require_once dirname(__FILE__) . '/global_filter.module';
+
+  $num_filter_blocks = global_filter_get_module_parameter('num_filters', GLOBAL_FILTER_DEF_NUM_FILTERS);
+  for ($i = 1; $i <= $num_filter_blocks; $i++) {
+    foreach (global_filter_get_filters_for_block($i) as $filter) {
+      global_filter_remove_default_filter_from_views($filter['name']);
+    }
+  }
+  // Delete global_filters multi-dimensional array of parameters as well as
+  // all global_filter_* module parameters, including legacy parameters.
+  db_query("DELETE FROM {variable} WHERE name LIKE 'global_filter%%'");
+}

@@ -1,6 +1,0 @@
-name = Admin Menu
-description = Instructors can see full menu, curate tags
-core = 7.x
-package = Features
-dependencies[] = admin_menu
-features[features_api][] = api:2
