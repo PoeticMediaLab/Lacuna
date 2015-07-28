@@ -109,7 +109,6 @@
         _ref = annotation.highlights;
         for (_j = 0, _len2 = _ref.length; _j < _len2; _j++) {
           highlight = _ref[_j];
-          $(highlight).first().attr('id', select.annotation + annotation.id);
           $(highlight).addClass(select.annotation + annotation.id);
         }
       }

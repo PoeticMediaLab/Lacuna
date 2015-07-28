@@ -91,7 +91,7 @@ class Annotator.Plugin.Filters extends Annotator.Plugin
     # add an ID to every annotation
     for annotation in annotations
       for highlight in annotation.highlights
-        $(highlight).first().attr('id', select.annotation + annotation.id)
+#        $(highlight).first().attr('id', select.annotation + annotation.id)
         $(highlight).addClass(select.annotation + annotation.id)
     if @scrollToID?
       @View.scrollTo(@Model.annotation(@scrollToID))
