@@ -10,7 +10,7 @@ class HeatmapAnnotatorPlugin extends AnnotatorPlugin {
 		$defaults['layout'] = array();
 		if (TRUE) {
 			$defaults['layout'] = array(
-				'container' => '#page-turner-nav-parent',
+				'containerID' => 'page-turner-nav-parent',
 				'orientation' => 'horizontal'
 			);
 		} else {
