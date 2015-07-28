@@ -33,7 +33,8 @@ class Annotator.Plugin.Heatmap extends Annotator.Plugin
       message: Annotator._t("Sorry, the annotation heatmap failed to load.")
 
   selector:
-    hidden: 'af-annotation-hide'  # Annotation Filter hidden annotation
+    annotation: 'annotator-hl'
+    hidden: 'af-annotation-hide'  # Annotation Filter hidden/filtered out annotation
 
   # Initializes the heatmap plugin
   pluginInit: ->
@@ -58,8 +59,9 @@ class Annotator.Plugin.Heatmap extends Annotator.Plugin
     @d3 = d3  # We add d3 through Drupal
     @layout = options.layout
     @heatmapContainer = document.querySelector(@layout.container)
-    @density = [] # Array for density of annotations
-    @ids = [] # Annotation IDs
+    @binSize = 0
+    @binTotal = 0
+    @bins = []
 
   # Listens to annotation change events on the Annotator in order to refresh
   # the @annotations collection.
@@ -77,46 +79,56 @@ class Annotator.Plugin.Heatmap extends Annotator.Plugin
     $(window).resize @updateHeatmap
     $(document).bind('annotation-filters-changed', @updateHeatmap)
 
-  # Calculate the annotation density for the heatmap
-  calculateDensity: (annotations) =>
-    @density = [] # reset
-
-  # If it's a hidden annotation, don't include it
-  skipHidden: (annotation) ->
-    return annotation unless annotation.classList.contains(@selector.hidden)
-
-  # Draw or update the heatmap
-  updateHeatmap: =>
-    return unless d3?
-
-    # compute dimensions
+  calculateDimensions: (node) =>
+    @layout.length = node.textContent.length;
     if @layout.orientation == 'horizontal'
       @layout.width = @heatmapContainer.offsetWidth
     @layout.height = @heatmapContainer.offsetHeight
 
-    annotations = document.querySelectorAll(".annotator-hl:not(.#{@selector.hidden})")
-    annotations = Array.prototype.slice.call(annotations) # convert from NodeList to Array
-    console.log(annotations)
-    # An annotation may comprise multiple spans, but they'll all have the same ID
-    # Thanks to the annotation filters plugin
-#    annotations.reduce((prev, current) =>
-#      @ids = []
-#      console.log(prev)
-#      if prev.id in @ids
-#        console.log('found', id)
-#      else
-#        @ids.push[prev.id]
-#      for className in prev.classList
-#        id = className.match(/^annotation-(\d+)$/)
-#        if id?
-#          console.log(id)
-##        console.log(prev.classList)
-##        console.log(current.classList)
-#    , [])
+  configureBins: (length) =>
+    # Get the length of only the document text, not the annotations
+    if @layout.orientation == 'horizontal'
+    # Calculate number of bins for annotations
+      @binTotal = $('.page-turner-ticks .tick').length # try to find page turner breaks first
+      if !@binTotal?
+        @binTotal = Math.ceil(length / @layout.width)
+      else
+        @binTotal = @binTotal * 4 # because we want more than 1 bar per page
+    @binSize = Math.ceil(length / @binTotal)
 
-#    visible = annotations.map(@skipHidden)
-#    console.log(visible)
-#    data = @calculateDensity(visible)
-    # Get all the visible annotations
-    # Note: Filters Plugin hides annotations with the .af-annotation-hide class
-#    console.log(annotations)
+  # Calculate the annotation density of a single bin
+  calculateDensity: (node, length = 0) =>
+    counted = []
+    total = 0
+
+    for child in node.childNodes
+      length += child.textContent.length
+      if length >= @binSize
+        @bins.push(total)
+        total = 0
+        length = 0
+      if child.nodeType == Node.ELEMENT_NODE and
+          child.classList.contains(@selector.annotation) and not
+          child.classList.contains(@selector.hidden)
+        if child.hasChildNodes() # overlapping annotations; check them, too
+          total += @calculateDensity(child, length)
+        id = parseInt(child.dataset.annotationId, 10)
+        if id not in counted
+          total++
+          counted.push(id) # don't over-count multi-span annotations
+    return total
+#    console.log(@bins)
+
+# Update the heatmap
+  updateHeatmap: =>
+    return unless d3?
+    @bins = []  # reset
+    documentNode = $(@annotator.wrapper).children()[1]
+    @calculateDimensions(documentNode)
+    @configureBins(documentNode.textContent.length)
+    console.log(@binSize, @binTotal)
+    for node in $(documentNode).find('.field-item.even').children() # First field-item is document body
+      @calculateDensity(node)
+
+    console.log(@bins, @bins.length)
+
