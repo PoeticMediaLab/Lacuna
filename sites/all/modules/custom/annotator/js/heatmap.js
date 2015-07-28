@@ -12,10 +12,7 @@
     __extends(Heatmap, _super);
 
     Heatmap.prototype.html = {
-      element: "<svg class=\"annotator-heatmap\"\n     xmlns=\"http://www.w3.org/2000/svg\"\n     xmlns:xlink=\"http://www.w3.org/1999/xlink\">\n   <defs>\n     <linearGradient id=\"heatmapGradient\"\n                     x1=\"0%\" y1=\"0%\"\n                     x2=\"0%\" y2=\"100%\">\n     </linearGradient>\n     <filter id=\"heatBlend\">\n       <feGaussianBlur stdDeviation=\"3\"><feGaussianBlur>\n     </filter>\n   </defs>\n   <rect x=\"0\" y=\"0\" width=\"800px\" height=\"50px\"\n         fill=\"url(#heatmapGradient)\"\n         filter=\"url(#heatBlend)\" />\n</svg>",
-      options: {
-        message: Annotator._t("Sorry, the annotation heatmap failed to load.")
-      }
+      element: '<g id ="annotation-heatmap"></g>'
     };
 
     Heatmap.prototype.selector = {
@@ -25,27 +22,28 @@
 
     Heatmap.prototype.pluginInit = function() {
       if (!Annotator.Plugin.Filters) return;
-      this.heatmap = $(this.html.element);
       $(this.layout.container).prepend(this.html.element);
+      this.heatmapContainer = $(this.html.element);
       if (!((typeof d3 !== "undefined" && d3 !== null) || (this.d3 != null))) {
         return console.error('d3.js is required to use the heatmap plugin');
       } else {
         this._setupListeners();
-        return this.updateHeatmap();
+        return this.update();
       }
     };
 
     function Heatmap(element, options) {
-      this.updateHeatmap = __bind(this.updateHeatmap, this);
+      this.update = __bind(this.update, this);
+      this.updateChart = __bind(this.updateChart, this);
       this.calculateDensity = __bind(this.calculateDensity, this);
       this.configureBins = __bind(this.configureBins, this);
       this.calculateDimensions = __bind(this.calculateDimensions, this);      Heatmap.__super__.constructor.call(this, element, options);
       this.d3 = d3;
       this.layout = options.layout;
-      this.heatmapContainer = document.querySelector(this.layout.container);
       this.binSize = 0;
       this.binTotal = 0;
       this.bins = [];
+      this.chart;
     }
 
     Heatmap.prototype._setupListeners = function() {
@@ -53,10 +51,10 @@
       events = ['annotationsLoaded', 'annotationCreated', 'annotationUpdated', 'annotationDeleted'];
       for (_i = 0, _len = events.length; _i < _len; _i++) {
         event = events[_i];
-        this.annotator.subscribe(event, this.updateHeatmap);
+        this.annotator.subscribe(event, this.update);
       }
-      $(window).resize(this.updateHeatmap);
-      return $(document).bind('annotation-filters-changed', this.updateHeatmap);
+      $(window).resize(this.update);
+      return $(document).bind('annotation-filters-changed', this.update);
     };
 
     Heatmap.prototype.calculateDimensions = function(node) {
@@ -64,7 +62,8 @@
       if (this.layout.orientation === 'horizontal') {
         this.layout.width = this.heatmapContainer.offsetWidth;
       }
-      return this.layout.height = this.heatmapContainer.offsetHeight;
+      this.layout.height = this.heatmapContainer.offsetHeight;
+      return this.chart = d3.select(this.heatmapContainer).append('g').attr('id', 'annotation-heatmap').style('width', this.layout.width).style('height', this.layout.height);
     };
 
     Heatmap.prototype.configureBins = function(length) {
@@ -76,25 +75,34 @@
           this.binTotal = this.binTotal * 4;
         }
       }
-      return this.binSize = Math.ceil(length / this.binTotal);
+      return this.binSize = Math.floor(length / this.binTotal);
     };
 
-    Heatmap.prototype.calculateDensity = function(node, length) {
-      var child, counted, id, total, _i, _len, _ref;
+    Heatmap.prototype.calculateDensity = function(node, length, overlap) {
+      var child, counted, i, id, total, _i, _len, _ref, _ref2;
       if (length == null) length = 0;
+      if (overlap == null) overlap = false;
       counted = [];
       total = 0;
       _ref = node.childNodes;
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         child = _ref[_i];
-        length += child.textContent.length;
+        if (!overlap) length += child.textContent.length;
         if (length >= this.binSize) {
-          this.bins.push(total);
+          if (total > 0) {
+            this.bins.push(total);
+          } else {
+            for (i = 0, _ref2 = Math.ceil(length / this.binSize); 0 <= _ref2 ? i <= _ref2 : i >= _ref2; 0 <= _ref2 ? i++ : i--) {
+              this.bins.push(0);
+            }
+          }
           total = 0;
           length = 0;
         }
         if (child.nodeType === Node.ELEMENT_NODE && child.classList.contains(this.selector.annotation) && !child.classList.contains(this.selector.hidden)) {
-          if (child.hasChildNodes()) total += this.calculateDensity(child, length);
+          if (child.hasChildNodes()) {
+            total += this.calculateDensity(child, length, true);
+          }
           id = parseInt(child.dataset.annotationId, 10);
           if (__indexOf.call(counted, id) < 0) {
             total++;
@@ -105,20 +113,37 @@
       return total;
     };
 
-    Heatmap.prototype.updateHeatmap = function() {
+    Heatmap.prototype.updateChart = function() {
+      var barWidth, colors, heatmap, y,
+        _this = this;
+      console.log(this.chart);
+      colors = d3.scale.linear().domain([0, 2, 6, 10, d3.max(this.bins)]).range(["#eff3ff", "#bdd7e7", "#6baed6", "#3182bd", "#08519c"]);
+      y = d3.scale.linear().domain([0, 2, 6, 10, d3.max(this.bins)]).range([0, this.layout.height / 2, this.layout.height, this.layout.height * 2, this.layout.height * 4]);
+      heatmap = this.chart.selectAll('rect.heatmap').data(this.bins);
+      barWidth = this.layout.width / this.bins.length;
+      heatmap.enter().append('rect').style('fill', colors).classed('heatmap', true).attr('width', barWidth).attr('x', function(d, i) {
+        return barWidth * i;
+      }).attr('height', function(d) {
+        return y(d);
+      }).attr('y', function(d) {
+        return _this.layout.height - y(d);
+      });
+      return heatmap.exit().remove();
+    };
+
+    Heatmap.prototype.update = function() {
       var documentNode, node, _i, _len, _ref;
       if (typeof d3 === "undefined" || d3 === null) return;
       this.bins = [];
       documentNode = $(this.annotator.wrapper).children()[1];
       this.calculateDimensions(documentNode);
       this.configureBins(documentNode.textContent.length);
-      console.log(this.binSize, this.binTotal);
       _ref = $(documentNode).find('.field-item.even').children();
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         node = _ref[_i];
         this.calculateDensity(node);
       }
-      return console.log(this.bins, this.bins.length);
+      return this.updateChart();
     };
 
     return Heatmap;

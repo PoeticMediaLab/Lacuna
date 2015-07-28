@@ -8,29 +8,8 @@
 
 $ = jQuery
 class Annotator.Plugin.Heatmap extends Annotator.Plugin
-  # HTML templates for the plugin UI.
   html:
-    element: """
-             <svg class="annotator-heatmap"
-                  xmlns="http://www.w3.org/2000/svg"
-                  xmlns:xlink="http://www.w3.org/1999/xlink">
-                <defs>
-                  <linearGradient id="heatmapGradient"
-                                  x1="0%" y1="0%"
-                                  x2="0%" y2="100%">
-                  </linearGradient>
-                  <filter id="heatBlend">
-                    <feGaussianBlur stdDeviation="3"><feGaussianBlur>
-                  </filter>
-                </defs>
-                <rect x="0" y="0" width="800px" height="50px"
-                      fill="url(#heatmapGradient)"
-                      filter="url(#heatBlend)" />
-             </svg>
-             """ #" coffee-mode font lock bug
-
-    options:
-      message: Annotator._t("Sorry, the annotation heatmap failed to load.")
+    element: '<g id ="annotation-heatmap"></g>'
 
   selector:
     annotation: 'annotator-hl'
@@ -39,14 +18,14 @@ class Annotator.Plugin.Heatmap extends Annotator.Plugin
   # Initializes the heatmap plugin
   pluginInit: ->
     return unless Annotator.Plugin.Filters # Must have the annotation IDs the filters add
-    @heatmap = $(@html.element)
     $(@layout.container).prepend(@html.element)
+    @heatmapContainer = $(@html.element)
 
     unless d3? or @d3?
         console.error('d3.js is required to use the heatmap plugin')
     else
       @_setupListeners()
-      @updateHeatmap()
+      @update()
 
   # Public: Creates a new instance of the Heatmap plugin.
   #
@@ -58,10 +37,10 @@ class Annotator.Plugin.Heatmap extends Annotator.Plugin
     super element, options
     @d3 = d3  # We add d3 through Drupal
     @layout = options.layout
-    @heatmapContainer = document.querySelector(@layout.container)
     @binSize = 0
     @binTotal = 0
     @bins = []
+    @chart
 
   # Listens to annotation change events on the Annotator in order to refresh
   # the @annotations collection.
@@ -74,16 +53,21 @@ class Annotator.Plugin.Heatmap extends Annotator.Plugin
     ]
 
     for event in events
-      @annotator.subscribe event, @updateHeatmap
+      @annotator.subscribe event, @update
 
-    $(window).resize @updateHeatmap
-    $(document).bind('annotation-filters-changed', @updateHeatmap)
+    $(window).resize @update
+    $(document).bind('annotation-filters-changed', @update)
 
   calculateDimensions: (node) =>
     @layout.length = node.textContent.length;
     if @layout.orientation == 'horizontal'
       @layout.width = @heatmapContainer.offsetWidth
     @layout.height = @heatmapContainer.offsetHeight
+    @chart = d3.select(@heatmapContainer)
+      .append('g')
+      .attr('id', 'annotation-heatmap')
+      .style('width', @layout.width)
+      .style('height', @layout.height)
 
   configureBins: (length) =>
     # Get the length of only the document text, not the annotations
@@ -94,41 +78,75 @@ class Annotator.Plugin.Heatmap extends Annotator.Plugin
         @binTotal = Math.ceil(length / @layout.width)
       else
         @binTotal = @binTotal * 4 # because we want more than 1 bar per page
-    @binSize = Math.ceil(length / @binTotal)
+    # NOTE: binTotal is just a suggestion
+    @binSize = Math.floor(length / @binTotal)
 
-  # Calculate the annotation density of a single bin
-  calculateDensity: (node, length = 0) =>
+  # Calculate the annotation density of a node
+  calculateDensity: (node, length = 0, overlap = false) =>
     counted = []
     total = 0
-
     for child in node.childNodes
-      length += child.textContent.length
+      length += child.textContent.length unless overlap # length already accounted for
       if length >= @binSize
-        @bins.push(total)
+        if total > 0
+          @bins.push(total)
+        else
+          # fill the empty bins
+          for i in [0..Math.ceil(length / @binSize)]
+            @bins.push(0)
         total = 0
         length = 0
       if child.nodeType == Node.ELEMENT_NODE and
           child.classList.contains(@selector.annotation) and not
           child.classList.contains(@selector.hidden)
         if child.hasChildNodes() # overlapping annotations; check them, too
-          total += @calculateDensity(child, length)
+          total += @calculateDensity(child, length, true)
         id = parseInt(child.dataset.annotationId, 10)
         if id not in counted
           total++
           counted.push(id) # don't over-count multi-span annotations
     return total
-#    console.log(@bins)
+
+  updateChart: =>
+    console.log(@chart)
+
+    colors = d3.scale.linear()
+      .domain([0, 2, 6, 10, d3.max(@bins)])
+      .range(["#eff3ff","#bdd7e7","#6baed6","#3182bd","#08519c"])
+
+    y = d3.scale.linear()
+      .domain([0, 2, 6, 10, d3.max(@bins)])
+      .range([0, @layout.height / 2, @layout.height, @layout.height * 2, @layout.height * 4])
+
+    heatmap = @chart.selectAll('rect.heatmap')
+      .data(@bins)
+
+    barWidth = @layout.width / @bins.length
+    heatmap.enter().append('rect')
+      .style('fill', colors)
+      .classed('heatmap', true)
+      .attr('width', barWidth)
+      .attr('x', (d, i) =>
+        return barWidth * i
+      )
+    .attr('height', (d) =>
+      return y(d)
+    )
+    .attr('y', (d) =>
+      return @layout.height - y(d)
+    )
+
+    heatmap.exit().remove()
 
 # Update the heatmap
-  updateHeatmap: =>
+  update: =>
     return unless d3?
     @bins = []  # reset
     documentNode = $(@annotator.wrapper).children()[1]
     @calculateDimensions(documentNode)
     @configureBins(documentNode.textContent.length)
-    console.log(@binSize, @binTotal)
     for node in $(documentNode).find('.field-item.even').children() # First field-item is document body
       @calculateDensity(node)
+    @updateChart()
 
-    console.log(@bins, @bins.length)
 
