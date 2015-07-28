@@ -31,7 +31,7 @@ function course_menu() {
     'file' => 'course.pages.inc',
   );
   $items['createcourse-3/%'] = array(
-    'title' => 'Set Up Materials',
+    'title' => 'Setting Up Materials',
     'description' => 'Add course materials.',
     'page callback' => 'course_set_up_materials',
     'page arguments' => array(1),
@@ -326,15 +326,57 @@ function course_get_selected_course () {
 function course_node_validate ($node, $form, &$form_state) {
 
   if ($node->type == 'course') {
-
     // Ensure that multi-term courses are in consecutive terms
     $terms = $form_state['values']['field_course_term'][$node->language];
     if (count($terms) == 2) {
       $term1 = $terms[0]['value'];
       $term2 = $terms[1]['value'];
       if (($term1 == 'Fall' && $term2 == 'Spring') OR ($term1 = 'Winter' && $term2 == 'Summer')) {
-        form_set_error('field_course_term', t('Multi-term courses must be in consecutive terms.')); // Todo: get this to highlight the term field in the failed form submission. Not sure what's up.
+        form_set_error('field_course_term', t('Multi-term courses must be in consecutive terms.'));
+        // Todo: get this to highlight the term field in the failed form submission. Not sure what's up.
       }
     }
+  }
+}
+
+// NB: Needs to be in .module so it is always loaded or it can be excluded from module_implements() cache
+function course_form_course_node_form_alter(&$form, &$form_state, $form_id) {
+  $form['#submit'] = array('course_create_form_submit');
+  $form['actions']['submit']['#submit'][] = 'course_create_form_submit';
+}
+
+function course_create_form_submit($form, &$form_state) {
+  $node = new stdClass();
+  $node->type = COURSE_NODE_TYPE;
+  foreach($form_state['values'] as $k => $v) {
+    $node->$k = $v;
+  }
+  node_object_prepare($node);
+  $node->status = 1; # make all the courses published
+  node_save($node);
+
+  // create unit vocab for the course, if new
+  if (is_null($form_state['node']->nid)) {
+    $units = (object) array(
+        'name' => "Course {$node->nid} Units",
+        'description' => "Course {$node->nid} Units",
+        'machine_name' => "units_{$node->nid}",
+      );
+    taxonomy_vocabulary_save($units);
+    $number_of_weeks = (object) array(
+        'name' => "Course {$node->nid} Number of Weeks",
+        'description' => "Course {$node->nid} Number of Weeks",
+        'machine_name' => "number_of_weeks_{$node->nid}",
+      );
+    taxonomy_vocabulary_save($number_of_weeks);
+
+  }
+
+  if ($node->nid) {
+    drupal_goto("createcourse-3/" . $node->nid);
+  }
+  else {
+    drupal_set_message("There was an error creating your course.  Please try again and/or contact the Lacuna Stories team for assistance, <a href='info@lacunastories.com'>info@lacunastories.com</a>.", 'error');
+    drupal_goto("createcourse-2");
   }
 }

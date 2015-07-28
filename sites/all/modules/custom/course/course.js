@@ -11,7 +11,7 @@
       });
       $('#ajax-units').click(function() {
         if (new_term = $('#edit-term').val().trim()) {
-          $.post("/ajax/add-unit-term", {term: new_term});
+          $.post("/ajax/add-unit-term", {term: new_term, nid: $("[name=course_nid]").val()});
           if (terms.indexOf(new_term) == -1) {
             $(".terms").append("<div class='term'>" + new_term + "</div>");
             terms.push(new_term);
