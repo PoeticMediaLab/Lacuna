@@ -769,8 +769,8 @@ function jsonParser(json) {
 					.remove()
 					;
 
-				// only blogPosts are moveable -- document nodes are fixed.
-				graph.selectAll(".blog")
+				// only responses are moveable -- document nodes are fixed.
+				graph.selectAll(".response")
 					.call(force.drag);
 				
 				// aw, let's let 'em move biblio posts, too.

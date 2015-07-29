@@ -1,0 +1,24 @@
+<?php
+
+/**
+ * @file
+ * session_cache.install
+ */
+
+/**
+ * Implements hook_schema().
+ */
+function session_cache_schema() {
+  $schema['cache_session_cache'] = drupal_get_schema_unprocessed('system', 'cache');
+  $schema['cache_session_cache']['description'] = 'Cache table for Session Cache API';
+  return $schema;
+}
+
+
+/**
+ * Implements hook_uninstall().
+ */
+function session_cache_uninstall() {
+  // Delete session_cache_* variables at once.
+  db_query("DELETE FROM {variable} WHERE name LIKE 'session_cache_%%'");
+}

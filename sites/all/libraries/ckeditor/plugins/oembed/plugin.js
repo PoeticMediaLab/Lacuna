@@ -10,7 +10,7 @@
             icons: 'oembed',
             hidpi: true,
             requires: 'widget,dialog',
-            lang: 'de,en,fr,nl,pl,pt-br,ru,tr,cs', // %REMOVE_LINE_CORE%
+            lang: 'de,en,fr,nl,pl,pt-br,ru,tr', // %REMOVE_LINE_CORE%
             version: 1.17,
             init: function(editor) {
                 // Load jquery?
@@ -100,7 +100,8 @@
                 editor.ui.addButton('oembed', {
                     label: editor.lang.oembed.button,
                     command: 'oembed',
-                    toolbar: 'insert,10'
+                    toolbar: 'insert,10',
+                    icon: this.path + "icons/" + (CKEDITOR.env.hidpi ? "hidpi/" : "") + "oembed.png"
                 });
 
                 var resizeTypeChanged = function() {

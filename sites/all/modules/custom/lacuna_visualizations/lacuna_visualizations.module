@@ -259,14 +259,14 @@ function lacuna_visualizations_menu() {
     'visualization/responses' => array(
   	  'title' => 'Responses Map',
   	  'description' => 'Visualization showing links between responses and primary sources',
-  	  'access arguments' => array('create blog content'),
+  	  'access arguments' => array('create response content'),
   	  'page callback' => 'lacuna_visualizations_mapview',
   	  'type' => MENU_NORMAL_ITEM,
   	  ),
     'visualization/journey' => array(
   	  'title' => 'Journey view',
   	  'description' => 'Visualization showing student movement through the site',
-  	  'access arguments' => array('create blog content'),
+  	  'access arguments' => array('create response content'),
   	  'page callback' => 'lacuna_visualizations_journeyview',
   	  'type' => MENU_NORMAL_ITEM,
   	),
@@ -288,19 +288,19 @@ function lacuna_visualizations_menu() {
 }
 
 /**
- * Visualization showing links between student blog posts and primary
+ * Visualization showing links between student responses and primary
  * sources. (version I'm currently working on).
  */
 function lacuna_visualizations_journeyview() {
 
-  // BJA uses EntityFieldQuery to pull all the 'blog' and 'document' nodes
+  // BJA uses EntityFieldQuery to pull all the 'response' and 'document' nodes
   // BJA in the future, this should read from a view(?) rather than being
   // BJA hard-coded here.
-  $blogQuery = new EntityFieldQuery();
-    $blogQuery
+  $responseQuery = new EntityFieldQuery();
+    $responseQuery
         ->entityCondition('entity_type', 'node')
-        ->entityCondition('bundle', array('biblio', 'blog'));
-  $result = $blogQuery->execute();
+        ->entityCondition('bundle', array('biblio', 'response'));
+  $result = $responseQuery->execute();
   $nids = array_keys($result['node']);
   $nodes = node_load_multiple($nids);
 
@@ -312,11 +312,11 @@ function lacuna_visualizations_journeyview() {
   	$uids = array_keys($usersResult['user']);
   	$users = user_load_multiple($uids);
 
-  	 // this array will eventually contain all relevant info about blogs and document: author, timestamp, etc.
+  	 // this array will eventually contain all relevant info about responses and document: author, timestamp, etc.
   	 // added to nodes before graphapi passes off to d3.
     $dataArray = array(
       'itemType' => $item->type,
-  		// author set below -- $item->name for blog posts, but
+  		// author set below -- $item->name for responses, but
   		// more complicated for biblio entries.
   		'author'	=> ' ',
       'title'     => $item->title,
@@ -331,7 +331,7 @@ function lacuna_visualizations_journeyview() {
   		// added to all links before graphapi passes off to d3.
   		// Currently only contains a date (the time that the source
   		// node was created; currently assuming that all links are
-  		// created at the same time as the blog post they're
+  		// created at the same time as the response they're
   		// associated with.
     if (!$dataArray['author']) {
       $dataArray['author'] = "None";
@@ -353,7 +353,7 @@ function lacuna_visualizations_journeyview() {
   			}
   		}
   	}
-    if ($item->type == "blog") {
+    if ($item->type == "response") {
 
   		$dataArray['author'] = $users[$item->uid]->field_display_name->und[0].safe_value;
 
@@ -395,7 +395,7 @@ function lacuna_visualizations_journeyview() {
 					  echo "<br />";
 				  }
 			  } */
-        }	// end if($item->type == "blog")
+        }	// end if($item->type == "response")
         graphapi_set_node_data($graph, $title, $dataArray);
     }
 
@@ -448,36 +448,36 @@ function get_image($item, $docId) {
       return '<center>'.theme('image_style', array('style_name' => 'thumbnails_for_browsing', 'path' => $node->field_image[LANGUAGE_NONE][0]['uri'])).'</center>';
     }
   }
-  else if ($item->type == "blog") {
+  else if ($item->type == "response") {
     return '<center>'.theme('image_style', array('style_name' => 'thumbnails_for_browsing', 'path' => $item->field_image[LANGUAGE_NONE][0]['uri'])).'</center>';
   }
   return "";
 }
 
 /**
- * Visualization showing links between student blog posts and primary
+ * Visualization showing links between student responses and primary
  * sources.
  */
 function lacuna_visualizations_mapview() {
 
   $graph = graphapi_new_graph();
 
-  $blogQuery = new EntityFieldQuery();
-  $blogQuery
+  $responseQuery = new EntityFieldQuery();
+  $responseQuery
       ->entityCondition('entity_type', 'node')
-      ->entityCondition('bundle', array('biblio', 'blog'));
-  $result = $blogQuery->execute();
+      ->entityCondition('bundle', array('biblio', 'response'));
+  $result = $responseQuery->execute();
   $nids = array_keys($result['node']);
   $nodes = node_load_multiple($nids);
 
   foreach ($nodes as $item) {
-	 // this array will eventually contain all relevant info about blogs and document: author, timestamp, etc.
+	 // this array will eventually contain all relevant info about responses and document: author, timestamp, etc.
 	 // added to nodes before graphapi passes off to d3.
     $docId = get_document_id_for_biblio($item->nid);
     // var_dump($docId);
     $dataArray = array(
       'itemType' => $item->type,
-      // author set below -- $item->name for blog posts, but
+      // author set below -- $item->name for responses, but
       // more complicated for biblio entries.
       'author'=> null,
       'u_id' => $item->uid,
@@ -494,7 +494,7 @@ function lacuna_visualizations_mapview() {
 		// added to all links before graphapi passes off to d3.
 		// Currently only contains a date (the time that the source
 		// node was created; currently assuming that all links are
-		// created at the same time as the blog post they're
+		// created at the same time as the response they're
 		// associated with.
     $title = $item->title;
 		/* pull out data needed for biblio nodes and add it to
@@ -521,7 +521,7 @@ function lacuna_visualizations_mapview() {
 			}
 		}
 
-    if ($item->type == "blog") {
+    if ($item->type == "response") {
 			$dataArray['author'] = $item->name;
 
 			// draw links based off of node's field_bibliographic_entry.
@@ -537,7 +537,7 @@ function lacuna_visualizations_mapview() {
           }
         }
       } // end if($item->field_bibliographic_entry)
-    }	// end if($item->type == "blog")
+    }	// end if($item->type == "response")
     graphapi_set_node_data($graph, $title, $dataArray);
   }
 
@@ -647,7 +647,7 @@ function lacuna_visualizations_annotation_dashboard_data() {
     $data->u_id = $annotation->uid;
 
     // For readability
-    $target_id = $annotation->annotation_reference[$annotation->language][0]['target_id'];
+    $target_id = $annotation->field_annotation_reference[$annotation->language][0]['target_id'];
     $data->doc_id = $target_id;
     if (!array_key_exists($target_id, $documentNames)) {
       $document = node_load($target_id);
@@ -667,10 +667,10 @@ function lacuna_visualizations_annotation_dashboard_data() {
         $data->{$field} = $annotation->{$field}[$annotation->language][0]['value'];
       }
     }
-    $data->private ? $data->private = 'Private' : $data->private = 'Public';
+    $data->field_annotation_private ? $data->field_annotation_private = 'Private' : $data->field_annotation_private = 'Public';
     // TODO: Refactor "annotation_tags" to be "tags" -- must wait until 1.0
     // Not a good idea to change it for existing alpha or beta sites
-    $fields = array('annotation_tags', 'category');
+    $fields = array('field_annotation_tags', 'field_annotation_category');
     foreach ($fields as $field) {
       $data->{$field} = array();
       if (isset($annotation->{$field}[$annotation->language][0]['tid'])) {
@@ -684,7 +684,7 @@ function lacuna_visualizations_annotation_dashboard_data() {
       $data->category = $data->category[0];
     }
     // Secure fields of private annotations, usernames, etc.
-    $isPrivate = $annotation->private[$annotation->language][0]['value'];
+    $isPrivate = $annotation->field_annotation_private[$annotation->language][0]['value'];
     if (!$canReadAll && ($annotation->uid != $user->uid)) {
       if ($isPrivate) {
         $data->text = "";

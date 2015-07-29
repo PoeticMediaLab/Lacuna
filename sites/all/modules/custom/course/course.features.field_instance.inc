@@ -10,6 +10,57 @@
 function course_field_default_field_instances() {
   $field_instances = array();
 
+  // Exported field_instance: 'node-course-body'
+  $field_instances['node-course-body'] = array(
+    'bundle' => 'course',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'hidden',
+        'module' => 'text',
+        'settings' => array(),
+        'type' => 'text_default',
+        'weight' => 1,
+      ),
+      'teaser' => array(
+        'label' => 'hidden',
+        'module' => 'text',
+        'settings' => array(
+          'trim_length' => 600,
+        ),
+        'type' => 'text_summary_or_trimmed',
+        'weight' => 1,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'body',
+    'label' => 'Course Description',
+    'required' => 0,
+    'settings' => array(
+      'display_summary' => 1,
+      'text_processing' => 1,
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'text',
+      'settings' => array(
+        'maxlength_js' => '',
+        'maxlength_js_enforce' => 0,
+        'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
+        'maxlength_js_label_summary' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
+        'maxlength_js_summary' => '',
+        'maxlength_js_truncate_html' => 0,
+        'rows' => 20,
+        'summary_rows' => 5,
+      ),
+      'type' => 'text_textarea_with_summary',
+      'weight' => 1,
+    ),
+  );
+
   // Exported field_instance: 'node-course-field_course_id'
   $field_instances['node-course-field_course_id'] = array(
     'bundle' => 'course',
@@ -46,7 +97,75 @@ function course_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 36,
+      'weight' => 10,
+    ),
+  );
+
+  // Exported field_instance: 'node-course-field_course_image'
+  $field_instances['node-course-field_course_image'] = array(
+    'bundle' => 'course',
+    'deleted' => 0,
+    'description' => 'This image appears on the course page. A square thumbnail of the image appears in course listings, so the image should be approximately square.',
+    'display' => array(
+      'default' => array(
+        'label' => 'hidden',
+        'module' => 'image',
+        'settings' => array(
+          'image_link' => '',
+          'image_style' => 'large',
+        ),
+        'type' => 'image',
+        'weight' => 0,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_course_image',
+    'label' => 'Course Image',
+    'required' => 1,
+    'settings' => array(
+      'alt_field' => 0,
+      'default_image' => 0,
+      'file_directory' => '',
+      'file_extensions' => 'png gif jpg jpeg',
+      'max_filesize' => '',
+      'max_resolution' => '',
+      'min_resolution' => '',
+      'title_field' => 0,
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'image',
+      'settings' => array(
+        'allowed_schemes' => array(
+          'public' => 'public',
+          'vimeo' => 0,
+          'youtube' => 0,
+        ),
+        'allowed_types' => array(
+          'application' => 0,
+          'audio' => 0,
+          'document' => 0,
+          'image' => 'image',
+          'video' => 0,
+        ),
+        'browser_plugins' => array(
+          'media_default--media_browser_1' => 'media_default--media_browser_1',
+          'media_default--media_browser_my_files' => 'media_default--media_browser_my_files',
+          'media_internet' => 0,
+          'upload' => 'upload',
+        ),
+        'preview_image_style' => 'thumbnail',
+        'progress_indicator' => 'throbber',
+      ),
+      'type' => 'image_image',
+      'weight' => 5,
     ),
   );
 
@@ -62,7 +181,7 @@ function course_field_default_field_instances() {
         'module' => 'text',
         'settings' => array(),
         'type' => 'text_default',
-        'weight' => 14,
+        'weight' => 16,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -86,7 +205,44 @@ function course_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 44,
+      'weight' => 20,
+    ),
+  );
+
+  // Exported field_instance: 'node-course-field_course_term'
+  $field_instances['node-course-field_course_term'] = array(
+    'bundle' => 'course',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => 'For courses that span terms, select multiple terms. Note, selecting multiple terms does not create separate courses.',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'list',
+        'settings' => array(),
+        'type' => 'list_default',
+        'weight' => 10,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_course_term',
+    'label' => 'Term',
+    'required' => 1,
+    'settings' => array(
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'options',
+      'settings' => array(),
+      'type' => 'options_buttons',
+      'weight' => 14,
     ),
   );
 
@@ -126,7 +282,50 @@ function course_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 35,
+      'weight' => 9,
+    ),
+  );
+
+  // Exported field_instance: 'node-course-field_course_year'
+  $field_instances['node-course-field_course_year'] = array(
+    'bundle' => 'course',
+    'default_value' => array(
+      0 => array(
+        'value' => '2015-2016',
+      ),
+    ),
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'list',
+        'settings' => array(),
+        'type' => 'list_default',
+        'weight' => 9,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_course_year',
+    'label' => 'Year',
+    'required' => 1,
+    'settings' => array(
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'options',
+      'settings' => array(
+        'apply_chosen' => '',
+      ),
+      'type' => 'options_select',
+      'weight' => 13,
     ),
   );
 
@@ -166,7 +365,7 @@ function course_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 34,
+      'weight' => 8,
     ),
   );
 
@@ -182,7 +381,7 @@ function course_field_default_field_instances() {
         'module' => 'list',
         'settings' => array(),
         'type' => 'list_default',
-        'weight' => 15,
+        'weight' => 17,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -201,9 +400,53 @@ function course_field_default_field_instances() {
     'widget' => array(
       'active' => 1,
       'module' => 'options',
-      'settings' => array(),
+      'settings' => array(
+        'apply_chosen' => '',
+      ),
       'type' => 'options_select',
-      'weight' => 45,
+      'weight' => 21,
+    ),
+  );
+
+  // Exported field_instance: 'node-course-field_doc_attachment'
+  $field_instances['node-course-field_doc_attachment'] = array(
+    'bundle' => 'course',
+    'deleted' => 0,
+    'description' => 'Add any file attachments (such as a PDF of your syllabus) here.',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'file',
+        'settings' => array(),
+        'type' => 'file_default',
+        'weight' => 2,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_doc_attachment',
+    'label' => 'Attachments',
+    'required' => 0,
+    'settings' => array(
+      'description_field' => 0,
+      'file_directory' => '',
+      'file_extensions' => 'txt pdf doc docx odt ods xlsl',
+      'max_filesize' => '',
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'file',
+      'settings' => array(
+        'progress_indicator' => 'throbber',
+      ),
+      'type' => 'file_generic',
+      'weight' => 2,
     ),
   );
 
@@ -224,7 +467,7 @@ function course_field_default_field_instances() {
           'multiple_to' => '',
         ),
         'type' => 'date_default',
-        'weight' => 10,
+        'weight' => 12,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -256,7 +499,7 @@ function course_field_default_field_instances() {
         'year_range' => '-3:+3',
       ),
       'type' => 'date_popup',
-      'weight' => 40,
+      'weight' => 16,
     ),
   );
 
@@ -277,7 +520,7 @@ function course_field_default_field_instances() {
           'thousand_separator' => ' ',
         ),
         'type' => 'number_integer',
-        'weight' => 11,
+        'weight' => 13,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -302,7 +545,7 @@ function course_field_default_field_instances() {
       'module' => 'number',
       'settings' => array(),
       'type' => 'number',
-      'weight' => 41,
+      'weight' => 17,
     ),
   );
 
@@ -342,7 +585,7 @@ function course_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 33,
+      'weight' => 7,
     ),
   );
 
@@ -362,7 +605,7 @@ function course_field_default_field_instances() {
         'module' => 'list',
         'settings' => array(),
         'type' => 'list_default',
-        'weight' => 12,
+        'weight' => 14,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -385,7 +628,7 @@ function course_field_default_field_instances() {
         'display_label' => 0,
       ),
       'type' => 'options_onoff',
-      'weight' => 42,
+      'weight' => 18,
     ),
   );
 
@@ -425,7 +668,7 @@ function course_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 37,
+      'weight' => 11,
     ),
   );
 
@@ -446,7 +689,7 @@ function course_field_default_field_instances() {
           'multiple_to' => '',
         ),
         'type' => 'date_default',
-        'weight' => 9,
+        'weight' => 11,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -478,7 +721,7 @@ function course_field_default_field_instances() {
         'year_range' => '-3:+3',
       ),
       'type' => 'date_popup',
-      'weight' => 39,
+      'weight' => 15,
     ),
   );
 
@@ -493,7 +736,7 @@ function course_field_default_field_instances() {
         'module' => 'file',
         'settings' => array(),
         'type' => 'file_default',
-        'weight' => 16,
+        'weight' => 18,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -520,7 +763,7 @@ function course_field_default_field_instances() {
         'progress_indicator' => 'throbber',
       ),
       'type' => 'file_generic',
-      'weight' => 46,
+      'weight' => 22,
     ),
   );
 
@@ -560,7 +803,7 @@ function course_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 38,
+      'weight' => 12,
     ),
   );
 
@@ -581,7 +824,7 @@ function course_field_default_field_instances() {
           'thousand_separator' => ' ',
         ),
         'type' => 'number_integer',
-        'weight' => 13,
+        'weight' => 15,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -606,12 +849,12 @@ function course_field_default_field_instances() {
       'module' => 'number',
       'settings' => array(),
       'type' => 'number',
-      'weight' => 43,
+      'weight' => 19,
     ),
   );
 
-  // Exported field_instance: 'node-course-field_visibility'
-  $field_instances['node-course-field_visibility'] = array(
+  // Exported field_instance: 'node-course-group_access'
+  $field_instances['node-course-group_access'] = array(
     'bundle' => 'course',
     'default_value' => array(
       0 => array(
@@ -619,14 +862,14 @@ function course_field_default_field_instances() {
       ),
     ),
     'deleted' => 0,
-    'description' => '',
+    'description' => 'Would you like your current draft course to be visible to students, or to continue in "Instructor-Only" mode?',
     'display' => array(
       'default' => array(
         'label' => 'above',
         'module' => 'list',
         'settings' => array(),
         'type' => 'list_default',
-        'weight' => 17,
+        'weight' => 19,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -636,28 +879,154 @@ function course_field_default_field_instances() {
       ),
     ),
     'entity_type' => 'node',
-    'field_name' => 'field_visibility',
-    'label' => 'Course Visibility: Would you like your current draft course to be visible to students, or to continue in "Instructor-Only" mode?',
-    'required' => 0,
+    'field_name' => 'group_access',
+    'label' => 'Course Visibility',
+    'required' => 1,
     'settings' => array(
       'user_register_form' => FALSE,
+    ),
+    'view modes' => array(
+      'full' => array(
+        'label' => 'above',
+        'type' => 'options_onoff',
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'type' => 'options_onoff',
+      ),
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'options',
+      'settings' => array(),
+      'type' => 'options_buttons',
+      'weight' => 23,
+    ),
+    'widget_type' => 'options_select',
+  );
+
+  // Exported field_instance: 'node-course-group_group'
+  $field_instances['node-course-group_group'] = array(
+    'bundle' => 'course',
+    'default_value' => array(
+      0 => array(
+        'value' => 1,
+      ),
+    ),
+    'deleted' => 0,
+    'description' => 'Determine if this is an OG group.',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 20,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'display_label' => 1,
+    'entity_type' => 'node',
+    'field_name' => 'group_group',
+    'label' => 'Group',
+    'required' => FALSE,
+    'settings' => array(
+      'user_register_form' => FALSE,
+    ),
+    'view modes' => array(
+      'full' => array(
+        'custom settings' => FALSE,
+        'label' => 'Full',
+        'type' => 'og_group_subscribe',
+      ),
+      'teaser' => array(
+        'custom settings' => FALSE,
+        'label' => 'Teaser',
+        'type' => 'og_group_subscribe',
+      ),
+    ),
+    'widget' => array(
+      'module' => 'options',
+      'settings' => array(
+        'display_label' => 0,
+        'og_hide' => TRUE,
+      ),
+      'type' => 'options_onoff',
+      'weight' => 4,
+    ),
+  );
+
+  // Exported field_instance: 'node-course-og_roles_permissions'
+  $field_instances['node-course-og_roles_permissions'] = array(
+    'bundle' => 'course',
+    'default_value' => array(
+      0 => array(
+        'value' => 0,
+      ),
+    ),
+    'deleted' => 0,
+    'description' => 'You can safely leave this set to the default. You would know if you needed to customize this part.',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 21,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'og_roles_permissions',
+    'label' => 'Course access permissions',
+    'required' => 1,
+    'settings' => array(
+      'user_register_form' => FALSE,
+    ),
+    'view modes' => array(
+      'full' => array(
+        'custom settings' => FALSE,
+        'label' => 'Full',
+        'type' => 'list_default',
+      ),
+      'teaser' => array(
+        'custom settings' => FALSE,
+        'label' => 'Teaser',
+        'type' => 'list_default',
+      ),
     ),
     'widget' => array(
       'active' => 1,
       'module' => 'options',
       'settings' => array(
-        'display_label' => 0,
+        'apply_chosen' => '',
       ),
-      'type' => 'options_onoff',
-      'weight' => 47,
+      'type' => 'options_select',
+      'weight' => 3,
     ),
   );
 
   // Translatables
   // Included for use with string extractors like potx.
   t('(ex. COMPLIT221)');
+  t('Add any file attachments (such as a PDF of your syllabus) here.');
   t('Are all of your students registered with your institution?');
-  t('Course Visibility: Would you like your current draft course to be visible to students, or to continue in "Instructor-Only" mode?');
+  t('Attachments');
+  t('Course Description');
+  t('Course Image');
+  t('Course Visibility');
+  t('Course access permissions');
+  t('Determine if this is an OG group.');
+  t('For courses that span terms, select multiple terms. Note, selecting multiple terms does not create separate courses.');
+  t('Group');
   t('How many students will have library and e-reserve access that differs from your own?');
   t('If applicable, what is the secondary cross-listed course ID (with no spaces)?');
   t('If applicable, what is the third cross-listed course ID (with no spaces)?');
@@ -666,6 +1035,8 @@ function course_field_default_field_instances() {
   t('Optional');
   t('Students will have access to materials 7 days before the first day of class');
   t('Students will have access to restricted materials 30 days after the end of class, or after 180 days of the beginning of the course, whichever arrives first.');
+  t('Term');
+  t('This image appears on the course page. A square thumbnail of the image appears in course listings, so the image should be approximately square.');
   t('What is the end date for the course?');
   t('What is the expected enrollment for your course?');
   t('What is the full name of your course?');
@@ -675,6 +1046,9 @@ function course_field_default_field_instances() {
   t('What is your department?');
   t('What is your name?');
   t('What password would you like to create for students to register in your class?');
+  t('Would you like your current draft course to be visible to students, or to continue in "Instructor-Only" mode?');
+  t('Year');
+  t('You can safely leave this set to the default. You would know if you needed to customize this part.');
   t('i.e. they have access to the same library and e-reserve materials as you');
 
   return $field_instances;

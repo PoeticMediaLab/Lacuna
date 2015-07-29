@@ -15,6 +15,7 @@ function lacuna_stories_permissions_user_default_permissions() {
     'name' => 'access administration menu',
     'roles' => array(
       'Content Manager' => 'Content Manager',
+      'Instructor' => 'Instructor',
       'Site Administrator' => 'Site Administrator',
     ),
     'module' => 'admin_menu',
@@ -24,6 +25,7 @@ function lacuna_stories_permissions_user_default_permissions() {
   $permissions['access administration pages'] = array(
     'name' => 'access administration pages',
     'roles' => array(
+      'Instructor' => 'Instructor',
       'Site Administrator' => 'Site Administrator',
     ),
     'module' => 'system',
@@ -45,17 +47,6 @@ function lacuna_stories_permissions_user_default_permissions() {
       'Site Administrator' => 'Site Administrator',
     ),
     'module' => 'webform',
-  );
-
-  // Exported permission: 'access any private annotation'.
-  $permissions['access any private annotation'] = array(
-    'name' => 'access any private annotation',
-    'roles' => array(
-      'Content Manager' => 'Content Manager',
-      'Instructor' => 'Instructor',
-      'Site Administrator' => 'Site Administrator',
-    ),
-    'module' => 'annotation',
   );
 
   // Exported permission: 'access backup and migrate'.
@@ -96,6 +87,7 @@ function lacuna_stories_permissions_user_default_permissions() {
     'roles' => array(
       'Content Manager' => 'Content Manager',
       'Instructor' => 'Instructor',
+      'Researcher' => 'Researcher',
       'Site Administrator' => 'Site Administrator',
       'Student' => 'Student',
     ),
@@ -148,6 +140,7 @@ function lacuna_stories_permissions_user_default_permissions() {
     'roles' => array(
       'Content Manager' => 'Content Manager',
       'Instructor' => 'Instructor',
+      'Researcher' => 'Researcher',
       'Site Administrator' => 'Site Administrator',
       'Student' => 'Student',
     ),
@@ -261,6 +254,7 @@ function lacuna_stories_permissions_user_default_permissions() {
     'roles' => array(
       'Content Manager' => 'Content Manager',
       'Instructor' => 'Instructor',
+      'Researcher' => 'Researcher',
       'Site Administrator' => 'Site Administrator',
       'Student' => 'Student',
     ),
@@ -784,18 +778,6 @@ function lacuna_stories_permissions_user_default_permissions() {
     'module' => 'node',
   );
 
-  // Exported permission: 'create blog content'.
-  $permissions['create blog content'] = array(
-    'name' => 'create blog content',
-    'roles' => array(
-      'Content Manager' => 'Content Manager',
-      'Instructor' => 'Instructor',
-      'Site Administrator' => 'Site Administrator',
-      'Student' => 'Student',
-    ),
-    'module' => 'node',
-  );
-
   // Exported permission: 'create course content'.
   $permissions['create course content'] = array(
     'name' => 'create course content',
@@ -934,6 +916,19 @@ function lacuna_stories_permissions_user_default_permissions() {
     'module' => 'node',
   );
 
+  // Exported permission: 'create response content'.
+  $permissions['create response content'] = array(
+    'name' => 'create response content',
+    'roles' => array(
+      'Content Manager' => 'Content Manager',
+      'Instructor' => 'Instructor',
+      'Site Administrator' => 'Site Administrator',
+      'Student' => 'Student',
+      'administrator' => 'administrator',
+    ),
+    'module' => 'node',
+  );
+
   // Exported permission: 'create thread content'.
   $permissions['create thread content'] = array(
     'name' => 'create thread content',
@@ -994,17 +989,6 @@ function lacuna_stories_permissions_user_default_permissions() {
     'module' => 'node',
   );
 
-  // Exported permission: 'delete any application files'.
-  $permissions['delete any application files'] = array(
-    'name' => 'delete any application files',
-    'roles' => array(
-      'Content Manager' => 'Content Manager',
-      'Instructor' => 'Instructor',
-      'Site Administrator' => 'Site Administrator',
-    ),
-    'module' => 'file_entity',
-  );
-
   // Exported permission: 'delete any article content'.
   $permissions['delete any article content'] = array(
     'name' => 'delete any article content',
@@ -1029,16 +1013,6 @@ function lacuna_stories_permissions_user_default_permissions() {
   // Exported permission: 'delete any biblio content'.
   $permissions['delete any biblio content'] = array(
     'name' => 'delete any biblio content',
-    'roles' => array(
-      'Content Manager' => 'Content Manager',
-      'Site Administrator' => 'Site Administrator',
-    ),
-    'module' => 'node',
-  );
-
-  // Exported permission: 'delete any blog content'.
-  $permissions['delete any blog content'] = array(
-    'name' => 'delete any blog content',
     'roles' => array(
       'Content Manager' => 'Content Manager',
       'Site Administrator' => 'Site Administrator',
@@ -1098,6 +1072,16 @@ function lacuna_stories_permissions_user_default_permissions() {
     'module' => 'node',
   );
 
+  // Exported permission: 'delete any response content'.
+  $permissions['delete any response content'] = array(
+    'name' => 'delete any response content',
+    'roles' => array(
+      'Content Manager' => 'Content Manager',
+      'Site Administrator' => 'Site Administrator',
+    ),
+    'module' => 'node',
+  );
+
   // Exported permission: 'delete any thread content'.
   $permissions['delete any thread content'] = array(
     'name' => 'delete any thread content',
@@ -1143,22 +1127,10 @@ function lacuna_stories_permissions_user_default_permissions() {
     'name' => 'delete own annotation content',
     'roles' => array(
       'Content Manager' => 'Content Manager',
-      'Instructor' => 'Instructor',
       'Site Administrator' => 'Site Administrator',
-      'Student' => 'Student',
+      'authenticated user' => 'authenticated user',
     ),
     'module' => 'node',
-  );
-
-  // Exported permission: 'delete own application files'.
-  $permissions['delete own application files'] = array(
-    'name' => 'delete own application files',
-    'roles' => array(
-      'Content Manager' => 'Content Manager',
-      'Instructor' => 'Instructor',
-      'Site Administrator' => 'Site Administrator',
-    ),
-    'module' => 'file_entity',
   );
 
   // Exported permission: 'delete own article content'.
@@ -1194,25 +1166,13 @@ function lacuna_stories_permissions_user_default_permissions() {
     'module' => 'node',
   );
 
-  // Exported permission: 'delete own blog content'.
-  $permissions['delete own blog content'] = array(
-    'name' => 'delete own blog content',
-    'roles' => array(
-      'Content Manager' => 'Content Manager',
-      'Instructor' => 'Instructor',
-      'Site Administrator' => 'Site Administrator',
-      'Student' => 'Student',
-    ),
-    'module' => 'node',
-  );
-
   // Exported permission: 'delete own course content'.
   $permissions['delete own course content'] = array(
     'name' => 'delete own course content',
     'roles' => array(
       'Content Manager' => 'Content Manager',
-      'Instructor' => 'Instructor',
       'Site Administrator' => 'Site Administrator',
+      'authenticated user' => 'authenticated user',
     ),
     'module' => 'node',
   );
@@ -1222,8 +1182,8 @@ function lacuna_stories_permissions_user_default_permissions() {
     'name' => 'delete own document content',
     'roles' => array(
       'Content Manager' => 'Content Manager',
-      'Instructor' => 'Instructor',
       'Site Administrator' => 'Site Administrator',
+      'authenticated user' => 'authenticated user',
     ),
     'module' => 'node',
   );
@@ -1256,6 +1216,17 @@ function lacuna_stories_permissions_user_default_permissions() {
     'roles' => array(
       'Content Manager' => 'Content Manager',
       'Site Administrator' => 'Site Administrator',
+    ),
+    'module' => 'node',
+  );
+
+  // Exported permission: 'delete own response content'.
+  $permissions['delete own response content'] = array(
+    'name' => 'delete own response content',
+    'roles' => array(
+      'Content Manager' => 'Content Manager',
+      'Site Administrator' => 'Site Administrator',
+      'authenticated user' => 'authenticated user',
     ),
     'module' => 'node',
   );
@@ -1393,17 +1364,6 @@ function lacuna_stories_permissions_user_default_permissions() {
     'module' => 'admin_menu',
   );
 
-  // Exported permission: 'download any application files'.
-  $permissions['download any application files'] = array(
-    'name' => 'download any application files',
-    'roles' => array(
-      'Content Manager' => 'Content Manager',
-      'Instructor' => 'Instructor',
-      'Site Administrator' => 'Site Administrator',
-    ),
-    'module' => 'file_entity',
-  );
-
   // Exported permission: 'download any audio files'.
   $permissions['download any audio files'] = array(
     'name' => 'download any audio files',
@@ -1440,17 +1400,6 @@ function lacuna_stories_permissions_user_default_permissions() {
   // Exported permission: 'download any video files'.
   $permissions['download any video files'] = array(
     'name' => 'download any video files',
-    'roles' => array(
-      'Content Manager' => 'Content Manager',
-      'Instructor' => 'Instructor',
-      'Site Administrator' => 'Site Administrator',
-    ),
-    'module' => 'file_entity',
-  );
-
-  // Exported permission: 'download own application files'.
-  $permissions['download own application files'] = array(
-    'name' => 'download own application files',
     'roles' => array(
       'Content Manager' => 'Content Manager',
       'Instructor' => 'Instructor',
@@ -1532,17 +1481,6 @@ function lacuna_stories_permissions_user_default_permissions() {
     'module' => 'annotator',
   );
 
-  // Exported permission: 'edit any application files'.
-  $permissions['edit any application files'] = array(
-    'name' => 'edit any application files',
-    'roles' => array(
-      'Content Manager' => 'Content Manager',
-      'Instructor' => 'Instructor',
-      'Site Administrator' => 'Site Administrator',
-    ),
-    'module' => 'file_entity',
-  );
-
   // Exported permission: 'edit any article content'.
   $permissions['edit any article content'] = array(
     'name' => 'edit any article content',
@@ -1567,16 +1505,6 @@ function lacuna_stories_permissions_user_default_permissions() {
   // Exported permission: 'edit any biblio content'.
   $permissions['edit any biblio content'] = array(
     'name' => 'edit any biblio content',
-    'roles' => array(
-      'Content Manager' => 'Content Manager',
-      'Site Administrator' => 'Site Administrator',
-    ),
-    'module' => 'node',
-  );
-
-  // Exported permission: 'edit any blog content'.
-  $permissions['edit any blog content'] = array(
-    'name' => 'edit any blog content',
     'roles' => array(
       'Content Manager' => 'Content Manager',
       'Site Administrator' => 'Site Administrator',
@@ -1636,13 +1564,14 @@ function lacuna_stories_permissions_user_default_permissions() {
     'module' => 'node',
   );
 
-  // Exported permission: 'edit any private annotation'.
-  $permissions['edit any private annotation'] = array(
-    'name' => 'edit any private annotation',
+  // Exported permission: 'edit any response content'.
+  $permissions['edit any response content'] = array(
+    'name' => 'edit any response content',
     'roles' => array(
+      'Content Manager' => 'Content Manager',
       'Site Administrator' => 'Site Administrator',
     ),
-    'module' => 'annotation',
+    'module' => 'node',
   );
 
   // Exported permission: 'edit any thread content'.
@@ -1778,9 +1707,8 @@ function lacuna_stories_permissions_user_default_permissions() {
     'name' => 'edit own annotation content',
     'roles' => array(
       'Content Manager' => 'Content Manager',
-      'Instructor' => 'Instructor',
       'Site Administrator' => 'Site Administrator',
-      'Student' => 'Student',
+      'authenticated user' => 'authenticated user',
     ),
     'module' => 'node',
   );
@@ -1795,17 +1723,6 @@ function lacuna_stories_permissions_user_default_permissions() {
       'Student' => 'Student',
     ),
     'module' => 'annotator',
-  );
-
-  // Exported permission: 'edit own application files'.
-  $permissions['edit own application files'] = array(
-    'name' => 'edit own application files',
-    'roles' => array(
-      'Content Manager' => 'Content Manager',
-      'Instructor' => 'Instructor',
-      'Site Administrator' => 'Site Administrator',
-    ),
-    'module' => 'file_entity',
   );
 
   // Exported permission: 'edit own article content'.
@@ -1841,18 +1758,6 @@ function lacuna_stories_permissions_user_default_permissions() {
     'module' => 'node',
   );
 
-  // Exported permission: 'edit own blog content'.
-  $permissions['edit own blog content'] = array(
-    'name' => 'edit own blog content',
-    'roles' => array(
-      'Content Manager' => 'Content Manager',
-      'Instructor' => 'Instructor',
-      'Site Administrator' => 'Site Administrator',
-      'Student' => 'Student',
-    ),
-    'module' => 'node',
-  );
-
   // Exported permission: 'edit own comments'.
   $permissions['edit own comments'] = array(
     'name' => 'edit own comments',
@@ -1870,8 +1775,8 @@ function lacuna_stories_permissions_user_default_permissions() {
     'name' => 'edit own course content',
     'roles' => array(
       'Content Manager' => 'Content Manager',
-      'Instructor' => 'Instructor',
       'Site Administrator' => 'Site Administrator',
+      'authenticated user' => 'authenticated user',
     ),
     'module' => 'node',
   );
@@ -1881,8 +1786,8 @@ function lacuna_stories_permissions_user_default_permissions() {
     'name' => 'edit own document content',
     'roles' => array(
       'Content Manager' => 'Content Manager',
-      'Instructor' => 'Instructor',
       'Site Administrator' => 'Site Administrator',
+      'authenticated user' => 'authenticated user',
     ),
     'module' => 'node',
   );
@@ -2008,6 +1913,17 @@ function lacuna_stories_permissions_user_default_permissions() {
     'roles' => array(
       'Content Manager' => 'Content Manager',
       'Site Administrator' => 'Site Administrator',
+    ),
+    'module' => 'node',
+  );
+
+  // Exported permission: 'edit own response content'.
+  $permissions['edit own response content'] = array(
+    'name' => 'edit own response content',
+    'roles' => array(
+      'Content Manager' => 'Content Manager',
+      'Site Administrator' => 'Site Administrator',
+      'authenticated user' => 'authenticated user',
     ),
     'module' => 'node',
   );
@@ -2248,13 +2164,6 @@ function lacuna_stories_permissions_user_default_permissions() {
     'module' => 'publishcontent',
   );
 
-  // Exported permission: 'publish any blog content'.
-  $permissions['publish any blog content'] = array(
-    'name' => 'publish any blog content',
-    'roles' => array(),
-    'module' => 'publishcontent',
-  );
-
   // Exported permission: 'publish any content'.
   $permissions['publish any content'] = array(
     'name' => 'publish any content',
@@ -2275,13 +2184,6 @@ function lacuna_stories_permissions_user_default_permissions() {
   // Exported permission: 'publish editable annotation content'.
   $permissions['publish editable annotation content'] = array(
     'name' => 'publish editable annotation content',
-    'roles' => array(),
-    'module' => 'publishcontent',
-  );
-
-  // Exported permission: 'publish editable blog content'.
-  $permissions['publish editable blog content'] = array(
-    'name' => 'publish editable blog content',
     'roles' => array(),
     'module' => 'publishcontent',
   );
@@ -2309,15 +2211,6 @@ function lacuna_stories_permissions_user_default_permissions() {
   $permissions['publish own annotation content'] = array(
     'name' => 'publish own annotation content',
     'roles' => array(),
-    'module' => 'publishcontent',
-  );
-
-  // Exported permission: 'publish own blog content'.
-  $permissions['publish own blog content'] = array(
-    'name' => 'publish own blog content',
-    'roles' => array(
-      'Instructor' => 'Instructor',
-    ),
     'module' => 'publishcontent',
   );
 
@@ -2414,6 +2307,7 @@ function lacuna_stories_permissions_user_default_permissions() {
     'roles' => array(
       'Content Manager' => 'Content Manager',
       'Instructor' => 'Instructor',
+      'Researcher' => 'Researcher',
       'Site Administrator' => 'Site Administrator',
       'Student' => 'Student',
     ),
@@ -2435,6 +2329,7 @@ function lacuna_stories_permissions_user_default_permissions() {
     'roles' => array(
       'Content Manager' => 'Content Manager',
       'Instructor' => 'Instructor',
+      'Researcher' => 'Researcher',
       'Site Administrator' => 'Site Administrator',
       'Student' => 'Student',
     ),
@@ -2489,13 +2384,6 @@ function lacuna_stories_permissions_user_default_permissions() {
     'module' => 'publishcontent',
   );
 
-  // Exported permission: 'unpublish any blog content'.
-  $permissions['unpublish any blog content'] = array(
-    'name' => 'unpublish any blog content',
-    'roles' => array(),
-    'module' => 'publishcontent',
-  );
-
   // Exported permission: 'unpublish any content'.
   $permissions['unpublish any content'] = array(
     'name' => 'unpublish any content',
@@ -2516,13 +2404,6 @@ function lacuna_stories_permissions_user_default_permissions() {
   // Exported permission: 'unpublish editable annotation content'.
   $permissions['unpublish editable annotation content'] = array(
     'name' => 'unpublish editable annotation content',
-    'roles' => array(),
-    'module' => 'publishcontent',
-  );
-
-  // Exported permission: 'unpublish editable blog content'.
-  $permissions['unpublish editable blog content'] = array(
-    'name' => 'unpublish editable blog content',
     'roles' => array(),
     'module' => 'publishcontent',
   );
@@ -2550,15 +2431,6 @@ function lacuna_stories_permissions_user_default_permissions() {
   $permissions['unpublish own annotation content'] = array(
     'name' => 'unpublish own annotation content',
     'roles' => array(),
-    'module' => 'publishcontent',
-  );
-
-  // Exported permission: 'unpublish own blog content'.
-  $permissions['unpublish own blog content'] = array(
-    'name' => 'unpublish own blog content',
-    'roles' => array(
-      'Instructor' => 'Instructor',
-    ),
     'module' => 'publishcontent',
   );
 
@@ -2613,6 +2485,7 @@ function lacuna_stories_permissions_user_default_permissions() {
     'name' => 'use text format filtered_html',
     'roles' => array(
       'Instructor' => 'Instructor',
+      'Researcher' => 'Researcher',
       'Site Administrator' => 'Site Administrator',
       'Student' => 'Student',
     ),
@@ -2671,6 +2544,7 @@ function lacuna_stories_permissions_user_default_permissions() {
     'roles' => array(
       'Content Manager' => 'Content Manager',
       'Instructor' => 'Instructor',
+      'Researcher' => 'Researcher',
       'Site Administrator' => 'Site Administrator',
       'Student' => 'Student',
     ),
