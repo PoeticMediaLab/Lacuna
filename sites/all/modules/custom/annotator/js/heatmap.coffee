@@ -21,10 +21,8 @@ class Annotator.Plugin.Heatmap extends Annotator.Plugin
   pluginInit: ->
     return unless Annotator.supported()
     return unless Annotator.Plugin.Filters # Must have the annotation IDs the filters add
-    g = document.createElement('g')
-    g.id = @selector.heatmap
-    @container = document.getElementById(@layout.containerID)
-    @container.insertBefore(g, @container.firstElementChild)
+
+    d3.select('#' + @layout.containerID).append('svg:svg').append('g').attr('id', @selector.heatmap)
     @heatmapContainer = d3.select('#' + @selector.heatmap)
 
     unless d3? or @d3?
@@ -154,5 +152,3 @@ class Annotator.Plugin.Heatmap extends Annotator.Plugin
     for node in $(documentNode).find('.field-item.even').children() # First field-item is document body
       @calculateDensity(node)
     @updateChart()
-#    @container.innerHTML = @container.innerHTML # force a redraw of the existing SVG
-    console.log(@container.innerHTML)

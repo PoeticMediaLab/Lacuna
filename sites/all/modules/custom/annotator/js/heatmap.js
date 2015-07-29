@@ -20,13 +20,9 @@
     };
 
     Heatmap.prototype.pluginInit = function() {
-      var g;
       if (!Annotator.supported()) return;
       if (!Annotator.Plugin.Filters) return;
-      g = document.createElement('g');
-      g.id = this.selector.heatmap;
-      this.container = document.getElementById(this.layout.containerID);
-      this.container.insertBefore(g, this.container.firstElementChild);
+      d3.select('#' + this.layout.containerID).append('svg:svg').append('g').attr('id', this.selector.heatmap);
       this.heatmapContainer = d3.select('#' + this.selector.heatmap);
       if (!((typeof d3 !== "undefined" && d3 !== null) || (this.d3 != null))) {
         console.error('d3.js is required to use the heatmap plugin');
@@ -148,8 +144,7 @@
         node = _ref[_i];
         this.calculateDensity(node);
       }
-      this.updateChart();
-      return console.log(this.container.innerHTML);
+      return this.updateChart();
     };
 
     return Heatmap;
