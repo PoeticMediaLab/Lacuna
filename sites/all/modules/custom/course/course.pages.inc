@@ -132,22 +132,23 @@ function course_set_up_materials_form($form, &$form_state, $nid) {
 }
 
 function course_set_up_materials_form_submit($form, &$form_state) {
+  $nid = $form_state['values']['course_nid'];
   # add terms to vocabs
 
   # number of week tags
   # delete max weeks??? for edits?
-  $vocab = taxonomy_vocabulary_machine_name_load("number_of_weeks_" . $form_state['values']['course_nid']);
+  $vocab = taxonomy_vocabulary_machine_name_load("number_of_weeks_$nid");
   $max = $form_state['values']['number_of_weeks'];
   for ($i=1; $i <= $max; $i++) {
     course_create_taxo($vocab, $i, $i);
   }
 
   # unit/theme tags
-  $vocab = taxonomy_vocabulary_machine_name_load("units_" . $form_state['values']['course_nid']);
+  $vocab = taxonomy_vocabulary_machine_name_load("units_$nid");
   foreach(explode(',', $form_state['values']['term']) as $unit) {
     course_create_taxo($vocab, $unit);
   }
-  drupal_goto('createcourse-4');
+  drupal_goto("createcourse-4/$nid");
 }
 
 function course_ajax_add_unit_term() {
@@ -188,15 +189,14 @@ function course_numerical_vocab_term_max($vocab_machine_name) {
 
 }
 
-function course_add_material() {
-  $output = "<p>Please find your materials using the methods below, in the order they are assigned. You, as the instructor, are responsible for determining if the online or e-access materials you are assigning your students are available at your home institution. If they are, your students will likely not have to pay for these materials. Otherwise, they will be charged. This is a cumbersome part of digital course setup, but an important one. It also allows the Lacuna Stories team to most efficiently assist you securing materials not available from your institutions digital resources. If you have any questions at any time, please send a quick email to info@lacunastories.com and someone from our team will assist you.</p><br />";
+function course_add_material($nid) {
+  $output = "<p>Please find your materials using the methods below, in the order they are assigned. You, as the instructor, are responsible for determining if the online or e-access materials you are assigning your students are available at your home institution. If they are, your students will likely not have to pay for these materials. Otherwise, they will be charged. This is a cumbersome part of digital course setup, but an important one. It also allows the Lacuna Stories team to most efficiently assist you securing materials not available from your institutions digital resources. If you have any questions at any time, please send a quick email to info@lacunastories.com and someone from our team will assist you.</p><br /><div class='add-materials'>";
 
-  $output .= "<p>Add E-Access Material from my Institution. If your students have digital access to materials through your institution’s library, they may have free access to those same materials on Lacuna Stories. Save your students money!<button>Confrim E-Access Material</button></p>";
+  $output .= "<div id='archived-materials'><div>Add Lacuna Stories Archived Materials. These materials may be free or available for a fee for your students. In either case, these are already digitized and using these materials will save you or the Lacuna Stories team time.</div><button class='form-submit'><a href='/archived-materials'>Search Lacuna Stories</a></button></div>";
 
-  $output .= "<p>Request Copyright Permission. The Lacuna Stories team, in partnership with Study.Net, will obtain permission, directly from the publisher or an intermediary service, to use the material you identify.<button>Request Copyright Permission</button></p>";
+  $output .= "<div id='e-access'><div>Add E-Access Material from my Institution. If your students have digital access to materials through your institution’s library, they may have free access to those same materials on Lacuna Stories. Save your students money!</div><button class='form-submit'>Confrim E-Access Material</button></div>";
 
-  $output .= "<p>Add Lacuna Stories Archived Materials. These materials may be free or available for a fee for your students. In either case, these are already digitized and using these materials will save you or the Lacuna Stories team time.<button><a href='/archived-materials'>Search Lacuna Stories</a></button></p>";
-
+  $output .= "<div id='studynet'><div>Request Copyright Permission. The Lacuna Stories team, in partnership with Study.Net, will obtain permission, directly from the publisher or an intermediary service, to use the material you identify.</div><button class='form-submit'>Request Copyright Permission</button></div></div>";
 
   global $user;
   module_load_include('inc', 'node', 'node.pages');
@@ -208,23 +208,11 @@ function course_add_material() {
   );
   $form = drupal_get_form(BIBLIO_NODE_TYPE . '_node_form', $node);
 
-  $form['additional_settings']['#access'] = FALSE;
-  $form['body'][LANGUAGE_NONE][0]['format']['#access'] = FALSE;
-  unset($form['actions']['preview']);
-  #$path = drupal_get_path('module', 'course');
-  #$form['#attached']['css'] = array("$path/course.css");
-  #$form['#attached']['js'] = array("$path/course.js");
+  $output .= "<div class='biblio-form'>" . drupal_render($form) . "</div>";
+  $output .= views_embed_view('documents', 'course_block');
+  return $output;
 
-  return $output . drupal_render($form);
-
-//  $output .= l("Add Material<span class='fa fa-plus'></span>", "createcourse-4",
-//    array("html" => TRUE, 'attributes' => array('class' => 'form-submit course-add-material')));
-//  $output .= l("Done Adding Course Materials<span class='fa fa-check'></span>", "/",
-//    array("html" => TRUE, 'attributes' => array('class' => 'form-submit')));
 //  $output .= "<p><em>You can add more materials at any time</em></p><br /><br /><br />";
-//  $output .= "VIEW OF COURSE MATERIALS";
-
-
 }
 
 function course_switch_course($gid) {
