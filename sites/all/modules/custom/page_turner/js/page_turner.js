@@ -244,7 +244,7 @@ function PTView(model, elements) {
     self.brush = {};
     self.pages = {};  // current page(s)
 
-    self.offset = 10;    // for a y-axis offset
+    self.offset = 0;    // for a y-axis offset
     draw_navbar();
     draw_navbar_ticks();
     draw_page_x_of_y();

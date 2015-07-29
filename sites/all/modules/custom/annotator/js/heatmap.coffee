@@ -22,7 +22,7 @@ class Annotator.Plugin.Heatmap extends Annotator.Plugin
     return unless Annotator.supported()
     return unless Annotator.Plugin.Filters # Must have the annotation IDs the filters add
 
-    d3.select('#' + @layout.containerID).append('svg:svg').append('g').attr('id', @selector.heatmap)
+    d3.select('#' + @layout.containerID).insert('svg:svg', ':first-child').append('g').attr('id', @selector.heatmap)
     @heatmapContainer = d3.select('#' + @selector.heatmap)
 
     unless d3? or @d3?
@@ -111,10 +111,14 @@ class Annotator.Plugin.Heatmap extends Annotator.Plugin
     return total
 
   updateChart: =>
-    colors = d3.scale.linear()
-      .domain([0, d3.max(@bars)])
-#      .range(["#eff3ff", "#08519c"])
-      .range(['blue', 'green'])
+    if d3.max(@bars) > 10
+      colors = d3.scale.linear()
+        .domain([0, 2, 5, 10, d3.max(@bars)])
+        .range(['#f1eef6','#bdc9e1','#74a9cf','#2b8cbe','#045a8d'])
+    else
+      colors = d3.scale.linear()
+        .domain([0, d3.max(@bars)])
+        .range(['#2b8cbe','#045a8d'])
 
     y = d3.scale.linear()
       .domain([0, d3.max(@bars)])
@@ -151,4 +155,5 @@ class Annotator.Plugin.Heatmap extends Annotator.Plugin
     @configureBars(documentNode.textContent.length)
     for node in $(documentNode).find('.field-item.even').children() # First field-item is document body
       @calculateDensity(node)
+    console.log(@bars, @bars.length, @barTotal)
     @updateChart()

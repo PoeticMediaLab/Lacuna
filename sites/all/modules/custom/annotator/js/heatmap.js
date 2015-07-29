@@ -22,7 +22,7 @@
     Heatmap.prototype.pluginInit = function() {
       if (!Annotator.supported()) return;
       if (!Annotator.Plugin.Filters) return;
-      d3.select('#' + this.layout.containerID).append('svg:svg').append('g').attr('id', this.selector.heatmap);
+      d3.select('#' + this.layout.containerID).insert('svg:svg', ':first-child').append('g').attr('id', this.selector.heatmap);
       this.heatmapContainer = d3.select('#' + this.selector.heatmap);
       if (!((typeof d3 !== "undefined" && d3 !== null) || (this.d3 != null))) {
         console.error('d3.js is required to use the heatmap plugin');
@@ -117,7 +117,11 @@
     Heatmap.prototype.updateChart = function() {
       var barWidth, colors, heatmap, y,
         _this = this;
-      colors = d3.scale.linear().domain([0, d3.max(this.bars)]).range(['blue', 'green']);
+      if (d3.max(this.bars) > 10) {
+        colors = d3.scale.linear().domain([0, 2, 5, 10, d3.max(this.bars)]).range(['#f1eef6', '#bdc9e1', '#74a9cf', '#2b8cbe', '#045a8d']);
+      } else {
+        colors = d3.scale.linear().domain([0, d3.max(this.bars)]).range(['#2b8cbe', '#045a8d']);
+      }
       y = d3.scale.linear().domain([0, d3.max(this.bars)]).range([0, this.layout.height]);
       barWidth = this.layout.width / this.bars.length;
       heatmap = this.heatmapContainer.selectAll("rect." + this.selector.bar).data(this.bars);
@@ -144,6 +148,7 @@
         node = _ref[_i];
         this.calculateDensity(node);
       }
+      console.log(this.bars, this.bars.length, this.barTotal);
       return this.updateChart();
     };
 

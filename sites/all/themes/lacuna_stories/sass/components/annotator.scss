@@ -1126,3 +1126,10 @@ li.annotator-checkbox[style] {
     border-radius: 0;
   }
 }
+
+/* Annotation histogram styles */
+.annotation-heatmap-bar {
+  opacity: .25;
+  stroke: black;
+  stroke-width: 1;
+}
