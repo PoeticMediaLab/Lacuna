@@ -10,14 +10,14 @@ a.nolink {
 }
 
 
-#block-superfish-1 {
+#block-superfish-1, #block-superfish-2 {
   float: right;
   padding-right: 50px;
   font-size: 1em;
   font-family: $base-font-family;
 }
 
-#superfish-1 {
+#superfish-1, #superfish-2 {
   padding-bottom: 100px;
   margin-top: -80px;
 }
@@ -30,16 +30,13 @@ a.nolink {
   li {
     list-style-type: none;
     list-style-image: none;
-    padding: 10px 15px 10px 15px;
+    //padding: 10px 15px 10px 15px;
     margin: 0px;
   }
   span.sf-depth-2 {
     display: block;
     padding: 10px 15px 10px 15px;
     margin: 0px;
-  }
-  .sf-depth-1.sf-no-children {
-    display: none;
   }
   li.menuparent {
     background-color: $menu-color;

@@ -7,11 +7,10 @@ dependencies[] = media_internet
 
 files[] = includes/MediaYouTubeStreamWrapper.inc
 files[] = includes/MediaInternetYouTubeHandler.inc
-files[] = includes/MediaYouTubeBrowser.inc
 
-; Information added by Drupal.org packaging script on 2015-03-23
-version = "7.x-2.0-rc5"
+; Information added by Drupal.org packaging script on 2015-05-28
+version = "7.x-3.0"
 core = "7.x"
 project = "media_youtube"
-datestamp = "1427094782"
+datestamp = "1432800182"
 

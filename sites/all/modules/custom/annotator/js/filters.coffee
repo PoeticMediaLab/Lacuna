@@ -189,6 +189,8 @@ class Annotator.Plugin.Filters extends Annotator.Plugin
       when 'last'
         index = total
     @Model.set('index', index)
+    # So the page turner can show the correct page, if needed
+    $(document).trigger('annotation-filters-paged', @Model.annotation())
     # Update to reflect pager values change
     @View.drawPagerCount()
     # Scroll to the current annotation
@@ -269,6 +271,7 @@ class Model
     # Return true if highlights should be shown
     # Note: they have their own filter type
     # Otherwise, they'll collide with the "real" categories
+    $(document).trigger('annotation-filters-changed')
     @state.showHighlights = !@state.showHighlights
     if @state.showHighlights
       @removeFilter('highlights', 'highlights')
@@ -398,6 +401,7 @@ class Model
   filterAnnotations: (filter, value) ->
     # Look for matches of filter type
     # Update list of filters
+    $(document).trigger('annotation-filters-changed')
     @activateFilter(filter, value)
     if filter == 'none'
       for annotation in @state.annotations
@@ -426,7 +430,7 @@ class View
     @i = $('#' + select.interface.wrapper)  # interface shortcut
     @Controller = Controller
     @Model = Model
-    @i.append('<h2>Select Annotations</h2>')
+    @i.append('<h2>Show Annotations</h2>')
     @drawPager(@Model.get('index'), @Model.get('total'))
     @i.append("<div id='#{select.button.default}'></div>")
     @drawButton(select.button.default, 'none', 'user')
@@ -437,7 +441,7 @@ class View
       @drawAutocomplete(filter, values)
     @i.append("<div id='#{select.button.reset}'></div>")
     @drawButton(select.button.reset, 'reset', 'reset')
-    @i.append("<div id='#{select.filters.active}'>Active Selections</div>")
+    @i.append("<div id='#{select.filters.active}'>Showing Only</div>")
     return
 
   update: () ->

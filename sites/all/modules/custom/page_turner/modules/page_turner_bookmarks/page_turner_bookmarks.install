@@ -1,0 +1,76 @@
+<?php
+/**
+ * @file
+ *
+ * Installs Page Turner Bookmarks module
+ *
+ */
+
+
+/**
+ * Implements hook_install().
+ **/
+function page_turner_bookmarks_install() {
+	$t = get_t();
+  $bookmark_flag = flag_flag::factory_by_entity_type('node');
+  $bookmark_flag->name = PAGE_TURNER_BOOKMARK_FLAG;
+  $bookmark_flag->title = 'Page Turner Bookmark';
+	$node_types = variable_get('page_turner_node_types');
+	foreach ($node_types as $key => $value) {
+		if (!$value) {
+			// disabled keys get a 0 for value
+			unset($node_types[$key]);
+		}
+	}
+  $bookmark_flag->types = $node_types;
+  $bookmark_flag->flag_short = 'Bookmark';
+  $bookmark_flag->unflag_short = 'Unbookmark';
+  $bookmark_flag->global = FALSE;
+  $bookmark_flag->show_on_form = FALSE;
+  $bookmark_flag->show_on_node = FALSE;
+  $bookmark_flag->show_on_teaser = FALSE;
+  $bookmark_flag->link_type = 'toggle';
+  $bookmark_flag->save();
+
+	// Add page number field
+	field_create_field(array(
+			'field_name' => 'field_bookmark_page',
+			'label' => $t('Bookmarked page number'),
+			'type' => 'number_integer',
+			'locked' => TRUE,
+			'cardinality' => FIELD_CARDINALITY_UNLIMITED,
+		)
+	);
+
+	field_create_instance(array(
+		'field_name' => 'field_bookmark_page',
+		'label' => $t('Page number for a bookmark'),
+		'entity_type' => 'flagging',
+		'bundle' => PAGE_TURNER_BOOKMARK_FLAG,
+		'description' => $t('Bookmark start page'),
+		'required' => TRUE,
+		'widget' => array(
+			'type' => 'number',
+			'module' => 'number',
+			'settings' => array(),
+		),
+    'settings' => array(
+			'min' => '0',
+			'prefix' => '',
+			'suffix' => ''
+		),
+	));
+}
+
+/**
+ * Implements hook_uninstall()
+ **/
+function page_turner_bookmarks_uninstall() {
+	// Because module is already disabled, the constant is gone
+	$bookmark_flag = flag_get_flag('page_turner_bookmark');
+	if ($bookmark_flag) {
+			$bookmark_flag->delete();
+			$bookmark_flag->disable();
+	}
+	field_delete_field('field_bookmark_page');
+}

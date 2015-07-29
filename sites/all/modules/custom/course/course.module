@@ -1,4 +1,10 @@
 <?php
+/**
+ * @file
+ * Code for the Lacuna Stories Course feature.
+ */
+
+include_once 'course.features.inc';
 
 define("COURSE_NODE_TYPE", 'course');
 define("BIBLIO_NODE_TYPE", 'biblio');
@@ -48,7 +54,6 @@ function course_menu() {
     'type' => MENU_NORMAL_ITEM,
     'file' => 'course.pages.inc',
   );
-
   $items['admin/config/content/lacuna-courses'] = array(
     'title' => 'Course Creation Settings',
     'page callback' => 'drupal_get_form',
@@ -56,7 +61,29 @@ function course_menu() {
     'access arguments' => array('administer site configuration'),
     'type' => MENU_NORMAL_ITEM,
    );
-
+  $items['switch-course/%'] = array(
+    'title' => 'Switch Courses',
+    'page callback' => 'course_switch_course',
+    'page arguments' => array(1),
+    'access callback' => 'course_access',
+    'type' => MENU_NORMAL_ITEM,
+    'file' => 'course.pages.inc',
+  );
+  // Empty home (front) page, added onto via context
+  $items['home'] = array(
+    'page callback' => 'course_blank_page',
+    'access callback' => TRUE,
+    'type' => MENU_SUGGESTED_ITEM,
+    'file' => 'course.pages.inc',
+  );
+  // "About This Course" callback. Link is defined separately in the feature.
+  $items['about-course'] = array(
+    'title' => 'About This Course',
+    'page callback' => 'course_about_course',
+    'access callback' => 'course_get_selected_course',
+    'type' => MENU_NORMAL_ITEM,
+    'file' => 'course.pages.inc',
+  );
   return $items;
 }
 
@@ -66,6 +93,12 @@ function course_menu() {
 function course_access() {
   global $user;
   $key = "Course_Auth_Code_User_" . $user->uid;
+
+  // we only want to check access when we are actually on a protected page
+  // not just when eg the link is displayed and the access functions are called.
+  if (!course_is_protected_page()) {
+    return TRUE;
+  }
 
   // ANON
   if (user_is_anonymous()) {
@@ -83,14 +116,13 @@ function course_access() {
   }
   // NO/MISMATCHED AUTHCODE
   else {
-    // redirect if not on the auth code form
-    if (preg_match("/createcourse/", current_path()) && current_path() != 'createcourse') {
-      drupal_set_message("Please type in the Authorization Code before creating a Lacuna Stories Course", 'status', FALSE);
-      drupal_goto('createcourse');
-    }
-    // already on auth code form
-    return TRUE;
+    drupal_set_message("Please type in the Authorization Code before creating a Lacuna Stories Course", 'status', FALSE);
+    drupal_goto('createcourse');
   }
+}
+
+function course_is_protected_page() {
+  return (preg_match("/createcourse/", current_path()) && current_path() != 'createcourse');
 }
 
 function course_admin_form() {
@@ -103,4 +135,206 @@ function course_admin_form() {
   );
 
   return system_settings_form($form);
+}
+
+// Dynamic link from the course listings sets context or not before going to the course node
+function course_switch_course_link ($row, $view) {
+  $gid = $row->nid;
+  $title = $row->title;
+  if ($view->current_display == 'not_enrolled') {
+    return l($title, 'node/' . $gid);
+  };
+    if ($current_course = course_get_selected_course()) {
+      if ($gid == $current_course) {
+        $title .= " (current course)";
+      }
+    }
+  return l ($title, 'switch-course/' . $gid);
+}
+
+/**
+ * Implements hook_views_query_alter().
+ */
+function course_views_query_alter(&$view, &$query) {
+  switch ($view->name) {
+
+    // Filter courses views for enrolled and not enrolled
+    case 'courses':
+      if($view->name == "courses") {
+        switch ($view->current_display) {
+          case 'not_enrolled':
+            // This cannot be done in the view. It needs to be done in a query alter. See: https://www.drupal.org/node/596860#comment-10030507
+            $query->add_where_expression(2, 'node.nid NOT IN (SELECT gid FROM og_membership WHERE etid = ***CURRENT_USER***)');
+            break;
+          case 'enrolled':
+            // This could be done in the view. Doing here for simplicity and organization.
+            $query->add_where_expression(2, 'node.nid IN (SELECT gid FROM og_membership WHERE etid = ***CURRENT_USER***)');
+            break;
+        }
+      }
+      break;
+
+    // Filter course-specific views to the course context
+    // Way easier this way than with a custom views filters, and equally performant.
+    case 'people':
+      $query->add_where_expression(2, 'users.uid IN (SELECT etid FROM og_membership WHERE gid = ' . course_get_selected_course() . ')');
+      break;
+    case 'responses':
+    case 'documents':
+      $query->add_where_expression(2, 'node.nid IN (SELECT etid FROM og_membership WHERE gid = ' . course_get_selected_course() . ')');
+      $query->group_operator = 'AND'; // For some reason which I can't find in its settings, Better Exposed Filters is changing the query group_operator to OR in the Documents (Materials) view only (not in responses view), which ORs our add_where_expression, producing a result set that includes all memberships in the current course (bad). This fixes that, but keep an eye out for weird behaviour with the Documents (Materials) exposed filters.
+      break;
+  }
+}
+
+/**
+ * Implements hook_views_pre_render().
+ */
+function course_views_pre_render(&$view) {
+
+  // User-contributed JS that prevents autosubmit on text views exposed text field filters for (while typing, still autosubmits on tab or enter). See https://www.drupal.org/node/1217948#comment-9233357
+  // TODO: For now I have this loading on all views, but we may wish to only load for the specific views where this is needed
+  // TODO: This is not not specific to courses. Once we have a general core feature, move this there
+  drupal_add_js(drupal_get_path('module', 'course') . '/js/prevent-auto-submit.js', array('weight' => 10));
+
+  switch ($view->name) {
+
+    // Tweak titles of course-specific views to show the course name
+    case 'people':
+    case 'responses':
+    case 'documents':
+      $title_map = array (
+        'people' => 'People',
+        'responses' => 'Responses',
+        'documents' => 'Materials',
+      );
+      if ($current_course = course_get_selected_course()) {
+        $course = node_load($current_course);
+        $view->set_title ($title_map[$view->name] . ' in ' . $course->title);
+      }
+      break;
+
+    case 'courses':
+      // "Not Enrolled" title is redundant when anon is viewing (front page), so hide the title
+      if (user_is_anonymous()) {
+        $view->set_title(' '); // space required
+      }
+      break;
+
+  }
+}
+
+/*
+ * Implements hook_views_pre_build().
+ */
+function course_views_pre_build(&$view) {
+  switch($view->name) {
+
+    case 'sewing-kit':
+
+      // Set some default values on the exposed filters for Course and Annotator
+      // There is a bug that prevents clearing default values (ie. searching for all) when the exposed filter is multivalued (see: https://www.drupal.org/node/2452729), so for now I have set these two filters to single value.
+      $current_course = course_get_selected_course();
+      $view->display_handler->handlers['filter']['og_group_ref_target_id']->value = array($current_course=>$current_course);
+      global $user;
+      $view->display_handler->handlers['filter']['author_select']->value = array($user->uid => $user->uid);
+
+      break;
+
+  }
+}
+
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function course_form_views_exposed_form_alter(&$form, &$form_state) {
+  if ($form['#id'] == 'views-exposed-form-sewing-kit-page') {
+
+    // Restrict the group filter options to (a) courses, (b) that the user is a member of
+    $group_options = array('All' => '- Any -');
+    $groups = og_get_groups_by_user();
+    foreach ($groups['node'] as $gid) {
+      $group = node_load($gid);
+      if ($group->type == 'course') {
+        $group_options[$gid] = $group->title;
+      }
+    }
+    $form['og_group_ref_target_id']['#options'] = $group_options;
+
+    // Restrict the tag filter options to tags on annotations on documents in courses in which the user is a member. Otherwise we will have inapplicable tags here even with no filters set. Plus tags may be considered private content.
+    $group_tag_options = array();
+
+    $user_groups = array_keys(og_get_groups_by_user (NULL, 'node'));
+    $course_groups = array();
+    foreach ($user_groups as $user_group) {
+      $group = node_load($user_group);
+      if ($group->type == 'course') {
+        $course_groups[] = $user_group;
+      }
+    }
+    $query = new EntityFieldQuery();
+    $query->entityCondition('entity_type', 'taxonomy_term');
+    $query->entityCondition('bundle', 'annotation_tags');
+    $query->fieldCondition('field_annotation_tag_course', 'target_id', $course_groups, 'IN');
+    $records = $query->execute();
+    if (count($records)) {
+      $group_tag_options = array_keys($records['taxonomy_term']);
+    }
+    foreach ($form['field_annotation_tags_tid']['#options'] as $existing_tag_option_tid => $existing_tag_option_name) {
+      if (!in_array($existing_tag_option_tid, $group_tag_options)) {
+        unset ($form['field_annotation_tags_tid']['#options'][$existing_tag_option_tid]);
+      }
+    }
+
+  }
+}
+
+// Shared With field in the Sewing Kit view, merges the Audience field and Peer Groups values (when applicable) into a single column to save space
+function course_sewing_kit_shared_with ($data) {
+  $lines = array();
+  foreach ($data->field_field_annotation_audience as $audience) {
+    $audience_val = $audience['rendered']['#markup'];
+    if ($audience['raw']['value'] == 'peer-groups') {
+      $peer_groups = array();
+      foreach ($data->field_og_group_ref as $group) {
+        if ($group['raw']['entity']->type == 'peer_group') {
+          $peer_groups[] = $group['rendered']['#markup'];
+        }
+      }
+      $audience_val .= ' (' . implode (', ', $peer_groups) . ')';
+    }
+    $lines[] = $audience_val;
+  }
+  $output = implode (', ', $lines);
+  if ($output) {
+    return $output;
+  }
+}
+
+// Get the currently selected course
+function course_get_selected_course () {
+  global $user;
+  if (isset($user->data['current-course'])) {
+    return $user->data['current-course'];
+  }
+}
+
+/*
+ * Implements hook_node_validate
+ */
+function course_node_validate ($node, $form, &$form_state) {
+
+  if ($node->type == 'course') {
+
+    // Ensure that multi-term courses are in consecutive terms
+    $terms = $form_state['values']['field_course_term'][$node->language];
+    if (count($terms) == 2) {
+      $term1 = $terms[0]['value'];
+      $term2 = $terms[1]['value'];
+      if (($term1 == 'Fall' && $term2 == 'Spring') OR ($term1 = 'Winter' && $term2 == 'Summer')) {
+        form_set_error('field_course_term', t('Multi-term courses must be in consecutive terms.')); // Todo: get this to highlight the term field in the failed form submission. Not sure what's up.
+      }
+    }
+  }
 }

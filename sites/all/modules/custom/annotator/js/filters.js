@@ -210,6 +210,7 @@
           index = total;
       }
       this.Model.set('index', index);
+      $(document).trigger('annotation-filters-paged', this.Model.annotation());
       this.View.drawPagerCount();
       return this.View.scrollTo(this.Model.annotation());
     };
@@ -320,6 +321,7 @@
 
     Model.prototype.toggleHighlights = function() {
       var id, _i, _len, _ref;
+      $(document).trigger('annotation-filters-changed');
       this.state.showHighlights = !this.state.showHighlights;
       if (this.state.showHighlights) {
         this.removeFilter('highlights', 'highlights');
@@ -491,6 +493,7 @@
 
     Model.prototype.filterAnnotations = function(filter, value) {
       var annotation, currentValue, _i, _j, _len, _len2, _ref, _ref2;
+      $(document).trigger('annotation-filters-changed');
       this.activateFilter(filter, value);
       if (filter === 'none') {
         _ref = this.state.annotations;
@@ -541,7 +544,7 @@
       this.i = $('#' + select.interface.wrapper);
       this.Controller = Controller;
       this.Model = Model;
-      this.i.append('<h2>Select Annotations</h2>');
+      this.i.append('<h2>Show Annotations</h2>');
       this.drawPager(this.Model.get('index'), this.Model.get('total'));
       this.i.append("<div id='" + select.button["default"] + "'></div>");
       this.drawButton(select.button["default"], 'none', 'user');
@@ -555,7 +558,7 @@
       }
       this.i.append("<div id='" + select.button.reset + "'></div>");
       this.drawButton(select.button.reset, 'reset', 'reset');
-      this.i.append("<div id='" + select.filters.active + "'>Active Selections</div>");
+      this.i.append("<div id='" + select.filters.active + "'>Showing Only</div>");
     };
 
     View.prototype.update = function() {};

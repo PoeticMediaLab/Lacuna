@@ -66,7 +66,7 @@ http://w8tcha.github.com/CKEditor-oEmbed-Plugin/
 * official.fm - YQL and oembed
 * mixcloud - YQL and oembed
 * shoudio - oembed
-* audioboo.fm - OGP
+* audioboo.fm - OGP 
 * Spotify - OGP YQL
 
 ###Photo
@@ -95,7 +95,7 @@ http://w8tcha.github.com/CKEditor-oEmbed-Plugin/
 * propic - OGP
 * avairy.com - OGP
 * lomography - ogp
-* weheartit - ogp
+* weheartit - ogp 
 * glogster - ogp
 * chart.ly - embedded
 * twitrpix - OGP
@@ -111,7 +111,7 @@ http://w8tcha.github.com/CKEditor-oEmbed-Plugin/
 * tumblr- JSONP lookup
 * imdb - JSONP lookup via imdbapi.com
 * wikipedia- JSONP lookup
-* github- JSONP lookup (CSS)
+* github- JSONP lookup (CSS) 
 * eventful - OGP
 * myspace - OGP
 * live Journal - JSONP Lookup (CSS)
@@ -167,7 +167,7 @@ http://w8tcha.github.com/CKEditor-oEmbed-Plugin/
 
 Licensed under the terms of the MIT License.
 
-####Dependencies
+####Dependencies 
 This Plugin requires the following plugins to work: Widget, Dialog.
 
 ####Installation
@@ -194,7 +194,7 @@ config.oembed_WrapperClass = 'embededContent';
 ````
 
 
-3. and also include the plugin in the toolbar
+3. and also include the plugin in the toolbar 
 
 ````js
 toolbar :[ ... ['oembed']...]

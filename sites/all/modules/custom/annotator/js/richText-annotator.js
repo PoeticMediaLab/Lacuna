@@ -31,18 +31,18 @@ Annotator.Plugin.RichText = (function(_super) {
 
 	//Default tinymce configuration
 	RichText.prototype.options = {
-		tinymce:{
-			selector: "li.annotator-item textarea",
-			plugins: "media, jbimages",
-			menubar: false,
-			theme: 'advanced',
-			theme_advanced_disable: 'bold, italic, underline, strikethrough, justifyleft, justifycenter, justifyright, justifyfull, bullist, numlist, outdent, indent, cut, copy, hr, styleselect, formatselect, fontselect, fontsizeselect, sup, sub, forecolor, backcolor, anchor, cleanup, help, seperator, charmap, visualaid, hr, undo, redo, code',
-			theme_advanced_buttons1_add: "media,jbimages",
-			editor_selector: 'mceAdvanced',
-			toolbar_items_size: 'small',
-			extended_valid_elements : "iframe[src|frameborder|style|scrolling|class|width|height|name|align|id]",
-    	toolbar: "link advimage media jbimages",
-		}
+		// tinymce:{
+		// 	selector: "li.annotator-item textarea",
+		// 	plugins: "media, jbimages",
+		// 	menubar: false,
+		// 	theme: 'advanced',
+		// 	theme_advanced_disable: 'bold, italic, underline, strikethrough, justifyleft, justifycenter, justifyright, justifyfull, bullist, numlist, outdent, indent, cut, copy, hr, styleselect, formatselect, fontselect, fontsizeselect, sup, sub, forecolor, backcolor, anchor, cleanup, help, seperator, charmap, visualaid, hr, undo, redo, code',
+		// 	theme_advanced_buttons1_add: "media,jbimages",
+		// 	editor_selector: 'mceAdvanced',
+		// 	toolbar_items_size: 'small',
+		// 	extended_valid_elements : "iframe[src|frameborder|style|scrolling|class|width|height|name|align|id]",
+  //   	toolbar: "link advimage media jbimages",
+		// }
 	};
 
 	function RichText(element,options) {
@@ -60,50 +60,52 @@ Annotator.Plugin.RichText = (function(_super) {
 		}
 
 		//Editor Setup
-		annotator.editor.addField({
-			type: 'input',
-			load: this.updateEditor,
-		});
+		// annotator.editor.addField({
+		// 	type: 'input',
+		// 	load: this.updateEditor,
+		// });
 
 		//Viewer setup
-		annotator.viewer.addField({
-			load: this.updateViewer,
-		});
+		// annotator.viewer.addField({
+		// 	load: this.updateViewer,
+		// });
 
 
-		annotator.subscribe("annotationEditorShown", function(){
-			$(annotator.editor.element).find('.mceEditor')[0].style.display='block';
-			$(annotator.editor.element).find('.mceEditor').css('z-index',3000000000);
-			annotator.editor.checkOrientation();
-		});
-		annotator.subscribe("annotationEditorHidden", function(){
-			$(annotator.editor.element).find('.mceEditor')[0].style.display='none';
-		});
+		// annotator.subscribe("annotationEditorShown", function(){
+		// 	$(annotator.editor.element).find('.mceEditor')[0].style.display='block';
+		// 	$(annotator.editor.element).find('.mceEditor').css('z-index',3000000000);
+		// 	annotator.editor.checkOrientation();
+		// });
+		// annotator.subscribe("annotationEditorHidden", function(){
+		// 	$(annotator.editor.element).find('.mceEditor')[0].style.display='none';
+		// });
 
 		//set listener for tinymce;
-		this.options.tinymce.setup = function(ed) {
-			ed.onChange.add(function(e) {
-				//set the modification in the textarea of annotator
-				$(editor.element).find('textarea')[0].value = tinymce.activeEditor.getContent();
-			});
-			ed.onInit.add(function(ed){
-				$('.mceEditor').css('z-index','3090000000000000000');
-			});
-		};
-		tinymce.init(this.options.tinymce);
+		// this.options.tinymce.setup = function(ed) {
+		// 	ed.onChange.add(function(e) {
+		// 		//set the modification in the textarea of annotator
+		// 		$(editor.element).find('textarea')[0].value = tinymce.activeEditor.getContent();
+		// 	});
+		// 	ed.onInit.add(function(ed){
+		// 		$('.mceEditor').css('z-index','3090000000000000000');
+		// 	});
+		// };
+		// tinymce.init(this.options.tinymce);
+
 	};
 
 	RichText.prototype.updateEditor = function(field, annotation) {
 		var text = typeof annotation.text!='undefined'?annotation.text:'';
-		tinymce.activeEditor.setContent(text);
-		$(field).remove(); //this is the auto create field by annotator and it is not necessary
+		// tinymce.activeEditor.setContent(text);
+		// $(field).remove(); //this is the auto create field by annotator and it is not necessary
+		CKEDITOR.replace('annotator-field-0');
 	}
 
 	RichText.prototype.updateViewer = function(field, annotation) {
 		var textDiv = $(field.parentNode).find('div:first-of-type')[0];
 		textDiv.innerHTML =annotation.text;
 		$(textDiv).addClass('richText-annotation');
-		$(field).remove(); //this is the auto create field by annotator and it is not necessary
+		// $(field).remove(); //this is the auto create field by annotator and it is not necessary
 	}
 
 	return RichText;

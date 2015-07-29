@@ -1,0 +1,139 @@
+<?php
+/**
+ * @file
+ * Code for the Lacuna Stories Peer Groups feature.
+ */
+
+include_once 'lacuna_stories_peer_groups.features.inc';
+
+/**
+ * Add and Remove links for Members view in Peer Groups
+ */
+function lacuna_stories_peer_groups_add_members($view) {
+ $gid = $view->args[0];
+ global $user;
+ if (og_user_access('node', $gid, 'add user', $user)) {
+  return l ('Add Members',
+    '/group/node/' .$gid . '/admin/people/add-user',
+    array(
+      'query' => drupal_get_destination(),
+      'html' => true,
+    )
+  );
+ }
+}
+function lacuna_stories_peer_groups_member_links($row, $view) {
+ $gid = $view->args[0];
+ global $user;
+ if (og_user_access('node', $gid, 'manage members', $user)) {
+  return l (
+    'Remove Member',
+    '/group/node/' . $gid . '/admin/people/delete-membership/' . $row->id,
+    array(
+      'query' => drupal_get_destination(),
+      'html' => true,
+    )
+  );
+ }
+}
+
+/**
+ * Implements hook_menu().
+ */
+function lacuna_stories_peer_groups_menu() {
+  $items = array();
+  $items['peer-groups'] = array(
+    'title' => 'Peer Groups',
+    'page callback' => 'lacuna_stories_peer_groups_peer_groups_listings',
+    'access callback' => 'user_access',
+    'access arguments' => array('create peer_group content'),
+    'type' => MENU_SUGGESTED_ITEM,
+  );
+  $items['join-peer-group/%'] = array(
+    'title' => 'Join Peer Group',
+    'page callback' => 'lacuna_stories_peer_groups_join_peer_group',
+    'page arguments' => array(1),
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+  );
+  return $items;
+}
+
+
+function lacuna_stories_peer_groups_join_peer_group($gid) {
+  if ($group = node_load ($gid)) {
+    if ($group->type == 'peer_group') {
+      global $user;
+      og_group('node', $gid, array(
+        "entity_type" => "user",
+        "entity" => $user,
+        "membership type" => OG_MEMBERSHIP_TYPE_DEFAULT
+      ));
+      og_role_grant('node', $gid, $user->uid, 3);
+      drupal_goto ('peer-groups');
+    }
+  }
+  drupal_access_denied();
+}
+
+// Page callback. Currently the entirety of the Peer Group listing page is generated here.
+function lacuna_stories_peer_groups_peer_groups_listings() {
+  $output = l ('Create a Peer Group', 'node/add/peer-group');
+  $peer_group_views = array (
+    'my_peer_groups',
+    'joined_peer_groups',
+    'unjoined_peer_groups'
+  );
+  foreach ($peer_group_views as $peer_group_view) {
+    $view = views_get_view('peer_groups');
+    $view->set_display($peer_group_view);
+    $output .= '<h4>' . $view->get_title() . '</h4>';
+    $output .= $view->preview($peer_group_view);
+  }
+  return $output;
+}
+
+/**
+ * Implements hook_views_query_alter().
+ */
+function lacuna_stories_peer_groups_views_query_alter(&$view, &$query) {
+  if($view->name == "peer_groups") {
+    // This cannot be done in the view. It needs to be done in a query alter. See: https://www.drupal.org/node/596860#comment-10030507
+    if ($view->current_display == 'unjoined_peer_groups') {
+      $query->add_where_expression (2, 'node.nid NOT IN (SELECT gid FROM og_membership WHERE etid = ***CURRENT_USER***)');
+    }
+    // This could be done in the view. Doing here for simplicity.
+    elseif ($view->current_display == 'joined_peer_groups') {
+      $query->add_where_expression (2, 'node.nid IN (SELECT gid FROM og_membership WHERE etid = ***CURRENT_USER***)');
+    }
+  }
+}
+
+/**
+ * Add/Remove links within Peer Group listings.
+ */
+function lacuna_stories_peer_groups_listing_join_leave_link ($data, $view) {
+  if ($view->current_display == 'unjoined_peer_groups') {
+    return l('Join', '/join-peer-group/' . $data->nid);
+  }
+  elseif ($view->current_display == 'joined_peer_groups') {
+    return l(
+      'Leave',
+      '/group/node/' . $data->nid . '/unsubscribe',
+      array(
+        'query' => drupal_get_destination(),
+        'html' => TRUE,
+      )
+    );
+  }
+}
+
+/**
+ * Implements hook_form_BASE_FORM_ID_alter().
+ *
+ * Hide the redundant "Request message" field from the group confirm form, since approval is not required to join open groups
+ */
+function lacuna_stories_peer_groups_form_og_ui_confirm_subscribe_alter(&$form, &$form_state) {
+  $form['og_membership_request']['#access'] = FALSE;
+}
+

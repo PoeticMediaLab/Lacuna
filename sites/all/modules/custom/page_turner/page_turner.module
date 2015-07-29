@@ -1,0 +1,133 @@
+<?php
+/**
+ * @file
+ *
+ * A module to break long text into turnable pages.
+ *
+ * This module takes a long work and adds UI to make it
+ * possible for users to flip through it more like a book,
+ * to bookmark pages, and to return to those pages.
+ *
+ * Mike Widner <mikewidner@stanford.edu>
+ *
+ **/
+
+/**
+ * Implement hook_menu().
+ */
+function page_turner_menu() {
+  $items = array();
+  $items['admin/config/user-interface/page-turner'] = array(
+    'title' => 'Page Turner',
+    'type' => MENU_NORMAL_ITEM,
+    'description' => 'Configuration for the Page Turner module',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('page_turner_admin_form'),
+    'access arguments' => array('administer page_turner'),
+    );
+  return $items;
+}
+
+/**
+ * Implement hook_permission().
+ */
+function page_turner_permission() {
+    return array(
+    'administer page_turner' => array(
+      'title' => t('Administer Page Turner'),
+      'description' => t('May manage settings for Page Turner module.'),
+    ),
+//    'use page_turner' => array(
+//      'title' => t('Use Page Turner'),
+//      'description' => t('May use Page Turner for viewing nodes.'),
+//    ),
+  );
+}
+
+/**
+ * Form builder; Create and display Page Turner configuration
+ * settings form
+ **/
+// TODO: Add validation that minlength and pagelength > 0 and
+// are numeric
+function page_turner_admin_form($form, &$form_state) {
+  // Minimum length that should use Page Turner
+  $form['page_turner_min_length'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Minimum text length'),
+    '#description' => t('The minimum number of characters in a text for Page Turner to be active'),
+    '#size' => 20,
+    '#maxlength' => 40,
+    '#required' => TRUE,
+    '#default_value' => variable_get('page_turner_min_length',20000),
+    );
+
+  // Number of characters in a single page
+  $form['page_turner_page_length'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Characters per page'),
+    '#description' => t('The number of characters that define a single page of text'),
+    '#size' => 20,
+    '#maxlength' => 40,
+    '#required' => TRUE,
+    '#default_value' => variable_get('page_turner_page_length',3000),
+    );
+
+  // HTML elements that force a new page break
+  $form['page_turner_breaks'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Page break HTML elements'),
+    '#description' => t('A comma-separated list of HTML elements that indicate a page break'),
+    '#size' => 60,
+    '#maxlength' => 255,
+    '#required' => FALSE,
+    '#default_value' => variable_get('page_turner_breaks', 'h4'),
+    );
+
+  // Set which content types on which Page Turner should activate
+  $form['page_turner_node_types'] = array(
+    '#type' => 'checkboxes',
+    '#title' => t('Content types'),
+    '#description' => t('Choose content types for which Page Turner should be used'),
+    '#options' => node_type_get_names(),
+    '#default_value' => variable_get('page_turner_node_types'),
+    );
+
+  return system_settings_form($form);
+}
+
+/**
+ * Implements hook_node_view()
+ */
+function page_turner_node_view($node, $view_mode, $langcode) {
+  // If the node is of a type chosen to use Page Turner
+  // And the page is long enough
+  // Then activate the Page Turner UI
+  $active = FALSE;
+  $node_types = variable_get('page_turner_node_types');
+
+  // $node_types has 0 as value for keys that haven't been checked
+  // in the configuration options
+  if ($node_types[$node->type] && $view_mode == 'full') {
+    $text_length = 0;
+    // Because I stupidly didn't use the default body field for documents
+    if ($node->type == 'document') {
+      $text_length = strlen($node->field_doc_text[LANGUAGE_NONE][0]['value']);
+    } else {
+      $text_length = strlen($node->body[LANGUAGE_NONE][0]['value']);
+    }
+    if ($text_length >= variable_get('page_turner_min_length')) {
+      $active = TRUE;
+    }
+  }
+
+  // Activate page_turner.js, pass settings
+  if ($active) {
+    drupal_add_js(array('page_turner' => array(
+      'page_length' => variable_get('page_turner_page_length'),
+      'breaks' => variable_get('page_turner_breaks')
+      )), 'setting');
+    drupal_add_js(libraries_get_path('d3') . '/d3.min.js');
+    drupal_add_js(drupal_get_path('module', 'page_turner') . '/js/page_turner.js', array('group' => 'page_turner', 'weight' => -10));
+  }
+}

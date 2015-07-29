@@ -4,8 +4,5 @@ sites/*/settings*.php
 # Ignore paths that contain user-generated content.
 sites/*/files
 sites/*/private
-*/.sass-cache/*
-sites/all/themes/lacuna_stories/.sass-cache/*
 
-.DS_Store
-*/.DS_Store
+sites/all/themes/lacuna_stories/.sass-cache/
