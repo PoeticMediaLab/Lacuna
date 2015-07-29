@@ -11,12 +11,12 @@ class HeatmapAnnotatorPlugin extends AnnotatorPlugin {
 		if (TRUE) {
 			$defaults['layout'] = array(
 				'containerID' => 'page-turner-nav-parent',
-				'orientation' => 'horizontal'
+				'horizontal' => 1
 			);
 		} else {
 			$defaults['layout'] = array(
-				'container' => 'div#content',
-				'orientation' => 'vertical',
+				'containerID' => 'div#content',
+				'horizontal' => 0,
 				'width' => '50px'
 			);
 		}
@@ -25,10 +25,9 @@ class HeatmapAnnotatorPlugin extends AnnotatorPlugin {
 
   public function setup() {
     $settings = $this->settings();
-
     libraries_load('d3');
 		drupal_add_js(array('annotator_heatmap' => (array) $settings), 'setting');
-    drupal_add_js(drupal_get_path('module', 'annotator') . '/js/annotator_heatmap.js');
-    drupal_add_js(drupal_get_path('module', 'annotator') . '/js/heatmap.js');
+		drupal_add_js(drupal_get_path('module', 'annotator') . '/js/annotator_heatmap.js');
+		drupal_add_js(drupal_get_path('module', 'annotator') . '/js/heatmap.js');
   }
 }

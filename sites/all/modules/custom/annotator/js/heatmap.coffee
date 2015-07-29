@@ -2,29 +2,34 @@
 # Create a heatmap of annotations
 # Update heatmap when annotations filtered
 #
-# Based loosely on code by @tilgovi
+# Based (very) loosely on code by @tilgovi
+# Initial d3 histogram code by Rhea Pokorny
 # Updated for Lacuna Stories by Mike Widner <mikewidner@stanford.edu>
 #
 
 $ = jQuery
-class Annotator.Plugin.Heatmap extends Annotator.Plugin
-  html:
-    element: '<g id ="annotation-heatmap"></g>'
 
+class Annotator.Plugin.Heatmap extends Annotator.Plugin
   selector:
     annotation: 'annotator-hl'
     hidden: 'af-annotation-hide'  # Annotation Filter hidden/filtered out annotation
-    heatmap: '#annotation-heatmap'
+    heatmap: 'annotation-heatmap'
     bar: 'annotation-heatmap-bar'
+    pageTurner: 'page-turner-nav'
 
   # Initializes the heatmap plugin
   pluginInit: ->
+    return unless Annotator.supported()
     return unless Annotator.Plugin.Filters # Must have the annotation IDs the filters add
-    $('#' + @layout.containerID).prepend(@html.element)
-    @heatmapContainer = d3.select(@selector.heatmap)
+    g = document.createElement('g')
+    g.id = @selector.heatmap
+    @container = document.getElementById(@layout.containerID)
+    @container.insertBefore(g, @container.firstElementChild)
+    @heatmapContainer = d3.select('#' + @selector.heatmap)
 
     unless d3? or @d3?
         console.error('d3.js is required to use the heatmap plugin')
+        return
     else
       @_setupListeners()
       @update()
@@ -39,9 +44,9 @@ class Annotator.Plugin.Heatmap extends Annotator.Plugin
     super element, options
     @d3 = d3  # We add d3 through Drupal
     @layout = options.layout
-    @binSize = 0
-    @binTotal = 0
-    @bins = []
+    @barWidth = 0
+    @barTotal = 0
+    @bars = []
     @chart
 
   # Listens to annotation change events on the Annotator in order to refresh
@@ -62,24 +67,23 @@ class Annotator.Plugin.Heatmap extends Annotator.Plugin
 
   calculateDimensions: (node) =>
     @layout.length = node.textContent.length;
-    if @layout.orientation == 'horizontal'
+    if @layout.horizontal
       @layout.width = document.getElementById(@layout.containerID).offsetWidth
-    @layout.height = document.getElementById(@layout.containerID).offsetHeight
-    @heatmapContainer
-      .style('width', @layout.width)
-      .style('height', @layout.height)
+    # Try for the page turner height first, then fall back to container
+    @layout.height = document.getElementById(@selector.pageTurner).offsetHeight or document.getElementById(@layout.containerID).offsetHeight
+    @heatmapContainer.style('width', @layout.width).style('height', @layout.height)
 
-  configureBins: (length) =>
+  configureBars: (length) =>
     # Get the length of only the document text, not the annotations
-    if @layout.orientation == 'horizontal'
+    if @layout.horizontal
     # Calculate number of bins for annotations
-      @binTotal = $('.page-turner-ticks .tick').length # try to find page turner breaks first
-      if !@binTotal?
-        @binTotal = Math.ceil(length / @layout.width)
+      @barTotal = $('.page-turner-ticks .tick').length # try to find page turner breaks first
+      if !@barTotal?
+        @barTotal = Math.ceil(length / @layout.width)
       else
-        @binTotal = @binTotal * 4 # because we want more than 1 bar per page
+        @barTotal = @barTotal * 4 # because we want more than 1 bar per page
     # NOTE: binTotal is just a suggestion
-    @binSize = Math.floor(length / @binTotal)
+    @barWidth = Math.floor(length / @barTotal)
 
   # Calculate the annotation density of a node
   calculateDensity: (node, length = 0, overlap = false) =>
@@ -87,15 +91,16 @@ class Annotator.Plugin.Heatmap extends Annotator.Plugin
     total = 0
     for child in node.childNodes
       length += child.textContent.length unless overlap # length already accounted for
-      if length >= @binSize
+      if length >= @barWidth
         if total > 0
-          @bins.push(total)
+          @bars.push(total)
         else
           # fill the empty bins
-          for i in [0..Math.ceil(length / @binSize)]
-            @bins.push(0)
+          for i in [0..Math.ceil(length / @barWidth)]
+            @bars.push(0)
         total = 0
         length = 0
+        counted = []
       if child.nodeType == Node.ELEMENT_NODE and
           child.classList.contains(@selector.annotation) and not
           child.classList.contains(@selector.hidden)
@@ -109,19 +114,18 @@ class Annotator.Plugin.Heatmap extends Annotator.Plugin
 
   updateChart: =>
     colors = d3.scale.linear()
-      .domain([0, d3.max(@bins)])
+      .domain([0, d3.max(@bars)])
 #      .range(["#eff3ff", "#08519c"])
       .range(['blue', 'green'])
 
     y = d3.scale.linear()
-      .domain([0, d3.max(@bins)])
+      .domain([0, d3.max(@bars)])
       .range([0, @layout.height])
 
-    console.log(y(0), y(1), y(2), y(3), y(4))
-    barWidth = @layout.width / @bins.length
+    barWidth = @layout.width / @bars.length
 
     heatmap = @heatmapContainer.selectAll("rect.#{@selector.bar}")
-      .data(@bins)
+      .data(@bars)
 
     heatmap.exit().remove() # remove stale bars
 
@@ -140,15 +144,15 @@ class Annotator.Plugin.Heatmap extends Annotator.Plugin
         return @layout.height - y(d)
       )
 
-# Update the heatmap
+  # Update the heatmap
   update: =>
     return unless d3?
-    @bins = []  # reset
+    @bars = []  # reset
     documentNode = $(@annotator.wrapper).children()[1]
     @calculateDimensions(documentNode)
-    @configureBins(documentNode.textContent.length)
+    @configureBars(documentNode.textContent.length)
     for node in $(documentNode).find('.field-item.even').children() # First field-item is document body
       @calculateDensity(node)
     @updateChart()
-
-
+#    @container.innerHTML = @container.innerHTML # force a redraw of the existing SVG
+    console.log(@container.innerHTML)

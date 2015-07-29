@@ -11,23 +11,25 @@
 
     __extends(Heatmap, _super);
 
-    Heatmap.prototype.html = {
-      element: '<g id ="annotation-heatmap"></g>'
-    };
-
     Heatmap.prototype.selector = {
       annotation: 'annotator-hl',
       hidden: 'af-annotation-hide',
-      heatmap: '#annotation-heatmap',
-      bar: 'annotation-heatmap-bar'
+      heatmap: 'annotation-heatmap',
+      bar: 'annotation-heatmap-bar',
+      pageTurner: 'page-turner-nav'
     };
 
     Heatmap.prototype.pluginInit = function() {
+      var g;
+      if (!Annotator.supported()) return;
       if (!Annotator.Plugin.Filters) return;
-      $('#' + this.layout.containerID).prepend(this.html.element);
-      this.heatmapContainer = d3.select(this.selector.heatmap);
+      g = document.createElement('g');
+      g.id = this.selector.heatmap;
+      this.container = document.getElementById(this.layout.containerID);
+      this.container.insertBefore(g, this.container.firstElementChild);
+      this.heatmapContainer = d3.select('#' + this.selector.heatmap);
       if (!((typeof d3 !== "undefined" && d3 !== null) || (this.d3 != null))) {
-        return console.error('d3.js is required to use the heatmap plugin');
+        console.error('d3.js is required to use the heatmap plugin');
       } else {
         this._setupListeners();
         return this.update();
@@ -38,13 +40,13 @@
       this.update = __bind(this.update, this);
       this.updateChart = __bind(this.updateChart, this);
       this.calculateDensity = __bind(this.calculateDensity, this);
-      this.configureBins = __bind(this.configureBins, this);
+      this.configureBars = __bind(this.configureBars, this);
       this.calculateDimensions = __bind(this.calculateDimensions, this);      Heatmap.__super__.constructor.call(this, element, options);
       this.d3 = d3;
       this.layout = options.layout;
-      this.binSize = 0;
-      this.binTotal = 0;
-      this.bins = [];
+      this.barWidth = 0;
+      this.barTotal = 0;
+      this.bars = [];
       this.chart;
     }
 
@@ -61,23 +63,23 @@
 
     Heatmap.prototype.calculateDimensions = function(node) {
       this.layout.length = node.textContent.length;
-      if (this.layout.orientation === 'horizontal') {
+      if (this.layout.horizontal) {
         this.layout.width = document.getElementById(this.layout.containerID).offsetWidth;
       }
-      this.layout.height = document.getElementById(this.layout.containerID).offsetHeight;
+      this.layout.height = document.getElementById(this.selector.pageTurner).offsetHeight || document.getElementById(this.layout.containerID).offsetHeight;
       return this.heatmapContainer.style('width', this.layout.width).style('height', this.layout.height);
     };
 
-    Heatmap.prototype.configureBins = function(length) {
-      if (this.layout.orientation === 'horizontal') {
-        this.binTotal = $('.page-turner-ticks .tick').length;
-        if (!(this.binTotal != null)) {
-          this.binTotal = Math.ceil(length / this.layout.width);
+    Heatmap.prototype.configureBars = function(length) {
+      if (this.layout.horizontal) {
+        this.barTotal = $('.page-turner-ticks .tick').length;
+        if (!(this.barTotal != null)) {
+          this.barTotal = Math.ceil(length / this.layout.width);
         } else {
-          this.binTotal = this.binTotal * 4;
+          this.barTotal = this.barTotal * 4;
         }
       }
-      return this.binSize = Math.floor(length / this.binTotal);
+      return this.barWidth = Math.floor(length / this.barTotal);
     };
 
     Heatmap.prototype.calculateDensity = function(node, length, overlap) {
@@ -90,16 +92,17 @@
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         child = _ref[_i];
         if (!overlap) length += child.textContent.length;
-        if (length >= this.binSize) {
+        if (length >= this.barWidth) {
           if (total > 0) {
-            this.bins.push(total);
+            this.bars.push(total);
           } else {
-            for (i = 0, _ref2 = Math.ceil(length / this.binSize); 0 <= _ref2 ? i <= _ref2 : i >= _ref2; 0 <= _ref2 ? i++ : i--) {
-              this.bins.push(0);
+            for (i = 0, _ref2 = Math.ceil(length / this.barWidth); 0 <= _ref2 ? i <= _ref2 : i >= _ref2; 0 <= _ref2 ? i++ : i--) {
+              this.bars.push(0);
             }
           }
           total = 0;
           length = 0;
+          counted = [];
         }
         if (child.nodeType === Node.ELEMENT_NODE && child.classList.contains(this.selector.annotation) && !child.classList.contains(this.selector.hidden)) {
           if (child.hasChildNodes()) {
@@ -118,11 +121,10 @@
     Heatmap.prototype.updateChart = function() {
       var barWidth, colors, heatmap, y,
         _this = this;
-      colors = d3.scale.linear().domain([0, d3.max(this.bins)]).range(['blue', 'green']);
-      y = d3.scale.linear().domain([0, d3.max(this.bins)]).range([0, this.layout.height]);
-      console.log(y(0), y(1), y(2), y(3), y(4));
-      barWidth = this.layout.width / this.bins.length;
-      heatmap = this.heatmapContainer.selectAll("rect." + this.selector.bar).data(this.bins);
+      colors = d3.scale.linear().domain([0, d3.max(this.bars)]).range(['blue', 'green']);
+      y = d3.scale.linear().domain([0, d3.max(this.bars)]).range([0, this.layout.height]);
+      barWidth = this.layout.width / this.bars.length;
+      heatmap = this.heatmapContainer.selectAll("rect." + this.selector.bar).data(this.bars);
       heatmap.exit().remove();
       heatmap.enter().append('rect').style('fill', colors).classed(this.selector.bar, true);
       return heatmap.attr('width', barWidth).attr('x', function(d, i) {
@@ -137,16 +139,17 @@
     Heatmap.prototype.update = function() {
       var documentNode, node, _i, _len, _ref;
       if (typeof d3 === "undefined" || d3 === null) return;
-      this.bins = [];
+      this.bars = [];
       documentNode = $(this.annotator.wrapper).children()[1];
       this.calculateDimensions(documentNode);
-      this.configureBins(documentNode.textContent.length);
+      this.configureBars(documentNode.textContent.length);
       _ref = $(documentNode).find('.field-item.even').children();
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         node = _ref[_i];
         this.calculateDensity(node);
       }
-      return this.updateChart();
+      this.updateChart();
+      return console.log(this.container.innerHTML);
     };
 
     return Heatmap;
