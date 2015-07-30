@@ -120,6 +120,7 @@ function page_turner_node_view($node, $view_mode, $langcode) {
       $active = TRUE;
     }
   }
+  variable_set('page_turner_active', $active);
 
   // Activate page_turner.js, pass settings
   if ($active) {
