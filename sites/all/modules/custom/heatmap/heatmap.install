@@ -1,8 +1,0 @@
-<?php
-/**
-* Implements hook_uninstall()
-*/
-function heatmap_uninstall() {
-	// Let's be nice and *actually* uninstall
-	variable_del('heatmap_content_types');
-}
