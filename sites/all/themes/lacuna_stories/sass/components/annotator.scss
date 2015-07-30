@@ -1129,7 +1129,8 @@ li.annotator-checkbox[style] {
 
 /* Annotation histogram styles */
 .annotation-heatmap-bar {
-  opacity: .25;
-  stroke: black;
+  opacity: .5;
+  stroke: #1693A5;
+  stroke-opacity: .5;
   stroke-width: 1;
 }
