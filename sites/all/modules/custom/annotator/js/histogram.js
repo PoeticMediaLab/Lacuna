@@ -45,7 +45,8 @@
       this.setBarDimensions = __bind(this.setBarDimensions, this);
       this.calculateDimensions = __bind(this.calculateDimensions, this);
       this.calculateDensity = __bind(this.calculateDensity, this);
-      this.barsPerNode = __bind(this.barsPerNode, this);      Histogram.__super__.constructor.call(this, element, options);
+      this.barsPerNode = __bind(this.barsPerNode, this);
+      this.countAnnotation = __bind(this.countAnnotation, this);      Histogram.__super__.constructor.call(this, element, options);
       this.d3 = d3;
       this.layout = options.layout;
       this.barTextLength = 0;
@@ -67,11 +68,22 @@
       return $(document).bind('annotation-filters-changed', this.update);
     };
 
+    Histogram.prototype.countAnnotation = function(annotation) {
+      var id;
+      id = parseInt(annotation.dataset.annotationId, 10);
+      if (__indexOf.call(this.counted, id) < 0 && !annotation.classList.contains(this.selector.hidden)) {
+        this.counted.push(id);
+        this.total++;
+        return true;
+      }
+      return false;
+    };
+
     Histogram.prototype.barsPerNode = function(node, length) {
-      var annotation, child, counted, id, maxLength, total, totalBars, _i, _j, _len, _len2, _ref, _ref2;
+      var annotation, child, maxLength, totalBars, _i, _j, _len, _len2, _ref, _ref2;
       if (length == null) length = 0;
-      counted = [];
-      total = 0;
+      this.counted = [];
+      this.total = 0;
       if (this.pageTurner) {
         maxLength = node.textContent.length / this.barsPerPage;
       } else {
@@ -84,32 +96,24 @@
         if (length >= maxLength) {
           totalBars = Math.floor(length / maxLength);
           length = length % maxLength;
-          if (total > 0) {
-            this.bars.push(total);
+          if (this.total > 0) {
+            this.bars.push(this.total);
             totalBars--;
           }
           while (totalBars--) {
             this.bars.push(0);
           }
-          total = 0;
-          counted = [];
+          this.total = 0;
+          this.counted = [];
         }
-        if (child.nodeType === Node.ELEMENT_NODE && child.classList.contains(this.selector.annotation) && !child.classList.contains(this.selector.hidden)) {
+        if (child.nodeType === Node.ELEMENT_NODE && child.classList.contains(this.selector.annotation)) {
+          this.countAnnotation(child);
           if (child.hasChildNodes()) {
             _ref2 = child.querySelectorAll('.' + this.selector.annotation);
             for (_j = 0, _len2 = _ref2.length; _j < _len2; _j++) {
               annotation = _ref2[_j];
-              id = parseInt(child.dataset.annotationId, 10);
-              if (__indexOf.call(counted, id) < 0) {
-                total++;
-                counted.push(id);
-              }
+              this.countAnnotation(annotation);
             }
-          }
-          id = parseInt(child.dataset.annotationId, 10);
-          if (__indexOf.call(counted, id) < 0) {
-            total++;
-            counted.push(id);
           }
         }
       }

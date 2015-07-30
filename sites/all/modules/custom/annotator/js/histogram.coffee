@@ -74,10 +74,19 @@ class Annotator.Plugin.Histogram extends Annotator.Plugin
     $(window).resize @update
     $(document).bind('annotation-filters-changed', @update)
 
+
+  countAnnotation: (annotation) =>
+    id = parseInt(annotation.dataset.annotationId, 10)
+    if id not in @counted and not annotation.classList.contains(@selector.hidden)
+      @counted.push(id) # don't over-count multi-span annotations
+      @total++
+      return true
+    return false
+
   # Calculate the annotation density of a node
   barsPerNode: (node, length = 0) =>
-    counted = []
-    total = 0
+    @counted = []
+    @total = 0
 
     if @pageTurner
       maxLength = node.textContent.length  / @barsPerPage # because Page Turner has variable page lengths
@@ -89,24 +98,19 @@ class Annotator.Plugin.Histogram extends Annotator.Plugin
       if length >= maxLength
         totalBars = Math.floor(length / maxLength) # how many bars should we have?
         length = length % maxLength # save remainder for next cycle
-        if total > 0
-          @bars.push(total)
+        if @total > 0
+          @bars.push(@total)
           totalBars--
         while totalBars-- # fill in remaining bars with zeros
           @bars.push(0)
-        total = 0
-        counted = []
-      if child.nodeType == Node.ELEMENT_NODE and child.classList.contains(@selector.annotation) and not child.classList.contains(@selector.hidden)
+        @total = 0
+        @counted = []
+      if child.nodeType == Node.ELEMENT_NODE and child.classList.contains(@selector.annotation)
+        @countAnnotation(child)
         if child.hasChildNodes() # possible overlapping annotations; count them, too
           for annotation in child.querySelectorAll('.' + @selector.annotation)
-            id = parseInt(child.dataset.annotationId, 10)
-            if id not in counted
-              total++
-              counted.push(id)
-        id = parseInt(child.dataset.annotationId, 10)
-        if id not in counted
-          total++
-          counted.push(id) # don't over-count multi-span annotations
+            @countAnnotation(annotation)
+
     return length
 
   calculateDensity: (nodes) =>
