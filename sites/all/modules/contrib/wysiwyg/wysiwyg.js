@@ -627,10 +627,12 @@ if (oldBeforeSerialize) {
         excludeSelectors = excludeSelectors.concat(this);
       }
     });
-    options.data['ajax_html_ids[]'] = [];
-    $('[id]:not(' + excludeSelectors.join(',') + ')').each(function () {
-     options.data['ajax_html_ids[]'].push(this.id);
-    });
+    if (excludeSelectors.length > 0) {
+      options.data['ajax_html_ids[]'] = [];
+      $('[id]:not(' + excludeSelectors.join(',') + ')').each(function () {
+      options.data['ajax_html_ids[]'].push(this.id);
+      });
+    }
     return ret;
   }
 }
