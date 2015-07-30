@@ -109,7 +109,6 @@
         _ref = annotation.highlights;
         for (_j = 0, _len2 = _ref.length; _j < _len2; _j++) {
           highlight = _ref[_j];
-          $(highlight).first().attr('id', select.annotation + annotation.id);
           $(highlight).addClass(select.annotation + annotation.id);
         }
       }
@@ -321,7 +320,6 @@
 
     Model.prototype.toggleHighlights = function() {
       var id, _i, _len, _ref;
-      $(document).trigger('annotation-filters-changed');
       this.state.showHighlights = !this.state.showHighlights;
       if (this.state.showHighlights) {
         this.removeFilter('highlights', 'highlights');
@@ -493,7 +491,6 @@
 
     Model.prototype.filterAnnotations = function(filter, value) {
       var annotation, currentValue, _i, _j, _len, _len2, _ref, _ref2;
-      $(document).trigger('annotation-filters-changed');
       this.activateFilter(filter, value);
       if (filter === 'none') {
         _ref = this.state.annotations;
@@ -661,23 +658,21 @@
     };
 
     View.prototype.showAnnotations = function(ids) {
-      var id, _i, _len, _results;
-      _results = [];
+      var id, _i, _len;
       for (_i = 0, _len = ids.length; _i < _len; _i++) {
         id = ids[_i];
-        _results.push($('.' + select.annotation + id).removeClass(select.hide));
+        $('.' + select.annotation + id).removeClass(select.hide);
       }
-      return _results;
+      return $(document).trigger('annotation-filters-changed');
     };
 
     View.prototype.hideAnnotations = function(ids) {
-      var id, _i, _len, _results;
-      _results = [];
+      var id, _i, _len;
       for (_i = 0, _len = ids.length; _i < _len; _i++) {
         id = ids[_i];
-        _results.push($('.' + select.annotation + id).addClass(select.hide));
+        $('.' + select.annotation + id).addClass(select.hide);
       }
-      return _results;
+      return $(document).trigger('annotation-filters-changed');
     };
 
     View.prototype.drawAnnotations = function() {

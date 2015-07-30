@@ -1126,3 +1126,20 @@ li.annotator-checkbox[style] {
     border-radius: 0;
   }
 }
+
+/* Annotation histogram styles */
+.annotation-histogram-bar {
+  opacity: .5;
+  stroke: #1693A5;
+  stroke-opacity: .5;
+  stroke-width: 1;
+}
+
+/* For vertical alignment */
+#annotation-histogram-wrapper {
+  position: fixed;
+  margin-left: 1em;
+  svg {
+    position: relative;
+  }
+}

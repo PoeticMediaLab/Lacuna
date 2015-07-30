@@ -67,7 +67,6 @@ function PTModel(content, settings) {
         var all_breaks = Array.prototype.slice.call(document.querySelectorAll(settings.breaks)),
             l = content.length,
             i;
-        //page.push(content[0]);  // initialize first page
         for (i = 0; i < l; i++) {
             var is_break = all_breaks.indexOf(content[i]) != -1,
                 new_len = t_len + content[i].textContent.length;
@@ -245,7 +244,7 @@ function PTView(model, elements) {
     self.brush = {};
     self.pages = {};  // current page(s)
 
-    self.offset = 10;    // for a y-axis offset
+    self.offset = 0;    // for a y-axis offset
     draw_navbar();
     draw_navbar_ticks();
     draw_page_x_of_y();
@@ -269,7 +268,7 @@ function PTView(model, elements) {
             .classed(self.elements.pager.prev.classes.join(' '), true)
             .style("padding-top", self.offset + "px");;
 
-        self.svg = d3.select('#' + self.elements.navbar).append("svg");
+        self.svg = d3.select('#' + self.elements.navbar).append("svg:svg");
         self.navbar_svg = self.svg
             .attr("id", self.elements.navbar_parent)
             .attr("width", "90%") // Note: affects width calculations
