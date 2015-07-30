@@ -14,7 +14,8 @@
     Histogram.prototype.selector = {
       annotation: 'annotator-hl',
       hidden: 'af-annotation-hide',
-      histogram: 'annotation-histogram',
+      histogramID: 'annotation-histogram',
+      histogramWrapperID: 'annotation-histogram-wrapper',
       bar: 'annotation-histogram-bar',
       pageTurner: 'page-turner-nav'
     };
@@ -22,8 +23,12 @@
     Histogram.prototype.pluginInit = function() {
       if (!Annotator.supported()) return;
       if (!Annotator.Plugin.Filters) return;
-      d3.select('#' + this.layout.containerID).insert('svg:svg', ':first-child').append('g').attr('id', this.selector.histogram);
-      this.histogramContainer = d3.select('#' + this.selector.histogram);
+      if (this.layout.horizontal) {
+        d3.select('#' + this.layout.container).insert('svg:svg', ':first-child').append('g').attr('id', this.selector.histogramID);
+      } else {
+        d3.select(this.layout.container).insert('div', ':first-child').attr('id', this.selector.histogramWrapperID).append('svg:svg').append('g').attr('id', this.selector.histogramID);
+      }
+      this.histogramContainer = d3.select('#' + this.selector.histogramID);
       if (!((typeof d3 !== "undefined" && d3 !== null) || (this.d3 != null))) {
         console.error('d3.js is required to use the histogram plugin');
       } else {
@@ -35,10 +40,12 @@
     function Histogram(element, options) {
       this.update = __bind(this.update, this);
       this.updateChart = __bind(this.updateChart, this);
-      this.calculateDensity = __bind(this.calculateDensity, this);
-      this.barsPerNode = __bind(this.barsPerNode, this);
+      this.updateVerticalChart = __bind(this.updateVerticalChart, this);
+      this.updateHorizontalChart = __bind(this.updateHorizontalChart, this);
       this.setBarDimensions = __bind(this.setBarDimensions, this);
-      this.calculateDimensions = __bind(this.calculateDimensions, this);      Histogram.__super__.constructor.call(this, element, options);
+      this.calculateDimensions = __bind(this.calculateDimensions, this);
+      this.calculateDensity = __bind(this.calculateDensity, this);
+      this.barsPerNode = __bind(this.barsPerNode, this);      Histogram.__super__.constructor.call(this, element, options);
       this.d3 = d3;
       this.layout = options.layout;
       this.barTextLength = 0;
@@ -58,28 +65,6 @@
       }
       $(window).resize(this.update);
       return $(document).bind('annotation-filters-changed', this.update);
-    };
-
-    Histogram.prototype.calculateDimensions = function(node) {
-      this.layout.length = node.textContent.length;
-      if (this.layout.horizontal) {
-        this.layout.width = document.getElementById(this.layout.containerID).offsetWidth;
-      }
-      this.layout.height = document.getElementById(this.selector.pageTurner).offsetHeight || document.getElementById(this.layout.containerID).offsetHeight;
-      return this.histogramContainer.style('width', this.layout.width).style('height', this.layout.height);
-    };
-
-    Histogram.prototype.setBarDimensions = function(length) {
-      if (this.layout.horizontal) {
-        this.barTotal = $('.page-turner-ticks .tick').length;
-        if (!(this.barTotal != null)) {
-          this.barTotal = Math.ceil(length / this.layout.width);
-        } else {
-          this.pageTurner = true;
-          this.barTotal = this.barTotal * this.barsPerPage;
-        }
-      }
-      return this.barTextLength = length / this.barTotal;
     };
 
     Histogram.prototype.barsPerNode = function(node, length) {
@@ -145,24 +130,75 @@
       return _results;
     };
 
-    Histogram.prototype.updateChart = function() {
-      var barWidth, colors, histogram, y,
+    Histogram.prototype.calculateDimensions = function(node) {
+      this.layout.length = node.textContent.length;
+      if (this.layout.horizontal) {
+        this.layout.width = document.getElementById(this.layout.container).offsetWidth;
+        return this.layout.height = document.getElementById(this.selector.pageTurner).offsetHeight;
+      } else {
+        this.layout.height = window.innerHeight;
+        return d3.select(this.histogramContainer[0][0].parentNode).attr('width', this.layout.width).attr('height', this.layout.height).style('float', 'left').style('padding-left', '5px');
+      }
+    };
+
+    Histogram.prototype.setBarDimensions = function(length) {
+      if (this.layout.horizontal) {
+        this.barTotal = $('.page-turner-ticks .tick').length;
+        if (!(this.barTotal != null)) {
+          this.barTotal = Math.ceil(length / this.layout.width);
+        } else {
+          this.pageTurner = true;
+          this.barTotal = this.barTotal * this.barsPerPage;
+        }
+      } else {
+        this.barTotal = 20;
+      }
+      return this.barTextLength = length / this.barTotal;
+    };
+
+    Histogram.prototype.updateHorizontalChart = function(histogram) {
+      var barWidth, height,
         _this = this;
-      colors = d3.scale.linear().domain([0, d3.max(this.bars)]).range(['white', '#1693A5']);
-      y = d3.scale.linear().domain([0, d3.max(this.bars)]).range([0, this.layout.height]);
+      barWidth = this.layout.width / this.bars.length;
+      height = d3.scale.linear().domain([0, d3.max(this.bars)]).range([0, this.layout.height]);
+      return histogram.attr('width', barWidth).attr('height', function(d) {
+        return height(d);
+      }).attr('x', function(d, i) {
+        return barWidth * i;
+      }).attr('y', function(d) {
+        return _this.layout.height - height(d);
+      }).style('fill', function(d) {
+        return _this.barColors(d);
+      });
+    };
+
+    Histogram.prototype.updateVerticalChart = function(histogram) {
+      var barHeight, width,
+        _this = this;
+      barHeight = this.layout.height / this.barTotal;
+      width = d3.scale.linear().domain([0, d3.max(this.bars)]).range([0, this.layout.width]);
+      return histogram.attr('width', function(d) {
+        return width(d);
+      }).attr('height', barHeight).attr('x', function(d) {
+        return _this.layout.width - width(d);
+      }).attr('y', function(d, i) {
+        return barHeight * i;
+      }).style('fill', function(d) {
+        return _this.barColors(d);
+      });
+    };
+
+    Histogram.prototype.updateChart = function() {
+      var histogram;
+      this.barColors = d3.scale.linear().domain([0, d3.max(this.bars)]).range(['white', '#1693A5']);
       histogram = this.histogramContainer.selectAll("rect." + this.selector.bar).data(this.bars);
       histogram.exit().remove();
       histogram.enter().append('rect').classed(this.selector.bar, true);
-      barWidth = this.layout.width / this.bars.length;
-      return histogram.attr('width', barWidth).style('fill', function(d) {
-        return colors(d);
-      }).attr('x', function(d, i) {
-        return barWidth * i;
-      }).attr('height', function(d) {
-        return y(d);
-      }).attr('y', function(d) {
-        return _this.layout.height - y(d);
-      });
+      if (this.layout.horizontal) {
+        return this.updateHorizontalChart(histogram);
+      } else {
+        return this.updateVerticalChart(histogram);
+      }
     };
 
     Histogram.prototype.update = function() {

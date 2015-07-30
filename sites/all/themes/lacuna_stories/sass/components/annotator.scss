@@ -1128,9 +1128,18 @@ li.annotator-checkbox[style] {
 }
 
 /* Annotation histogram styles */
-.annotation-heatmap-bar {
+.annotation-histogram-bar {
   opacity: .5;
   stroke: #1693A5;
   stroke-opacity: .5;
   stroke-width: 1;
+}
+
+/* For vertical alignment */
+#annotation-histogram-wrapper {
+  position: fixed;
+  margin-left: 1em;
+  svg {
+    position: relative;
+  }
 }
