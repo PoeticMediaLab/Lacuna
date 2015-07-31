@@ -2328,11 +2328,12 @@ function lacuna_stories_content_types_field_default_field_instances() {
     'entity_type' => 'taxonomy_term',
     'field_name' => 'field_annotation_tag_course',
     'label' => 'Course(s)',
-    'required' => FALSE,
+    'required' => 1,
     'settings' => array(
       'user_register_form' => FALSE,
     ),
     'widget' => array(
+      'active' => 1,
       'module' => 'entityreference',
       'settings' => array(
         'match_operator' => 'CONTAINS',
