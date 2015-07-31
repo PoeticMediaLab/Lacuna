@@ -483,6 +483,12 @@ class View
   drawAutocomplete: (id, values) ->
     html = "<div class='#{select.autocomplete.default}'><label class='#{select.autocomplete.label}' for='#{id}'>#{id}: </label><input name='#{id}' class='#{select.autocomplete.default} #{select.autocomplete.default}-#{id}' /></div>"
     @i.append(html)
+#    if id == 'tags' # we use a special autocompletion for tags
+#      $("input[name=#{id}]").catcomplete
+#      source: values
+#      select: (event, ui) =>
+#        @Controller.filterSelected(event, ui)
+#    else
     $("input[name=#{id}]").autocomplete
       source: values
       select: (event, ui) =>
