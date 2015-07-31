@@ -17,6 +17,7 @@ class Annotator.Plugin.Histogram extends Annotator.Plugin
     histogramWrapperID: 'annotation-histogram-wrapper'
     bar: 'annotation-histogram-bar'
     pageTurner: 'page-turner-nav'
+    pageBreak: 'page-turner-number'
 
   # Initializes the histogram plugin
   pluginInit: ->
@@ -33,12 +34,16 @@ class Annotator.Plugin.Histogram extends Annotator.Plugin
         .append('svg:svg')
         .append('g').attr('id', @selector.histogramID)
     @histogramContainer = d3.select('#' + @selector.histogramID)
+    @documentNode = $(@annotator.wrapper).children()[1]
+    # First field-item is document body
+    @documentNodeList = $(@documentNode).find('.field-item.even').children()
 
     unless d3? or @d3?
         console.error('d3.js is required to use the histogram plugin')
         return
     else
       @_setupListeners()
+      @countPageLengths()
       @update()
 
   # Public: Creates a new instance of the Histogram plugin.
@@ -52,16 +57,14 @@ class Annotator.Plugin.Histogram extends Annotator.Plugin
     @d3 = d3  # We add d3 through Drupal
     @layout = options.layout
     @barTextLength = 0
+    @barsPerPage = 4
     @barTotal = 0
     @bars = []
     @chart
-    @pageTurner = false
-    @barsPerPage = 4
+    @pageTurnerActive = false
 
   # Listens to annotation change events on the Annotator in order to refresh
   # the @annotations collection.
-  # TODO: Make this more granular so the entire collection isn't reloaded for
-  # every single change.
   _setupListeners: ->
     events = [
       'annotationsLoaded', 'annotationCreated',
@@ -74,49 +77,87 @@ class Annotator.Plugin.Histogram extends Annotator.Plugin
     $(window).resize @update
     $(document).bind('annotation-filters-changed', @update)
 
+  isPageBreak: (node) =>
+    # don't try on text nodes
+    if node.nodeType == Node.ELEMENT_NODE
+      return node.classList.contains(@selector.pageBreak)
+    return false
+
+  hasPageBreak: (node) =>
+    for child in node.childNodes
+      return true if @isPageBreak(child)
+    return false
+
+  countPageLengths: =>
+    length = 0
+    @pageLengths = {}
+    for node in @documentNodeList
+      length += node.textContent.length
+      # Because page numbers are inside p elements
+      if @hasPageBreak(node)
+        @pageLengths[@getPageNumber(node)] = length
+        length = 0
+    @barTextLength = @pageLengths[@getFirstPageNumber()] / @barsPerPage
+
+  getFirstPageNumber: =>
+    # find index of the first defined item; don't assume counting from zero
+    for i, page of @pageLengths
+      return i
+
+  getPageNumber: (node) =>
+    if node.nodeType == Node.ELEMENT_NODE
+      pageBreak = node.querySelector('.' + @selector.pageBreak)
+      if pageBreak? and pageBreak.dataset.pageNumber?
+        return parseInt(pageBreak.dataset.pageNumber, 10)
+      if node.dataset.pageNumber?
+        return parseInt(node.dataset.pageNumber, 10)
+    else
+      return null
+
+  getPageLength: (page) =>
+    if @pageLengths[page]?
+      return @pageLengths[page]
+    else
+      return 0
 
   countAnnotation: (annotation) =>
     id = parseInt(annotation.dataset.annotationId, 10)
     if id not in @counted and not annotation.classList.contains(@selector.hidden)
       @counted.push(id) # don't over-count multi-span annotations
-      @total++
       return true
     return false
 
-  # Calculate the annotation density of a node
-  barsPerNode: (node, length = 0) =>
+  # Calculate the bars per node based on number of annotations
+  assignBarsPerNode: (node, length = 0) =>
     @counted = []
-    @total = 0
-
-    if @pageTurner
-      maxLength = node.textContent.length  / @barsPerPage # because Page Turner has variable page lengths
-    else
-      maxLength = @barTextLength
-
     for child in node.childNodes
       length += child.textContent.length
-      if length >= maxLength
-        totalBars = Math.floor(length / maxLength) # how many bars should we have?
-        length = length % maxLength # save remainder for next cycle
-        if @total > 0
-          @bars.push(@total)
+      if length >= @barTextLength
+        totalBars = Math.floor(length / @barTextLength) # how many bars should we have?
+        length = length % @barTextLength # save remainder for next cycle
+        if @counted.length > 0
+          @bars.push(@counted.length)
           totalBars--
         while totalBars-- # fill in remaining bars with zeros
           @bars.push(0)
-        @total = 0
         @counted = []
       if child.nodeType == Node.ELEMENT_NODE and child.classList.contains(@selector.annotation)
         @countAnnotation(child)
         if child.hasChildNodes() # possible overlapping annotations; count them, too
           for annotation in child.querySelectorAll('.' + @selector.annotation)
             @countAnnotation(annotation)
-
     return length
 
+  # Loop through all nodes and calculate annotation density
   calculateDensity: (nodes) =>
     length = 0
+    if @pageTurnerActive
+      @barTextLength = @getPageLength(@getFirstPageNumber()) / @barsPerPage
     for node in nodes
-      length = @barsPerNode(node, length) # update any left-over length
+      length = @assignBarsPerNode(node, length) # update with any left-over length
+      if @pageTurnerActive and @hasPageBreak(node)
+        page = @getPageNumber(node)
+        @barTextLength = @getPageLength(page + 1) / @barsPerPage
     while @bars.length < @barTotal
       @bars.push(0) # fill the end if needed
 
@@ -124,7 +165,7 @@ class Annotator.Plugin.Histogram extends Annotator.Plugin
     @layout.length = node.textContent.length;
     if @layout.horizontal
       @layout.width = document.getElementById(@layout.container).offsetWidth
-      @layout.height = document.getElementById(@selector.pageTurner).offsetHeight # assume page turner
+      @layout.height = document.getElementById(@selector.pageTurner).offsetHeight   # assume page turner
     else
       @layout.height = window.innerHeight # keep in viewport
       # [0][0] because d3 likes arrays almost as much as Drupal
@@ -136,17 +177,17 @@ class Annotator.Plugin.Histogram extends Annotator.Plugin
 
   setBarDimensions: (length) =>
     # Get the length of only the document text, not the annotations
+    @barTextLength = length / @barTotal
     if @layout.horizontal
       # Calculate number of bins for annotations
       @barTotal = $('.page-turner-ticks .tick').length # try to find page turner breaks first
       if !@barTotal?
         @barTotal = Math.ceil(length / @layout.width)
       else
-        @pageTurner = true
+        @pageTurnerActive = true
         @barTotal = @barTotal * @barsPerPage # because we want more than 1 bar per page
     else
       @barTotal = 20
-    @barTextLength = length / @barTotal
 
   updateHorizontalChart: (histogram) =>
     barWidth = @layout.width / @bars.length
@@ -177,13 +218,11 @@ class Annotator.Plugin.Histogram extends Annotator.Plugin
     else
       @updateVerticalChart(histogram)
 
-
   # Update the histogram
   update: =>
     return unless d3?
     @bars = []  # reset
-    documentNode = $(@annotator.wrapper).children()[1]
-    @calculateDimensions(documentNode)
-    @setBarDimensions(documentNode.textContent.length)
-    @calculateDensity($(documentNode).find('.field-item.even').children()) # First field-item is document body)
+    @calculateDimensions(@documentNode)
+    @setBarDimensions(@documentNode.textContent.length)  # only on init; doesn't change
+    @calculateDensity(@documentNodeList)
     @updateChart()
