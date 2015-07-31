@@ -91,8 +91,9 @@ function get_term_id($term_name, $taxonomy_name) {
   $taxonomy = taxonomy_vocabulary_machine_name_load($taxonomy_name);
   $terms = taxonomy_get_term_by_name($term_name, $taxonomy_name);
   $tid = NULL;
+  $course_id = course_get_selected_course();
   foreach ($terms as $term) {
-    if ($term->vid == $taxonomy->vid) {
+    if (($term->vid == $taxonomy->vid) && ($term->field_annotation_tag_course[LANGUAGE_NONE][0]['target_id'] == $course_id)) {
       $tid = $term->tid;
       break;  // go with the first match
     }
@@ -548,13 +549,14 @@ function annotation_api_entity_prepare($annotation, $op) {
       if (isset($annotation->field_annotation_tags[$annotation->language])) {
         $entity->tags = array();
         foreach(array_values($annotation->field_annotation_tags[$annotation->language]) as $item) {
-          $term = taxonomy_term_load($item['tid']);
-          array_push($entity->tags, $term->name);
+            $term = taxonomy_term_load($item['tid']);
+            array_push($entity->tags, $term->name);
         }
       }
 
-			// Privacy options
-
+			/*
+			 * Privacy options
+			 */
       // Audience
       $audience_values = $annotation_wrapper->field_annotation_audience->value();
       $audience = array(
@@ -594,8 +596,15 @@ function annotation_api_entity_prepare($annotation, $op) {
       );
 
       // Links
+      // href = link to annotation in node via scrollTo in Filters plugin
+      $nid = $annotation->field_annotation_reference[$annotation->language][0]['target_id'];
+      if ($nid) {
+        $link = url(drupal_get_path_alias('node/'. $nid), array('query' => array('id' => $annotation->nid)));
+      } else {
+        $link = url('node/' . $annotation->id);
+      }
       $entity->links[] = array(
-        'href' => url('node/' . $annotation->nid),
+        'href' => $link,
         'rel' => 'alternate',
         'type' => 'text/html',
         );

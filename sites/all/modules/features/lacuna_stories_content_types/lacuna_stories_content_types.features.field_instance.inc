@@ -2307,39 +2307,6 @@ function lacuna_stories_content_types_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'taxonomy_term-annotation_tags-annotation_tag'
-  $field_instances['taxonomy_term-annotation_tags-annotation_tag'] = array(
-    'bundle' => 'annotation_tags',
-    'default_value' => NULL,
-    'deleted' => 0,
-    'description' => 'Description',
-    'display' => array(
-      'default' => array(
-        'label' => 'above',
-        'module' => 'text',
-        'settings' => array(),
-        'type' => 'text_default',
-        'weight' => 0,
-      ),
-    ),
-    'entity_type' => 'taxonomy_term',
-    'field_name' => 'annotation_tag',
-    'label' => 'annotation_tag',
-    'required' => TRUE,
-    'settings' => array(
-      'text_processing' => 0,
-      'user_register_form' => FALSE,
-    ),
-    'widget' => array(
-      'module' => 'text',
-      'settings' => array(
-        'size' => 60,
-      ),
-      'type' => 'text_textfield',
-      'weight' => 31,
-    ),
-  );
-
   // Exported field_instance:
   // 'taxonomy_term-annotation_tags-field_annotation_tag_course'
   $field_instances['taxonomy_term-annotation_tags-field_annotation_tag_course'] = array(
@@ -2783,7 +2750,6 @@ function lacuna_stories_content_types_field_default_field_instances() {
   t('Date of Birth');
   t('Decide if this annotation is private or not');
   t('Describe why these pieces are stitched together');
-  t('Description');
   t('Description of My Thread');
   t('Display Name');
   t('Education');
@@ -2832,7 +2798,6 @@ function lacuna_stories_content_types_field_default_field_instances() {
   t('Which course(s) or group(s) should be able to see this post?');
   t('Who should be able to see your response?');
   t('Year in Program');
-  t('annotation_tag');
   t('e.g., Freshman, Senior, 2nd-year PhD student');
 
   return $field_instances;
