@@ -569,7 +569,7 @@ function lacuna_stories_views_views_default_views() {
   $handler->display->display_options['filters']['field_annotation_audience_value']['value'] = array(
     'peer-groups' => 'peer-groups',
   );
-  /* Filter criterion: Content: Groups (og_group_ref) */
+  /* Filter criterion: Content: Audience (og_group_ref) */
   $handler->display->display_options['filters']['og_group_ref_target_id']['id'] = 'og_group_ref_target_id';
   $handler->display->display_options['filters']['og_group_ref_target_id']['table'] = 'og_membership';
   $handler->display->display_options['filters']['og_group_ref_target_id']['field'] = 'og_group_ref_target_id';
@@ -705,8 +705,17 @@ function lacuna_stories_views_views_default_views() {
   $handler->display->display_options['header']['area']['id'] = 'area';
   $handler->display->display_options['header']['area']['table'] = 'views';
   $handler->display->display_options['header']['area']['field'] = 'area';
-  $handler->display->display_options['header']['area']['content'] = 'As a site administrator or instructor, you can designate certain tags as “curated.” They will then appear at the top of the list of suggested tags on the annotator window. Adding your own curated tags, or adding popular user-generated tags to a “curated” status, can facilitate a shared vocabulary for your users. The tag cloud to the left indicates each tag’s usage frequency on your course or project site.';
-  $handler->display->display_options['header']['area']['format'] = 'filtered_html';
+  $handler->display->display_options['header']['area']['content'] = 'As a site administrator or instructor, you can designate certain tags as “curated.” They will then appear at the top of the list of suggested tags on the annotator window. Adding your own curated tags, or adding popular user-generated tags to a “curated” status, can facilitate a shared vocabulary for your users. The tag cloud to the left indicates each tag’s usage frequency on your course or project site.
+
+<a href="/admin/structure/taxonomy/annotation_tags/add" class="lacuna-button">Add a New Tag</a>';
+  $handler->display->display_options['header']['area']['format'] = 'full_html';
+  /* No results behavior: Global: Text area */
+  $handler->display->display_options['empty']['area']['id'] = 'area';
+  $handler->display->display_options['empty']['area']['table'] = 'views';
+  $handler->display->display_options['empty']['area']['field'] = 'area';
+  $handler->display->display_options['empty']['area']['empty'] = TRUE;
+  $handler->display->display_options['empty']['area']['content'] = 'No tags have been created yet for this course.';
+  $handler->display->display_options['empty']['area']['format'] = 'filtered_html';
   /* Relationship: Flags: curated_tag */
   $handler->display->display_options['relationships']['flag_content_rel']['id'] = 'flag_content_rel';
   $handler->display->display_options['relationships']['flag_content_rel']['table'] = 'taxonomy_term_data';
@@ -741,12 +750,22 @@ function lacuna_stories_views_views_default_views() {
   $handler->display->display_options['sorts']['name']['id'] = 'name';
   $handler->display->display_options['sorts']['name']['table'] = 'taxonomy_term_data';
   $handler->display->display_options['sorts']['name']['field'] = 'name';
+  /* Contextual filter: Taxonomy term: Course(s) (field_annotation_tag_course) */
+  $handler->display->display_options['arguments']['field_annotation_tag_course_target_id']['id'] = 'field_annotation_tag_course_target_id';
+  $handler->display->display_options['arguments']['field_annotation_tag_course_target_id']['table'] = 'field_data_field_annotation_tag_course';
+  $handler->display->display_options['arguments']['field_annotation_tag_course_target_id']['field'] = 'field_annotation_tag_course_target_id';
+  $handler->display->display_options['arguments']['field_annotation_tag_course_target_id']['default_action'] = 'default';
+  $handler->display->display_options['arguments']['field_annotation_tag_course_target_id']['default_argument_type'] = 'php';
+  $handler->display->display_options['arguments']['field_annotation_tag_course_target_id']['default_argument_options']['code'] = 'return course_get_selected_course();';
+  $handler->display->display_options['arguments']['field_annotation_tag_course_target_id']['summary']['number_of_records'] = '0';
+  $handler->display->display_options['arguments']['field_annotation_tag_course_target_id']['summary']['format'] = 'default_summary';
+  $handler->display->display_options['arguments']['field_annotation_tag_course_target_id']['summary_options']['items_per_page'] = '25';
   /* Filter criterion: Taxonomy vocabulary: Machine name */
   $handler->display->display_options['filters']['machine_name']['id'] = 'machine_name';
   $handler->display->display_options['filters']['machine_name']['table'] = 'taxonomy_vocabulary';
   $handler->display->display_options['filters']['machine_name']['field'] = 'machine_name';
   $handler->display->display_options['filters']['machine_name']['value'] = array(
-    'tags' => 'tags',
+    'annotation_tags' => 'annotation_tags',
   );
 
   /* Display: Page */
@@ -1935,7 +1954,7 @@ function lacuna_stories_views_views_default_views() {
   $handler->display->display_options['fields']['field_annotation_audience']['field'] = 'field_annotation_audience';
   $handler->display->display_options['fields']['field_annotation_audience']['exclude'] = TRUE;
   $handler->display->display_options['fields']['field_annotation_audience']['delta_offset'] = '0';
-  /* Field: Content: Groups */
+  /* Field: Content: Audience */
   $handler->display->display_options['fields']['og_group_ref']['id'] = 'og_group_ref';
   $handler->display->display_options['fields']['og_group_ref']['table'] = 'og_membership';
   $handler->display->display_options['fields']['og_group_ref']['field'] = 'og_group_ref';
@@ -1981,7 +2000,7 @@ function lacuna_stories_views_views_default_views() {
   $handler->display->display_options['fields']['field_annotation_reference']['settings'] = array(
     'link' => 1,
   );
-  /* Field: Content: Groups */
+  /* Field: Content: Audience */
   $handler->display->display_options['fields']['og_group_ref_1']['id'] = 'og_group_ref_1';
   $handler->display->display_options['fields']['og_group_ref_1']['table'] = 'og_membership';
   $handler->display->display_options['fields']['og_group_ref_1']['field'] = 'og_group_ref';
@@ -2020,7 +2039,7 @@ function lacuna_stories_views_views_default_views() {
     'annotation' => 'annotation',
   );
   $handler->display->display_options['filters']['type']['group'] = 1;
-  /* Filter criterion: Content: Groups (og_group_ref) */
+  /* Filter criterion: Content: Audience (og_group_ref) */
   $handler->display->display_options['filters']['og_group_ref_target_id']['id'] = 'og_group_ref_target_id';
   $handler->display->display_options['filters']['og_group_ref_target_id']['table'] = 'og_membership';
   $handler->display->display_options['filters']['og_group_ref_target_id']['field'] = 'og_group_ref_target_id';
