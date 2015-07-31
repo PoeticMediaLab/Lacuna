@@ -91,8 +91,10 @@ function get_term_id($term_name, $taxonomy_name) {
   $taxonomy = taxonomy_vocabulary_machine_name_load($taxonomy_name);
   $terms = taxonomy_get_term_by_name($term_name, $taxonomy_name);
   $tid = NULL;
+  $course_id = course_get_selected_course();
   foreach ($terms as $term) {
-    if ($term->vid == $taxonomy->vid) {
+    ddl($term->field_annotation_tag_course);
+    if (($term->vid == $taxonomy->vid) && ($term->field_annotation_tag_course[LANGUAGE_NONE][0]['target_id'] == $course_id)) {
       $tid = $term->tid;
       break;  // go with the first match
     }
@@ -545,21 +547,17 @@ function annotation_api_entity_prepare($annotation, $op) {
       }
 
       // Tags
-      // TODO: Change to load per-course tags via course types in og_group_ref
       if (isset($annotation->field_annotation_tags[$annotation->language])) {
-        $current_course = course_get_selected_course();
         $entity->tags = array();
         foreach(array_values($annotation->field_annotation_tags[$annotation->language]) as $item) {
-          // Restrict available tags to only currently selected course
-          if ($item['field_annotation_tag_course'] == $current_course) {
             $term = taxonomy_term_load($item['tid']);
             array_push($entity->tags, $term->name);
-          }
         }
       }
 
-			// Privacy options
-
+			/*
+			 * Privacy options
+			 */
       // Audience
       $audience_values = $annotation_wrapper->field_annotation_audience->value();
       $audience = array(
