@@ -267,13 +267,19 @@
                   _results2.push(this.addFilterValue(filter, annotation['user'].name));
                   break;
                 case 'tags':
+                  console.log(annotation.tags);
                   _results2.push((function() {
                     var _j, _len2, _ref, _results3;
                     _ref = annotation.tags;
                     _results3 = [];
                     for (_j = 0, _len2 = _ref.length; _j < _len2; _j++) {
                       tag = _ref[_j];
-                      _results3.push(this.addFilterValue(filter, tag));
+                      console.log(tag);
+                      if (tag != null) {
+                        _results3.push(this.addFilterValue(filter, tag));
+                      } else {
+                        _results3.push(void 0);
+                      }
                     }
                     return _results3;
                   }).call(this));

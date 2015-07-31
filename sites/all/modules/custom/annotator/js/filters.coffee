@@ -238,7 +238,7 @@ class Model
               @addFilterValue(filter, annotation['user'].name)
             when 'tags'
               for tag in annotation.tags
-                @addFilterValue(filter, tag)
+                @addFilterValue(filter, tag) if tag?
             else
               @addFilterValue(filter, annotation[filter])
 
