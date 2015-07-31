@@ -545,11 +545,16 @@ function annotation_api_entity_prepare($annotation, $op) {
       }
 
       // Tags
+      // TODO: Change to load per-course tags via course types in og_group_ref
       if (isset($annotation->field_annotation_tags[$annotation->language])) {
+        $current_course = course_get_selected_course();
         $entity->tags = array();
         foreach(array_values($annotation->field_annotation_tags[$annotation->language]) as $item) {
-          $term = taxonomy_term_load($item['tid']);
-          array_push($entity->tags, $term->name);
+          // Restrict available tags to only currently selected course
+          if ($item['field_annotation_tag_course'] == $current_course) {
+            $term = taxonomy_term_load($item['tid']);
+            array_push($entity->tags, $term->name);
+          }
         }
       }
 
@@ -594,8 +599,15 @@ function annotation_api_entity_prepare($annotation, $op) {
       );
 
       // Links
+      // href = link to annotation in node via scrollTo in Filters plugin
+      $nid = $annotation->field_annotation_reference[$annotation->language][0]['target_id'];
+      if ($nid) {
+        $link = url(drupal_get_path_alias('node/'. $nid), array('query' => array('id' => $annotation->nid)));
+      } else {
+        $link = url('node/' . $annotation->id);
+      }
       $entity->links[] = array(
-        'href' => url('node/' . $annotation->nid),
+        'href' => $link,
         'rel' => 'alternate',
         'type' => 'text/html',
         );
