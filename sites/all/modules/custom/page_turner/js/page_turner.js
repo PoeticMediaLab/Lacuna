@@ -327,10 +327,11 @@ function PTView(model, elements) {
         // Add page numbers at the bottom of every page
         var i, l;
         for (i = 0, l = self.model.page_total(); i < l; i++) {
-          var selection = d3.selectAll(self.model.get_page(i));
-          // selectAll returns an array of arrays
-          // but we'll only get one result for each page, cuz they're unique
-          d3.select(selection[0][selection[0].length - 1]).append('div').classed(self.elements.page_num, true).text(i + 1);
+            var selection = d3.selectAll(self.model.get_page(i));
+            // selectAll returns an array of arrays
+            // but we'll only get one result for each page, cuz they're unique
+            div = d3.select(selection[0][selection[0].length - 1]).append('div').classed(self.elements.page_num, true).text(i + 1);
+            div[0][0].dataset.pageNumber = i + 1; // add as data value
         }
     }
 

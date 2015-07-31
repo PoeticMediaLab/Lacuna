@@ -17,7 +17,8 @@
       histogramID: 'annotation-histogram',
       histogramWrapperID: 'annotation-histogram-wrapper',
       bar: 'annotation-histogram-bar',
-      pageTurner: 'page-turner-nav'
+      pageTurner: 'page-turner-nav',
+      pageBreak: 'page-turner-number'
     };
 
     Histogram.prototype.pluginInit = function() {
@@ -29,10 +30,13 @@
         d3.select(this.layout.container).insert('div', ':first-child').attr('id', this.selector.histogramWrapperID).append('svg:svg').append('g').attr('id', this.selector.histogramID);
       }
       this.histogramContainer = d3.select('#' + this.selector.histogramID);
+      this.documentNode = $(this.annotator.wrapper).children()[1];
+      this.documentNodeList = $(this.documentNode).find('.field-item.even').children();
       if (!((typeof d3 !== "undefined" && d3 !== null) || (this.d3 != null))) {
         console.error('d3.js is required to use the histogram plugin');
       } else {
         this._setupListeners();
+        this.countPageLengths();
         return this.update();
       }
     };
@@ -45,16 +49,22 @@
       this.setBarDimensions = __bind(this.setBarDimensions, this);
       this.calculateDimensions = __bind(this.calculateDimensions, this);
       this.calculateDensity = __bind(this.calculateDensity, this);
-      this.barsPerNode = __bind(this.barsPerNode, this);
-      this.countAnnotation = __bind(this.countAnnotation, this);      Histogram.__super__.constructor.call(this, element, options);
+      this.assignBarsPerNode = __bind(this.assignBarsPerNode, this);
+      this.countAnnotation = __bind(this.countAnnotation, this);
+      this.getPageLength = __bind(this.getPageLength, this);
+      this.getPageNumber = __bind(this.getPageNumber, this);
+      this.getFirstPage = __bind(this.getFirstPage, this);
+      this.countPageLengths = __bind(this.countPageLengths, this);
+      this.hasPageBreak = __bind(this.hasPageBreak, this);
+      this.isPageBreak = __bind(this.isPageBreak, this);      Histogram.__super__.constructor.call(this, element, options);
       this.d3 = d3;
       this.layout = options.layout;
       this.barTextLength = 0;
+      this.barsPerPage = 4;
       this.barTotal = 0;
       this.bars = [];
       this.chart;
-      this.pageTurner = false;
-      this.barsPerPage = 4;
+      this.pageTurnerActive = false;
     }
 
     Histogram.prototype._setupListeners = function() {
@@ -68,42 +78,95 @@
       return $(document).bind('annotation-filters-changed', this.update);
     };
 
+    Histogram.prototype.isPageBreak = function(node) {
+      if (node.nodeType === Node.ELEMENT_NODE) {
+        return node.classList.contains(this.selector.pageBreak) != null;
+      }
+      return false;
+    };
+
+    Histogram.prototype.hasPageBreak = function(node) {
+      var child, _i, _len, _ref;
+      _ref = node.childNodes;
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        child = _ref[_i];
+        if (this.isPageBreak(child)) return true;
+      }
+      return false;
+    };
+
+    Histogram.prototype.countPageLengths = function() {
+      var length, node, _i, _len, _ref;
+      length = 0;
+      this.pageLengths = {};
+      _ref = this.documentNodeList;
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        node = _ref[_i];
+        length += node.textContent.length;
+        if (this.hasPageBreak(node)) {
+          this.pageLengths[this.getPageNumber(node)] = length;
+          length = 0;
+        }
+      }
+      return this.barTextLength = this.pageLengths[this.getFirstPage()] / this.barsPerPage;
+    };
+
+    Histogram.prototype.getFirstPage = function() {
+      var i, page, _ref;
+      _ref = this.pageLengths;
+      for (i in _ref) {
+        page = _ref[i];
+        return i;
+      }
+    };
+
+    Histogram.prototype.getPageNumber = function(node) {
+      var pageBreak;
+      pageBreak = node.querySelector('.' + this.selector.pageBreak);
+      if ((pageBreak != null) && (pageBreak.dataset.pageNumber != null)) {
+        return parseInt(pageBreak.dataset.pageNumber, 10);
+      } else if (node.dataset.pageNumber != null) {
+        return parseInt(node.dataset.pageNumber, 10);
+      } else {
+        return null;
+      }
+    };
+
+    Histogram.prototype.getPageLength = function(node) {
+      var page;
+      page = this.getPageNumber(node);
+      if (this.pageLengths[page] != null) return this.pageLengths[page];
+    };
+
     Histogram.prototype.countAnnotation = function(annotation) {
       var id;
       id = parseInt(annotation.dataset.annotationId, 10);
       if (__indexOf.call(this.counted, id) < 0 && !annotation.classList.contains(this.selector.hidden)) {
         this.counted.push(id);
-        this.total++;
         return true;
       }
       return false;
     };
 
-    Histogram.prototype.barsPerNode = function(node, length) {
-      var annotation, child, maxLength, totalBars, _i, _j, _len, _len2, _ref, _ref2;
+    Histogram.prototype.assignBarsPerNode = function(node, length) {
+      var annotation, child, totalBars, _i, _j, _len, _len2, _ref, _ref2;
       if (length == null) length = 0;
       this.counted = [];
-      this.total = 0;
-      if (this.pageTurner) {
-        maxLength = node.textContent.length / this.barsPerPage;
-      } else {
-        maxLength = this.barTextLength;
-      }
       _ref = node.childNodes;
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         child = _ref[_i];
         length += child.textContent.length;
-        if (length >= maxLength) {
-          totalBars = Math.floor(length / maxLength);
-          length = length % maxLength;
-          if (this.total > 0) {
-            this.bars.push(this.total);
+        if (length >= this.barTextLength) {
+          console.log(length);
+          totalBars = Math.floor(length / this.barTextLength);
+          length = length % this.barTextLength;
+          if (this.counted.length > 0) {
+            this.bars.push(this.counted.length);
             totalBars--;
           }
           while (totalBars--) {
             this.bars.push(0);
           }
-          this.total = 0;
           this.counted = [];
         }
         if (child.nodeType === Node.ELEMENT_NODE && child.classList.contains(this.selector.annotation)) {
@@ -121,11 +184,19 @@
     };
 
     Histogram.prototype.calculateDensity = function(nodes) {
-      var length, node, _i, _len, _results;
+      var length, node, page, _i, _len, _results;
       length = 0;
+      if (this.pageTurnerActive) {
+        this.barTextLength = this.getPageLength(this.getFirstPage(nodes[0])) / this.barsPerPage;
+      }
       for (_i = 0, _len = nodes.length; _i < _len; _i++) {
         node = nodes[_i];
-        length = this.barsPerNode(node, length);
+        length += this.assignBarsPerNode(node, length);
+        console.log(this.barTextLength);
+        if (this.pageTurnerActive && this.hasPageBreak(node)) {
+          page = this.getPageNumber(node);
+          this.barTextLength = this.getPageLength(page + 1) / this.barsPerPage;
+        }
       }
       _results = [];
       while (this.bars.length < this.barTotal) {
@@ -146,18 +217,18 @@
     };
 
     Histogram.prototype.setBarDimensions = function(length) {
+      this.barTextLength = length / this.barTotal;
       if (this.layout.horizontal) {
         this.barTotal = $('.page-turner-ticks .tick').length;
         if (!(this.barTotal != null)) {
-          this.barTotal = Math.ceil(length / this.layout.width);
+          return this.barTotal = Math.ceil(length / this.layout.width);
         } else {
-          this.pageTurner = true;
-          this.barTotal = this.barTotal * this.barsPerPage;
+          this.pageTurnerActive = true;
+          return this.barTotal = this.barTotal * this.barsPerPage;
         }
       } else {
-        this.barTotal = 20;
+        return this.barTotal = 20;
       }
-      return this.barTextLength = length / this.barTotal;
     };
 
     Histogram.prototype.updateHorizontalChart = function(histogram) {
@@ -206,13 +277,11 @@
     };
 
     Histogram.prototype.update = function() {
-      var documentNode;
       if (typeof d3 === "undefined" || d3 === null) return;
       this.bars = [];
-      documentNode = $(this.annotator.wrapper).children()[1];
-      this.calculateDimensions(documentNode);
-      this.setBarDimensions(documentNode.textContent.length);
-      this.calculateDensity($(documentNode).find('.field-item.even').children());
+      this.calculateDimensions(this.documentNode);
+      this.setBarDimensions(this.documentNode.textContent.length);
+      this.calculateDensity(this.documentNodeList);
       return this.updateChart();
     };
 
