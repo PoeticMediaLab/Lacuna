@@ -80,7 +80,7 @@ class Annotator.Plugin.Histogram extends Annotator.Plugin
   isPageBreak: (node) =>
     # don't try on text nodes
     if node.nodeType == Node.ELEMENT_NODE
-      return node.classList.contains(@selector.pageBreak)?
+      return node.classList.contains(@selector.pageBreak)
     return false
 
   hasPageBreak: (node) =>
@@ -97,26 +97,28 @@ class Annotator.Plugin.Histogram extends Annotator.Plugin
       if @hasPageBreak(node)
         @pageLengths[@getPageNumber(node)] = length
         length = 0
-    @barTextLength = @pageLengths[@getFirstPage()] / @barsPerPage
+    @barTextLength = @pageLengths[@getFirstPageNumber()] / @barsPerPage
 
-  getFirstPage: =>
+  getFirstPageNumber: =>
     # find index of the first defined item; don't assume counting from zero
     for i, page of @pageLengths
       return i
 
   getPageNumber: (node) =>
-    pageBreak = node.querySelector('.' + @selector.pageBreak)
-    if pageBreak? and pageBreak.dataset.pageNumber?
-      return parseInt(pageBreak.dataset.pageNumber, 10)
-    else if node.dataset.pageNumber?
-      return parseInt(node.dataset.pageNumber, 10)
+    if node.nodeType == Node.ELEMENT_NODE
+      pageBreak = node.querySelector('.' + @selector.pageBreak)
+      if pageBreak? and pageBreak.dataset.pageNumber?
+        return parseInt(pageBreak.dataset.pageNumber, 10)
+      if node.dataset.pageNumber?
+        return parseInt(node.dataset.pageNumber, 10)
     else
       return null
 
-  getPageLength: (node) =>
-    page = @getPageNumber(node)
+  getPageLength: (page) =>
     if @pageLengths[page]?
       return @pageLengths[page]
+    else
+      return 0
 
   countAnnotation: (annotation) =>
     id = parseInt(annotation.dataset.annotationId, 10)
@@ -125,13 +127,12 @@ class Annotator.Plugin.Histogram extends Annotator.Plugin
       return true
     return false
 
-  # Calculate the annotation density of a node
+  # Calculate the bars per node based on number of annotations
   assignBarsPerNode: (node, length = 0) =>
     @counted = []
     for child in node.childNodes
       length += child.textContent.length
       if length >= @barTextLength
-        console.log(length)
         totalBars = Math.floor(length / @barTextLength) # how many bars should we have?
         length = length % @barTextLength # save remainder for next cycle
         if @counted.length > 0
@@ -147,11 +148,13 @@ class Annotator.Plugin.Histogram extends Annotator.Plugin
             @countAnnotation(annotation)
     return length
 
+  # Loop through all nodes and calculate annotation density
   calculateDensity: (nodes) =>
     length = 0
+    if @pageTurnerActive
+      @barTextLength = @getPageLength(@getFirstPageNumber()) / @barsPerPage
     for node in nodes
-      length += @assignBarsPerNode(node, length) # update any left-over length
-      console.log(@barTextLength)
+      length = @assignBarsPerNode(node, length) # update with any left-over length
       if @pageTurnerActive and @hasPageBreak(node)
         page = @getPageNumber(node)
         @barTextLength = @getPageLength(page + 1) / @barsPerPage
@@ -174,7 +177,7 @@ class Annotator.Plugin.Histogram extends Annotator.Plugin
 
   setBarDimensions: (length) =>
     # Get the length of only the document text, not the annotations
-    @barTextLength = length / @barTotal # TODO: don't reset every time
+    @barTextLength = length / @barTotal
     if @layout.horizontal
       # Calculate number of bins for annotations
       @barTotal = $('.page-turner-ticks .tick').length # try to find page turner breaks first

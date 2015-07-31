@@ -53,7 +53,7 @@
       this.countAnnotation = __bind(this.countAnnotation, this);
       this.getPageLength = __bind(this.getPageLength, this);
       this.getPageNumber = __bind(this.getPageNumber, this);
-      this.getFirstPage = __bind(this.getFirstPage, this);
+      this.getFirstPageNumber = __bind(this.getFirstPageNumber, this);
       this.countPageLengths = __bind(this.countPageLengths, this);
       this.hasPageBreak = __bind(this.hasPageBreak, this);
       this.isPageBreak = __bind(this.isPageBreak, this);      Histogram.__super__.constructor.call(this, element, options);
@@ -80,7 +80,7 @@
 
     Histogram.prototype.isPageBreak = function(node) {
       if (node.nodeType === Node.ELEMENT_NODE) {
-        return node.classList.contains(this.selector.pageBreak) != null;
+        return node.classList.contains(this.selector.pageBreak);
       }
       return false;
     };
@@ -108,10 +108,10 @@
           length = 0;
         }
       }
-      return this.barTextLength = this.pageLengths[this.getFirstPage()] / this.barsPerPage;
+      return this.barTextLength = this.pageLengths[this.getFirstPageNumber()] / this.barsPerPage;
     };
 
-    Histogram.prototype.getFirstPage = function() {
+    Histogram.prototype.getFirstPageNumber = function() {
       var i, page, _ref;
       _ref = this.pageLengths;
       for (i in _ref) {
@@ -122,20 +122,25 @@
 
     Histogram.prototype.getPageNumber = function(node) {
       var pageBreak;
-      pageBreak = node.querySelector('.' + this.selector.pageBreak);
-      if ((pageBreak != null) && (pageBreak.dataset.pageNumber != null)) {
-        return parseInt(pageBreak.dataset.pageNumber, 10);
-      } else if (node.dataset.pageNumber != null) {
-        return parseInt(node.dataset.pageNumber, 10);
+      if (node.nodeType === Node.ELEMENT_NODE) {
+        pageBreak = node.querySelector('.' + this.selector.pageBreak);
+        if ((pageBreak != null) && (pageBreak.dataset.pageNumber != null)) {
+          return parseInt(pageBreak.dataset.pageNumber, 10);
+        }
+        if (node.dataset.pageNumber != null) {
+          return parseInt(node.dataset.pageNumber, 10);
+        }
       } else {
         return null;
       }
     };
 
-    Histogram.prototype.getPageLength = function(node) {
-      var page;
-      page = this.getPageNumber(node);
-      if (this.pageLengths[page] != null) return this.pageLengths[page];
+    Histogram.prototype.getPageLength = function(page) {
+      if (this.pageLengths[page] != null) {
+        return this.pageLengths[page];
+      } else {
+        return 0;
+      }
     };
 
     Histogram.prototype.countAnnotation = function(annotation) {
@@ -157,7 +162,6 @@
         child = _ref[_i];
         length += child.textContent.length;
         if (length >= this.barTextLength) {
-          console.log(length);
           totalBars = Math.floor(length / this.barTextLength);
           length = length % this.barTextLength;
           if (this.counted.length > 0) {
@@ -187,12 +191,11 @@
       var length, node, page, _i, _len, _results;
       length = 0;
       if (this.pageTurnerActive) {
-        this.barTextLength = this.getPageLength(this.getFirstPage(nodes[0])) / this.barsPerPage;
+        this.barTextLength = this.getPageLength(this.getFirstPageNumber()) / this.barsPerPage;
       }
       for (_i = 0, _len = nodes.length; _i < _len; _i++) {
         node = nodes[_i];
-        length += this.assignBarsPerNode(node, length);
-        console.log(this.barTextLength);
+        length = this.assignBarsPerNode(node, length);
         if (this.pageTurnerActive && this.hasPageBreak(node)) {
           page = this.getPageNumber(node);
           this.barTextLength = this.getPageLength(page + 1) / this.barsPerPage;
