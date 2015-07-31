@@ -93,7 +93,6 @@ function get_term_id($term_name, $taxonomy_name) {
   $tid = NULL;
   $course_id = course_get_selected_course();
   foreach ($terms as $term) {
-    ddl($term->field_annotation_tag_course);
     if (($term->vid == $taxonomy->vid) && ($term->field_annotation_tag_course[LANGUAGE_NONE][0]['target_id'] == $course_id)) {
       $tid = $term->tid;
       break;  // go with the first match
