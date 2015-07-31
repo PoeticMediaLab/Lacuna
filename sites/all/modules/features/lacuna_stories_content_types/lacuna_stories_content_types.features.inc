@@ -33,7 +33,7 @@ function lacuna_stories_content_types_flag_default_flags() {
     'title' => 'Curated Tags',
     'global' => 1,
     'types' => array(
-      0 => 'tags',
+      0 => 'annotation_tags',
     ),
     'flag_short' => 'Add to "Curated Tags" list',
     'flag_long' => '',
@@ -46,6 +46,7 @@ function lacuna_stories_content_types_flag_default_flags() {
     'weight' => 0,
     'show_in_links' => array(
       'full' => 'full',
+      'diff_standard' => 0,
       'token' => 0,
     ),
     'show_as_field' => 0,
