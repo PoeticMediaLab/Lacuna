@@ -43,3 +43,12 @@ function media_wysiwyg_update_7201() {
     '@roles' => check_plain(implode(', ', $roles)),
   ));
 }
+
+/**
+ * Use the legacy file entity rendering method for existing sites.
+ *
+ * Existing sites can change this setting at admin/config/media/browser.
+ */
+function media_wysiwyg_update_7202() {
+  variable_set('media_wysiwyg_default_render', 'field_attach');
+}

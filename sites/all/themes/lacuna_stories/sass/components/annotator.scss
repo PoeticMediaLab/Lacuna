@@ -290,18 +290,65 @@ i.af-pager {
 *	Annotator Privacy Plugin CSS
 */
 
-.annotator-privacy {
-  opacity: .5;
-}
- .annotator-privacy-public {
-  color: green;
-  display: block !important;
- }
+/***
+ * Annotator Privacy Plugin CSS.
+ *
+ ***/
 
- .annotator-privacy-private {
- 	color: firebrick;
-  display: block !important;
- }
+$privacy-selected: #88b551;
+$privacy-default: #92a6c4;
+span.annotator-privacy-types .annotator-privacy-type {
+  padding: 7px 6px;
+  margin: 1px 1px 0px;
+  -webkit-border-radius: 6px 6px 6px 6px;
+  -moz-border-radius: 6px 6px 6px 6px;
+  border-radius: 6px 6px 6px 6px;
+  color: #FFF;
+  background-color: $privacy-default;
+  cursor: pointer;
+  display: inline-block;
+}
+span.annotator-privacy-types .annotator-privacy-type.checked {
+  background-color: $privacy-selected;
+}
+form.annotator-widget .annotator-privacy-groups {
+  display: none;
+}
+form.annotator-widget .annotator-privacy-groups.show-groups {
+  display: block;
+}
+label.annotator-privacy-group {
+  width: 95%;
+  margin-left: 5%;
+  display: inline-block;
+}
+
+.annotator-viewer .annotator-privacy-type {
+  padding: 7px 6px;
+  margin: 1px 1px 0px;
+  -webkit-border-radius: 6px 6px 6px 6px;
+  -moz-border-radius: 6px 6px 6px 6px;
+  border-radius: 6px 6px 6px 6px;
+  color: #FFF;
+  background-color: $privacy-default;
+  display: inline-block;
+}
+.annotator-viewer .annotator-privacy-group.checked {
+  padding: 7px 6px;
+  margin: 1px 1px 0px;
+  -webkit-border-radius: 6px 6px 6px 6px;
+  -moz-border-radius: 6px 6px 6px 6px;
+  border-radius: 6px 6px 6px 6px;
+  color: #FFF;
+  background-color: $privacy-selected;
+  display: inline-block;
+}
+.annotator-viewer .annotator-privacy-group.peer-groups.checked {
+  background-color: $privacy-selected;
+}
+.annotator-viewer .annotator-privacy-group.course-groups.checked {
+  background-color: $privacy-default;
+}
 
 
 /* ----------------------------------------------------------------
@@ -1091,5 +1138,22 @@ li.annotator-checkbox[style] {
   .annotator-touch-editor .annotator-touch-widget .annotator-item:first-child textarea,
   .annotator-touch-editor .annotator-controls {
     border-radius: 0;
+  }
+}
+
+/* Annotation histogram styles */
+.annotation-histogram-bar {
+  opacity: .5;
+  stroke: #1693A5;
+  stroke-opacity: .5;
+  stroke-width: 1;
+}
+
+/* For vertical alignment */
+#annotation-histogram-wrapper {
+  position: fixed;
+  margin-left: 1em;
+  svg {
+    position: relative;
   }
 }

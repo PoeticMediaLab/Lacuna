@@ -195,7 +195,10 @@ function media_wysiwyg_token_to_markup($match, $wysiwyg = FALSE) {
   else {
     // Display the field elements.
     $element = array();
-    $element['content'] = file_view($file, $tag_info['view_mode']);
+    // Render the file entity, for sites using the file_entity rendering method.
+    if (variable_get('media_wysiwyg_default_render', 'file_entity') == 'file_entity') {
+      $element['content'] = file_view($file, $tag_info['view_mode']);
+    }
     $element['content']['file'] = media_wysiwyg_get_file_without_label($file, $tag_info['view_mode'], $settings);
     // Overwrite or set the file #alt attribute if it has been set in this
     // instance.
@@ -207,6 +210,12 @@ function media_wysiwyg_token_to_markup($match, $wysiwyg = FALSE) {
     if (!empty($element['content']['file']['#attributes']['title'])) {
       $element['content']['file']['#title'] = $element['content']['file']['#attributes']['title'];
     }
+    // For sites using the legacy field_attach rendering method, attach fields.
+    if (variable_get('media_wysiwyg_default_render', 'file_entity') == 'field_attach') {
+      field_attach_prepare_view('file', array($file->fid => $file), $tag_info['view_mode']);
+      entity_prepare_view('file', array($file->fid => $file));
+      $element['content'] += field_attach_view('file', $file, $tag_info['view_mode']);
+    }
     if (count(element_children($element['content'])) > 1) {
       // Add surrounding divs to group them together.
       // We dont want divs when there are no additional fields to allow files
@@ -217,6 +226,12 @@ function media_wysiwyg_token_to_markup($match, $wysiwyg = FALSE) {
         'media-element-container',
         'media-' . $element['content']['file']['#view_mode']
       );
+    }
+
+    // Conditionally add a pre-render if the media filter output is be cached.
+    $filters = filter_get_filters();
+    if (!isset($filters['media_filter']['cache']) || $filters['media_filter']['cache']) {
+      $element['#pre_render'][] = 'media_wysiwyg_pre_render_cached_filter';
     }
   }
   drupal_alter('media_wysiwyg_token_to_markup', $element, $tag_info, $settings);
@@ -341,4 +356,17 @@ function media_wysiwyg_get_wysiwyg_allowed_view_modes($file) {
   $view_modes = $enabled_view_modes[$file->type];
   drupal_alter('media_wysiwyg_wysiwyg_allowed_view_modes', $view_modes, $file);
   return $view_modes;
+}
+
+/**
+ * #pre_render callback: Modify the element if the render cache is filtered.
+ */
+function media_wysiwyg_pre_render_cached_filter($element) {
+  // Remove contextual links since they are not compatible with cached filtered
+  // text.
+  if (isset($element['content']['#contextual_links'])) {
+    unset($element['content']['#contextual_links']);
+  }
+
+  return $element;
 }

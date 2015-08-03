@@ -112,7 +112,6 @@
         ref = annotation.highlights;
         for (j = 0, len1 = ref.length; j < len1; j++) {
           highlight = ref[j];
-          $(highlight).first().attr('id', select.annotation + annotation.id);
           $(highlight).addClass(select.annotation + annotation.id);
         }
       }
@@ -290,7 +289,11 @@
                     results2 = [];
                     for (j = 0, len1 = ref.length; j < len1; j++) {
                       tag = ref[j];
-                      results2.push(this.addFilterValue(filter, tag));
+                      if (tag != null) {
+                        results2.push(this.addFilterValue(filter, tag));
+                      } else {
+                        results2.push(void 0);
+                      }
                     }
                     return results2;
                   }).call(this));
@@ -343,7 +346,6 @@
 
     Model.prototype.toggleHighlights = function() {
       var i, id, len, ref;
-      $(document).trigger('annotation-filters-changed');
       this.state.showHighlights = !this.state.showHighlights;
       if (this.state.showHighlights) {
         this.removeFilter('highlights', 'highlights');
@@ -531,7 +533,6 @@
 
     Model.prototype.filterAnnotations = function(filter, value) {
       var annotation, currentValue, i, j, len, len1, ref, ref1;
-      $(document).trigger('annotation-filters-changed');
       this.activateFilter(filter, value);
       if (filter === 'none') {
         ref = this.state.annotations;
@@ -708,23 +709,21 @@
     };
 
     View.prototype.showAnnotations = function(ids) {
-      var i, id, len, results;
-      results = [];
+      var i, id, len;
       for (i = 0, len = ids.length; i < len; i++) {
         id = ids[i];
-        results.push($('.' + select.annotation + id).removeClass(select.hide));
+        $('.' + select.annotation + id).removeClass(select.hide);
       }
-      return results;
+      return $(document).trigger('annotation-filters-changed');
     };
 
     View.prototype.hideAnnotations = function(ids) {
-      var i, id, len, results;
-      results = [];
+      var i, id, len;
       for (i = 0, len = ids.length; i < len; i++) {
         id = ids[i];
-        results.push($('.' + select.annotation + id).addClass(select.hide));
+        $('.' + select.annotation + id).addClass(select.hide);
       }
-      return results;
+      return $(document).trigger('annotation-filters-changed');
     };
 
     View.prototype.drawAnnotations = function() {
@@ -760,6 +759,7 @@
       if (!annotation) {
         return;
       }
+      $(document).trigger('annotation-filters-paged', annotation);
       highlight = $(annotation.highlights[0]);
       $("html, body").animate({
         scrollTop: highlight.offset().top - 500

@@ -13,6 +13,83 @@ function course_strongarm() {
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
+  $strongarm->name = 'chosen_disable_search';
+  $strongarm->value = 0;
+  $export['chosen_disable_search'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'chosen_disable_search_threshold';
+  $strongarm->value = '0';
+  $export['chosen_disable_search_threshold'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'chosen_jquery_selector';
+  $strongarm->value = 'select:visible';
+  $export['chosen_jquery_selector'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'chosen_minimum_multiple';
+  $strongarm->value = '0';
+  $export['chosen_minimum_multiple'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'chosen_minimum_single';
+  $strongarm->value = '0';
+  $export['chosen_minimum_single'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'chosen_minimum_width';
+  $strongarm->value = '200';
+  $export['chosen_minimum_width'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'chosen_no_results_text';
+  $strongarm->value = 'No results match';
+  $export['chosen_no_results_text'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'chosen_placeholder_text_multiple';
+  $strongarm->value = 'Choose some options';
+  $export['chosen_placeholder_text_multiple'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'chosen_placeholder_text_single';
+  $strongarm->value = 'Choose an option';
+  $export['chosen_placeholder_text_single'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'chosen_search_contains';
+  $strongarm->value = 0;
+  $export['chosen_search_contains'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'chosen_use_theme';
+  $strongarm->value = 1;
+  $export['chosen_use_theme'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
   $strongarm->name = 'comment_anonymous_course';
   $strongarm->value = 0;
   $export['comment_anonymous_course'] = $strongarm;
@@ -62,6 +139,25 @@ function course_strongarm() {
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
+  $strongarm->name = 'content_access_course';
+  $strongarm->value = array(
+    'view_own' => array(
+      0 => 2,
+      1 => 5,
+      2 => 3,
+    ),
+    'view' => array(
+      0 => 2,
+      1 => 5,
+      2 => 3,
+    ),
+    'priority' => '5',
+  );
+  $export['content_access_course'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
   $strongarm->name = 'field_bundle_settings_node__course';
   $strongarm->value = array(
     'view_modes' => array(
@@ -86,6 +182,12 @@ function course_strongarm() {
       'workflow_tab' => array(
         'custom_settings' => FALSE,
       ),
+      'diff_standard' => array(
+        'custom_settings' => FALSE,
+      ),
+      'revision' => array(
+        'custom_settings' => FALSE,
+      ),
     ),
     'extra_fields' => array(
       'form' => array(
@@ -93,13 +195,80 @@ function course_strongarm() {
           'weight' => '0',
         ),
         'path' => array(
-          'weight' => '5',
+          'weight' => '6',
         ),
       ),
       'display' => array(),
     ),
   );
   $export['field_bundle_settings_node__course'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'global_filters';
+  $strongarm->value = array(
+    1 => array(
+      'name' => 'field_course_year',
+      'block' => 'global_filter_1',
+      'uses_view' => '0',
+      'field' => 'field_course_year',
+      'view' => '',
+      'widget' => 'select',
+      'convert_to_range' => 0,
+      'label' => 'Year',
+      'option_all_text' => '',
+      'confirm_question' => '',
+      'set_on_select' => 1,
+      'global_field_or_view_default' => '',
+      'global_php_default' => '',
+    ),
+    2 => array(
+      'name' => 'field_course_term',
+      'block' => 'global_filter_1',
+      'uses_view' => '0',
+      'field' => 'field_course_term',
+      'view' => '',
+      'widget' => 'select',
+      'convert_to_range' => 0,
+      'label' => 'Term',
+      'option_all_text' => '',
+      'confirm_question' => '',
+      'set_on_select' => 1,
+      'global_field_or_view_default' => '',
+      'global_php_default' => '',
+    ),
+    3 => array(
+      'name' => '',
+      'block' => NULL,
+      'uses_view' => NULL,
+      'field' => NULL,
+      'view' => NULL,
+      'widget' => NULL,
+      'convert_to_range' => NULL,
+      'label' => NULL,
+      'option_all_text' => NULL,
+      'confirm_question' => NULL,
+      'set_on_select' => NULL,
+      'global_field_or_view_default' => NULL,
+      'global_php_default' => NULL,
+    ),
+  );
+  $export['global_filters'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'global_filter_legacy_parameters_set';
+  $strongarm->value = TRUE;
+  $export['global_filter_legacy_parameters_set'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'htmlpurifier_version_current';
+  $strongarm->value = '4.6.0';
+  $export['htmlpurifier_version_current'] = $strongarm;
 
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
@@ -139,6 +308,20 @@ function course_strongarm() {
   $strongarm->name = 'node_submitted_course';
   $strongarm->value = 0;
   $export['node_submitted_course'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'pathauto_node_course_pattern';
+  $strongarm->value = 'course/[node:title]';
+  $export['pathauto_node_course_pattern'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'site_frontpage';
+  $strongarm->value = 'home';
+  $export['site_frontpage'] = $strongarm;
 
   return $export;
 }
