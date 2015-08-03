@@ -62,6 +62,7 @@ class Annotator.Plugin.Histogram extends Annotator.Plugin
     @bars = []
     @chart
     @pageTurnerActive = false
+    @duration = 250 # ms for animation time
 
   # Listens to annotation change events on the Annotator in order to refresh
   # the @annotations collection.
@@ -193,6 +194,7 @@ class Annotator.Plugin.Histogram extends Annotator.Plugin
     barWidth = @layout.width / @bars.length
     height = d3.scale.linear().domain([0, d3.max(@bars)]).range([0, @layout.height])
     histogram.attr( 'width', barWidth )
+      .transition().duration(@duration)
       .attr( 'height', (d) => return height(d) )
       .attr( 'x', (d, i) => return barWidth * i )
       .attr( 'y', (d) => return @layout.height - height(d) )
@@ -202,6 +204,7 @@ class Annotator.Plugin.Histogram extends Annotator.Plugin
     barHeight = @layout.height / @barTotal
     width = d3.scale.linear().domain([0, d3.max(@bars)]).range([0, @layout.width])
     histogram.attr( 'width', (d) => return width(d) )
+      .transition().duration(@duration)
       .attr( 'height', barHeight )
       .attr( 'x', (d) => return @layout.width - width(d) )
       .attr( 'y', (d, i) => return barHeight * i )

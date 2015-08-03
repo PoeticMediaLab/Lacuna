@@ -571,6 +571,7 @@ class View
     # Jump to selected annotation
     # Load annotation viewer
     return if not annotation
+    $(document).trigger('annotation-filters-paged', annotation)
     highlight = $(annotation.highlights[0])
     $("html, body").animate({
       scrollTop: highlight.offset().top - 500

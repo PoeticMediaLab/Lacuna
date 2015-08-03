@@ -65,6 +65,7 @@
       this.bars = [];
       this.chart;
       this.pageTurnerActive = false;
+      this.duration = 250;
     }
 
     Histogram.prototype._setupListeners = function() {
@@ -239,7 +240,7 @@
         _this = this;
       barWidth = this.layout.width / this.bars.length;
       height = d3.scale.linear().domain([0, d3.max(this.bars)]).range([0, this.layout.height]);
-      return histogram.attr('width', barWidth).attr('height', function(d) {
+      return histogram.attr('width', barWidth).transition().duration(this.duration).attr('height', function(d) {
         return height(d);
       }).attr('x', function(d, i) {
         return barWidth * i;
@@ -257,7 +258,7 @@
       width = d3.scale.linear().domain([0, d3.max(this.bars)]).range([0, this.layout.width]);
       return histogram.attr('width', function(d) {
         return width(d);
-      }).attr('height', barHeight).attr('x', function(d) {
+      }).transition().duration(this.duration).attr('height', barHeight).attr('x', function(d) {
         return _this.layout.width - width(d);
       }).attr('y', function(d, i) {
         return barHeight * i;

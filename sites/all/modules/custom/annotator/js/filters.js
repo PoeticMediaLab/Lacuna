@@ -710,6 +710,7 @@
     View.prototype.scrollTo = function(annotation) {
       var highlight;
       if (!annotation) return;
+      $(document).trigger('annotation-filters-paged', annotation);
       highlight = $(annotation.highlights[0]);
       $("html, body").animate({
         scrollTop: highlight.offset().top - 500
