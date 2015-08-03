@@ -267,6 +267,16 @@ function course_views_pre_build(&$view) {
  * Implements hook_form_FORM_ID_alter().
  */
 function course_form_views_exposed_form_alter(&$form, &$form_state) {
+  if ('views-exposed-form-documents-materials' == $form['#id']) {
+    $gid = course_get_selected_course();
+    $vocab = taxonomy_vocabulary_machine_name_load("units_$gid");
+    $tree = taxonomy_get_tree($vocab->vid);
+    foreach($tree as $term) {
+      $units[$term->tid] = $term->name;
+    }
+    $form['field_unit_tid']['#options'] = $units;
+  }
+
   if ($form['#id'] == 'views-exposed-form-sewing-kit-page') {
 
     // Restrict the group filter options to (a) courses, (b) that the user is a member of
