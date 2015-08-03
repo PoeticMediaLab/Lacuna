@@ -178,25 +178,20 @@ function annotation_form_alter(&$form, &$form_state, $form_id) {
  *
  * 1. node access (core) @ admin/people/permissions -> node -> annotation (perms other than view)
  * 2. content_access (contrib) @ admin/structure/types/manage/annotation/access (view perms and perms other than view)
- * 3. og_access (contrib) -- group_content_access field (view perm) and @ admin/config/group/permissions/node/course (perms other than view)
- * 4. the two node grants below (view perm)
+ * 3. og_access (contrib) -- group_content_access field (view perm) and @ admin/config/group/permissions/node/course / admin/config/group/permissions/node/peer_group (perms other than view)
+ * 4. the instructor view grant below (view perm)
  *
  * Specifically, how each annotation view audience is handled:
  *
  * 1. Private -- Least amount of perm handling. Falls unto content_access.
- * 2. Everyone -- Custom grant annotation_everyone grants access to all authenticated users.
- * 3. Instructor -- Custom grant annotation_instructor grants access to instructors of selected instructor courses.
- * 4. Co-learners -- og_access grants access to the selected groups (course and peer groups).
- * 5. Instructor + Co-learners --
- *    a) Selected instructor courses which are also selected as co-learner course are handled as #4.
- *    b) Selected instructor courses which are not also selected as co-learner course are handled as #3.
- *    c) Unselected instructor courses which are selected as co-learner course are handled as #4.
- *    d) Unselected instructor courses which are not selected as co-learner courses are handled as #1.
+ * 2. Instructor -- Custom grant annotation_instructor grants access to instructor(s) of selected instructor courses.
+ * 3. Peer Groups -- og_group_ref gets set to the selected peer group(s), og_access grants access to peer group members
+ * 4. Everyone -- og_group_ref gets set to the current course, og_access grants access to course members
  *
  ***/
 
 /***
- * Annotation view grants for "everyone" and "instructor" audience options
+ * Annotation view grant for "instructor" audience option
  *
  * @see http://www.phase2technology.com/blog/drupal-7-node-access-grants-locks-and-keys/
  * Don't use hook_node_access()
@@ -207,11 +202,6 @@ function annotation_node_grants($account, $op) {
 
   if ($op == 'view') {
     $grants = array();
-
-    // "Everyone" grant
-    if (in_array ('authenticated user', $account->roles)) {
-      $grants['annotation_everyone'] = array(1);
-    }
 
     // Instructors can view private annotations within their courses if the annotation has the course selected in "Instructor Viewable by Instructors of these Courses"
     if (in_array('Instructor', $account->roles)) {
@@ -230,40 +220,17 @@ function annotation_node_access_records($node) {
   if ($node->type == 'annotation') {
     $annotation_wrapper = entity_metadata_wrapper('node', $node);
 
-    // "Everyone" grant
-    $audience = $annotation_wrapper->field_annotation_audience->value();
-    if (in_array('everyone', $audience)) {
-      $grants[] = array(
-        'realm' => 'annotation_everyone',
-        'gid' => 1,
-        'grant_view' => 1,
-        'grant_update' => 0,
-        'grant_delete' => 0,
-        'priority' => 100,
-      );
-    }
-
     // Instructors can view private annotations within their courses if the annotation has the course selected in "Instructor Viewable by Instructors of these Courses"
     if ($courses = $annotation_wrapper->field_annotation_ins_viewable_co->value()) {
-      // If a selected instructor-viewable course is also selected as one of the co-learner courses, then we do not create this lock (grant), or else students of the course will not be able to view the annotation. We simply skip it and it falls onto to og_access.
-      $co_learner_group_nids = array();
-      $co_learner_group_nodes = $annotation_wrapper->og_group_ref->value();
-      if (count($co_learner_group_nodes)) {
-        foreach ($co_learner_group_nodes as $co_learner_group_node) {
-          $co_learner_group_nids[] = $co_learner_group_node->nid;
-        }
-      }
       foreach ($courses as $course) {
-        if (!in_array($course->nid, $co_learner_group_nids)) {
-          $grants[] = array(
-            'realm' => 'annotation_instructor',
-            'gid' => $course->nid,
-            'grant_view' => 1,
-            'grant_update' => 0,
-            'grant_delete' => 0,
-            'priority' => 100,
-          );
-        }
+        $grants[] = array(
+          'realm' => 'annotation_instructor',
+          'gid' => $course->nid,
+          'grant_view' => 1,
+          'grant_update' => 0,
+          'grant_delete' => 0,
+          'priority' => 0, // Important! This grant priority must equal the og_access grant priority of 0, so that if an annotation is marked both for instructor and for peer groups, instructors can view the annotation due to this grant, and peer group members can view the annotation due to the og_access grant.
+        );
       }
     }
   }
@@ -351,42 +318,24 @@ function annotation_copy_field_values_to_drupal_standard_fields () {
   }
 }
 
-// Get possible groups for a document annotation
-// Groups are marked as selected (the default for new annotations). If editing an existing annotation, unselected groups should be unmarked as selected.
-function annotation_get_possible_groups_for_document ($document_node) {
-  $document_wrapper = entity_metadata_wrapper('node', $document_node);
+// Build peer groups array chunk
+// Peer groups are marked as not selected (the default for new annotations).
+function annotation_build_peer_groups () {
   if ($user_groups = og_get_groups_by_user()) {
     $user_groups = array_keys($user_groups['node']);
-
-    // Course groups - for the current document that user is a member of
-    $course_groups = array();
-    $doc_groups = $document_wrapper->og_group_ref->value();
-    if (count($doc_groups)) {
-      foreach ($doc_groups as $doc_group) { // Documents can belong to multiple courses
-        if (in_array($doc_group->nid, $user_groups)) { // User must be in course
-          $course_groups [$doc_group->nid] = array(
-            $doc_group->title,
-            'selected' => 1
-          );
-        }
-      }
-    }
-
 
     // Peer groups -- all user's peer groups
     $peer_groups = array();
     foreach ($user_groups as $user_group) {
-      $node = node_load($user_group);
-      if ($node->type == 'peer_group') {
+      $group = node_load($user_group);
+      if ($group->type == 'peer_group') {
         $peer_groups[$user_group] = array(
-          $node->title,
-          'selected' => 1
+          $group->title,
+          'selected' => 0
         );
       }
     }
-
     return array(
-      'course_groups' => $course_groups,
       'peer_groups' => $peer_groups
     );
   }

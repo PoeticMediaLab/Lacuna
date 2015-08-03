@@ -1,0 +1,119 @@
+<?php
+/**
+ * @file
+ * session_cache_file.module
+ *
+ * Provides a file storage implementation for the Session Cache API.
+ * More than anything for demonstration and debugging purporses as it is easy
+ * to follow on the file system when the caches are written and expired,
+ * i.e. when the underlying files are updated and removed.
+ *
+ * See the session_cache/README.txt for more info.
+ */
+
+define('SESSION_CACHE_FILE_STORAGE_FILE', 5);
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function session_cache_file_form_session_cache_admin_config_alter(&$form, &$form_state) {
+  $form['session_cache_storage_method']['#options'][SESSION_CACHE_FILE_STORAGE_FILE]
+    = t('on the server, as a small file');
+}
+
+/**
+ * Returns the directory path to where session cache files are stored.
+ *
+ * @param string $bin
+ *   The bin for which the path is to be returned, NULL for the base path.
+ *
+ * @return boolean|string
+ *   The existing or newly created path, or FALSE if there was an error.
+ */
+function session_cache_file_directory($bin = NULL) {
+  $path = variable_get('file_private_path');
+  // Typically $path == 'sites/default/files/private'.
+  if (empty($path)) {
+    drupal_set_message(t('Session Cache File: the <strong>Private file system path</strong> is not set. Please configure it <a href="@url">here</a>.',
+      array('@url' => url('admin/config/media/file-system'))), 'warning', FALSE);
+    return FALSE;
+  }
+  $path = DRUPAL_ROOT . "/$path/session_cache";
+
+  // @todo Use file_prepare_directory(&$path, FILE_CREATE_DIRECTORY)
+  if (!file_exists($path) && !@mkdir($path)) {
+    drupal_set_message(t('Session cache directory %path could not be created.',
+      array('%path' => $path)), 'error', FALSE);
+    return FALSE;
+  }
+  if (empty($bin)) {
+    return $path;
+  }
+  if (!file_exists("$path/$bin") && !@mkdir("$path/$bin")) {
+    drupal_set_message(t('Session cache subdirectory %bin could not be created inside %path',
+      array('%bin' => $bin, '%path' => $path)), 'error', FALSE);
+    return FALSE;
+  }
+  return "$path/$bin";
+}
+
+/**
+ * Implements hook_session_cache_set().
+ */
+function session_cache_file_session_cache_set($method, $bin, $data) {
+  if ($method != SESSION_CACHE_FILE_STORAGE_FILE) {
+    return;
+  }
+  $path = session_cache_file_directory($bin);
+  $sid = session_cache_get_sid();
+  if ($data == NULL) {
+    if (!$path || !$sid || !@unlink("$path/$sid")) {
+      drupal_set_message(t('Session cache file for empty session state could not be deleted.', array('%bin' => "$bin/$sid")), 'warning', FALSE);
+    }
+  }
+  elseif (!$path || !$sid || @file_put_contents("$path/$sid", serialize($data), FILE_EXISTS_REPLACE) === FALSE) {
+    drupal_set_message(t('Session cache file for session state %bin could not be written.', array('%bin' => "$bin/$sid")), 'error', FALSE);
+  }
+}
+
+/**
+ * Implements hook_session_cache_get().
+ */
+function session_cache_file_session_cache_get($method, $bin) {
+  if ($method != SESSION_CACHE_FILE_STORAGE_FILE) {
+    return NULL;
+  }
+  $path = session_cache_file_directory($bin);
+  $sid = session_cache_get_sid();
+  $data = $path && $sid && file_exists("$path/$sid") ? unserialize(file_get_contents("$path/$sid")) : NULL;
+  return $data;
+}
+
+/**
+ * Implements hook_cron().
+ */
+function session_cache_file_cron() {
+  $session_cache_root = session_cache_file_directory();
+  if (empty($session_cache_root)) {
+    return;
+  }
+  if ($bin_dirs = scandir($session_cache_root)) {
+    foreach ($bin_dirs as $bin_dir) {
+      if (strpos($bin_dir, '.') !== 0) {
+        if ($filenames = scandir("$session_cache_root/$bin_dir")) {
+          foreach ($filenames as $filename) {
+            if (strpos($filename, '.') !== 0) {
+              $filespec = "$session_cache_root/$bin_dir/$filename";
+              $last_modified = filemtime($filespec);
+              if ($last_modified && (time() - $last_modified > SESSION_CACHE_DEFAULT_EXPIRATION_DAYS * 24 * 60 * 60)) {
+                if (!@unlink($filespec)) {
+                  drupal_set_message(t('Could not delete expired session cache file %file.', array('%file' => $filespec)), 'warning');
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

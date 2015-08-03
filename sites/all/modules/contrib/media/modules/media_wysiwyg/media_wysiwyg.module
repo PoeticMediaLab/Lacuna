@@ -207,6 +207,17 @@ function media_wysiwyg_form_media_admin_config_browser_alter(&$form, &$form_stat
     );
   }
 
+  $form['wysiwyg']['media_wysiwyg_default_render'] = array(
+    '#type' => 'radios',
+    '#title' => t('How should file entities be rendered within a text field?'),
+    '#description' => t("Full file entity rendering is the best choice for most sites. It respects the file entity's display settings specified at admin/structure/file-types. If your site already uses the legacy method, note that changing this option will affect your site's markup. Testing it on a non-production site is recommended."),
+    '#options' => array(
+      'file_entity' => 'Full file entity rendering',
+      'field_attach' => 'Legacy rendering (using field attach)',
+    ),
+    '#default_value' => variable_get('media_wysiwyg_default_render', 'file_entity'),
+  );
+
   $form['wysiwyg']['media_wysiwyg_wysiwyg_allowed_types'] = array(
     '#type' => 'checkboxes',
     '#title' => t('Allowed types in WYSIWYG'),

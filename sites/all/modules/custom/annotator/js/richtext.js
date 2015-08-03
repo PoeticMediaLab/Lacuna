@@ -63,15 +63,18 @@
     };
 
     RichText.prototype.convertText = function(Viewer) {
-      var annotation, div, index, _results;
+      var annotation, divList, index, _ref, _results;
+      divList = $(Viewer.element[0]).find('span.annotator-controls').next();
+      _ref = Viewer.annotations;
       _results = [];
-      for (index in Viewer.annotations) {
-        div = $(Viewer.element[0]).find('div:first-of-type')[index];
-        annotation = Viewer.annotations[index];
+      for (index in _ref) {
+        annotation = _ref[index];
         if (annotation.text != null) {
           annotation.text = annotation.text.replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"');
+          _results.push(divList[index].innerHTML = annotation.text);
+        } else {
+          _results.push(void 0);
         }
-        _results.push(div.innerHTML = annotation.text);
       }
       return _results;
     };
