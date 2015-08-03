@@ -61,7 +61,6 @@ function course_create() {
 
   $form['additional_settings']['#access'] = FALSE;
   $form['body'][LANGUAGE_NONE][0]['format']['#access'] = FALSE;
-  $form['body'][LANGUAGE_NONE][0]['format']['#access'] = FALSE;
   $form['og_roles_permissions']['#access'] = FALSE;
 
   unset($form['actions']['preview']);
@@ -88,7 +87,7 @@ function course_set_up_materials_form($form, &$form_state, $nid) {
   $units_vocab = taxonomy_vocabulary_machine_name_load("units_$nid");
   $units = array();
   foreach (taxonomy_term_load_multiple(array(), array('vid' => $units_vocab->vid)) as $unit) {
-    $units[] = "<div class='term'>" . $unit->name . "</div>";
+    $units[] = "<div class='term'><span class='name'>" . $unit->name . "</span><span class='fa fa-minus'></span></div>";
   }
   asort($units);
 
@@ -136,9 +135,18 @@ function course_set_up_materials_form_submit($form, &$form_state) {
   # add terms to vocabs
 
   # number of week tags
-  # delete max weeks??? for edits?
   $vocab = taxonomy_vocabulary_machine_name_load("number_of_weeks_$nid");
   $max = $form_state['values']['number_of_weeks'];
+  $tree = taxonomy_get_tree($vocab->vid);
+
+  # updating an existing vocab
+  if (count($tree)) {
+    foreach ($tree as $week) {
+      if ($week->name > $max) {
+        taxonomy_term_delete($week->tid);
+      }
+    }
+  }
   for ($i=1; $i <= $max; $i++) {
     course_create_taxo($vocab, $i, $i);
   }
@@ -155,7 +163,20 @@ function course_ajax_add_unit_term() {
   $term = check_plain($_POST['term']);
   $nid = check_plain($_POST['nid']);
   $vocab = taxonomy_vocabulary_machine_name_load("units_$nid");
-  course_create_taxo($vocab, $term);
+  foreach(explode(',', $term) as $unit) {
+    course_create_taxo($vocab, $unit);
+  }
+  ajax_deliver();
+}
+
+
+function course_ajax_delete_unit_term($nid, $term) {
+  $term = check_plain($term);
+  $nid = check_plain($nid);
+  $term = array_pop(taxonomy_get_term_by_name($term, "units_$nid"));
+  if ($term) {
+    taxonomy_term_delete($term->tid);
+  }
   ajax_deliver();
 }
 
@@ -200,29 +221,25 @@ function course_add_material($nid) {
 
   global $user;
   module_load_include('inc', 'node', 'node.pages');
-  $node = (object) array(
+  $biblio = (object) array(
     'uid' => $user->uid,
     'name' => (isset($user->name) ? $user->name : ''),
     'type' => BIBLIO_NODE_TYPE,
     'language' => LANGUAGE_NONE,
   );
-  $form = drupal_get_form(BIBLIO_NODE_TYPE . '_node_form', $node);
+  $form = drupal_get_form(BIBLIO_NODE_TYPE . '_node_form', $biblio);
 
   $output .= "<div class='biblio-form'>" . drupal_render($form) . "</div>";
   $output .= views_embed_view('documents', 'course_block');
   return $output;
-
-//  $output .= "<p><em>You can add more materials at any time</em></p><br /><br /><br />";
 }
 
 function course_switch_course($gid) {
   if ($group = node_load ($gid)) {
     if ($group->type == 'course') {
       if (og_is_member('node', $gid)) {
-        global $user;
-        $user = user_load ($user->uid); // Global user does not contain OG memberships, so saving that will lose them for the user. Load the user first and use that (see: https://www.drupal.org/node/1502916#comment-6444954).
-        user_save ($user, array ('data' => array ('current-course' => $gid)));
-        drupal_goto ('materials'); // After setting the context, redirect user to the course materials page
+        _course_set_selected_course($gid);
+        drupal_goto('materials'); // After setting the context, redirect user to the course materials page
       }
     }
   }

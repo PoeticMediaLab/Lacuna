@@ -51,7 +51,13 @@ function course_menu() {
   );
   $items['ajax/add-unit-term'] = array(
     'page callback' => 'course_ajax_add_unit_term',
-    'page arguments' => array(2),
+    'access callback' => 'course_access',
+    'type' => MENU_NORMAL_ITEM,
+    'file' => 'course.pages.inc',
+  );
+  $items['ajax/delete-unit-term/%/%'] = array(
+    'page callback' => 'course_ajax_delete_unit_term',
+    'page arguments' => array(2,3),
     'access callback' => 'course_access',
     'type' => MENU_NORMAL_ITEM,
     'file' => 'course.pages.inc',
@@ -206,7 +212,6 @@ function course_views_pre_render(&$view) {
   // TODO: For now I have this loading on all views, but we may wish to only load for the specific views where this is needed
   // TODO: This is not not specific to courses. Once we have a general core feature, move this there
   drupal_add_js(drupal_get_path('module', 'course') . '/js/prevent-auto-submit.js', array('weight' => 10));
-
   switch ($view->name) {
 
     // Tweak titles of course-specific views to show the course name
@@ -230,6 +235,9 @@ function course_views_pre_render(&$view) {
         $view->set_title(' '); // space required
       }
       break;
+    case 'archived_materials':
+      drupal_add_css(drupal_get_path('module', 'course') . '/course.css');
+    break;
 
   }
 }
@@ -301,7 +309,7 @@ function course_form_views_exposed_form_alter(&$form, &$form_state) {
 }
 
 // Shared With field in the Sewing Kit view, merges the Audience field and Peer Groups values (when applicable) into a single column to save space
-function course_sewing_kit_shared_with ($data) {
+function course_sewing_kit_shared_with($data) {
   $lines = array();
   foreach ($data->field_field_annotation_audience as $audience) {
     $audience_val = $audience['rendered']['#markup'];
@@ -323,17 +331,26 @@ function course_sewing_kit_shared_with ($data) {
 }
 
 // Get the currently selected course
-function course_get_selected_course () {
+function course_get_selected_course() {
   global $user;
   if (isset($user->data['current-course'])) {
     return $user->data['current-course'];
   }
 }
 
+function _course_set_selected_course($nid) {
+  // NB: do your own error handling and permissions checking if you use this setter directly
+  global $user;
+  // Global user does not contain OG memberships, so saving that will lose them for the user. Load the user first and use that
+  // see: https://www.drupal.org/node/1502916#comment-6444954.
+  $user = user_load($user->uid);
+  user_save($user, array('data' => array('current-course' => $nid)));
+}
+
 /*
  * Implements hook_node_validate
  */
-function course_node_validate ($node, $form, &$form_state) {
+function course_node_validate($node, $form, &$form_state) {
 
   if ($node->type == 'course') {
     // Ensure that multi-term courses are in consecutive terms
@@ -349,6 +366,71 @@ function course_node_validate ($node, $form, &$form_state) {
   }
 }
 
+function course_node_update($node) {
+  global $user;
+  $key = "Course_Clone_Material_Docs_" . $user->uid;
+  // If any the material was cloned, we needed the user to finish all the course-specific bits, check if they are saving
+  // one of those nodes and remove that node from the to finish queue cookie
+  if (DOCUMENT_NODE_TYPE == $node->type && $docs = $_COOKIE['Drupal_visitor_' . $key]) {
+    course_pop_unfinished_doc_queue($node->nid);
+  }
+
+}
+
+function course_form_document_node_form_alter(&$form, &$form_state, $form_id) {
+  $gid = course_get_selected_course();
+  $document = node_load($form['nid']['#value']);
+
+  $vocab = taxonomy_vocabulary_machine_name_load("number_of_weeks_$gid");
+  $tree = taxonomy_get_tree($vocab->vid);
+  foreach($tree as $term) {
+    $weeks[$term->tid] = $term->name;
+  }
+  foreach($document->field_tags[LANGUAGE_NONE] as $week) {
+    $default_weeks[] = $week['tid'];
+  }
+  $form['weeks'] = array(
+    '#title' => 'Week(s)',
+    '#type' => 'select',
+    '#multiple' => TRUE,
+    '#size' => 60,
+    '#options' => $weeks,
+    '#default_value' => $default_weeks,
+  );
+  $vocab = taxonomy_vocabulary_machine_name_load("units_$gid");
+  $tree = taxonomy_get_tree($vocab->vid);
+  foreach($tree as $term) {
+    $units[$term->tid] = $term->name;
+  }
+  $default_unit = $document->field_unit[LANGUAGE_NONE][0]['tid'];
+  $form['units'] = array(
+    '#title' => 'Unit',
+    '#type' => 'select',
+    '#size' => 60,
+    '#default_value' => $default_unit,
+    '#options' => $units,
+  );
+  $form['#group_children']['units'] = 'group_syllabus';
+  $form['#group_children']['weeks'] = 'group_syllabus';
+  $form['field_copyright']['#access'] = FALSE;
+  $form['field_tags']['#access'] = FALSE;
+  $form['field_unit']['#access'] = FALSE;
+  $form['additional_settings']['#access'] = FALSE;
+  $form['og_group_ref']['#access'] = FALSE;
+  $form['field_bibliographic_entry']['#access'] = FALSE;
+  $form['title']['#title'] = 'Material Name to Be Displayed to Students';
+  $form['actions']['submit']['#value'] = 'Save (Finished Adding Material)';
+  $form['actions']['submit']['#submit'] = array('course_add_document_form_submit');
+
+  $form['actions']['submit2'] = array(
+    '#type' => 'submit',
+    '#submit' => array('course_add_document_form_submit'),
+    '#value' => 'Save (Add More Material)',
+  );
+  $path = drupal_get_path('module', 'course');
+  $form['#attached']['css'] = array("$path/course.css");
+}
+
 function course_form_biblio_node_form_alter(&$form, &$form_state, $form_id) {
   $form['course_nid'] = array(
     '#type' => 'hidden',
@@ -360,28 +442,14 @@ function course_form_biblio_node_form_alter(&$form, &$form_state, $form_id) {
   );
   $form['#submit'] = array('course_add_material_form_submit');
   $form['actions']['submit']['#submit'][] = 'course_add_material_form_submit';
-  $form['actions']['submit']['#value'] = 'Save (Done Adding Material)';
+  $form['actions']['submit']['#value'] = 'Save Bibliographic Information';
   $form['additional_settings']['#access'] = FALSE;
   $form['body'][LANGUAGE_NONE][0]['format']['#access'] = FALSE;
-  $form['document'] = array(
-    '#type' => 'fieldset',
-    '#title' => 'Document Details',
-  );
-  $form['document']['blah'] = array(
-    '#type' => 'textfield',
-    '#description' => "Some document action",
-    '#size' => 60,
-  );
 
   unset($form['actions']['preview']);
   $path = drupal_get_path('module', 'course');
   $form['#attached']['css'] = array("$path/course.css");
   $form['#attached']['js'] = array("$path/course.js");
-  $form['actions']['submit2'] = array(
-    '#type' => 'submit',
-    '#submit' => array('course_add_material_form_submit'),
-    '#value' => 'Save (Add More Material)'
-  );
 }
 
 // NB: Needs to be in .module so it is always loaded or it can be excluded from module_implements() cache
@@ -416,8 +484,8 @@ function course_create_form_submit($form, &$form_state) {
     taxonomy_vocabulary_save($number_of_weeks);
 
   }
-
   if ($node->nid) {
+    _course_set_selected_course($node->nid);
     drupal_goto("createcourse-3/" . $node->nid);
   }
   else {
@@ -427,7 +495,7 @@ function course_create_form_submit($form, &$form_state) {
 }
 
 function course_add_material_form_submit($form, &$form_state) {
-  $gid = $form_state['values']['course_nid'];
+  $gid = course_get_selected_course();
   # have to save in a cookie b/c biblio module form refreshes the page on type selection and borks with initial form render
   $copyright = check_plain($_COOKIE['course-material-type-' . $gid]);
 
@@ -442,6 +510,7 @@ function course_add_material_form_submit($form, &$form_state) {
 
   $document = new stdClass();
   $document->type = DOCUMENT_NODE_TYPE;
+  $document->language = LANGUAGE_NONE;
   $document->title = $biblio->title;
   $document->field_doc_text[LANGUAGE_NONE][0]['value'] = $biblio->body[LANGUAGE_NONE][0]['value'];
   $document->field_doc_text[LANGUAGE_NONE][0]['format']  = filter_default_format();
@@ -450,21 +519,159 @@ function course_add_material_form_submit($form, &$form_state) {
   $document->og_group_ref[LANGUAGE_NONE][0]['target_id'] = $gid;
   $document->field_bibliographic_entry[LANGUAGE_NONE][0]['target_id'] = $biblio->nid;
   $document->status = 1; # make all documents published
-  $taxo = taxonomy_get_term_by_name($copyright);
+  $taxo = array_pop(taxonomy_get_term_by_name($copyright));
   if ($taxo) {
-    $document->taxonomy[] = $taxo;
+    $document->field_copyright[LANGUAGE_NONE][0]['tid'] = $taxo->tid;
   }
   node_save($document);
   $form_state['rebuild'] = TRUE;
+  course_push_unfinished_doc_queue($document->nid);
 
-  if ("Save (Add More Material)" == $form_state['values']['op']) {
-    drupal_set_message("Your Course Material has successfully been added.");
-    drupal_goto("createcourse-4/$gid");
+  if ($document->nid) {
+    drupal_set_message("The Material's bibliographic information has been saved, please finish adding course-specific details.");
+    drupal_goto("node/{$document->nid}/edit");
   }
-  if ("Save (Done Adding Material)" == $form_state['values']['op']) {
-    drupal_set_message("Your Course Material has successfully been added.");
-    drupal_goto("/");
+  else {
+    drupal_set_message("There was an error adding your material, please try again or contact the Lacuna Stories team", 'error');
   }
 }
 
+function course_add_document_form_submit($form, &$form_state) {
+  $node = node_form_submit_build_node($form, $form_state);
+  $node->status = 1;
+  $i = 0;
+  foreach($form_state['values']['weeks'] as $week) {
+    $node->field_tags[LANGUAGE_NONE][$i]['tid'] = $week;
+    $i++;
+  }
+  $node->field_unit[LANGUAGE_NONE][0]['tid'] = $form_state['values']['units'];
+  node_save($node);
 
+  if ("Save (Finished Adding Material)" == $form_state['values']['op']) {
+    drupal_set_message("Your Course Material has successfully been added.");
+    unset($_GET['destination']);
+    drupal_goto("/");
+  }
+  else if ("Save (Add More Material)" == $form_state['values']['op']) {
+    drupal_set_message("Your Course Material has successfully been added.");
+    $gid = course_get_selected_course();
+    unset($_GET['destination']);
+    drupal_goto("createcourse-4/$gid");
+  }
+}
+
+/**
+ * Implements hook_action_info().
+ */
+function course_action_info() {
+  return array(
+    'course_bulk_clone_material' => array(
+      'type' => 'node',
+      'label' => t('Add Material'),
+    ),
+  );
+}
+
+function course_bulk_clone_material($biblios, $context = array()) {
+  if (!is_array($biblios)) {
+    $biblios = array($biblios);
+  }
+  $docs = array();
+  foreach ($biblios as $biblio) {
+    $doc = course_clone_material($biblio);
+    if (!$doc) {
+      drupal_set_message(t('Error adding material for @biblio', array('@biblio' => $biblio->title)), 'warning');
+    }
+    course_push_unfinished_doc_queue($doc->nid);
+  }
+
+}
+
+/**
+ * NB: "material" is made up of a biblio entity (canonical info) and a doc entity (course-specific info)
+ * Here, we are creating a new doc from an existing biblio, so it's cloning w/ air quotes people.
+ */
+function course_clone_material($biblio) {
+  try {
+    $course_nid = course_get_selected_course();
+    if (!$course_nid) {
+      return false;
+    }
+
+    $document = new stdClass();
+    $document->type = DOCUMENT_NODE_TYPE;
+    $document->language = LANGUAGE_NONE;
+    $document->title = $biblio->title;
+    $document->field_doc_text[LANGUAGE_NONE][0]['value'] = $biblio->body[LANGUAGE_NONE][0]['value'];
+    $document->field_doc_text[LANGUAGE_NONE][0]['format']  = filter_default_format();
+
+    node_object_prepare($document);
+    $document->og_group_ref[LANGUAGE_NONE][0]['target_id'] = $course_nid;
+    $document->field_bibliographic_entry[LANGUAGE_NONE][0]['target_id'] = $biblio->nid;
+    $document->status = 1; # make all documents published
+    node_save($document);
+    return $document;
+  }
+  catch (Exception $e) {
+    watchdog('course_matierl_clone', $e, array(), WATCHDOG_ERROR);
+    return false;
+  }
+}
+
+function course_block_info() {
+    $blocks = array();
+    $blocks['course_finish_material_block'] = array(
+      'info' => t('Finish Adding Material'),
+      'cache' => DRUPAL_NO_CACHE,
+    );
+    return $blocks;
+}
+
+
+function course_block_view($delta = '') {
+  $block = array();
+  switch($delta) {
+    case 'course_finish_material_block':
+      $block['subject'] = NULL;
+      $block['content'] = array(
+        '#markup' => course_finish_material_block_content()
+      );
+    break;
+  }
+
+  return $block;
+}
+
+function course_finish_material_block_content() {
+  global $user;
+  $key = "Course_Clone_Material_Docs_" . $user->uid;
+  $content = '';
+  if (isset($_COOKIE['Drupal_visitor_' . $key]) && $docs = $_COOKIE['Drupal_visitor_' . $key]) {
+    drupal_add_css(drupal_get_path('module', 'course') . '/course.css');
+    $docs = explode(',', $docs);
+    foreach($docs as $doc) {
+      $url = l("node/$doc/edit","node/$doc/edit");
+      $content .= "<p>Please finish adding this Course Material, $url</p>";
+    }
+  }
+  return "<div class='course-finish-adding-material'>" . $content . "</div>";
+}
+
+function course_pop_unfinished_doc_queue($nid) {
+  global $user;
+  $key = "Course_Clone_Material_Docs_" . $user->uid;
+  $docs = $_COOKIE['Drupal_visitor_' . $key];
+  $docs = explode(',', $docs);
+  $docs = array_diff($docs, $nid);
+  user_cookie_save(array($key => implode(',', $docs)));
+}
+
+function course_push_unfinished_doc_queue($nid) {
+  global $user;
+  $key = "Course_Clone_Material_Docs_" . $user->uid;
+  $docs = $_COOKIE['Drupal_visitor_' . $key];
+  $docs = explode(',', $docs);
+  $docs[] = $nid;
+  array_unique($docs);
+  user_cookie_save(array($key => implode(',', $docs)));
+}
