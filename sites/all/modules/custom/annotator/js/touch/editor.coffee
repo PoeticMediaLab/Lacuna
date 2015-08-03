@@ -174,4 +174,4 @@ class Annotator.Plugin.Touch.Editor extends Annotator.Delegator
   #
   # Returns nothing.
   _onOverlayTap: (event) =>
-    @editor.hide() if event.target is @element[0]
+    # @editor.hide() if event.target is @element[0]
