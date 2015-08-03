@@ -91,7 +91,7 @@ function lacuna_stories_rules_default_rules_configuration() {
       "DO" : [
         { "mail" : {
             "to" : [ "node:annotation-reference:author:mail" ],
-            "subject" : "New annotation of [node:annotation-reference:title] on Lacuna Stories: [site:name]",
+            "subject" : "New annotation of [node:annotation-reference:title] on Lacuna Stories: [site:name]: \\r\\n\\u0022[node:field-annotation-text]\\u0022",
             "message" : "Dear [node:annotation-reference:author:field-display-name],\\r\\n\\r\\nYour post on Lacuna Stories: [site:name], \\u0022[node:annotation-reference:title]\\u0022 has been annotated by [node:author:field-display-name]:\\r\\n\\r\\n[node:text]\\r\\n\\r\\nTo view this annotation, visit the following link:\\r\\n\\r\\n[node:annotation-reference:url]?id=[node:nid]\\r\\n\\r\\nSincerely,\\r\\n\\r\\nThe Lacuna Stories Team",
             "language" : [ "" ]
           }
