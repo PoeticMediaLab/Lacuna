@@ -608,6 +608,35 @@ function callbackWrapper(name, context) {
   }
 }
 
+var oldBeforeSerialize = (Drupal.ajax ? Drupal.ajax.prototype.beforeSerialize : false);
+if (oldBeforeSerialize) {
+  /**
+   * Filter the ajax_html_ids list sent in AJAX requests.
+   *
+   * This overrides part of the form serializer to not include ids we know will
+   * not collide because editors are removed before those ids are reused.
+   *
+   * This avoids hitting like max_input_vars, which defaults to 1000,
+   * even with just a few active editor instances.
+   */
+  Drupal.ajax.prototype.beforeSerialize = function (element, options) {
+    var ret = oldBeforeSerialize.call(this, element, options);
+    var excludeSelectors = [];
+    $.each(Drupal.wysiwyg.excludeIdSelectors, function () {
+      if ($.isArray(this)) {
+        excludeSelectors = excludeSelectors.concat(this);
+      }
+    });
+    if (excludeSelectors.length > 0) {
+      options.data['ajax_html_ids[]'] = [];
+      $('[id]:not(' + excludeSelectors.join(',') + ')').each(function () {
+      options.data['ajax_html_ids[]'].push(this.id);
+      });
+    }
+    return ret;
+  }
+}
+
 /**
  * Allow certain editor libraries to initialize before the DOM is loaded.
  */

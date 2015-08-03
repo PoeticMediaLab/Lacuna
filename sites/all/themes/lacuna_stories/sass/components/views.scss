@@ -119,12 +119,7 @@ $views-link-hover-color: #1588BA;
     float: left;
     margin-right: 10px;
   }
-  .views-widget {
-    display: inline;
-    input[type=text] {
-      width: 20%;
-    }
-  }
+
   .form-type-bef-checkbox {
     float: left;
     margin: 0px 5px 0px 10px;
@@ -143,7 +138,14 @@ $views-link-hover-color: #1588BA;
   margin-top: 0px;
   margin-right: 80px;
 }
-
+.view-courses {
+  li.views-fluid-grid-item {
+    width: 32%;
+  }
+  div.views-fluid-grid h3 {
+    text-align: left;
+  }
+}
 table.views-table {
   width: 100%;
 }
@@ -206,4 +208,10 @@ div#block-views-bibliography-block {
     cursor: text;
     color: black;
   }
+}
+
+// For "Cite As" block
+div#block-views-cite-as-block {
+  padding-left: 5em;
+  padding-top: 1em;
 }

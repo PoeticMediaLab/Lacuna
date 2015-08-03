@@ -37,11 +37,10 @@ function lacuna_stories_workflows_field_default_field_bases() {
           3 => 3,
           4 => 4,
           5 => 0,
-          6 => 0,
         ),
       ),
       'watchdog_log' => 1,
-      'wid' => 2,
+      'wid' => 1,
       'widget' => array(
         'comment' => 1,
         'hide' => 0,

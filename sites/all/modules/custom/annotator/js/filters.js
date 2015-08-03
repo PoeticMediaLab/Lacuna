@@ -109,7 +109,6 @@
         _ref = annotation.highlights;
         for (_j = 0, _len2 = _ref.length; _j < _len2; _j++) {
           highlight = _ref[_j];
-          $(highlight).first().attr('id', select.annotation + annotation.id);
           $(highlight).addClass(select.annotation + annotation.id);
         }
       }
@@ -210,6 +209,7 @@
           index = total;
       }
       this.Model.set('index', index);
+      $(document).trigger('annotation-filters-paged', this.Model.annotation());
       this.View.drawPagerCount();
       return this.View.scrollTo(this.Model.annotation());
     };
@@ -273,7 +273,11 @@
                     _results3 = [];
                     for (_j = 0, _len2 = _ref.length; _j < _len2; _j++) {
                       tag = _ref[_j];
-                      _results3.push(this.addFilterValue(filter, tag));
+                      if (tag != null) {
+                        _results3.push(this.addFilterValue(filter, tag));
+                      } else {
+                        _results3.push(void 0);
+                      }
                     }
                     return _results3;
                   }).call(this));
@@ -658,23 +662,21 @@
     };
 
     View.prototype.showAnnotations = function(ids) {
-      var id, _i, _len, _results;
-      _results = [];
+      var id, _i, _len;
       for (_i = 0, _len = ids.length; _i < _len; _i++) {
         id = ids[_i];
-        _results.push($('.' + select.annotation + id).removeClass(select.hide));
+        $('.' + select.annotation + id).removeClass(select.hide);
       }
-      return _results;
+      return $(document).trigger('annotation-filters-changed');
     };
 
     View.prototype.hideAnnotations = function(ids) {
-      var id, _i, _len, _results;
-      _results = [];
+      var id, _i, _len;
       for (_i = 0, _len = ids.length; _i < _len; _i++) {
         id = ids[_i];
-        _results.push($('.' + select.annotation + id).addClass(select.hide));
+        $('.' + select.annotation + id).addClass(select.hide);
       }
-      return _results;
+      return $(document).trigger('annotation-filters-changed');
     };
 
     View.prototype.drawAnnotations = function() {
@@ -708,6 +710,7 @@
     View.prototype.scrollTo = function(annotation) {
       var highlight;
       if (!annotation) return;
+      $(document).trigger('annotation-filters-paged', annotation);
       highlight = $(annotation.highlights[0]);
       $("html, body").animate({
         scrollTop: highlight.offset().top - 500

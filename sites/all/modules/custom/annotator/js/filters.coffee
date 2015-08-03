@@ -91,7 +91,7 @@ class Annotator.Plugin.Filters extends Annotator.Plugin
     # add an ID to every annotation
     for annotation in annotations
       for highlight in annotation.highlights
-        $(highlight).first().attr('id', select.annotation + annotation.id)
+#        $(highlight).first().attr('id', select.annotation + annotation.id)
         $(highlight).addClass(select.annotation + annotation.id)
     if @scrollToID?
       @View.scrollTo(@Model.annotation(@scrollToID))
@@ -189,6 +189,8 @@ class Annotator.Plugin.Filters extends Annotator.Plugin
       when 'last'
         index = total
     @Model.set('index', index)
+    # So the page turner can show the correct page, if needed
+    $(document).trigger('annotation-filters-paged', @Model.annotation())
     # Update to reflect pager values change
     @View.drawPagerCount()
     # Scroll to the current annotation
@@ -236,7 +238,7 @@ class Model
               @addFilterValue(filter, annotation['user'].name)
             when 'tags'
               for tag in annotation.tags
-                @addFilterValue(filter, tag)
+                @addFilterValue(filter, tag) if tag?
             else
               @addFilterValue(filter, annotation[filter])
 
@@ -417,7 +419,6 @@ class Model
           @addToFilter(filter, value, annotation.id)
     @computeFilters()
 
-
 ### View methods ###
 class View
   setup: (Controller, Model) =>
@@ -482,6 +483,12 @@ class View
   drawAutocomplete: (id, values) ->
     html = "<div class='#{select.autocomplete.default}'><label class='#{select.autocomplete.label}' for='#{id}'>#{id}: </label><input name='#{id}' class='#{select.autocomplete.default} #{select.autocomplete.default}-#{id}' /></div>"
     @i.append(html)
+#    if id == 'tags' # we use a special autocompletion for tags
+#      $("input[name=#{id}]").catcomplete
+#      source: values
+#      select: (event, ui) =>
+#        @Controller.filterSelected(event, ui)
+#    else
     $("input[name=#{id}]").autocomplete
       source: values
       select: (event, ui) =>
@@ -531,10 +538,12 @@ class View
   showAnnotations: (ids) ->
     for id in ids
       $('.' + select.annotation + id).removeClass(select.hide)
+    $(document).trigger('annotation-filters-changed') # fire after DOM changed
 
   hideAnnotations: (ids) ->
     for id in ids
       $('.' + select.annotation + id).addClass(select.hide)
+    $(document).trigger('annotation-filters-changed') # fire after DOM changed
 
   drawAnnotations: () ->
     @showAnnotations(@Model.getShown())
@@ -562,6 +571,7 @@ class View
     # Jump to selected annotation
     # Load annotation viewer
     return if not annotation
+    $(document).trigger('annotation-filters-paged', annotation)
     highlight = $(annotation.highlights[0])
     $("html, body").animate({
       scrollTop: highlight.offset().top - 500

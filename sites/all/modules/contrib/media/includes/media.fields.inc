@@ -81,12 +81,6 @@ function media_field_widget_settings_form($field, $instance) {
  * Implements hook_field_widget_form().
  */
 function media_field_widget_form(&$form, &$form_state, $field, $instance, $langcode, $items, $delta, $element) {
-
-  // Add display_field setting to field because media_field_widget_form() assumes it is set.
-  if (!isset($field['settings']['display_field'])) {
-    $field['settings']['display_field'] = 0;
-  }
-
   $defaults = array(
     'fid' => 0,
     'display' => !empty($field['settings']['display_default']),
@@ -168,7 +162,7 @@ function media_field_widget_form(&$form, &$form_state, $field, $instance, $langc
     $elements['#description'] = $element['#description'];
     $elements['#field_name'] = $element['#field_name'];
     $elements['#language'] = $element['#language'];
-    $elements['#display_field'] = $field['settings']['display_field'];
+    $elements['#display_field'] = intval(!empty($field['settings']['display_field']));
 
     // Add some properties that will eventually be added to the media upload
     // field. These are added here so that they may be referenced easily through
@@ -189,7 +183,7 @@ function media_field_widget_value($element, $input = FALSE, $form_state) {
     // If the display field is present make sure its unchecked value is saved.
     $field = field_widget_field($element, $form_state);
     if (empty($input['display'])) {
-      $input['display'] = $field['settings']['display_field'] ? 0 : 1;
+      $input['display'] = intval(!empty($field['settings']['display_field']));
     }
   }
 

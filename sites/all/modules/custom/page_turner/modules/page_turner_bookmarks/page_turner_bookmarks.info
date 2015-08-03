@@ -8,3 +8,6 @@ files[] = page_turner_bookmarks.test
 
 dependencies[] = page_turner
 dependencies[] = flag
+
+stylesheets[all][] = css/page_turner_bookmarks.css
+

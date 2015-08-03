@@ -1,7 +1,7 @@
 ; Packaging information for lacunastories_base
 name = "Lacunastories Base"
 description = "Installation profile for basic lacunastories site."
-exclusive = "1"
+exclusive = TRUE
 core = "7.x"
 ; ----------
 ; Dependencies
@@ -12,7 +12,6 @@ dependencies[] = content_access
 dependencies[] = admin_menu
 dependencies[] = admin_menu_toolbar
 dependencies[] = fpa
-dependencies[] = front_page
 dependencies[] = module_filter
 ; Biblio
 dependencies[] = biblio
@@ -23,7 +22,6 @@ dependencies[] = context
 dependencies[] = context_ui
 ; Core
 dependencies[] = block
-dependencies[] = blog
 dependencies[] = color
 dependencies[] = comment
 dependencies[] = contact
@@ -90,7 +88,6 @@ dependencies[] = media_vimeo
 dependencies[] = media_wysiwyg
 dependencies[] = media_wysiwyg_view_mode
 dependencies[] = media_youtube
-dependencies[] = plupload
 ; Organic groups
 dependencies[] = og
 dependencies[] = og_access
@@ -99,8 +96,10 @@ dependencies[] = og_vocab
 ; Other
 dependencies[] = advanced_help
 dependencies[] = backup_migrate
+dependencies[] = chosen
 dependencies[] = entity
 dependencies[] = entity_token
+dependencies[] = file_entity
 dependencies[] = htmlpurifier
 dependencies[] = libraries
 dependencies[] = mediaelement
@@ -127,7 +126,6 @@ dependencies[] = wysiwyg
 ; Views
 dependencies[] = better_exposed_filters
 dependencies[] = views
-dependencies[] = views_autocomplete_filters
 dependencies[] = views_bulk_operations
 dependencies[] = views_ui
 ; Visualization
@@ -146,7 +144,9 @@ dependencies[] = workflowfield
 dependencies[] = popup_views_integration
 ; Features
 dependencies[] = features
+dependencies[] = diff
 dependencies[] = course
+dependencies[] = lacuna_stories_peer_groups
 dependencies[] = lacuna_stories_content_types
 dependencies[] = lacuna_stories_irb_form
 dependencies[] = lacuna_stories_media
@@ -154,6 +154,4 @@ dependencies[] = lacuna_stories_menus
 dependencies[] = lacuna_stories_permissions
 dependencies[] = lacuna_stories_rules
 dependencies[] = lacuna_stories_system
-dependencies[] = lacuna_stories_views
-dependencies[] = lacuna_stories_workflows
 

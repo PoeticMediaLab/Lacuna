@@ -43,6 +43,7 @@ function lacuna_stories_content_types_wysiwyg_default_profiles() {
           'HorizontalRule' => 1,
           'Paste' => 1,
           'SpecialChar' => 1,
+          'Format' => 1,
         ),
       ),
       'toolbarLocation' => 'top',
@@ -101,6 +102,7 @@ function lacuna_stories_content_types_wysiwyg_default_profiles() {
           'PasteFromWord' => 1,
           'RemoveFormat' => 1,
           'SpecialChar' => 1,
+          'Format' => 1,
           'Table' => 1,
         ),
         'drupal' => array(

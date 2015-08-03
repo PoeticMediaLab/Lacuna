@@ -27,9 +27,6 @@ class CategoriesAnnotatorPlugin extends AnnotatorPlugin {
     // In JS console, type: Drupal.settings.annotator_categories
     drupal_add_js(array('annotator_categories' => (array) $settings), 'setting');
 
-    // CSS file for Categories
-    drupal_add_css(drupal_get_path('module', 'annotator') . '/css/categories.css');
-
     // Create the categories plugin for Annotator
     drupal_add_js(drupal_get_path('module', 'annotator') . '/js/annotator_categories.js');
 

@@ -75,7 +75,7 @@ function hook_wysiwyg_plugin($editor, $version) {
             // Most plugins should define TRUE here.
             'load' => TRUE,
             // Boolean whether this plugin is a native plugin, i.e. shipped with
-            // the editor. Definition must be ommitted for plugins provided by
+            // the editor. Definition must be omitted for plugins provided by
             // other modules. TRUE means 'path' and 'filename' above are ignored
             // and the plugin is instead loaded from the editor's plugin folder.
             'internal' => TRUE,

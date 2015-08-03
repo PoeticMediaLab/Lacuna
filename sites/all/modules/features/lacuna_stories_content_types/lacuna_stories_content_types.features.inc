@@ -14,6 +14,9 @@ function lacuna_stories_content_types_ctools_plugin_api($module = NULL, $api = N
   if ($module == "field_group" && $api == "field_group") {
     return array("version" => "1");
   }
+  if ($module == "file_entity" && $api == "file_type") {
+    return array("version" => "1");
+  }
   if ($module == "strongarm" && $api == "strongarm") {
     return array("version" => "1");
   }
@@ -30,7 +33,7 @@ function lacuna_stories_content_types_flag_default_flags() {
     'title' => 'Curated Tags',
     'global' => 1,
     'types' => array(
-      0 => 'tags',
+      0 => 'annotation_tags',
     ),
     'flag_short' => 'Add to "Curated Tags" list',
     'flag_long' => '',
@@ -43,17 +46,18 @@ function lacuna_stories_content_types_flag_default_flags() {
     'weight' => 0,
     'show_in_links' => array(
       'full' => 'full',
+      'diff_standard' => 0,
       'token' => 0,
     ),
     'show_as_field' => 0,
     'show_on_form' => 0,
     'access_author' => '',
     'show_contextual_link' => 0,
-    'api_version' => 3,
     'module' => 'lacuna_stories_content_types',
     'locked' => array(
       0 => 'name',
     ),
+    'api_version' => 3,
   );
   return $flags;
 
@@ -104,14 +108,6 @@ function lacuna_stories_content_types_node_info() {
       'title_label' => t('Title'),
       'help' => '',
     ),
-    'course' => array(
-      'name' => t('Course'),
-      'base' => 'node_content',
-      'description' => t('A specific course, used to give a group of enrolled students access to materials.'),
-      'has_title' => '1',
-      'title_label' => t('Title'),
-      'help' => '',
-    ),
     'document' => array(
       'name' => t('Document'),
       'base' => 'node_content',
@@ -124,6 +120,14 @@ function lacuna_stories_content_types_node_info() {
       'name' => t('Basic page'),
       'base' => 'node_content',
       'description' => t('Use <em>basic pages</em> for your static content, such as an \'About us\' page.'),
+      'has_title' => '1',
+      'title_label' => t('Title'),
+      'help' => '',
+    ),
+    'response' => array(
+      'name' => t('Response'),
+      'base' => 'node_content',
+      'description' => '',
       'has_title' => '1',
       'title_label' => t('Title'),
       'help' => '',
