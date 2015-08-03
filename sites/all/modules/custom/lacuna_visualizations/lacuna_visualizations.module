@@ -605,39 +605,54 @@ function lacuna_visualizations_annotation_dashboard() {
   // return theme('graphapi_dispatch', array('graph' => null, 'config' => $settings));
 }
 
-// TODO: Improve performance - this function is really slow
+
+// an array map function to return the document id
+function get_doc_id($annotation) {
+	return $annotation->field_annotation_reference[$annotation->language][0]['target_id'];
+}
+
+function get_uid($annotation) {
+	return $annotation->uid;
+}
+
 function lacuna_visualizations_annotation_dashboard_data() {
   // Prepare the data for the dashboard, output as JSON
   global $user;
 
   // Query all annotations with no access checks
-  // $query = new EntityFieldQuery();
-  // $result = $query->entityCondition('entity_type', 'node')
-  //     ->entityCondition('bundle', 'annotation')
-  //     ->addTag('DANGEROUS_ACCESS_CHECK_OPT_OUT')
-  //     ->execute();
+	$course_id = course_get_selected_course();	// get current course ID
+	$query = new EntityFieldQuery();
+	$result = $query->entityCondition('entity_type', 'node')
+		->entityCondition('bundle', 'annotation')
+		->fieldCondition('og_group_ref', 'target_id', $course_id)
+		->addTag('DANGEROUS_ACCESS_CHECK_OPT_OUT')
+		->execute();
 
-  $result = db_query("SELECT nid FROM {node} WHERE type = :type", array(
-  ':type' => 'annotation'));
+//  $result = db_query("SELECT nid FROM {node} WHERE type = :type", array(
+//  ':type' => 'annotation'));
 
-  if ($result) {
+  if ($result['node']) {
     $all = array();
-    foreach ($result->fetchAll() as $row) {
+    foreach ($result['node'] as $row) {
       array_push($all, $row->nid);
     }
   }
 
-
   $canReadAll = user_access('access any private annotation');
-  $documentNames = array(); // to cut down on db queries
-  $userNames = array();   // same as previous - only load users once
+  $userNames = array();   // only load users once
   $annotations = array();
 
   // Fields need for db query:
   // created, uid, annotation_reference, text, quote, private, annotation_tags, category
   $allNodes = node_load_multiple($all);
 
-  foreach ($allNodes as $annotation) {
+	// Load all document and users at once to speed up query time
+	$documents = node_load_multiple(array_map("get_doc_id", $allNodes));
+	$users = user_load_multiple(array_map("get_uid", $allNodes));
+
+	$field_prefix = 'field_annotation_';	// to convert from Drupal field names to viz
+	// Convert from Drupal format to a simpler data format for viz
+	foreach ($allNodes as $annotation) {
     // Create a new data object, populate only with necessary data
     // Make it harder to leak unintended data
     $data = new StdClass();
@@ -646,43 +661,37 @@ function lacuna_visualizations_annotation_dashboard_data() {
     $data->updated = $annotation->changed * 1000;
     $data->u_id = $annotation->uid;
 
-    // For readability
-    $target_id = $annotation->field_annotation_reference[$annotation->language][0]['target_id'];
-    $data->doc_id = $target_id;
-    if (!array_key_exists($target_id, $documentNames)) {
-      $document = node_load($target_id);
-      // TODO: use Biblio reference short title instead
-      // TODO: check that something is returned
-      $documentNames[$target_id] = $document->title;
-    }
-    $data->documentTitle = $documentNames[$target_id];
+		$target_id = $annotation->field_annotation_reference[$annotation->language][0]['target_id'];
+		$data->doc_id = $target_id;
+		$data->documentTitle = $documents[$target_id]->title;
 
-    // Convert from Drupal format to a simpler data format for viz
-    // TODO: Refactor the next two loops into a single function
-    // Put function in a helper library for general use here and Annotation Store
-
-    $fields = array('text', 'quote', 'private');
+		// Text content
+    $fields = array('text', 'quote');
+		ddl($annotation);
     foreach ($fields as $field) {
-      if (isset($annotation->{$field}[$annotation->language][0]['value'])) {
-        $data->{$field} = $annotation->{$field}[$annotation->language][0]['value'];
+      if (isset($annotation->{$field_prefix . $field}[$annotation->language][0]['value'])) {
+        $data->{$field} = $annotation->{$field_prefix . $field}[$annotation->language][0]['value'];
       }
     }
-    $data->field_annotation_private ? $data->field_annotation_private = 'Private' : $data->field_annotation_private = 'Public';
-    // TODO: Refactor "annotation_tags" to be "tags" -- must wait until 1.0
-    // Not a good idea to change it for existing alpha or beta sites
-    $fields = array('field_annotation_tags', 'field_annotation_category');
+
+		// Sharing options; we just need the overall option (Private, Everyone, etc.), not details
+		$data->audience = ucfirst($annotation->field_annotation_audience[$annotation->language][0]['value']);
+
+		// Taxonomies: tags and categories
+    $fields = array('tags', 'category');
     foreach ($fields as $field) {
       $data->{$field} = array();
-      if (isset($annotation->{$field}[$annotation->language][0]['tid'])) {
-        foreach ($annotation->{$field}[$annotation->language] as $tag) {
+      if (isset($annotation->{$field_prefix . $field}[$annotation->language][0]['tid'])) {
+        foreach ($annotation->{$field_prefix . $field}[$annotation->language] as $tag) {
           $term = taxonomy_term_load($tag['tid']);
           array_push($data->{$field}, $term->name);
         }
       }
     }
     if ($data->category) {
-      $data->category = $data->category[0];
+      $data->category = $data->category[0];	// set default to first category
     }
+
     // Secure fields of private annotations, usernames, etc.
     $isPrivate = $annotation->field_annotation_private[$annotation->language][0]['value'];
     if (!$canReadAll && ($annotation->uid != $user->uid)) {
@@ -700,12 +709,13 @@ function lacuna_visualizations_annotation_dashboard_data() {
     }
     elseif ($canReadAll || $annotation->uid == $user->uid) {
       if (!array_key_exists($annotation->uid, $userNames)) {
-        $userNames[$annotation->uid] = format_username(user_load($annotation->uid));
+        $userNames[$annotation->uid] = format_username($users[$annotation->uid]);
       }
     }
     $data->username = $userNames[$annotation->uid];
     array_push($annotations, $data);
   }
+
   drupal_json_output($annotations);
   drupal_exit();
 }

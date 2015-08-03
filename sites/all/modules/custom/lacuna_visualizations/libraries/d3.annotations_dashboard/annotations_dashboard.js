@@ -79,12 +79,12 @@ var annotations;
 // All are added by pre-processing, not native to Annotator data structure
 // TODO: Add tags
 // var pie_types = ['category', 'text_length', 'private', 'annotation_tags'];
-var pie_types = ['category', 'text_length', 'private'];
+var pie_types = ['category', 'text_length', 'audience'];
 
-var pie_labels = {'category': 'Category', 'text_length': 'Length', 'private': 'Sharing', 'annotation_tags': 'Tags'};	// yeah, yeah; see? it's already ugly code
+var pie_labels = {'category': 'Category', 'text_length': 'Length', 'audience': 'Sharing', 'annotation_tags': 'Tags'};	// yeah, yeah; see? it's already ugly code
 var pie_current = pie_types[0]; // Set the current pie-type selection
 // Default values if attribute missing from annotation data
-var pie_defaults = {'category': 'Highlight', 'length': 'Zero', 'private': 'Private', 'annotation_tags': 'None'};
+var pie_defaults = {'category': 'Highlight', 'length': 'Zero', 'audience': 'Everyone', 'annotation_tags': 'None'};
 var pie_slices = {};
 pie_types.forEach(function(pie_type) {
 	pie_slices[pie_type] = Array();
@@ -465,7 +465,7 @@ function main(data) {
 
 	// "View Annotations" button clicked; update data table
 	// We only update when this button is clicked because it's too slow to update all the time
-	$('a.dashboard-button#view_annotations').click(update_annotations_table);
+	//$('a.dashboard-button#view_annotations').click(update_annotations_table);
 
 	$('a.dashboard-button#return_to_vis').click(function() {
 		// annotations_table.destroy();
@@ -953,40 +953,6 @@ function main(data) {
 	 * END: bar chart
 	 *
 	 *************/
-
-	 // Show all annotations in current selection
-	var annotations_table;
-	function update_annotations_table() {
-		if (typeof annotations_table === "object") {
-			annotations_table.destroy();
-		}
-		annotations_table = $('#annotations_table_draw').DataTable({
-	    	"processing": true,
-	    	"dom": 'T<"clear">lfrtip',
-	    	"tableTools": {
-            	"sSwfPath": "lib/js/DataTables/extras/TableTools/media/swf/copy_csv_xls_pdf.swf"
-        	},
-	        "data": annotations.current(),
-	        "order": [[7, "asc"]],
-	        "columns": [
-		        { "data": "username"},
-		        { "data": "category"},
-		        { "data": "documentTitle"},
-		        { "data": "text"},
-		        { "data": "quote"},
-		        { "data": "annotation_tags"},
-		        { "data": "private"},
-		        { "data": "created",
-		    	  "render": function (data, type, full, meta) {
-		    	  	var d = new Date(data);
-		    	  	return d.toDateString();
-		    	  }}
-	           ]
-	    });
-	    d3.select("#annotations_table_draw").style("visibility", "visible");
-	    d3.select("#annotations_table_draw_wrapper").style("visibility", "visible");
-	    d3.selectAll("a#return_to_vis").style("visibility", "visible");
-	}
 
 	function update_total() {
     	var total = $('a#view_annotations');
