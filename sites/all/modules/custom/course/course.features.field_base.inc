@@ -34,6 +34,31 @@ function course_field_default_field_bases() {
     'type' => 'text',
   );
 
+  // Exported field_base: 'field_course_image'
+  $field_bases['field_course_image'] = array(
+    'active' => 1,
+    'cardinality' => 1,
+    'deleted' => 0,
+    'entity_types' => array(),
+    'field_name' => 'field_course_image',
+    'field_permissions' => array(
+      'type' => 0,
+    ),
+    'indexes' => array(
+      'fid' => array(
+        0 => 'fid',
+      ),
+    ),
+    'locked' => 0,
+    'module' => 'image',
+    'settings' => array(
+      'default_image' => 0,
+      'uri_scheme' => 'public',
+    ),
+    'translatable' => 0,
+    'type' => 'image',
+  );
+
   // Exported field_base: 'field_course_password'
   $field_bases['field_course_password'] = array(
     'active' => 1,
@@ -58,6 +83,36 @@ function course_field_default_field_bases() {
     'type' => 'text',
   );
 
+  // Exported field_base: 'field_course_term'
+  $field_bases['field_course_term'] = array(
+    'active' => 1,
+    'cardinality' => -1,
+    'deleted' => 0,
+    'entity_types' => array(),
+    'field_name' => 'field_course_term',
+    'field_permissions' => array(
+      'type' => 0,
+    ),
+    'indexes' => array(
+      'value' => array(
+        0 => 'value',
+      ),
+    ),
+    'locked' => 0,
+    'module' => 'list',
+    'settings' => array(
+      'allowed_values' => array(
+        'Fall' => 'Fall',
+        'Winter' => 'Winter',
+        'Spring' => 'Spring',
+        'Summer' => 'Summer',
+      ),
+      'allowed_values_function' => '',
+    ),
+    'translatable' => 0,
+    'type' => 'list_text',
+  );
+
   // Exported field_base: 'field_course_title'
   $field_bases['field_course_title'] = array(
     'active' => 1,
@@ -80,6 +135,35 @@ function course_field_default_field_bases() {
     ),
     'translatable' => 0,
     'type' => 'text',
+  );
+
+  // Exported field_base: 'field_course_year'
+  $field_bases['field_course_year'] = array(
+    'active' => 1,
+    'cardinality' => 1,
+    'deleted' => 0,
+    'entity_types' => array(),
+    'field_name' => 'field_course_year',
+    'field_permissions' => array(
+      'type' => 0,
+    ),
+    'indexes' => array(
+      'value' => array(
+        0 => 'value',
+      ),
+    ),
+    'locked' => 0,
+    'module' => 'list',
+    'settings' => array(
+      'allowed_values' => array(
+        '2015-2016' => '2015-2016',
+        '2016-2017' => '2016-2017',
+        '2017-2018' => '2017-2018',
+      ),
+      'allowed_values_function' => '',
+    ),
+    'translatable' => 0,
+    'type' => 'list_text',
   );
 
   // Exported field_base: 'field_department'

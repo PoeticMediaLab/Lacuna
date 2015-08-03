@@ -1740,6 +1740,8 @@ function flag_get_entity_flag_counts($flag, $entity_type) {
  * This is because this queries the {flagging} table, which only has its record
  * deleted at the very end of the unflagging process.
  *
+ * However, it should be noted that this method does not serves global flags.
+ *
  * @param $flag
  *   The flag.
  * @param $user
@@ -2555,6 +2557,21 @@ function flag_features_api() {
 function flag_ctools_plugin_directory($module, $plugin) {
   if ($module == 'ctools' && !empty($plugin)) {
     return "plugins/$plugin";
+  }
+}
+
+/**
+ * Implements hook_field_attach_rename_bundle().
+ */
+function flag_field_attach_rename_bundle($entity_type, $bundle_old, $bundle_new) {
+  $flags = flag_get_flags($entity_type);
+  foreach ($flags as $flag) {
+    foreach ($flag->types as $key => $type) {
+      if ($type == $bundle_old) {
+        $flag->types[$key] = $bundle_new;
+      }
+    }
+    $flag->save();
   }
 }
 

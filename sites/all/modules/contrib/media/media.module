@@ -585,6 +585,11 @@ function media_parse_to_uri($url) {
   $url = trim($url);
   foreach (module_implements('media_parse') as $module) {
     $success = module_invoke($module, 'media_parse', $url);
+    $context = array(
+      'url' => $url,
+      'module' => $module,
+    );
+    drupal_alter('media_parse', $success, $context);
     if (isset($success)) {
       return $success;
     }

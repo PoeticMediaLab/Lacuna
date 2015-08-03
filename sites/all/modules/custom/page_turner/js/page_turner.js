@@ -51,25 +51,25 @@ function PTModel(content, settings) {
         // Divide total content length by page length
         // And look for page break elements
         // Return array of page chunks
-        var page = []; // holds all elements in a page
-        var t_len = 0;  // text length
-        var pages = [];
-        var break_pages = [];
+        var page = [], // holds all elements in a page
+            t_len = 0,  // text length
+            pages = [],
+            break_pages = [];
 
         // Get to the real content
-        while (content.childElementCount == 1) {
+        while (content.childElementCount === 1) {
           content = content.childNodes[0];
         }
         content = content.children;
 
         // Check that the current item is not a break point
         // and that adding it wouldn't go over the text limit
-        var all_breaks = Array.prototype.slice.call(document.querySelectorAll(settings.breaks));
-        var l = content.length;
-        var i;
+        var all_breaks = Array.prototype.slice.call(document.querySelectorAll(settings.breaks)),
+            l = content.length,
+            i;
         for (i = 0; i < l; i++) {
-            var is_break = all_breaks.indexOf(content[i]) != -1;
-            var new_len = t_len + content[i].textContent.length;
+            var is_break = all_breaks.indexOf(content[i]) != -1,
+                new_len = t_len + content[i].textContent.length;
             if (is_break) {
                 if (t_len === 0) {
                     // Start of new page
@@ -91,6 +91,9 @@ function PTModel(content, settings) {
                 // Start a new page
                 pages.push(page);
                 t_len = content[i].textContent.length;
+                page = Array(content[i]);
+            }
+            else {
                 page = Array(content[i]);
             }
         }
@@ -241,7 +244,7 @@ function PTView(model, elements) {
     self.brush = {};
     self.pages = {};  // current page(s)
 
-    self.offset = 10;    // for a y-axis offset
+    self.offset = 0;    // for a y-axis offset
     draw_navbar();
     draw_navbar_ticks();
     draw_page_x_of_y();
@@ -265,7 +268,7 @@ function PTView(model, elements) {
             .classed(self.elements.pager.prev.classes.join(' '), true)
             .style("padding-top", self.offset + "px");;
 
-        self.svg = d3.select('#' + self.elements.navbar).append("svg");
+        self.svg = d3.select('#' + self.elements.navbar).append("svg:svg");
         self.navbar_svg = self.svg
             .attr("id", self.elements.navbar_parent)
             .attr("width", "90%") // Note: affects width calculations
@@ -324,10 +327,11 @@ function PTView(model, elements) {
         // Add page numbers at the bottom of every page
         var i, l;
         for (i = 0, l = self.model.page_total(); i < l; i++) {
-          var selection = d3.selectAll(self.model.get_page(i));
-          // selectAll returns an array of arrays
-          // but we'll only get one result for each page, cuz they're unique
-          d3.select(selection[0][selection[0].length - 1]).append('div').classed(self.elements.page_num, true).text(i + 1);
+            var selection = d3.selectAll(self.model.get_page(i));
+            // selectAll returns an array of arrays
+            // but we'll only get one result for each page, cuz they're unique
+            div = d3.select(selection[0][selection[0].length - 1]).append('div').classed(self.elements.page_num, true).text(i + 1);
+            div[0][0].dataset.pageNumber = i + 1; // add as data value
         }
     }
 

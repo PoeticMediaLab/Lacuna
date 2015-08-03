@@ -1,0 +1,11 @@
+name = Session Cache API
+description = A super simple API that avoids $_SESSION to offer caching engine friendly ways to save and recall user state.
+configure = admin/config/development/session_cache
+core = 7.x
+
+; Information added by Drupal.org packaging script on 2014-03-14
+version = "7.x-1.3"
+core = "7.x"
+project = "session_cache"
+datestamp = "1394773116"
+
