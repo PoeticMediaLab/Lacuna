@@ -159,6 +159,9 @@ class Annotator.Plugin.Touch.Editor extends Annotator.Delegator
     event.preventDefault()
     @editor.submit()
 
+    # to prevent keyboard from staying up
+    document.activeElement.blur()
+
   # Event handler for the cancel button in the editor.
   #
   # event - A jQuery.Event tap event object.
@@ -167,6 +170,9 @@ class Annotator.Plugin.Touch.Editor extends Annotator.Delegator
   _onCancel: (event) =>
     event.preventDefault()
     @editor.hide()
+
+    # to prevent keyboard from staying up
+    document.activeElement.blur()
 
   # Event handler for the overlay.
   #

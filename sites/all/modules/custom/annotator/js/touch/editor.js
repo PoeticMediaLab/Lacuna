@@ -141,12 +141,14 @@ Annotator.Plugin.Touch.Editor = (function(superClass) {
 
   Editor.prototype._onSubmit = function(event) {
     event.preventDefault();
-    return this.editor.submit();
+    this.editor.submit();
+    return document.activeElement.blur();
   };
 
   Editor.prototype._onCancel = function(event) {
     event.preventDefault();
-    return this.editor.hide();
+    this.editor.hide();
+    return document.activeElement.blur();
   };
 
   Editor.prototype._onOverlayTap = function(event) {};
