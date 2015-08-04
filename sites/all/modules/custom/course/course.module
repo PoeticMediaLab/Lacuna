@@ -69,8 +69,8 @@ function course_menu() {
 		'type' => MENU_CALLBACK,
 		'file' => 'course.pages.inc',
  	);
-	$items['ajax/remove-term/%/%'] = array(
-		'page callback' => 'course_ajax_remove_term',
+	$items['ajax/delete-term/%/%'] = array(
+		'page callback' => 'course_ajax_delete_term',
 		'page arguments' => array(2,3),
 		'access callback' => 'course_access',
 		'type' => MENU_CALLBACK,

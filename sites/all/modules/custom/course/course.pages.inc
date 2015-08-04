@@ -91,34 +91,39 @@ function course_set_up_materials_form($form, &$form_state, $nid) {
   }
   asort($units);
 
-  $form['course_nid'] = array(
-    '#type' => 'hidden',
-    '#value' => $nid
-  );
-  $form['number_of_weeks'] = array(
-    '#type' => 'select',
-    '#title' => 'Assign Materials to Individual Weeks',
-    '#options' => drupal_map_assoc(range(1,25)),
-    '#description' => "How many individual class weeks are there in your course?",
-    '#default_value' => $number_of_weeks,
-    '#required' => TRUE
-  );
+	// TODO: Remove hidden course gid
+//  $form['course_nid'] = array(
+//    '#type' => 'hidden',
+//    '#value' => $nid
+//  );
+//  $form['number_of_weeks'] = array(
+//    '#type' => 'select',
+//    '#title' => 'Weeks in course',
+//    '#options' => drupal_map_assoc(range(1,25)),
+//    '#description' => "How many individual class weeks are there in your course?",
+//    '#default_value' => $number_of_weeks,
+//    '#required' => TRUE
+//  );
   $form['units_themes'] = array(
     '#type' => 'fieldset',
-    '#title' => 'Assign Materials to Units/Themes',
+    '#title' => 'Create units by which you course will be organized.',
   );
   $require_units = (count($units))? FALSE: TRUE; // only require if there are no existing terms
   $form['units_themes']['term'] = array(
     '#type' => 'textfield',
-    '#description' => "Add as individual units or themes to your course.",
+    '#description' => "Add units to organize your course (e.g., 'Week One', 'Travel')",
     '#size' => 60,
     '#required' => $require_units,
   );
   $form['units_themes']['ajax_button'] = array(
-    '#markup' => "<button class='form-submit' id='ajax-units'>Add Unit/Theme</button>",
-    '#suffix' => "<div class='terms'>" . implode('', $units) . "</div>",
+    '#markup' => "<button class='form-submit' id='ajax-term' value='units'>Add Unit</button>",
+    '#suffix' => "<div class='terms' id='terms-units'>" . implode('', $units) . "</div>",
   );
 
+	$form['genre_doc'] = array(
+		'#type' => 'fieldset',
+		'#title' => 'Create genres to categorize materials.',
+	);
 	$require_genre = (count($genre)) ? FALSE: TRUE;
 	$form['genre_doc']['term'] = array(
 		'#type' => 'textfield',
@@ -127,8 +132,8 @@ function course_set_up_materials_form($form, &$form_state, $nid) {
 		'#required' => $require_genre,
 	);
 	$form['genre_doc']['ajax_button'] = array(
-		'#markup' => "<button class='form-submit' id='ajax-genre'>Add Genres</button>",
-		'#suffix' => "<div class='terms'>" . implode('', $genre_doc) . "</div>",
+		'#markup' => "<button class='form-submit' id='ajax-term' value='genre_doc'>Add Genre</button>",
+		'#suffix' => "<div class='terms' id='terms-genre_doc'>" . implode('', $genre_doc) . "</div>",
 	);
 
   $path = drupal_get_path('module', 'course');
@@ -161,57 +166,72 @@ function course_set_up_materials_form_submit($form, &$form_state) {
     }
   }
   for ($i=1; $i <= $max; $i++) {
-    course_create_taxo($vocab, $i, $i);
+    course_create_taxonomy_term($vocab, $i, $i);
   }
 
   # unit/theme tags
   $vocab = taxonomy_vocabulary_machine_name_load("units_$nid");
   foreach(explode(',', $form_state['values']['term']) as $unit) {
-    course_create_taxo($vocab, $unit);
+    course_create_taxonomy_term($vocab, $unit);
   }
   drupal_goto("createcourse-4/$nid");
 }
 
-function course_ajax_add_term($vocab) {
-
+/*
+ * Routines for per-course taxonomies
+ */
+function course_create_taxonomy_term($vocab, $tag, $weight = 0) {
+	// check for existing term
+	$tag = trim($tag);
+	if (0 == count(taxonomy_get_term_by_name($tag, $vocab->machine_name)) && !empty($tag)) {
+		$term = new stdClass();
+		$term->name = $tag;
+		$term->vid = $vocab->vid;
+		$term->weight = $weight;
+		taxonomy_term_save($term);
+	}
 }
 
-function course_ajax_remove_term($vocab) {
-
+function course_ajax_add_term($vocab_name) {
+	$term = check_plain($_POST['terms']);
+	$gid = course_get_selected_course();
+	$vocab = taxonomy_vocabulary_machine_name_load($vocab_name . '_' . $gid);
+	foreach(explode(',', $terms) as $term) {
+		course_create_taxonomy_term($vocab, $term);
+	}
+	ajax_deliver();
 }
 
-function course_ajax_add_unit_term() {
-  $term = check_plain($_POST['term']);
-  $nid = check_plain($_POST['nid']);
-  $vocab = taxonomy_vocabulary_machine_name_load("units_$nid");
-  foreach(explode(',', $term) as $unit) {
-    course_create_taxo($vocab, $unit);
-  }
-  ajax_deliver();
+function course_ajax_delete_term($vocab_name, $term) {
+	$gid = course_get_selected_course();
+	$vocab = taxonomy_vocabulary_machine_name_load($vocab_name . '_' . $gid);
+	$term = array_pop(taxonomy_get_term_by_name($term, $vocab_name . '_' . $gid));
+	if ($term) {
+		taxonomy_term_delete($term->tid);
+	}
+	ajax_deliver();
 }
 
-
-function course_ajax_delete_unit_term($nid, $term) {
-  $term = check_plain($term);
-  $nid = check_plain($nid);
-  $term = array_pop(taxonomy_get_term_by_name($term, "units_$nid"));
-  if ($term) {
-    taxonomy_term_delete($term->tid);
-  }
-  ajax_deliver();
-}
-
-function course_create_taxo($vocab, $tag, $weight = 0) {
-  // check for existing term
-  $tag = trim($tag);
-  if (0 == count(taxonomy_get_term_by_name($tag, $vocab->machine_name)) && !empty($tag)) {
-    $term = new stdClass();
-    $term->name = $tag;
-    $term->vid = $vocab->vid;
-    $term->weight = $weight;
-    taxonomy_term_save($term);
-  }
-}
+//function course_ajax_add_unit_term() {
+//  $term = check_plain($_POST['term']);
+//  $nid = check_plain($_POST['nid']);
+//  $vocab = taxonomy_vocabulary_machine_name_load("units_$nid");
+//  foreach(explode(',', $term) as $unit) {
+//    course_create_taxonomy_term($vocab, $unit);
+//  }
+//  ajax_deliver();
+//}
+//
+//
+//function course_ajax_delete_unit_term($nid, $term) {
+//  $term = check_plain($term);
+//  $nid = check_plain($nid);
+//  $term = array_pop(taxonomy_get_term_by_name($term, "units_$nid"));
+//  if ($term) {
+//    taxonomy_term_delete($term->tid);
+//  }
+//  ajax_deliver();
+//}
 
 /**
  * Get the largest term for a numerical vocabulary

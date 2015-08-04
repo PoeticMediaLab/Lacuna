@@ -9,9 +9,10 @@
       $(".term").each(function() {
         terms.push($(this).text().trim());
       });
-      $('#ajax-units').click(function() {
+      $('#ajax-term').click(function() {
+        vocab =
         if (new_term = $('#edit-term').val().trim()) {
-          $.post(settings['basePath'] + "/ajax/add-unit-term", {term: new_term, nid: $("[name=course_nid]").val()});
+          $.post(settings['basePath'] + "/ajax/add-term" + vocab, { term: new_term });
           new_terms = new_term.split(',')
           for (i=0; i < new_terms.length; i++) {
             if (terms.indexOf(new_terms[i].trim()) == -1) {
@@ -27,7 +28,7 @@
         term = $(this).siblings(".name").text();
         nid = $("[name=course_nid]").val();
         $.ajax({
-          url: settings['bathPath'] + '/ajax/delete-unit-term/' + nid + '/' + term,
+          url: settings['bathPath'] + '/ajax/delete-term/' + nid + '/' + term,
           method: 'DELETE',
           done: function(result) {
             i = terms.indexOf(term);
