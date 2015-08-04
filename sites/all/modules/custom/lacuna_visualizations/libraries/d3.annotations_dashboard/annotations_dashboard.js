@@ -970,8 +970,12 @@ function main(data) {
         // get unique uids
         users = current.map(function (value, index) { return value['username']})
             .filter(function (value, index, self) { return self.indexOf(value) === index;});
-        href += 'field_annotation_reference_target_id[]=' + doc_ids.join(',');
-        href += '&edit-author-select=' + users.join(',');
+        if (doc_ids.length) {
+            href += 'field_annotation_reference_target_id[]=' + doc_ids.join(',') + '&';
+        }
+        if (users.length) {
+            href += 'edit-author-select=' + users.join(',');
+        }
         sewing_kit.attr('href', href)
 	}
 
