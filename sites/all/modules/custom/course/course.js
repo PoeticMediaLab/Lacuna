@@ -11,7 +11,7 @@
       });
       $('#ajax-units').click(function() {
         if (new_term = $('#edit-term').val().trim()) {
-          $.post("/ajax/add-unit-term", {term: new_term, nid: $("[name=course_nid]").val()});
+          $.post(settings['basePath'] + "/ajax/add-unit-term", {term: new_term, nid: $("[name=course_nid]").val()});
           new_terms = new_term.split(',')
           for (i=0; i < new_terms.length; i++) {
             if (terms.indexOf(new_terms[i].trim()) == -1) {
@@ -26,9 +26,8 @@
       $('.terms .fa-minus').click(function() {
         term = $(this).siblings(".name").text();
         nid = $("[name=course_nid]").val();
-        console.log('/ajax/delete-unit-term/' + nid + '/' + term);
         $.ajax({
-          url: '/ajax/delete-unit-term/' + nid + '/' + term,
+          url: settings['bathPath'] + '/ajax/delete-unit-term/' + nid + '/' + term,
           method: 'DELETE',
           done: function(result) {
             i = terms.indexOf(term);

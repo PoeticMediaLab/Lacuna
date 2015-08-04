@@ -211,11 +211,13 @@ function course_numerical_vocab_term_max($vocab_machine_name) {
 }
 
 function course_add_material($nid) {
+  global $base_url;
+
   $output = "<p>Please find your materials using the methods below, in the order they are assigned. You, as the instructor, are responsible for determining if the online or e-access materials you are assigning your students are available at your home institution. If they are, your students will likely not have to pay for these materials. Otherwise, they will be charged. This is a cumbersome part of digital course setup, but an important one. It also allows the Lacuna Stories team to most efficiently assist you securing materials not available from your institutions digital resources. If you have any questions at any time, please send a quick email to info@lacunastories.com and someone from our team will assist you.</p><br /><div class='add-materials'>";
 
-  $output .= "<div id='archived-materials'><div>Add Lacuna Stories Archived Materials. These materials may be free or available for a fee for your students. In either case, these are already digitized and using these materials will save you or the Lacuna Stories team time.</div><button class='form-submit'><a href='/archived-materials'>Search Lacuna Stories</a></button></div>";
+  $output .= "<div id='archived-materials'><div>Add Lacuna Stories Archived Materials. These materials may be free or available for a fee for your students. In either case, these are already digitized and using these materials will save you or the Lacuna Stories team time.</div><button class='form-submit'><a href='" . $base_url . "/archived-materials'>Search Lacuna Stories</a></button></div>";
 
-  $output .= "<div id='e-access'><div>Add E-Access Material from my Institution. If your students have digital access to materials through your institution’s library, they may have free access to those same materials on Lacuna Stories. Save your students money!</div><button class='form-submit'>Confrim E-Access Material</button></div>";
+  $output .= "<div id='e-access'><div>Add E-Access Material from my Institution. If your students have digital access to materials through your institution’s library, they may have free access to those same materials on Lacuna Stories. Save your students money!</div><button class='form-submit'>Confirm E-Access Material</button></div>";
 
   $output .= "<div id='studynet'><div>Request Copyright Permission. The Lacuna Stories team, in partnership with Study.Net, will obtain permission, directly from the publisher or an intermediary service, to use the material you identify.</div><button class='form-submit'>Request Copyright Permission</button></div></div>";
 
