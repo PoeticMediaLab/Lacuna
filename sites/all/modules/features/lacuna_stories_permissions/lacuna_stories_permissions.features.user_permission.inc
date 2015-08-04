@@ -420,6 +420,7 @@ function lacuna_stories_permissions_user_default_permissions() {
   $permissions['administer group'] = array(
     'name' => 'administer group',
     'roles' => array(
+      'Content Manager' => 'Content Manager',
       'Site Administrator' => 'Site Administrator',
     ),
     'module' => 'og',
@@ -887,12 +888,7 @@ function lacuna_stories_permissions_user_default_permissions() {
   // Exported permission: 'create files'.
   $permissions['create files'] = array(
     'name' => 'create files',
-    'roles' => array(
-      'Content Manager' => 'Content Manager',
-      'Instructor' => 'Instructor',
-      'Site Administrator' => 'Site Administrator',
-      'administrator' => 'administrator',
-    ),
+    'roles' => array(),
     'module' => 'file_entity',
   );
 
@@ -2735,9 +2731,7 @@ function lacuna_stories_permissions_user_default_permissions() {
   // Exported permission: 'view own files'.
   $permissions['view own files'] = array(
     'name' => 'view own files',
-    'roles' => array(
-      'authenticated user' => 'authenticated user',
-    ),
+    'roles' => array(),
     'module' => 'file_entity',
   );
 
@@ -2757,9 +2751,7 @@ function lacuna_stories_permissions_user_default_permissions() {
   // Exported permission: 'view own private files'.
   $permissions['view own private files'] = array(
     'name' => 'view own private files',
-    'roles' => array(
-      'authenticated user' => 'authenticated user',
-    ),
+    'roles' => array(),
     'module' => 'file_entity',
   );
 
@@ -2785,10 +2777,7 @@ function lacuna_stories_permissions_user_default_permissions() {
   // Exported permission: 'view private files'.
   $permissions['view private files'] = array(
     'name' => 'view private files',
-    'roles' => array(
-      'Site Administrator' => 'Site Administrator',
-      'administrator' => 'administrator',
-    ),
+    'roles' => array(),
     'module' => 'file_entity',
   );
 
