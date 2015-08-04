@@ -20,7 +20,7 @@ fieldset#edit-units-themes { margin-bottom: 30px; }
 .page-createcourse-4 .form-submit,
 .node-document-form .form-submit {
   margin-top: 10px;
-  width: 230px;
+  width: 230px !important;
 }
 .page-createcourse-4 button a { color: #FFF !important; }
 .view-archived-materials .views-row-odd { background-color: #F0F0F0; }
@@ -45,9 +45,10 @@ fieldset#edit-units-themes { margin-bottom: 30px; }
   color: #FFF;
   border-radius: 3px;
   text-align: center;
+  margin-top: 50px; /* temp hack b/c #navigation absolute positioning is messing this up. figure out long-term workaround once navigation is set or removed */
 }
-.course-finish-adding-material p {
-  padding: 5px 0;
+.course-finish-adding-material div {
+  line-height: 35px;
 }
 .form-item-weeks .chosen-container, 
 .form-item-units .chosen-container {

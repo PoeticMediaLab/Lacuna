@@ -454,7 +454,6 @@ function course_form_biblio_node_form_alter(&$form, &$form_state, $form_id) {
   $form['actions']['submit']['#submit'][] = 'course_add_material_form_submit';
   $form['actions']['submit']['#value'] = 'Save Bibliographic Information';
   $form['additional_settings']['#access'] = FALSE;
-  $form['body'][LANGUAGE_NONE][0]['format']['#access'] = FALSE;
 
   unset($form['actions']['preview']);
   $path = drupal_get_path('module', 'course');
@@ -661,7 +660,7 @@ function course_finish_material_block_content() {
     $docs = explode(',', $docs);
     foreach($docs as $doc) {
       $url = l("node/$doc/edit","node/$doc/edit");
-      $content .= "<p>Please finish adding this Course Material, $url</p>";
+      $content .= "<div>Please finish adding this Course Material, $url</div>";
     }
   }
   return "<div class='course-finish-adding-material'>" . $content . "</div>";
@@ -669,19 +668,30 @@ function course_finish_material_block_content() {
 
 function course_pop_unfinished_doc_queue($nid) {
   global $user;
+  $cookie_queue = &drupal_static('course_doc_queue');
   $key = "Course_Clone_Material_Docs_" . $user->uid;
-  $docs = $_COOKIE['Drupal_visitor_' . $key];
-  $docs = explode(',', $docs);
-  $docs = array_diff($docs, $nid);
-  user_cookie_save(array($key => implode(',', $docs)));
+  if (!isset($cookie_queue)) {
+    $cookie_queue = $_COOKIE['Drupal_visitor_' . $key];
+  }
+  $docs = explode(',', $cookie_queue);
+  $docs = array_diff($docs, array($nid));
+  $cookie_queue = implode(',', $docs);
+  user_cookie_save(array($key => $cookie_queue));
 }
 
 function course_push_unfinished_doc_queue($nid) {
   global $user;
+  $cookie_queue = &drupal_static('course_doc_queue');
+
   $key = "Course_Clone_Material_Docs_" . $user->uid;
-  $docs = $_COOKIE['Drupal_visitor_' . $key];
-  $docs = explode(',', $docs);
+  if (!isset($cookie_queue)) {
+    $cookie_queue = $_COOKIE['Drupal_visitor_' . $key];
+  }
+  if (!empty($cookie_queue)) {
+    $docs = explode(',', $cookie_queue);
+  }
   $docs[] = $nid;
-  array_unique($docs);
-  user_cookie_save(array($key => implode(',', $docs)));
+  $docs = array_unique($docs);
+  $cookie_queue = implode(',', $docs);
+  user_cookie_save(array($key => $cookie_queue));
 }
