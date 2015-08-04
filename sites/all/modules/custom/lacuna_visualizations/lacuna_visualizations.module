@@ -619,19 +619,23 @@ function lacuna_visualizations_annotation_dashboard_data() {
   // Prepare the data for the dashboard, output as JSON
   global $user;
 
-  // Query all annotations with no access checks
 	$course_id = course_get_selected_course();	// get current course ID
+	$query = new EntityFieldQuery();
+	// Get ids of all annotatable content for current course
+	$target_ids = $query->entityCondition('entity_type', 'node')
+		->entityCondition('bundle', array('document', 'response'), 'IN')
+		->fieldCondition('og_group_ref', 'target_id', $course_id)
+		->execute();
+
+	// Get all annotations that are on a document or response in the current course
 	$query = new EntityFieldQuery();
 	$result = $query->entityCondition('entity_type', 'node')
 		->entityCondition('bundle', 'annotation')
-		->fieldCondition('og_group_ref', 'target_id', $course_id)
+		->fieldCondition('field_annotation_reference', 'target_id', array_keys($target_ids['node']), 'IN')
 		->addTag('DANGEROUS_ACCESS_CHECK_OPT_OUT')
 		->execute();
-
-//  $result = db_query("SELECT nid FROM {node} WHERE type = :type", array(
-//  ':type' => 'annotation'));
-
-  if ($result['node']) {
+	
+  if (isset($result['node'])) {
     $all = array();
     foreach ($result['node'] as $row) {
       array_push($all, $row->nid);
@@ -667,7 +671,6 @@ function lacuna_visualizations_annotation_dashboard_data() {
 
 		// Text content
     $fields = array('text', 'quote');
-		ddl($annotation);
     foreach ($fields as $field) {
       if (isset($annotation->{$field_prefix . $field}[$annotation->language][0]['value'])) {
         $data->{$field} = $annotation->{$field_prefix . $field}[$annotation->language][0]['value'];
