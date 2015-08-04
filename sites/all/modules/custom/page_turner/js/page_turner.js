@@ -95,6 +95,7 @@ function PTModel(content, settings) {
             }
             else {
                 page = Array(content[i]);
+                t_len = content[i].textContent.length;
             }
         }
         pages.push(page); // whatever's left over
