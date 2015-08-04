@@ -262,20 +262,57 @@ function course_views_pre_build(&$view) {
   }
 }
 
+function course_get_taxonomy_for_current_course($taxonomy_name) {
+	$gid = course_get_selected_course();
+	// Filter units specific to the current course
+	$taxonomy = array();
+	// Convention for per-course taxonomies: name_gid
+	$vocab = taxonomy_vocabulary_machine_name_load($taxonomy_name . '_' . $gid);
+	$tree = taxonomy_get_tree($vocab->vid);
+	foreach($tree as $term) {
+		$taxonomy[$term->tid] = $term->name;
+	}
+	return $taxonomy;
+}
+
+/*
+ * Get a list of relevant authors for exposed filter
+ */
+function course_get_authors_for_current_course() {
+	$authors = array();
+	$gid = course_get_selected_course();
+	$query = new EntityFieldQuery();
+	$doc_result = $query->entityCondition('entity_type', 'node')
+		->entityCondition('bundle', 'document')
+		->fieldCondition('og_group_ref', 'target_id', $gid)
+		->execute();
+	if (isset($doc_result['node'])) {
+		$docs = node_load_multiple(array_keys($doc_result['node']));
+		$biblios = array();
+		foreach($docs as $doc) {
+			$wrapper = entity_metadata_wrapper('node', $doc);
+			array_push($biblios, $wrapper->field_bibliographic_entry->value());
+		}
+		foreach ($biblios as $biblio) {
+			foreach ($biblio->biblio_contributors as $author) {
+					$authors[$author['lastname']] = $author['name'];
+			}
+		}
+	}
+	return $authors;
+}
 
 /**
  * Implements hook_form_FORM_ID_alter().
  */
 function course_form_views_exposed_form_alter(&$form, &$form_state) {
   if ('views-exposed-form-documents-materials' == $form['#id']) {
-    $gid = course_get_selected_course();
-    $vocab = taxonomy_vocabulary_machine_name_load("units_$gid");
-    $tree = taxonomy_get_tree($vocab->vid);
-    foreach($tree as $term) {
-      $units[$term->tid] = $term->name;
-    }
-    $form['field_unit_tid']['#options'] = $units;
-  }
+    // Set exposed filter 'Limit by Unit' for current course
+    $form['field_unit_tid']['#options'] = course_get_taxonomy_for_current_course('units');
+		$form['field_genre_doc_tid']['#options'] = course_get_taxonomy_for_current_course('genre_doc');
+//		dpm($form);
+		$form['lastname']['#options'] = course_get_authors_for_current_course();
+	}
 
   if ($form['#id'] == 'views-exposed-form-sewing-kit-page') {
 
@@ -505,7 +542,7 @@ function course_create_form_submit($form, &$form_state) {
 
 function course_add_material_form_submit($form, &$form_state) {
   $gid = course_get_selected_course();
-  # have to save in a cookie b/c biblio module form refreshes the page on type selection and borks with initial form render
+  // have to save in a cookie b/c biblio module form refreshes the page on type selection and borks with initial form render
   $copyright = check_plain($_COOKIE['course-material-type-' . $gid]);
 
   $biblio = new stdClass();
@@ -514,7 +551,7 @@ function course_add_material_form_submit($form, &$form_state) {
     $biblio->$k = $v;
   }
   node_object_prepare($biblio);
-  $biblio->status = 1; # make all biblios published
+  $biblio->status = 1; // make all biblios published
   node_save($biblio);
 
   $document = new stdClass();
@@ -527,7 +564,7 @@ function course_add_material_form_submit($form, &$form_state) {
   node_object_prepare($document);
   $document->og_group_ref[LANGUAGE_NONE][0]['target_id'] = $gid;
   $document->field_bibliographic_entry[LANGUAGE_NONE][0]['target_id'] = $biblio->nid;
-  $document->status = 1; # make all documents published
+  $document->status = 1; // make all documents published
   $taxo = array_pop(taxonomy_get_term_by_name($copyright));
   if ($taxo) {
     $document->field_copyright[LANGUAGE_NONE][0]['tid'] = $taxo->tid;

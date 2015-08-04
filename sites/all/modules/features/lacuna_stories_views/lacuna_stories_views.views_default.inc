@@ -1237,17 +1237,18 @@ function lacuna_stories_views_views_default_views() {
   $handler->display->display_options['filters']['field_medium_tid']['vocabulary'] = 'medium';
   $handler->display->display_options['filters']['field_medium_tid']['hierarchy'] = 1;
   $handler->display->display_options['filters']['field_medium_tid']['error_message'] = FALSE;
-  /* Filter criterion: Content: Author (select list) */
-  $handler->display->display_options['filters']['author_select']['id'] = 'author_select';
-  $handler->display->display_options['filters']['author_select']['table'] = 'node';
-  $handler->display->display_options['filters']['author_select']['field'] = 'author_select';
-  $handler->display->display_options['filters']['author_select']['exposed'] = TRUE;
-  $handler->display->display_options['filters']['author_select']['expose']['operator_id'] = 'author_select_op';
-  $handler->display->display_options['filters']['author_select']['expose']['label'] = 'Limit by Author';
-  $handler->display->display_options['filters']['author_select']['expose']['operator'] = 'author_select_op';
-  $handler->display->display_options['filters']['author_select']['expose']['identifier'] = 'author_select';
-  $handler->display->display_options['filters']['author_select']['expose']['multiple'] = TRUE;
-  $handler->display->display_options['filters']['author_select']['expose']['remember_roles'] = array(
+  /* Filter criterion: Biblio: Author last name */
+  $handler->display->display_options['filters']['lastname']['id'] = 'lastname';
+  $handler->display->display_options['filters']['lastname']['table'] = 'biblio_contributor_data';
+  $handler->display->display_options['filters']['lastname']['field'] = 'lastname';
+  $handler->display->display_options['filters']['lastname']['relationship'] = 'field_bibliographic_entry_target_id';
+  $handler->display->display_options['filters']['lastname']['exposed'] = TRUE;
+  $handler->display->display_options['filters']['lastname']['expose']['operator_id'] = 'lastname_op';
+  $handler->display->display_options['filters']['lastname']['expose']['label'] = 'Limit by Author';
+  $handler->display->display_options['filters']['lastname']['expose']['operator'] = 'lastname_op';
+  $handler->display->display_options['filters']['lastname']['expose']['identifier'] = 'lastname';
+  $handler->display->display_options['filters']['lastname']['expose']['multiple'] = TRUE;
+  $handler->display->display_options['filters']['lastname']['expose']['remember_roles'] = array(
     2 => '2',
     1 => 0,
     5 => 0,
@@ -1256,6 +1257,7 @@ function lacuna_stories_views_views_default_views() {
     6 => 0,
     7 => 0,
   );
+  $handler->display->display_options['filters']['lastname']['reduce_duplicates'] = TRUE;
   $handler->display->display_options['path'] = 'materials';
   $handler->display->display_options['menu']['type'] = 'normal';
   $handler->display->display_options['menu']['title'] = 'Materials';
