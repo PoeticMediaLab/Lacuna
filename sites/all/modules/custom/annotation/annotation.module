@@ -76,11 +76,10 @@ function annotation_access($op, $entity = NULL, $account = NULL, $entity_type = 
  */
 function annotation_entity_method_access($op, $entity_type, $entity = NULL, $account = NULL) {
   $method = $_SERVER['REQUEST_METHOD'];
-
   switch ($method) {
     case 'GET':
-      if (isset($entity) && is_numeric($id)) {
-        annotation_api_read($id);
+      if (isset($entity) && is_numeric($entity->id)) {
+        annotation_api_read($entity->id);
         // entity_access('view', $entity_type, $entity = NULL, $account = NULL);
       }
       else {
@@ -93,10 +92,10 @@ function annotation_entity_method_access($op, $entity_type, $entity = NULL, $acc
       // entity_access('create', $entity_type, $entity = NULL, $account = NULL);
       break;
     case 'PUT':
-      annotation_api_update($id);
+      annotation_api_update($entity->id);
       break;
     case 'DELETE':
-      annotation_api_destroy($id);
+      annotation_api_destroy($entity->id);
       break;
   }
 }

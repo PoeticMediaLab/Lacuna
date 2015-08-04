@@ -18,8 +18,8 @@
  */
 
 (function ($) {  // Namespace wrapper for Drupal
+    "use strict";
 Drupal.d3.annotations_dashboard = function (select, settings) {
-"use strict";
 
 d3.json(settings.config.data_url, function (error, data) {
     if (error) {
@@ -36,28 +36,28 @@ d3.json(settings.config.data_url, function (error, data) {
  *
  **************/
 function Annotations(data) {
-	this.data = Array();
-	this.data.push(data);
-	this.all = data;
-	this.timeFilter = null;	// because time filters are unique
+    this.data = Array();
+    this.data.push(data);
+    this.all = data;
+    this.timeFilter = null;	// because time filters are unique
 
-	this.addFilter = function (data) {
-		this.data.push(data);
-	};
+    this.addFilter = function (data) {
+        this.data.push(data);
+    };
 
-	this.current = function (ignore_time_filter) {
-		if (!ignore_time_filter && this.timeFilter != null) {
-			return this.timeFilter;
-		}
-		return this.data[this.data.length - 1];
-	};
+    this.current = function (ignore_time_filter) {
+        if (!ignore_time_filter && this.timeFilter != null) {
+            return this.timeFilter;
+        }
+        return this.data[this.data.length - 1];
+    };
 
-	// The first entry should be *all* annotations
-	this.unfiltered = function () {
-		return this.all;
-	}
+    // The first entry should be *all* annotations
+    this.unfiltered = function () {
+        return this.all;
+    }
 
-	this.removeFilter = function () {
+    this.removeFilter = function () {
 		return this.data.pop();
 	};
 
@@ -79,12 +79,12 @@ var annotations;
 // All are added by pre-processing, not native to Annotator data structure
 // TODO: Add tags
 // var pie_types = ['category', 'text_length', 'private', 'annotation_tags'];
-var pie_types = ['category', 'text_length', 'private'];
+var pie_types = ['category', 'text_length', 'audience'];
 
-var pie_labels = {'category': 'Category', 'text_length': 'Length', 'private': 'Sharing', 'annotation_tags': 'Tags'};	// yeah, yeah; see? it's already ugly code
+var pie_labels = {'category': 'Category', 'text_length': 'Length', 'audience': 'Sharing', 'annotation_tags': 'Tags'};	// yeah, yeah; see? it's already ugly code
 var pie_current = pie_types[0]; // Set the current pie-type selection
 // Default values if attribute missing from annotation data
-var pie_defaults = {'category': 'Highlight', 'length': 'Zero', 'private': 'Private', 'annotation_tags': 'None'};
+var pie_defaults = {'category': 'Highlight', 'length': 'Zero', 'audience': 'Everyone', 'annotation_tags': 'None'};
 var pie_slices = {};
 pie_types.forEach(function(pie_type) {
 	pie_slices[pie_type] = Array();
@@ -123,7 +123,7 @@ function init_graph() {
 	annotations.current().forEach(function (a) {
 		// Add nodes into lookup table and the nodes array
 		// The "type" attribute is *very* important
-		var source = add_to_graph(nodes_unique, nodes, a.username, {type: "user", u_id : a.u_id});
+		var source = add_to_graph(nodes_unique, nodes, a.username, {type: "user", uid : a.uid});
 		var target = add_to_graph(nodes_unique, nodes, a.documentTitle, {type: "doc", doc_id : a.doc_id});
 
 		// Add new edges, combine duplicate edges and increment weight & count
@@ -262,7 +262,7 @@ function main(data) {
 						min: .1 },
 				string: { length: 45 },
 				radius: 25,
-				column: {user: 100, doc: 400}	// X coords for the two columns
+				column: {user: 100, doc: 500}	// X coords for the two columns
 				};
 
 	// TODO: loop through settings; overwrite matching variables
@@ -465,7 +465,7 @@ function main(data) {
 
 	// "View Annotations" button clicked; update data table
 	// We only update when this button is clicked because it's too slow to update all the time
-	$('a.dashboard-button#view_annotations').click(update_annotations_table);
+	//$('a.dashboard-button#view_annotations').click(update_annotations_table);
 
 	$('a.dashboard-button#return_to_vis').click(function() {
 		// annotations_table.destroy();
@@ -500,16 +500,17 @@ function main(data) {
 
 	d3.select("div#network")
 		.append("p")
-		.text("Students")
-		.style("font-size", "18pt")
-		.style("font-weight", "bold")
+		.text("People")
+		.style("font-size", "16pt")
+		//.style("font-weight", "bold")
 		.style("padding-left", (size.column.user - size.graph.padding) + 'px')
 		.append("p")
-		.text("Resources")
+		.text("Materials")
 		// .style("left", size.column.doc)
-		.style("font-size", "18pt")
-		.style("font-weight", "bold")
-		.style("padding-left", (size.column.user + (size.graph.padding * 2)) + 'px')
+		.style("font-size", "16pt")
+		//.style("font-weight", "bold")
+		.style("padding-left", (size.column.user + (size.graph.padding * 5)) + 'px')
+        //.style("padding-left", size.column.doc / 2 + "px")
 		.style("display", "inline")
 		;
 
@@ -941,7 +942,7 @@ function main(data) {
     	// Call these updates here because we don't want to update the bar chart, too
     	update_graph();
     	update_summary_pies();
-    	update_total();
+    	update_view_all();
     	// Are we focused on a node? If so, update the edge labels
     	if (focused_on !== null) {
 	    	draw_edge_weights();
@@ -954,51 +955,24 @@ function main(data) {
 	 *
 	 *************/
 
-	 // Show all annotations in current selection
-	var annotations_table;
-	function update_annotations_table() {
-		if (typeof annotations_table === "object") {
-			annotations_table.destroy();
-		}
-		annotations_table = $('#annotations_table_draw').DataTable({
-	    	"processing": true,
-	    	"dom": 'T<"clear">lfrtip',
-	    	"tableTools": {
-            	"sSwfPath": "lib/js/DataTables/extras/TableTools/media/swf/copy_csv_xls_pdf.swf"
-        	},
-	        "data": annotations.current(),
-	        "order": [[7, "asc"]],
-	        "columns": [
-		        { "data": "username"},
-		        { "data": "category"},
-		        { "data": "documentTitle"},
-		        { "data": "text"},
-		        { "data": "quote"},
-		        { "data": "annotation_tags"},
-		        { "data": "private"},
-		        { "data": "created",
-		    	  "render": function (data, type, full, meta) {
-		    	  	var d = new Date(data);
-		    	  	return d.toDateString();
-		    	  }}
-	           ]
-	    });
-	    d3.select("#annotations_table_draw").style("visibility", "visible");
-	    d3.select("#annotations_table_draw_wrapper").style("visibility", "visible");
-	    d3.selectAll("a#return_to_vis").style("visibility", "visible");
-	}
-
-	function update_total() {
-    	var total = $('a#view_annotations');
-    	total.empty();
-    	// var str = "<h2>";
-    	var str = "View "
-		str += annotations.current().length + " annotation";
-    	if (annotations.current().length != 1) {
-    		str += "s";
-    	}
-    	// str += "</h2>";
-    	total.text(str);
+    // Update the link for the "View in Sewing Kit" button
+    // TODO: Add time filters to Sewing Kit
+	function update_view_all() {
+    	var sewing_kit = $('a#view_annotations'),
+            href = sewing_kit.attr('href'),
+            current = annotations.current(),
+            doc_ids,
+            users;
+        href = href.split('?')[0] + '?'  // drop query string
+        // Get unique doc ids in current annotations
+        doc_ids = current.map(function (value, index) { return value['doc_id']})
+                    .filter(function (value, index, self) { return self.indexOf(value) === index;});
+        // get unique uids
+        users = current.map(function (value, index) { return value['username']})
+            .filter(function (value, index, self) { return self.indexOf(value) === index;});
+        href += 'field_annotation_reference_target_id[]=' + doc_ids.join(',');
+        href += '&edit-author-select=' + users.join(',');
+        sewing_kit.attr('href', href)
 	}
 
 	// Provide a legend for the pie chart colors
@@ -1038,7 +1012,7 @@ function main(data) {
 
   // update all graphs with the most recent filter
   function update() {
-  	update_total();
+  	update_view_all();
   	update_graph();
   	update_timebrush();
   	update_summary_pies();
@@ -1054,36 +1028,33 @@ function main(data) {
   	return 3 * size.radius * (1 + Math.max(counts.user, counts.doc));			//adding 1 for padding
   }
 
-  function manageURLQuery()
-  {
-	var params = getURLVars();
-	var typeMap = { doc_id : "doc", u_id : "user" };
-	for(var id in typeMap)
-	{
-		if(params[id] && !isNaN(params[id]))
-		{
-			var node = findNodeById(params[id], typeMap[id]);
-			if(node) focus_toggle(node);
-		}
-	}
+  function manageURLQuery() {
+    var params = getURLVars();
+    var typeMap = { doc_id : "doc", uid : "user" };
+    for (var id in typeMap) {
+        if (params[id] && !isNaN(params[id])) {
+            var node = findNodeById(params[id], typeMap[id]);
+            if (node) {
+                focus_toggle(node);
+            }
+        }
+    }
   }
 
-  function findNodeById(id, type)
-  {
-  	var idMap = {	user : "u_id", doc : "doc_id"};
-  	for(var i = 0; i < graph.nodes.length; ++i)
-  	{
-  		if(graph.nodes[i].type == type && graph.nodes[i][idMap[type]] == id) return graph.nodes[i];
+  function findNodeById(id, type) {
+  	var idMap = { user : "uid", doc : "doc_id" };
+  	for (var i = 0; i < graph.nodes.length; ++i) {
+  		if (graph.nodes[i].type == type && graph.nodes[i][idMap[type]] == id) {
+            return graph.nodes[i];
+        }
   	}
   	return false;
   }
 
-  function getURLVars()
-  {
+  function getURLVars() {
       var vars = [], hash;
       var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
-      for(var i = 0; i < hashes.length; i++)
-      {
+      for (var i = 0; i < hashes.length; i++) {
           hash = hashes[i].split('=');
           vars.push(hash[0]);
           vars[hash[0]] = hash[1];
