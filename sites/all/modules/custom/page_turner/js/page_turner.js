@@ -141,7 +141,7 @@ PTModel.prototype = {
         }
         pages.end = parseInt(pages.end, 10);
         if (isNaN(pages.end)) {
-            pages.end = pages.start + 1;
+            pages.end = pages.start;
         }
         if (pages.start > pages.end) {
             // swap them!
@@ -158,8 +158,11 @@ PTModel.prototype = {
             pages.end = range;
         }
         if (pages.end > total) {
+            pages.start = pages.end - range;
             pages.end = total;
-            //pages.start = total - range;
+            if (pages.start >= pages.end) {
+                pages.start = pages.end - 1;
+            }
         }
         return pages;
     },
