@@ -118,6 +118,19 @@ function course_set_up_materials_form($form, &$form_state, $nid) {
     '#markup' => "<button class='form-submit' id='ajax-units'>Add Unit/Theme</button>",
     '#suffix' => "<div class='terms'>" . implode('', $units) . "</div>",
   );
+
+	$require_genre = (count($genre)) ? FALSE: TRUE;
+	$form['genre_doc']['term'] = array(
+		'#type' => 'textfield',
+		'#description' => 'Add genres to categorize course materials.',
+		'#size' => 60,
+		'#required' => $require_genre,
+	);
+	$form['genre_doc']['ajax_button'] = array(
+		'#markup' => "<button class='form-submit' id='ajax-genre'>Add Genres</button>",
+		'#suffix' => "<div class='terms'>" . implode('', $genre_doc) . "</div>",
+	);
+
   $path = drupal_get_path('module', 'course');
   $form['#attached']['css'] = array("$path/course.css");
   $form['#attached']['js'] = array("$path/course.js");
@@ -157,6 +170,14 @@ function course_set_up_materials_form_submit($form, &$form_state) {
     course_create_taxo($vocab, $unit);
   }
   drupal_goto("createcourse-4/$nid");
+}
+
+function course_ajax_add_term($vocab) {
+
+}
+
+function course_ajax_remove_term($vocab) {
+
 }
 
 function course_ajax_add_unit_term() {
