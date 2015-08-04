@@ -634,7 +634,7 @@ function lacuna_visualizations_annotation_dashboard_data() {
 		->fieldCondition('field_annotation_reference', 'target_id', array_keys($target_ids['node']), 'IN')
 		->addTag('DANGEROUS_ACCESS_CHECK_OPT_OUT')
 		->execute();
-	
+
   if (isset($result['node'])) {
     $all = array();
     foreach ($result['node'] as $row) {

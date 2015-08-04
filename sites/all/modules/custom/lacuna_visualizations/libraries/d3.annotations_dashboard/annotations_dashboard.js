@@ -18,8 +18,8 @@
  */
 
 (function ($) {  // Namespace wrapper for Drupal
+    "use strict";
 Drupal.d3.annotations_dashboard = function (select, settings) {
-"use strict";
 
 d3.json(settings.config.data_url, function (error, data) {
     if (error) {
@@ -36,28 +36,28 @@ d3.json(settings.config.data_url, function (error, data) {
  *
  **************/
 function Annotations(data) {
-	this.data = Array();
-	this.data.push(data);
-	this.all = data;
-	this.timeFilter = null;	// because time filters are unique
+    this.data = Array();
+    this.data.push(data);
+    this.all = data;
+    this.timeFilter = null;	// because time filters are unique
 
-	this.addFilter = function (data) {
-		this.data.push(data);
-	};
+    this.addFilter = function (data) {
+        this.data.push(data);
+    };
 
-	this.current = function (ignore_time_filter) {
-		if (!ignore_time_filter && this.timeFilter != null) {
-			return this.timeFilter;
-		}
-		return this.data[this.data.length - 1];
-	};
+    this.current = function (ignore_time_filter) {
+        if (!ignore_time_filter && this.timeFilter != null) {
+            return this.timeFilter;
+        }
+        return this.data[this.data.length - 1];
+    };
 
-	// The first entry should be *all* annotations
-	this.unfiltered = function () {
-		return this.all;
-	}
+    // The first entry should be *all* annotations
+    this.unfiltered = function () {
+        return this.all;
+    }
 
-	this.removeFilter = function () {
+    this.removeFilter = function () {
 		return this.data.pop();
 	};
 
@@ -1020,36 +1020,33 @@ function main(data) {
   	return 3 * size.radius * (1 + Math.max(counts.user, counts.doc));			//adding 1 for padding
   }
 
-  function manageURLQuery()
-  {
-	var params = getURLVars();
-	var typeMap = { doc_id : "doc", u_id : "user" };
-	for(var id in typeMap)
-	{
-		if(params[id] && !isNaN(params[id]))
-		{
-			var node = findNodeById(params[id], typeMap[id]);
-			if(node) focus_toggle(node);
-		}
-	}
+  function manageURLQuery() {
+    var params = getURLVars();
+    var typeMap = { doc_id : "doc", u_id : "user" };
+    for (var id in typeMap) {
+        if (params[id] && !isNaN(params[id])) {
+            var node = findNodeById(params[id], typeMap[id]);
+            if (node) {
+                focus_toggle(node);
+            }
+        }
+    }
   }
 
-  function findNodeById(id, type)
-  {
-  	var idMap = {	user : "u_id", doc : "doc_id"};
-  	for(var i = 0; i < graph.nodes.length; ++i)
-  	{
-  		if(graph.nodes[i].type == type && graph.nodes[i][idMap[type]] == id) return graph.nodes[i];
+  function findNodeById(id, type) {
+  	var idMap = { user : "u_id", doc : "doc_id" };
+  	for (var i = 0; i < graph.nodes.length; ++i) {
+  		if (graph.nodes[i].type == type && graph.nodes[i][idMap[type]] == id) {
+            return graph.nodes[i];
+        }
   	}
   	return false;
   }
 
-  function getURLVars()
-  {
+  function getURLVars() {
       var vars = [], hash;
       var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
-      for(var i = 0; i < hashes.length; i++)
-      {
+      for (var i = 0; i < hashes.length; i++) {
           hash = hashes[i].split('=');
           vars.push(hash[0]);
           vars[hash[0]] = hash[1];
