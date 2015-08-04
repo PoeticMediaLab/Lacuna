@@ -48,13 +48,6 @@ function course_authcode_form_submit($form, &$form_state) {
 }
 
 
-function course_form_alter(&$form, &$form_state, $form_id) {
-  if ("course_node_form" == $form_id ) {
-    $form['#submit'] = array('course_create_form_submit');
-    $form['actions']['submit']['#submit'][] = 'course_create_form_submit';
-  }
-}
-
 function course_create() {
   global $user;
   module_load_include('inc', 'node', 'node.pages');
@@ -66,9 +59,10 @@ function course_create() {
   );
   $form = drupal_get_form(COURSE_NODE_TYPE . '_node_form', $node);
 
-  $form['group_access']['#access'] = FALSE;
   $form['additional_settings']['#access'] = FALSE;
   $form['body'][LANGUAGE_NONE][0]['format']['#access'] = FALSE;
+  $form['og_roles_permissions']['#access'] = FALSE;
+
   unset($form['actions']['preview']);
   $form['field_unregistered_students'][LANGUAGE_NONE][0]['value']['#value'] = 0;
   $form['actions']['submit']['#prefix'] = '<div>Send my information to the Lacuna Stories team to begin setting up my course!</div>';
@@ -79,47 +73,28 @@ function course_create() {
   return drupal_render($form);
 }
 
-function course_create_form_submit($form, &$form_state) {
-  # prevent the form from caching, which breaks our submit handler
-  cache_clear_all('form_'. $_POST['form_build_id'], 'cache_form');
-
-  $node = new stdClass();
-  $node->type = COURSE_NODE_TYPE;
-  foreach($form_state['values'] as $k => $v) {
-    $node->$k = $v;
-  }
-  node_object_prepare($node);
-  node_save($node);
-
-  if ($node->nid) {
-    drupal_goto("createcourse-3/" . $node->nid);
-  }
-  else {
-    drupal_set_message("There was an error creating your course.  Please try again and/or contact the Lacuna Stories team for assistance, <a href='info@lacunastories.com'>info@lacunastories.com</a>.", 'error');
-    drupal_goto("createcourse-2");
-  }
-}
-
 function course_set_up_materials($nid) {
   $node = node_load($nid);
   $output = "Thank you for submitting your course information to the Lacuna Stories team. You can now continue by indicating the course materials you'd like to host on Lacuna Stories, and to assign them for specific weeks or units. To continue, click \"Set Up Materials for <i>{$node->title}</i>\"<br />";
   $output .= "<br />";
-  $output .= drupal_render(drupal_get_form('course_set_up_materials_form'));
+  $output .= drupal_render(drupal_get_form('course_set_up_materials_form', $nid));
   return $output;
 }
 
-function course_set_up_materials_form($form, &$form_state) {
-  // TODO make taxo course specific
-
+function course_set_up_materials_form($form, &$form_state, $nid) {
   // current taxo terms, if any
-  $number_of_weeks = course_numerical_vocab_term_max('number_of_weeks');
-  $units_vocab = taxonomy_vocabulary_machine_name_load('units_themes');
+  $number_of_weeks = course_numerical_vocab_term_max("number_of_weeks_$nid");
+  $units_vocab = taxonomy_vocabulary_machine_name_load("units_$nid");
   $units = array();
   foreach (taxonomy_term_load_multiple(array(), array('vid' => $units_vocab->vid)) as $unit) {
-    $units[] = "<div class='term'>" . $unit->name . "</div>";
+    $units[] = "<div class='term'><span class='name'>" . $unit->name . "</span><span class='fa fa-minus'></span></div>";
   }
   asort($units);
 
+  $form['course_nid'] = array(
+    '#type' => 'hidden',
+    '#value' => $nid
+  );
   $form['number_of_weeks'] = array(
     '#type' => 'select',
     '#title' => 'Assign Materials to Individual Weeks',
@@ -149,34 +124,59 @@ function course_set_up_materials_form($form, &$form_state) {
 
   $form['submit'] = array(
     '#type' => 'submit',
-    '#value' => 'Save'
+    '#value' => 'Set Up Materials'
   );
 
   return $form;
 }
 
 function course_set_up_materials_form_submit($form, &$form_state) {
+  $nid = $form_state['values']['course_nid'];
   # add terms to vocabs
 
   # number of week tags
-  $vocab = taxonomy_vocabulary_machine_name_load('number_of_weeks');
+  $vocab = taxonomy_vocabulary_machine_name_load("number_of_weeks_$nid");
   $max = $form_state['values']['number_of_weeks'];
+  $tree = taxonomy_get_tree($vocab->vid);
+
+  # updating an existing vocab
+  if (count($tree)) {
+    foreach ($tree as $week) {
+      if ($week->name > $max) {
+        taxonomy_term_delete($week->tid);
+      }
+    }
+  }
   for ($i=1; $i <= $max; $i++) {
     course_create_taxo($vocab, $i, $i);
   }
 
   # unit/theme tags
-  $vocab = taxonomy_vocabulary_machine_name_load('units_themes');
-  foreach(explode(',', $form_state['values']['units_themes']['term']) as $unit) {
+  $vocab = taxonomy_vocabulary_machine_name_load("units_$nid");
+  foreach(explode(',', $form_state['values']['term']) as $unit) {
     course_create_taxo($vocab, $unit);
   }
-  drupal_goto('createcourse-4');
+  drupal_goto("createcourse-4/$nid");
 }
 
 function course_ajax_add_unit_term() {
   $term = check_plain($_POST['term']);
-  $vocab = taxonomy_vocabulary_machine_name_load('units_themes');
-  course_create_taxo($vocab, $term);
+  $nid = check_plain($_POST['nid']);
+  $vocab = taxonomy_vocabulary_machine_name_load("units_$nid");
+  foreach(explode(',', $term) as $unit) {
+    course_create_taxo($vocab, $unit);
+  }
+  ajax_deliver();
+}
+
+
+function course_ajax_delete_unit_term($nid, $term) {
+  $term = check_plain($term);
+  $nid = check_plain($nid);
+  $term = array_pop(taxonomy_get_term_by_name($term, "units_$nid"));
+  if ($term) {
+    taxonomy_term_delete($term->tid);
+  }
   ajax_deliver();
 }
 
@@ -199,7 +199,7 @@ function course_create_taxo($vocab, $tag, $weight = 0) {
  */
 function course_numerical_vocab_term_max($vocab_machine_name) {
   # simple guard to ensure numerical vocabularies
-  if ('number_of_weeks' != $vocab_machine_name) {
+  if ('number_of_weeks' != substr($vocab_machine_name, 0, 15)) {
     return FALSE;
   }
   return db_query('SELECT t.name
@@ -210,56 +210,36 @@ function course_numerical_vocab_term_max($vocab_machine_name) {
 
 }
 
-function course_add_material() {
-  $output = "<p>Please find your materials using the methods below, in the order they are assigned. You, as the instructor, are responsible for determining if the online or e-access materials you are assigning your students are available at your home institution. If they are, your students will likely not have to pay for these materials. Otherwise, they will be charged. This is a cumbersome part of digital course setup, but an important one. It also allows the Lacuna Stories team to most efficiently assist you securing materials not available from your institutions digital resources. If you have any questions at any time, please send a quick email to info@lacunastories.com and someone from our team will assist you.</p><br />";
+function course_add_material($nid) {
+  $output = "<p>Please find your materials using the methods below, in the order they are assigned. You, as the instructor, are responsible for determining if the online or e-access materials you are assigning your students are available at your home institution. If they are, your students will likely not have to pay for these materials. Otherwise, they will be charged. This is a cumbersome part of digital course setup, but an important one. It also allows the Lacuna Stories team to most efficiently assist you securing materials not available from your institutions digital resources. If you have any questions at any time, please send a quick email to info@lacunastories.com and someone from our team will assist you.</p><br /><div class='add-materials'>";
 
-// There should be large number icons on the left, with each "stage" separated by a different background color (white/ light grey/ white) to clearly distinguish the stages instructors should go through. They are:
-  $output .= "<p>Add E-Access Material from my Institution. If your students have digital access to materials through your institution’s library, they may have free access to those same materials on Lacuna Stories. Save your students money!<button>Confrim E-Access Material</button></p>";
+  $output .= "<div id='archived-materials'><div>Add Lacuna Stories Archived Materials. These materials may be free or available for a fee for your students. In either case, these are already digitized and using these materials will save you or the Lacuna Stories team time.</div><button class='form-submit'><a href='/archived-materials'>Search Lacuna Stories</a></button></div>";
 
-  $output .= "<p>Request Copyright Permission. The Lacuna Stories team, in partnership with Study.Net, will obtain permission, directly from the publisher or an intermediary service, to use the material you identify.<button>Request Copyright Permission</button></p>";
-  //The same information requested by study.Net should appear here. Change "Periodical" to "Journal Article" and add categories "Video", "Newspaper Article," and the field "Chapters or Page numbers" for Book category. "Material Name to be Displayed" should be changed to "Material Name to Be Displayed to Students."
+  $output .= "<div id='e-access'><div>Add E-Access Material from my Institution. If your students have digital access to materials through your institution’s library, they may have free access to those same materials on Lacuna Stories. Save your students money!</div><button class='form-submit'>Confrim E-Access Material</button></div>";
 
-  $output .= "<p>Add Lacuna Stories Archived Materials. These materials may be free or available for a fee for your students. In either case, these are already digitized and using these materials will save you or the Lacuna Stories team time.<button>Search Lacuna Stories</button></p>";
-//The "Search Lacuna Stories’ Materials Archive" button should lead to a list of all current materials, with a [Full text] or [excerpts] listed by each. They should be searchable and sortable by author and title. There should be a "+" button by each, which turns into a green checkmark when they are added. At the top and bottom of the page there should be a Save Selections and Return to Add Materials button.
-
+  $output .= "<div id='studynet'><div>Request Copyright Permission. The Lacuna Stories team, in partnership with Study.Net, will obtain permission, directly from the publisher or an intermediary service, to use the material you identify.</div><button class='form-submit'>Request Copyright Permission</button></div></div>";
 
   global $user;
   module_load_include('inc', 'node', 'node.pages');
-  $node = (object) array(
+  $biblio = (object) array(
     'uid' => $user->uid,
     'name' => (isset($user->name) ? $user->name : ''),
     'type' => BIBLIO_NODE_TYPE,
     'language' => LANGUAGE_NONE,
   );
-  $form = drupal_get_form(BIBLIO_NODE_TYPE . '_node_form', $node);
+  $form = drupal_get_form(BIBLIO_NODE_TYPE . '_node_form', $biblio);
 
-  $form['additional_settings']['#access'] = FALSE;
-  $form['body'][LANGUAGE_NONE][0]['format']['#access'] = FALSE;
-  unset($form['actions']['preview']);
-  #$path = drupal_get_path('module', 'course');
-  #$form['#attached']['css'] = array("$path/course.css");
-  #$form['#attached']['js'] = array("$path/course.js");
-
-  return $output . drupal_render($form);
-
-//  $output .= l("Add Material<span class='fa fa-plus'></span>", "createcourse-4",
-//    array("html" => TRUE, 'attributes' => array('class' => 'form-submit course-add-material')));
-//  $output .= l("Done Adding Course Materials<span class='fa fa-check'></span>", "/",
-//    array("html" => TRUE, 'attributes' => array('class' => 'form-submit')));
-//  $output .= "<p><em>You can add more materials at any time</em></p><br /><br /><br />";
-//  $output .= "VIEW OF COURSE MATERIALS";
-
-
+  $output .= "<div class='biblio-form'>" . drupal_render($form) . "</div>";
+  $output .= views_embed_view('documents', 'course_block');
+  return $output;
 }
 
 function course_switch_course($gid) {
   if ($group = node_load ($gid)) {
     if ($group->type == 'course') {
       if (og_is_member('node', $gid)) {
-        global $user;
-        $user = user_load ($user->uid); // Global user does not contain OG memberships, so saving that will lose them for the user. Load the user first and use that (see: https://www.drupal.org/node/1502916#comment-6444954).
-        user_save ($user, array ('data' => array ('current-course' => $gid)));
-        drupal_goto ('materials'); // After setting the context, redirect user to the course materials page
+        _course_set_selected_course($gid);
+        drupal_goto('materials'); // After setting the context, redirect user to the course materials page
       }
     }
   }

@@ -327,7 +327,7 @@ function course_field_default_field_bases() {
     'settings' => array(
       'allowed_values' => array(
         0 => '',
-        1 => 'Are all of your students registered with your institution?',
+        1 => 'Some of my students are not from my institution',
       ),
       'allowed_values_function' => '',
     ),
