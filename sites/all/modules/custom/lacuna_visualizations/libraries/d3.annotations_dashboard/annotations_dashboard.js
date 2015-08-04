@@ -123,7 +123,7 @@ function init_graph() {
 	annotations.current().forEach(function (a) {
 		// Add nodes into lookup table and the nodes array
 		// The "type" attribute is *very* important
-		var source = add_to_graph(nodes_unique, nodes, a.username, {type: "user", u_id : a.u_id});
+		var source = add_to_graph(nodes_unique, nodes, a.username, {type: "user", uid : a.uid});
 		var target = add_to_graph(nodes_unique, nodes, a.documentTitle, {type: "doc", doc_id : a.doc_id});
 
 		// Add new edges, combine duplicate edges and increment weight & count
@@ -262,7 +262,7 @@ function main(data) {
 						min: .1 },
 				string: { length: 45 },
 				radius: 25,
-				column: {user: 100, doc: 400}	// X coords for the two columns
+				column: {user: 100, doc: 500}	// X coords for the two columns
 				};
 
 	// TODO: loop through settings; overwrite matching variables
@@ -500,16 +500,17 @@ function main(data) {
 
 	d3.select("div#network")
 		.append("p")
-		.text("Students")
-		.style("font-size", "18pt")
-		.style("font-weight", "bold")
+		.text("People")
+		.style("font-size", "16pt")
+		//.style("font-weight", "bold")
 		.style("padding-left", (size.column.user - size.graph.padding) + 'px')
 		.append("p")
-		.text("Resources")
+		.text("Materials")
 		// .style("left", size.column.doc)
-		.style("font-size", "18pt")
-		.style("font-weight", "bold")
-		.style("padding-left", (size.column.user + (size.graph.padding * 2)) + 'px')
+		.style("font-size", "16pt")
+		//.style("font-weight", "bold")
+		.style("padding-left", (size.column.user + (size.graph.padding * 5)) + 'px')
+        //.style("padding-left", size.column.doc / 2 + "px")
 		.style("display", "inline")
 		;
 
@@ -941,7 +942,7 @@ function main(data) {
     	// Call these updates here because we don't want to update the bar chart, too
     	update_graph();
     	update_summary_pies();
-    	update_total();
+    	update_view_all();
     	// Are we focused on a node? If so, update the edge labels
     	if (focused_on !== null) {
 	    	draw_edge_weights();
@@ -954,17 +955,24 @@ function main(data) {
 	 *
 	 *************/
 
-	function update_total() {
-    	var total = $('a#view_annotations');
-    	total.empty();
-    	// var str = "<h2>";
-    	var str = "View "
-		str += annotations.current().length + " annotation";
-    	if (annotations.current().length != 1) {
-    		str += "s";
-    	}
-    	// str += "</h2>";
-    	total.text(str);
+    // Update the link for the "View in Sewing Kit" button
+    // TODO: Add time filters to Sewing Kit
+	function update_view_all() {
+    	var sewing_kit = $('a#view_annotations'),
+            href = sewing_kit.attr('href'),
+            current = annotations.current(),
+            doc_ids,
+            users;
+        href = href.split('?')[0] + '?'  // drop query string
+        // Get unique doc ids in current annotations
+        doc_ids = current.map(function (value, index) { return value['doc_id']})
+                    .filter(function (value, index, self) { return self.indexOf(value) === index;});
+        // get unique uids
+        users = current.map(function (value, index) { return value['username']})
+            .filter(function (value, index, self) { return self.indexOf(value) === index;});
+        href += 'field_annotation_reference_target_id[]=' + doc_ids.join(',');
+        href += '&edit-author-select=' + users.join(',');
+        sewing_kit.attr('href', href)
 	}
 
 	// Provide a legend for the pie chart colors
@@ -1004,7 +1012,7 @@ function main(data) {
 
   // update all graphs with the most recent filter
   function update() {
-  	update_total();
+  	update_view_all();
   	update_graph();
   	update_timebrush();
   	update_summary_pies();
@@ -1022,7 +1030,7 @@ function main(data) {
 
   function manageURLQuery() {
     var params = getURLVars();
-    var typeMap = { doc_id : "doc", u_id : "user" };
+    var typeMap = { doc_id : "doc", uid : "user" };
     for (var id in typeMap) {
         if (params[id] && !isNaN(params[id])) {
             var node = findNodeById(params[id], typeMap[id]);
@@ -1034,7 +1042,7 @@ function main(data) {
   }
 
   function findNodeById(id, type) {
-  	var idMap = { user : "u_id", doc : "doc_id" };
+  	var idMap = { user : "uid", doc : "doc_id" };
   	for (var i = 0; i < graph.nodes.length; ++i) {
   		if (graph.nodes[i].type == type && graph.nodes[i][idMap[type]] == id) {
             return graph.nodes[i];
