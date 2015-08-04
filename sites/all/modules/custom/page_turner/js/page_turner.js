@@ -115,17 +115,19 @@ PTModel.prototype = {
   },
 
   current_page: function(p) {
+    var diff;
     if (typeof p !== 'undefined') {
-      if (p > this.page_total()) {
-        p = this.page_total();
-      }
-      if (p < 0) {
-        p = 0;
-      }
-      var diff = p - this._page_range.start;
-      this._page_range.start = p;
-      this._page_range.end += diff;
-      $(document).trigger('page-turner-page-changed', this._page_range);
+        if (p > this.page_total()) {
+            p = this.page_total();
+        }
+        if (p < 0) {
+            p = 0;
+        }
+        diff = p - this._page_range.start;
+        this._page_range.start = p;
+        this._page_range.end += diff;
+        this._page_range = this.validate_page_range(this._page_range);
+        $(document).trigger('page-turner-page-changed', this._page_range);
     }
     return this._page_range.start;
   },
@@ -157,7 +159,7 @@ PTModel.prototype = {
         }
         if (pages.end > total) {
             pages.end = total;
-            pages.start = total - range;
+            //pages.start = total - range;
         }
         return pages;
     },
@@ -192,6 +194,7 @@ PTModel.prototype = {
                 // Because that's *really* where we were asked to go; just shrink range
                 this._page_range.start = pages.start;
             }
+            this._page_range = this.validate_page_range(this._page_range);
             $(document).trigger('page-turner-page-changed', this._page_range);
         }
         return this._page_range;
