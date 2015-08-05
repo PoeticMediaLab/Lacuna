@@ -21,22 +21,25 @@
                 vocab = event.srcElement.parentNode.parentNode.id,
                 input = wrapper.find("input[name='term']"),
                 term = input.val(),
+                terms_list = wrapper.find('.terms'),
                 new_terms,
-                i;
-            wrapper.find('.terms').each(function() {
-                terms.push($(this).text().trim());
+                new_term,
+                i, l;
+            wrapper.find('.terms > .term > .name').each(function() {
+                terms.push($(this).textContent.trim());
             });
             if (term.length > 0) {
-                console.log(settings['basePath'] + "ajax/add-term/" + vocab, { terms: term });
                 $.post(settings['basePath'] + "ajax/add-term/" + vocab, { terms: term });
                 new_terms = term.split(',')
-                for (i = 0; i < new_terms.length; i++) {
-                    if (terms.indexOf(new_terms[i].trim()) == -1) {
-                        $('#terms-' + vocab).append("<div class='term'><span class='name'>" + new_terms[i].trim() + "</span><span class='fa fa-trash-o'></span></div>");
-                        terms.push(new_terms[i].trim());
+                for (i = 0, l = new_terms.length; i < l; i++) {
+                    new_term = new_terms[i].trim();
+                    console.log(new_term);
+                    if (terms.indexOf(new_term) == -1) {
+                        terms_list.append("<div class='term'><span class='fa fa-trash-o'></span><span class='name'>" + new_term + "</span></div>");
+                        terms.push(new_terms);
                     }
                 }
-                $('#edit-term').val('');
+                input.val('');
             }
             return false; // don't submit the form
       });

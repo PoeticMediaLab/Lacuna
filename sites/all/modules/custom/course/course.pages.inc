@@ -85,7 +85,7 @@ function course_set_up_materials($nid) {
 function course_custom_taxonomy_form_setup(&$form, $taxonomy_name) {
 	$items = [];
 	foreach (course_get_terms_for_current_course($taxonomy_name) as $term) {
-		$items[] = "<div class='term'><span class='name'>" . $term->name . "</span><span class='fa fa-trash-o'></span></div>";
+		$items[] = "<div class='term'><span class='fa fa-trash-o'></span><span class='name'>" . $term . "</span></div>";
 	}
 	asort($items);
 	$form[$taxonomy_name]['term']['#required'] = (count($items))? FALSE: TRUE;
@@ -189,6 +189,7 @@ function course_set_up_materials_form_submit($form, &$form_state) {
 //  foreach(explode(',', $form_state['values']['term']) as $unit) {
 //    course_create_taxonomy_term($vocab, $unit);
 //  }
+	// TODO: uncomment next line to progress
 //  drupal_goto("createcourse-4/$nid");
 }
 
