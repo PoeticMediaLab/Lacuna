@@ -276,16 +276,20 @@ function course_views_pre_build(&$view) {
 
   }
 }
-
-function course_get_taxonomy_for_current_course($taxonomy_name) {
+// Filter taxonomy terms to return only those relevant for current course
+function course_get_terms_for_current_course($taxonomy_name) {
 	$gid = course_get_selected_course();
-	// Filter units specific to the current course
 	$taxonomy = array();
-	// Convention for per-course taxonomies: name_gid
-	$vocab = taxonomy_vocabulary_machine_name_load($taxonomy_name . '_' . $gid);
-	$tree = taxonomy_get_tree($vocab->vid);
-	foreach($tree as $term) {
-		$taxonomy[$term->tid] = $term->name;
+	$query = new EntityFieldQuery();
+	$result = $query->entityCondition('entity_type', 'taxonomy_term')
+		->entityCondition('bundle', $taxonomy_name)
+		->fieldCondition('field_term_course', 'target_id', $gid, '=')
+		->execute();
+	if (isset($result['taxonomy_term'])) {
+		foreach(array_keys($result['taxonomy_term']) as $tid) {
+			$wrapper = entity_metadata_wrapper('taxonomy_term', taxonomy_term_load($tid));
+			$taxonomy[$tid] = $wrapper->name->value();
+		}
 	}
 	return $taxonomy;
 }
@@ -323,9 +327,8 @@ function course_get_authors_for_current_course() {
 function course_form_views_exposed_form_alter(&$form, &$form_state) {
   if ('views-exposed-form-documents-materials' == $form['#id']) {
     // Set exposed filter 'Limit by Unit' for current course
-    $form['field_unit_tid']['#options'] = course_get_taxonomy_for_current_course('units');
-		$form['field_genre_doc_tid']['#options'] = course_get_taxonomy_for_current_course('genre_doc');
-//		dpm($form);
+    $form['field_unit_tid']['#options'] = course_get_terms_for_current_course('units');
+		$form['field_genre_doc_tid']['#options'] = course_get_terms_for_current_course('genre_doc');
 		$form['lastname']['#options'] = course_get_authors_for_current_course();
 	}
 
@@ -452,7 +455,7 @@ function course_form_document_node_form_alter(&$form, &$form_state, $form_id) {
   foreach($document->field_tags[LANGUAGE_NONE] as $week) {
     $default_weeks[] = $week['tid'];
   }
-	$weeks = course_get_taxonomy_for_current_course('units');
+	$weeks = course_get_terms_for_current_course('units');
   $form['weeks'] = array(
     '#title' => 'Week(s)',
     '#type' => 'select',
@@ -473,7 +476,7 @@ function course_form_document_node_form_alter(&$form, &$form_state, $form_id) {
     '#type' => 'select',
     '#size' => 60,
     '#default_value' => $default_unit,
-    '#options' => course_get_taxonomy_for_current_course('units'),
+    '#options' => course_get_terms_for_current_course('units'),
   );
 
 	// Per-course Materials Genre taxonomy
@@ -482,7 +485,7 @@ function course_form_document_node_form_alter(&$form, &$form_state, $form_id) {
 		'#type' => 'select',
 		'#size' => 60,
 		'#default_value' => $default_unit,
-		'#options' => course_get_taxonomy_for_current_course('genre_doc'),
+		'#options' => course_get_terms_for_current_course('genre_doc'),
 	);
 
   $form['#group_children']['units'] = 'group_syllabus';
