@@ -219,14 +219,14 @@ function annotation_drupal_format($entity, $update = FALSE) {
         // Private
         if ($val['audience']['private'] == 1) {
           $annotation->field_annotation_audience[$annotation->language][]['value'] = 'private'; // set the audience field
-          break; // private is mutually exclusive
+          break; // private is mutually exclusive to other options
         }
 
         // Everyone
         if ($val['audience']['everyone'] == 1) {
           $annotation->field_annotation_audience[$annotation->language][]['value'] = 'everyone'; // set the audience field
           $annotation->og_group_ref[$annotation->language] =  array (array ('target_id' => course_get_selected_course())); // Set viewable for the current course based on course context
-          break; // everyone is mutually exclusive
+          break; // everyone is mutually exclusive to other options
         }
 
         // Instructor

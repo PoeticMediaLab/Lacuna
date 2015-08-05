@@ -75,127 +75,159 @@ function course_create() {
 
 function course_set_up_materials($nid) {
   $node = node_load($nid);
-  $output = "Thank you for submitting your course information to the Lacuna Stories team. You can now continue by indicating the course materials you'd like to host on Lacuna Stories, and to assign them for specific weeks or units. To continue, click \"Set Up Materials for <i>{$node->title}</i>\"<br />";
+  $output = "Thank you for submitting your course information to the Lacuna Stories team. You can now continue by indicating the course materials you'd like to host on Lacuna Stories, and to assign them for specific weeks or units. To continue, click \"Continue\"<br />";
   $output .= "<br />";
   $output .= drupal_render(drupal_get_form('course_set_up_materials_form', $nid));
   return $output;
 }
 
+// Update the form array for a course-specific list of taxonomy terms
+function course_custom_taxonomy_form_setup(&$form, $taxonomy_name) {
+	$items = [];
+	foreach (course_get_terms_for_current_course($taxonomy_name) as $term) {
+		$items[] = "<div class='term'><span class='name'>" . $term->name . "</span><span class='fa fa-trash-o'></span></div>";
+	}
+	asort($items);
+	$form[$taxonomy_name]['term']['#required'] = (count($items))? FALSE: TRUE;
+	$form[$taxonomy_name]['ajax_button'] = array(
+		'#markup' => "<button class='form-submit ajax-add-term'>Add Item</button>",
+		'#suffix' => "<div class='terms'>" . implode('', $items) . "</div>",
+	);
+}
+
 function course_set_up_materials_form($form, &$form_state, $nid) {
-  // current taxo terms, if any
-  $number_of_weeks = course_numerical_vocab_term_max("number_of_weeks_$nid");
-  $units_vocab = taxonomy_vocabulary_machine_name_load("units_$nid");
-  $units = array();
-  foreach (taxonomy_term_load_multiple(array(), array('vid' => $units_vocab->vid)) as $unit) {
-    $units[] = "<div class='term'><span class='name'>" . $unit->name . "</span><span class='fa fa-minus'></span></div>";
-  }
-  asort($units);
-
-	// TODO: Remove hidden course gid
-//  $form['course_nid'] = array(
-//    '#type' => 'hidden',
-//    '#value' => $nid
-//  );
-//  $form['number_of_weeks'] = array(
-//    '#type' => 'select',
-//    '#title' => 'Weeks in course',
-//    '#options' => drupal_map_assoc(range(1,25)),
-//    '#description' => "How many individual class weeks are there in your course?",
-//    '#default_value' => $number_of_weeks,
-//    '#required' => TRUE
-//  );
-  $form['units_themes'] = array(
+  // Current Units terms for this course, if any
+  $form['units'] = array(
     '#type' => 'fieldset',
-    '#title' => 'Create units by which you course will be organized.',
+    '#title' => 'Create units by which your course will be organized.',
+		'#attributes' => array(
+			'id' => 'units'
+		)
   );
-  $require_units = (count($units))? FALSE: TRUE; // only require if there are no existing terms
-  $form['units_themes']['term'] = array(
+  $form['units']['term'] = array(
     '#type' => 'textfield',
-    '#description' => "Add units to organize your course (e.g., 'Week One', 'Travel')",
+    '#description' => 'Examples: "Week One," "Travel"',
     '#size' => 60,
-    '#required' => $require_units,
   );
-  $form['units_themes']['ajax_button'] = array(
-    '#markup' => "<button class='form-submit' id='ajax-term' value='units'>Add Unit</button>",
-    '#suffix' => "<div class='terms' id='terms-units'>" . implode('', $units) . "</div>",
-  );
+	course_custom_taxonomy_form_setup($form, 'units');
 
+	// Current Genre terms for this courajax-se, if any
 	$form['genre_doc'] = array(
 		'#type' => 'fieldset',
-		'#title' => 'Create genres to categorize materials.',
+		'#title' => 'Create genres to categorize course readings.',
+		'#attributes' => array(
+			'id' => 'genre_doc',
+		),
 	);
-	$require_genre = (count($genre)) ? FALSE: TRUE;
 	$form['genre_doc']['term'] = array(
 		'#type' => 'textfield',
-		'#description' => 'Add genres to categorize course materials.',
+		'#description' => 'Examples: "Scholarship," "Fiction"',
 		'#size' => 60,
-		'#required' => $require_genre,
 	);
-	$form['genre_doc']['ajax_button'] = array(
-		'#markup' => "<button class='form-submit' id='ajax-term' value='genre_doc'>Add Genre</button>",
-		'#suffix' => "<div class='terms' id='terms-genre_doc'>" . implode('', $genre_doc) . "</div>",
-	);
+	course_custom_taxonomy_form_setup($form, 'genre_doc');
 
-  $path = drupal_get_path('module', 'course');
+	// Current Response genre terms for this course, if any
+	$form['genre_response'] = array(
+		'#type' => 'fieldset',
+		'#title' => 'Create genres to categorize student responses.',
+		'#attributes' => array(
+			'id' => 'genre_response',
+		),
+	);
+	$form['genre_response']['term'] = array(
+		'#type' => 'textfield',
+		'#description' => 'Examples: "Essay," "Reflection"',
+		'#size' => 60,
+	);
+	course_custom_taxonomy_form_setup($form, 'genre_response');
+
+	$path = drupal_get_path('module', 'course');
   $form['#attached']['css'] = array("$path/course.css");
-  $form['#attached']['js'] = array("$path/course.js");
+	// TODO: refactor to include only the JS we need
+	$form['#attached']['js'] = array("$path/course.js");
 
   $form['submit'] = array(
     '#type' => 'submit',
-    '#value' => 'Set Up Materials'
+    '#value' => 'Continue',
+		'#attributes' => array(
+			'CLASS' => 'lacuna-button',
+		),
   );
 
   return $form;
 }
 
 function course_set_up_materials_form_submit($form, &$form_state) {
-  $nid = $form_state['values']['course_nid'];
-  # add terms to vocabs
-
-  # number of week tags
-  $vocab = taxonomy_vocabulary_machine_name_load("number_of_weeks_$nid");
-  $max = $form_state['values']['number_of_weeks'];
-  $tree = taxonomy_get_tree($vocab->vid);
-
-  # updating an existing vocab
-  if (count($tree)) {
-    foreach ($tree as $week) {
-      if ($week->name > $max) {
-        taxonomy_term_delete($week->tid);
-      }
-    }
-  }
-  for ($i=1; $i <= $max; $i++) {
-    course_create_taxonomy_term($vocab, $i, $i);
-  }
-
-  # unit/theme tags
-  $vocab = taxonomy_vocabulary_machine_name_load("units_$nid");
-  foreach(explode(',', $form_state['values']['term']) as $unit) {
-    course_create_taxonomy_term($vocab, $unit);
-  }
-  drupal_goto("createcourse-4/$nid");
+  $gid = course_get_selected_course();
+  // add terms to vocabs
+	dpm($form);
+	dpm($form_state);
+	$taxonomies = ['units', 'genre_doc', 'genre_response'];
+	foreach ($taxonomies as $taxonomy) {
+		dpm($form_state[$taxonomy]);
+	}
+//  # number of week tags
+//  $vocab = taxonomy_vocabulary_machine_name_load("number_of_weeks_$nid");
+//  $max = $form_state['values']['number_of_weeks'];
+//  $tree = taxonomy_get_tree($vocab->vid);
+//
+//	dpm($form);
+//  # updating an existing vocab
+//  if (count($tree)) {
+//    foreach ($tree as $week) {
+//      if ($week->name > $max) {
+//        taxonomy_term_delete($week->tid);
+//      }
+//    }
+//  }
+//  for ($i=1; $i <= $max; $i++) {
+//    course_create_taxonomy_term($vocab, $i, $i);
+//  }
+//
+//  # unit/theme tags
+//  $vocab = taxonomy_vocabulary_machine_name_load("units_$nid");
+//  foreach(explode(',', $form_state['values']['term']) as $unit) {
+//    course_create_taxonomy_term($vocab, $unit);
+//  }
+//  drupal_goto("createcourse-4/$nid");
 }
 
 /*
  * Routines for per-course taxonomies
  */
+
+// Returns results for query on course-based term in given vocabulary
+function course_get_taxonomy_term_in_current_course($vocab_name, $term) {
+	$gid = course_get_selected_course();
+	$query = new EntityFieldQuery();
+	$result = $query->entityCondition('entity_type', 'taxonomy_term')
+		->entityCondition('bundle', $vocab_name)
+		->fieldCondition('field_term_course', 'target_id', $gid, '=')
+		->fieldCondition('name', $term, '=')
+		->execute();
+	if (isset($result['taxonomy_term'])) {
+		return $result['taxonomy_term'];
+	}
+	return FALSE;
+}
+
 function course_create_taxonomy_term($vocab, $tag, $weight = 0) {
-	// check for existing term
+	// first, check for existing term in per-course taxonomy
 	$tag = trim($tag);
-	if (0 == count(taxonomy_get_term_by_name($tag, $vocab->machine_name)) && !empty($tag)) {
+	if (!course_get_taxonomy_term_in_current_course($vocab->machine_name, $tag)) {
+		// none found, create a new one
 		$term = new stdClass();
 		$term->name = $tag;
 		$term->vid = $vocab->vid;
 		$term->weight = $weight;
+		$term->field_term_course[LANGUAGE_NONE][0]['target_id'] = course_get_selected_course();
 		taxonomy_term_save($term);
 	}
 }
 
 function course_ajax_add_term($vocab_name) {
-	$term = check_plain($_POST['terms']);
-	$gid = course_get_selected_course();
-	$vocab = taxonomy_vocabulary_machine_name_load($vocab_name . '_' . $gid);
+	$terms = check_plain($_POST['terms']);
+	$vocab = taxonomy_vocabulary_machine_name_load($vocab_name);
 	foreach(explode(',', $terms) as $term) {
 		course_create_taxonomy_term($vocab, $term);
 	}
@@ -203,9 +235,7 @@ function course_ajax_add_term($vocab_name) {
 }
 
 function course_ajax_delete_term($vocab_name, $term) {
-	$gid = course_get_selected_course();
-	$vocab = taxonomy_vocabulary_machine_name_load($vocab_name . '_' . $gid);
-	$term = array_pop(taxonomy_get_term_by_name($term, $vocab_name . '_' . $gid));
+	$term = course_get_taxonomy_term_in_current_course($vocab_name, $term);
 	if ($term) {
 		taxonomy_term_delete($term->tid);
 	}
@@ -297,6 +327,6 @@ function course_blank_page() {
 // The about course callback, simply redirects to the user's currently selected course
 function course_about_course() {
   if ($current_course = course_get_selected_course()) {
-    drupal_goto('node/' . $current_course);
+    drupal_goto(drupal_get_path_alias('node/' . $current_course));
   }
 }
