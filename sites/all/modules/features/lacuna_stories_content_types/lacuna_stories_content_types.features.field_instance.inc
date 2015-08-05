@@ -1185,6 +1185,42 @@ function lacuna_stories_content_types_field_default_field_instances() {
     ),
   );
 
+  // Exported field_instance: 'node-document-field_copyright'
+  $field_instances['node-document-field_copyright'] = array(
+    'bundle' => 'document',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 16,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_copyright',
+    'label' => 'Copyright',
+    'required' => 0,
+    'settings' => array(
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'options',
+      'settings' => array(),
+      'type' => 'options_buttons',
+      'weight' => 17,
+    ),
+  );
+
   // Exported field_instance: 'node-document-field_doc_attachment'
   $field_instances['node-document-field_doc_attachment'] = array(
     'bundle' => 'document',
@@ -2744,6 +2780,7 @@ function lacuna_stories_content_types_field_default_field_instances() {
   t('Body');
   t('Category');
   t('Comment');
+  t('Copyright');
   t('Course');
   t('Course(s)');
   t('Course(s) Enrolled');

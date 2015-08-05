@@ -598,7 +598,7 @@ function course_field_default_field_instances() {
       ),
     ),
     'deleted' => 0,
-    'description' => 'i.e. they have access to the same library and e-reserve materials as you',
+    'description' => '',
     'display' => array(
       'default' => array(
         'label' => 'above',
@@ -616,7 +616,7 @@ function course_field_default_field_instances() {
     ),
     'entity_type' => 'node',
     'field_name' => 'field_registered_students',
-    'label' => 'Are all of your students registered with your institution?',
+    'label' => 'Some of my students are not from my institution',
     'required' => 0,
     'settings' => array(
       'user_register_form' => FALSE,
@@ -853,58 +853,6 @@ function course_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-course-group_access'
-  $field_instances['node-course-group_access'] = array(
-    'bundle' => 'course',
-    'default_value' => array(
-      0 => array(
-        'value' => 0,
-      ),
-    ),
-    'deleted' => 0,
-    'description' => 'Would you like your current draft course to be visible to students, or to continue in "Instructor-Only" mode?',
-    'display' => array(
-      'default' => array(
-        'label' => 'above',
-        'module' => 'list',
-        'settings' => array(),
-        'type' => 'list_default',
-        'weight' => 19,
-      ),
-      'teaser' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
-      ),
-    ),
-    'entity_type' => 'node',
-    'field_name' => 'group_access',
-    'label' => 'Course Visibility',
-    'required' => 1,
-    'settings' => array(
-      'user_register_form' => FALSE,
-    ),
-    'view modes' => array(
-      'full' => array(
-        'label' => 'above',
-        'type' => 'options_onoff',
-      ),
-      'teaser' => array(
-        'label' => 'above',
-        'type' => 'options_onoff',
-      ),
-    ),
-    'widget' => array(
-      'active' => 1,
-      'module' => 'options',
-      'settings' => array(),
-      'type' => 'options_buttons',
-      'weight' => 23,
-    ),
-    'widget_type' => 'options_select',
-  );
-
   // Exported field_instance: 'node-course-group_group'
   $field_instances['node-course-group_group'] = array(
     'bundle' => 'course',
@@ -1018,11 +966,9 @@ function course_field_default_field_instances() {
   // Included for use with string extractors like potx.
   t('(ex. COMPLIT221)');
   t('Add any file attachments (such as a PDF of your syllabus) here.');
-  t('Are all of your students registered with your institution?');
   t('Attachments');
   t('Course Description');
   t('Course Image');
-  t('Course Visibility');
   t('Course access permissions');
   t('Determine if this is an OG group.');
   t('For courses that span terms, select multiple terms. Note, selecting multiple terms does not create separate courses.');
@@ -1033,6 +979,7 @@ function course_field_default_field_instances() {
   t('If you have a syllabus for your course, please upload it now. You can update your syllabus at any time.');
   t('Online registration with this password will close after the university add/drop deadline for your course.');
   t('Optional');
+  t('Some of my students are not from my institution');
   t('Students will have access to materials 7 days before the first day of class');
   t('Students will have access to restricted materials 30 days after the end of class, or after 180 days of the beginning of the course, whichever arrives first.');
   t('Term');
@@ -1046,10 +993,8 @@ function course_field_default_field_instances() {
   t('What is your department?');
   t('What is your name?');
   t('What password would you like to create for students to register in your class?');
-  t('Would you like your current draft course to be visible to students, or to continue in "Instructor-Only" mode?');
   t('Year');
   t('You can safely leave this set to the default. You would know if you needed to customize this part.');
-  t('i.e. they have access to the same library and e-reserve materials as you');
 
   return $field_instances;
 }
