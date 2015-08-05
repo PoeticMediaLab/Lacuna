@@ -528,7 +528,7 @@ class View
 
   eraseFilter: (id, value) ->
     if value?
-      $('#' + id + '.' + select.filters.active + "[data-value='#{value}'").remove()
+      $('#' + id + '.' + select.filters.active + '[data-value="' + value + '"]').remove()
     else
       # No explicit value; remove all of this type
       $('#' + id + '.' + select.filters.active).remove()
