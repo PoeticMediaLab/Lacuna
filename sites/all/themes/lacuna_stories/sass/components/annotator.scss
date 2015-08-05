@@ -85,48 +85,54 @@
   webkit-border-radius: 5px;
   border-radius: 5px;
   padding: 2px;
-  /*width: 14%;*/
-  min-width: 14em;
-  max-width: 16em;
+  width: 15em;
+}
+
+  /*  Styles for annotation filter on small screens. */
+@media all and (max-width: 960px) {
+
+  #annotation-filters-wrapper {
+
+    $width: 16em;
+    width: $width;
+
+    right: 0em;
+
+    &.hidden {
+
+      right: 0em - $width - 1em;
+
+    }
+
+    h2 {
+
+      border-radius: 2px;
+      padding: 4px;
+      background-color: #eff;
+      box-shadow: 0px -2px 2px gray;
+      padding-bottom: 15px;
+      position: absolute;
+      -webkit-transform: rotate(270deg);
+      -moz-transform: rotate(270deg);
+      -ms-transform: rotate(270deg);
+      -o-transform: rotate(270deg);
+      width: 12em;
+      right: 6.3em;
+      top: 6em;
+
+    }
+
+  }
+
+  div#content {
+    padding-left: 25px;
+    padding-right: 25px;
+  }
+
 }
 
 #annotation-filters {
   position: relative;
-}
-
-@media (max-width: 959px) {
-  #annotation-filters {
-    width: 20%;
-  }
-  #af-pager-controls {
-    font-size: xx-large;
-  }
-  i.af-pager {
-    padding-right: 10% !important;
-  }
-}
-
-@media (min-width: 960px) and (max-width: 1099px) {
-  #annotation-filters {
-    width: 15%;
-  }
-  #af-pager-controls {
-    font-size: large;
-  }
-  i.af-pager {
-  }
-}
-
-@media (max-height: 768px) {
-  #annotation-filters {
-    top: 20%;
-  }
-}
-
-@media (min-width: 1100px) {
-  #annotation-filters {
-    width: 13%;
-  }
 }
 
 section.region-sidebar-second h2 {
@@ -470,7 +476,7 @@ li.annotator-checkbox[style] {
 }
 
 #annotation-filters-wrapper {
-  background-color: rgba(120,206,253,.1);
+  background-color: #eff;
   box-shadow: 2px 2px 5px gray;
 }
 
