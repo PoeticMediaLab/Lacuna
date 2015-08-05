@@ -1237,17 +1237,18 @@ function lacuna_stories_views_views_default_views() {
   $handler->display->display_options['filters']['field_medium_tid']['vocabulary'] = 'medium';
   $handler->display->display_options['filters']['field_medium_tid']['hierarchy'] = 1;
   $handler->display->display_options['filters']['field_medium_tid']['error_message'] = FALSE;
-  /* Filter criterion: Content: Author (select list) */
-  $handler->display->display_options['filters']['author_select']['id'] = 'author_select';
-  $handler->display->display_options['filters']['author_select']['table'] = 'node';
-  $handler->display->display_options['filters']['author_select']['field'] = 'author_select';
-  $handler->display->display_options['filters']['author_select']['exposed'] = TRUE;
-  $handler->display->display_options['filters']['author_select']['expose']['operator_id'] = 'author_select_op';
-  $handler->display->display_options['filters']['author_select']['expose']['label'] = 'Limit by Author';
-  $handler->display->display_options['filters']['author_select']['expose']['operator'] = 'author_select_op';
-  $handler->display->display_options['filters']['author_select']['expose']['identifier'] = 'author_select';
-  $handler->display->display_options['filters']['author_select']['expose']['multiple'] = TRUE;
-  $handler->display->display_options['filters']['author_select']['expose']['remember_roles'] = array(
+  /* Filter criterion: Biblio: Author last name */
+  $handler->display->display_options['filters']['lastname']['id'] = 'lastname';
+  $handler->display->display_options['filters']['lastname']['table'] = 'biblio_contributor_data';
+  $handler->display->display_options['filters']['lastname']['field'] = 'lastname';
+  $handler->display->display_options['filters']['lastname']['relationship'] = 'field_bibliographic_entry_target_id';
+  $handler->display->display_options['filters']['lastname']['exposed'] = TRUE;
+  $handler->display->display_options['filters']['lastname']['expose']['operator_id'] = 'lastname_op';
+  $handler->display->display_options['filters']['lastname']['expose']['label'] = 'Limit by Author';
+  $handler->display->display_options['filters']['lastname']['expose']['operator'] = 'lastname_op';
+  $handler->display->display_options['filters']['lastname']['expose']['identifier'] = 'lastname';
+  $handler->display->display_options['filters']['lastname']['expose']['multiple'] = TRUE;
+  $handler->display->display_options['filters']['lastname']['expose']['remember_roles'] = array(
     2 => '2',
     1 => 0,
     5 => 0,
@@ -1256,6 +1257,7 @@ function lacuna_stories_views_views_default_views() {
     6 => 0,
     7 => 0,
   );
+  $handler->display->display_options['filters']['lastname']['reduce_duplicates'] = TRUE;
   $handler->display->display_options['path'] = 'materials';
   $handler->display->display_options['menu']['type'] = 'normal';
   $handler->display->display_options['menu']['title'] = 'Materials';
@@ -1263,6 +1265,62 @@ function lacuna_stories_views_views_default_views() {
   $handler->display->display_options['menu']['name'] = 'main-menu';
   $handler->display->display_options['menu']['context'] = 0;
   $handler->display->display_options['menu']['context_only_inline'] = 0;
+
+  /* Display: Block */
+  $handler = $view->new_display('block', 'Block', 'course_block');
+  $handler->display->display_options['defaults']['access'] = FALSE;
+  $handler->display->display_options['access']['type'] = 'none';
+  $handler->display->display_options['defaults']['style_plugin'] = FALSE;
+  $handler->display->display_options['style_plugin'] = 'default';
+  $handler->display->display_options['defaults']['style_options'] = FALSE;
+  $handler->display->display_options['defaults']['row_plugin'] = FALSE;
+  $handler->display->display_options['row_plugin'] = 'fields';
+  $handler->display->display_options['row_options']['inline'] = array(
+    'views_bulk_operations' => 'views_bulk_operations',
+    'field_image' => 'field_image',
+  );
+  $handler->display->display_options['defaults']['row_options'] = FALSE;
+  $handler->display->display_options['defaults']['empty'] = FALSE;
+  /* No results behavior: Global: Text area */
+  $handler->display->display_options['empty']['area']['id'] = 'area';
+  $handler->display->display_options['empty']['area']['table'] = 'views';
+  $handler->display->display_options['empty']['area']['field'] = 'area';
+  $handler->display->display_options['empty']['area']['empty'] = TRUE;
+  $handler->display->display_options['empty']['area']['format'] = 'filtered_html';
+  $handler->display->display_options['defaults']['sorts'] = FALSE;
+  /* Sort criterion: Biblio: Sort Title */
+  $handler->display->display_options['sorts']['biblio_sort_title']['id'] = 'biblio_sort_title';
+  $handler->display->display_options['sorts']['biblio_sort_title']['table'] = 'biblio';
+  $handler->display->display_options['sorts']['biblio_sort_title']['field'] = 'biblio_sort_title';
+  $handler->display->display_options['sorts']['biblio_sort_title']['relationship'] = 'field_bibliographic_entry_target_id';
+  $handler->display->display_options['sorts']['biblio_sort_title']['expose']['label'] = 'Title';
+  $handler->display->display_options['defaults']['filter_groups'] = FALSE;
+  $handler->display->display_options['filter_groups']['operator'] = 'OR';
+  $handler->display->display_options['defaults']['filters'] = FALSE;
+  /* Filter criterion: Content: Type */
+  $handler->display->display_options['filters']['type_1']['id'] = 'type_1';
+  $handler->display->display_options['filters']['type_1']['table'] = 'node';
+  $handler->display->display_options['filters']['type_1']['field'] = 'type';
+  $handler->display->display_options['filters']['type_1']['value'] = array(
+    'audio' => 'audio',
+    'document' => 'document',
+    'image' => 'image',
+    'music_video' => 'music_video',
+    'video' => 'video',
+  );
+  $handler->display->display_options['filters']['type_1']['group'] = 1;
+  $handler->display->display_options['filters']['type_1']['expose']['operator_id'] = 'type_1_op';
+  $handler->display->display_options['filters']['type_1']['expose']['label'] = 'Type';
+  $handler->display->display_options['filters']['type_1']['expose']['operator'] = 'type_1_op';
+  $handler->display->display_options['filters']['type_1']['expose']['identifier'] = 'type_1';
+  /* Filter criterion: Content: Published */
+  $handler->display->display_options['filters']['status']['id'] = 'status';
+  $handler->display->display_options['filters']['status']['table'] = 'node';
+  $handler->display->display_options['filters']['status']['field'] = 'status';
+  $handler->display->display_options['filters']['status']['value'] = 1;
+  $handler->display->display_options['filters']['status']['group'] = 1;
+  $handler->display->display_options['filters']['status']['expose']['operator'] = FALSE;
+  $handler->display->display_options['block_description'] = 'course materials block';
   $export['documents'] = $view;
 
   $view = new view();

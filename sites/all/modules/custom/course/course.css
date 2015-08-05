@@ -1,1 +1,56 @@
 .form-field-name-field-unregistered-students { display: none; }
+.page-createcourse-3 .terms .fa-minus {
+  padding-left: 5px;
+  font-size: 12px;
+  cursor: pointer;
+}
+fieldset#edit-units-themes { margin-bottom: 30px; }
+.page-createcourse-4 .biblio-form {
+  display: none;
+  padding: 10px;
+  border: solid 1px lightgray;
+  border-radius: 3px;
+  margin-top: 30px;
+}
+.page-createcourse-4 .selected { background-color: rgba(22,147,165,0.2); }
+.page-createcourse-4 #e-access, .page-createcourse-4 #studynet, .page-createcourse-4 #archived-materials {
+  padding: 10px;
+  margin-bottom: 10px;
+}
+.page-createcourse-4 .form-submit,
+.node-document-form .form-submit {
+  margin-top: 10px;
+  width: 230px !important;
+}
+.page-createcourse-4 button a { color: #FFF !important; }
+.view-archived-materials .views-row-odd { background-color: #F0F0F0; }
+.view-archived-materials .views-row { padding: 10px; }
+.view-archived-materials .views-exposed-form {
+  padding: 10px;
+  border: solid 1px #F0F0F0;
+  margin-bottom: 30px;
+}
+.view-archived-materials .vbo-views-form fieldset#edit-select {
+  border: none;
+}
+.view-archived-materials .vbo-select-all-markup fieldset  {
+  border: none;
+  width: 300px;
+  margin-left: 0;
+  margin-right: 0;
+}
+
+.course-finish-adding-material {
+  background-color: #88b551;
+  color: #FFF;
+  border-radius: 3px;
+  text-align: center;
+  margin-top: 50px; /* temp hack b/c #navigation absolute positioning is messing this up. figure out long-term workaround once navigation is set or removed */
+}
+.course-finish-adding-material div {
+  line-height: 35px;
+}
+.form-item-weeks .chosen-container, 
+.form-item-units .chosen-container {
+  width: 400px !important;
+}
