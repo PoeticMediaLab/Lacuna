@@ -278,9 +278,9 @@ function course_add_material($nid) {
 }
 
 function course_switch_course($gid) {
-  if ($group = node_load ($gid)) {
+  if ($group = node_load($gid)) {
     if ($group->type == 'course') {
-      if (og_is_member('node', $gid)) {
+      if (og_is_member('node', $gid) || user_access('administer group')) {
         _course_set_selected_course($gid);
         drupal_goto('materials'); // After setting the context, redirect user to the course materials page
       }

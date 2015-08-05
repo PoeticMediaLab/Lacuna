@@ -163,15 +163,16 @@ function course_admin_form() {
 function course_switch_course_link ($row, $view) {
   $gid = $row->nid;
   $title = $row->title;
-  if ($view->current_display == 'not_enrolled') {
-    return l($title, 'node/' . $gid);
+  if (($view->current_display == 'not_enrolled') && !user_access('administer group')) {
+		// Allow users w/ admin group permissions to switch context to any course
+    return l($title, drupal_get_path_alias('node/' . $gid));
   };
-    if ($current_course = course_get_selected_course()) {
-      if ($gid == $current_course) {
-        $title .= " (current course)";
-      }
-    }
-  return l ($title, 'switch-course/' . $gid);
+	if ($current_course = course_get_selected_course()) {
+		if ($gid == $current_course) {
+			$title .= " (current course)";
+		}
+	}
+  return l($title, 'switch-course/' . $gid);
 }
 
 /**
