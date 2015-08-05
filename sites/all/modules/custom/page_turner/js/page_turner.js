@@ -306,7 +306,7 @@ function PTView(model, elements) {
 
     function draw_page_x_of_y() {
         // Add the "Page X of Y" div
-        d3.select('#' + self.elements.pages.loc).append('div').attr('id', self.elements.pages.container).append('span').attr('id', self.elements.pages.id);
+        d3.select('#' + self.elements.pages.loc).insert('div', '#page-turner-nav').attr('id', self.elements.pages.container).append('span').attr('id', self.elements.pages.id);
         d3.select('#' + self.elements.pages.container).append('span').attr('contenteditable', true).attr('id', self.elements.pages.numbers);
         d3.select('#' + self.elements.pages.container).append('span').attr('id', self.elements.pages.total).text(' of ' + self.model.page_total());
     }
@@ -622,7 +622,7 @@ PTController.prototype = {
         view = new PTView(model, {
           'content': 'article',
           'pages': {
-            'loc': 'navigation',
+            'loc': 'content',
             'container': 'page-turner-pages-container',
             'id': 'page-turner-pages',
             'numbers': 'page-turner-pages-numbers',

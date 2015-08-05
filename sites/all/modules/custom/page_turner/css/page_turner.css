@@ -9,6 +9,7 @@
 #page-turner-nav {
   width: 100%;
   height: 50px;
+  clear: both;
 }
 
 rect#page-turner-nav {
@@ -28,6 +29,8 @@ rect#page-turner-nav {
   float: right;
   font-size: 12px;
   cursor: default;
+  margin-top: -20px;
+  margin-bottom: 10px;
 }
 
 #page-turner-pages-numbers {
