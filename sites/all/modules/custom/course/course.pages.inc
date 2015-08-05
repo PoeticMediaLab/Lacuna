@@ -203,7 +203,7 @@ function course_get_taxonomy_term_in_current_course($vocab_name, $term) {
 	$result = $query->entityCondition('entity_type', 'taxonomy_term')
 		->entityCondition('bundle', $vocab_name)
 		->fieldCondition('field_term_course', 'target_id', $gid, '=')
-		->fieldCondition('name', $term, '=')
+		->propertyCondition('name', $term)
 		->execute();
 	if (isset($result['taxonomy_term'])) {
 		return $result['taxonomy_term'];
@@ -231,7 +231,7 @@ function course_ajax_add_term($vocab_name) {
 	foreach(explode(',', $terms) as $term) {
 		course_create_taxonomy_term($vocab, $term);
 	}
-	ajax_deliver();
+	ajax_deliver(NULL);
 }
 
 function course_ajax_delete_term($vocab_name, $term) {
@@ -239,7 +239,7 @@ function course_ajax_delete_term($vocab_name, $term) {
 	if ($term) {
 		taxonomy_term_delete($term->tid);
 	}
-	ajax_deliver();
+	ajax_deliver(NULL);
 }
 
 //function course_ajax_add_unit_term() {
