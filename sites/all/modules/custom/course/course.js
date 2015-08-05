@@ -16,7 +16,7 @@
           new_terms = new_term.split(',')
           for (i=0; i < new_terms.length; i++) {
             if (terms.indexOf(new_terms[i].trim()) == -1) {
-              $(".terms").append("<div class='term'><span class='name'>" + new_terms[i].trim() + "</span><span class='fa fa-minus'></span></div>");
+              $(".terms").append("<div class='term'><span class='name'>" + new_terms[i].trim() + "</span><span class='fa fa-trash-o'></span></div>");
               terms.push(new_terms[i].trim());
             }
           }
@@ -24,7 +24,7 @@
         }
         return false; // dont submit the form
       });
-      $('.terms .fa-minus').click(function() {
+      $('.terms .trash-o').click(function() {
         term = $(this).siblings(".name").text();
         nid = $("[name=course_nid]").val();
         $.ajax({
