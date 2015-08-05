@@ -93,7 +93,7 @@ function get_term_id($term_name, $taxonomy_name) {
   $tid = NULL;
   $course_id = course_get_selected_course();
   foreach ($terms as $term) {
-    if (($term->vid == $taxonomy->vid) && ($term->field_annotation_tag_course[LANGUAGE_NONE][0]['target_id'] == $course_id)) {
+    if (($term->vid == $taxonomy->vid) && ($term->field_term_course[LANGUAGE_NONE][0]['target_id'] == $course_id)) {
       $tid = $term->tid;
       break;  // go with the first match
     }
@@ -124,7 +124,7 @@ function annotation_format_tags(&$entity, $tags) {
             $term = new stdClass();
             $term->name = $tag;
             $term->vid = $taxonomy->vid;
-            $term->field_annotation_tag_course[$entity->language][0]['target_id'] = $current_course;
+            $term->field_term_course[$entity->language][0]['target_id'] = $current_course;
             taxonomy_term_save($term);
             $tid = $term->tid;
           }

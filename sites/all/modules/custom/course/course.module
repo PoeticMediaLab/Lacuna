@@ -356,7 +356,7 @@ function course_form_views_exposed_form_alter(&$form, &$form_state) {
     $query = new EntityFieldQuery();
     $query->entityCondition('entity_type', 'taxonomy_term');
     $query->entityCondition('bundle', 'annotation_tags');
-    $query->fieldCondition('field_annotation_tag_course', 'target_id', $course_groups, 'IN');
+    $query->fieldCondition('field_term_course', 'target_id', $course_groups, 'IN');
     $records = $query->execute();
     if (count($records)) {
       $group_tag_options = array_keys($records['taxonomy_term']);
