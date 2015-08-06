@@ -282,28 +282,43 @@ function course_get_terms_for_current_course($taxonomy_name) {
 	return $taxonomy;
 }
 
+function course_get_documents_for_current_course() {
+	$gid = course_get_selected_course();
+	$query = new EntityFieldQuery();
+	$result = $query->entityCondition('entity_type', 'node')
+		->entityCondition('bundle', 'document')
+		->fieldCondition('og_group_ref', 'target_id', $gid)
+		->execute();
+	if (isset($result['node'])) {
+		return $result['node'];
+	}
+}
+
+/*
+ * Filter the bibliography nodes to those used in current course
+ */
+function course_get_bibliography_for_current_course() {
+	$documents = course_get_documents_for_current_course();
+	$biblios = array();
+	if (!empty($documents)) {
+		$docs = node_load_multiple(array_keys($documents));
+		foreach ($docs as $doc) {
+			$wrapper = entity_metadata_wrapper('node', $doc);
+			array_push($biblios, $wrapper->field_bibliographic_entry->value());
+		}
+	}
+	return $biblios;
+}
+
 /*
  * Get a list of relevant authors for exposed filter
  */
 function course_get_authors_for_current_course() {
 	$authors = array();
-	$gid = course_get_selected_course();
-	$query = new EntityFieldQuery();
-	$doc_result = $query->entityCondition('entity_type', 'node')
-		->entityCondition('bundle', 'document')
-		->fieldCondition('og_group_ref', 'target_id', $gid)
-		->execute();
-	if (isset($doc_result['node'])) {
-		$docs = node_load_multiple(array_keys($doc_result['node']));
-		$biblios = array();
-		foreach($docs as $doc) {
-			$wrapper = entity_metadata_wrapper('node', $doc);
-			array_push($biblios, $wrapper->field_bibliographic_entry->value());
-		}
-		foreach ($biblios as $biblio) {
-			foreach ($biblio->biblio_contributors as $author) {
-					$authors[$author['lastname']] = $author['name'];
-			}
+	$biblios = course_get_bibliography_for_current_course();
+	foreach ($biblios as $biblio) {
+		foreach ($biblio->biblio_contributors as $author) {
+				$authors[$author['lastname']] = $author['name'];
 		}
 	}
 	return $authors;

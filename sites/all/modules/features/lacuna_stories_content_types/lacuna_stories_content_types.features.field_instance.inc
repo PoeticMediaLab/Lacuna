@@ -1296,8 +1296,10 @@ function lacuna_stories_content_types_field_default_field_instances() {
     'widget' => array(
       'active' => 1,
       'module' => 'options',
-      'settings' => array(),
-      'type' => 'options_buttons',
+      'settings' => array(
+        'apply_chosen' => '',
+      ),
+      'type' => 'options_select',
       'weight' => 3,
     ),
   );
@@ -1869,11 +1871,14 @@ function lacuna_stories_content_types_field_default_field_instances() {
     ),
     'widget' => array(
       'active' => 1,
-      'module' => 'options',
+      'module' => 'entityreference',
       'settings' => array(
-        'apply_chosen' => 1,
+        'apply_chosen' => 0,
+        'match_operator' => 'CONTAINS',
+        'path' => '',
+        'size' => 60,
       ),
-      'type' => 'options_select',
+      'type' => 'entityreference_autocomplete',
       'weight' => 4,
     ),
   );
@@ -2454,9 +2459,9 @@ function lacuna_stories_content_types_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'taxonomy_term-unit-field_term_course'
-  $field_instances['taxonomy_term-unit-field_term_course'] = array(
-    'bundle' => 'unit',
+  // Exported field_instance: 'taxonomy_term-units-field_term_course'
+  $field_instances['taxonomy_term-units-field_term_course'] = array(
+    'bundle' => 'units',
     'default_value' => NULL,
     'deleted' => 0,
     'description' => '',
