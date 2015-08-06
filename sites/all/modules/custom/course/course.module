@@ -282,12 +282,14 @@ function course_get_terms_for_current_course($taxonomy_name) {
 	return $taxonomy;
 }
 
+// Returns list of documents in Ready to Annotate status for current course
 function course_get_documents_for_current_course() {
 	$gid = course_get_selected_course();
 	$query = new EntityFieldQuery();
 	$result = $query->entityCondition('entity_type', 'node')
 		->entityCondition('bundle', 'document')
 		->fieldCondition('og_group_ref', 'target_id', $gid)
+		->fieldCondition('field_status', 'value', 3)	// 3 == Ready to Annotate
 		->execute();
 	if (isset($result['node'])) {
 		return $result['node'];
