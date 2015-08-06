@@ -271,6 +271,7 @@ function course_get_terms_for_current_course($taxonomy_name) {
 	$result = $query->entityCondition('entity_type', 'taxonomy_term')
 		->entityCondition('bundle', $taxonomy_name)
 		->fieldCondition('field_term_course', 'target_id', $gid, '=')
+		->propertyOrderBy('weight')
 		->execute();
 	if (isset($result['taxonomy_term'])) {
 		foreach(array_keys($result['taxonomy_term']) as $tid) {

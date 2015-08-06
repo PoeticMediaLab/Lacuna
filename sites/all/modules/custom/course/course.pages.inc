@@ -87,8 +87,7 @@ function course_custom_taxonomy_form_setup(&$form, $taxonomy_name) {
 	foreach (course_get_terms_for_current_course($taxonomy_name) as $term) {
 		$items[] = "<div class='term'><span class='fa fa-trash-o'></span><span class='name'>" . $term . "</span></div>";
 	}
-	asort($items);
-	$form[$taxonomy_name]['term']['#required'] = (count($items))? FALSE: TRUE;
+	$form[$taxonomy_name]['term']['#required'] = (count($items) == 0);
 	$form[$taxonomy_name]['ajax_button'] = array(
 		'#markup' => "<button class='form-submit ajax-add-term'>Add Item</button>",
 		'#suffix' => "<div class='terms'>" . implode('', $items) . "</div>",
@@ -153,42 +152,16 @@ function course_set_up_materials_form($form, &$form_state, $nid) {
 			'CLASS' => 'lacuna-button',
 		),
   );
-
   return $form;
 }
 
+// AJAX adds the taxonomy terms, so form submit doesn't need to handle it
 function course_set_up_materials_form_submit($form, &$form_state) {
   $gid = course_get_selected_course();
-  // add terms to vocabs
 	dpm($form);
 	dpm($form_state);
-	$taxonomies = ['units', 'genre_doc', 'genre_response'];
 	foreach ($taxonomies as $taxonomy) {
-		dpm($form_state[$taxonomy]);
 	}
-//  # number of week tags
-//  $vocab = taxonomy_vocabulary_machine_name_load("number_of_weeks_$nid");
-//  $max = $form_state['values']['number_of_weeks'];
-//  $tree = taxonomy_get_tree($vocab->vid);
-//
-//	dpm($form);
-//  # updating an existing vocab
-//  if (count($tree)) {
-//    foreach ($tree as $week) {
-//      if ($week->name > $max) {
-//        taxonomy_term_delete($week->tid);
-//      }
-//    }
-//  }
-//  for ($i=1; $i <= $max; $i++) {
-//    course_create_taxonomy_term($vocab, $i, $i);
-//  }
-//
-//  # unit/theme tags
-//  $vocab = taxonomy_vocabulary_machine_name_load("units_$nid");
-//  foreach(explode(',', $form_state['values']['term']) as $unit) {
-//    course_create_taxonomy_term($vocab, $unit);
-//  }
 	// TODO: uncomment next line to progress
 //  drupal_goto("createcourse-4/$nid");
 }
@@ -236,51 +209,33 @@ function course_ajax_add_term($vocab_name) {
 }
 
 function course_ajax_delete_term($vocab_name, $term) {
-	$term = course_get_taxonomy_term_in_current_course($vocab_name, $term);
-	if ($term) {
-		taxonomy_term_delete($term->tid);
+	$terms = course_get_taxonomy_term_in_current_course($vocab_name, $term);
+	if (!empty($term)) {
+		foreach(array_keys($terms) as $tid) {
+			// Should be only one, but this is easier
+			taxonomy_term_delete($tid);
+		}
 	}
 	ajax_deliver(NULL);
 }
-
-//function course_ajax_add_unit_term() {
-//  $term = check_plain($_POST['term']);
-//  $nid = check_plain($_POST['nid']);
-//  $vocab = taxonomy_vocabulary_machine_name_load("units_$nid");
-//  foreach(explode(',', $term) as $unit) {
-//    course_create_taxonomy_term($vocab, $unit);
-//  }
-//  ajax_deliver();
-//}
-//
-//
-//function course_ajax_delete_unit_term($nid, $term) {
-//  $term = check_plain($term);
-//  $nid = check_plain($nid);
-//  $term = array_pop(taxonomy_get_term_by_name($term, "units_$nid"));
-//  if ($term) {
-//    taxonomy_term_delete($term->tid);
-//  }
-//  ajax_deliver();
-//}
 
 /**
  * Get the largest term for a numerical vocabulary
  *
  * return integer or FALSE
  */
-function course_numerical_vocab_term_max($vocab_machine_name) {
-  # simple guard to ensure numerical vocabularies
-  if ('number_of_weeks' != substr($vocab_machine_name, 0, 15)) {
-    return FALSE;
-  }
-  return db_query('SELECT t.name
-  FROM {taxonomy_vocabulary} v INNER JOIN {taxonomy_term_data} t ON v.vid=t.vid
-  WHERE v.machine_name = :machine_name
-  ORDER BY CAST(t.name AS SIGNED) DESC
-  LIMIT 1', array(':machine_name' => $vocab_machine_name))->fetchField();
-
-}
+//function course_numerical_vocab_term_max($vocab_machine_name) {
+//  # simple guard to ensure numerical vocabularies
+//  if ('number_of_weeks' != substr($vocab_machine_name, 0, 15)) {
+//    return FALSE;
+//  }
+//  return db_query('SELECT t.name
+//  FROM {taxonomy_vocabulary} v INNER JOIN {taxonomy_term_data} t ON v.vid=t.vid
+//  WHERE v.machine_name = :machine_name
+//  ORDER BY CAST(t.name AS SIGNED) DESC
+//  LIMIT 1', array(':machine_name' => $vocab_machine_name))->fetchField();
+//
+//}
 
 function course_add_material($nid) {
   global $base_url;

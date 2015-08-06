@@ -14,27 +14,27 @@
 
         // Accept new terms to add to taxonomies
         $('.ajax-add-term').click(function(event) {
-            // Fieldsets, which we use, have an extra fieldset wrapper div
-            // We set the ID for each taxonomy in the fieldset element
-            var wrapper = $(event.srcElement.parentNode.parentNode),
+            // We set the ID for each taxonomy in the fieldset element wrapping it all
+            var wrapper = $(event.srcElement).parents('fieldset'),
                 terms = [],
-                vocab = event.srcElement.parentNode.parentNode.id,
+                vocab = wrapper.attr('id'),
                 input = wrapper.find("input[name='term']"),
                 term = input.val(),
                 terms_list = wrapper.find('.terms'),
                 new_terms,
                 new_term,
-                i, l;
+                i, l,
+                clone;
             wrapper.find('.terms > .term > .name').each(function() {
-                terms.push($(this).textContent.trim());
+                terms.push(this.textContent.trim());
             });
             if (term.length > 0) {
                 $.post(settings['basePath'] + "ajax/add-term/" + vocab, { terms: term });
                 new_terms = term.split(',')
                 for (i = 0, l = new_terms.length; i < l; i++) {
                     new_term = new_terms[i].trim();
-                    console.log(new_term);
                     if (terms.indexOf(new_term) == -1) {
+                        // Note: needs to match initial form list
                         terms_list.append("<div class='term'><span class='fa fa-trash-o'></span><span class='name'>" + new_term + "</span></div>");
                         terms.push(new_terms);
                     }
@@ -44,21 +44,22 @@
             return false; // don't submit the form
       });
 
-    //  $('.terms .trash-o').click(function() {
-    //    term = $(this).siblings(".name").text();
-    //    nid = $("[name=course_nid]").val();
-    //    $.ajax({
-    //      url: settings['bathPath'] + 'ajax/delete-term/' + nid + '/' + term,
-    //      method: 'DELETE',
-    //      done: function(result) {
-    //        i = terms.indexOf(term);
-    //        if (i != -1) {
-    //          terms.splice(i, 1);
-    //        }
-    //      }
-    //    });
-    //    $(this).parent().remove();
-    //  });
+      $('.terms .fa-trash-o').click(function(event) {
+        var wrapper = $(event.srcElement).parents('fieldset'),
+            vocab = wrapper.attr('id'),
+            term = $(this).siblings(".name").text();
+            $.ajax({
+              url: settings['basePath'] + 'ajax/delete-term/' + vocab + '/' + term,
+              method: 'DELETE',
+              done: function(result) {
+                i = terms.indexOf(term);
+                if (i != -1) {
+                  terms.splice(i, 1);
+                }
+              }
+            });
+        $(this).parent().remove();
+      });
     //
     //  // createcourse-4
     //  if ($(".page-createcourse-4").length) {
