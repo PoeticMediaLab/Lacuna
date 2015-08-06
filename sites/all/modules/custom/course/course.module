@@ -401,6 +401,8 @@ function course_sewing_kit_shared_with($data) {
 }
 
 // Get the currently selected course
+// Note: If you need to rename this function, be aware that it's used in
+// many, many views in PHP fields
 function course_get_selected_course() {
   global $user;
   if (isset($user->data['current-course'])) {
