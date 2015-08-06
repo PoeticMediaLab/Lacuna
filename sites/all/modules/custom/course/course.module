@@ -499,6 +499,38 @@ function course_form_document_node_form_alter(&$form, &$form_state, $form_id) {
   $form['#attached']['css'] = array("$path/course.css");
 }
 
+// Filter fields in Responses to current course context
+function course_form_response_node_form_alter(&$form, &$form_state, $form_id) {
+	$response = node_load($form['nid']['#value']);
+	// Filter Response Genre to course
+	$default_genre = $response->field_response_genre[LANGUAGE_NONE][0]['tid'];
+	$form['genre_response'] = array(
+		'#title' => 'Genres',
+		'#type' => 'select',
+		'#size' => 60,
+		'#default_value' => $default_genre,
+		'#options' => course_get_terms_for_current_course('genre_response'),
+		'#required' => TRUE,
+	);
+	$form['#group_children']['genre_response'] = 'group_genre_about';
+
+	$form['field_response_genre']['#access'] = FALSE;	// hide this field
+	$form['#submit'] = array('course_add_response_form_submit');
+	$form['actions']['submit']['#submit'][] = 'course_add_response_form_submit';
+	$form['actions']['submit']['#value'] = 'Save Response';
+}
+
+// Handle setting custom values
+function course_add_response_form_submit($form, &$form_state) {
+	dpm($form);
+	$node = node_form_submit_build_node($form, $form_state);
+	$node->status = 1;
+
+	// Update node with our filtered values
+	$node->field_response_genre[LANGUAGE_NONE][0]['tid'] = $form_state['values']['genre_response'];
+	node_save($node);
+}
+
 function course_form_biblio_node_form_alter(&$form, &$form_state, $form_id) {
   $form['course_nid'] = array(
     '#type' => 'hidden',
@@ -535,27 +567,6 @@ function course_create_form_submit($form, &$form_state) {
   $node->status = 1; // make all the courses published
   node_save($node);
 
-  // create unit vocab for the course, if new
-//  if (is_null($form_state['node']->nid)) {
-//    $units = (object) array(
-//        'name' => "Units: " . $node->title,
-//        'description' => "Units: " . $node->title,
-//        'machine_name' => "units_" . $node->nid,
-//      );
-//    taxonomy_vocabulary_save($units);
-//    $number_of_weeks = (object) array(
-//        'name' => "Number of Weeks: " . $node->title,
-//        'description' => "Number of Weeks: " . $node->title,
-//        'machine_name' => "number_of_weeks_" . $node->nid,
-//      );
-//    taxonomy_vocabulary_save($number_of_weeks);
-//		$genre_doc = (object) array(
-//			'name' => "Genre - Materials: " . $node->title,
-//			'description' => "Genre - Materials for course " . $node->title,
-//			'machine_name' => 'genre_doc_' . $node->nid,
-//		);
-//		taxonomy_vocabulary_save($genre_doc);
-//  }
   if ($node->nid) {
     _course_set_selected_course($node->nid);
     drupal_goto("createcourse-3/" . $node->nid);
