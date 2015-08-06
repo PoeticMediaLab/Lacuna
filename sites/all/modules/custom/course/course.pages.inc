@@ -158,12 +158,10 @@ function course_set_up_materials_form($form, &$form_state, $nid) {
 // AJAX adds the taxonomy terms, so form submit doesn't need to handle it
 function course_set_up_materials_form_submit($form, &$form_state) {
   $gid = course_get_selected_course();
-	dpm($form);
-	dpm($form_state);
-	foreach ($taxonomies as $taxonomy) {
-	}
 	// TODO: uncomment next line to progress
-//  drupal_goto("createcourse-4/$nid");
+	// TODO: remove need to pass $gid to each step
+	// May not need to do anything else; taxonomies handled in previous step!
+  drupal_goto("createcourse-4/$gid");
 }
 
 /*

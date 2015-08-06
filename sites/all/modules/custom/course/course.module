@@ -316,7 +316,9 @@ function course_form_views_exposed_form_alter(&$form, &$form_state) {
   if ('views-exposed-form-documents-materials' == $form['#id']) {
     // Set exposed filter 'Limit by Unit' for current course
     $form['field_unit_tid']['#options'] = course_get_terms_for_current_course('units');
-		$form['field_genre_doc_tid']['#options'] = course_get_terms_for_current_course('genre_doc');
+		// Field name got reversed in Document field. Oops!
+		// TODO: Fix the name
+		$form['field_doc_genre_tid']['#options'] = course_get_terms_for_current_course('genre_doc');
 		$form['lastname']['#options'] = course_get_authors_for_current_course();
 	}
 
@@ -404,7 +406,6 @@ function _course_set_selected_course($nid) {
  * Implements hook_node_validate
  */
 function course_node_validate($node, $form, &$form_state) {
-
   if ($node->type == 'course') {
     // Ensure that multi-term courses are in consecutive terms
     $terms = $form_state['values']['field_course_term'][$node->language];
@@ -431,32 +432,8 @@ function course_node_update($node) {
 }
 
 function course_form_document_node_form_alter(&$form, &$form_state, $form_id) {
-//  $gid = course_get_selected_course();
   $document = node_load($form['nid']['#value']);
 
-//  $vocab = taxonomy_vocabulary_machine_name_load("number_of_weeks_$gid");
-//  $tree = taxonomy_get_tree($vocab->vid);
-//  foreach($tree as $term) {
-//    $weeks[$term->tid] = $term->name;
-//  }
-	// Per-course weeks taxonomy
-  foreach($document->field_tags[LANGUAGE_NONE] as $week) {
-    $default_weeks[] = $week['tid'];
-  }
-	$weeks = course_get_terms_for_current_course('units');
-  $form['weeks'] = array(
-    '#title' => 'Week(s)',
-    '#type' => 'select',
-    '#multiple' => TRUE,
-    '#size' => 60,
-    '#options' => $weeks,
-    '#default_value' => $default_weeks,
-  );
-//  $vocab = taxonomy_vocabulary_machine_name_load("units_$gid");
-//  $tree = taxonomy_get_tree($vocab->vid);
-//  foreach($tree as $term) {
-//    $units[$term->tid] = $term->name;
-//  }
 	// Per-course units taxonomy
   $default_unit = $document->field_unit[LANGUAGE_NONE][0]['tid'];
   $form['units'] = array(
@@ -465,26 +442,35 @@ function course_form_document_node_form_alter(&$form, &$form_state, $form_id) {
     '#size' => 60,
     '#default_value' => $default_unit,
     '#options' => course_get_terms_for_current_course('units'),
+		'#required' => TRUE,
   );
 
 	// Per-course Materials Genre taxonomy
-	$form['genre'] = array(
+	$default_genre = $document->field_doc_genre[LANGUAGE_NONE][0]['tid'];
+	$form['genre_doc'] = array(
 		'#title' => 'Genres',
 		'#type' => 'select',
 		'#size' => 60,
-		'#default_value' => $default_unit,
+		'#default_value' => $default_genre,
 		'#options' => course_get_terms_for_current_course('genre_doc'),
+		'#required' => TRUE,
 	);
 
+	// Add our filtered fields to the correct groups
   $form['#group_children']['units'] = 'group_syllabus';
-  $form['#group_children']['weeks'] = 'group_syllabus';
+  $form['#group_children']['genre_doc'] = 'group_about';
+
+	// Hide several default fields from user input - we're overriding them above
   $form['field_copyright']['#access'] = FALSE;
   $form['field_tags']['#access'] = FALSE;
   $form['field_unit']['#access'] = FALSE;
+	$form['field_doc_genre']['#access'] = FALSE;
   $form['additional_settings']['#access'] = FALSE;
   $form['og_group_ref']['#access'] = FALSE;
   $form['field_bibliographic_entry']['#access'] = FALSE;
-  $form['title']['#title'] = 'Material Name to Be Displayed to Students';
+
+	// Finish up form
+  $form['title']['#title'] = 'Material Title to Be Displayed to Students';
   $form['actions']['submit']['#value'] = 'Save (Finished Adding Material)';
   $form['actions']['submit']['#submit'] = array('course_add_document_form_submit');
 
@@ -493,7 +479,8 @@ function course_form_document_node_form_alter(&$form, &$form_state, $form_id) {
     '#submit' => array('course_add_document_form_submit'),
     '#value' => 'Save (Add More Material)',
   );
-  $path = drupal_get_path('module', 'course');
+
+	$path = drupal_get_path('module', 'course');
   $form['#attached']['css'] = array("$path/course.css");
 }
 
@@ -534,26 +521,26 @@ function course_create_form_submit($form, &$form_state) {
   node_save($node);
 
   // create unit vocab for the course, if new
-  if (is_null($form_state['node']->nid)) {
-    $units = (object) array(
-        'name' => "Units: " . $node->title,
-        'description' => "Units: " . $node->title,
-        'machine_name' => "units_" . $node->nid,
-      );
-    taxonomy_vocabulary_save($units);
-    $number_of_weeks = (object) array(
-        'name' => "Number of Weeks: " . $node->title,
-        'description' => "Number of Weeks: " . $node->title,
-        'machine_name' => "number_of_weeks_" . $node->nid,
-      );
-    taxonomy_vocabulary_save($number_of_weeks);
-		$genre_doc = (object) array(
-			'name' => "Genre - Materials: " . $node->title,
-			'description' => "Genre - Materials for course " . $node->title,
-			'machine_name' => 'genre_doc_' . $node->nid,
-		);
-		taxonomy_vocabulary_save($genre_doc);
-  }
+//  if (is_null($form_state['node']->nid)) {
+//    $units = (object) array(
+//        'name' => "Units: " . $node->title,
+//        'description' => "Units: " . $node->title,
+//        'machine_name' => "units_" . $node->nid,
+//      );
+//    taxonomy_vocabulary_save($units);
+//    $number_of_weeks = (object) array(
+//        'name' => "Number of Weeks: " . $node->title,
+//        'description' => "Number of Weeks: " . $node->title,
+//        'machine_name' => "number_of_weeks_" . $node->nid,
+//      );
+//    taxonomy_vocabulary_save($number_of_weeks);
+//		$genre_doc = (object) array(
+//			'name' => "Genre - Materials: " . $node->title,
+//			'description' => "Genre - Materials for course " . $node->title,
+//			'machine_name' => 'genre_doc_' . $node->nid,
+//		);
+//		taxonomy_vocabulary_save($genre_doc);
+//  }
   if ($node->nid) {
     _course_set_selected_course($node->nid);
     drupal_goto("createcourse-3/" . $node->nid);
@@ -609,12 +596,11 @@ function course_add_material_form_submit($form, &$form_state) {
 function course_add_document_form_submit($form, &$form_state) {
   $node = node_form_submit_build_node($form, $form_state);
   $node->status = 1;
-  $i = 0;
-  foreach($form_state['values']['weeks'] as $week) {
-    $node->field_tags[LANGUAGE_NONE][$i]['tid'] = $week;
-    $i++;
-  }
+
+	// Update document node with our filtered values
   $node->field_unit[LANGUAGE_NONE][0]['tid'] = $form_state['values']['units'];
+	// TODO: Rename field_doc_genre to field_genre_doc
+	$node->field_doc_genre[LANGUAGE_NONE][0]['tid'] = $form_state['values']['genre_doc'];
   node_save($node);
 
   if ("Save (Finished Adding Material)" == $form_state['values']['op']) {
