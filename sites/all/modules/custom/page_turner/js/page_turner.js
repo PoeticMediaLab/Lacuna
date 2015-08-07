@@ -158,8 +158,11 @@ PTModel.prototype = {
             pages.end = range;
         }
         if (pages.end > total) {
+            pages.start = pages.end - range;
             pages.end = total;
-            //pages.start = total - range;
+            if (pages.start >= pages.end) {
+                pages.start = pages.end - 1;
+            }
         }
         return pages;
     },

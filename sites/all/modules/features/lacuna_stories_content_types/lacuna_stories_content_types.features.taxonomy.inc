@@ -171,7 +171,7 @@ function lacuna_stories_content_types_taxonomy_default_vocabularies() {
       ),
     ),
     'unit' => array(
-      'name' => 'Unit',
+      'name' => 'Units',
       'machine_name' => 'unit',
       'description' => 'Organize content by units in the syllabus',
       'hierarchy' => 0,
