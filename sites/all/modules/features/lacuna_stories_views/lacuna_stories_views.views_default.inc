@@ -1302,7 +1302,7 @@ function lacuna_stories_views_views_default_views() {
   );
   $handler->display->display_options['filters']['field_unit_tid']['reduce_duplicates'] = TRUE;
   $handler->display->display_options['filters']['field_unit_tid']['type'] = 'select';
-  $handler->display->display_options['filters']['field_unit_tid']['vocabulary'] = 'unit';
+  $handler->display->display_options['filters']['field_unit_tid']['vocabulary'] = 'units';
   $handler->display->display_options['filters']['field_unit_tid']['error_message'] = FALSE;
   /* Filter criterion: Content: Genre (field_doc_genre) */
   $handler->display->display_options['filters']['field_doc_genre_tid']['id'] = 'field_doc_genre_tid';
