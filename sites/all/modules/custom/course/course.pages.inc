@@ -73,8 +73,32 @@ function course_create() {
   return drupal_render($form);
 }
 
+/*
+ * Pre-populate Units, Genre - Materials, and Genre - Responses
+ * for a new course with some defaults
+*/
+function course_add_default_terms() {
+	$taxonomies = [];
+	$taxonomies['units'] = [];
+	for ($i = 1; $i <= 10; $i++) {
+		$taxonomies['units'][] = 'Week ' . $i;
+	}
+	$taxonomies['genre_doc'] = ['Scholarship', 'Fiction'];
+	$taxonomies['genre_response'] = ['Class Notes' ,'Essay','Fiction', 'Other', 'Reflection', 'Summary'];
+	foreach ($taxonomies as $taxonomy) {
+		$vocab = taxonomy_vocabulary_machine_name_load($taxonomy);
+		dpm($vocab);
+		if (!empty($vocab)) {
+			foreach ($taxonomy as $term) {
+				course_create_taxonomy_term($vocab, $term);
+			}
+		}
+	}
+}
+
 function course_set_up_materials($nid) {
-  $node = node_load($nid);
+	_course_set_selected_course($nid);
+	course_add_default_terms();
   $output = "Thank you for submitting your course information to the Lacuna Stories team. You can now continue by indicating the course materials you'd like to host on Lacuna Stories, and to assign them for specific weeks or units. To continue, click \"Continue\"<br />";
   $output .= "<br />";
   $output .= drupal_render(drupal_get_form('course_set_up_materials_form', $nid));
@@ -170,6 +194,9 @@ function course_set_up_materials_form_submit($form, &$form_state) {
 
 // Returns results for query on course-based term in given vocabulary
 function course_get_taxonomy_term_in_current_course($vocab_name, $term) {
+	if (empty($vocab)) {
+		return FALSE;
+	}
 	$gid = course_get_selected_course();
 	$query = new EntityFieldQuery();
 	$result = $query->entityCondition('entity_type', 'taxonomy_term')

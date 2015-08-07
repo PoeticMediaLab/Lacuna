@@ -138,10 +138,43 @@ function course_admin_form() {
   $form = array();
   $form['course_authcode'] = array(
     '#type' => 'textfield',
-    '#title' => t('The authorization code Teachers and TAs need to create Lacuna Stories Courses'),
+    '#title' => t('Authorization Code'),
+		'#description' => t('Set the authorization code needed to create a Lacuna Stories Course.'),
     '#default_value' => variable_get('course_authcode', 's3kr3t'),
     '#required' => TRUE,
   );
+
+	$form['taxonomies'] = array(
+		'#type' => 'fieldset',
+		'#title' => t('Default Taxonomies'),
+		'#collapsible' => FALSE,
+		'#collapsed' => FALSE,
+		'#description' => t('Set the default values that all new courses will receive. Separate each item by commas. Instructors will have a chance to change these when setting up their course.')
+	);
+
+	$form['taxonomies']['course_default_units'] = array(
+		'#type' => 'textfield',
+		'#title' => t('Units'),
+		'#description' => t('Used to organize readings into units'),
+		'#required' => TRUE,
+		'#default_value' => variable_get('course_default_units', 'Week 1, Week 2'),
+	);
+
+	$form['taxonomies']['course_default_genre_doc'] = array(
+		'#type' => 'textfield',
+		'#title' => t('Genre - Materials'),
+		'#description' => t('Used to classify materials by genre'),
+		'#required' => TRUE,
+		'#default_value' => variable_get('course_default_genre_doc', 'Fiction, Scholarship'),
+	);
+
+	$form['taxonomies']['course_default_genre_response'] = array(
+		'#type' => 'textfield',
+		'#title' => t('Genre - Responses'),
+		'#description' => t('Used to classify student responses by genre'),
+		'#required' => TRUE,
+		'#default_value' => variable_get('course_default_genre_response', 'Essay, Fiction, Other, Reflection, Summary'),
+	);
 
   return system_settings_form($form);
 }
@@ -332,7 +365,7 @@ function course_get_authors_for_current_course() {
 function course_form_views_exposed_form_alter(&$form, &$form_state) {
   if ('views-exposed-form-documents-materials' == $form['#id']) {
     // Set exposed filter 'Limit by Unit' for current course
-    $form['field_unit_tid']['#options'] = course_get_terms_for_current_course('units');
+		$form['field_unit_tid']['#options'] = course_get_terms_for_current_course('unit');
 		// Field name got reversed in Document field. Oops!
 		// TODO: Fix the name
 		$form['field_doc_genre_tid']['#options'] = course_get_terms_for_current_course('genre_doc');
@@ -635,8 +668,9 @@ function course_add_document_form_submit($form, &$form_state) {
 
   if ("Save (Finished Adding Material)" == $form_state['values']['op']) {
     drupal_set_message("Your Course Material has successfully been added.");
+		// TODO: Change destination here
     unset($_GET['destination']);
-    drupal_goto("/");
+    drupal_goto("/materials");
   }
   else if ("Save (Add More Material)" == $form_state['values']['op']) {
     drupal_set_message("Your Course Material has successfully been added.");
