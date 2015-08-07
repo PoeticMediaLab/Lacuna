@@ -62,34 +62,44 @@
       });
 
       // createcourse-4
-      if ($(".page-createcourse-4").length) {
-        var doc_nid = window.location.pathname.split('/')[2];
+      if ($(".page-course-setup-add-materials").length) {
         // selecting the biblio type reloads the page
         if (0 != $("#edit-biblio-type option:selected").val()) {
           $(".biblio-form").show();
-          $("#" + $.cookie("course-material-type-" + doc_nid)).addClass("selected");
+          $("#" + $.cookie("course-material-type-" + Drupal.settings.course.current_course)).addClass("selected");
         }
 
-        $("#e-access button").click(function(e) {
-          if ($("#studynet").hasClass("selected")) {
-            $("#studynet").removeClass("selected");
+        $("#add-documents button").click(function(e) {
+          if ($("#add-documents").hasClass("selected")) {
+              $("#add-documents").removeClass("selected");
           }
           else {
-            $(".biblio-form").toggle(300);
+              $(".biblio-form").toggle(300);
           }
           $(this).blur().parent().toggleClass("selected");
           $.cookie("course-material-type-" + doc_nid, $(this).parent().attr("id"));
         });
-        $("#studynet button").click(function(e) {
-          if ($("#e-access").hasClass("selected")) {
-            $("#e-access").removeClass("selected");
-          }
-          else {
-            $(".biblio-form").toggle(300);
-          }
-          $(this).blur().parent().toggleClass("selected");
-          $.cookie("course-material-type-" + doc_nid, $(this).parent().attr("id"));
-        });
+
+        //$("#e-access button").click(function(e) {
+        //  if ($("#studynet").hasClass("selected")) {
+        //    $("#studynet").removeClass("selected");
+        //  }
+        //  else {
+        //    $(".biblio-form").toggle(300);
+        //  }
+        //  $(this).blur().parent().toggleClass("selected");
+        //  $.cookie("course-material-type-" + doc_nid, $(this).parent().attr("id"));
+        //});
+        //$("#studynet button").click(function(e) {
+        //  if ($("#e-access").hasClass("selected")) {
+        //    $("#e-access").removeClass("selected");
+        //  }
+        //  else {
+        //    $(".biblio-form").toggle(300);
+        //  }
+        //  $(this).blur().parent().toggleClass("selected");
+        //  $.cookie("course-material-type-" + doc_nid, $(this).parent().attr("id"));
+        //});
       }
     }
   };

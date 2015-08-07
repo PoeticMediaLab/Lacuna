@@ -15,7 +15,7 @@ define("DOCUMENT_NODE_TYPE", 'document');
  */
 function course_menu() {
   $items = array();
-  $items['createcourse'] = array(
+  $items['course-setup'] = array(
     'title' => 'Create a New Course',
     'description' => 'course creation.',
     'page callback' => 'course_create_authorize',
@@ -23,7 +23,7 @@ function course_menu() {
     'type' => MENU_NORMAL_ITEM,
     'file' => 'course.pages.inc',
   );
-  $items['createcourse-2'] = array(
+  $items['course-setup/add-course'] = array(
     'title' => 'Creating a New Course',
     'description' => 'course creation.',
     'page callback' => 'course_create',
@@ -31,20 +31,18 @@ function course_menu() {
     'type' => MENU_NORMAL_ITEM,
     'file' => 'course.pages.inc',
   );
-  $items['createcourse-3/%'] = array(
+  $items['course-setup/organize'] = array(
     'title' => 'Setting Up Materials',
     'description' => 'Add course materials.',
     'page callback' => 'course_set_up_materials',
-    'page arguments' => array(1),
     'access callback' => 'course_access',
     'type' => MENU_NORMAL_ITEM,
     'file' => 'course.pages.inc',
   );
-  $items['createcourse-4/%'] = array(
+  $items['course-setup/add-materials'] = array(
     'title' => 'Add Material',
     'description' => 'Add course material.',
     'page callback' => 'course_add_material',
-    'page arguments' => array(1),
     'access callback' => 'course_access',
     'type' => MENU_NORMAL_ITEM,
     'file' => 'course.pages.inc',
@@ -112,7 +110,7 @@ function course_access() {
   // ANON
   if (user_is_anonymous()) {
     drupal_set_message("You must be logged in to create a Lacuna Stories course.", 'status', FALSE);
-    drupal_goto('user/login', array('query' => array('destination' => 'createcourse')));
+    drupal_goto('user/login', array('query' => array('destination' => 'course-setup')));
   }
   // NO PERMS
   elseif (!user_access("create course content")) {
@@ -125,13 +123,13 @@ function course_access() {
   }
   // NO/MISMATCHED AUTHCODE
   else {
-    drupal_set_message("Please type in the Authorization Code before creating a Lacuna Stories Course", 'status', FALSE);
-    drupal_goto('createcourse');
+    drupal_set_message("Please type in the Authorization Code before creating a Lacuna Stories Course", 'warning', FALSE);
+    drupal_goto('course-setup');
   }
 }
 
 function course_is_protected_page() {
-  return (preg_match("/createcourse/", current_path()) && current_path() != 'createcourse');
+  return (preg_match("/course-setup/", current_path()) && current_path() != 'course-setup');
 }
 
 function course_admin_form() {
@@ -322,7 +320,7 @@ function course_get_documents_for_current_course() {
 	$result = $query->entityCondition('entity_type', 'node')
 		->entityCondition('bundle', 'document')
 		->fieldCondition('og_group_ref', 'target_id', $gid)
-		->fieldCondition('field_status', 'value', 3)	// 3 == Ready to Annotate
+		->fieldCondition('field_status', 'value', WORKFLOW_READY_STATE)
 		->execute();
 	if (isset($result['node'])) {
 		return $result['node'];
@@ -365,7 +363,7 @@ function course_get_authors_for_current_course() {
 function course_form_views_exposed_form_alter(&$form, &$form_state) {
   if ('views-exposed-form-documents-materials' == $form['#id']) {
     // Set exposed filter 'Limit by Unit' for current course
-		$form['field_unit_tid']['#options'] = course_get_terms_for_current_course('unit');
+		$form['field_unit_tid']['#options'] = course_get_terms_for_current_course('units');
 		// Field name got reversed in Document field. Oops!
 		// TODO: Fix the name
 		$form['field_doc_genre_tid']['#options'] = course_get_terms_for_current_course('genre_doc');
@@ -450,8 +448,15 @@ function _course_set_selected_course($nid) {
   global $user;
   // Global user does not contain OG memberships, so saving that will lose them for the user. Load the user first and use that
   // see: https://www.drupal.org/node/1502916#comment-6444954.
-  $user = user_load($user->uid);
-  user_save($user, array('data' => array('current-course' => $nid)));
+	try {
+		$user = user_load($user->uid);
+		user_save($user, array('data' => array('current-course' => $nid)));
+	}
+	catch (Exception $e) {
+		watchdog_exception('_course_set_selected_course', $e, NULL, NULL, WATCHDOG_ERROR);
+		drupal_set_message('Sorry, but an error occurred. Please notify a site administrator.', 'error');
+		drupal_goto("/");
+	}
 }
 
 /*
@@ -608,15 +613,16 @@ function course_create_form_submit($form, &$form_state) {
 	try {
 		$course_wrapper->save();
 		$nid = $course_wrapper->nid->value();
+		ddl($nid);
 		if (!empty($nid)) {
 			_course_set_selected_course($nid);
-			drupal_goto("createcourse-3/" . $nid);
+			drupal_goto("course-setup/organize");
 		}
 	}
 	catch (Exception $e) {
 		watchdog_exception('Course', $e, NULL, NULL, WATCHDOG_ERROR);
 		drupal_set_message("There was an error creating your course.  Please try again and/or contact the Lacuna Stories team for assistance, <a href='info@lacunastories.com'>info@lacunastories.com</a>.", 'error');
-		drupal_goto("createcourse-2");
+		drupal_goto("course-setup/add-course");
 	}
 }
 
@@ -631,7 +637,7 @@ function course_add_material_form_submit($form, &$form_state) {
     $biblio->$k = $v;
   }
   node_object_prepare($biblio);
-  $biblio->status = 1; // make all biblios published
+  $biblio->status = NODE_PUBLISHED; // make all biblios published
   node_save($biblio);
 
   $document = new stdClass();
@@ -644,7 +650,7 @@ function course_add_material_form_submit($form, &$form_state) {
   node_object_prepare($document);
   $document->og_group_ref[LANGUAGE_NONE][0]['target_id'] = $gid;
   $document->field_bibliographic_entry[LANGUAGE_NONE][0]['target_id'] = $biblio->nid;
-  $document->status = 1; // make all documents published
+  $document->status = NODE_PUBLISHED; // make all documents published
   $taxo = array_pop(taxonomy_get_term_by_name($copyright));
   if ($taxo) {
     $document->field_copyright[LANGUAGE_NONE][0]['tid'] = $taxo->tid;
@@ -663,8 +669,10 @@ function course_add_material_form_submit($form, &$form_state) {
 }
 
 function course_add_document_form_submit($form, &$form_state) {
-  $node = node_form_submit_build_node($form, $form_state);
-  $node->status = 1;
+	global $base_url;
+
+	$node = node_form_submit_build_node($form, $form_state);
+  $node->status = NODE_PUBLISHED;
 
 	// Update document node with our filtered values
   $node->field_unit[LANGUAGE_NONE][0]['tid'] = $form_state['values']['units'];
@@ -672,17 +680,17 @@ function course_add_document_form_submit($form, &$form_state) {
 	$node->field_doc_genre[LANGUAGE_NONE][0]['tid'] = $form_state['values']['genre_doc'];
   node_save($node);
 
+	$message = "You have successfully added material to your course. To make the item available for annotation, remember to change the status to 'Ready for Annotation'. You can access all your course materials under <a href=\"" . $base_url . "all-content\">Manage->All Content</a>";
+
   if ("Save (Finished Adding Material)" == $form_state['values']['op']) {
-    drupal_set_message("Your Course Material has successfully been added.");
-		// TODO: Change destination here
+    drupal_set_message($message);
     unset($_GET['destination']);
     drupal_goto("/materials");
   }
   else if ("Save (Add More Material)" == $form_state['values']['op']) {
-    drupal_set_message("Your Course Material has successfully been added.");
-    $gid = course_get_selected_course();
+    drupal_set_message($message);
     unset($_GET['destination']);
-    drupal_goto("createcourse-4/$gid");
+    drupal_goto("course-setup/add-materials");
   }
 }
 
@@ -734,12 +742,12 @@ function course_clone_material($biblio) {
     node_object_prepare($document);
     $document->og_group_ref[LANGUAGE_NONE][0]['target_id'] = $course_nid;
     $document->field_bibliographic_entry[LANGUAGE_NONE][0]['target_id'] = $biblio->nid;
-    $document->status = 1; # make all documents published
+    $document->status = NODE_PUBLISHED; # make all documents published
     node_save($document);
     return $document;
   }
   catch (Exception $e) {
-    watchdog('course_matierl_clone', $e, array(), WATCHDOG_ERROR);
+    watchdog('course_material_clone', $e, array(), WATCHDOG_ERROR);
     return false;
   }
 }
@@ -816,4 +824,24 @@ function course_push_unfinished_doc_queue($nid) {
   $docs = array_unique($docs);
   $cookie_queue = implode(',', $docs);
   user_cookie_save(array($key => $cookie_queue));
+}
+
+
+/**
+ * Implements hook_node_delete(). Delete related taxonomy terms when course deleted.
+ */
+function course_node_delete($node) {
+	if ($node->type == COURSE_NODE_TYPE) {
+		$query = new EntityFieldQuery();
+		$result = $query->entityCondition('entity_type', 'taxonomy_term')
+			->entityCondition('bundle', $vocab_name)
+			->fieldCondition('field_term_course', 'target_id', $node->id, '=')
+			->execute();
+		if (isset($result['taxonomy_term'])) {
+			foreach(array_keys($result['taxonomy_term']) as $term) {
+				dpm($term, 'term delete');
+				taxonomy_term_delete($term->tid);
+			}
+		}
+	}
 }

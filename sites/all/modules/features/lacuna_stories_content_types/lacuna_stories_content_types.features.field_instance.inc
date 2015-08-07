@@ -2459,9 +2459,9 @@ function lacuna_stories_content_types_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'taxonomy_term-unit-field_term_course'
-  $field_instances['taxonomy_term-unit-field_term_course'] = array(
-    'bundle' => 'unit',
+  // Exported field_instance: 'taxonomy_term-units-field_term_course'
+  $field_instances['taxonomy_term-units-field_term_course'] = array(
+    'bundle' => 'units',
     'default_value' => NULL,
     'deleted' => 0,
     'description' => '',
