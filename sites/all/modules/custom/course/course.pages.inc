@@ -78,18 +78,13 @@ function course_create() {
  * for a new course with some defaults
 */
 function course_add_default_terms() {
-	$taxonomies = [];
-	$taxonomies['units'] = [];
-	for ($i = 1; $i <= 10; $i++) {
-		$taxonomies['units'][] = 'Week ' . $i;
-	}
-	$taxonomies['genre_doc'] = ['Scholarship', 'Fiction'];
-	$taxonomies['genre_response'] = ['Class Notes' ,'Essay','Fiction', 'Other', 'Reflection', 'Summary'];
+	$default_prefix = 'course_default_';
+	$taxonomies = ['units', 'genre_doc','genre_response'];
 	foreach ($taxonomies as $taxonomy) {
 		$vocab = taxonomy_vocabulary_machine_name_load($taxonomy);
-		dpm($vocab);
 		if (!empty($vocab)) {
-			foreach ($taxonomy as $term) {
+			foreach (explode(',', variable_get($default_prefix . $taxonomy)) as $term) {
+				$term = trim($term);
 				course_create_taxonomy_term($vocab, $term);
 			}
 		}

@@ -595,23 +595,29 @@ function course_form_course_node_form_alter(&$form, &$form_state, $form_id) {
 }
 
 function course_create_form_submit($form, &$form_state) {
-  $node = new stdClass();
-  $node->type = COURSE_NODE_TYPE;
-  foreach($form_state['values'] as $k => $v) {
-    $node->$k = $v;
-  }
-  node_object_prepare($node);
-  $node->status = 1; // make all the courses published
-  node_save($node);
-
-  if ($node->nid) {
-    _course_set_selected_course($node->nid);
-    drupal_goto("createcourse-3/" . $node->nid);
-  }
-  else {
-    drupal_set_message("There was an error creating your course.  Please try again and/or contact the Lacuna Stories team for assistance, <a href='info@lacunastories.com'>info@lacunastories.com</a>.", 'error');
-    drupal_goto("createcourse-2");
-  }
+	global $user;
+	$values = array(
+		'type' => COURSE_NODE_TYPE,
+		'uid' => $user->uid,
+		'status' => 1,
+		'comment' => 0,
+		'promote' => 0,
+	);
+  $course = entity_create('node', array_merge($values, $form_state['values']));
+	$course_wrapper = entity_metadata_wrapper('node', $course);
+	try {
+		$course_wrapper->save();
+		$nid = $course_wrapper->nid->value();
+		if (!empty($nid)) {
+			_course_set_selected_course($nid);
+			drupal_goto("createcourse-3/" . $nid);
+		}
+	}
+	catch (Exception $e) {
+		watchdog_exception('Course', $e, NULL, NULL, WATCHDOG_ERROR);
+		drupal_set_message("There was an error creating your course.  Please try again and/or contact the Lacuna Stories team for assistance, <a href='info@lacunastories.com'>info@lacunastories.com</a>.", 'error');
+		drupal_goto("createcourse-2");
+	}
 }
 
 function course_add_material_form_submit($form, &$form_state) {
