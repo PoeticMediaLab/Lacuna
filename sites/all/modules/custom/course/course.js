@@ -44,7 +44,7 @@
             return false; // don't submit the form
       });
 
-      $('.terms .fa-trash-o').click(function(event) {
+      $('.terms').on('click', '.term .fa-trash-o', function(event) {
         var wrapper = $(event.srcElement).parents('fieldset'),
             vocab = wrapper.attr('id'),
             term = $(this).siblings(".name").text();
