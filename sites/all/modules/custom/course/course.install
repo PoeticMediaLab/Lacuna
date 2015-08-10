@@ -12,8 +12,23 @@ function course_update_7100() {
 }
 
 /**
- * Rename bibliographic reference field in Responses
+ * Add db table for storing user's current course
  */
-//function course_update_7101() {
-//
-//}
+function course_update_7101() {
+	$schema = array(
+		'description' => 'Stores currently selected course per user',
+		'fields' => array(
+			'uid' => array(
+				'type' => 'int',
+				'unsigned' => TRUE,
+				'not null' => TRUE,
+			),
+			'gid' => array(
+				'type' => 'int',
+				'unsigned' => TRUE,
+			),
+		),
+		'primary key' => array('uid'),
+	);
+	db_create_table(COURSE_CURRENT_TABLE, $schema);
+}

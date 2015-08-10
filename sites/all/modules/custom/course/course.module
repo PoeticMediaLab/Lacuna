@@ -9,6 +9,8 @@ include_once 'course.features.inc';
 define("COURSE_NODE_TYPE", 'course');
 define("BIBLIO_NODE_TYPE", 'biblio');
 define("DOCUMENT_NODE_TYPE", 'document');
+define("COURSE_CURRENT_TABLE", 'course_current');
+define("COURSE_CURRENT_CACHE_ID", 'course_current_cache');
 
 /**
  * Implements hook_menu().
@@ -438,24 +440,30 @@ function course_sewing_kit_shared_with($data) {
 // many, many views in PHP fields
 function course_get_selected_course() {
   global $user;
-  if (isset($user->data['current-course'])) {
-    return $user->data['current-course'];
-  }
+	$result = db_query('SELECT c.gid FROM {' . COURSE_CURRENT_TABLE . '} c WHERE c.uid = :uid', array(':uid' => (int) $user->uid));
+	foreach ($result as $record) {
+		return($record->gid);
+	}
 }
 
-function _course_set_selected_course($nid) {
+function _course_set_selected_course($gid) {
   // NB: do your own error handling and permissions checking if you use this setter directly
   global $user;
   // Global user does not contain OG memberships, so saving that will lose them for the user. Load the user first and use that
   // see: https://www.drupal.org/node/1502916#comment-6444954.
+	if (empty($gid)) {
+		return;
+	}
 	try {
-		$user = user_load($user->uid);
-		user_save($user, array('data' => array('current-course' => $nid)));
+		db_merge(COURSE_CURRENT_TABLE)
+			->key(array('uid' => (int) $user->uid))
+			->fields(array('gid' => $gid))
+			->execute();
 	}
 	catch (Exception $e) {
 		watchdog_exception('_course_set_selected_course', $e, NULL, NULL, WATCHDOG_ERROR);
 		drupal_set_message('Sorry, but an error occurred. Please notify a site administrator.', 'error');
-		drupal_goto("/");
+		drupal_goto(drupal_get_destination());
 	}
 }
 
@@ -564,7 +572,6 @@ function course_form_response_node_form_alter(&$form, &$form_state, $form_id) {
 
 // Handle setting custom values
 function course_add_response_form_submit($form, &$form_state) {
-	dpm($form);
 	$node = node_form_submit_build_node($form, $form_state);
 	$node->status = 1;
 
@@ -680,7 +687,7 @@ function course_add_document_form_submit($form, &$form_state) {
 	$node->field_doc_genre[LANGUAGE_NONE][0]['tid'] = $form_state['values']['genre_doc'];
   node_save($node);
 
-	$message = "You have successfully added material to your course. To make the item available for annotation, remember to change the status to 'Ready for Annotation'. You can access all your course materials under <a href=\"" . $base_url . "all-content\">Manage->All Content</a>";
+	$message = "You have successfully added material to your course. To make the item available for annotation, remember to change the status to 'Ready for Annotation'. You can access all your course materials under <a href=\"" . $base_url . "/all-content\">Manage->All Content</a>";
 
   if ("Save (Finished Adding Material)" == $form_state['values']['op']) {
     drupal_set_message($message);
@@ -839,7 +846,6 @@ function course_node_delete($node) {
 			->execute();
 		if (isset($result['taxonomy_term'])) {
 			foreach(array_keys($result['taxonomy_term']) as $term) {
-				dpm($term, 'term delete');
 				taxonomy_term_delete($term->tid);
 			}
 		}
