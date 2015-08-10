@@ -242,24 +242,6 @@ function course_ajax_delete_term($vocab_name, $term) {
 	ajax_deliver(NULL);
 }
 
-/**
- * Get the largest term for a numerical vocabulary
- *
- * return integer or FALSE
- */
-//function course_numerical_vocab_term_max($vocab_machine_name) {
-//  # simple guard to ensure numerical vocabularies
-//  if ('number_of_weeks' != substr($vocab_machine_name, 0, 15)) {
-//    return FALSE;
-//  }
-//  return db_query('SELECT t.name
-//  FROM {taxonomy_vocabulary} v INNER JOIN {taxonomy_term_data} t ON v.vid=t.vid
-//  WHERE v.machine_name = :machine_name
-//  ORDER BY CAST(t.name AS SIGNED) DESC
-//  LIMIT 1', array(':machine_name' => $vocab_machine_name))->fetchField();
-//
-//}
-
 function course_add_material() {
   global $base_url;
 
