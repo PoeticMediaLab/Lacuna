@@ -673,7 +673,6 @@ function course_add_material_form_submit($form, &$form_state) {
 		'field_name' => 'og_group_ref',
 		'state' => OG_STATE_ACTIVE
 	));
-
 	$form_state['rebuild'] = TRUE;
   course_push_unfinished_doc_queue($document->nid);
 
