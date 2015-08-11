@@ -1352,16 +1352,6 @@ function lacuna_stories_permissions_user_default_permissions() {
     'module' => 'taxonomy',
   );
 
-  // Exported permission: 'delete terms in unit'.
-  $permissions['delete terms in unit'] = array(
-    'name' => 'delete terms in unit',
-    'roles' => array(
-      'Content Manager' => 'Content Manager',
-      'Site Administrator' => 'Site Administrator',
-    ),
-    'module' => 'taxonomy',
-  );
-
   // Exported permission: 'display drupal links'.
   $permissions['display drupal links'] = array(
     'name' => 'display drupal links',
@@ -2037,16 +2027,6 @@ function lacuna_stories_permissions_user_default_permissions() {
       'Instructor' => 'Instructor',
       'Site Administrator' => 'Site Administrator',
       'Student' => 'Student',
-    ),
-    'module' => 'taxonomy',
-  );
-
-  // Exported permission: 'edit terms in unit'.
-  $permissions['edit terms in unit'] = array(
-    'name' => 'edit terms in unit',
-    'roles' => array(
-      'Content Manager' => 'Content Manager',
-      'Site Administrator' => 'Site Administrator',
     ),
     'module' => 'taxonomy',
   );

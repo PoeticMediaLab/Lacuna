@@ -284,8 +284,8 @@ function lacuna_stories_content_types_field_group_info() {
     'label' => 'About',
     'weight' => '3',
     'children' => array(
-      0 => 'field_response_tags',
-      1 => 'field_response_genre',
+      0 => 'field_response_genre',
+      1 => 'field_response_tags',
       2 => 'og_group_ref',
     ),
     'format_type' => 'fieldset',

@@ -131,6 +131,17 @@ function lacuna_stories_views_views_default_views() {
   $handler->display->display_options['sorts']['created']['table'] = 'node';
   $handler->display->display_options['sorts']['created']['field'] = 'created';
   $handler->display->display_options['sorts']['created']['order'] = 'DESC';
+  /* Contextual filter: Content: Groups audience (og_group_ref) */
+  $handler->display->display_options['arguments']['og_group_ref_target_id']['id'] = 'og_group_ref_target_id';
+  $handler->display->display_options['arguments']['og_group_ref_target_id']['table'] = 'og_membership';
+  $handler->display->display_options['arguments']['og_group_ref_target_id']['field'] = 'og_group_ref_target_id';
+  $handler->display->display_options['arguments']['og_group_ref_target_id']['relationship'] = 'og_group_ref_target_id';
+  $handler->display->display_options['arguments']['og_group_ref_target_id']['default_action'] = 'default';
+  $handler->display->display_options['arguments']['og_group_ref_target_id']['default_argument_type'] = 'php';
+  $handler->display->display_options['arguments']['og_group_ref_target_id']['default_argument_options']['code'] = 'return course_get_selected_course();';
+  $handler->display->display_options['arguments']['og_group_ref_target_id']['summary']['number_of_records'] = '0';
+  $handler->display->display_options['arguments']['og_group_ref_target_id']['summary']['format'] = 'default_summary';
+  $handler->display->display_options['arguments']['og_group_ref_target_id']['summary_options']['items_per_page'] = '25';
   /* Filter criterion: Content: Published */
   $handler->display->display_options['filters']['status']['id'] = 'status';
   $handler->display->display_options['filters']['status']['table'] = 'node';
@@ -142,28 +153,19 @@ function lacuna_stories_views_views_default_views() {
   $handler->display->display_options['filters']['type']['id'] = 'type';
   $handler->display->display_options['filters']['type']['table'] = 'node';
   $handler->display->display_options['filters']['type']['field'] = 'type';
-  $handler->display->display_options['filters']['type']['operator'] = 'not in';
   $handler->display->display_options['filters']['type']['value'] = array(
-    'annotation' => 'annotation',
-    'article' => 'article',
-    'page' => 'page',
-    'biblio' => 'biblio',
-    'course_or_other_group' => 'course_or_other_group',
-    'webform' => 'webform',
+    'document' => 'document',
+    'response' => 'response',
+    'thread' => 'thread',
   );
   /* Filter criterion: Content: Type */
   $handler->display->display_options['filters']['type_1']['id'] = 'type_1';
   $handler->display->display_options['filters']['type_1']['table'] = 'node';
   $handler->display->display_options['filters']['type_1']['field'] = 'type';
   $handler->display->display_options['filters']['type_1']['value'] = array(
-    'audio' => 'audio',
-    'page' => 'page',
     'document' => 'document',
-    'image' => 'image',
-    'music_video' => 'music_video',
     'response' => 'response',
     'thread' => 'thread',
-    'video' => 'video',
   );
   $handler->display->display_options['filters']['type_1']['exposed'] = TRUE;
   $handler->display->display_options['filters']['type_1']['expose']['operator_id'] = 'type_1_op';
@@ -174,10 +176,11 @@ function lacuna_stories_views_views_default_views() {
   $handler->display->display_options['filters']['type_1']['expose']['remember_roles'] = array(
     2 => '2',
     1 => 0,
+    5 => 0,
     3 => 0,
     4 => 0,
-    5 => 0,
     6 => 0,
+    7 => 0,
   );
   $handler->display->display_options['filters']['type_1']['expose']['reduce'] = TRUE;
   /* Filter criterion: Workflow current: New state name */
@@ -231,6 +234,9 @@ function lacuna_stories_views_views_default_views() {
   $handler->display->display_options['cache']['type'] = 'none';
   $handler->display->display_options['query']['type'] = 'views_query';
   $handler->display->display_options['exposed_form']['type'] = 'basic';
+  $handler->display->display_options['exposed_form']['options']['reset_button'] = TRUE;
+  $handler->display->display_options['exposed_form']['options']['reset_button_label'] = 'View All';
+  $handler->display->display_options['exposed_form']['options']['autosubmit'] = TRUE;
   $handler->display->display_options['pager']['type'] = 'none';
   $handler->display->display_options['style_plugin'] = 'table';
   $handler->display->display_options['style_options']['columns'] = array(
@@ -254,6 +260,13 @@ function lacuna_stories_views_views_default_views() {
       'empty_column' => 0,
     ),
   );
+  /* No results behavior: Global: Text area */
+  $handler->display->display_options['empty']['area']['id'] = 'area';
+  $handler->display->display_options['empty']['area']['table'] = 'views';
+  $handler->display->display_options['empty']['area']['field'] = 'area';
+  $handler->display->display_options['empty']['area']['empty'] = TRUE;
+  $handler->display->display_options['empty']['area']['content'] = 'Sorry, but no users were found for this course.';
+  $handler->display->display_options['empty']['area']['format'] = 'filtered_html';
   /* Field: Bulk operations: User */
   $handler->display->display_options['fields']['views_bulk_operations']['id'] = 'views_bulk_operations';
   $handler->display->display_options['fields']['views_bulk_operations']['table'] = 'users';
@@ -287,6 +300,16 @@ function lacuna_stories_views_views_default_views() {
   $handler->display->display_options['fields']['mail']['alter']['alter_text'] = TRUE;
   $handler->display->display_options['fields']['mail']['alter']['text'] = '[name] <[mail]>';
   $handler->display->display_options['fields']['mail']['element_label_colon'] = FALSE;
+  /* Contextual filter: User: Course(s) Enrolled (og_user_node) */
+  $handler->display->display_options['arguments']['og_user_node_target_id']['id'] = 'og_user_node_target_id';
+  $handler->display->display_options['arguments']['og_user_node_target_id']['table'] = 'og_membership';
+  $handler->display->display_options['arguments']['og_user_node_target_id']['field'] = 'og_user_node_target_id';
+  $handler->display->display_options['arguments']['og_user_node_target_id']['default_action'] = 'default';
+  $handler->display->display_options['arguments']['og_user_node_target_id']['default_argument_type'] = 'php';
+  $handler->display->display_options['arguments']['og_user_node_target_id']['default_argument_options']['code'] = 'return course_get_selected_course();';
+  $handler->display->display_options['arguments']['og_user_node_target_id']['summary']['number_of_records'] = '0';
+  $handler->display->display_options['arguments']['og_user_node_target_id']['summary']['format'] = 'default_summary';
+  $handler->display->display_options['arguments']['og_user_node_target_id']['summary_options']['items_per_page'] = '25';
   /* Filter criterion: User: Active */
   $handler->display->display_options['filters']['status']['id'] = 'status';
   $handler->display->display_options['filters']['status']['table'] = 'users';
@@ -385,6 +408,93 @@ function lacuna_stories_views_views_default_views() {
   /* Display: Block */
   $handler = $view->new_display('block', 'Block', 'block');
   $export['bibliography'] = $view;
+
+  $view = new view();
+  $view->name = 'bibliography_entity_reference_autocomplete';
+  $view->description = '';
+  $view->tag = 'default';
+  $view->base_table = 'node';
+  $view->human_name = 'Bibliography Entity Reference Autocomplete';
+  $view->core = 7;
+  $view->api_version = '3.0';
+  $view->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
+
+  /* Display: Master */
+  $handler = $view->new_display('default', 'Master', 'default');
+  $handler->display->display_options['use_more_always'] = FALSE;
+  $handler->display->display_options['access']['type'] = 'perm';
+  $handler->display->display_options['cache']['type'] = 'none';
+  $handler->display->display_options['query']['type'] = 'views_query';
+  $handler->display->display_options['exposed_form']['type'] = 'basic';
+  $handler->display->display_options['pager']['type'] = 'full';
+  $handler->display->display_options['style_plugin'] = 'default';
+  $handler->display->display_options['row_plugin'] = 'fields';
+  /* Relationship: Entity Reference: Referencing entity */
+  $handler->display->display_options['relationships']['reverse_field_bibliographic_entry_node']['id'] = 'reverse_field_bibliographic_entry_node';
+  $handler->display->display_options['relationships']['reverse_field_bibliographic_entry_node']['table'] = 'node';
+  $handler->display->display_options['relationships']['reverse_field_bibliographic_entry_node']['field'] = 'reverse_field_bibliographic_entry_node';
+  $handler->display->display_options['relationships']['reverse_field_bibliographic_entry_node']['label'] = 'Document';
+  /* Field: Content: Title */
+  $handler->display->display_options['fields']['title']['id'] = 'title';
+  $handler->display->display_options['fields']['title']['table'] = 'node';
+  $handler->display->display_options['fields']['title']['field'] = 'title';
+  $handler->display->display_options['fields']['title']['label'] = '';
+  $handler->display->display_options['fields']['title']['alter']['word_boundary'] = FALSE;
+  $handler->display->display_options['fields']['title']['alter']['ellipsis'] = FALSE;
+  $handler->display->display_options['fields']['title']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['title']['link_to_node'] = FALSE;
+  /* Field: Biblio: Author full name */
+  $handler->display->display_options['fields']['name']['id'] = 'name';
+  $handler->display->display_options['fields']['name']['table'] = 'biblio_contributor_data';
+  $handler->display->display_options['fields']['name']['field'] = 'name';
+  $handler->display->display_options['fields']['name']['label'] = '';
+  $handler->display->display_options['fields']['name']['element_label_colon'] = FALSE;
+  /* Sort criterion: Biblio: Sort Title */
+  $handler->display->display_options['sorts']['biblio_sort_title']['id'] = 'biblio_sort_title';
+  $handler->display->display_options['sorts']['biblio_sort_title']['table'] = 'biblio';
+  $handler->display->display_options['sorts']['biblio_sort_title']['field'] = 'biblio_sort_title';
+  /* Contextual filter: Content: Groups audience (og_group_ref) */
+  $handler->display->display_options['arguments']['og_group_ref_target_id']['id'] = 'og_group_ref_target_id';
+  $handler->display->display_options['arguments']['og_group_ref_target_id']['table'] = 'og_membership';
+  $handler->display->display_options['arguments']['og_group_ref_target_id']['field'] = 'og_group_ref_target_id';
+  $handler->display->display_options['arguments']['og_group_ref_target_id']['relationship'] = 'reverse_field_bibliographic_entry_node';
+  $handler->display->display_options['arguments']['og_group_ref_target_id']['default_action'] = 'default';
+  $handler->display->display_options['arguments']['og_group_ref_target_id']['default_argument_type'] = 'php';
+  $handler->display->display_options['arguments']['og_group_ref_target_id']['default_argument_options']['code'] = 'return course_get_selected_course();';
+  $handler->display->display_options['arguments']['og_group_ref_target_id']['summary']['number_of_records'] = '0';
+  $handler->display->display_options['arguments']['og_group_ref_target_id']['summary']['format'] = 'default_summary';
+  $handler->display->display_options['arguments']['og_group_ref_target_id']['summary_options']['items_per_page'] = '25';
+  /* Filter criterion: Content: Published */
+  $handler->display->display_options['filters']['status']['id'] = 'status';
+  $handler->display->display_options['filters']['status']['table'] = 'node';
+  $handler->display->display_options['filters']['status']['field'] = 'status';
+  $handler->display->display_options['filters']['status']['value'] = 1;
+  $handler->display->display_options['filters']['status']['group'] = 1;
+  $handler->display->display_options['filters']['status']['expose']['operator'] = FALSE;
+  /* Filter criterion: Content: Type */
+  $handler->display->display_options['filters']['type']['id'] = 'type';
+  $handler->display->display_options['filters']['type']['table'] = 'node';
+  $handler->display->display_options['filters']['type']['field'] = 'type';
+  $handler->display->display_options['filters']['type']['value'] = array(
+    'biblio' => 'biblio',
+  );
+
+  /* Display: Entity Reference */
+  $handler = $view->new_display('entityreference', 'Entity Reference', 'entityreference_1');
+  $handler->display->display_options['defaults']['title'] = FALSE;
+  $handler->display->display_options['pager']['type'] = 'none';
+  $handler->display->display_options['pager']['options']['offset'] = '0';
+  $handler->display->display_options['defaults']['style_plugin'] = FALSE;
+  $handler->display->display_options['style_plugin'] = 'entityreference_style';
+  $handler->display->display_options['style_options']['search_fields'] = array(
+    'title' => 'title',
+    'name' => 'name',
+  );
+  $handler->display->display_options['defaults']['style_options'] = FALSE;
+  $handler->display->display_options['defaults']['row_plugin'] = FALSE;
+  $handler->display->display_options['row_plugin'] = 'entityreference_fields';
+  $handler->display->display_options['defaults']['row_options'] = FALSE;
+  $export['bibliography_entity_reference_autocomplete'] = $view;
 
   $view = new view();
   $view->name = 'bulk_update_annotations';
@@ -569,7 +679,7 @@ function lacuna_stories_views_views_default_views() {
   $handler->display->display_options['filters']['field_annotation_audience_value']['value'] = array(
     'peer-groups' => 'peer-groups',
   );
-  /* Filter criterion: Content: Audience (og_group_ref) */
+  /* Filter criterion: Content: Groups audience (og_group_ref) */
   $handler->display->display_options['filters']['og_group_ref_target_id']['id'] = 'og_group_ref_target_id';
   $handler->display->display_options['filters']['og_group_ref_target_id']['table'] = 'og_membership';
   $handler->display->display_options['filters']['og_group_ref_target_id']['field'] = 'og_group_ref_target_id';
@@ -750,7 +860,7 @@ function lacuna_stories_views_views_default_views() {
   $handler->display->display_options['sorts']['name']['id'] = 'name';
   $handler->display->display_options['sorts']['name']['table'] = 'taxonomy_term_data';
   $handler->display->display_options['sorts']['name']['field'] = 'name';
-  /* Contextual filter: Taxonomy term: Course(s) (field_annotation_tag_course) */
+  /* Contextual filter: Broken/missing handler */
   $handler->display->display_options['arguments']['field_annotation_tag_course_target_id']['id'] = 'field_annotation_tag_course_target_id';
   $handler->display->display_options['arguments']['field_annotation_tag_course_target_id']['table'] = 'field_data_field_annotation_tag_course';
   $handler->display->display_options['arguments']['field_annotation_tag_course_target_id']['field'] = 'field_annotation_tag_course_target_id';
@@ -1174,6 +1284,7 @@ function lacuna_stories_views_views_default_views() {
   $handler->display->display_options['filters']['field_unit_tid']['id'] = 'field_unit_tid';
   $handler->display->display_options['filters']['field_unit_tid']['table'] = 'field_data_field_unit';
   $handler->display->display_options['filters']['field_unit_tid']['field'] = 'field_unit_tid';
+  $handler->display->display_options['filters']['field_unit_tid']['group'] = 1;
   $handler->display->display_options['filters']['field_unit_tid']['exposed'] = TRUE;
   $handler->display->display_options['filters']['field_unit_tid']['expose']['operator_id'] = 'field_unit_tid_op';
   $handler->display->display_options['filters']['field_unit_tid']['expose']['label'] = 'Limit by Unit';
@@ -1183,19 +1294,21 @@ function lacuna_stories_views_views_default_views() {
   $handler->display->display_options['filters']['field_unit_tid']['expose']['remember_roles'] = array(
     2 => '2',
     1 => 0,
+    5 => 0,
     3 => 0,
     4 => 0,
-    5 => 0,
     6 => 0,
+    7 => 0,
   );
   $handler->display->display_options['filters']['field_unit_tid']['reduce_duplicates'] = TRUE;
   $handler->display->display_options['filters']['field_unit_tid']['type'] = 'select';
-  $handler->display->display_options['filters']['field_unit_tid']['vocabulary'] = 'unit';
+  $handler->display->display_options['filters']['field_unit_tid']['vocabulary'] = 'units';
   $handler->display->display_options['filters']['field_unit_tid']['error_message'] = FALSE;
   /* Filter criterion: Content: Genre (field_doc_genre) */
   $handler->display->display_options['filters']['field_doc_genre_tid']['id'] = 'field_doc_genre_tid';
   $handler->display->display_options['filters']['field_doc_genre_tid']['table'] = 'field_data_field_doc_genre';
   $handler->display->display_options['filters']['field_doc_genre_tid']['field'] = 'field_doc_genre_tid';
+  $handler->display->display_options['filters']['field_doc_genre_tid']['group'] = 1;
   $handler->display->display_options['filters']['field_doc_genre_tid']['exposed'] = TRUE;
   $handler->display->display_options['filters']['field_doc_genre_tid']['expose']['operator_id'] = 'field_doc_genre_tid_op';
   $handler->display->display_options['filters']['field_doc_genre_tid']['expose']['label'] = 'Limit by Genre';
@@ -1218,6 +1331,7 @@ function lacuna_stories_views_views_default_views() {
   $handler->display->display_options['filters']['field_medium_tid']['id'] = 'field_medium_tid';
   $handler->display->display_options['filters']['field_medium_tid']['table'] = 'field_data_field_medium';
   $handler->display->display_options['filters']['field_medium_tid']['field'] = 'field_medium_tid';
+  $handler->display->display_options['filters']['field_medium_tid']['group'] = 1;
   $handler->display->display_options['filters']['field_medium_tid']['exposed'] = TRUE;
   $handler->display->display_options['filters']['field_medium_tid']['expose']['operator_id'] = 'field_medium_tid_op';
   $handler->display->display_options['filters']['field_medium_tid']['expose']['label'] = 'Limit by Media';
@@ -1242,6 +1356,7 @@ function lacuna_stories_views_views_default_views() {
   $handler->display->display_options['filters']['lastname']['table'] = 'biblio_contributor_data';
   $handler->display->display_options['filters']['lastname']['field'] = 'lastname';
   $handler->display->display_options['filters']['lastname']['relationship'] = 'field_bibliographic_entry_target_id';
+  $handler->display->display_options['filters']['lastname']['group'] = 1;
   $handler->display->display_options['filters']['lastname']['exposed'] = TRUE;
   $handler->display->display_options['filters']['lastname']['expose']['operator_id'] = 'lastname_op';
   $handler->display->display_options['filters']['lastname']['expose']['label'] = 'Limit by Author';
@@ -2012,7 +2127,7 @@ function lacuna_stories_views_views_default_views() {
   $handler->display->display_options['fields']['field_annotation_audience']['field'] = 'field_annotation_audience';
   $handler->display->display_options['fields']['field_annotation_audience']['exclude'] = TRUE;
   $handler->display->display_options['fields']['field_annotation_audience']['delta_offset'] = '0';
-  /* Field: Content: Audience */
+  /* Field: Content: Groups audience */
   $handler->display->display_options['fields']['og_group_ref']['id'] = 'og_group_ref';
   $handler->display->display_options['fields']['og_group_ref']['table'] = 'og_membership';
   $handler->display->display_options['fields']['og_group_ref']['field'] = 'og_group_ref';
@@ -2058,12 +2173,11 @@ function lacuna_stories_views_views_default_views() {
   $handler->display->display_options['fields']['field_annotation_reference']['settings'] = array(
     'link' => 1,
   );
-  /* Field: Content: Audience */
+  /* Field: Content: Groups audience */
   $handler->display->display_options['fields']['og_group_ref_1']['id'] = 'og_group_ref_1';
   $handler->display->display_options['fields']['og_group_ref_1']['table'] = 'og_membership';
   $handler->display->display_options['fields']['og_group_ref_1']['field'] = 'og_group_ref';
   $handler->display->display_options['fields']['og_group_ref_1']['relationship'] = 'field_annotation_reference_target_id';
-  $handler->display->display_options['fields']['og_group_ref_1']['label'] = 'Course';
   $handler->display->display_options['fields']['og_group_ref_1']['settings'] = array(
     'link' => 1,
   );
@@ -2097,7 +2211,7 @@ function lacuna_stories_views_views_default_views() {
     'annotation' => 'annotation',
   );
   $handler->display->display_options['filters']['type']['group'] = 1;
-  /* Filter criterion: Content: Audience (og_group_ref) */
+  /* Filter criterion: Content: Groups audience (og_group_ref) */
   $handler->display->display_options['filters']['og_group_ref_target_id']['id'] = 'og_group_ref_target_id';
   $handler->display->display_options['filters']['og_group_ref_target_id']['table'] = 'og_membership';
   $handler->display->display_options['filters']['og_group_ref_target_id']['field'] = 'og_group_ref_target_id';

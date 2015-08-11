@@ -16,7 +16,7 @@ class TagsAnnotatorPlugin extends AnnotatorPlugin {
       $query = new EntityFieldQuery();
       $result = $query->entityCondition('entity_type', 'taxonomy_term')
         ->propertyCondition('vid', (int) $tags->vid, '=')
-        ->fieldCondition('field_annotation_tag_course', 'target_id', $current_course)
+        ->fieldCondition('field_term_course', 'target_id', $current_course)
         ->execute();
       $flag = flag_get_flag('curated_tag');
       if (!empty($result['taxonomy_term'])) {

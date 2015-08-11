@@ -253,8 +253,29 @@ function annotation_update_7100() {
 }
 
 /**
- * Copy values from old annotation fields to new ones.
+ * Update 7101: Copy values from old annotation fields to new ones.
  */
 function annotation_update_7101() {
-  annotation_copy_field_values_to_drupal_standard_fields ();
+  annotation_copy_field_values_to_drupal_standard_fields();
+}
+
+/**
+ * Update 7102: Move course reference for annotation tags to new field.
+ */
+function annotation_update_7102() {
+	// Copy data from field_annotation_tag_course to field_term_course
+	// Delete field_annotation_tag_course
+	$query = new EntityFieldQuery();
+	$result = $query->entityCondition('entity_type', 'taxonomy_term')
+		->entityCondition('bundle', 'annotation_tags')
+		->execute();
+	if (isset($result['taxonomy_term'])) {
+		$tids = array_keys($result['taxonomy_term']);
+		foreach ($tids as $tid) {
+			$wrapper = entity_metadata_wrapper('taxonomy_term', taxonomy_term_load($tid));
+			$wrapper->field_term_course->set($wrapper->field_annotation_tag_course->value());
+			$wrapper->save();
+		}
+		field_delete_field('field_annotation_tag_course');
+	}
 }
