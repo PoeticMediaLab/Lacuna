@@ -42,7 +42,8 @@ function lacuna_stories_content_types_filter_default_formats() {
           'valid_elements' => 'a[!href|target<_blank|title],
 div[align<center?justify?left?right],
 p[align<center?justify?left?right],
-br,span,em,strong,cite,code,blockquote,ul,ol,li,dl,dt,dd',
+br,span,em,strong,cite,code,blockquote,ul,ol,li,dl,dt,dd
+sup,sub',
           'allow_comments' => 0,
           'nofollow_policy' => 'whitelist',
           'nofollow_domains' => array(
