@@ -279,3 +279,28 @@ function annotation_update_7102() {
 		field_delete_field('field_annotation_tag_course');
 	}
 }
+
+/**
+ * Delete deprecated annotation fields
+ */
+function annotation_update_7103() {
+	$old_fields = array(
+		'text',
+		'quote',
+		'private',
+		'annotation_tags',
+		'category',
+		'ranges',
+		'annotation_reference',
+		'uri',
+		'field_annotation_private',
+		'field_annotation_ins_viewable',
+	);
+	foreach ($old_fields as $field) {
+		field_delete_field($field);
+	}
+	if ($group = field_group_load_field_group('group_annotation_deprecated', 'node', 'annotation', 'form')) {
+		ctools_include('export');
+		field_group_group_export_delete($group, FALSE);
+	}
+}
