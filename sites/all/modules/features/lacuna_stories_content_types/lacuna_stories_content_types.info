@@ -20,6 +20,7 @@ dependencies[] = filter
 dependencies[] = flag
 dependencies[] = htmlpurifier
 dependencies[] = image
+dependencies[] = lacuna_stories_views
 dependencies[] = link
 dependencies[] = list
 dependencies[] = media

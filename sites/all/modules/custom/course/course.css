@@ -1,28 +1,27 @@
 .form-field-name-field-unregistered-students { display: none; }
-.page-createcourse-3 .terms .fa-minus {
+.page-course-setup-organize .terms .fa-trash-o {
   padding-left: 5px;
-  font-size: 12px;
   cursor: pointer;
 }
 fieldset#edit-units-themes { margin-bottom: 30px; }
-.page-createcourse-4 .biblio-form {
+.page-course-setup-add-materials .biblio-form {
   display: none;
   padding: 10px;
   border: solid 1px lightgray;
   border-radius: 3px;
   margin-top: 30px;
 }
-.page-createcourse-4 .selected { background-color: rgba(22,147,165,0.2); }
-.page-createcourse-4 #e-access, .page-createcourse-4 #studynet, .page-createcourse-4 #archived-materials {
+.page-course-setup-add-materials .selected { background-color: rgba(22,147,165,0.2); }
+.page-course-setup-add-materials .explanation {
   padding: 10px;
   margin-bottom: 10px;
 }
-.page-createcourse-4 .form-submit,
+.page-course-setup-add-materials .form-submit,
 .node-document-form .form-submit {
   margin-top: 10px;
   width: 230px !important;
 }
-.page-createcourse-4 button a { color: #FFF !important; }
+.page-course-setup-add-materials button a { color: #FFF !important; }
 .view-archived-materials .views-row-odd { background-color: #F0F0F0; }
 .view-archived-materials .views-row { padding: 10px; }
 .view-archived-materials .views-exposed-form {
