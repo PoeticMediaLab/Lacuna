@@ -38,12 +38,12 @@ function course_authcode_form_submit($form, &$form_state) {
     $expiration = time() + (7 * 24 * 60 * 60); // seven days from now
     cache_set($key, $token, 'cache', $expiration); // our copy
 
-    drupal_set_message("Your Course Setup Code was recognized, please contact a Lacuna Stories team member if you have any issues creating your course.");
-    drupal_goto('createcourse-2');
+    drupal_set_message("Your Course Setup Code was recognized. Please contact a Lacuna Stories team member if you have any issues creating your course.");
+    drupal_goto('course-setup/add-course');
   }
   else {
-    drupal_set_message("Unfortunately, we do not recognize your Course Setup Code.  Please try again or contact a Lacuna Stories team member.");
-    drupal_goto('createcourse');
+    drupal_set_message("Unfortunately, we do not recognize your Course Setup Code. Please try again or contact a Lacuna Stories team member.", 'warning');
+    drupal_goto('course-setup');
   }
 }
 
@@ -56,6 +56,7 @@ function course_create() {
     'name' => (isset($user->name) ? $user->name : ''),
     'type' => COURSE_NODE_TYPE,
     'language' => LANGUAGE_NONE,
+		'status' => NODE_PUBLISHED,
   );
   $form = drupal_get_form(COURSE_NODE_TYPE . '_node_form', $node);
 
@@ -91,12 +92,16 @@ function course_add_default_terms() {
 	}
 }
 
-function course_set_up_materials($nid) {
-	_course_set_selected_course($nid);
+function course_set_up_materials() {
+	// For JS access
+	drupal_add_js(array(
+		'course' => array(
+			'current_course' => course_get_selected_course()
+		)), 'setting');
 	course_add_default_terms();
   $output = "Thank you for submitting your course information to the Lacuna Stories team. You can now continue by indicating the course materials you'd like to host on Lacuna Stories, and to assign them for specific weeks or units. To continue, click \"Continue\"<br />";
   $output .= "<br />";
-  $output .= drupal_render(drupal_get_form('course_set_up_materials_form', $nid));
+  $output .= drupal_render(drupal_get_form('course_set_up_materials_form'));
   return $output;
 }
 
@@ -113,7 +118,7 @@ function course_custom_taxonomy_form_setup(&$form, $taxonomy_name) {
 	);
 }
 
-function course_set_up_materials_form($form, &$form_state, $nid) {
+function course_set_up_materials_form($form, &$form_state) {
   // Current Units terms for this course, if any
   $form['units'] = array(
     '#type' => 'fieldset',
@@ -176,11 +181,9 @@ function course_set_up_materials_form($form, &$form_state, $nid) {
 
 // AJAX adds the taxonomy terms, so form submit doesn't need to handle it
 function course_set_up_materials_form_submit($form, &$form_state) {
-  $gid = course_get_selected_course();
-	// TODO: uncomment next line to progress
 	// TODO: remove need to pass $gid to each step
-	// May not need to do anything else; taxonomies handled in previous step!
-  drupal_goto("createcourse-4/$gid");
+	// Don't need to do anything else; taxonomies handled in previous step
+  drupal_goto("course-setup/add-materials");
 }
 
 /*
@@ -189,7 +192,7 @@ function course_set_up_materials_form_submit($form, &$form_state) {
 
 // Returns results for query on course-based term in given vocabulary
 function course_get_taxonomy_term_in_current_course($vocab_name, $term) {
-	if (empty($vocab)) {
+	if (empty($vocab_name)) {
 		return FALSE;
 	}
 	$gid = course_get_selected_course();
@@ -208,7 +211,7 @@ function course_get_taxonomy_term_in_current_course($vocab_name, $term) {
 function course_create_taxonomy_term($vocab, $tag, $weight = 0) {
 	// first, check for existing term in per-course taxonomy
 	$tag = trim($tag);
-	if (!course_get_taxonomy_term_in_current_course($vocab->machine_name, $tag)) {
+	if (course_get_taxonomy_term_in_current_course($vocab->machine_name, $tag) == FALSE) {
 		// none found, create a new one
 		$term = new stdClass();
 		$term->name = $tag;
@@ -239,34 +242,18 @@ function course_ajax_delete_term($vocab_name, $term) {
 	ajax_deliver(NULL);
 }
 
-/**
- * Get the largest term for a numerical vocabulary
- *
- * return integer or FALSE
- */
-//function course_numerical_vocab_term_max($vocab_machine_name) {
-//  # simple guard to ensure numerical vocabularies
-//  if ('number_of_weeks' != substr($vocab_machine_name, 0, 15)) {
-//    return FALSE;
-//  }
-//  return db_query('SELECT t.name
-//  FROM {taxonomy_vocabulary} v INNER JOIN {taxonomy_term_data} t ON v.vid=t.vid
-//  WHERE v.machine_name = :machine_name
-//  ORDER BY CAST(t.name AS SIGNED) DESC
-//  LIMIT 1', array(':machine_name' => $vocab_machine_name))->fetchField();
-//
-//}
-
-function course_add_material($nid) {
+function course_add_material() {
   global $base_url;
 
-  $output = "<p>Please find your materials using the methods below, in the order they are assigned. You, as the instructor, are responsible for determining if the online or e-access materials you are assigning your students are available at your home institution. If they are, your students will likely not have to pay for these materials. Otherwise, they will be charged. This is a cumbersome part of digital course setup, but an important one. It also allows the Lacuna Stories team to most efficiently assist you securing materials not available from your institutions digital resources. If you have any questions at any time, please send a quick email to info@lacunastories.com and someone from our team will assist you.</p><br /><div class='add-materials'>";
+  $output = "<p>Please find your materials using the methods below, in the order they are assigned. You, as the instructor, are responsible for determining if the online or e-access materials you are assigning your students are available at your home institution. If they are, your students will likely not have to pay for these materials. Otherwise, they will be charged. This is a cumbersome part of digital course setup, but an important one. It also allows the Lacuna Stories team to most efficiently assist you securing materials not available from your institutions digital resources. If you have any questions at any time, please send a quick email to " .l('info@lacunastories.com', 'mailto:info@lacunastories.com', array('absolute' => TRUE)) . " and someone from our team will assist you.</p><br /><div class='add-materials'>";
 
-  $output .= "<div id='archived-materials'><div>Add Lacuna Stories Archived Materials. These materials may be free or available for a fee for your students. In either case, these are already digitized and using these materials will save you or the Lacuna Stories team time.</div><button class='form-submit'><a href='" . $base_url . "/archived-materials'>Search Lacuna Stories</a></button></div>";
+  $output .= "<div id='archived-materials' class='explanation'><div>Add Lacuna Stories Archived Materials. These materials may be free or available for a fee for your students. In either case, these are already digitized and using these materials will save you or the Lacuna Stories team time.</div><button class='form-submit'><a href='" . $base_url . "/archived-materials'>Search Lacuna Stories</a></button></div>";
 
-  $output .= "<div id='e-access'><div>Add E-Access Material from my Institution. If your students have digital access to materials through your institution’s library, they may have free access to those same materials on Lacuna Stories. Save your students money!</div><button class='form-submit'>Confirm E-Access Material</button></div>";
+//  $output .= "<div id='e-access'><div>Add E-Access Material from my Institution. If your students have digital access to materials through your institution’s library, they may have free access to those same materials on Lacuna Stories. Save your students money!</div><button class='form-submit'>Confirm E-Access Material</button></div>";
 
-  $output .= "<div id='studynet'><div>Request Copyright Permission. The Lacuna Stories team, in partnership with Study.Net, will obtain permission, directly from the publisher or an intermediary service, to use the material you identify.</div><button class='form-submit'>Request Copyright Permission</button></div></div>";
+//  $output .= "<div id='studynet'><div>Request Copyright Permission. The Lacuna Stories team, in partnership with Study.Net, will obtain permission, directly from the publisher or an intermediary service, to use the material you identify.</div><button class='form-submit'>Request Copyright Permission</button></div></div>";
+
+	  $output .= "<div id='add-documents' class='explanation'><div>Add materials to your course. Note: You are responsible for ensuring that you have permission to publish these materials for your course.</div><button class='form-submit'>Add Materials</button></div></div>";
 
   global $user;
   module_load_include('inc', 'node', 'node.pages');
@@ -286,7 +273,7 @@ function course_add_material($nid) {
 function course_switch_course($gid) {
   if ($group = node_load($gid)) {
     if ($group->type == 'course') {
-      if (og_is_member('node', $gid) || user_access('administer group')) {
+      if (user_access('administer group') || og_is_member('node', $gid)) {
         _course_set_selected_course($gid);
         drupal_goto('materials'); // After setting the context, redirect user to the course materials page
       }
