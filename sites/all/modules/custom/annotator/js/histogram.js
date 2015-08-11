@@ -160,11 +160,7 @@
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         child = _ref[_i];
         length += child.textContent.length;
-        if (this.counted.length) {
-          console.log(this.barTextLength, length, this.counted);
-        }
         if (length >= this.barTextLength) {
-          console.log(this.barTextLength, length, this.counted);
           totalBars = Math.floor(length / this.barTextLength);
           length = length % this.barTextLength;
           if (this.counted.length > 0) {
