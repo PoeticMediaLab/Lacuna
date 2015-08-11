@@ -10,3 +10,10 @@
 function course_update_7100() {
   field_delete_field('field_visibility');
 }
+
+/**
+ * Rename bibliographic reference field in Responses
+ */
+//function course_update_7101() {
+//
+//}

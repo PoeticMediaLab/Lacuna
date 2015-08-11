@@ -49,19 +49,20 @@ function course_menu() {
     'type' => MENU_NORMAL_ITEM,
     'file' => 'course.pages.inc',
   );
-  $items['ajax/add-unit-term'] = array(
-    'page callback' => 'course_ajax_add_unit_term',
-    'access callback' => 'course_access',
-    'type' => MENU_NORMAL_ITEM,
-    'file' => 'course.pages.inc',
-  );
-  $items['ajax/delete-unit-term/%/%'] = array(
-    'page callback' => 'course_ajax_delete_unit_term',
-    'page arguments' => array(2,3),
-    'access callback' => 'course_access',
-    'type' => MENU_NORMAL_ITEM,
-    'file' => 'course.pages.inc',
-  );
+	$items['ajax/add-term/%'] = array(
+		'page callback' => 'course_ajax_add_term',
+		'page arguments' => array(2),
+		'access callback' => 'course_access',
+		'type' => MENU_CALLBACK,
+		'file' => 'course.pages.inc',
+ 	);
+	$items['ajax/delete-term/%/%'] = array(
+		'page callback' => 'course_ajax_delete_term',
+		'page arguments' => array(2,3),
+		'access callback' => 'course_access',
+		'type' => MENU_CALLBACK,
+		'file' => 'course.pages.inc',
+	);
   $items['admin/config/content/lacuna-courses'] = array(
     'title' => 'Course Creation Settings',
     'page callback' => 'drupal_get_form',
@@ -137,10 +138,43 @@ function course_admin_form() {
   $form = array();
   $form['course_authcode'] = array(
     '#type' => 'textfield',
-    '#title' => t('The authorization code Teachers and TAs need to create Lacuna Stories Courses'),
+    '#title' => t('Authorization Code'),
+		'#description' => t('Set the authorization code needed to create a Lacuna Stories Course.'),
     '#default_value' => variable_get('course_authcode', 's3kr3t'),
     '#required' => TRUE,
   );
+
+	$form['taxonomies'] = array(
+		'#type' => 'fieldset',
+		'#title' => t('Default Taxonomies'),
+		'#collapsible' => FALSE,
+		'#collapsed' => FALSE,
+		'#description' => t('Set the default values that all new courses will receive. Separate each item by commas. Instructors will have a chance to change these when setting up their course.')
+	);
+
+	$form['taxonomies']['course_default_units'] = array(
+		'#type' => 'textfield',
+		'#title' => t('Units'),
+		'#description' => t('Used to organize readings into units'),
+		'#required' => TRUE,
+		'#default_value' => variable_get('course_default_units', 'Week 1, Week 2'),
+	);
+
+	$form['taxonomies']['course_default_genre_doc'] = array(
+		'#type' => 'textfield',
+		'#title' => t('Genre - Materials'),
+		'#description' => t('Used to classify materials by genre'),
+		'#required' => TRUE,
+		'#default_value' => variable_get('course_default_genre_doc', 'Fiction, Scholarship'),
+	);
+
+	$form['taxonomies']['course_default_genre_response'] = array(
+		'#type' => 'textfield',
+		'#title' => t('Genre - Responses'),
+		'#description' => t('Used to classify student responses by genre'),
+		'#required' => TRUE,
+		'#default_value' => variable_get('course_default_genre_response', 'Essay, Fiction, Other, Reflection, Summary'),
+	);
 
   return system_settings_form($form);
 }
@@ -149,15 +183,16 @@ function course_admin_form() {
 function course_switch_course_link ($row, $view) {
   $gid = $row->nid;
   $title = $row->title;
-  if ($view->current_display == 'not_enrolled') {
-    return l($title, 'node/' . $gid);
+  if (($view->current_display == 'not_enrolled') && !user_access('administer group')) {
+		// Allow users w/ admin group permissions to switch context to any course
+    return l($title, drupal_get_path_alias('node/' . $gid));
   };
-    if ($current_course = course_get_selected_course()) {
-      if ($gid == $current_course) {
-        $title .= " (current course)";
-      }
-    }
-  return l ($title, 'switch-course/' . $gid);
+	if ($current_course = course_get_selected_course()) {
+		if ($gid == $current_course) {
+			$title .= " (current course)";
+		}
+	}
+  return l($title, 'switch-course/' . $gid);
 }
 
 /**
@@ -261,18 +296,53 @@ function course_views_pre_build(&$view) {
 
   }
 }
-
-function course_get_taxonomy_for_current_course($taxonomy_name) {
+// Filter taxonomy terms to return only those relevant for current course
+function course_get_terms_for_current_course($taxonomy_name) {
 	$gid = course_get_selected_course();
-	// Filter units specific to the current course
 	$taxonomy = array();
-	// Convention for per-course taxonomies: name_gid
-	$vocab = taxonomy_vocabulary_machine_name_load($taxonomy_name . '_' . $gid);
-	$tree = taxonomy_get_tree($vocab->vid);
-	foreach($tree as $term) {
-		$taxonomy[$term->tid] = $term->name;
+	$query = new EntityFieldQuery();
+	$result = $query->entityCondition('entity_type', 'taxonomy_term')
+		->entityCondition('bundle', $taxonomy_name)
+		->fieldCondition('field_term_course', 'target_id', $gid, '=')
+		->propertyOrderBy('weight')
+		->execute();
+	if (isset($result['taxonomy_term'])) {
+		foreach(array_keys($result['taxonomy_term']) as $tid) {
+			$wrapper = entity_metadata_wrapper('taxonomy_term', taxonomy_term_load($tid));
+			$taxonomy[$tid] = $wrapper->name->value();
+		}
 	}
 	return $taxonomy;
+}
+
+// Returns list of documents in Ready to Annotate status for current course
+function course_get_documents_for_current_course() {
+	$gid = course_get_selected_course();
+	$query = new EntityFieldQuery();
+	$result = $query->entityCondition('entity_type', 'node')
+		->entityCondition('bundle', 'document')
+		->fieldCondition('og_group_ref', 'target_id', $gid)
+		->fieldCondition('field_status', 'value', 3)	// 3 == Ready to Annotate
+		->execute();
+	if (isset($result['node'])) {
+		return $result['node'];
+	}
+}
+
+/*
+ * Filter the bibliography nodes to those used in current course
+ */
+function course_get_bibliography_for_current_course() {
+	$documents = course_get_documents_for_current_course();
+	$biblios = array();
+	if (!empty($documents)) {
+		$docs = node_load_multiple(array_keys($documents));
+		foreach ($docs as $doc) {
+			$wrapper = entity_metadata_wrapper('node', $doc);
+			array_push($biblios, $wrapper->field_bibliographic_entry->value());
+		}
+	}
+	return $biblios;
 }
 
 /*
@@ -280,23 +350,10 @@ function course_get_taxonomy_for_current_course($taxonomy_name) {
  */
 function course_get_authors_for_current_course() {
 	$authors = array();
-	$gid = course_get_selected_course();
-	$query = new EntityFieldQuery();
-	$doc_result = $query->entityCondition('entity_type', 'node')
-		->entityCondition('bundle', 'document')
-		->fieldCondition('og_group_ref', 'target_id', $gid)
-		->execute();
-	if (isset($doc_result['node'])) {
-		$docs = node_load_multiple(array_keys($doc_result['node']));
-		$biblios = array();
-		foreach($docs as $doc) {
-			$wrapper = entity_metadata_wrapper('node', $doc);
-			array_push($biblios, $wrapper->field_bibliographic_entry->value());
-		}
-		foreach ($biblios as $biblio) {
-			foreach ($biblio->biblio_contributors as $author) {
-					$authors[$author['lastname']] = $author['name'];
-			}
+	$biblios = course_get_bibliography_for_current_course();
+	foreach ($biblios as $biblio) {
+		foreach ($biblio->biblio_contributors as $author) {
+				$authors[$author['lastname']] = $author['name'];
 		}
 	}
 	return $authors;
@@ -308,9 +365,10 @@ function course_get_authors_for_current_course() {
 function course_form_views_exposed_form_alter(&$form, &$form_state) {
   if ('views-exposed-form-documents-materials' == $form['#id']) {
     // Set exposed filter 'Limit by Unit' for current course
-    $form['field_unit_tid']['#options'] = course_get_taxonomy_for_current_course('units');
-		$form['field_genre_doc_tid']['#options'] = course_get_taxonomy_for_current_course('genre_doc');
-//		dpm($form);
+		$form['field_unit_tid']['#options'] = course_get_terms_for_current_course('unit');
+		// Field name got reversed in Document field. Oops!
+		// TODO: Fix the name
+		$form['field_doc_genre_tid']['#options'] = course_get_terms_for_current_course('genre_doc');
 		$form['lastname']['#options'] = course_get_authors_for_current_course();
 	}
 
@@ -341,7 +399,7 @@ function course_form_views_exposed_form_alter(&$form, &$form_state) {
     $query = new EntityFieldQuery();
     $query->entityCondition('entity_type', 'taxonomy_term');
     $query->entityCondition('bundle', 'annotation_tags');
-    $query->fieldCondition('field_annotation_tag_course', 'target_id', $course_groups, 'IN');
+    $query->fieldCondition('field_term_course', 'target_id', $course_groups, 'IN');
     $records = $query->execute();
     if (count($records)) {
       $group_tag_options = array_keys($records['taxonomy_term']);
@@ -378,6 +436,8 @@ function course_sewing_kit_shared_with($data) {
 }
 
 // Get the currently selected course
+// Note: If you need to rename this function, be aware that it's used in
+// many, many views in PHP fields
 function course_get_selected_course() {
   global $user;
   if (isset($user->data['current-course'])) {
@@ -398,7 +458,6 @@ function _course_set_selected_course($nid) {
  * Implements hook_node_validate
  */
 function course_node_validate($node, $form, &$form_state) {
-
   if ($node->type == 'course') {
     // Ensure that multi-term courses are in consecutive terms
     $terms = $form_state['values']['field_course_term'][$node->language];
@@ -425,47 +484,45 @@ function course_node_update($node) {
 }
 
 function course_form_document_node_form_alter(&$form, &$form_state, $form_id) {
-  $gid = course_get_selected_course();
   $document = node_load($form['nid']['#value']);
 
-  $vocab = taxonomy_vocabulary_machine_name_load("number_of_weeks_$gid");
-  $tree = taxonomy_get_tree($vocab->vid);
-  foreach($tree as $term) {
-    $weeks[$term->tid] = $term->name;
-  }
-  foreach($document->field_tags[LANGUAGE_NONE] as $week) {
-    $default_weeks[] = $week['tid'];
-  }
-  $form['weeks'] = array(
-    '#title' => 'Week(s)',
-    '#type' => 'select',
-    '#multiple' => TRUE,
-    '#size' => 60,
-    '#options' => $weeks,
-    '#default_value' => $default_weeks,
-  );
-  $vocab = taxonomy_vocabulary_machine_name_load("units_$gid");
-  $tree = taxonomy_get_tree($vocab->vid);
-  foreach($tree as $term) {
-    $units[$term->tid] = $term->name;
-  }
+	// Per-course units taxonomy
   $default_unit = $document->field_unit[LANGUAGE_NONE][0]['tid'];
   $form['units'] = array(
-    '#title' => 'Unit',
+    '#title' => 'Units',
     '#type' => 'select',
     '#size' => 60,
     '#default_value' => $default_unit,
-    '#options' => $units,
+    '#options' => course_get_terms_for_current_course('units'),
+		'#required' => TRUE,
   );
+
+	// Per-course Materials Genre taxonomy
+	$default_genre = $document->field_doc_genre[LANGUAGE_NONE][0]['tid'];
+	$form['genre_doc'] = array(
+		'#title' => 'Genres',
+		'#type' => 'select',
+		'#size' => 60,
+		'#default_value' => $default_genre,
+		'#options' => course_get_terms_for_current_course('genre_doc'),
+		'#required' => TRUE,
+	);
+
+	// Add our filtered fields to the correct groups
   $form['#group_children']['units'] = 'group_syllabus';
-  $form['#group_children']['weeks'] = 'group_syllabus';
+  $form['#group_children']['genre_doc'] = 'group_about';
+
+	// Hide several default fields from user input - we're overriding them above
   $form['field_copyright']['#access'] = FALSE;
   $form['field_tags']['#access'] = FALSE;
   $form['field_unit']['#access'] = FALSE;
+	$form['field_doc_genre']['#access'] = FALSE;
   $form['additional_settings']['#access'] = FALSE;
   $form['og_group_ref']['#access'] = FALSE;
   $form['field_bibliographic_entry']['#access'] = FALSE;
-  $form['title']['#title'] = 'Material Name to Be Displayed to Students';
+
+	// Finish up form
+  $form['title']['#title'] = 'Material Title to Be Displayed to Students';
   $form['actions']['submit']['#value'] = 'Save (Finished Adding Material)';
   $form['actions']['submit']['#submit'] = array('course_add_document_form_submit');
 
@@ -474,8 +531,41 @@ function course_form_document_node_form_alter(&$form, &$form_state, $form_id) {
     '#submit' => array('course_add_document_form_submit'),
     '#value' => 'Save (Add More Material)',
   );
-  $path = drupal_get_path('module', 'course');
+
+	$path = drupal_get_path('module', 'course');
   $form['#attached']['css'] = array("$path/course.css");
+}
+
+// Filter fields in Responses to current course context
+function course_form_response_node_form_alter(&$form, &$form_state, $form_id) {
+	$response = node_load($form['nid']['#value']);
+	// Filter Response Genre to course
+	$default_genre = $response->field_response_genre[LANGUAGE_NONE][0]['tid'];
+	$form['genre_response'] = array(
+		'#title' => 'Genres',
+		'#type' => 'select',
+		'#size' => 60,
+		'#default_value' => $default_genre,
+		'#options' => course_get_terms_for_current_course('genre_response'),
+		'#required' => TRUE,
+	);
+	$form['#group_children']['genre_response'] = 'group_genre_about';
+
+	$form['field_response_genre']['#access'] = FALSE;	// hide this field
+	$form['#submit'] = array('course_add_response_form_submit');
+	$form['actions']['submit']['#submit'][] = 'course_add_response_form_submit';
+	$form['actions']['submit']['#value'] = 'Save Response';
+}
+
+// Handle setting custom values
+function course_add_response_form_submit($form, &$form_state) {
+	dpm($form);
+	$node = node_form_submit_build_node($form, $form_state);
+	$node->status = 1;
+
+	// Update node with our filtered values
+	$node->field_response_genre[LANGUAGE_NONE][0]['tid'] = $form_state['values']['genre_response'];
+	node_save($node);
 }
 
 function course_form_biblio_node_form_alter(&$form, &$form_state, $form_id) {
@@ -505,39 +595,29 @@ function course_form_course_node_form_alter(&$form, &$form_state, $form_id) {
 }
 
 function course_create_form_submit($form, &$form_state) {
-  $node = new stdClass();
-  $node->type = COURSE_NODE_TYPE;
-  foreach($form_state['values'] as $k => $v) {
-    $node->$k = $v;
-  }
-  node_object_prepare($node);
-  $node->status = 1; # make all the courses published
-  node_save($node);
-
-  // create unit vocab for the course, if new
-  if (is_null($form_state['node']->nid)) {
-    $units = (object) array(
-        'name' => "Course {$node->nid} Units",
-        'description' => "Course {$node->nid} Units",
-        'machine_name' => "units_{$node->nid}",
-      );
-    taxonomy_vocabulary_save($units);
-    $number_of_weeks = (object) array(
-        'name' => "Course {$node->nid} Number of Weeks",
-        'description' => "Course {$node->nid} Number of Weeks",
-        'machine_name' => "number_of_weeks_{$node->nid}",
-      );
-    taxonomy_vocabulary_save($number_of_weeks);
-
-  }
-  if ($node->nid) {
-    _course_set_selected_course($node->nid);
-    drupal_goto("createcourse-3/" . $node->nid);
-  }
-  else {
-    drupal_set_message("There was an error creating your course.  Please try again and/or contact the Lacuna Stories team for assistance, <a href='info@lacunastories.com'>info@lacunastories.com</a>.", 'error');
-    drupal_goto("createcourse-2");
-  }
+	global $user;
+	$values = array(
+		'type' => COURSE_NODE_TYPE,
+		'uid' => $user->uid,
+		'status' => 1,
+		'comment' => 0,
+		'promote' => 0,
+	);
+  $course = entity_create('node', array_merge($values, $form_state['values']));
+	$course_wrapper = entity_metadata_wrapper('node', $course);
+	try {
+		$course_wrapper->save();
+		$nid = $course_wrapper->nid->value();
+		if (!empty($nid)) {
+			_course_set_selected_course($nid);
+			drupal_goto("createcourse-3/" . $nid);
+		}
+	}
+	catch (Exception $e) {
+		watchdog_exception('Course', $e, NULL, NULL, WATCHDOG_ERROR);
+		drupal_set_message("There was an error creating your course.  Please try again and/or contact the Lacuna Stories team for assistance, <a href='info@lacunastories.com'>info@lacunastories.com</a>.", 'error');
+		drupal_goto("createcourse-2");
+	}
 }
 
 function course_add_material_form_submit($form, &$form_state) {
@@ -585,18 +665,18 @@ function course_add_material_form_submit($form, &$form_state) {
 function course_add_document_form_submit($form, &$form_state) {
   $node = node_form_submit_build_node($form, $form_state);
   $node->status = 1;
-  $i = 0;
-  foreach($form_state['values']['weeks'] as $week) {
-    $node->field_tags[LANGUAGE_NONE][$i]['tid'] = $week;
-    $i++;
-  }
+
+	// Update document node with our filtered values
   $node->field_unit[LANGUAGE_NONE][0]['tid'] = $form_state['values']['units'];
+	// TODO: Rename field_doc_genre to field_genre_doc
+	$node->field_doc_genre[LANGUAGE_NONE][0]['tid'] = $form_state['values']['genre_doc'];
   node_save($node);
 
   if ("Save (Finished Adding Material)" == $form_state['values']['op']) {
     drupal_set_message("Your Course Material has successfully been added.");
+		// TODO: Change destination here
     unset($_GET['destination']);
-    drupal_goto("/");
+    drupal_goto("/materials");
   }
   else if ("Save (Add More Material)" == $form_state['values']['op']) {
     drupal_set_message("Your Course Material has successfully been added.");
