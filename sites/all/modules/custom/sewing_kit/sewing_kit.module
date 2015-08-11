@@ -23,53 +23,53 @@ function sewing_kit_action_info() {
       'configurable' => TRUE,
       'vbo_configurable' => FALSE,
       'triggers' => array('any'),
+			'aggregate' => TRUE,
     ),
   );
 }
 
-global $_sewing_kit_thread;  // cuz $thread seems a dangerous name
 // Create a new Thread; populate with references to all selected nodes
 function sewing_kit_stitch(&$node, $context) {
     global $user;
-    global $_sewing_kit_thread;
 
-    if ($context['progress']['current'] == 1) {
-      if (!$context['thread_new']) {
-        // Add to existing thread; we pass the node id in the select form
-        $_sewing_kit_thread = node_load($context['thread_add']);
-      }
-      else {
-        $_sewing_kit_thread = new stdClass();
-        $_sewing_kit_thread->title = $context['thread_new'];
-        $_sewing_kit_thread->type = 'thread';
-        node_object_prepare($_sewing_kit_thread);
-        $_sewing_kit_thread->language = $node->language;
-        $_sewing_kit_thread->uid = $user->uid;
-        $_sewing_kit_thread->status = 1; // (1 or 0): published or not
-        $_sewing_kit_thread->promote = 0; // (1 or 0): promoted to front page
-        $_sewing_kit_thread->comment = 2; // allow commenting
-        $_sewing_kit_thread->thread_description[$node->language][0]['value'] = $context['thread_description']['value'];
-        $_sewing_kit_thread->thread_description[$node->language][0]['format'] = 'full_html';
-        $_sewing_kit_thread->thread_reference[$node->language] = array();
-      }
-    }
+		if (!$context['thread_new']) {
+			// Add to existing thread; we pass the node id in the select form
+			$sewing_kit_thread = node_load($context['thread_add']);
+		}
+		else {
+			$sewing_kit_thread = new stdClass();
+			$sewing_kit_thread->title = $context['thread_new'];
+			$sewing_kit_thread->type = 'thread';
+			node_object_prepare($sewing_kit_thread);
+			$sewing_kit_thread->language = $node->language;
+			$sewing_kit_thread->uid = $user->uid;
+			$sewing_kit_thread->status = NODE_PUBLISHED; // (1 or 0): published or not
+			$sewing_kit_thread->promote = NODE_NOT_PROMOTED; // (1 or 0): promoted to front page
+			$sewing_kit_thread->comment = COMMENT_NODE_OPEN; // allow commenting
+			$sewing_kit_thread->thread_description[LANGUAGE_NONE][0]['value'] = $context['thread_description']['value'];
+			$sewing_kit_thread->thread_description[LANGUAGE_NONE][0]['format'] = 'full_html';
+			$sewing_kit_thread->thread_reference[LANGUAGE_NONE] = array();
+		}
 
-    // Don't duplicate references, only add new ones
-    if (!array_key_exists($node->nid, $_sewing_kit_thread->thread_reference[$node->language])) {
-      $_sewing_kit_thread->thread_reference[$node->language][] = array(
-          'target_id' => $node->nid,
-          'target_type' => 'node'
-      );
-    }
+		// Add references to annotation nodes
+		foreach (array_keys($node) as $nid) {
+			$sewing_kit_thread->thread_reference[LANGUAGE_NONE][] = array(
+				'target_id' => $nid,
+				'target_type' => 'node'
+			);
+		}
 
-    if ($context['progress']['current'] == $context['progress']['total']) {
-      // We're done; save
-      $_sewing_kit_thread = node_submit($_sewing_kit_thread);
-      node_save($_sewing_kit_thread);
-      drupal_set_message('Your thread ' . l($_sewing_kit_thread->title, 'node/' . $_sewing_kit_thread->nid) .  ' has been saved.');
-      // drupal_goto() breaks the AJAX here
-      // drupal_goto('node/' . $_sewing_kit_thread->nid);
-    }
+		$sewing_kit_thread = node_submit($sewing_kit_thread);
+		node_save($sewing_kit_thread);
+		// Add to course group
+		og_group('node', course_get_selected_course(), array(
+			'entity_type' => 'node',
+			'entity' => $sewing_kit_thread,
+			'field_name' => 'og_group_ref',
+			'state' => OG_STATE_ACTIVE
+		));
+
+		drupal_set_message('Your thread ' . l($sewing_kit_thread->title, drupal_get_path_alias('node/' . $sewing_kit_thread->nid)) .  ' has been saved.');
 }
 
 // Require a title for the new thread
