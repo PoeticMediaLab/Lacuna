@@ -52,11 +52,17 @@ function sewing_kit_stitch(&$node, $context) {
 		}
 
 		// Add references to annotation nodes
+		$stitches = array();
+		foreach ($sewing_kit_thread->thread_reference[LANGUAGE_NONE] as $stitch) {
+			$stitches[] = $stitch['target_id'];
+		}
 		foreach (array_keys($node) as $nid) {
-			$sewing_kit_thread->thread_reference[LANGUAGE_NONE][] = array(
-				'target_id' => $nid,
-				'target_type' => 'node'
-			);
+			if (!in_array($nid, $stitches)) {	// Don't duplicate existing annotations
+				$sewing_kit_thread->thread_reference[LANGUAGE_NONE][] = array(
+					'target_id' => $nid,
+					'target_type' => 'node'
+				);
+			}
 		}
 
 		$sewing_kit_thread = node_submit($sewing_kit_thread);
