@@ -782,9 +782,9 @@ function lacuna_stories_views_views_default_views() {
   $handler->display->display_options['use_more_always'] = FALSE;
   $handler->display->display_options['access']['type'] = 'role';
   $handler->display->display_options['access']['role'] = array(
+    7 => '7',
     4 => '4',
     5 => '5',
-    7 => '7',
   );
   $handler->display->display_options['cache']['type'] = 'none';
   $handler->display->display_options['query']['type'] = 'views_query';
@@ -859,16 +859,16 @@ function lacuna_stories_views_views_default_views() {
   $handler->display->display_options['sorts']['name']['id'] = 'name';
   $handler->display->display_options['sorts']['name']['table'] = 'taxonomy_term_data';
   $handler->display->display_options['sorts']['name']['field'] = 'name';
-  /* Contextual filter: Broken/missing handler */
-  $handler->display->display_options['arguments']['field_annotation_tag_course_target_id']['id'] = 'field_annotation_tag_course_target_id';
-  $handler->display->display_options['arguments']['field_annotation_tag_course_target_id']['table'] = 'field_data_field_annotation_tag_course';
-  $handler->display->display_options['arguments']['field_annotation_tag_course_target_id']['field'] = 'field_annotation_tag_course_target_id';
-  $handler->display->display_options['arguments']['field_annotation_tag_course_target_id']['default_action'] = 'default';
-  $handler->display->display_options['arguments']['field_annotation_tag_course_target_id']['default_argument_type'] = 'php';
-  $handler->display->display_options['arguments']['field_annotation_tag_course_target_id']['default_argument_options']['code'] = 'return course_get_selected_course();';
-  $handler->display->display_options['arguments']['field_annotation_tag_course_target_id']['summary']['number_of_records'] = '0';
-  $handler->display->display_options['arguments']['field_annotation_tag_course_target_id']['summary']['format'] = 'default_summary';
-  $handler->display->display_options['arguments']['field_annotation_tag_course_target_id']['summary_options']['items_per_page'] = '25';
+  /* Contextual filter: Taxonomy term: Course (field_term_course) */
+  $handler->display->display_options['arguments']['field_term_course_target_id']['id'] = 'field_term_course_target_id';
+  $handler->display->display_options['arguments']['field_term_course_target_id']['table'] = 'field_data_field_term_course';
+  $handler->display->display_options['arguments']['field_term_course_target_id']['field'] = 'field_term_course_target_id';
+  $handler->display->display_options['arguments']['field_term_course_target_id']['default_action'] = 'default';
+  $handler->display->display_options['arguments']['field_term_course_target_id']['default_argument_type'] = 'php';
+  $handler->display->display_options['arguments']['field_term_course_target_id']['default_argument_options']['code'] = 'return course_get_selected_course();';
+  $handler->display->display_options['arguments']['field_term_course_target_id']['summary']['number_of_records'] = '0';
+  $handler->display->display_options['arguments']['field_term_course_target_id']['summary']['format'] = 'default_summary';
+  $handler->display->display_options['arguments']['field_term_course_target_id']['summary_options']['items_per_page'] = '25';
   /* Filter criterion: Taxonomy vocabulary: Machine name */
   $handler->display->display_options['filters']['machine_name']['id'] = 'machine_name';
   $handler->display->display_options['filters']['machine_name']['table'] = 'taxonomy_vocabulary';
