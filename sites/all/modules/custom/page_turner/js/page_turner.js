@@ -278,10 +278,12 @@ function PTView(model, elements) {
         self.svg = d3.select('#' + self.elements.navbar).append("svg:svg");
 
         //  Detect window width for small screens.
-        var width;
-        if (window.innerWidth < 768) width = "83%";
-        else if (window.innerWidth > 1200) width = "90%";
-        else width = "86%";
+        var widthDecimal;
+        if (window.innerWidth < 768) widthDecimal = .83;
+        else if (window.innerWidth > 1200) widthDecimal = .9;
+        else widthDecimal = .86;
+
+        var width = '' + (widthDecimal * 100) + '%';
 
         self.navbar_svg = self.svg
             .attr("id", self.elements.navbar_parent)
@@ -298,7 +300,7 @@ function PTView(model, elements) {
             .style("padding-top", self.offset + "px");
 
         // Set our sizing variables
-        self.navbar.width = parseInt(d3.select('#' + self.elements.navbar).style('width'), 10) * .9; // svg width = 90%
+        self.navbar.width = parseInt(d3.select('#' + self.elements.navbar).style('width'), 10) * widthDecimal; // svg width = 90%
         self.navbar.height = parseInt(d3.select('#' + self.elements.navbar).style('height'), 10);
         self.navbar.x = d3.scale.linear().range([0, self.navbar.width]);
         self.navbar.ratio = self.model.page_total();
@@ -306,7 +308,7 @@ function PTView(model, elements) {
 
     function draw_page_x_of_y() {
         // Add the "Page X of Y" div
-        d3.select('#' + self.elements.pages.loc).append('div').attr('id', self.elements.pages.container).append('span').attr('id', self.elements.pages.id);
+        d3.select('#' + self.elements.pages.loc).insert('div', '#page-turner-nav').attr('id', self.elements.pages.container).append('span').attr('id', self.elements.pages.id);
         d3.select('#' + self.elements.pages.container).append('span').attr('contenteditable', true).attr('id', self.elements.pages.numbers);
         d3.select('#' + self.elements.pages.container).append('span').attr('id', self.elements.pages.total).text(' of ' + self.model.page_total());
     }
@@ -622,7 +624,7 @@ PTController.prototype = {
         view = new PTView(model, {
           'content': 'article',
           'pages': {
-            'loc': 'navigation',
+            'loc': 'content',
             'container': 'page-turner-pages-container',
             'id': 'page-turner-pages',
             'numbers': 'page-turner-pages-numbers',

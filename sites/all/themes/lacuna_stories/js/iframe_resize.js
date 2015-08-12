@@ -19,7 +19,7 @@ Drupal.behaviors.iframe_resize = {
 
     //  get iframes on document
     var $frames = $('.field-name-field-media iframe');
-    var parent = $frames[0].parentElement;
+    var parent = $frames[0] ? $frames[0].parentElement : null;
 
     //  record the aspect ratio of each and remove dimensions
     //  from elements
@@ -34,7 +34,7 @@ Drupal.behaviors.iframe_resize = {
     //  resize elements on window resize
     $(window).resize(function() {
 
-        var width = parent.offsetWidth;
+        var width = parent ? parent.offsetWidth : null;
         $frames.each(function(index, element) {
 
             element.setAttribute('width', width);
