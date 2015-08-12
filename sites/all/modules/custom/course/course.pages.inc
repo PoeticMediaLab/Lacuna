@@ -92,7 +92,7 @@ function course_add_default_terms() {
 	}
 }
 
-function course_set_up_materials() {
+function course_organize() {
 	// For JS access
 	drupal_add_js(array(
 		'course' => array(
@@ -101,7 +101,7 @@ function course_set_up_materials() {
 	course_add_default_terms();
   $output = "Thank you for submitting your course information to the Lacuna Stories team. You can now continue by indicating the course materials you'd like to host on Lacuna Stories, and to assign them for specific weeks or units. To continue, click \"Continue\"<br />";
   $output .= "<br />";
-  $output .= drupal_render(drupal_get_form('course_set_up_materials_form'));
+  $output .= drupal_render(drupal_get_form('course_organize_form'));
   return $output;
 }
 
@@ -118,7 +118,7 @@ function course_custom_taxonomy_form_setup(&$form, $taxonomy_name) {
 	);
 }
 
-function course_set_up_materials_form($form, &$form_state) {
+function course_organize_form($form, &$form_state) {
   // Current Units terms for this course, if any
   $form['units'] = array(
     '#type' => 'fieldset',
@@ -180,9 +180,11 @@ function course_set_up_materials_form($form, &$form_state) {
 }
 
 // AJAX adds the taxonomy terms, so form submit doesn't need to handle it
-function course_set_up_materials_form_submit($form, &$form_state) {
-	// TODO: remove need to pass $gid to each step
+function course_organize_form_submit($form, &$form_state) {
 	// Don't need to do anything else; taxonomies handled in previous step
+	// TODO: Skip taxonomy submission
+	ddl($form_state, 'FORM STATE');
+	ddl($form, 'FORM');
   drupal_goto("course-setup/add-materials");
 }
 
