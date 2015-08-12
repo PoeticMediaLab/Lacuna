@@ -104,7 +104,7 @@
         for (audience_type in _ref) {
           checked = _ref[audience_type];
           if (checked) {
-            audience += '<span class="annotator-privacy-type">' + audience_type + '</span>';
+            audience += ("<span class='annotator-privacy-type annotator-privacy-type-" + audience_type + "'>") + audience_type + '</span>';
             if ('peer-groups' === audience_type) has_groups = true;
           }
         }
