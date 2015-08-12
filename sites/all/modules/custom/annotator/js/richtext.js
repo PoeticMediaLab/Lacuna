@@ -71,7 +71,7 @@
 
     RichText.prototype.convertText = function(Viewer) {
       var annotation, divList, index, ref, results;
-      divList = $(Viewer.element[0]).find('span.annotator-controls').next();
+      divList = $(Viewer.element[0]).find('span.annotator-controls, span.annotator-touch-controls').next();
       ref = Viewer.annotations;
       results = [];
       for (index in ref) {

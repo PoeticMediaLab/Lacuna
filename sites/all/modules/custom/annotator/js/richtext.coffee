@@ -62,7 +62,7 @@ class Annotator.Plugin.RichText extends Annotator.Plugin
   # convert text back to HTML
   convertText: (Viewer) =>
     # Annotator adds the controls, then the next sibling is the div with the text in it
-    divList = $(Viewer.element[0]).find('span.annotator-controls').next()
+    divList = $(Viewer.element[0]).find('span.annotator-controls, span.annotator-touch-controls').next()
     for index, annotation of Viewer.annotations
       # reverse the HTML escaping by Annotator.Util.escape
       # possibly dangerous, but trusting WYSIWYG input filters for content
