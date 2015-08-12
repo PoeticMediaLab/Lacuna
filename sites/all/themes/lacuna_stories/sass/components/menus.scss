@@ -1,6 +1,6 @@
 @import "init";
 
-$menu-color: transparent;
+$menu-color: white;
 $tabs-color: rgb(245,245,245);
 $menu-active-color: #eee;
 
@@ -43,8 +43,8 @@ ul.sf-menu {
     padding: 10px 15px 10px 15px;
     margin: 0px;
   }
-  li.menuparent {
-    background-color: $menu-color;
+  li {
+    background-color: $menu-color !important;
     list-style-type: none;
     list-style-image: none;
     //padding: 10px 15px 10px 15px;
@@ -69,14 +69,13 @@ ul.sf-menu {
         background-color: $menu-active-color !important;
       }
     }
-    li:hover {
-      // background-color: $menu-active-color !important;
-    }
   }
 }
 
 .sf-depth-2 {
-  width: 80% !important;
+  max-width: 200px !important;
+  //width: 80% !important;
+  border-right: 1px solid gray !important;
 }
 
 ul.menu {
