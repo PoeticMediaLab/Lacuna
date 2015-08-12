@@ -1,6 +1,7 @@
 <?php
 
 define('ANNOTATOR_VERSION', '1.2.9');
+define('WORKFLOW_READY_STATE', 3); // Workflow state "Ready to Annotate"
 /**
  * Implements hook_init().
  */
@@ -167,7 +168,7 @@ function annotator_check_annotatable_node () {
     $current_node = node_load(arg(1));
     $anno_ref_field = field_info_field('field_annotation_reference');
     $annotatable_types = $anno_ref_field['settings']['handler_settings']['target_bundles'];
-    if (in_array($current_node->type, $annotatable_types)) {
+    if (in_array($current_node->type, $annotatable_types) && workflow_node_current_state($current_node) == WORKFLOW_READY_STATE) {
       $current_course = course_get_selected_course();
       foreach ($current_node->og_group_ref[$current_node->language] as $current_node_parent_group) {
         if ($current_node_parent_group['target_id'] == $current_course) {
@@ -175,7 +176,7 @@ function annotator_check_annotatable_node () {
         }
       }
 
-      drupal_set_message ('You are viewing content that is not within your current course. Annotations on this content are disabled. You may ' . l ('return to the front page', '<front>') . ' to change courses.'); // This can happen if a user is already logged in with a course context set, and they access the node directly from browser (non-referred) or they've clicked to this node from the Sewing Kit (as of writing, the only way content is linked to other courses), or if it's an admin user coming from admin/content, etc. 
+      drupal_set_message('You are viewing content that is either not within your current course or not yet ready to annotate. Annotations on this content are disabled. You may ' . l('return to the front page', '<front>') . ' to change courses.'); // This can happen if a user is already logged in with a course context set, and they access the node directly from browser (non-referred) or they've clicked to this node from the Sewing Kit (as of writing, the only way content is linked to other courses), or if it's an admin user coming from admin/content, etc.
     }
   }
 }

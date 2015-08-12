@@ -135,7 +135,6 @@ function lacuna_stories_views_views_default_views() {
   $handler->display->display_options['arguments']['og_group_ref_target_id']['id'] = 'og_group_ref_target_id';
   $handler->display->display_options['arguments']['og_group_ref_target_id']['table'] = 'og_membership';
   $handler->display->display_options['arguments']['og_group_ref_target_id']['field'] = 'og_group_ref_target_id';
-  $handler->display->display_options['arguments']['og_group_ref_target_id']['relationship'] = 'og_group_ref_target_id';
   $handler->display->display_options['arguments']['og_group_ref_target_id']['default_action'] = 'default';
   $handler->display->display_options['arguments']['og_group_ref_target_id']['default_argument_type'] = 'php';
   $handler->display->display_options['arguments']['og_group_ref_target_id']['default_argument_options']['code'] = 'return course_get_selected_course();';
@@ -189,7 +188,7 @@ function lacuna_stories_views_views_default_views() {
   $handler->display->display_options['filters']['sid']['field'] = 'sid';
   $handler->display->display_options['filters']['sid']['exposed'] = TRUE;
   $handler->display->display_options['filters']['sid']['expose']['operator_id'] = 'sid_op';
-  $handler->display->display_options['filters']['sid']['expose']['label'] = 'Limit by Workflow State';
+  $handler->display->display_options['filters']['sid']['expose']['label'] = 'Limit by Status';
   $handler->display->display_options['filters']['sid']['expose']['operator'] = 'sid_op';
   $handler->display->display_options['filters']['sid']['expose']['identifier'] = 'sid';
   $handler->display->display_options['filters']['sid']['expose']['multiple'] = TRUE;
@@ -783,9 +782,9 @@ function lacuna_stories_views_views_default_views() {
   $handler->display->display_options['use_more_always'] = FALSE;
   $handler->display->display_options['access']['type'] = 'role';
   $handler->display->display_options['access']['role'] = array(
+    7 => '7',
     4 => '4',
     5 => '5',
-    7 => '7',
   );
   $handler->display->display_options['cache']['type'] = 'none';
   $handler->display->display_options['query']['type'] = 'views_query';
@@ -860,16 +859,16 @@ function lacuna_stories_views_views_default_views() {
   $handler->display->display_options['sorts']['name']['id'] = 'name';
   $handler->display->display_options['sorts']['name']['table'] = 'taxonomy_term_data';
   $handler->display->display_options['sorts']['name']['field'] = 'name';
-  /* Contextual filter: Broken/missing handler */
-  $handler->display->display_options['arguments']['field_annotation_tag_course_target_id']['id'] = 'field_annotation_tag_course_target_id';
-  $handler->display->display_options['arguments']['field_annotation_tag_course_target_id']['table'] = 'field_data_field_annotation_tag_course';
-  $handler->display->display_options['arguments']['field_annotation_tag_course_target_id']['field'] = 'field_annotation_tag_course_target_id';
-  $handler->display->display_options['arguments']['field_annotation_tag_course_target_id']['default_action'] = 'default';
-  $handler->display->display_options['arguments']['field_annotation_tag_course_target_id']['default_argument_type'] = 'php';
-  $handler->display->display_options['arguments']['field_annotation_tag_course_target_id']['default_argument_options']['code'] = 'return course_get_selected_course();';
-  $handler->display->display_options['arguments']['field_annotation_tag_course_target_id']['summary']['number_of_records'] = '0';
-  $handler->display->display_options['arguments']['field_annotation_tag_course_target_id']['summary']['format'] = 'default_summary';
-  $handler->display->display_options['arguments']['field_annotation_tag_course_target_id']['summary_options']['items_per_page'] = '25';
+  /* Contextual filter: Taxonomy term: Course (field_term_course) */
+  $handler->display->display_options['arguments']['field_term_course_target_id']['id'] = 'field_term_course_target_id';
+  $handler->display->display_options['arguments']['field_term_course_target_id']['table'] = 'field_data_field_term_course';
+  $handler->display->display_options['arguments']['field_term_course_target_id']['field'] = 'field_term_course_target_id';
+  $handler->display->display_options['arguments']['field_term_course_target_id']['default_action'] = 'default';
+  $handler->display->display_options['arguments']['field_term_course_target_id']['default_argument_type'] = 'php';
+  $handler->display->display_options['arguments']['field_term_course_target_id']['default_argument_options']['code'] = 'return course_get_selected_course();';
+  $handler->display->display_options['arguments']['field_term_course_target_id']['summary']['number_of_records'] = '0';
+  $handler->display->display_options['arguments']['field_term_course_target_id']['summary']['format'] = 'default_summary';
+  $handler->display->display_options['arguments']['field_term_course_target_id']['summary_options']['items_per_page'] = '25';
   /* Filter criterion: Taxonomy vocabulary: Machine name */
   $handler->display->display_options['filters']['machine_name']['id'] = 'machine_name';
   $handler->display->display_options['filters']['machine_name']['table'] = 'taxonomy_vocabulary';
@@ -1062,6 +1061,16 @@ function lacuna_stories_views_views_default_views() {
   $handler->display->display_options['sorts']['biblio_sort_title']['relationship'] = 'field_bibliographic_entry_target_id';
   $handler->display->display_options['sorts']['biblio_sort_title']['exposed'] = TRUE;
   $handler->display->display_options['sorts']['biblio_sort_title']['expose']['label'] = 'Title';
+  /* Contextual filter: Content: Groups audience (og_group_ref) */
+  $handler->display->display_options['arguments']['og_group_ref_target_id']['id'] = 'og_group_ref_target_id';
+  $handler->display->display_options['arguments']['og_group_ref_target_id']['table'] = 'og_membership';
+  $handler->display->display_options['arguments']['og_group_ref_target_id']['field'] = 'og_group_ref_target_id';
+  $handler->display->display_options['arguments']['og_group_ref_target_id']['default_action'] = 'default';
+  $handler->display->display_options['arguments']['og_group_ref_target_id']['default_argument_type'] = 'php';
+  $handler->display->display_options['arguments']['og_group_ref_target_id']['default_argument_options']['code'] = 'return course_get_selected_course();';
+  $handler->display->display_options['arguments']['og_group_ref_target_id']['summary']['number_of_records'] = '0';
+  $handler->display->display_options['arguments']['og_group_ref_target_id']['summary']['format'] = 'default_summary';
+  $handler->display->display_options['arguments']['og_group_ref_target_id']['summary_options']['items_per_page'] = '25';
   $handler->display->display_options['filter_groups']['operator'] = 'OR';
   /* Filter criterion: Content: Type */
   $handler->display->display_options['filters']['type_1']['id'] = 'type_1';
@@ -1461,17 +1470,17 @@ function lacuna_stories_views_views_default_views() {
   $handler->display->display_options['style_plugin'] = 'default';
   $handler->display->display_options['row_plugin'] = 'fields';
   /* Relationship: Entity Reference: Referenced Entity */
-  $handler->display->display_options['relationships']['annotation_reference_target_id']['id'] = 'annotation_reference_target_id';
-  $handler->display->display_options['relationships']['annotation_reference_target_id']['table'] = 'field_data_annotation_reference';
-  $handler->display->display_options['relationships']['annotation_reference_target_id']['field'] = 'annotation_reference_target_id';
-  $handler->display->display_options['relationships']['annotation_reference_target_id']['label'] = 'Annotated Document';
+  $handler->display->display_options['relationships']['field_annotation_reference_target_id']['id'] = 'field_annotation_reference_target_id';
+  $handler->display->display_options['relationships']['field_annotation_reference_target_id']['table'] = 'field_data_field_annotation_reference';
+  $handler->display->display_options['relationships']['field_annotation_reference_target_id']['field'] = 'field_annotation_reference_target_id';
+  $handler->display->display_options['relationships']['field_annotation_reference_target_id']['label'] = 'Annotated Content';
   /* Field: Content: Title */
   $handler->display->display_options['fields']['title']['id'] = 'title';
   $handler->display->display_options['fields']['title']['table'] = 'node';
   $handler->display->display_options['fields']['title']['field'] = 'title';
   $handler->display->display_options['fields']['title']['alter']['word_boundary'] = FALSE;
   $handler->display->display_options['fields']['title']['alter']['ellipsis'] = FALSE;
-  /* Field: Content: Annotation Text */
+  /* Field: Broken/missing handler */
   $handler->display->display_options['fields']['text']['id'] = 'text';
   $handler->display->display_options['fields']['text']['table'] = 'field_data_text';
   $handler->display->display_options['fields']['text']['field'] = 'text';
@@ -1531,7 +1540,7 @@ function lacuna_stories_views_views_default_views() {
     'path' => 'path',
     'nid' => 'nid',
     'nothing' => 'nothing',
-    'text' => 'text',
+    'field_annotation_text' => 'field_annotation_text',
   );
   $handler->display->display_options['defaults']['row_options'] = FALSE;
   $handler->display->display_options['defaults']['fields'] = FALSE;
@@ -1539,7 +1548,7 @@ function lacuna_stories_views_views_default_views() {
   $handler->display->display_options['fields']['path']['id'] = 'path';
   $handler->display->display_options['fields']['path']['table'] = 'node';
   $handler->display->display_options['fields']['path']['field'] = 'path';
-  $handler->display->display_options['fields']['path']['relationship'] = 'annotation_reference_target_id';
+  $handler->display->display_options['fields']['path']['relationship'] = 'field_annotation_reference_target_id';
   $handler->display->display_options['fields']['path']['exclude'] = TRUE;
   $handler->display->display_options['fields']['path']['absolute'] = TRUE;
   /* Field: Content: Nid */
@@ -1559,16 +1568,13 @@ function lacuna_stories_views_views_default_views() {
   $handler->display->display_options['fields']['nothing']['alter']['target'] = '_blank';
   $handler->display->display_options['fields']['nothing']['element_label_colon'] = FALSE;
   /* Field: Content: Annotation Text */
-  $handler->display->display_options['fields']['text']['id'] = 'text';
-  $handler->display->display_options['fields']['text']['table'] = 'field_data_text';
-  $handler->display->display_options['fields']['text']['field'] = 'text';
-  $handler->display->display_options['fields']['text']['label'] = '';
-  $handler->display->display_options['fields']['text']['element_label_colon'] = FALSE;
-  $handler->display->display_options['fields']['text']['empty'] = '<i>No annotation</i>';
-  $handler->display->display_options['fields']['text']['type'] = 'text_plain';
-  $handler->display->display_options['fields']['text']['settings'] = array(
-    'trim_length' => '140',
-  );
+  $handler->display->display_options['fields']['field_annotation_text']['id'] = 'field_annotation_text';
+  $handler->display->display_options['fields']['field_annotation_text']['table'] = 'field_data_field_annotation_text';
+  $handler->display->display_options['fields']['field_annotation_text']['field'] = 'field_annotation_text';
+  $handler->display->display_options['fields']['field_annotation_text']['label'] = '';
+  $handler->display->display_options['fields']['field_annotation_text']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['field_annotation_text']['empty'] = '<i>No annotation</i>';
+  $handler->display->display_options['fields']['field_annotation_text']['type'] = 'text_plain';
   $handler->display->display_options['defaults']['arguments'] = FALSE;
   /* Contextual filter: Content: Author uid */
   $handler->display->display_options['arguments']['uid']['id'] = 'uid';
@@ -2373,51 +2379,54 @@ function lacuna_stories_views_views_default_views() {
   $handler->display->display_options['relationships']['reverse_thread_reference_node']['table'] = 'node';
   $handler->display->display_options['relationships']['reverse_thread_reference_node']['field'] = 'reverse_thread_reference_node';
   $handler->display->display_options['relationships']['reverse_thread_reference_node']['label'] = 'Thread';
+  /* Relationship: Entity Reference: Referenced Entity */
+  $handler->display->display_options['relationships']['field_annotation_reference_target_id']['id'] = 'field_annotation_reference_target_id';
+  $handler->display->display_options['relationships']['field_annotation_reference_target_id']['table'] = 'field_data_field_annotation_reference';
+  $handler->display->display_options['relationships']['field_annotation_reference_target_id']['field'] = 'field_annotation_reference_target_id';
+  $handler->display->display_options['relationships']['field_annotation_reference_target_id']['label'] = 'Annotated Document';
   /* Relationship: Content: Author */
   $handler->display->display_options['relationships']['uid']['id'] = 'uid';
   $handler->display->display_options['relationships']['uid']['table'] = 'node';
   $handler->display->display_options['relationships']['uid']['field'] = 'uid';
   $handler->display->display_options['relationships']['uid']['label'] = 'Author';
-  /* Relationship: Entity Reference: Referenced Entity */
-  $handler->display->display_options['relationships']['annotation_reference_target_id']['id'] = 'annotation_reference_target_id';
-  $handler->display->display_options['relationships']['annotation_reference_target_id']['table'] = 'field_data_annotation_reference';
-  $handler->display->display_options['relationships']['annotation_reference_target_id']['field'] = 'annotation_reference_target_id';
-  $handler->display->display_options['relationships']['annotation_reference_target_id']['label'] = 'Annotated Document';
   /* Field: User: Display Name */
   $handler->display->display_options['fields']['field_display_name']['id'] = 'field_display_name';
   $handler->display->display_options['fields']['field_display_name']['table'] = 'field_data_field_display_name';
   $handler->display->display_options['fields']['field_display_name']['field'] = 'field_display_name';
   $handler->display->display_options['fields']['field_display_name']['relationship'] = 'uid';
   $handler->display->display_options['fields']['field_display_name']['label'] = 'Author';
+  $handler->display->display_options['fields']['field_display_name']['empty'] = 'N/A';
   /* Field: Content: Annotation Text */
-  $handler->display->display_options['fields']['text']['id'] = 'text';
-  $handler->display->display_options['fields']['text']['table'] = 'field_data_text';
-  $handler->display->display_options['fields']['text']['field'] = 'text';
+  $handler->display->display_options['fields']['field_annotation_text']['id'] = 'field_annotation_text';
+  $handler->display->display_options['fields']['field_annotation_text']['table'] = 'field_data_field_annotation_text';
+  $handler->display->display_options['fields']['field_annotation_text']['field'] = 'field_annotation_text';
+  $handler->display->display_options['fields']['field_annotation_text']['type'] = 'text_plain';
   /* Field: Content: Category */
-  $handler->display->display_options['fields']['category']['id'] = 'category';
-  $handler->display->display_options['fields']['category']['table'] = 'field_data_category';
-  $handler->display->display_options['fields']['category']['field'] = 'category';
-  /* Field: Content: Quote */
-  $handler->display->display_options['fields']['quote']['id'] = 'quote';
-  $handler->display->display_options['fields']['quote']['table'] = 'field_data_quote';
-  $handler->display->display_options['fields']['quote']['field'] = 'quote';
+  $handler->display->display_options['fields']['field_annotation_category']['id'] = 'field_annotation_category';
+  $handler->display->display_options['fields']['field_annotation_category']['table'] = 'field_data_field_annotation_category';
+  $handler->display->display_options['fields']['field_annotation_category']['field'] = 'field_annotation_category';
+  $handler->display->display_options['fields']['field_annotation_category']['type'] = 'taxonomy_term_reference_plain';
+  /* Field: Content: Excerpt */
+  $handler->display->display_options['fields']['field_annotation_quote']['id'] = 'field_annotation_quote';
+  $handler->display->display_options['fields']['field_annotation_quote']['table'] = 'field_data_field_annotation_quote';
+  $handler->display->display_options['fields']['field_annotation_quote']['field'] = 'field_annotation_quote';
   /* Field: Content: Tags */
-  $handler->display->display_options['fields']['annotation_tags']['id'] = 'annotation_tags';
-  $handler->display->display_options['fields']['annotation_tags']['table'] = 'field_data_annotation_tags';
-  $handler->display->display_options['fields']['annotation_tags']['field'] = 'annotation_tags';
-  $handler->display->display_options['fields']['annotation_tags']['type'] = 'taxonomy_term_reference_plain';
-  $handler->display->display_options['fields']['annotation_tags']['delta_offset'] = '0';
+  $handler->display->display_options['fields']['field_annotation_tags']['id'] = 'field_annotation_tags';
+  $handler->display->display_options['fields']['field_annotation_tags']['table'] = 'field_data_field_annotation_tags';
+  $handler->display->display_options['fields']['field_annotation_tags']['field'] = 'field_annotation_tags';
+  $handler->display->display_options['fields']['field_annotation_tags']['type'] = 'taxonomy_term_reference_plain';
+  $handler->display->display_options['fields']['field_annotation_tags']['delta_offset'] = '0';
   /* Field: Content: Title */
   $handler->display->display_options['fields']['title']['id'] = 'title';
   $handler->display->display_options['fields']['title']['table'] = 'node';
   $handler->display->display_options['fields']['title']['field'] = 'title';
-  $handler->display->display_options['fields']['title']['relationship'] = 'annotation_reference_target_id';
+  $handler->display->display_options['fields']['title']['relationship'] = 'field_annotation_reference_target_id';
   $handler->display->display_options['fields']['title']['label'] = 'Annotated Document';
   /* Field: Content: Path */
   $handler->display->display_options['fields']['path']['id'] = 'path';
   $handler->display->display_options['fields']['path']['table'] = 'node';
   $handler->display->display_options['fields']['path']['field'] = 'path';
-  $handler->display->display_options['fields']['path']['relationship'] = 'annotation_reference_target_id';
+  $handler->display->display_options['fields']['path']['relationship'] = 'field_annotation_reference_target_id';
   $handler->display->display_options['fields']['path']['exclude'] = TRUE;
   $handler->display->display_options['fields']['path']['absolute'] = TRUE;
   /* Field: Content: Nid */

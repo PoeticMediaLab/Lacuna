@@ -1,7 +1,7 @@
 name = Lacuna Stories IRB Form
 core = 7.x
 package = Lacuna Stories
-version = 7.x-1.0-beta
+version = 7.x-1.0
 project = lacuna_stories_irb_form
 dependencies[] = entity
 dependencies[] = flag

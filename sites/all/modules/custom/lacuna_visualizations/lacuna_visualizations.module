@@ -695,14 +695,12 @@ function lacuna_visualizations_annotation_dashboard_data() {
       $data->category = $data->category[0];	// set default to first category
     }
 
-    // Secure fields of private annotations, usernames, etc.
-    $isPrivate = $annotation->field_annotation_private[$annotation->language][0]['value'];
+    // Remove or sanitize data we don't want to expose: annotations, usernames, etc.
     if (!$canReadAll && ($annotation->uid != $user->uid)) {
-      if ($isPrivate) {
-        $data->text = "";
-        $data->quote = "";
-        $data->annotation_tags = Array();
-      }
+			$data->text = "";
+			$data->quote = "";
+			$data->annotation_tags = Array();
+
       if (!array_key_exists($annotation->uid, $userNames)) {
         // anonymize with slight UID obfuscation
         // should use a hash or something to make it harder to decipher
