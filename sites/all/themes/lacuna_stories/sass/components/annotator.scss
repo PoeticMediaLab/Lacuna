@@ -289,10 +289,10 @@ i.af-pager {
  *
  ***/
 
-$privacy-selected: #88b551;
-$privacy-default: #92a6c4;
+$privacy-selected: rgba(196, 223, 44, 1);
+$privacy-default: rgba(255, 255, 10, .3);
 span.annotator-privacy-types .annotator-privacy-type {
-  padding: 7px 6px;
+  //padding: 7px 6px;
   margin: 1px 1px 0px;
   -webkit-border-radius: 6px 6px 6px 6px;
   -moz-border-radius: 6px 6px 6px 6px;
@@ -304,6 +304,10 @@ span.annotator-privacy-types .annotator-privacy-type {
 }
 span.annotator-privacy-types .annotator-privacy-type.checked {
   background-color: $privacy-selected;
+}
+
+.annotator.privacy-type-everyone {
+
 }
 form.annotator-widget .annotator-privacy-groups {
   display: none;
