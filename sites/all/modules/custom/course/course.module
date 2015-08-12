@@ -858,14 +858,15 @@ function course_push_unfinished_doc_queue($nid) {
  */
 function course_node_delete($node) {
 	if ($node->type == COURSE_NODE_TYPE) {
+		$vocabularies = ['units', 'genre_doc', 'genre_response'];
 		$query = new EntityFieldQuery();
 		$result = $query->entityCondition('entity_type', 'taxonomy_term')
-			->entityCondition('bundle', $vocab_name)
-			->fieldCondition('field_term_course', 'target_id', $node->id, '=')
+			->entityCondition('bundle', $vocabularies, 'IN')
+			->fieldCondition('field_term_course', 'target_id', $node->nid, '=')
 			->execute();
 		if (isset($result['taxonomy_term'])) {
-			foreach(array_keys($result['taxonomy_term']) as $term) {
-				taxonomy_term_delete($term->tid);
+			foreach(array_keys($result['taxonomy_term']) as $tid) {
+				taxonomy_term_delete($tid);
 			}
 		}
 	}
