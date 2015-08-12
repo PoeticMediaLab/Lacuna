@@ -1,6 +1,6 @@
 @import "init";
 
-$menu-color: transparent;
+$menu-color: white;
 $tabs-color: rgb(245,245,245);
 $menu-active-color: #eee;
 
@@ -22,61 +22,61 @@ a.nolink {
  margin-top: 0px;
 }
 
+.sf-sub-indicator {
+  display: none;
+}
 /* Superfish dropdown menu rules */
-.sf-menu {
- font-size: 12pt;
- background-color: $menu-color;
+ul.sf-menu {
+  font-size: 12pt;
+  background-color: $menu-color !important;
+  padding: none !important;
 
- li {
-   list-style-type: none;
-   list-style-image: none;
-   //padding: 10px 15px 10px 15px;
-   margin: 0px;
- }
- span.sf-depth-2 {
-   display: block;
-   padding: 10px 15px 10px 15px;
-   margin: 0px;
- }
- li.menuparent {
-   background-color: $menu-color;
-   a {
-     border: none;
-     background-color: $menu-color !important;
-   }
-   ul {
-     li {
-       padding: 0px;
-       background-color: white;
-       border: 1px solid gray;
-       border-bottom: 0px;
-     }
-     li.firstandlast, li.last {
-       border-bottom: 1px solid gray;
-     }
-     li.active-trail {
-       background-color: $menu-active-color !important;
-     }
-   }
-   li:hover {
-     // background-color: $menu-active-color !important;
-   }
- }
+  a {
+    border: none !important;
+  }
 
-  &.sf-style-white {
-
-    margin-bottom: 0px;
-
-    span.nolink {
-      border: none;
+  span.sf-with-ul {
+    padding-right: 1em !important;
+  }
+  span.sf-depth-2 {
+    display: block;
+    padding: 10px 15px 10px 15px;
+    margin: 0px;
+  }
+  li {
+    background-color: $menu-color !important;
+    list-style-type: none;
+    list-style-image: none;
+    //padding: 10px 15px 10px 15px;
+    margin: 0px;
+    span {
+      border: none !important;
+      a {
+        background-color: $menu-color !important;
+      }
     }
-
+    ul {
+      li {
+        padding: 0px;
+        background-color: white;
+        border: 1px solid gray;
+        border-bottom: 0px;
+      }
+      li.firstandlast, li.last {
+        border-bottom: 1px solid gray;
+      }
+      li.active-trail {
+        background-color: $menu-active-color !important;
+      }
+    }
   }
 
 }
 
 .sf-depth-2 {
- width: 80% !important;
+  max-width: 200px !important;
+  //width: 80% !important;
+  border-right: 1px solid gray !important;
 }
 
 ul.menu {

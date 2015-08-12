@@ -74,7 +74,7 @@ class Annotator.Plugin.Privacy extends Annotator.Plugin
         audience = '<div class="annotator-privacy-types">'
         for audience_type, checked of annotation.privacy_options.audience
           if checked
-            audience += '<span class="annotator-privacy-type">' + audience_type + '</span>'
+            audience += "<span class='annotator-privacy-type annotator-privacy-type-#{audience_type}'>" + audience_type + '</span>'
             if 'peer-groups' == audience_type
               has_groups = true
         audience += '</div>'

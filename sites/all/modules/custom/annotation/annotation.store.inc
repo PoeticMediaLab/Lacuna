@@ -152,9 +152,9 @@ function annotation_drupal_format($entity, $update = FALSE) {
     $result = annotation_sanitize_uri($entity->uri);
     $uri = $result['root'] . $result['path'];
     $node = menu_get_object($type = 'node', $position = 1, $result['path']);
-    $annotation->uri = array();
-    $annotation->uri[$annotation->language][0]['url'] = $uri;  // formatted for Link field
-    $annotation->uri[$annotation->language][0]['title'] = $node->title;
+    $annotation->field_annotation_uri = array();
+    $annotation->field_annotation_uri[$annotation->language][0]['url'] = $uri;  // formatted for Link field
+    $annotation->field_annotation_uri[$annotation->language][0]['title'] = $node->title;
     $annotation->field_annotation_reference[$annotation->language][] = array(
       'target_id' => (int) $node->nid,
       'target_type' => 'node'
@@ -397,7 +397,7 @@ function annotation_api_search() {
   $limit   = isset($_GET['limit'])   ? $_GET['limit']      : 20;
   $offset  = isset($_GET['offset'])  ? $_GET['offset']     : 0;
   $id      = isset($_GET['id'])      ? $_GET['id']         : NULL;
-  $nid     = isset($_GET['nid'])     ? $_GET['nid']        : NULL;
+//  $nid     = isset($_GET['nid'])     ? $_GET['nid']        : NULL;
   $created = isset($_GET['created']) ? $_GET['created']    : NULL;
   $updated = isset($_GET['updated']) ? $_GET['updated']    : NULL;
   $text    = isset($_GET['text'])    ? $_GET['text']       : NULL;
@@ -429,17 +429,17 @@ function annotation_api_search() {
     $query->propertyCondition('updated', $updated);
   }
   if ($text) {
-    $query->fieldCondition('text', 'value', $text, 'LIKE');
+    $query->fieldCondition('field_annotation_text', 'value', $text, 'LIKE');
   }
   if ($quote) {
-    $query->fieldCondition('quote', 'value', $quote, 'LIKE');
+    $query->fieldCondition('field_annotation_quote', 'value', $quote, 'LIKE');
   }
 
   if ($uri) {
     // Note: The URL field is provided by the Link module (https://www.drupal.org/project/link)
     // This module has several values for each entry, not stored in the "value" column
     // Instead, stored in the "url" column - MLW
-    $query->fieldCondition('uri', 'url', $uri, '=');
+    $query->fieldCondition('field_annotation_uri', 'url', $uri, '=');
   }
 
   // TODO: convert this to a term reference query

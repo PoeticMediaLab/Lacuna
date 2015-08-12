@@ -1,5 +1,5 @@
 name = Lacuna Stories Rules
-description = Workflow rules
+description = Reaction rules
 core = 7.x
 package = Lacuna Stories
 version = 7.x-1.0

@@ -530,9 +530,7 @@ function lacuna_stories_menus_menu_default_menu_links() {
     'router_path' => 'node/%',
     'link_title' => 'Student User Guide',
     'options' => array(
-      'attributes' => array(
-        'title' => '',
-      ),
+      'attributes' => array(),
       'identifier' => 'main-menu_student-user-guide:node/5',
     ),
     'module' => 'menu',
@@ -683,6 +681,7 @@ function lacuna_stories_menus_menu_default_menu_links() {
     'weight' => 0,
     'customized' => 1,
   );
+
   // Translatables
   // Included for use with string extractors like potx.
   t('About');
@@ -718,7 +717,6 @@ function lacuna_stories_menus_menu_default_menu_links() {
   t('Student User Guide');
   t('Threads');
   t('Write a Response');
-
 
   return $menu_links;
 }

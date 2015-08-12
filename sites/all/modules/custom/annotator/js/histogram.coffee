@@ -44,7 +44,6 @@ class Annotator.Plugin.Histogram extends Annotator.Plugin
     else
       @_setupListeners()
       @countPageLengths()
-      @update()
 
   # Public: Creates a new instance of the Histogram plugin.
   #
@@ -130,7 +129,6 @@ class Annotator.Plugin.Histogram extends Annotator.Plugin
 
   # Calculate the bars per node based on number of annotations
   assignBarsPerNode: (node, length = 0) =>
-    @counted = []
     for child in node.childNodes
       length += child.textContent.length
       if length >= @barTextLength
@@ -152,6 +150,7 @@ class Annotator.Plugin.Histogram extends Annotator.Plugin
   # Loop through all nodes and calculate annotation density
   calculateDensity: (nodes) =>
     length = 0
+    @counted = []
     if @pageTurnerActive
       @barTextLength = @getPageLength(@getFirstPageNumber()) / @barsPerPage
     for node in nodes
@@ -222,7 +221,7 @@ class Annotator.Plugin.Histogram extends Annotator.Plugin
       @updateVerticalChart(histogram)
 
   # Update the histogram
-  update: =>
+  update: (annotations) =>
     return unless d3?
     @bars = []  # reset
     @calculateDimensions(@documentNode)
