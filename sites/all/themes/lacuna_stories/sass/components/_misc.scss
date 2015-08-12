@@ -126,8 +126,13 @@
 
 /* Wrapper for any blocks placed in the header region. */
 .header__region {
-  /* Clear the logo. */
-  clear: both;
+ /*  Changed from 'clear: both;' as part of style rearranging
+ *   to make site work at smaller window widths / tablets.
+ *   --Cody
+ */
+float: right;
+position: relative;
+top: 0.4rem;
 }
 
 /**
