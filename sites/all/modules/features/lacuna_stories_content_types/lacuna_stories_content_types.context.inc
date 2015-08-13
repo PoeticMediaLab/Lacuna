@@ -19,29 +19,15 @@ function lacuna_stories_content_types_context_default_contexts() {
   $context->conditions = array(
     'node' => array(
       'values' => array(
-        'response' => 'response',
         'document' => 'document',
-        'image' => 'image',
-        'music_video' => 'music_video',
-        'video' => 'video',
+        'response' => 'response',
       ),
       'options' => array(
         'node_form' => '0',
       ),
     ),
   );
-  $context->reactions = array(
-    'block' => array(
-      'blocks' => array(
-        'block-1' => array(
-          'module' => 'block',
-          'delta' => '1',
-          'region' => 'sidebar_second',
-          'weight' => '-10',
-        ),
-      ),
-    ),
-  );
+  $context->reactions = array();
   $context->condition_mode = 0;
 
   // Translatables

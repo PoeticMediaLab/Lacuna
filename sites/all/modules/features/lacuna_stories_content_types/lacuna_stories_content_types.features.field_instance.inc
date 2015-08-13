@@ -2348,6 +2348,44 @@ function lacuna_stories_content_types_field_default_field_instances() {
     ),
   );
 
+  // Exported field_instance:
+  // 'taxonomy_term-annotation_tags-field_annotation_tag_course'
+  $field_instances['taxonomy_term-annotation_tags-field_annotation_tag_course'] = array(
+    'bundle' => 'annotation_tags',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'entityreference',
+        'settings' => array(
+          'link' => FALSE,
+        ),
+        'type' => 'entityreference_label',
+        'weight' => 1,
+      ),
+    ),
+    'entity_type' => 'taxonomy_term',
+    'field_name' => 'field_annotation_tag_course',
+    'label' => 'Course(s)',
+    'required' => 1,
+    'settings' => array(
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'entityreference',
+      'settings' => array(
+        'match_operator' => 'CONTAINS',
+        'path' => '',
+        'size' => 60,
+      ),
+      'type' => 'entityreference_autocomplete',
+      'weight' => 32,
+    ),
+  );
+
   // Exported field_instance: 'taxonomy_term-annotation_tags-field_term_course'
   $field_instances['taxonomy_term-annotation_tags-field_term_course'] = array(
     'bundle' => 'annotation_tags',
@@ -2897,6 +2935,7 @@ function lacuna_stories_content_types_field_default_field_instances() {
   t('Comment');
   t('Copyright');
   t('Course');
+  t('Course(s)');
   t('Course(s) Enrolled');
   t('Cover Image');
   t('Date of Birth');
