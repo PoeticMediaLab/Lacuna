@@ -93,6 +93,8 @@
 
   #annotation-filters-wrapper {
 
+    top: 50px;
+
     $width: 16em;
     width: $width;
 
@@ -552,16 +554,6 @@ li.annotator-checkbox[style] {
 
 /* Adder Styles */
 
-.annotator-touch-controls {
-  position: fixed;
-  top: 45vh;
-  left: 90vw;
-  min-width: auto;
-  -webkit-transform: rotate(270deg);
-  -moz-transform: rotate(270deg);
-  -ms-transform: rotate(270deg);
-  -o-transform: rotate(270deg);
-}
 
 .annotator-touch-controls.annotator-touch-hide {
 
@@ -1104,11 +1096,37 @@ li.annotator-checkbox[style] {
 
 .annotator-touch-editor.tab-out .annotator-touch-widget {
   left: calc(100% - 370px);
-  top: 38vh;
+  top: 10px;
 }
 
 .annotator-touch-editor.tab-in .annotator-touch-widget {
   left: 100%;
-  top: 38vh;
+  top: 10px;
 }
 
+.annotator-touch-controls.tab-in {
+  position: fixed;
+  top: 350px;
+  right: -67px;
+  min-width: auto;
+  -webkit-transform: rotate(270deg);
+  -moz-transform: rotate(270deg);
+  -ms-transform: rotate(270deg);
+  -o-transform: rotate(270deg);
+}
+
+.annotator-touch-controls.tab-out {
+  position: fixed;
+  top: 350px;
+  right: calc(-67px + 370px);
+  min-width: auto;
+  -webkit-transform: rotate(270deg);
+  -moz-transform: rotate(270deg);
+  -ms-transform: rotate(270deg);
+  -o-transform: rotate(270deg);
+
+  .annotator-button {
+    opacity: 0.3;
+    cursor: default;
+  }
+}
