@@ -279,7 +279,8 @@
             };
           })(this);
           this.annotator.subscribe('beforeAnnotationCreated', onAnnotationCreated);
-          return this.annotator.onAdderClick(event);
+          this.annotator.onAdderClick(event);
+          return window.dispatchEvent(new Event('resize'));
         }
       }
     };

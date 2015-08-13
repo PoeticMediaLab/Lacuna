@@ -361,6 +361,8 @@ class Annotator.Plugin.Touch extends Annotator.Plugin
         # and triggering the correct events for persistance.
         @annotator.onAdderClick(event)
 
+        window.dispatchEvent(new Event('resize'))
+
   # Event callback for tap events on highlights and displays the Viewer.
   # Allows events on anchor elements and those with the
   # "data-annotator-clickable" attribute to pass through. Watches the
