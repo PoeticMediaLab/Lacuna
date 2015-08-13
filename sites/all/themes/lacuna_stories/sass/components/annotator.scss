@@ -5,10 +5,11 @@
 *	Categories styles
 *	from annotator/css/categories.css
 *
-* Annotator Categories Plugin CSS.
-* Some code from Zhila and some from Adi's original plugin
 *
 */
+
+$button-default: rgba(22,147,165, .2);
+$button-selected: rgba(196,223,44,1);
 
 .annotator-categories {
     border-top: solid 1px #eee;
@@ -53,11 +54,11 @@
 .annotator-category-6,
 .annotator-category-7
 {
-    background-color: rgba(22,147,165, .2);
+    background-color: $button-default;
 }
 
 .annotator-category-selected {
-    background-color: rgba(196,223,44,1) !important;
+    background-color: $button-selected !important;
 }
 
 
@@ -295,26 +296,38 @@ i.af-pager {
  *
  ***/
 
-$privacy-selected: rgba(196, 223, 44, 1);
-$privacy-default: rgba(255, 255, 10, .3);
-span.annotator-privacy-types .annotator-privacy-type {
-  //padding: 7px 6px;
+
+.annotator-privacy-types {
+  padding: 0px !important;
+  font-size: 12px;
+}
+
+.annotator-privacy-types .annotator-privacy-type {
+  padding: 7px;
   margin: 1px 1px 0px;
-  -webkit-border-radius: 6px 6px 6px 6px;
-  -moz-border-radius: 6px 6px 6px 6px;
-  border-radius: 6px 6px 6px 6px;
-  color: #FFF;
-  background-color: $privacy-default;
+  -webkit-border-radius: 6px;
+  -moz-border-radius: 6px;
+  border-radius: 6px;
+  background-color: $button-default;
   cursor: pointer;
   display: inline-block;
-}
-span.annotator-privacy-types .annotator-privacy-type.checked {
-  background-color: $privacy-selected;
+  background-opacity: .5;
+  color: black;
+  font-style: normal;
 }
 
-.annotator.privacy-type-everyone {
-
+.annotator-privacy-types .annotator-privacy-type.checked {
+  background-color: $button-selected;
 }
+
+.annotator-privacy-everyone {
+  background-color: rgba(51, 255, 51, .5) !important;
+}
+
+.annotator-privacy-private {
+  background-color: rgba(255, 0, 51, .5) !important;
+}
+
 form.annotator-widget .annotator-privacy-groups {
   display: none;
 }
@@ -328,30 +341,26 @@ label.annotator-privacy-group {
 }
 
 .annotator-viewer .annotator-privacy-type {
-  padding: 7px 6px;
+  padding: 7px;
   margin: 1px 1px 0px;
-  -webkit-border-radius: 6px 6px 6px 6px;
-  -moz-border-radius: 6px 6px 6px 6px;
-  border-radius: 6px 6px 6px 6px;
-  color: #FFF;
-  background-color: $privacy-default;
+  -webkit-border-radius: 6px;
+  -moz-border-radius: 6px;
+  border-radius: 6px;
   display: inline-block;
 }
 .annotator-viewer .annotator-privacy-group.checked {
-  padding: 7px 6px;
+  padding: 7px;
   margin: 1px 1px 0px;
-  -webkit-border-radius: 6px 6px 6px 6px;
-  -moz-border-radius: 6px 6px 6px 6px;
-  border-radius: 6px 6px 6px 6px;
-  color: #FFF;
-  background-color: $privacy-selected;
+  -webkit-border-radius: 6px;
+  -moz-border-radius: 6px;
+  border-radius: 6px;
   display: inline-block;
 }
 .annotator-viewer .annotator-privacy-group.peer-groups.checked {
-  background-color: $privacy-selected;
+  background-color: $button-selected;
 }
 .annotator-viewer .annotator-privacy-group.course-groups.checked {
-  background-color: $privacy-default;
+  background-color: $button-default;
 }
 
 
@@ -385,7 +394,7 @@ label.annotator-privacy-group {
 
 /* Some change in the design of Annotator */
 .annotator-editor .annotator-widget{
-	min-width: 250px;
+	min-width: 300px;
 }
 
 /* Fix to show icons */
@@ -416,11 +425,6 @@ table.mceToolbar {
 *	Rich Text styles
 *	from annotator/css/richtext.css
 */
-
-/* Some change in the design of Annotator */
-.annotator-editor .annotator-widget{
-  min-width: 250px;
-}
 
 /* Fix to show icons */
 .annotator-editor a:after {
