@@ -504,76 +504,16 @@ li.annotator-checkbox[style] {
 
 /* Generic Touch Widget Styles */
 .annotator-touch-widget {
-  font-family: "Helvetica Neue", Arial, Helvetica, sans-serif;
-  border: 1px solid rgba(0, 0, 0, 0.8);
-  background: rgba(0, 0, 0, 0.85);
-  background: -webkit-gradient(
-    linear, left top, left bottom,
-    from(rgba(57, 57, 57, 0.85)),
-    color-stop(0.5, rgba(58, 58, 58, 0.85)),
-    color-stop(0.5, rgba(0, 0, 0, 0.85)),
-    to(rgba(0, 0, 0, 0.85))
-  );
-  background: -moz-linear-gradient(
-    -90deg,
-    from(rgba(57, 57, 57, 0.85)),
-    color-stop(0.5, rgba(58, 58, 58, 0.85)),
-    color-stop(0.5, rgba(0, 0, 0, 0.85)) 50%,
-    to(rgba(0, 0, 0, 0.85))
-  );
-  background: -webkit-linear-gradient(
-    -90deg,
-    from(rgba(57, 57, 57, 0.85)),
-    color-stop(0.5, rgba(58, 58, 58, 0.85)) 50%,
-    color-stop(0.5, rgba(0, 0, 0, 0.85)) 50%,
-    to(rgba(0, 0, 0, 0.85))
-  );
-  //  Commented out because it wouldn't compile in compass.
-  /*
-  background: linear-gradient(
-    to bottom,
-    from(rgba(57, 57, 57, 0.85)),
-    color-stop(0.5, rgba(58, 58, 58, 0.85)) 50%,
-    color-stop(0.5, rgba(0, 0, 0, 0.85)) 50%,
-    to(rgba(0, 0, 0, 0.85))
-  );
-*/
-  -webkit-border-radius: 4px;
-  -moz-border-radius: 4px;
-  -ms-border-radius: 4px;
-  -o-border-radius: 4px;
-  border-radius: 4px;
-  -webkit-box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
-  -moz-box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
-  -ms-box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
-  -o-box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
-  /* Removes the tap outline on elements that have bound touch events */
-  -webkit-tap-highlight-color: transparent;
+
 }
 
 .annotator-touch-widget-inner {
-  background: #efefef;
-  border: 1px solid rgba(0, 0, 0, 0.8);
-  margin: 7px;
-  padding: 6px;
-  line-height: 0;
-  -webkit-border-radius: 3px;
-  -moz-border-radius: 3px;
-  -ms-border-radius: 3px;
-  -o-border-radius: 3px;
-  border-radius: 3px;
-  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.8);
-  -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.8);
-  -ms-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.8);
-  -o-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.8);
-  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.8);
+
 }
 
 .annotator-touch-widget .annotator-button {
   cursor: pointer;
   font-size: 16px;
-  line-height: 44px;
   padding-left: 40px;
   padding-right: 20px;
   -webkit-box-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
@@ -616,6 +556,10 @@ li.annotator-checkbox[style] {
   bottom: 15px;
   right: 15px;
   min-width: auto;
+  -webkit-transform: rotate(270deg);
+  -moz-transform: rotate(270deg);
+  -ms-transform: rotate(270deg);
+  -o-transform: rotate(270deg);
 }
 
 .annotator-touch-controls.annotator-touch-hide {
@@ -629,7 +573,8 @@ li.annotator-checkbox[style] {
 }
 
 .annotator-touch-controls .annotator-button {
-  line-height: 56px;
+  line-height: 25px;
+  padding-bottom: 18px;
 }
 
 /* Viewer Overrides*/
@@ -700,7 +645,6 @@ li.annotator-checkbox[style] {
 }
 
 .annotator-touch-viewer .annotator-touch-controls button {
-  line-height: 44px;
   padding-left: 40px;
   padding-right: 20px;
   margin-left: 6px;
@@ -726,15 +670,8 @@ li.annotator-checkbox[style] {
 //  the 'display: none;' needed to hide the editor.
 
 .annotator-touch-editor:not(.annotator-hide) {
-  position: fixed;
-  top: -1000px !important;
-  left: 0 !important;
-  right: 0;
-  bottom: -1000px;
-  padding: 1000px 0;
   width: 100%;
   height: 100%;
-  background: rgba(255, 255, 255, 0.6);
   display: -webkit-box;
   display: -moz-box;
   display: box;
@@ -748,9 +685,10 @@ li.annotator-checkbox[style] {
 
 .annotator-touch-editor .annotator-touch-widget {
   pointer-events: all;
-  position: relative;
-  width: 50%;
-  max-width: 400px;
+  width: 370px;
+  left: 25%;
+  position: fixed;
+  bottom: 15px;
 }
 
 .annotator-touch-editor .annotator-touch-widget-inner {
@@ -909,7 +847,7 @@ li.annotator-checkbox[style] {
 
 .annotator-button::after {
   position: absolute;
-  top: 50%;
+  top: 12px;
   left: 5px;
   display: block;
   content: "";
