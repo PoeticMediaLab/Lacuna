@@ -201,6 +201,10 @@ class Annotator.Plugin.Touch extends Annotator.Plugin
       @annotator.onAdderMousedown()
       @highlighter.disable() if @highlighter
 
+      # hide annotator filters tab if visible
+      hiddenFilters = $('#annotation-filters-wrapper:not(.hidden)')
+      hiddenFilters.addClass('hidden') if hiddenFilters.length > 0
+
     @annotator.viewer.on "show", =>
       @highlighter.disable() if @highlighter
 

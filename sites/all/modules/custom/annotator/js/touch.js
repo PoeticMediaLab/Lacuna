@@ -142,10 +142,15 @@
       this.viewer = new Touch.Viewer(this.annotator.viewer);
       this.annotator.editor.on("show", (function(_this) {
         return function() {
+          var hiddenFilters;
           _this._clearWatchForSelection();
           _this.annotator.onAdderMousedown();
           if (_this.highlighter) {
-            return _this.highlighter.disable();
+            _this.highlighter.disable();
+          }
+          hiddenFilters = $('#annotation-filters-wrapper:not(.hidden)');
+          if (hiddenFilters.length > 0) {
+            return hiddenFilters.addClass('hidden');
           }
         };
       })(this));
