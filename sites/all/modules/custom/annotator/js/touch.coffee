@@ -195,11 +195,22 @@ class Annotator.Plugin.Touch extends Annotator.Plugin
     @editor = new Touch.Editor(@annotator.editor)
     @viewer = new Touch.Viewer(@annotator.viewer)
 
+    # start with closed annotator tab
+    @editor.element.addClass('tab-in')
+    @controls.addClass('tab-in')
+
     # Ensure the annotate buttom is hidden when the interface is visible.
     @annotator.editor.on "show", =>
       @_clearWatchForSelection()
       @annotator.onAdderMousedown()
       @highlighter.disable() if @highlighter
+
+      # open annotator tab
+      @editor.element.removeClass('tab-in')
+      @controls.removeClass('tab-in')
+      @editor.element.addClass('tab-out')
+      @controls.addClass('tab-out')
+
 
       # hide annotator filters tab if visible
       hiddenFilters = $('#annotation-filters-wrapper:not(.hidden)')
@@ -209,6 +220,13 @@ class Annotator.Plugin.Touch extends Annotator.Plugin
       @highlighter.disable() if @highlighter
 
     @annotator.editor.on "hide", =>
+
+      # close annotator tab
+      @editor.element.removeClass('tab-out')
+      @controls.removeClass('tab-out')
+      @editor.element.addClass('tab-in')
+      @controls.addClass('tab-in')
+
       @utils.nextTick =>
         @highlighter.enable().deselect() if @highlighter
         @_watchForSelection()

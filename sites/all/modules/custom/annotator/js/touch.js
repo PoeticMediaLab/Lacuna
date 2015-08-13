@@ -140,6 +140,8 @@
     Touch.prototype._setupAnnotatorEvents = function() {
       this.editor = new Touch.Editor(this.annotator.editor);
       this.viewer = new Touch.Viewer(this.annotator.viewer);
+      this.editor.element.addClass('tab-in');
+      this.controls.addClass('tab-in');
       this.annotator.editor.on("show", (function(_this) {
         return function() {
           var hiddenFilters;
@@ -148,6 +150,10 @@
           if (_this.highlighter) {
             _this.highlighter.disable();
           }
+          _this.editor.element.removeClass('tab-in');
+          _this.controls.removeClass('tab-in');
+          _this.editor.element.addClass('tab-out');
+          _this.controls.addClass('tab-out');
           hiddenFilters = $('#annotation-filters-wrapper:not(.hidden)');
           if (hiddenFilters.length > 0) {
             return hiddenFilters.addClass('hidden');
@@ -163,6 +169,10 @@
       })(this));
       this.annotator.editor.on("hide", (function(_this) {
         return function() {
+          _this.editor.element.removeClass('tab-out');
+          _this.controls.removeClass('tab-out');
+          _this.editor.element.addClass('tab-in');
+          _this.controls.addClass('tab-in');
           return _this.utils.nextTick(function() {
             if (_this.highlighter) {
               _this.highlighter.enable().deselect();

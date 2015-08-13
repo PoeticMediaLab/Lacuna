@@ -482,6 +482,7 @@ li.annotator-checkbox[style] {
 #annotation-filters-wrapper {
   background-color: #eff;
   box-shadow: 2px 2px 5px gray;
+  z-index: 1;
 }
 
 /* ----------------------------------------------------------------
@@ -553,8 +554,8 @@ li.annotator-checkbox[style] {
 
 .annotator-touch-controls {
   position: fixed;
-  bottom: 15px;
-  right: 15px;
+  top: 45vh;
+  left: 90vw;
   min-width: auto;
   -webkit-transform: rotate(270deg);
   -moz-transform: rotate(270deg);
@@ -563,13 +564,7 @@ li.annotator-checkbox[style] {
 }
 
 .annotator-touch-controls.annotator-touch-hide {
-  right: -9999em;
-  opacity: 0;
-  -webkit-transition: opacity 0.2s 0 ease-in, right 0s 0.3s linear;
-  -moz-transition: opacity 0.2s 0 ease-in, right 0s 0.3s linear;
-  -ms-transition: opacity 0.2s 0 ease-in, right 0s 0.3s linear;
-  -o-transition: opacity 0.2s 0 ease-in, right 0s 0.3s linear;
-  transition: opacity 0.2s 0 ease-in, right 0s 0.3s linear;
+
 }
 
 .annotator-touch-controls .annotator-button {
@@ -1103,5 +1098,17 @@ li.annotator-checkbox[style] {
 /* For Author plugin */
 .annotator-author {
   display: block;
+}
+
+//  for tabbed touch editor
+
+.annotator-touch-editor.tab-out .annotator-touch-widget {
+  left: calc(100% - 370px);
+  top: 38vh;
+}
+
+.annotator-touch-editor.tab-in .annotator-touch-widget {
+  left: 100%;
+  top: 38vh;
 }
 
