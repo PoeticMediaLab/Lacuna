@@ -1,6 +1,6 @@
 @import "init";
 
-$menu-color: transparent;
+$menu-color: white;
 $tabs-color: rgb(245,245,245);
 $menu-active-color: #eee;
 
@@ -9,40 +9,51 @@ a.nolink {
   color: black;
 }
 
-
 #block-superfish-1, #block-superfish-2 {
-  float: right;
-  padding-right: 50px;
-  font-size: 1em;
-  font-family: $base-font-family;
+ float: right;
+ padding-right: 0px;
+ font-size: 1em;
+ font-family: $base-font-family;
+ margin-bottom: 0px;
 }
 
 #superfish-1, #superfish-2 {
-  padding-bottom: 100px;
-  margin-top: -80px;
+ padding-bottom: 0px;
+ margin-top: 0px;
 }
 
+.sf-sub-indicator {
+  display: none;
+}
 /* Superfish dropdown menu rules */
-.sf-menu {
+ul.sf-menu {
   font-size: 12pt;
-  background-color: $menu-color;
+  background-color: $menu-color !important;
+  padding: none !important;
 
-  li {
-    list-style-type: none;
-    list-style-image: none;
-    //padding: 10px 15px 10px 15px;
-    margin: 0px;
+  a {
+    border: none !important;
+  }
+
+  span.sf-with-ul {
+    padding-right: 1em !important;
   }
   span.sf-depth-2 {
     display: block;
     padding: 10px 15px 10px 15px;
     margin: 0px;
   }
-  li.menuparent {
-    background-color: $menu-color;
-    a {
-      border: none;
-      background-color: $menu-color !important;
+  li {
+    background-color: $menu-color !important;
+    list-style-type: none;
+    list-style-image: none;
+    //padding: 10px 15px 10px 15px;
+    margin: 0px;
+    span {
+      border: none !important;
+      a {
+        background-color: $menu-color !important;
+      }
     }
     ul {
       li {
@@ -58,14 +69,14 @@ a.nolink {
         background-color: $menu-active-color !important;
       }
     }
-    li:hover {
-      // background-color: $menu-active-color !important;
-    }
   }
+
 }
 
 .sf-depth-2 {
-  width: 80% !important;
+  max-width: 200px !important;
+  //width: 80% !important;
+  border-right: 1px solid gray !important;
 }
 
 ul.menu {

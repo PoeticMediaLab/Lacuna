@@ -283,7 +283,7 @@ function lacunastories_base_default_tax_terms () {
       'Supplementary',
     ),
     'medium' => array(
-      'Print',
+      'Document',
       'Video',
       'Audio',
       'Image',

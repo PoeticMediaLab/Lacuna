@@ -82,34 +82,37 @@ function course_add_default_terms() {
 	$default_prefix = 'course_default_';
 	$taxonomies = ['units', 'genre_doc','genre_response'];
 	foreach ($taxonomies as $taxonomy) {
-		$vocab = taxonomy_vocabulary_machine_name_load($taxonomy);
-		if (!empty($vocab)) {
-			foreach (explode(',', variable_get($default_prefix . $taxonomy)) as $term) {
-				$term = trim($term);
-				course_create_taxonomy_term($vocab, $term);
+		// Add only if this course doesn't already have terms for this vocabulary
+		if (count(course_get_terms_for_current_course($taxonomy)) == 0) {
+			$vocab = taxonomy_vocabulary_machine_name_load($taxonomy);
+			if (!empty($vocab)) {
+				foreach (explode(',', variable_get($default_prefix . $taxonomy)) as $term) {
+					$term = trim($term);
+					course_create_taxonomy_term($vocab, $term);
+				}
 			}
 		}
 	}
 }
 
-function course_set_up_materials() {
+function course_organize() {
 	// For JS access
 	drupal_add_js(array(
 		'course' => array(
 			'current_course' => course_get_selected_course()
 		)), 'setting');
 	course_add_default_terms();
-  $output = "Thank you for submitting your course information to the Lacuna Stories team. You can now continue by indicating the course materials you'd like to host on Lacuna Stories, and to assign them for specific weeks or units. To continue, click \"Continue\"<br />";
+  $output = "Thank you for submitting your course information to the Lacuna Stories team. You can now continue by naming the units and genres by which you would like to organize course materials. A few defaults have been chosen for you already. You may remove these by clicking on the trash icon (<span class='fa fa-trash-o'></span>). To continue, click \"Continue\"<br />";
   $output .= "<br />";
-  $output .= drupal_render(drupal_get_form('course_set_up_materials_form'));
+  $output .= drupal_render(drupal_get_form('course_organize_form'));
   return $output;
 }
 
 // Update the form array for a course-specific list of taxonomy terms
-function course_custom_taxonomy_form_setup(&$form, $taxonomy_name) {
+function course_organize_form_set_defaults(&$form, $taxonomy_name) {
 	$items = [];
 	foreach (course_get_terms_for_current_course($taxonomy_name) as $term) {
-		$items[] = "<div class='term'><span class='fa fa-trash-o'></span><span class='name'>" . $term . "</span></div>";
+		$items[] = "<div class='term'><span class='fa fa-trash-o'></span> <span class='name'>" . $term . "</span></div>";
 	}
 	$form[$taxonomy_name]['term']['#required'] = (count($items) == 0);
 	$form[$taxonomy_name]['ajax_button'] = array(
@@ -118,7 +121,7 @@ function course_custom_taxonomy_form_setup(&$form, $taxonomy_name) {
 	);
 }
 
-function course_set_up_materials_form($form, &$form_state) {
+function course_organize_form($form, &$form_state) {
   // Current Units terms for this course, if any
   $form['units'] = array(
     '#type' => 'fieldset',
@@ -132,7 +135,7 @@ function course_set_up_materials_form($form, &$form_state) {
     '#description' => 'Examples: "Week One," "Travel"',
     '#size' => 60,
   );
-	course_custom_taxonomy_form_setup($form, 'units');
+	course_organize_form_set_defaults($form, 'units');
 
 	// Current Genre terms for this courajax-se, if any
 	$form['genre_doc'] = array(
@@ -147,7 +150,7 @@ function course_set_up_materials_form($form, &$form_state) {
 		'#description' => 'Examples: "Scholarship," "Fiction"',
 		'#size' => 60,
 	);
-	course_custom_taxonomy_form_setup($form, 'genre_doc');
+	course_organize_form_set_defaults($form, 'genre_doc');
 
 	// Current Response genre terms for this course, if any
 	$form['genre_response'] = array(
@@ -162,7 +165,7 @@ function course_set_up_materials_form($form, &$form_state) {
 		'#description' => 'Examples: "Essay," "Reflection"',
 		'#size' => 60,
 	);
-	course_custom_taxonomy_form_setup($form, 'genre_response');
+	course_organize_form_set_defaults($form, 'genre_response');
 
 	$path = drupal_get_path('module', 'course');
   $form['#attached']['css'] = array("$path/course.css");
@@ -180,9 +183,9 @@ function course_set_up_materials_form($form, &$form_state) {
 }
 
 // AJAX adds the taxonomy terms, so form submit doesn't need to handle it
-function course_set_up_materials_form_submit($form, &$form_state) {
-	// TODO: remove need to pass $gid to each step
+function course_organize_form_submit($form, &$form_state) {
 	// Don't need to do anything else; taxonomies handled in previous step
+	// TODO: Skip taxonomy submission
   drupal_goto("course-setup/add-materials");
 }
 
@@ -247,7 +250,7 @@ function course_add_material() {
 
   $output = "<p>Please find your materials using the methods below, in the order they are assigned. You, as the instructor, are responsible for determining if the online or e-access materials you are assigning your students are available at your home institution. If they are, your students will likely not have to pay for these materials. Otherwise, they will be charged. This is a cumbersome part of digital course setup, but an important one. It also allows the Lacuna Stories team to most efficiently assist you securing materials not available from your institutions digital resources. If you have any questions at any time, please send a quick email to " .l('info@lacunastories.com', 'mailto:info@lacunastories.com', array('absolute' => TRUE)) . " and someone from our team will assist you.</p><br /><div class='add-materials'>";
 
-  $output .= "<div id='archived-materials' class='explanation'><div>Add Lacuna Stories Archived Materials. These materials may be free or available for a fee for your students. In either case, these are already digitized and using these materials will save you or the Lacuna Stories team time.</div><button class='form-submit'><a href='" . $base_url . "/archived-materials'>Search Lacuna Stories</a></button></div>";
+//  $output .= "<div id='archived-materials' class='explanation'><div>Add Lacuna Stories Archived Materials. These materials may be free or available for a fee for your students. In either case, these are already digitized and using these materials will save you or the Lacuna Stories team time.</div><button class='form-submit'><a href='" . $base_url . "/archived-materials'>Search Lacuna Stories</a></button></div>";
 
 //  $output .= "<div id='e-access'><div>Add E-Access Material from my Institution. If your students have digital access to materials through your institution’s library, they may have free access to those same materials on Lacuna Stories. Save your students money!</div><button class='form-submit'>Confirm E-Access Material</button></div>";
 

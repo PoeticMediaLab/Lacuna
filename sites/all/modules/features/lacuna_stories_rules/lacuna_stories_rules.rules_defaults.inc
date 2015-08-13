@@ -77,22 +77,26 @@ function lacuna_stories_rules_default_rules_configuration() {
       "ON" : { "node_insert--annotation" : { "bundle" : "annotation" } },
       "IF" : [
         { "node_is_of_type" : {
-            "node" : [ "node:annotation-reference" ],
+            "node" : [ "node:field-annotation-reference" ],
             "type" : { "value" : { "response" : "response", "thread" : "thread" } }
           }
         },
-        { "NOT data_is" : { "data" : [ "node:private" ], "value" : 1 } },
         { "NOT data_is" : {
             "data" : [ "node:author" ],
-            "value" : [ "node:annotation-reference:author" ]
+            "value" : [ "node:field-annotation-reference:author" ]
+          }
+        },
+        { "data_is" : {
+            "data" : [ "node:field-annotation-audience" ],
+            "value" : { "value" : { "everyone" : "everyone" } }
           }
         }
       ],
       "DO" : [
         { "mail" : {
-            "to" : [ "node:annotation-reference:author:mail" ],
-            "subject" : "New annotation of [node:annotation-reference:title] on Lacuna Stories: [site:name]",
-            "message" : "Dear [node:annotation-reference:author:field-display-name],\\r\\n\\r\\nYour post on Lacuna Stories: [site:name], \\u0022[node:annotation-reference:title]\\u0022 has been annotated by [node:author:field-display-name]:\\r\\n\\r\\n[node:text]\\r\\n\\r\\nTo view this annotation, visit the following link:\\r\\n\\r\\n[node:annotation-reference:url]?id=[node:nid]\\r\\n\\r\\nSincerely,\\r\\n\\r\\nThe Lacuna Stories Team",
+            "to" : [ "node:field-annotation-reference:author:mail" ],
+            "subject" : "New annotation of [node:field-annotation-reference:title] on Lacuna Stories: [site:name]",
+            "message" : "Dear [node:field-annotation-reference:author:field-display-name],\\r\\n\\r\\nYour post on Lacuna Stories: [site:name], \\u0022[node:field-annotation-reference:title]\\u0022 has been annotated by [node:author:field-display-name]:\\r\\n\\r\\n[node:text]\\r\\n\\r\\nTo view this annotation, visit the following link:\\r\\n\\r\\n[node:field-annotation-reference:url]?id=[node:nid]\\r\\n\\r\\nSincerely,\\r\\n\\r\\nThe Lacuna Stories Team",
             "language" : [ "" ]
           }
         }

@@ -5,10 +5,11 @@
 *	Categories styles
 *	from annotator/css/categories.css
 *
-* Annotator Categories Plugin CSS.
-* Some code from Zhila and some from Adi's original plugin
 *
 */
+
+$button-default: rgba(22,147,165, .2);
+$button-selected: rgba(196,223,44,1);
 
 .annotator-categories {
     border-top: solid 1px #eee;
@@ -53,11 +54,11 @@
 .annotator-category-6,
 .annotator-category-7
 {
-    background-color: rgba(22,147,165, .2);
+    background-color: $button-default;
 }
 
 .annotator-category-selected {
-    background-color: rgba(196,223,44,1) !important;
+    background-color: $button-selected !important;
 }
 
 
@@ -85,48 +86,54 @@
   webkit-border-radius: 5px;
   border-radius: 5px;
   padding: 2px;
-  /*width: 14%;*/
-  min-width: 14em;
-  max-width: 16em;
+  width: 15em;
+}
+
+  /*  Styles for annotation filter on small screens. */
+@media all and (max-width: 960px) {
+
+  #annotation-filters-wrapper {
+
+    $width: 16em;
+    width: $width;
+
+    right: 0em;
+
+    &.hidden {
+
+      right: 0em - $width - 1em;
+
+    }
+
+    h2 {
+
+      border-radius: 2px;
+      padding: 4px;
+      background-color: #eff;
+      box-shadow: 0px -2px 2px gray;
+      padding-bottom: 15px;
+      position: absolute;
+      -webkit-transform: rotate(270deg);
+      -moz-transform: rotate(270deg);
+      -ms-transform: rotate(270deg);
+      -o-transform: rotate(270deg);
+      width: 12em;
+      right: 6.3em;
+      top: 6em;
+
+    }
+
+  }
+
+  div#content {
+    padding-left: 25px;
+    padding-right: 25px;
+  }
+
 }
 
 #annotation-filters {
   position: relative;
-}
-
-@media (max-width: 959px) {
-  #annotation-filters {
-    width: 20%;
-  }
-  #af-pager-controls {
-    font-size: xx-large;
-  }
-  i.af-pager {
-    padding-right: 10% !important;
-  }
-}
-
-@media (min-width: 960px) and (max-width: 1099px) {
-  #annotation-filters {
-    width: 15%;
-  }
-  #af-pager-controls {
-    font-size: large;
-  }
-  i.af-pager {
-  }
-}
-
-@media (max-height: 768px) {
-  #annotation-filters {
-    top: 20%;
-  }
-}
-
-@media (min-width: 1100px) {
-  #annotation-filters {
-    width: 13%;
-  }
 }
 
 section.region-sidebar-second h2 {
@@ -289,22 +296,38 @@ i.af-pager {
  *
  ***/
 
-$privacy-selected: #88b551;
-$privacy-default: #92a6c4;
-span.annotator-privacy-types .annotator-privacy-type {
-  padding: 7px 6px;
+
+.annotator-privacy-types {
+  padding: 0px !important;
+  font-size: 12px;
+}
+
+.annotator-privacy-types .annotator-privacy-type {
+  padding: 7px;
   margin: 1px 1px 0px;
-  -webkit-border-radius: 6px 6px 6px 6px;
-  -moz-border-radius: 6px 6px 6px 6px;
-  border-radius: 6px 6px 6px 6px;
-  color: #FFF;
-  background-color: $privacy-default;
+  -webkit-border-radius: 6px;
+  -moz-border-radius: 6px;
+  border-radius: 6px;
+  background-color: $button-default;
   cursor: pointer;
   display: inline-block;
+  background-opacity: .5;
+  color: black;
+  font-style: normal;
 }
-span.annotator-privacy-types .annotator-privacy-type.checked {
-  background-color: $privacy-selected;
+
+.annotator-privacy-types .annotator-privacy-type.checked {
+  background-color: $button-selected;
 }
+
+.annotator-privacy-everyone {
+  background-color: rgba(51, 255, 51, .5) !important;
+}
+
+.annotator-privacy-private {
+  background-color: rgba(255, 0, 51, .5) !important;
+}
+
 form.annotator-widget .annotator-privacy-groups {
   display: none;
 }
@@ -318,30 +341,26 @@ label.annotator-privacy-group {
 }
 
 .annotator-viewer .annotator-privacy-type {
-  padding: 7px 6px;
+  padding: 7px;
   margin: 1px 1px 0px;
-  -webkit-border-radius: 6px 6px 6px 6px;
-  -moz-border-radius: 6px 6px 6px 6px;
-  border-radius: 6px 6px 6px 6px;
-  color: #FFF;
-  background-color: $privacy-default;
+  -webkit-border-radius: 6px;
+  -moz-border-radius: 6px;
+  border-radius: 6px;
   display: inline-block;
 }
 .annotator-viewer .annotator-privacy-group.checked {
-  padding: 7px 6px;
+  padding: 7px;
   margin: 1px 1px 0px;
-  -webkit-border-radius: 6px 6px 6px 6px;
-  -moz-border-radius: 6px 6px 6px 6px;
-  border-radius: 6px 6px 6px 6px;
-  color: #FFF;
-  background-color: $privacy-selected;
+  -webkit-border-radius: 6px;
+  -moz-border-radius: 6px;
+  border-radius: 6px;
   display: inline-block;
 }
 .annotator-viewer .annotator-privacy-group.peer-groups.checked {
-  background-color: $privacy-selected;
+  background-color: $button-selected;
 }
 .annotator-viewer .annotator-privacy-group.course-groups.checked {
-  background-color: $privacy-default;
+  background-color: $button-default;
 }
 
 
@@ -375,7 +394,7 @@ label.annotator-privacy-group {
 
 /* Some change in the design of Annotator */
 .annotator-editor .annotator-widget{
-	min-width: 250px;
+	min-width: 300px;
 }
 
 /* Fix to show icons */
@@ -406,11 +425,6 @@ table.mceToolbar {
 *	Rich Text styles
 *	from annotator/css/richtext.css
 */
-
-/* Some change in the design of Annotator */
-.annotator-editor .annotator-widget{
-  min-width: 250px;
-}
 
 /* Fix to show icons */
 .annotator-editor a:after {
@@ -470,7 +484,7 @@ li.annotator-checkbox[style] {
 }
 
 #annotation-filters-wrapper {
-  background-color: rgba(120,206,253,.1);
+  background-color: #eff;
   box-shadow: 2px 2px 5px gray;
 }
 
@@ -1143,3 +1157,9 @@ li.annotator-checkbox[style] {
     position: relative;
   }
 }
+
+/* For Author plugin */
+.annotator-author {
+  display: block;
+}
+

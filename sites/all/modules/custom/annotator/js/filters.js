@@ -539,13 +539,18 @@
     }
 
     View.prototype.setup = function(Controller, Model) {
-      var filter, values, _ref;
+      var filter, title, values, _ref;
       this.viewer = new Annotator.Viewer();
       $(select.interface.setup).append("<div id='" + select.interface.wrapper + "'><div id='" + select.interface.filters + "'></div></div>");
       this.i = $('#' + select.interface.wrapper);
       this.Controller = Controller;
       this.Model = Model;
-      this.i.append('<h2>Show Annotations</h2>');
+      this.i.addClass('hidden');
+      title = $('<h2>Show Annotations</h2>');
+      title.click((function() {
+        return this.i.toggleClass('hidden');
+      }).bind(this));
+      this.i.append(title);
       this.drawPager(this.Model.get('index'), this.Model.get('total'));
       this.i.append("<div id='" + select.button["default"] + "'></div>");
       this.drawButton(select.button["default"], 'none', 'user');
@@ -652,7 +657,7 @@
 
     View.prototype.eraseFilter = function(id, value) {
       if (value != null) {
-        $('#' + id + '.' + select.filters.active + ("[data-value='" + value + "'")).remove();
+        $('#' + id + '.' + select.filters.active + '[data-value="' + value + '"]').remove();
       } else {
         $('#' + id + '.' + select.filters.active).remove();
       }

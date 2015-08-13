@@ -427,7 +427,14 @@ class View
     @i = $('#' + select.interface.wrapper)  # interface shortcut
     @Controller = Controller
     @Model = Model
-    @i.append('<h2>Show Annotations</h2>')
+
+    # Toggle a class on title click to show or hide the filters
+    # for small screens.
+    @i.addClass('hidden')
+    title = $('<h2>Show Annotations</h2>')
+    title.click((-> @i.toggleClass('hidden')).bind(this))
+    @i.append(title)
+
     @drawPager(@Model.get('index'), @Model.get('total'))
     @i.append("<div id='#{select.button.default}'></div>")
     @drawButton(select.button.default, 'none', 'user')
@@ -528,7 +535,7 @@ class View
 
   eraseFilter: (id, value) ->
     if value?
-      $('#' + id + '.' + select.filters.active + "[data-value='#{value}'").remove()
+      $('#' + id + '.' + select.filters.active + '[data-value="' + value + '"]').remove()
     else
       # No explicit value; remove all of this type
       $('#' + id + '.' + select.filters.active).remove()

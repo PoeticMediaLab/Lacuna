@@ -36,8 +36,7 @@
         console.error('d3.js is required to use the histogram plugin');
       } else {
         this._setupListeners();
-        this.countPageLengths();
-        return this.update();
+        return this.countPageLengths();
       }
     };
 
@@ -157,7 +156,6 @@
     Histogram.prototype.assignBarsPerNode = function(node, length) {
       var annotation, child, totalBars, _i, _j, _len, _len2, _ref, _ref2;
       if (length == null) length = 0;
-      this.counted = [];
       _ref = node.childNodes;
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         child = _ref[_i];
@@ -191,6 +189,7 @@
     Histogram.prototype.calculateDensity = function(nodes) {
       var length, node, page, _i, _len, _results;
       length = 0;
+      this.counted = [];
       if (this.pageTurnerActive) {
         this.barTextLength = this.getPageLength(this.getFirstPageNumber()) / this.barsPerPage;
       }
@@ -280,7 +279,7 @@
       }
     };
 
-    Histogram.prototype.update = function() {
+    Histogram.prototype.update = function(annotations) {
       if (typeof d3 === "undefined" || d3 === null) return;
       this.bars = [];
       this.calculateDimensions(this.documentNode);

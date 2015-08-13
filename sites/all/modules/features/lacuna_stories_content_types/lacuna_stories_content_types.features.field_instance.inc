@@ -77,126 +77,6 @@ function lacuna_stories_content_types_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-annotation-annotation_reference'
-  $field_instances['node-annotation-annotation_reference'] = array(
-    'bundle' => 'annotation',
-    'default_value' => NULL,
-    'deleted' => 0,
-    'description' => 'A reference to the annotated content',
-    'display' => array(
-      'default' => array(
-        'label' => 'above',
-        'module' => 'entityreference',
-        'settings' => array(
-          'link' => 1,
-        ),
-        'type' => 'entityreference_label',
-        'weight' => 6,
-      ),
-      'teaser' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
-      ),
-    ),
-    'entity_type' => 'node',
-    'field_name' => 'annotation_reference',
-    'label' => 'Annotated Content',
-    'required' => FALSE,
-    'settings' => array(
-      'user_register_form' => FALSE,
-    ),
-    'widget' => array(
-      'module' => 'entityreference',
-      'settings' => array(
-        'match_operator' => 'CONTAINS',
-        'path' => '',
-        'size' => 60,
-      ),
-      'type' => 'entityreference_autocomplete',
-      'weight' => 7,
-    ),
-  );
-
-  // Exported field_instance: 'node-annotation-annotation_tags'
-  $field_instances['node-annotation-annotation_tags'] = array(
-    'bundle' => 'annotation',
-    'default_value' => NULL,
-    'deleted' => 0,
-    'description' => 'Tags for an annotation',
-    'display' => array(
-      'default' => array(
-        'label' => 'above',
-        'module' => 'taxonomy',
-        'settings' => array(),
-        'type' => 'taxonomy_term_reference_plain',
-        'weight' => 4,
-      ),
-      'teaser' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
-      ),
-    ),
-    'entity_type' => 'node',
-    'field_name' => 'annotation_tags',
-    'label' => 'Tags',
-    'required' => FALSE,
-    'settings' => array(
-      'user_register_form' => FALSE,
-    ),
-    'widget' => array(
-      'module' => 'taxonomy',
-      'settings' => array(
-        'autocomplete_path' => 'taxonomy/autocomplete',
-        'size' => 60,
-      ),
-      'type' => 'taxonomy_autocomplete',
-      'weight' => 4,
-    ),
-  );
-
-  // Exported field_instance: 'node-annotation-category'
-  $field_instances['node-annotation-category'] = array(
-    'bundle' => 'annotation',
-    'default_value' => NULL,
-    'deleted' => 0,
-    'description' => 'What category of annotation this is',
-    'display' => array(
-      'default' => array(
-        'label' => 'above',
-        'module' => 'taxonomy',
-        'settings' => array(),
-        'type' => 'taxonomy_term_reference_plain',
-        'weight' => 5,
-      ),
-      'teaser' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
-      ),
-    ),
-    'entity_type' => 'node',
-    'field_name' => 'category',
-    'label' => 'Category',
-    'required' => FALSE,
-    'settings' => array(
-      'user_register_form' => FALSE,
-    ),
-    'widget' => array(
-      'module' => 'options',
-      'settings' => array(
-        'autocomplete_path' => 'taxonomy/autocomplete',
-        'size' => 60,
-      ),
-      'type' => 'options_buttons',
-      'weight' => 5,
-    ),
-  );
-
   // Exported field_instance: 'node-annotation-field_annotation_audience'
   $field_instances['node-annotation-field_annotation_audience'] = array(
     'bundle' => 'annotation',
@@ -273,48 +153,6 @@ function lacuna_stories_content_types_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-annotation-field_annotation_ins_viewable'
-  $field_instances['node-annotation-field_annotation_ins_viewable'] = array(
-    'bundle' => 'annotation',
-    'default_value' => array(
-      0 => array(
-        'value' => 0,
-      ),
-    ),
-    'deleted' => 0,
-    'description' => '',
-    'display' => array(
-      'default' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 11,
-      ),
-      'teaser' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
-      ),
-    ),
-    'entity_type' => 'node',
-    'field_name' => 'field_annotation_ins_viewable',
-    'label' => 'Instructor Viewable',
-    'required' => 0,
-    'settings' => array(
-      'user_register_form' => FALSE,
-    ),
-    'widget' => array(
-      'active' => 1,
-      'module' => 'options',
-      'settings' => array(
-        'display_label' => 0,
-      ),
-      'type' => 'options_buttons',
-      'weight' => 10,
-    ),
-  );
-
   // Exported field_instance: 'node-annotation-field_annotation_ins_viewable_co'
   $field_instances['node-annotation-field_annotation_ins_viewable_co'] = array(
     'bundle' => 'annotation',
@@ -355,46 +193,6 @@ function lacuna_stories_content_types_field_default_field_instances() {
       ),
       'type' => 'entityreference_autocomplete',
       'weight' => 4,
-    ),
-  );
-
-  // Exported field_instance: 'node-annotation-field_annotation_private'
-  $field_instances['node-annotation-field_annotation_private'] = array(
-    'bundle' => 'annotation',
-    'default_value' => array(
-      0 => array(
-        'value' => 1,
-      ),
-    ),
-    'deleted' => 0,
-    'description' => 'Decide if this annotation is private or not',
-    'display' => array(
-      'default' => array(
-        'label' => 'above',
-        'module' => 'list',
-        'settings' => array(),
-        'type' => 'list_default',
-        'weight' => 2,
-      ),
-      'teaser' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
-      ),
-    ),
-    'entity_type' => 'node',
-    'field_name' => 'field_annotation_private',
-    'label' => 'Private',
-    'required' => TRUE,
-    'settings' => array(
-      'user_register_form' => FALSE,
-    ),
-    'widget' => array(
-      'module' => 'options',
-      'settings' => array(),
-      'type' => 'options_buttons',
-      'weight' => 9,
     ),
   );
 
@@ -754,213 +552,6 @@ function lacuna_stories_content_types_field_default_field_instances() {
       'settings' => array(),
       'type' => 'og_complex',
       'weight' => 3,
-    ),
-  );
-
-  // Exported field_instance: 'node-annotation-private'
-  $field_instances['node-annotation-private'] = array(
-    'bundle' => 'annotation',
-    'default_value' => array(
-      0 => array(
-        'value' => 1,
-      ),
-    ),
-    'deleted' => 0,
-    'description' => 'Decide if this annotation is private or not',
-    'display' => array(
-      'default' => array(
-        'label' => 'inline',
-        'module' => 'list',
-        'settings' => array(),
-        'type' => 'list_default',
-        'weight' => 3,
-      ),
-      'teaser' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
-      ),
-    ),
-    'entity_type' => 'node',
-    'field_name' => 'private',
-    'label' => 'Private',
-    'required' => FALSE,
-    'settings' => array(
-      'user_register_form' => FALSE,
-    ),
-    'widget' => array(
-      'module' => 'options',
-      'settings' => array(),
-      'type' => 'options_buttons',
-      'weight' => 3,
-    ),
-  );
-
-  // Exported field_instance: 'node-annotation-quote'
-  $field_instances['node-annotation-quote'] = array(
-    'bundle' => 'annotation',
-    'default_value' => NULL,
-    'deleted' => 0,
-    'description' => 'The selected text that was annotated',
-    'display' => array(
-      'default' => array(
-        'label' => 'above',
-        'module' => 'text',
-        'settings' => array(),
-        'type' => 'text_default',
-        'weight' => 2,
-      ),
-      'teaser' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
-      ),
-    ),
-    'entity_type' => 'node',
-    'field_name' => 'quote',
-    'label' => 'Quote',
-    'required' => FALSE,
-    'settings' => array(
-      'text_processing' => 0,
-      'user_register_form' => FALSE,
-    ),
-    'widget' => array(
-      'module' => 'text',
-      'settings' => array(
-        'rows' => 5,
-      ),
-      'type' => 'text_textarea',
-      'weight' => 2,
-    ),
-  );
-
-  // Exported field_instance: 'node-annotation-ranges'
-  $field_instances['node-annotation-ranges'] = array(
-    'bundle' => 'annotation',
-    'default_value' => NULL,
-    'deleted' => 0,
-    'description' => 'The ranges for the start and stop of a quote',
-    'display' => array(
-      'default' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 15,
-      ),
-      'teaser' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
-      ),
-    ),
-    'entity_type' => 'node',
-    'field_name' => 'ranges',
-    'label' => 'Ranges',
-    'required' => FALSE,
-    'settings' => array(
-      'text_processing' => 0,
-      'user_register_form' => FALSE,
-    ),
-    'widget' => array(
-      'module' => 'text',
-      'settings' => array(
-        'rows' => 5,
-      ),
-      'type' => 'text_textarea',
-      'weight' => 6,
-    ),
-  );
-
-  // Exported field_instance: 'node-annotation-text'
-  $field_instances['node-annotation-text'] = array(
-    'bundle' => 'annotation',
-    'default_value' => NULL,
-    'deleted' => 0,
-    'description' => 'The annotation text',
-    'display' => array(
-      'default' => array(
-        'label' => 'hidden',
-        'module' => 'text',
-        'settings' => array(),
-        'type' => 'text_plain',
-        'weight' => 1,
-      ),
-      'teaser' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
-      ),
-    ),
-    'entity_type' => 'node',
-    'field_name' => 'text',
-    'label' => 'Annotation Text',
-    'required' => FALSE,
-    'settings' => array(
-      'text_processing' => 0,
-      'user_register_form' => FALSE,
-    ),
-    'widget' => array(
-      'module' => 'text',
-      'settings' => array(
-        'rows' => 5,
-      ),
-      'type' => 'text_textarea',
-      'weight' => 1,
-    ),
-  );
-
-  // Exported field_instance: 'node-annotation-uri'
-  $field_instances['node-annotation-uri'] = array(
-    'bundle' => 'annotation',
-    'default_value' => NULL,
-    'deleted' => 0,
-    'description' => 'The URI of the annotated work',
-    'display' => array(
-      'default' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 14,
-      ),
-      'teaser' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
-      ),
-    ),
-    'entity_type' => 'node',
-    'field_name' => 'uri',
-    'label' => 'URI',
-    'required' => FALSE,
-    'settings' => array(
-      'absolute_url' => 1,
-      'attributes' => array(
-        'class' => '',
-        'rel' => '',
-        'target' => 'default',
-      ),
-      'display' => array(
-        'url_cutoff' => 80,
-      ),
-      'enable_tokens' => 1,
-      'title' => 'optional',
-      'title_label_use_field_label' => FALSE,
-      'title_maxlength' => 128,
-      'title_value' => '',
-      'url' => 0,
-      'user_register_form' => FALSE,
-      'validate_url' => 1,
-    ),
-    'widget' => array(
-      'module' => 'link',
-      'settings' => array(),
-      'type' => 'link_field',
-      'weight' => 8,
     ),
   );
 
@@ -2939,7 +2530,6 @@ function lacuna_stories_content_types_field_default_field_instances() {
   t('Course(s) Enrolled');
   t('Cover Image');
   t('Date of Birth');
-  t('Decide if this annotation is private or not');
   t('Describe why these pieces are stitched together');
   t('Description of My Thread');
   t('Display Name');
@@ -2953,7 +2543,6 @@ function lacuna_stories_content_types_field_default_field_instances() {
   t('If Instructor Viewable is checked, instructors for which courses should be able to view this?');
   t('If there is a PDF or other file version of this document, attach it here.');
   t('Image');
-  t('Instructor Viewable');
   t('Instructor Viewable by Instructors of these Courses');
   t('Learning Goals');
   t('Major/Degree');
@@ -2961,9 +2550,7 @@ function lacuna_stories_content_types_field_default_field_instances() {
   t('Medium');
   t('My Stitchings');
   t('Priority');
-  t('Private');
   t('Public Visibility');
-  t('Quote');
   t('Ranges');
   t('References to the content stitched together');
   t('Response Genre');
@@ -2977,7 +2564,6 @@ function lacuna_stories_content_types_field_default_field_instances() {
   t('The medium or media of this document.');
   t('The name under which you would like your work to appear.');
   t('The ranges for the start and stop of a quote');
-  t('The selected text that was annotated');
   t('The text excerpt that was annotated');
   t('To which course(s) is this document assigned?');
   t('URI');
