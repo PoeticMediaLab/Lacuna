@@ -361,6 +361,9 @@ class Annotator.Plugin.Touch extends Annotator.Plugin
         # and triggering the correct events for persistance.
         @annotator.onAdderClick(event)
 
+        # Trigger a resize event to fix bug where editor
+        # text field would be un-focusable for an unknown
+        # reason.
         window.dispatchEvent(new Event('resize'))
 
   # Event callback for tap events on highlights and displays the Viewer.
