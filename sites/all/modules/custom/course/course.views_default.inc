@@ -257,13 +257,13 @@ function course_views_default_views() {
   $handler->display->display_options['fields']['field_course_year']['alter']['alter_text'] = TRUE;
   $handler->display->display_options['fields']['field_course_year']['alter']['text'] = '[field_course_term], [field_course_year]';
   $handler->display->display_options['fields']['field_course_year']['element_label_colon'] = FALSE;
-  /* Field: Content: What is the primary course ID (with no spaces)? */
+  /* Field: Content: Course ID */
   $handler->display->display_options['fields']['field_course_id']['id'] = 'field_course_id';
   $handler->display->display_options['fields']['field_course_id']['table'] = 'field_data_field_course_id';
   $handler->display->display_options['fields']['field_course_id']['field'] = 'field_course_id';
   $handler->display->display_options['fields']['field_course_id']['label'] = '';
   $handler->display->display_options['fields']['field_course_id']['element_label_colon'] = FALSE;
-  /* Field: Content: What is your name? */
+  /* Field: Content: Instructor: */
   $handler->display->display_options['fields']['field_name']['id'] = 'field_name';
   $handler->display->display_options['fields']['field_name']['table'] = 'field_data_field_name';
   $handler->display->display_options['fields']['field_name']['field'] = 'field_name';
