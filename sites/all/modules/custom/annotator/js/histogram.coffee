@@ -60,7 +60,7 @@ class Annotator.Plugin.Histogram extends Annotator.Plugin
     @barTotal = 0
     @bars = []
     @chart
-    @pageTurnerActive = false
+    @pageTurnerActive = options.page_turner_active
     @duration = 250 # ms for animation time
 
   # Listens to annotation change events on the Annotator in order to refresh
