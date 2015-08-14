@@ -1,3 +1,9 @@
+/*moving course title to top of page*/
+.course-name {
+    position: relative;
+    top: -100px;
+}
+
 /*views fluid grid styling for enrolled courses view*/
 .views-fluid-grid-item {
 	background-color: #fafafa !important;
@@ -111,6 +117,11 @@ li.views-fluid-grid-inline.views-fluid-grid-item.views-row:hover {
 body {
 	overflow-x: hidden;
 }
+
+#page {
+    overflow-x: visible !important;
+}
+
 }
 
 @media (max-width: 1199px) and (min-width: 915px) {
@@ -264,4 +275,105 @@ body {
     color: #000000;
     line-height: 20px;
 }
+}
+
+/*styling for "about this course" page*/
+.node-course {
+    .group-header {
+        width: 100%;
+        height: 35vh;
+        overflow: hidden;
+        border-bottom: 1px solid #d1d5d3;
+    }
+
+    .field-name-field-course-image img {
+        width: 100%;
+        height: auto;
+        transform: translateY(-50%);
+    }
+    .field-name-field-course-title {
+        font-family: "Source Sans Pro", serif;
+        font-size: 3em;
+        padding-top: 25px;
+        padding-bottom: 10px;
+        text-align: left;
+        letter-spacing: -.03em;
+        text-transform: uppercase;
+        color: #1588ba;
+        line-height: 1em;
+        margin-left: 5%;
+        margin-right: 5%;
+    }
+
+    .field-name-field-name {
+      margin-left: 5%;
+      margin-right: 5%;
+      font-family: "Source Sans Pro", sans-serif;
+      font-size: 2em;
+    }
+
+    .field-name-field-department {
+      margin-left: 5%;
+      margin-right: 5%;
+      font-family: "Source Sans Pro", sans-serif;
+      font-size: 1.5em;
+    }
+
+    .field-name-body {
+      margin-left: 5%;
+      margin-right: 5%;
+      text-align: justify;
+    }
+
+    .group-left {
+      width: 58%;
+    }
+
+    .group-right {
+      width: 40%;
+      box-shadow: inset 0 0 3px 0 rgba(0,0,0,0.15);
+      border: 1px solid #d1d5d3;
+      margin-top: 40px;
+    }
+    .field-name-field-course-term {
+      margin-left: 10%;
+      margin-right: 20%;
+      border-bottom: 1px dotted #d1d5d3;
+      padding-top: 25px;
+        .field-items {
+          float: right;
+        }
+    }
+    .field-name-field-course-year {
+      margin-left: 10%;
+      margin-right: 20%;
+      border-bottom: 1px dotted #d1d5d3;
+        .field-items {
+          float: right;
+        }
+    }
+    .field-name-field-course-id {
+      margin-left: 10%;
+      margin-right: 20%;
+      border-bottom: 1px dotted #d1d5d3;
+        .field-items {
+          float: right;
+        }
+    }
+    .field-name-field-start-date {
+      margin-left: 10%;
+      margin-right: 20%;
+      border-bottom: 1px dotted #d1d5d3;
+        .field-items {
+          float: right;
+        }
+    }
+    .field-name-field-end-date {
+      margin-left: 10%;
+      margin-right: 20%;
+      border-bottomn: 1px dotted #d1d5d3;
+        .field-items {
+          float: right;
+        }
+    }
 }
