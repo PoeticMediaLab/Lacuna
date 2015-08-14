@@ -66,17 +66,34 @@ function lacuna_stories_preprocess_page(&$variables, $hook) {
  * @param $hook
  *   The name of the template being rendered ("node" in this case.)
  */
-/* -- Delete this line if you want to use this function
-function lacuna_stories_preprocess_node(&$variables, $hook) {
-  $variables['sample_variable'] = t('Lorem ipsum.');
-
-  // Optionally, run node-type-specific preprocess functions, like
-  // lacuna_stories_preprocess_node_page() or lacuna_stories_preprocess_node_story().
-  $function = __FUNCTION__ . '_' . $variables['node']->type;
-  if (function_exists($function)) {
-    $function($variables, $hook);
-  }
+function lacuna_stories_preprocess_page(&$variables, $hook) {
+	$node = $variables['node'];
+	if ($node->type == 'document') {
+		// Add the document authors to the title
+		$biblio = node_load($node->field_bibliographic_entry[$node->language][0]['target_id']);
+		$title = $node->title . ' ';
+		$title .= '<div id="document-authors">';
+		$l = count((array)$biblio->biblio_contributors);
+		for ($i = 0; $i < $l; $i += 1) {
+			if ($i > 0) {
+				$title .= ' ';
+			}
+			if ($i == $l - 1) {
+				$title .= 'and ';
+			}
+			$title .= $biblio->biblio_contributors[$i]['name'];
+			if (($i + 1 < $l) && ($l > 2)) {
+				$title .= ',';
+			}
+		}
+		$title .= ' (' . $biblio->biblio_year . ')';
+		$title .= '</div>';
+		$variables['title'] = $title;
+	}
 }
+//function lacuna_stories_preprocess_node(&$variables, $hook) {
+//
+//}
 // */
 
 /**
