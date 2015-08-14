@@ -77,7 +77,7 @@ function annotation_sanitize_uri($uri) {
     $root = $base_root . base_path();
     $parsed = drupal_parse_url($uri);
     $uri = $parsed['path'];
-    $uri = preg_replace("/#.*$/", "", $uri);  // sanitize
+    $uri = urldecode(preg_replace("/#.*$/", "", $uri));  // sanitize & convert any special characters
     $path = str_replace($root, "", $uri);
     $real_path = drupal_lookup_path('source', $path); // in case of aliases
     if ($real_path) {
@@ -87,15 +87,18 @@ function annotation_sanitize_uri($uri) {
     return(array('root' => $root, 'path' => $path));
 }
 
-function get_term_id($term_name, $taxonomy_name) {
+function annotation_get_term_id($term_name, $taxonomy_name) {
   $taxonomy = taxonomy_vocabulary_machine_name_load($taxonomy_name);
   $terms = taxonomy_get_term_by_name($term_name, $taxonomy_name);
   $tid = NULL;
   $course_id = course_get_selected_course();
   foreach ($terms as $term) {
-    if (($term->vid == $taxonomy->vid) && ($term->field_term_course[LANGUAGE_NONE][0]['target_id'] == $course_id)) {
-      $tid = $term->tid;
-      break;  // go with the first match
+    if (isset($term->field_term_course) &&
+        ($term->vid == $taxonomy->vid) &&
+        ($term->field_term_course[LANGUAGE_NONE][0]['target_id'] == $course_id))
+    {
+        $tid = $term->tid;
+        break;  // go with the first match
     }
   }
   return($tid);
@@ -118,7 +121,7 @@ function annotation_format_tags(&$entity, $tags) {
       foreach (array_values($tags) as $tag) {
         $tag = trim($tag);
         if (strlen($tag)) {
-          $tid = get_term_id($tag, ANNOTATION_TAXONOMY_NAME);
+          $tid = annotation_get_term_id($tag, ANNOTATION_TAXONOMY_NAME);
           if (!$tid) {
             // add new term to taxonomy
             $term = new stdClass();
@@ -166,7 +169,7 @@ function annotation_drupal_format($entity, $update = FALSE) {
     // Wipe all values that users might change
     // They'll be added back in the switch below
     // Probably a better way to do this
-    unset($annotation->text);
+    unset($annotation->field_annotation_text);
     // unset($annotation->permissions);
   }
   $annotation->updated = REQUEST_TIME;
@@ -183,7 +186,7 @@ function annotation_drupal_format($entity, $update = FALSE) {
 
       case 'category':
         // Categories are taxonomy references
-        $tid = get_term_id($val, ANNOTATION_CATEGORY_TAXONOMY);
+        $tid = annotation_get_term_id($val, ANNOTATION_CATEGORY_TAXONOMY);
         if (isset($tid)) {
           $annotation->field_annotation_category[$annotation->language][0]['tid'] = $tid;
         }
@@ -310,7 +313,6 @@ function annotation_api_create() {
     node_save($annotation);
     $annotation->id = $annotation->nid; // set ID for Annotator
     // Send response
-    // ddl($annotation, 'create');
     $record = annotation_api_entity_prepare($annotation, 'read');
     return drupal_json_output($record);
   }
@@ -573,7 +575,7 @@ function annotation_api_entity_prepare($annotation, $op) {
       // Get selected groups
       $selected_groups = array();
       if ($audience['peer-groups'] == 1) {
-        if (isset($annotation->og_group_ref)) {
+        if (isset($annotation->og_group_ref) && isset($annotation->og_group_ref[$annotation->language])) {
           foreach ($annotation->og_group_ref[$annotation->language] as $group) {
             $selected_groups[] = $group['target_id'];
           }
@@ -617,6 +619,5 @@ function annotation_api_entity_prepare($annotation, $op) {
     case 'update':
       break;
   }
-  // ddl($entity, 'entity after prep');
   return $entity;
 }

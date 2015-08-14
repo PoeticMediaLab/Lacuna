@@ -25,18 +25,16 @@ $ = jQuery
 # CKEditor looks for a textarea with a specific ID
 # then adds itself immediately after it
 editor_instance = 'annotator-field-0'
-
 class Annotator.Plugin.RichText extends Annotator.Plugin
 
   pluginInit: ->
     return unless Annotator.supported()
-    editor = @annotator.editor
     CKEDITOR.replace(editor_instance, {
-      extraPlugins: 'lineutils,oembed,widget',
+      extraPlugins: 'lineutils,embed,autoembed,image2',
       toolbar: [
           { name: 'paragraph', items: ['NumberedList', 'BulletedList'] },
           { name: 'links', items: ['Link', 'Unlink'] },
-          { name: 'insert', items: ['oembed'] },
+          { name: 'insert', items: ['embed, autoembed'] },
         ],
       # removeButtons: 'Underline,Strike,Subscript,Superscript,Anchor',
       removePlugins: 'elementspath,font,resize',
