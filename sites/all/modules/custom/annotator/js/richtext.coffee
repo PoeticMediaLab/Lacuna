@@ -25,18 +25,23 @@ $ = jQuery
 # CKEditor looks for a textarea with a specific ID
 # then adds itself immediately after it
 editor_instance = 'annotator-field-0'
-
 class Annotator.Plugin.RichText extends Annotator.Plugin
 
   pluginInit: ->
     return unless Annotator.supported()
-    editor = @annotator.editor
+#    // Enable local "abbr" plugin from /myplugins/abbr/ folder
+#CKEDITOR.plugins.addExternal( 'abbr', '/myplugins/abbr/', 'plugin.js' );
+#
+#// extraPlugins needs to be set too
+#CKEDITOR.replace( 'editor1', {
+#  extraPlugins: 'abbr'
+#} );
     CKEDITOR.replace(editor_instance, {
-      extraPlugins: 'lineutils,oembed,widget',
+      extraPlugins: 'lineutils,embed,autoembed,image2',
       toolbar: [
           { name: 'paragraph', items: ['NumberedList', 'BulletedList'] },
           { name: 'links', items: ['Link', 'Unlink'] },
-          { name: 'insert', items: ['oembed'] },
+          { name: 'insert', items: ['embed, autoembed'] },
         ],
       # removeButtons: 'Underline,Strike,Subscript,Superscript,Anchor',
       removePlugins: 'elementspath,font,resize',
@@ -67,6 +72,11 @@ class Annotator.Plugin.RichText extends Annotator.Plugin
       # reverse the HTML escaping by Annotator.Util.escape
       # possibly dangerous, but trusting WYSIWYG input filters for content
       if annotation.text?
+#        function htmlDecode(input){
+#        var e = document.createElement('div');
+#  e.innerHTML = input;
+#  return e.childNodes[0].nodeValue;
+#}
         annotation.text = annotation.text.replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"');
         # Match the correct text to the correct div by index
         divList[index].innerHTML = annotation.text

@@ -7,15 +7,15 @@ Implements annotator-richText plugin
 
 class RichtextAnnotatorPlugin extends AnnotatorPlugin {
   public function settings($defaults = array()) {
-    // Settings are in the richtext plugin
+    // settings are in the richtext plugin
     return parent::settings($defaults);
   }
 
   public function setup() {
-    $settings = $this->settings();
-    drupal_add_js(array('annotator_richtext' => (array) $settings), 'setting');
-    drupal_add_js(libraries_get_path('ckeditor') . '/ckeditor.js', array('weight' => -10));
-    drupal_add_js(drupal_get_path('module', 'annotator') . '/js/annotator_richtext.js', array('weight' => 9));
+		// For aggregated javascript, CKEditor needs to know where its libraries are
+		drupal_add_js('window.CKEDITOR_BASEPATH="' . base_path() . libraries_get_path('ckeditor_annotator') . '/";', 'inline', array('weight' => -100));
+		drupal_add_js(libraries_get_path('ckeditor_annotator') . '/ckeditor.js', array('weight' => 8));
+		drupal_add_js(drupal_get_path('module', 'annotator') . '/js/annotator_richtext.js', array('weight' => 9));
     drupal_add_js(drupal_get_path('module', 'annotator') . '/js/richtext.js', array('weight' => 10));
-  }
+	}
 }
