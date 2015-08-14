@@ -78,7 +78,7 @@ function lacuna_stories_preprocess_page(&$variables, $hook) {
 			if ($i > 0) {
 				$title .= ' ';
 			}
-			if ($i == $l - 1) {
+			if (($i == $l - 1) && ($l > 1)) {
 				$title .= 'and ';
 			}
 			$title .= $biblio->biblio_contributors[$i]['name'];
