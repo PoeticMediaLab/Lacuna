@@ -27,6 +27,39 @@ function course_views_api($module = NULL, $api = NULL) {
 }
 
 /**
+ * Implements hook_image_default_styles().
+ */
+function course_image_default_styles() {
+  $styles = array();
+
+  // Exported image style: course_views_style.
+  $styles['course_views_style'] = array(
+    'label' => 'Course Views Style',
+    'effects' => array(
+      3 => array(
+        'name' => 'image_scale_and_crop',
+        'data' => array(
+          'width' => 450,
+          'height' => 275,
+        ),
+        'weight' => -10,
+      ),
+      2 => array(
+        'name' => 'image_crop',
+        'data' => array(
+          'width' => 275,
+          'height' => 150,
+          'anchor' => 'center-bottom',
+        ),
+        'weight' => -9,
+      ),
+    ),
+  );
+
+  return $styles;
+}
+
+/**
  * Implements hook_node_info().
  */
 function course_node_info() {

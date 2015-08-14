@@ -72,6 +72,7 @@ features[field_instance][] = node-course-field_third_course_id
 features[field_instance][] = node-course-field_unregistered_students
 features[field_instance][] = node-course-group_group
 features[field_instance][] = node-course-og_roles_permissions
+features[image][] = course_views_style
 features[node][] = course
 features[og_features_permission][] = node:course:add user
 features[og_features_permission][] = node:course:administer group
