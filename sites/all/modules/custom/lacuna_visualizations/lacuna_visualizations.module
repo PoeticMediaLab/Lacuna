@@ -696,8 +696,7 @@ function lacuna_visualizations_annotation_dashboard_data() {
     }
 
     // Remove or sanitize data we don't want to expose: annotations, usernames, etc.
-		// to get correct text lengths w/o exposing data
-		$data->text = str_repeat("x", strlen($data->text));
+		$data->text = str_repeat("x", strlen($data->text)); // provide length w/o exposing data
 		unset($data->quote);
 		unset($data->tags);
 		unset($data->uid);
