@@ -40,12 +40,12 @@ Drupal.behaviors.iframe_resize = {
             element.setAttribute('width', width);
             element.setAttribute('height', width * $(element).data('aspectRatio'));
 
-        })
+        });
 
     });
 
     //  resize once to set correct size
-    $(window).resize();
+    setTimeout($(window).resize(), 0);
 
   }
 };
