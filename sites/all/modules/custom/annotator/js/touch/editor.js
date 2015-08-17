@@ -50,9 +50,24 @@
       })(this));
       this._setupQuoteField();
       this._setupAndroidRedrawHack();
-      CKEDITOR.instances['annotator-field-0'].on('focus', function() {
-        return alert('focused!');
-      });
+      setTimeout(function() {
+        var instance;
+        instance = CKEDITOR.instances['annotator-field-0'];
+        console.log('instance: ', instance);
+        return instance.on('focus', function(event) {
+          var onBlur, scrollPosition;
+          console.log('event: ', event.name, event);
+          scrollPosition = window.scrollY;
+          console.log('saved scroll position: ', scrollPosition);
+          onBlur = function(event) {
+            console.log('event: ', event.name, event);
+            console.log('scrolling to saved scroll position');
+            window.scrollTo(0, scrollPosition);
+            return instance.removeListener('blur', onBlur);
+          };
+          return instance.on('blur', onBlur);
+        });
+      }, 0);
     }
 
     Editor.prototype.showQuote = function() {

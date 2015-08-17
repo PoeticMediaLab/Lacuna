@@ -61,9 +61,26 @@ class Annotator.Plugin.Touch.Editor extends Annotator.Delegator
     #     editor.style.top = '' + (scrollY - editor.parentElement.getBoundingClientRect().top) + 'px'
     #     $(window).unbind('scroll.withOpenTextbox')
     # )
-    CKEDITOR.instances['annotator-field-0'].on('focus', ->
-      alert('focused!')
-    )
+    # CKEDITOR.instances['annotator-field-0'].on('focus', ->
+    #   alert('focused!')
+    # )
+    setTimeout(->
+      instance = CKEDITOR.instances['annotator-field-0']
+      console.log('instance: ', instance)
+      instance.on('focus', (event) ->
+        console.log('event: ', event.name, event)
+        scrollPosition = window.scrollY
+        console.log('saved scroll position: ', scrollPosition)
+
+        onBlur = (event) ->
+          console.log('event: ', event.name, event)
+          console.log('scrolling to saved scroll position')
+          window.scrollTo(0, scrollPosition)
+          instance.removeListener('blur', onBlur)
+
+        instance.on('blur', onBlur)
+      )
+    , 0)
 
   # Expands the quote field to display more than one line.
   #
