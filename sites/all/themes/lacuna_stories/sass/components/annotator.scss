@@ -675,7 +675,6 @@ li.annotator-checkbox[style] {
   width: 370px;
   left: 25%;
   position: fixed;
-  bottom: 15px;
 }
 
 .annotator-touch-editor .annotator-touch-widget-inner {
@@ -1104,6 +1103,11 @@ li.annotator-checkbox[style] {
   top: 10px;
 }
 
+.annotator-touch-editor.tab-out .annotator-touch-widget.absolute {
+  position: absolute;
+  top: 500px;
+}
+
 .annotator-touch-controls.tab-in {
   position: fixed;
   top: 350px;
@@ -1126,7 +1130,36 @@ li.annotator-checkbox[style] {
   -o-transform: rotate(270deg);
 
   .annotator-button {
-    opacity: 0.3;
     cursor: default;
+    border-color: rgb(112, 12, 73);
+    background-color: rgb(209, 46, 142);
+    background-image: -webkit-gradient(
+      linear, left top, left bottom,
+      from(rgb(252, 124, 202)),
+      color-stop(0.5, rgb(232, 93, 178)),
+      color-stop(0.5, rgb(209, 46, 142)),
+      to(rgb(255, 0, 156))
+    );
+    background-image: -moz-linear-gradient(
+        -90deg,
+        rgb(252, 124, 202),
+        rgb(232, 93, 178) 50%,
+        rgb(209, 46, 142) 50%,
+        rgb(255, 0, 156)
+    );
+    background-image: -webkit-linear-gradient(
+        -90deg,
+        rgb(252, 124, 202),
+        rgb(232, 93, 178) 50%,
+        rgb(209, 46, 142) 50%,
+        rgb(255, 0, 156)
+    );
+    background-image: linear-gradient(
+        to bottom,
+        rgb(252, 124, 202),
+        rgb(232, 93, 178) 50%,
+        rgb(209, 46, 142) 50%,
+        rgb(255, 0, 156)
+    );
   }
 }

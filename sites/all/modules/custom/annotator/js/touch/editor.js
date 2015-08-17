@@ -50,6 +50,9 @@
       })(this));
       this._setupQuoteField();
       this._setupAndroidRedrawHack();
+      CKEDITOR.instances['annotator-field-0'].on('focus', function() {
+        return alert('focused!');
+      });
     }
 
     Editor.prototype.showQuote = function() {
