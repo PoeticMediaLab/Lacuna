@@ -642,7 +642,7 @@ function lacuna_visualizations_annotation_dashboard_data() {
     }
   }
 
-  $canReadAll = user_access('access any private annotation');
+  $canReadAll = in_array('Instructor', $user->roles);
   $userNames = array();   // only load users once
   $annotations = array();
 
@@ -696,11 +696,11 @@ function lacuna_visualizations_annotation_dashboard_data() {
     }
 
     // Remove or sanitize data we don't want to expose: annotations, usernames, etc.
+		$data->text = str_repeat("x", strlen($data->text)); // provide length w/o exposing data
+		unset($data->quote);
+		unset($data->tags);
+		unset($data->uid);
     if (!$canReadAll && ($annotation->uid != $user->uid)) {
-			$data->text = "";
-			$data->quote = "";
-			$data->annotation_tags = Array();
-
       if (!array_key_exists($annotation->uid, $userNames)) {
         // anonymize with slight UID obfuscation
         // should use a hash or something to make it harder to decipher

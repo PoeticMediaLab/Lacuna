@@ -143,15 +143,18 @@ function course_strongarm() {
   $strongarm->value = array(
     'view_own' => array(
       0 => 2,
-      1 => 5,
-      2 => 3,
+      1 => 4,
+      2 => 7,
+      3 => 5,
+      4 => 3,
     ),
     'view' => array(
-      0 => 2,
-      1 => 5,
-      2 => 3,
+      0 => 1,
+      1 => 2,
+      2 => 5,
+      3 => 3,
     ),
-    'priority' => '5',
+    'priority' => '-5',
   );
   $export['content_access_course'] = $strongarm;
 

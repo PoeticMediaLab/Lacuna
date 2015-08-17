@@ -127,7 +127,7 @@ h3 {
 
 .help {
     display: inline-block;
-    margin-right: 25px:
+    margin-right: 25px;
 }
 
 .help_text {
@@ -165,15 +165,15 @@ div#annotations_table_draw_wrapper label {
 	padding-left: 25px;
 }
 
-.simple_overlay .close {
-    background-image:url("/media/img/overlay/close.png");
-    position:absolute;
-    right:-15px;
-    top:-15px;
-    cursor:pointer;
-    height:35px;
-    width:35px;
-}
+/*.simple_overlay .close {*/
+    /*background-image:url("/media/img/overlay/close.png");*/
+    /*position:absolute;*/
+    /*right:-15px;*/
+    /*top:-15px;*/
+    /*cursor:pointer;*/
+    /*height:35px;*/
+    /*width:35px;*/
+/*}*/
 
 div.tooltip table {
   text-rendering: optimizeLegibility;

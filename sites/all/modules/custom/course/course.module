@@ -499,7 +499,6 @@ function course_node_update($node) {
 function course_form_document_node_form_alter(&$form, &$form_state, $form_id) {
   $document = node_load($form['nid']['#value']);
 	$default_unit = '';
-	$default_doc_genre = '';
 
 	// Per-course units taxonomy
 	if (isset($document->field_unit[LANGUAGE_NONE])) {
@@ -541,7 +540,7 @@ function course_form_document_node_form_alter(&$form, &$form_state, $form_id) {
   $form['field_bibliographic_entry']['#access'] = FALSE;
 
 	// Finish up form
-  $form['title']['#title'] = 'Material Title to Be Displayed to Students';
+  $form['title']['#title'] = 'Title to Be Displayed to Students';
   $form['actions']['submit']['#value'] = 'Save (Finished Adding Material)';
   $form['actions']['submit']['#submit'] = array('course_add_document_form_submit');
 
