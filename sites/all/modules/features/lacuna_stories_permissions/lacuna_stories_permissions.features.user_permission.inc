@@ -2168,13 +2168,6 @@ function lacuna_stories_permissions_user_default_permissions() {
     'module' => 'flag',
   );
 
-  // Exported permission: 'flag page_turner_bookmark'.
-  $permissions['flag page_turner_bookmark'] = array(
-    'name' => 'flag page_turner_bookmark',
-    'roles' => array(),
-    'module' => 'flag',
-  );
-
   // Exported permission: 'flush caches'.
   $permissions['flush caches'] = array(
     'name' => 'flush caches',
@@ -2519,13 +2512,6 @@ function lacuna_stories_permissions_user_default_permissions() {
     'roles' => array(
       'Site Administrator' => 'Site Administrator',
     ),
-    'module' => 'flag',
-  );
-
-  // Exported permission: 'unflag page_turner_bookmark'.
-  $permissions['unflag page_turner_bookmark'] = array(
-    'name' => 'unflag page_turner_bookmark',
-    'roles' => array(),
     'module' => 'flag',
   );
 
