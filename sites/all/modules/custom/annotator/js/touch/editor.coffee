@@ -42,12 +42,25 @@ class Annotator.Plugin.Touch.Editor extends Annotator.Delegator
     @element.find("form").addClass("annotator-touch-widget-inner")
     @element.find(".annotator-controls a").addClass("annotator-button")
 
+    # @element.detach().appendTo('section.region-sidebar-second');
+
     # Remove the "return to submit" listener.
     @element.undelegate("textarea", "keydown")
     @on "hide", => @element.find(":focus").blur()
 
     @_setupQuoteField()
     @_setupAndroidRedrawHack()
+
+    # Add a listener to fix the wild scroll bug
+    # $(window).bind('scroll.withOpenTextbox', (event) ->
+    #   if document.activeElement.classList.contains('cke_wysiwyg_frame')
+    #     event.preventDefault()
+    #     console.log('scroll with textbox active detected', window, event)
+    #     editor = $('.annotator-outer .annotator-touch-widget')[0]
+    #     editor.style.position = 'absolute'
+    #     editor.style.top = '' + (scrollY - editor.parentElement.getBoundingClientRect().top) + 'px'
+    #     $(window).unbind('scroll.withOpenTextbox')
+    # )
 
   # Expands the quote field to display more than one line.
   #
