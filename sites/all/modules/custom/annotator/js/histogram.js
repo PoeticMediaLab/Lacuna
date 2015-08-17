@@ -57,14 +57,25 @@
       this.hasPageBreak = __bind(this.hasPageBreak, this);
       this.isPageBreak = __bind(this.isPageBreak, this);      Histogram.__super__.constructor.call(this, element, options);
       this.d3 = d3;
-      this.layout = options.layout;
       this.barTextLength = 0;
       this.barsPerPage = 4;
       this.barTotal = 0;
       this.bars = [];
       this.chart;
-      this.pageTurnerActive = false;
+      this.pageTurnerActive = options.page_turner.active;
       this.duration = 250;
+      if (this.pageTurnerActive === true) {
+        this.layout = {
+          'container': 'page-turner-nav-parent',
+          'horizontal': true
+        };
+      } else {
+        this.layout = {
+          'container': 'article',
+          'horizontal': false,
+          'width': '25'
+        };
+      }
     }
 
     Histogram.prototype._setupListeners = function() {

@@ -54,14 +54,24 @@ class Annotator.Plugin.Histogram extends Annotator.Plugin
   constructor: (element, options) ->
     super element, options
     @d3 = d3  # We add d3 through Drupal
-    @layout = options.layout
     @barTextLength = 0
     @barsPerPage = 4
     @barTotal = 0
     @bars = []
     @chart
-    @pageTurnerActive = options.page_turner_active
+    @pageTurnerActive = options.page_turner.active
     @duration = 250 # ms for animation time
+
+    if (@pageTurnerActive == true)
+      @layout =
+        'container': 'page-turner-nav-parent'
+        'horizontal': true
+    else
+      @layout =
+        'container': 'article'
+        'horizontal': false
+        'width': '25'
+
 
   # Listens to annotation change events on the Annotator in order to refresh
   # the @annotations collection.
