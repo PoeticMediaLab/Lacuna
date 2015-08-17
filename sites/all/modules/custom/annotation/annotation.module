@@ -436,13 +436,17 @@ function annotation_bulk_add_remove_courses(&$node, $context, $op) {
 
 
 // Get courses by instructor
-// Currently instructor is whomever the course author is. This will change when we add an instructor field to annotations, to allow for assistant instructors
+// Instructor of a course is defined as any member of a course w/ the instructor user role
+// TODO: Refactor to add a per-course instructor role
+// Otherwise, an edge case exists where an instructor who is a member of another course
+// can see instructor-only annotations.
 function _annotation_courses_by_instructor ($account) {
-  $query = new EntityFieldQuery();
-  $query->entityCondition('entity_type', 'node')
-    ->entityCondition('bundle', 'course')
-    ->propertyCondition('uid', $account->uid);
-  $result = $query->execute();
+	$result = og_get_groups_by_user($account);
+//  $query = new EntityFieldQuery();
+//  $query->entityCondition('entity_type', 'node')
+//    ->entityCondition('bundle', 'course')
+//    ->propertyCondition('uid', $account->uid);
+//  $result = $query->execute();
   if (isset ($result['node'])) {
     return array_keys($result['node']);
   }
