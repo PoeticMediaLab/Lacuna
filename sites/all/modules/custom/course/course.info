@@ -2,6 +2,7 @@ name = Lacuna Stories Course
 description = Course related functionality.
 core = 7.x
 package = Lacuna Stories
+dependencies[] = block
 dependencies[] = chosen
 dependencies[] = context
 dependencies[] = ctools

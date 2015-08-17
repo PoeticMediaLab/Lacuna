@@ -26,6 +26,12 @@ function course_context_default_contexts() {
   $context->reactions = array(
     'block' => array(
       'blocks' => array(
+        'block-1' => array(
+          'module' => 'block',
+          'delta' => '1',
+          'region' => 'highlighted',
+          'weight' => '-10',
+        ),
         'global_filter-global_filter_1' => array(
           'module' => 'global_filter',
           'delta' => 'global_filter_1',

@@ -20,13 +20,11 @@
     }
 
     RichText.prototype.pluginInit = function() {
-      var editor;
       if (!Annotator.supported()) {
         return;
       }
-      editor = this.annotator.editor;
       CKEDITOR.replace(editor_instance, {
-        extraPlugins: 'lineutils,oembed,widget',
+        extraPlugins: 'lineutils,embed,autoembed,image2',
         toolbar: [
           {
             name: 'paragraph',
@@ -36,7 +34,7 @@
             items: ['Link', 'Unlink']
           }, {
             name: 'insert',
-            items: ['oembed']
+            items: ['embed, autoembed']
           }
         ],
         removePlugins: 'elementspath,font,resize',

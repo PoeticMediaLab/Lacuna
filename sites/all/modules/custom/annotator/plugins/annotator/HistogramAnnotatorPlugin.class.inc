@@ -11,13 +11,15 @@ class HistogramAnnotatorPlugin extends AnnotatorPlugin {
 		if (variable_get('page_turner_active')) {
 			$defaults['layout'] = array(
 				'container' => 'page-turner-nav-parent',
-				'horizontal' => 1
+				'horizontal' => 1,
+				'page_turner_active' => TRUE,
 			);
 		} else {
 			$defaults['layout'] = array(
 				'container' => 'article',
 				'horizontal' => 0,
-				'width' => '25'
+				'width' => '25',
+				'page_turner_active' => FALSE,
 			);
 		}
     return parent::settings($defaults);

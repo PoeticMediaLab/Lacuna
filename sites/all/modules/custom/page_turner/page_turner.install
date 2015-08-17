@@ -57,3 +57,15 @@ function page_turner_uninstall() {
   variable_del('page_turner_node_types');
   field_delete_field('field_page_turner_active');
 }
+
+/**
+ * Change order in which Page Turner module loads
+ */
+function page_turner_update_7101() {
+	// This module needs to fire before the Annotator Histogram plugin loads
+	// So, let's change our module weight
+	db_update('system')
+		->fields(array('weight' => -100))
+		->condition('name', 'page_turner', '=')
+		->execute();
+}

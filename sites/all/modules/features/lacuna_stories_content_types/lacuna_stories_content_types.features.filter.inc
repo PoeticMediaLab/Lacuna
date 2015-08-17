@@ -188,6 +188,11 @@ sup,sub',
           ),
         ),
       ),
+      'media_filter' => array(
+        'weight' => 2,
+        'status' => 1,
+        'settings' => array(),
+      ),
     ),
   );
 

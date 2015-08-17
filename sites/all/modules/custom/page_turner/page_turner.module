@@ -109,7 +109,6 @@ function page_turner_node_view($node, $view_mode, $langcode) {
   // $node_types has 0 as value for keys that haven't been checked
   // in the configuration options
   if ($node_types[$node->type] && $view_mode == 'full') {
-    $text_length = 0;
     // Because I stupidly didn't use the default body field for documents
     if ($node->type == 'document') {
       $text_length = strlen($node->field_doc_text[LANGUAGE_NONE][0]['value']);
