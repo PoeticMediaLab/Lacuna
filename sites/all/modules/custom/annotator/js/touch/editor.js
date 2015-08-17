@@ -30,8 +30,8 @@
       quote: "<button class=\"annotator-quote-toggle\">" + _t("expand") + "</button>\n<span class=\"quote\"></span>"
     };
 
-    function Editor(editor, options) {
-      this.editor = editor;
+    function Editor(editor1, options) {
+      this.editor = editor1;
       this._onOverlayTap = bind(this._onOverlayTap, this);
       this._onCancel = bind(this._onCancel, this);
       this._onSubmit = bind(this._onSubmit, this);
@@ -53,16 +53,19 @@
       setTimeout(function() {
         var instance;
         instance = CKEDITOR.instances['annotator-field-0'];
-        console.log('instance: ', instance);
         return instance.on('focus', function(event) {
-          var onBlur, scrollPosition;
-          console.log('event: ', event.name, event);
+          var editor, editorPosition, onBlur, scrollPosition, tab, tabPosition;
           scrollPosition = window.scrollY;
-          console.log('saved scroll position: ', scrollPosition);
+          window.scrollTo(0, scrollPosition);
+          tab = $('.annotator-touch-controls')[0];
+          editor = $('.annotator-touch-editor div')[0];
+          tabPosition = +getComputedStyle(tab).top.replace('px', '');
+          editorPosition = +getComputedStyle(editor).top.replace('px', '');
+          tab.setAttribute('style', 'top: ' + (tabPosition + scrollPosition) + 'px;');
+          editor.setAttribute('style', 'top: ' + (editorPosition + scrollPosition) + 'px;');
           onBlur = function(event) {
-            console.log('event: ', event.name, event);
-            console.log('scrolling to saved scroll position');
-            window.scrollTo(0, scrollPosition);
+            tab.setAttribute('style', '');
+            editor.setAttribute('style', '');
             return instance.removeListener('blur', onBlur);
           };
           return instance.on('blur', onBlur);

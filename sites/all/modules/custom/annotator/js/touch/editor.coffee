@@ -51,35 +51,42 @@ class Annotator.Plugin.Touch.Editor extends Annotator.Delegator
     @_setupQuoteField()
     @_setupAndroidRedrawHack()
 
-    # Add a listener to fix the wild scroll bug
-    # $(window).bind('scroll.withOpenTextbox', (event) ->
-    #   if document.activeElement.classList.contains('cke_wysiwyg_frame')
-    #     event.preventDefault()
-    #     console.log('scroll with textbox active detected', window, event)
-    #     editor = $('.annotator-outer .annotator-touch-widget')[0]
-    #     editor.style.position = 'absolute'
-    #     editor.style.top = '' + (scrollY - editor.parentElement.getBoundingClientRect().top) + 'px'
-    #     $(window).unbind('scroll.withOpenTextbox')
-    # )
-    # CKEDITOR.instances['annotator-field-0'].on('focus', ->
-    #   alert('focused!')
-    # )
+    # Attempts to circumvent MobileSafari's automatic scrolling
+    # on keyboard open.
     setTimeout(->
       instance = CKEDITOR.instances['annotator-field-0']
-      console.log('instance: ', instance)
       instance.on('focus', (event) ->
-        console.log('event: ', event.name, event)
-        scrollPosition = window.scrollY
-        console.log('saved scroll position: ', scrollPosition)
 
+        # find the scroll position before keyboard-induced scroll
+        scrollPosition = window.scrollY
+
+        # scroll back to that position
+        window.scrollTo(0, scrollPosition)
+
+        # select the tab and editor elements
+        tab = $('.annotator-touch-controls')[0]
+        editor = $('.annotator-touch-editor div')[0]
+
+        # find their current Y-positions on the page
+        tabPosition = +getComputedStyle(tab).top.replace('px', '')
+        editorPosition = +getComputedStyle(editor).top.replace('px', '')
+
+        # set their Y-positions to where they were before the keyboard open
+        tab.setAttribute('style', 'top: ' + (tabPosition + scrollPosition) + 'px;')
+        editor.setAttribute('style', 'top: ' + (editorPosition + scrollPosition) + 'px;')
+
+        # reset this change when text field is blurred
         onBlur = (event) ->
-          console.log('event: ', event.name, event)
-          console.log('scrolling to saved scroll position')
-          window.scrollTo(0, scrollPosition)
+
+          tab.setAttribute('style', '')
+          editor.setAttribute('style', '')
+
           instance.removeListener('blur', onBlur)
 
         instance.on('blur', onBlur)
+
       )
+
     , 0)
 
   # Expands the quote field to display more than one line.
