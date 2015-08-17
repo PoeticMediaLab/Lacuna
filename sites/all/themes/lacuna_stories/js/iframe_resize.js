@@ -45,7 +45,7 @@ Drupal.behaviors.iframe_resize = {
     });
 
     //  resize once to set correct size
-    setTimeout($(window).resize(), 0);
+    setTimeout(function() { $(window).resize(); }, 0);
 
   }
 };
