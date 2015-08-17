@@ -853,6 +853,58 @@ function course_field_default_field_instances() {
     ),
   );
 
+  // Exported field_instance: 'node-course-group_access'
+  $field_instances['node-course-group_access'] = array(
+    'bundle' => 'course',
+    'default_value' => array(
+      0 => array(
+        'value' => 0,
+      ),
+    ),
+    'deleted' => 0,
+    'description' => 'Would you like your current draft course to be visible to students, or to continue in "Instructor-Only" mode?',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'list',
+        'settings' => array(),
+        'type' => 'list_default',
+        'weight' => 19,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'group_access',
+    'label' => 'Course Visibility',
+    'required' => 1,
+    'settings' => array(
+      'user_register_form' => FALSE,
+    ),
+    'view modes' => array(
+      'full' => array(
+        'label' => 'above',
+        'type' => 'options_onoff',
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'type' => 'options_onoff',
+      ),
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'options',
+      'settings' => array(),
+      'type' => 'options_buttons',
+      'weight' => 23,
+    ),
+    'widget_type' => 'options_select',
+  );
+
   // Exported field_instance: 'node-course-group_group'
   $field_instances['node-course-group_group'] = array(
     'bundle' => 'course',
@@ -969,6 +1021,7 @@ function course_field_default_field_instances() {
   t('Attachments');
   t('Course Description');
   t('Course Image');
+  t('Course Visibility');
   t('Course access permissions');
   t('Determine if this is an OG group.');
   t('For courses that span terms, select multiple terms. Note, selecting multiple terms does not create separate courses.');
@@ -993,6 +1046,7 @@ function course_field_default_field_instances() {
   t('What is your department?');
   t('What is your name?');
   t('What password would you like to create for students to register in your class?');
+  t('Would you like your current draft course to be visible to students, or to continue in "Instructor-Only" mode?');
   t('Year');
   t('You can safely leave this set to the default. You would know if you needed to customize this part.');
 
