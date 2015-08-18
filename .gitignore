@@ -1,0 +1,10 @@
+# Ignore local sites and settings
+docroot/sites/local.*
+docroot/sites/*.local
+docroot/sites/*.local*
+
+# Exclude local docker-compse.yml
+docker-compose.yml
+
+# IDEs
+.idea
