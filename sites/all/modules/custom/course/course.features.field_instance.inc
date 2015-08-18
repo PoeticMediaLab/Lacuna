@@ -22,7 +22,7 @@ function course_field_default_field_instances() {
         'module' => 'text',
         'settings' => array(),
         'type' => 'text_default',
-        'weight' => 1,
+        'weight' => 4,
       ),
       'teaser' => array(
         'label' => 'hidden',
@@ -66,14 +66,14 @@ function course_field_default_field_instances() {
     'bundle' => 'course',
     'default_value' => NULL,
     'deleted' => 0,
-    'description' => '(ex. COMPLIT221)',
+    'description' => 'What is the primary course ID (with no spaces)? (ex. COMPLIT221)',
     'display' => array(
       'default' => array(
-        'label' => 'above',
+        'label' => 'inline',
         'module' => 'text',
         'settings' => array(),
         'type' => 'text_default',
-        'weight' => 6,
+        'weight' => 7,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -84,7 +84,7 @@ function course_field_default_field_instances() {
     ),
     'entity_type' => 'node',
     'field_name' => 'field_course_id',
-    'label' => 'What is the primary course ID (with no spaces)?',
+    'label' => 'Course ID',
     'required' => 0,
     'settings' => array(
       'text_processing' => 0,
@@ -94,6 +94,8 @@ function course_field_default_field_instances() {
       'active' => 1,
       'module' => 'text',
       'settings' => array(
+        'maxlength_js' => 0,
+        'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
         'size' => 60,
       ),
       'type' => 'text_textfield',
@@ -178,10 +180,9 @@ function course_field_default_field_instances() {
     'display' => array(
       'default' => array(
         'label' => 'above',
-        'module' => 'text',
         'settings' => array(),
-        'type' => 'text_default',
-        'weight' => 16,
+        'type' => 'hidden',
+        'weight' => 25,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -217,11 +218,11 @@ function course_field_default_field_instances() {
     'description' => 'For courses that span terms, select multiple terms. Note, selecting multiple terms does not create separate courses.',
     'display' => array(
       'default' => array(
-        'label' => 'above',
+        'label' => 'inline',
         'module' => 'list',
         'settings' => array(),
         'type' => 'list_default',
-        'weight' => 10,
+        'weight' => 5,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -251,14 +252,14 @@ function course_field_default_field_instances() {
     'bundle' => 'course',
     'default_value' => NULL,
     'deleted' => 0,
-    'description' => '',
+    'description' => 'What is the full name of your course?',
     'display' => array(
       'default' => array(
-        'label' => 'above',
+        'label' => 'hidden',
         'module' => 'text',
         'settings' => array(),
         'type' => 'text_default',
-        'weight' => 5,
+        'weight' => 1,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -269,8 +270,8 @@ function course_field_default_field_instances() {
     ),
     'entity_type' => 'node',
     'field_name' => 'field_course_title',
-    'label' => 'What is the full name of your course?',
-    'required' => 0,
+    'label' => 'Course Title',
+    'required' => 1,
     'settings' => array(
       'text_processing' => 0,
       'user_register_form' => FALSE,
@@ -279,6 +280,8 @@ function course_field_default_field_instances() {
       'active' => 1,
       'module' => 'text',
       'settings' => array(
+        'maxlength_js' => 0,
+        'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
         'size' => 60,
       ),
       'type' => 'text_textfield',
@@ -298,11 +301,11 @@ function course_field_default_field_instances() {
     'description' => '',
     'display' => array(
       'default' => array(
-        'label' => 'above',
+        'label' => 'inline',
         'module' => 'list',
         'settings' => array(),
         'type' => 'list_default',
-        'weight' => 9,
+        'weight' => 6,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -334,14 +337,14 @@ function course_field_default_field_instances() {
     'bundle' => 'course',
     'default_value' => NULL,
     'deleted' => 0,
-    'description' => '',
+    'description' => 'What is your department?',
     'display' => array(
       'default' => array(
-        'label' => 'above',
+        'label' => 'hidden',
         'module' => 'text',
         'settings' => array(),
         'type' => 'text_default',
-        'weight' => 4,
+        'weight' => 3,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -352,7 +355,7 @@ function course_field_default_field_instances() {
     ),
     'entity_type' => 'node',
     'field_name' => 'field_department',
-    'label' => 'What is your department?',
+    'label' => 'Department',
     'required' => 0,
     'settings' => array(
       'text_processing' => 0,
@@ -362,6 +365,8 @@ function course_field_default_field_instances() {
       'active' => 1,
       'module' => 'text',
       'settings' => array(
+        'maxlength_js' => 0,
+        'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
         'size' => 60,
       ),
       'type' => 'text_textfield',
@@ -378,10 +383,9 @@ function course_field_default_field_instances() {
     'display' => array(
       'default' => array(
         'label' => 'above',
-        'module' => 'list',
         'settings' => array(),
-        'type' => 'list_default',
-        'weight' => 17,
+        'type' => 'hidden',
+        'weight' => 26,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -416,10 +420,9 @@ function course_field_default_field_instances() {
     'display' => array(
       'default' => array(
         'label' => 'above',
-        'module' => 'file',
         'settings' => array(),
-        'type' => 'file_default',
-        'weight' => 2,
+        'type' => 'hidden',
+        'weight' => 21,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -454,20 +457,20 @@ function course_field_default_field_instances() {
   $field_instances['node-course-field_end_date'] = array(
     'bundle' => 'course',
     'deleted' => 0,
-    'description' => 'Students will have access to restricted materials 30 days after the end of class, or after 180 days of the beginning of the course, whichever arrives first.',
+    'description' => 'What is the end date for the course? Students will have access to restricted materials 30 days after the end of class, or after 180 days of the beginning of the course, whichever arrives first.',
     'display' => array(
       'default' => array(
-        'label' => 'above',
+        'label' => 'inline',
         'module' => 'date',
         'settings' => array(
-          'format_type' => 'long',
+          'format_type' => 'short',
           'fromto' => 'both',
           'multiple_from' => '',
           'multiple_number' => '',
           'multiple_to' => '',
         ),
         'type' => 'date_default',
-        'weight' => 12,
+        'weight' => 11,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -478,7 +481,7 @@ function course_field_default_field_instances() {
     ),
     'entity_type' => 'node',
     'field_name' => 'field_end_date',
-    'label' => 'What is the end date for the course?',
+    'label' => 'End Date',
     'required' => 0,
     'settings' => array(
       'default_value' => 'now',
@@ -512,15 +515,9 @@ function course_field_default_field_instances() {
     'display' => array(
       'default' => array(
         'label' => 'above',
-        'module' => 'number',
-        'settings' => array(
-          'decimal_separator' => '.',
-          'prefix_suffix' => TRUE,
-          'scale' => 0,
-          'thousand_separator' => ' ',
-        ),
-        'type' => 'number_integer',
-        'weight' => 13,
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 22,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -554,14 +551,14 @@ function course_field_default_field_instances() {
     'bundle' => 'course',
     'default_value' => NULL,
     'deleted' => 0,
-    'description' => '',
+    'description' => 'What is your name?',
     'display' => array(
       'default' => array(
-        'label' => 'above',
+        'label' => 'hidden',
         'module' => 'text',
         'settings' => array(),
         'type' => 'text_default',
-        'weight' => 3,
+        'weight' => 2,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -572,7 +569,7 @@ function course_field_default_field_instances() {
     ),
     'entity_type' => 'node',
     'field_name' => 'field_name',
-    'label' => 'What is your name?',
+    'label' => 'Instructor:',
     'required' => 0,
     'settings' => array(
       'text_processing' => 0,
@@ -582,6 +579,8 @@ function course_field_default_field_instances() {
       'active' => 1,
       'module' => 'text',
       'settings' => array(
+        'maxlength_js' => 0,
+        'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
         'size' => 60,
       ),
       'type' => 'text_textfield',
@@ -602,10 +601,9 @@ function course_field_default_field_instances() {
     'display' => array(
       'default' => array(
         'label' => 'above',
-        'module' => 'list',
         'settings' => array(),
-        'type' => 'list_default',
-        'weight' => 14,
+        'type' => 'hidden',
+        'weight' => 23,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -637,14 +635,13 @@ function course_field_default_field_instances() {
     'bundle' => 'course',
     'default_value' => NULL,
     'deleted' => 0,
-    'description' => 'Optional',
+    'description' => 'Optional - If applicable, what is the secondary cross-listed course ID (with no spaces)?',
     'display' => array(
       'default' => array(
-        'label' => 'above',
-        'module' => 'text',
+        'label' => 'inline',
         'settings' => array(),
-        'type' => 'text_default',
-        'weight' => 7,
+        'type' => 'hidden',
+        'weight' => 8,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -655,7 +652,7 @@ function course_field_default_field_instances() {
     ),
     'entity_type' => 'node',
     'field_name' => 'field_secondary_course_id',
-    'label' => 'If applicable, what is the secondary cross-listed course ID (with no spaces)?',
+    'label' => 'Cross-listed as:',
     'required' => 0,
     'settings' => array(
       'text_processing' => 0,
@@ -665,6 +662,8 @@ function course_field_default_field_instances() {
       'active' => 1,
       'module' => 'text',
       'settings' => array(
+        'maxlength_js' => 0,
+        'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
         'size' => 60,
       ),
       'type' => 'text_textfield',
@@ -676,20 +675,20 @@ function course_field_default_field_instances() {
   $field_instances['node-course-field_start_date'] = array(
     'bundle' => 'course',
     'deleted' => 0,
-    'description' => 'Students will have access to materials 7 days before the first day of class',
+    'description' => 'What is the start date for the course?  Students will have access to materials 7 days before the first day of class',
     'display' => array(
       'default' => array(
-        'label' => 'above',
+        'label' => 'inline',
         'module' => 'date',
         'settings' => array(
-          'format_type' => 'long',
+          'format_type' => 'short',
           'fromto' => 'both',
           'multiple_from' => '',
           'multiple_number' => '',
           'multiple_to' => '',
         ),
         'type' => 'date_default',
-        'weight' => 11,
+        'weight' => 10,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -700,7 +699,7 @@ function course_field_default_field_instances() {
     ),
     'entity_type' => 'node',
     'field_name' => 'field_start_date',
-    'label' => 'What is the start date for the course? ',
+    'label' => 'Start Date',
     'required' => 0,
     'settings' => array(
       'default_value' => 'now',
@@ -733,10 +732,9 @@ function course_field_default_field_instances() {
     'display' => array(
       'default' => array(
         'label' => 'above',
-        'module' => 'file',
         'settings' => array(),
-        'type' => 'file_default',
-        'weight' => 18,
+        'type' => 'hidden',
+        'weight' => 27,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -772,14 +770,13 @@ function course_field_default_field_instances() {
     'bundle' => 'course',
     'default_value' => NULL,
     'deleted' => 0,
-    'description' => 'Optional',
+    'description' => 'Optional - If applicable, what is the third cross-listed course ID (with no spaces)?',
     'display' => array(
       'default' => array(
-        'label' => 'above',
-        'module' => 'text',
+        'label' => 'inline',
         'settings' => array(),
-        'type' => 'text_default',
-        'weight' => 8,
+        'type' => 'hidden',
+        'weight' => 9,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -790,7 +787,7 @@ function course_field_default_field_instances() {
     ),
     'entity_type' => 'node',
     'field_name' => 'field_third_course_id',
-    'label' => 'If applicable, what is the third cross-listed course ID (with no spaces)?',
+    'label' => 'Cross-listed as:',
     'required' => 0,
     'settings' => array(
       'text_processing' => 0,
@@ -800,6 +797,8 @@ function course_field_default_field_instances() {
       'active' => 1,
       'module' => 'text',
       'settings' => array(
+        'maxlength_js' => 0,
+        'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
         'size' => 60,
       ),
       'type' => 'text_textfield',
@@ -816,15 +815,9 @@ function course_field_default_field_instances() {
     'display' => array(
       'default' => array(
         'label' => 'above',
-        'module' => 'number',
-        'settings' => array(
-          'decimal_separator' => '.',
-          'prefix_suffix' => TRUE,
-          'scale' => 0,
-          'thousand_separator' => ' ',
-        ),
-        'type' => 'number_integer',
-        'weight' => 15,
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 24,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -920,7 +913,7 @@ function course_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 20,
+        'weight' => 28,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -975,7 +968,7 @@ function course_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 21,
+        'weight' => 29,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -1016,32 +1009,35 @@ function course_field_default_field_instances() {
 
   // Translatables
   // Included for use with string extractors like potx.
-  t('(ex. COMPLIT221)');
   t('Add any file attachments (such as a PDF of your syllabus) here.');
   t('Attachments');
   t('Course Description');
+  t('Course ID');
   t('Course Image');
+  t('Course Title');
   t('Course Visibility');
   t('Course access permissions');
+  t('Cross-listed as:');
+  t('Department');
   t('Determine if this is an OG group.');
+  t('End Date');
   t('For courses that span terms, select multiple terms. Note, selecting multiple terms does not create separate courses.');
   t('Group');
   t('How many students will have library and e-reserve access that differs from your own?');
-  t('If applicable, what is the secondary cross-listed course ID (with no spaces)?');
-  t('If applicable, what is the third cross-listed course ID (with no spaces)?');
   t('If you have a syllabus for your course, please upload it now. You can update your syllabus at any time.');
+  t('Instructor:');
   t('Online registration with this password will close after the university add/drop deadline for your course.');
-  t('Optional');
+  t('Optional - If applicable, what is the secondary cross-listed course ID (with no spaces)?');
+  t('Optional - If applicable, what is the third cross-listed course ID (with no spaces)?');
   t('Some of my students are not from my institution');
-  t('Students will have access to materials 7 days before the first day of class');
-  t('Students will have access to restricted materials 30 days after the end of class, or after 180 days of the beginning of the course, whichever arrives first.');
+  t('Start Date');
   t('Term');
   t('This image appears on the course page. A square thumbnail of the image appears in course listings, so the image should be approximately square.');
-  t('What is the end date for the course?');
+  t('What is the end date for the course? Students will have access to restricted materials 30 days after the end of class, or after 180 days of the beginning of the course, whichever arrives first.');
   t('What is the expected enrollment for your course?');
   t('What is the full name of your course?');
-  t('What is the primary course ID (with no spaces)?');
-  t('What is the start date for the course? ');
+  t('What is the primary course ID (with no spaces)? (ex. COMPLIT221)');
+  t('What is the start date for the course?  Students will have access to materials 7 days before the first day of class');
   t('What is the subject/discipline?');
   t('What is your department?');
   t('What is your name?');

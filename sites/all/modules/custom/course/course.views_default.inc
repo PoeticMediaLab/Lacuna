@@ -257,13 +257,13 @@ function course_views_default_views() {
   $handler->display->display_options['fields']['field_course_year']['alter']['alter_text'] = TRUE;
   $handler->display->display_options['fields']['field_course_year']['alter']['text'] = '[field_course_term], [field_course_year]';
   $handler->display->display_options['fields']['field_course_year']['element_label_colon'] = FALSE;
-  /* Field: Content: What is the primary course ID (with no spaces)? */
+  /* Field: Content: Course ID */
   $handler->display->display_options['fields']['field_course_id']['id'] = 'field_course_id';
   $handler->display->display_options['fields']['field_course_id']['table'] = 'field_data_field_course_id';
   $handler->display->display_options['fields']['field_course_id']['field'] = 'field_course_id';
   $handler->display->display_options['fields']['field_course_id']['label'] = '';
   $handler->display->display_options['fields']['field_course_id']['element_label_colon'] = FALSE;
-  /* Field: Content: What is your name? */
+  /* Field: Content: Instructor: */
   $handler->display->display_options['fields']['field_name']['id'] = 'field_name';
   $handler->display->display_options['fields']['field_name']['table'] = 'field_data_field_name';
   $handler->display->display_options['fields']['field_name']['field'] = 'field_name';
@@ -279,6 +279,13 @@ function course_views_default_views() {
   $handler->display->display_options['fields']['name']['label'] = '';
   $handler->display->display_options['fields']['name']['exclude'] = TRUE;
   $handler->display->display_options['fields']['name']['element_label_colon'] = FALSE;
+  /* Field: Content: Path */
+  $handler->display->display_options['fields']['path']['id'] = 'path';
+  $handler->display->display_options['fields']['path']['table'] = 'node';
+  $handler->display->display_options['fields']['path']['field'] = 'path';
+  $handler->display->display_options['fields']['path']['label'] = '';
+  $handler->display->display_options['fields']['path']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['path']['element_label_colon'] = FALSE;
   /* Field: Content: Body */
   $handler->display->display_options['fields']['body']['id'] = 'body';
   $handler->display->display_options['fields']['body']['table'] = 'field_data_body';
@@ -287,7 +294,7 @@ function course_views_default_views() {
   $handler->display->display_options['fields']['body']['alter']['max_length'] = '230';
   $handler->display->display_options['fields']['body']['alter']['more_link'] = TRUE;
   $handler->display->display_options['fields']['body']['alter']['more_link_text'] = 'Learn more';
-  $handler->display->display_options['fields']['body']['alter']['more_link_path'] = '[php]';
+  $handler->display->display_options['fields']['body']['alter']['more_link_path'] = '[path]';
   $handler->display->display_options['fields']['body']['alter']['trim'] = TRUE;
   $handler->display->display_options['fields']['body']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['body']['type'] = 'text_plain';

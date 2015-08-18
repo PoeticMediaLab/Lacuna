@@ -11,6 +11,9 @@ function course_ctools_plugin_api($module = NULL, $api = NULL) {
   if ($module == "context" && $api == "context") {
     return array("version" => "3");
   }
+  if ($module == "ds" && $api == "ds") {
+    return array("version" => "1");
+  }
   if ($module == "strongarm" && $api == "strongarm") {
     return array("version" => "1");
   }
@@ -21,6 +24,39 @@ function course_ctools_plugin_api($module = NULL, $api = NULL) {
  */
 function course_views_api($module = NULL, $api = NULL) {
   return array("api" => "3.0");
+}
+
+/**
+ * Implements hook_image_default_styles().
+ */
+function course_image_default_styles() {
+  $styles = array();
+
+  // Exported image style: course_views_style.
+  $styles['course_views_style'] = array(
+    'label' => 'Course Views Style',
+    'effects' => array(
+      3 => array(
+        'name' => 'image_scale_and_crop',
+        'data' => array(
+          'width' => 450,
+          'height' => 275,
+        ),
+        'weight' => -10,
+      ),
+      2 => array(
+        'name' => 'image_crop',
+        'data' => array(
+          'width' => 275,
+          'height' => 150,
+          'anchor' => 'center-bottom',
+        ),
+        'weight' => -9,
+      ),
+    ),
+  );
+
+  return $styles;
 }
 
 /**
