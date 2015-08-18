@@ -17,3 +17,25 @@ function user_account_menu_alter(&$items)
   $items['user/%user/contact']['type'] = MENU_CALLBACK;
   $items['user/%user/notify']['type'] = MENU_CALLBACK;
 }
+
+/**
+ * @param $form
+ * @param $form_state
+ * @param $form_id
+ * Implements hook_form_alter().
+ */
+function user_account_form_alter(&$form, &$form_state, $form_id) {
+  if ($form_id == 'user_profile_form') {
+		// Hide account 'status' radio buttons
+		$form['account']['status']['#access'] = FALSE;
+		// Next, wrap account settings in a fieldset
+		$form['account_settings'] = array(
+			'#type' => 'fieldset',
+			'#title' => t('Account Settings'),
+			'#weight' => -100,
+			'#collapsible' => TRUE,
+		);
+		$form['account_settings']['items'] = $form['account'];
+		unset($form['account']);
+  }
+}
