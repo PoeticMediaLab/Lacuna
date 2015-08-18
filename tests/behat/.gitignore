@@ -8,3 +8,6 @@ behat.yml
 # Screenshots
 screenshots/*
 !screenshots/.gitkeep
+
+# JUnit test logs
+junit
