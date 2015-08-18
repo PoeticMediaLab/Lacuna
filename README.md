@@ -3,7 +3,7 @@
 This is a sample vanila Drupal 7 installation preconfigured for use with Drude.  
 Sample Behat tests also included.
 
-## Instructions (Mac)
+## Instructions (Mac and Windows)
 
 1. Create directory structure (e.g. in your home directory)
     
