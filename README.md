@@ -5,6 +5,9 @@ Sample Behat tests also included.
 
 ## Instructions (Mac and Windows)
 
+**On Windows** you will need a Linux-type shell. Install [Babun](http://babun.github.io/) before proceeding and run all commands in it.  
+Instructions were not tested with other shells on Windows.
+
 1. Create directory structure (e.g. in your home directory)
     
     ```
