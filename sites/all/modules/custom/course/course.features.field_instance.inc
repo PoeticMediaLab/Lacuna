@@ -1015,6 +1015,7 @@ function course_field_default_field_instances() {
   t('Course ID');
   t('Course Image');
   t('Course Title');
+  t('Course Visibility');
   t('Course access permissions');
   t('Cross-listed as:');
   t('Department');
