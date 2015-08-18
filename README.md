@@ -42,3 +42,21 @@ Sample Behat tests also included.
     ```
     http://hello-world.drude
     ```
+
+## More automation with 'dsh init'
+
+Site provisioning can be automated using `dsh init`, which calls the shell script in [.drude/scripts/drude-init.sh](.drude/scripts/drude-init.sh).  
+This script is meant to be modified per project. The one in this repo will give you a good starting point.
+
+Some commond tasks that can be handled by the init script:
+
+- initialize local settings files (Docker Compose, Drupal, Behat, etc.)
+- import DB / perform a site install
+- compile Sass
+- run DB updates, revert features, clear cached, etc.
+- apply local settings (e.g. enable/disable modules, updates variable values)
+- run Behat tests available in the repo
+
+Try it - run in this project repo:
+
+    dsh init
