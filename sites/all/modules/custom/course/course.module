@@ -372,6 +372,13 @@ function course_form_views_exposed_form_alter(&$form, &$form_state) {
 		$form['lastname']['#options'] = course_get_authors_for_current_course();
 	}
 
+	// Use display name via Realname module, not user account name for author exposed form
+	if (isset($form['author_select'])) {
+		foreach ($form['author_select']['#options'] as $uid => $username) {
+			$form['author_select']['#options'][$uid] = format_username(user_load($uid));
+		}
+	}
+
   if ($form['#id'] == 'views-exposed-form-sewing-kit-page') {
 
     // Restrict the group filter options to (a) courses, (b) that the user is a member of
