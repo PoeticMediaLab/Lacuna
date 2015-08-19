@@ -32,6 +32,7 @@ class Annotator.Plugin.Privacy extends Annotator.Plugin
     @field = @annotator.editor.addField({
       label: Annotator._t('Privacy')
     })
+    $(@field).addClass(@className.default + ' fa fa-lock') # distinguish this field
 
     @annotator.viewer.addField({
       load: @updateViewer
