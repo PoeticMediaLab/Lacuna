@@ -46,12 +46,12 @@ class Annotator.Plugin.Tags extends Annotator.Plugin
 
     @field = @annotator.editor.addField({
       label: Annotator._t('Add tags here, separate with commas') + '\u2026'
-      load: this.updateField
-      submit: this.setAnnotationTags
+      load: @updateField
+      submit: @setAnnotationTags
     })
 
     @annotator.viewer.addField({
-      load: this.updateViewer
+      load: @updateViewer
     })
 
     # Add a filter to the Filter plugin if loaded.
@@ -103,6 +103,7 @@ class Annotator.Plugin.Tags extends Annotator.Plugin
   #
   # Returns nothing.
   updateField: (field, annotation) =>
+    console.log(annotation.tags)
     value = ''
     value = this.stringifyTags(annotation.tags) if annotation.tags
     @input.val(value)
@@ -128,11 +129,11 @@ class Annotator.Plugin.Tags extends Annotator.Plugin
   updateAutocompleteTags: (event, annotation) =>
     # update the autocomplete field in the Editor
     # based on any new tags
-    tags = Drupal.settings.annotator_tags
+    tags = (tag.label for tag in Drupal.settings.annotator_tags.tags)
     for tag in annotation.tags
       if tag not in tags
-        tags.push(tag)
-    @input.catcomplete({source: tags})
+        Drupal.settings.annotator_tags.tags.push({label: tag, flagged: 0})
+    @input.catcomplete({source: Drupal.settings.annotator_tags.tags})
 
   # Annotator.Viewer callback function. Updates the annotation display with tags
   # removes the field from the Viewer if there are no tags to display.
@@ -152,7 +153,7 @@ class Annotator.Plugin.Tags extends Annotator.Plugin
 
     if annotation.tags and $.isArray(annotation.tags) and annotation.tags.length
       field.addClass('annotator-tags').html(->
-        string = $.map(annotation.tags,(tag) ->
+        $.map(annotation.tags, (tag) ->
           '<span class="annotator-tag">' +
           Annotator.Util.escape(tag) +
           '</span>'
@@ -184,6 +185,3 @@ Annotator.Plugin.Tags.filterCallback = (input, tags = []) ->
 
   matches == keywords.length
 
-# Annotator.Plugin.register('Tags', Tags)
-
-# module.exports = Tags

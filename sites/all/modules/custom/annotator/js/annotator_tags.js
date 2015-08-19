@@ -34,7 +34,8 @@
               //   });
               // response(data);
               response( $.ui.autocomplete.filter(
-              Drupal.settings.annotator_tags, extractLast( request.term ) ) );
+                Drupal.settings.annotator_tags.tags, extractLast( request.term ) )
+              );
             },
             select: function( event, ui ) {
               var terms = split( this.value );
