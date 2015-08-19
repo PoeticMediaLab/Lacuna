@@ -72,6 +72,10 @@
       return annotation.tags = this.parseTags(this.input.val());
     };
 
+    Tags.prototype.sortTags = function(a, b) {
+      return a.label.localeCompare(b.label);
+    };
+
     Tags.prototype.updateAutocompleteTags = function(event, annotation) {
       var tag, tags, _i, _len, _ref;
       tags = (function() {
@@ -95,7 +99,7 @@
         }
       }
       return this.input.catcomplete({
-        source: Drupal.settings.annotator_tags.tags
+        source: Drupal.settings.annotator_tags.tags.sort(this.sortTags)
       });
     };
 

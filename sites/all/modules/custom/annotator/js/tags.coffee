@@ -126,6 +126,9 @@ class Annotator.Plugin.Tags extends Annotator.Plugin
   setAnnotationTags: (field, annotation) =>
     annotation.tags = this.parseTags(@input.val())
 
+  sortTags: (a, b) ->
+    return a.label.localeCompare(b.label)
+
   updateAutocompleteTags: (event, annotation) =>
     # update the autocomplete field in the Editor
     # based on any new tags
@@ -133,7 +136,7 @@ class Annotator.Plugin.Tags extends Annotator.Plugin
     for tag in annotation.tags
       if tag not in tags
         Drupal.settings.annotator_tags.tags.push({label: tag, flagged: 0})
-    @input.catcomplete({source: Drupal.settings.annotator_tags.tags})
+    @input.catcomplete({source: Drupal.settings.annotator_tags.tags.sort( @sortTags ) })
 
   # Annotator.Viewer callback function. Updates the annotation display with tags
   # removes the field from the Viewer if there are no tags to display.
