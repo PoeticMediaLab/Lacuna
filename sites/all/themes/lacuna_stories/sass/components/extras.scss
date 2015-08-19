@@ -75,6 +75,7 @@ li.views-fluid-grid-inline.views-fluid-grid-item.views-row:hover {
     top: 0;
     left: 0;
     transform: translate(47%, 20%);
+    -webkit-transform: translate(47%, 20%);
     float: left;
     vertical-align: baseline;
 }
@@ -112,6 +113,7 @@ li.views-fluid-grid-inline.views-fluid-grid-item.views-row:hover {
     position: relative;
     right: 0;
     transform: translatex(-501%);
+    -webkit-transform: translatex(-501%);
     box-shadow: 3px 0px 5px 0 #666464;
 }
 body {
@@ -143,6 +145,7 @@ body {
     top: 0;
     left: 0;
     transform: translate(20%, 20%);
+    -webkit-transform: translate(20%, 20%);
     float: left;
     vertical-align: baseline;
 }
@@ -201,6 +204,7 @@ body {
     top: 0;
     left: 0;
     transform: translate(25%, 15%);
+    -webkit-transform: translate(25%, 15%);
     float: left;
     vertical-align: baseline;
 }
@@ -261,6 +265,7 @@ body {
     top: 0;
     left: 0;
     transform: translate(0%, 90%);
+    -webkit-transform: translate(0%, 90%);
 }
 
 .lacuna-stories-image {
@@ -293,6 +298,7 @@ body {
         width: 100%;
         height: auto;
         transform: translateY(-50%);
+        -webkit-transform: translateY(-50%);
     }
     .field-name-field-course-title {
         font-family: "Source Sans Pro", serif;
