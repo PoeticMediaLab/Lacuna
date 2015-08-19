@@ -241,6 +241,7 @@ td.value {
 {
     text-align: left;
     position: relative;
+    top: 20px;
 }
 
 #dashboard div.column
