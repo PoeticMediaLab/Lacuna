@@ -373,9 +373,17 @@ function course_form_views_exposed_form_alter(&$form, &$form_state) {
 	}
 
 	// Use display name via Realname module, not user account name for author exposed form
+	// Filter authors to only those in current course
 	if (isset($form['author_select'])) {
-		foreach ($form['author_select']['#options'] as $uid => $username) {
-			$form['author_select']['#options'][$uid] = format_username(user_load($uid));
+		$uids = array_keys($form['author_select']['#options']);
+		$form['author_select']['#options'] = array();	// wipe options
+		$gid = course_get_selected_course();
+		foreach ($uids as $uid) {
+			$account = user_load($uid);
+			$groups = og_get_groups_by_user($account, 'node');
+			if (in_array($gid, $groups)) {
+				$form['author_select']['#options'][$uid] = format_username($account);
+			}
 		}
 	}
 
