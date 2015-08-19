@@ -513,23 +513,22 @@ function course_node_update($node) {
 
 function course_form_document_node_form_alter(&$form, &$form_state, $form_id) {
   $document = node_load($form['nid']['#value']);
-	$default_unit = '';
-	$default_genre = '';
+	$unit_options = course_get_terms_for_current_course('units');
+	$genre_options = course_get_terms_for_current_course('genre_doc');
+	$default_unit = array_shift(array_keys($unit_options));
+	$default_genre = array_shift(array_keys($genre_options));
 
 	// Per-course units taxonomy
 	if (isset($document->field_unit[LANGUAGE_NONE])) {
 		$default_unit = $document->field_unit[LANGUAGE_NONE][0]['tid'];
 	}
-	// #validated => TRUE avoids errors when uploading media to form via AJAX
-	// @see http://drupal.stackexchange.com/a/59044
   $form['units'] = array(
     '#title' => 'Units',
     '#type' => 'select',
     '#size' => 60,
     '#default_value' => $default_unit,
-    '#options' => course_get_terms_for_current_course('units'),
+    '#options' => $unit_options,
 		'#required' => TRUE,
-		'#validated' => TRUE,
   );
 
 	// Per-course Materials Genre taxonomy
@@ -541,9 +540,8 @@ function course_form_document_node_form_alter(&$form, &$form_state, $form_id) {
 		'#type' => 'select',
 		'#size' => 60,
 		'#default_value' => $default_genre,
-		'#options' => course_get_terms_for_current_course('genre_doc'),
+		'#options' => $genre_options,
 		'#required' => TRUE,
-		'#validated' => TRUE,
 	);
 
 	// Add our filtered fields to the correct groups
