@@ -622,6 +622,11 @@ function course_form_biblio_node_form_alter(&$form, &$form_state, $form_id) {
 
 // NB: Needs to be in .module so it is always loaded or it can be excluded from module_implements() cache
 function course_form_course_node_form_alter(&$form, &$form_state, $form_id) {
+	// ensure AJAX media upload still has all the includes
+	// @see https://www.drupal.org/node/1118114#comment-4575298
+	$files = (isset($form_state['build_info']['files'])) ? $form_state['build_info']['files'] : array();
+	$files[] = drupal_get_path('module', 'node') . '/node.pages.inc';
+	$form_state['build_info']['files'] = $files;
   $form['#submit'] = array('course_create_form_submit');
   $form['actions']['submit']['#submit'][] = 'course_create_form_submit';
 }
