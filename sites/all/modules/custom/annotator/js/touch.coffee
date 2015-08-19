@@ -216,6 +216,11 @@ class Annotator.Plugin.Touch extends Annotator.Plugin
       hiddenFilters = $('#annotation-filters-wrapper:not(.hidden)')
       hiddenFilters.addClass('hidden') if hiddenFilters.length > 0
 
+      # attempt to deselect the selection
+      document.execCommand('Unselect')
+      document.selection.empty() if (document.selection)
+      window.getSelection().removeAllRanges() if window.getSelection and window.getSelection().removeAllRanges
+
     @annotator.viewer.on "show", =>
       @highlighter.disable() if @highlighter
 

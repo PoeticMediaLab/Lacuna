@@ -156,7 +156,14 @@
           _this.controls.addClass('tab-out');
           hiddenFilters = $('#annotation-filters-wrapper:not(.hidden)');
           if (hiddenFilters.length > 0) {
-            return hiddenFilters.addClass('hidden');
+            hiddenFilters.addClass('hidden');
+          }
+          document.execCommand('Unselect');
+          if (document.selection) {
+            document.selection.empty();
+          }
+          if (window.getSelection && window.getSelection().removeAllRanges) {
+            return window.getSelection().removeAllRanges();
           }
         };
       })(this));
