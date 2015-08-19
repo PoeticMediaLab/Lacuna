@@ -1,0 +1,17 @@
+name = WebAuth
+description = Allow Stanford affiliates to log in with WebAuth
+core = 7.x
+package = Lacuna Stories
+version = 7.x-1.0
+dependencies[] = ctools
+dependencies[] = features
+dependencies[] = strongarm
+dependencies[] = webauth
+features[ctools][] = strongarm:strongarm:1
+features[features_api][] = api:2
+features[user_role][] = SUNet User
+features[variable][] = webauth_default_role
+features[variable][] = webauth_path
+features[variable][] = webauth_require_valid_user
+features[variable][] = webform_node_types
+project path = sites/all/modules/features
