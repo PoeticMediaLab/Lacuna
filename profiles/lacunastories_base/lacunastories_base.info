@@ -19,7 +19,6 @@ dependencies[] = biblio
 dependencies[] = ctools
 ; Context
 dependencies[] = context
-dependencies[] = context_ui
 ; Core
 dependencies[] = block
 dependencies[] = color
@@ -57,9 +56,7 @@ dependencies[] = date
 dependencies[] = date_api
 dependencies[] = date_popup
 dependencies[] = date_views
-; Development
-dependencies[] = profiler_builder
-dependencies[] = profiler_builder_extras
+
 ; Fields
 dependencies[] = entityreference
 dependencies[] = field_group
@@ -71,12 +68,7 @@ dependencies[] = flag
 dependencies[] = flag_actions
 ; Input filters
 dependencies[] = wysiwyg_filter
-; Lacuna Stories
-dependencies[] = annotation
-dependencies[] = annotator
-dependencies[] = lacuna_visualizations
-dependencies[] = sewing_kit
-dependencies[] = user_account
+
 ; Mail
 dependencies[] = notify
 ; Media
@@ -91,7 +83,6 @@ dependencies[] = media_youtube
 ; Organic groups
 dependencies[] = og
 dependencies[] = og_access
-dependencies[] = og_ui
 dependencies[] = og_vocab
 ; Other
 dependencies[] = advanced_help
@@ -115,8 +106,6 @@ dependencies[] = rules
 dependencies[] = rules_admin
 ; Spam control
 dependencies[] = honeypot
-; Taxonomy
-dependencies[] = tagclouds
 ; User interface
 dependencies[] = jquery_update
 dependencies[] = popup
@@ -127,7 +116,7 @@ dependencies[] = wysiwyg
 dependencies[] = better_exposed_filters
 dependencies[] = views
 dependencies[] = views_bulk_operations
-dependencies[] = views_ui
+
 ; Visualization
 dependencies[] = d3
 dependencies[] = graphapi
@@ -137,21 +126,18 @@ dependencies[] = webform_rules
 ; Workflow
 dependencies[] = workflow
 dependencies[] = workflow_access
-dependencies[] = workflow_admin_ui
 dependencies[] = workflow_views
 dependencies[] = workflowfield
 ; views
 dependencies[] = popup_views_integration
-; Features
-dependencies[] = features
-dependencies[] = diff
+
+; Lacuna Stories
 dependencies[] = course
-dependencies[] = lacuna_stories_peer_groups
-dependencies[] = lacuna_stories_content_types
-dependencies[] = lacuna_stories_irb_form
-dependencies[] = lacuna_stories_media
-dependencies[] = lacuna_stories_menus
-dependencies[] = lacuna_stories_permissions
-dependencies[] = lacuna_stories_rules
-dependencies[] = lacuna_stories_system
+dependencies[] = annotation
+dependencies[] = annotator
+dependencies[] = lacuna_visualizations
+dependencies[] = sewing_kit
+dependencies[] = user_account
+dependencies[] = features
+
 
