@@ -1,8 +1,11 @@
 name = Lacuna Stories Visualizations
-description = A number of visualizations of student data (currently just the map visualization). 
-core = 7.x
+description = Visualizations of student data
 package = Lacuna Stories
+core = 7.x
+version = "7.x-1.0"
+package = Lacuna Stories
+
 dependencies[] = d3
 dependencies[] = graphapi
-package = Lacuna Stories
+dependencies[] = course
 stylesheets[all][] = ./lacuna_visualizations.css

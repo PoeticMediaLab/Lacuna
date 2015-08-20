@@ -2,6 +2,7 @@ name = Annotator
 description = Enables the OKFN Annotator and Plugins
 package = Lacuna Stories
 core = 7.x
+version = "7.x-1.0"
 
 configure = admin/config/content/annotator
 
@@ -20,3 +21,4 @@ files[] = plugins/annotator/HistogramAnnotatorPlugin.class.inc
 dependencies[] = ctools
 dependencies[] = jquery_update
 dependencies[] = libraries
+dependencies[] = course
