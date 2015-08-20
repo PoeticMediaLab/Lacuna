@@ -36,6 +36,6 @@ function user_account_form_alter(&$form, &$form_state, $form_id) {
 			'#collapsible' => TRUE,
 		);
 		$form['account_settings']['items'] = $form['account'];
-		unset($form['account']);
+		$form['account']['#access'] = FALSE;
   }
 }
