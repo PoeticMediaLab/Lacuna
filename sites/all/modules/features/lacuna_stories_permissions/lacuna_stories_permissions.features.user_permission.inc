@@ -15,7 +15,6 @@ function lacuna_stories_permissions_user_default_permissions() {
     'name' => 'access administration menu',
     'roles' => array(
       'Content Manager' => 'Content Manager',
-      'Instructor' => 'Instructor',
       'Site Administrator' => 'Site Administrator',
     ),
     'module' => 'admin_menu',
@@ -25,7 +24,6 @@ function lacuna_stories_permissions_user_default_permissions() {
   $permissions['access administration pages'] = array(
     'name' => 'access administration pages',
     'roles' => array(
-      'Instructor' => 'Instructor',
       'Site Administrator' => 'Site Administrator',
     ),
     'module' => 'system',
@@ -222,7 +220,6 @@ function lacuna_stories_permissions_user_default_permissions() {
     'name' => 'access site-wide contact form',
     'roles' => array(
       'Content Manager' => 'Content Manager',
-      'Instructor' => 'Instructor',
       'Site Administrator' => 'Site Administrator',
       'Student' => 'Student',
     ),
@@ -255,6 +252,7 @@ function lacuna_stories_permissions_user_default_permissions() {
       'Instructor' => 'Instructor',
       'Site Administrator' => 'Site Administrator',
       'Student' => 'Student',
+      'administrator' => 'administrator',
     ),
     'module' => 'user',
   );
@@ -536,6 +534,7 @@ function lacuna_stories_permissions_user_default_permissions() {
     'name' => 'administer permissions',
     'roles' => array(
       'Site Administrator' => 'Site Administrator',
+      'administrator' => 'administrator',
     ),
     'module' => 'user',
   );
@@ -651,8 +650,8 @@ function lacuna_stories_permissions_user_default_permissions() {
   $permissions['administer users'] = array(
     'name' => 'administer users',
     'roles' => array(
-      'Instructor' => 'Instructor',
       'Site Administrator' => 'Site Administrator',
+      'administrator' => 'administrator',
     ),
     'module' => 'user',
   );
@@ -719,6 +718,7 @@ function lacuna_stories_permissions_user_default_permissions() {
       'Instructor' => 'Instructor',
       'Site Administrator' => 'Site Administrator',
       'Student' => 'Student',
+      'administrator' => 'administrator',
     ),
     'module' => 'user',
   );
@@ -731,6 +731,7 @@ function lacuna_stories_permissions_user_default_permissions() {
       'Instructor' => 'Instructor',
       'Site Administrator' => 'Site Administrator',
       'Student' => 'Student',
+      'administrator' => 'administrator',
     ),
     'module' => 'user',
   );
@@ -871,6 +872,7 @@ function lacuna_stories_permissions_user_default_permissions() {
       'Content Manager' => 'Content Manager',
       'Instructor' => 'Instructor',
       'Site Administrator' => 'Site Administrator',
+      'Student' => 'Student',
     ),
     'module' => 'field_permissions',
   );
@@ -972,7 +974,6 @@ function lacuna_stories_permissions_user_default_permissions() {
     'roles' => array(
       'Content Manager' => 'Content Manager',
       'Site Administrator' => 'Site Administrator',
-      'Student' => 'Student',
     ),
     'module' => 'node',
   );
@@ -1292,7 +1293,6 @@ function lacuna_stories_permissions_user_default_permissions() {
     'roles' => array(
       'Content Manager' => 'Content Manager',
       'Site Administrator' => 'Site Administrator',
-      'Student' => 'Student',
     ),
     'module' => 'node',
   );
@@ -1937,6 +1937,7 @@ function lacuna_stories_permissions_user_default_permissions() {
       'Content Manager' => 'Content Manager',
       'Instructor' => 'Instructor',
       'Site Administrator' => 'Site Administrator',
+      'Student' => 'Student',
     ),
     'module' => 'field_permissions',
   );
@@ -2036,7 +2037,6 @@ function lacuna_stories_permissions_user_default_permissions() {
     'roles' => array(
       'Content Manager' => 'Content Manager',
       'Site Administrator' => 'Site Administrator',
-      'Student' => 'Student',
     ),
     'module' => 'node',
   );
@@ -2065,6 +2065,8 @@ function lacuna_stories_permissions_user_default_permissions() {
   $permissions['edit terms in annotation_tags'] = array(
     'name' => 'edit terms in annotation_tags',
     'roles' => array(
+      'Instructor' => 'Instructor',
+      'Student' => 'Student',
       'administrator' => 'administrator',
     ),
     'module' => 'taxonomy',
@@ -2122,7 +2124,6 @@ function lacuna_stories_permissions_user_default_permissions() {
     'name' => 'edit terms in tags',
     'roles' => array(
       'Content Manager' => 'Content Manager',
-      'Instructor' => 'Instructor',
       'Site Administrator' => 'Site Administrator',
       'Student' => 'Student',
     ),
@@ -2340,6 +2341,7 @@ function lacuna_stories_permissions_user_default_permissions() {
   $permissions['publish own response content'] = array(
     'name' => 'publish own response content',
     'roles' => array(
+      'Instructor' => 'Instructor',
       'administrator' => 'administrator',
     ),
     'module' => 'publishcontent',
@@ -2405,10 +2407,7 @@ function lacuna_stories_permissions_user_default_permissions() {
   $permissions['select account cancellation method'] = array(
     'name' => 'select account cancellation method',
     'roles' => array(
-      'Content Manager' => 'Content Manager',
-      'Instructor' => 'Instructor',
       'Site Administrator' => 'Site Administrator',
-      'Student' => 'Student',
     ),
     'module' => 'user',
   );
@@ -2594,6 +2593,7 @@ function lacuna_stories_permissions_user_default_permissions() {
   $permissions['unpublish own response content'] = array(
     'name' => 'unpublish own response content',
     'roles' => array(
+      'Instructor' => 'Instructor',
       'administrator' => 'administrator',
     ),
     'module' => 'publishcontent',
