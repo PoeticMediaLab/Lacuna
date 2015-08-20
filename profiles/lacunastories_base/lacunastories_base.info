@@ -83,7 +83,6 @@ dependencies[] = media_youtube
 ; Organic groups
 dependencies[] = og
 dependencies[] = og_access
-dependencies[] = og_vocab
 ; Other
 dependencies[] = advanced_help
 dependencies[] = backup_migrate
