@@ -71,6 +71,27 @@
           return instance.on('blur', onBlur);
         });
       }, 0);
+      setTimeout(function() {
+        var field;
+        field = $('input#annotator-field-4');
+        return field.bind('focus', function(event) {
+          var editor, editorPosition, onBlur, scrollPosition, tab, tabPosition;
+          scrollPosition = window.scrollY;
+          window.scrollTo(0, scrollPosition);
+          tab = $('.annotator-touch-controls')[0];
+          editor = $('.annotator-touch-editor div')[0];
+          tabPosition = +getComputedStyle(tab).top.replace('px', '');
+          editorPosition = +getComputedStyle(editor).top.replace('px', '');
+          tab.setAttribute('style', 'top: ' + (tabPosition + scrollPosition) + 'px;');
+          editor.setAttribute('style', 'top: ' + (editorPosition + scrollPosition) + 'px;');
+          onBlur = function(event) {
+            tab.setAttribute('style', '');
+            editor.setAttribute('style', '');
+            return field.unbind('blur', onBlur);
+          };
+          return field.bind('blur', onBlur);
+        });
+      }, 0);
     }
 
     Editor.prototype.showQuote = function() {

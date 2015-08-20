@@ -468,6 +468,10 @@ li.annotator-checkbox[style] {
 *	from annotator/css/tags.css
 */
 
+.ui-autocomplete {
+  z-index: 2000;
+}
+
 .ui-autocomplete-category {
   font-weight: bold;
   border-bottom: 1px solid black;
