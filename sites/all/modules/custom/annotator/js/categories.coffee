@@ -13,6 +13,7 @@ class Annotator.Plugin.Categories extends Annotator.Plugin
   options:
     categories: []
     categoryColorClasses: {}
+    categoryField: "annotator-category-field"
     categoryClass: "annotator-category"
     classForSelectedCategory : "annotator-category-selected"
     emptyCategory: "Highlight"
@@ -43,6 +44,7 @@ class Annotator.Plugin.Categories extends Annotator.Plugin
       label: Annotator._t('Category')
       options: @options
     })
+    $(@field).addClass(@options.categoryField + ' fa fa-folder-o') # distinguish this field
 
     # Add support for touch devices
     $(document).delegate(".annotator-category", "tap", preventDefault: false, @changeSelectedCategory)

@@ -67,6 +67,9 @@ function lacuna_stories_preprocess_page(&$variables, $hook) {
  *   The name of the template being rendered ("node" in this case.)
  */
 function lacuna_stories_preprocess_page(&$variables, $hook) {
+	if (!isset($variables['node'])) {
+		return;
+	}
 	$node = $variables['node'];
 	if ($node->type == 'document') {
 		// Add the document authors to the title
