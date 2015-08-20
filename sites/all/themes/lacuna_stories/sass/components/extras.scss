@@ -36,11 +36,13 @@ li.views-fluid-grid-inline.views-fluid-grid-item.views-row:hover {
 	}
 	.views-field-field-course-year {
 		padding-left: 10px;
-		padding-top: 10px;
+		/*padding-top: 10px;*/
+        font-size: 0.9em;
 	}
 	.views-field-field-course-id {
 		padding-left: 10px;
 		padding-bottom: 10px;
+        font-size: 0.9em;
 	}
 	.views-field-field-name {
 		padding-left: 10px;
@@ -53,6 +55,7 @@ li.views-fluid-grid-inline.views-fluid-grid-item.views-row:hover {
 		padding-left: 10px;
 		position: relative;
 		font-family: "Source Sans Pro", sans-serif;
+        line-height: 1.2em;
 	}
 }
 
