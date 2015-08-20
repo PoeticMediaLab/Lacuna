@@ -2,4 +2,4 @@ name = User Account
 description = adds/removes tabs from user account
 package = Lacuna Stories
 core = 7.x
-version = "7.x-1.0-alpha"
+version = "7.x-1.0"
