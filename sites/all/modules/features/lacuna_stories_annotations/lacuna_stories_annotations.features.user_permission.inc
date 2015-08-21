@@ -75,15 +75,6 @@ function lacuna_stories_annotations_user_default_permissions() {
     'module' => 'taxonomy',
   );
 
-  // Exported permission: 'delete terms in annotation_tags'.
-  $permissions['delete terms in annotation_tags'] = array(
-    'name' => 'delete terms in annotation_tags',
-    'roles' => array(
-      'administrator' => 'administrator',
-    ),
-    'module' => 'taxonomy',
-  );
-
   // Exported permission: 'edit any annotation content'.
   $permissions['edit any annotation content'] = array(
     'name' => 'edit any annotation content',
@@ -133,17 +124,6 @@ function lacuna_stories_annotations_user_default_permissions() {
     'roles' => array(
       'Content Manager' => 'Content Manager',
       'Site Administrator' => 'Site Administrator',
-    ),
-    'module' => 'taxonomy',
-  );
-
-  // Exported permission: 'edit terms in annotation_tags'.
-  $permissions['edit terms in annotation_tags'] = array(
-    'name' => 'edit terms in annotation_tags',
-    'roles' => array(
-      'Instructor' => 'Instructor',
-      'Student' => 'Student',
-      'administrator' => 'administrator',
     ),
     'module' => 'taxonomy',
   );
