@@ -190,7 +190,7 @@ class Annotator.Plugin.Touch extends Annotator.Plugin
   # from moving the panel all around the screen.
   _stickEditor: ->
     # select the tab and editor elements
-    tab = $('.annotator-touch-controls')
+    tab = $('.annotator-touch-controls.annotator-touch-widget')
     editor = $('.annotator-touch-editor .annotator-touch-widget')
 
     # set the editor position to absolute
@@ -205,11 +205,15 @@ class Annotator.Plugin.Touch extends Annotator.Plugin
     styleString = 'position: absolute; top: ' + tabTopOffset + 'px; right: ' + tabRightOffset + 'px;'
     tab.attr('style', styleString);
 
+    # something styles the editor wrapper so the box appears off-screen,
+    # so this undoes that.
+    editor.parent().attr('style', 'left: 0px; top: 0px;')
+
   # Reverts the Editor panel to fixed positioning.
   _unstickEditor: ->
     # select the tab and editor elements
-    tab = $('.annotator-touch-controls')
-    editor = $('.annotator-touch-editor div')
+    tab = $('.annotator-touch-controls.annotator-touch-widget')
+    editor = $('.annotator-touch-editor .annotator-touch-widget')
 
     # remove style tags
     editor.attr('style', '')

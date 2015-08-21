@@ -139,7 +139,7 @@
 
     Touch.prototype._stickEditor = function() {
       var editor, editorRightOffset, editorTopOffset, styleString, tab, tabRightOffset, tabTopOffset;
-      tab = $('.annotator-touch-controls');
+      tab = $('.annotator-touch-controls.annotator-touch-widget');
       editor = $('.annotator-touch-editor .annotator-touch-widget');
       editorTopOffset = +getComputedStyle(editor[0]).top.replace('px', '') + window.scrollY;
       editorRightOffset = 0;
@@ -148,13 +148,14 @@
       tabTopOffset = +getComputedStyle(tab[0]).top.replace('px', '') + window.scrollY;
       tabRightOffset = +getComputedStyle(tab[0]).right.replace('px', '');
       styleString = 'position: absolute; top: ' + tabTopOffset + 'px; right: ' + tabRightOffset + 'px;';
-      return tab.attr('style', styleString);
+      tab.attr('style', styleString);
+      return editor.parent().attr('style', 'left: 0px; top: 0px;');
     };
 
     Touch.prototype._unstickEditor = function() {
       var editor, tab;
-      tab = $('.annotator-touch-controls');
-      editor = $('.annotator-touch-editor div');
+      tab = $('.annotator-touch-controls.annotator-touch-widget');
+      editor = $('.annotator-touch-editor .annotator-touch-widget');
       editor.attr('style', '');
       return tab.attr('style', '');
     };
