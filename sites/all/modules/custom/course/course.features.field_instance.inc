@@ -1007,6 +1007,148 @@ function course_field_default_field_instances() {
     ),
   );
 
+  // Exported field_instance:
+  // 'og_membership-og_membership_type_default-og_membership_request'
+  $field_instances['og_membership-og_membership_type_default-og_membership_request'] = array(
+    'bundle' => 'og_membership_type_default',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => 'This is the text a user may send to the group administrators.',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'text',
+        'settings' => array(),
+        'type' => 'text_default',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'og_membership',
+    'field_name' => 'og_membership_request',
+    'label' => 'Request message',
+    'required' => FALSE,
+    'settings' => array(
+      'text_processing' => 0,
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'module' => 'text',
+      'settings' => array(
+        'rows' => 5,
+      ),
+      'type' => 'text_textarea',
+      'weight' => 0,
+    ),
+  );
+
+  // Exported field_instance: 'user-user-og_user_node'
+  $field_instances['user-user-og_user_node'] = array(
+    'bundle' => 'user',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => 'What course are you enrolled in?',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'og_ui',
+        'settings' => array(),
+        'type' => 'og_list_default',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'user',
+    'field_name' => 'og_user_node',
+    'label' => 'Course(s) Enrolled',
+    'required' => 0,
+    'settings' => array(
+      'behaviors' => array(
+        'og_widget' => array(
+          'access_override' => 0,
+          'admin' => array(
+            'widget_type' => 'entityreference_autocomplete',
+          ),
+          'default' => array(
+            'widget_type' => 'options_select',
+          ),
+          'status' => TRUE,
+        ),
+      ),
+      'user_register_form' => 1,
+    ),
+    'view modes' => array(
+      'full' => array(
+        'custom settings' => FALSE,
+        'label' => 'Full',
+        'type' => 'og_list_default',
+      ),
+      'teaser' => array(
+        'custom settings' => FALSE,
+        'label' => 'Teaser',
+        'type' => 'og_list_default',
+      ),
+    ),
+    'widget' => array(
+      'active' => 0,
+      'module' => 'og',
+      'settings' => array(),
+      'type' => 'og_complex',
+      'weight' => 7,
+    ),
+  );
+
+  // Exported field_instance: 'user-user-og_user_node1'
+  $field_instances['user-user-og_user_node1'] = array(
+    'bundle' => 'user',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'og_ui',
+        'settings' => array(),
+        'type' => 'og_list_default',
+        'weight' => 10,
+      ),
+    ),
+    'entity_type' => 'user',
+    'field_name' => 'og_user_node1',
+    'label' => 'Group membership',
+    'required' => FALSE,
+    'settings' => array(
+      'behaviors' => array(
+        'og_widget' => array(
+          'admin' => array(
+            'widget_type' => 'entityreference_autocomplete',
+          ),
+          'default' => array(
+            'widget_type' => 'options_select',
+          ),
+          'status' => TRUE,
+        ),
+      ),
+      'user_register_form' => FALSE,
+    ),
+    'view modes' => array(
+      'full' => array(
+        'custom settings' => FALSE,
+        'label' => 'Full',
+        'type' => 'og_list_default',
+      ),
+      'teaser' => array(
+        'custom settings' => FALSE,
+        'label' => 'Teaser',
+        'type' => 'og_list_default',
+      ),
+    ),
+    'widget' => array(
+      'module' => 'og',
+      'settings' => array(),
+      'type' => 'og_complex',
+      'weight' => 8,
+    ),
+  );
+
   // Translatables
   // Included for use with string extractors like potx.
   t('Add any file attachments (such as a PDF of your syllabus) here.');
@@ -1017,22 +1159,27 @@ function course_field_default_field_instances() {
   t('Course Title');
   t('Course Visibility');
   t('Course access permissions');
+  t('Course(s) Enrolled');
   t('Cross-listed as:');
   t('Department');
   t('Determine if this is an OG group.');
   t('End Date');
   t('For courses that span terms, select multiple terms. Note, selecting multiple terms does not create separate courses.');
   t('Group');
+  t('Group membership');
   t('How many students will have library and e-reserve access that differs from your own?');
   t('If you have a syllabus for your course, please upload it now. You can update your syllabus at any time.');
   t('Instructor:');
   t('Online registration with this password will close after the university add/drop deadline for your course.');
   t('Optional - If applicable, what is the secondary cross-listed course ID (with no spaces)?');
   t('Optional - If applicable, what is the third cross-listed course ID (with no spaces)?');
+  t('Request message');
   t('Some of my students are not from my institution');
   t('Start Date');
   t('Term');
   t('This image appears on the course page. A square thumbnail of the image appears in course listings, so the image should be approximately square.');
+  t('This is the text a user may send to the group administrators.');
+  t('What course are you enrolled in?');
   t('What is the end date for the course? Students will have access to restricted materials 30 days after the end of class, or after 180 days of the beginning of the course, whichever arrives first.');
   t('What is the expected enrollment for your course?');
   t('What is the full name of your course?');
