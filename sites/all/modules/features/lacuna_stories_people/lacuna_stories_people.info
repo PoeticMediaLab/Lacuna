@@ -9,6 +9,7 @@ dependencies[] = field_permissions
 dependencies[] = notify
 dependencies[] = realname
 dependencies[] = user
+dependencies[] = user_account
 dependencies[] = views
 dependencies[] = views_php
 features[ctools][] = views:views_default:3.0
