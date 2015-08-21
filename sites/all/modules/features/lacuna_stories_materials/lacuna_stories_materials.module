@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the Materials feature.
+ */
+
+include_once 'lacuna_stories_materials.features.inc';
