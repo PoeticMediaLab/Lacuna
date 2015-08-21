@@ -7,6 +7,7 @@ dependencies[] = course
 dependencies[] = features
 dependencies[] = field_permissions
 dependencies[] = lacuna_stories_biblio
+dependencies[] = lacuna_stories_media
 dependencies[] = lacuna_stories_people
 dependencies[] = lacuna_stories_tags
 dependencies[] = media
