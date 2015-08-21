@@ -36,11 +36,13 @@ li.views-fluid-grid-inline.views-fluid-grid-item.views-row:hover {
 	}
 	.views-field-field-course-year {
 		padding-left: 10px;
-		padding-top: 10px;
+		/*padding-top: 10px;*/
+        font-size: 0.9em;
 	}
 	.views-field-field-course-id {
 		padding-left: 10px;
 		padding-bottom: 10px;
+        font-size: 0.9em;
 	}
 	.views-field-field-name {
 		padding-left: 10px;
@@ -53,6 +55,7 @@ li.views-fluid-grid-inline.views-fluid-grid-item.views-row:hover {
 		padding-left: 10px;
 		position: relative;
 		font-family: "Source Sans Pro", sans-serif;
+        line-height: 1.2em;
 	}
 }
 
@@ -75,6 +78,7 @@ li.views-fluid-grid-inline.views-fluid-grid-item.views-row:hover {
     top: 0;
     left: 0;
     transform: translate(47%, 20%);
+    -webkit-transform: translate(47%, 20%);
     float: left;
     vertical-align: baseline;
 }
@@ -112,6 +116,7 @@ li.views-fluid-grid-inline.views-fluid-grid-item.views-row:hover {
     position: relative;
     right: 0;
     transform: translatex(-501%);
+    -webkit-transform: translatex(-501%);
     box-shadow: 3px 0px 5px 0 #666464;
 }
 body {
@@ -126,7 +131,7 @@ body {
 
 }
 
-@media (max-width: 1199px) and (min-width: 915px) {
+@media (max-width: 1199px) and (min-width: 965px) {
 	.banner-wrapper {
     height: 400px;
     width: 100%;
@@ -143,6 +148,7 @@ body {
     top: 0;
     left: 0;
     transform: translate(20%, 20%);
+    -webkit-transform: translate(20%, 20%);
     float: left;
     vertical-align: baseline;
 }
@@ -174,7 +180,7 @@ body {
     height: 400px;
     width: 400px;
     border: 1px solid black;
-    background-image: url(http://s4.postimg.org/o8uky8ixp/Screenshot_2015_08_11_16_29_19.png);
+    background-image: url(http://stanford.lacunastories.com/sites/default/files/styles/large/public/Screenshot%202015-08-18%2011.49.41.png?itok=vmQEav_2);
     background-size: cover;
     background-position: center;
     position: relative;
@@ -184,7 +190,7 @@ body {
 }
 }
 
-@media (max-width: 915px) and (min-width: 541px) {
+@media (max-width: 965px) and (min-width: 541px) {
 	.banner-wrapper {
     height: 400px;
     width: 100%;
@@ -201,6 +207,7 @@ body {
     top: 0;
     left: 0;
     transform: translate(25%, 15%);
+    -webkit-transform: translate(25%, 15%);
     float: left;
     vertical-align: baseline;
 }
@@ -261,6 +268,7 @@ body {
     top: 0;
     left: 0;
     transform: translate(0%, 90%);
+    -webkit-transform: translate(0%, 90%);
 }
 
 .lacuna-stories-image {
@@ -293,6 +301,7 @@ body {
         width: 100%;
         height: auto;
         transform: translateY(-50%);
+        -webkit-transform: translateY(-50%);
     }
     .field-name-field-course-title {
         font-family: "Source Sans Pro", serif;
