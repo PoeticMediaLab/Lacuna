@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the Responses feature.
+ */
+
+include_once 'lacuna_stories_responses.features.inc';

@@ -1,0 +1,193 @@
+<?php
+/**
+ * @file
+ * lacuna_stories_responses.features.user_permission.inc
+ */
+
+/**
+ * Implements hook_user_default_permissions().
+ */
+function lacuna_stories_responses_user_default_permissions() {
+  $permissions = array();
+
+  // Exported permission: 'access comments'.
+  $permissions['access comments'] = array(
+    'name' => 'access comments',
+    'roles' => array(
+      'Content Manager' => 'Content Manager',
+      'Instructor' => 'Instructor',
+      'Site Administrator' => 'Site Administrator',
+      'Student' => 'Student',
+    ),
+    'module' => 'comment',
+  );
+
+  // Exported permission: 'create response content'.
+  $permissions['create response content'] = array(
+    'name' => 'create response content',
+    'roles' => array(
+      'Content Manager' => 'Content Manager',
+      'Instructor' => 'Instructor',
+      'Site Administrator' => 'Site Administrator',
+      'Student' => 'Student',
+      'administrator' => 'administrator',
+    ),
+    'module' => 'node',
+  );
+
+  // Exported permission: 'delete any response content'.
+  $permissions['delete any response content'] = array(
+    'name' => 'delete any response content',
+    'roles' => array(
+      'Content Manager' => 'Content Manager',
+      'Site Administrator' => 'Site Administrator',
+    ),
+    'module' => 'node',
+  );
+
+  // Exported permission: 'delete own response content'.
+  $permissions['delete own response content'] = array(
+    'name' => 'delete own response content',
+    'roles' => array(
+      'Content Manager' => 'Content Manager',
+      'Site Administrator' => 'Site Administrator',
+      'authenticated user' => 'authenticated user',
+    ),
+    'module' => 'node',
+  );
+
+  // Exported permission: 'delete terms in genre_response'.
+  $permissions['delete terms in genre_response'] = array(
+    'name' => 'delete terms in genre_response',
+    'roles' => array(
+      'Content Manager' => 'Content Manager',
+      'Site Administrator' => 'Site Administrator',
+    ),
+    'module' => 'taxonomy',
+  );
+
+  // Exported permission: 'edit any response content'.
+  $permissions['edit any response content'] = array(
+    'name' => 'edit any response content',
+    'roles' => array(
+      'Content Manager' => 'Content Manager',
+      'Site Administrator' => 'Site Administrator',
+    ),
+    'module' => 'node',
+  );
+
+  // Exported permission: 'edit own comments'.
+  $permissions['edit own comments'] = array(
+    'name' => 'edit own comments',
+    'roles' => array(
+      'Content Manager' => 'Content Manager',
+      'Instructor' => 'Instructor',
+      'Site Administrator' => 'Site Administrator',
+      'Student' => 'Student',
+    ),
+    'module' => 'comment',
+  );
+
+  // Exported permission: 'edit own response content'.
+  $permissions['edit own response content'] = array(
+    'name' => 'edit own response content',
+    'roles' => array(
+      'Content Manager' => 'Content Manager',
+      'Site Administrator' => 'Site Administrator',
+      'authenticated user' => 'authenticated user',
+    ),
+    'module' => 'node',
+  );
+
+  // Exported permission: 'edit terms in genre_response'.
+  $permissions['edit terms in genre_response'] = array(
+    'name' => 'edit terms in genre_response',
+    'roles' => array(
+      'Content Manager' => 'Content Manager',
+      'Site Administrator' => 'Site Administrator',
+    ),
+    'module' => 'taxonomy',
+  );
+
+  // Exported permission: 'post comments'.
+  $permissions['post comments'] = array(
+    'name' => 'post comments',
+    'roles' => array(
+      'Content Manager' => 'Content Manager',
+      'Instructor' => 'Instructor',
+      'Site Administrator' => 'Site Administrator',
+      'Student' => 'Student',
+    ),
+    'module' => 'comment',
+  );
+
+  // Exported permission: 'publish any response content'.
+  $permissions['publish any response content'] = array(
+    'name' => 'publish any response content',
+    'roles' => array(
+      'administrator' => 'administrator',
+    ),
+    'module' => 'publishcontent',
+  );
+
+  // Exported permission: 'publish editable response content'.
+  $permissions['publish editable response content'] = array(
+    'name' => 'publish editable response content',
+    'roles' => array(
+      'administrator' => 'administrator',
+    ),
+    'module' => 'publishcontent',
+  );
+
+  // Exported permission: 'publish own response content'.
+  $permissions['publish own response content'] = array(
+    'name' => 'publish own response content',
+    'roles' => array(
+      'Instructor' => 'Instructor',
+      'administrator' => 'administrator',
+    ),
+    'module' => 'publishcontent',
+  );
+
+  // Exported permission: 'skip comment approval'.
+  $permissions['skip comment approval'] = array(
+    'name' => 'skip comment approval',
+    'roles' => array(
+      'Content Manager' => 'Content Manager',
+      'Instructor' => 'Instructor',
+      'Site Administrator' => 'Site Administrator',
+      'Student' => 'Student',
+    ),
+    'module' => 'comment',
+  );
+
+  // Exported permission: 'unpublish any response content'.
+  $permissions['unpublish any response content'] = array(
+    'name' => 'unpublish any response content',
+    'roles' => array(
+      'administrator' => 'administrator',
+    ),
+    'module' => 'publishcontent',
+  );
+
+  // Exported permission: 'unpublish editable response content'.
+  $permissions['unpublish editable response content'] = array(
+    'name' => 'unpublish editable response content',
+    'roles' => array(
+      'administrator' => 'administrator',
+    ),
+    'module' => 'publishcontent',
+  );
+
+  // Exported permission: 'unpublish own response content'.
+  $permissions['unpublish own response content'] = array(
+    'name' => 'unpublish own response content',
+    'roles' => array(
+      'Instructor' => 'Instructor',
+      'administrator' => 'administrator',
+    ),
+    'module' => 'publishcontent',
+  );
+
+  return $permissions;
+}
