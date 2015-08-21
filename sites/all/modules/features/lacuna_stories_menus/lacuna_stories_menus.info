@@ -1,5 +1,5 @@
-name = Lacuna Stories Menus
-description = Menus for Lacuna Stories
+name = Menus
+description = Superfish menus for Lacuna Stories
 core = 7.x
 package = Lacuna Stories
 version = 7.x-1.0
