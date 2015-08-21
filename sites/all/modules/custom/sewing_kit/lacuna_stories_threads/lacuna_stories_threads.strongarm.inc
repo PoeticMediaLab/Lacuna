@@ -141,5 +141,12 @@ function lacuna_stories_threads_strongarm() {
   $strongarm->value = 1;
   $export['node_submitted_thread'] = $strongarm;
 
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'publishcontent_thread';
+  $strongarm->value = 1;
+  $export['publishcontent_thread'] = $strongarm;
+
   return $export;
 }
