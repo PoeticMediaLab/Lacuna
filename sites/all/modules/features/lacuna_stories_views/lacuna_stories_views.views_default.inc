@@ -131,7 +131,7 @@ function lacuna_stories_views_views_default_views() {
   $handler->display->display_options['sorts']['created']['table'] = 'node';
   $handler->display->display_options['sorts']['created']['field'] = 'created';
   $handler->display->display_options['sorts']['created']['order'] = 'DESC';
-  /* Contextual filter: Content: Audience (og_group_ref) */
+  /* Contextual filter: Content: Groups audience (og_group_ref) */
   $handler->display->display_options['arguments']['og_group_ref_target_id']['id'] = 'og_group_ref_target_id';
   $handler->display->display_options['arguments']['og_group_ref_target_id']['table'] = 'og_membership';
   $handler->display->display_options['arguments']['og_group_ref_target_id']['field'] = 'og_group_ref_target_id';
@@ -452,7 +452,7 @@ function lacuna_stories_views_views_default_views() {
   $handler->display->display_options['sorts']['biblio_sort_title']['id'] = 'biblio_sort_title';
   $handler->display->display_options['sorts']['biblio_sort_title']['table'] = 'biblio';
   $handler->display->display_options['sorts']['biblio_sort_title']['field'] = 'biblio_sort_title';
-  /* Contextual filter: Content: Audience (og_group_ref) */
+  /* Contextual filter: Content: Groups audience (og_group_ref) */
   $handler->display->display_options['arguments']['og_group_ref_target_id']['id'] = 'og_group_ref_target_id';
   $handler->display->display_options['arguments']['og_group_ref_target_id']['table'] = 'og_membership';
   $handler->display->display_options['arguments']['og_group_ref_target_id']['field'] = 'og_group_ref_target_id';
@@ -678,7 +678,7 @@ function lacuna_stories_views_views_default_views() {
   $handler->display->display_options['filters']['field_annotation_audience_value']['value'] = array(
     'peer-groups' => 'peer-groups',
   );
-  /* Filter criterion: Content: Audience (og_group_ref) */
+  /* Filter criterion: Content: Groups audience (og_group_ref) */
   $handler->display->display_options['filters']['og_group_ref_target_id']['id'] = 'og_group_ref_target_id';
   $handler->display->display_options['filters']['og_group_ref_target_id']['table'] = 'og_membership';
   $handler->display->display_options['filters']['og_group_ref_target_id']['field'] = 'og_group_ref_target_id';
@@ -1061,7 +1061,7 @@ function lacuna_stories_views_views_default_views() {
   $handler->display->display_options['sorts']['biblio_sort_title']['relationship'] = 'field_bibliographic_entry_target_id';
   $handler->display->display_options['sorts']['biblio_sort_title']['exposed'] = TRUE;
   $handler->display->display_options['sorts']['biblio_sort_title']['expose']['label'] = 'Title';
-  /* Contextual filter: Content: Audience (og_group_ref) */
+  /* Contextual filter: Content: Groups audience (og_group_ref) */
   $handler->display->display_options['arguments']['og_group_ref_target_id']['id'] = 'og_group_ref_target_id';
   $handler->display->display_options['arguments']['og_group_ref_target_id']['table'] = 'og_membership';
   $handler->display->display_options['arguments']['og_group_ref_target_id']['field'] = 'og_group_ref_target_id';
@@ -2143,7 +2143,7 @@ function lacuna_stories_views_views_default_views() {
   $handler->display->display_options['fields']['field_annotation_audience']['field'] = 'field_annotation_audience';
   $handler->display->display_options['fields']['field_annotation_audience']['exclude'] = TRUE;
   $handler->display->display_options['fields']['field_annotation_audience']['delta_offset'] = '0';
-  /* Field: Content: Audience */
+  /* Field: Content: Groups audience */
   $handler->display->display_options['fields']['og_group_ref']['id'] = 'og_group_ref';
   $handler->display->display_options['fields']['og_group_ref']['table'] = 'og_membership';
   $handler->display->display_options['fields']['og_group_ref']['field'] = 'og_group_ref';
@@ -2189,7 +2189,7 @@ function lacuna_stories_views_views_default_views() {
   $handler->display->display_options['fields']['field_annotation_reference']['settings'] = array(
     'link' => 1,
   );
-  /* Field: Content: Audience */
+  /* Field: Content: Groups audience */
   $handler->display->display_options['fields']['og_group_ref_1']['id'] = 'og_group_ref_1';
   $handler->display->display_options['fields']['og_group_ref_1']['table'] = 'og_membership';
   $handler->display->display_options['fields']['og_group_ref_1']['field'] = 'og_group_ref';
@@ -2227,7 +2227,7 @@ function lacuna_stories_views_views_default_views() {
     'annotation' => 'annotation',
   );
   $handler->display->display_options['filters']['type']['group'] = 1;
-  /* Filter criterion: Content: Audience (og_group_ref) */
+  /* Filter criterion: Content: Groups audience (og_group_ref) */
   $handler->display->display_options['filters']['og_group_ref_target_id']['id'] = 'og_group_ref_target_id';
   $handler->display->display_options['filters']['og_group_ref_target_id']['table'] = 'og_membership';
   $handler->display->display_options['filters']['og_group_ref_target_id']['field'] = 'og_group_ref_target_id';
@@ -2399,6 +2399,13 @@ function lacuna_stories_views_views_default_views() {
   $handler->display->display_options['relationships']['uid']['table'] = 'node';
   $handler->display->display_options['relationships']['uid']['field'] = 'uid';
   $handler->display->display_options['relationships']['uid']['label'] = 'Author';
+  /* Field: Content: Nid */
+  $handler->display->display_options['fields']['nid_1']['id'] = 'nid_1';
+  $handler->display->display_options['fields']['nid_1']['table'] = 'node';
+  $handler->display->display_options['fields']['nid_1']['field'] = 'nid';
+  $handler->display->display_options['fields']['nid_1']['label'] = '';
+  $handler->display->display_options['fields']['nid_1']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['nid_1']['element_label_colon'] = FALSE;
   /* Field: User: Display Name */
   $handler->display->display_options['fields']['field_display_name']['id'] = 'field_display_name';
   $handler->display->display_options['fields']['field_display_name']['table'] = 'field_data_field_display_name';
@@ -2455,11 +2462,21 @@ function lacuna_stories_views_views_default_views() {
   $handler->display->display_options['fields']['nothing']['alter']['absolute'] = TRUE;
   $handler->display->display_options['fields']['nothing']['alter']['target'] = '_blank';
   $handler->display->display_options['fields']['nothing']['element_label_colon'] = FALSE;
-  /* Sort criterion: Content: Post date */
-  $handler->display->display_options['sorts']['created']['id'] = 'created';
-  $handler->display->display_options['sorts']['created']['table'] = 'node';
-  $handler->display->display_options['sorts']['created']['field'] = 'created';
-  $handler->display->display_options['sorts']['created']['order'] = 'DESC';
+  /* Field: Draggableviews: Content */
+  $handler->display->display_options['fields']['draggableviews']['id'] = 'draggableviews';
+  $handler->display->display_options['fields']['draggableviews']['table'] = 'node';
+  $handler->display->display_options['fields']['draggableviews']['field'] = 'draggableviews';
+  $handler->display->display_options['fields']['draggableviews']['label'] = '';
+  $handler->display->display_options['fields']['draggableviews']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['draggableviews']['element_default_classes'] = FALSE;
+  $handler->display->display_options['fields']['draggableviews']['hide_alter_empty'] = FALSE;
+  $handler->display->display_options['fields']['draggableviews']['draggableviews']['ajax'] = 0;
+  /* Sort criterion: Draggableviews: Weight */
+  $handler->display->display_options['sorts']['weight']['id'] = 'weight';
+  $handler->display->display_options['sorts']['weight']['table'] = 'draggableviews_structure';
+  $handler->display->display_options['sorts']['weight']['field'] = 'weight';
+  $handler->display->display_options['sorts']['weight']['draggableviews_setting_view'] = 'stitchings:block';
+  $handler->display->display_options['sorts']['weight']['draggableviews_setting_new_items_bottom_list'] = 1;
   /* Contextual filter: Content: Nid */
   $handler->display->display_options['arguments']['nid']['id'] = 'nid';
   $handler->display->display_options['arguments']['nid']['table'] = 'node';
@@ -2601,7 +2618,7 @@ function lacuna_stories_views_views_default_views() {
   $handler->display->display_options['sorts']['created']['table'] = 'node';
   $handler->display->display_options['sorts']['created']['field'] = 'created';
   $handler->display->display_options['sorts']['created']['order'] = 'DESC';
-  /* Contextual filter: Content: Audience (og_group_ref) */
+  /* Contextual filter: Content: Groups audience (og_group_ref) */
   $handler->display->display_options['arguments']['og_group_ref_target_id']['id'] = 'og_group_ref_target_id';
   $handler->display->display_options['arguments']['og_group_ref_target_id']['table'] = 'og_membership';
   $handler->display->display_options['arguments']['og_group_ref_target_id']['field'] = 'og_group_ref_target_id';
