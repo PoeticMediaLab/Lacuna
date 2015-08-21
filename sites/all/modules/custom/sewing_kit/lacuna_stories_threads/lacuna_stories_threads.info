@@ -5,6 +5,7 @@ package = Lacuna Stories
 version = 7.x-1.0
 dependencies[] = course
 dependencies[] = entityreference
+dependencies[] = lacuna_stories_annotations
 dependencies[] = lacuna_stories_materials
 dependencies[] = lacuna_stories_responses
 dependencies[] = node
