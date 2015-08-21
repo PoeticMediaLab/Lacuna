@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the Tags feature.
+ */
+
+include_once 'lacuna_stories_tags.features.inc';
