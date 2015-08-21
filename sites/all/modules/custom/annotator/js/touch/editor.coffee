@@ -42,7 +42,7 @@ class Annotator.Plugin.Touch.Editor extends Annotator.Delegator
     @element.find("form").addClass("annotator-touch-widget-inner")
     @element.find(".annotator-controls a").addClass("annotator-button")
 
-    # @element.detach().appendTo('section.region-sidebar-second');
+    @element.detach().appendTo('body');
 
     # Remove the "return to submit" listener.
     @element.undelegate("textarea", "keydown")
@@ -50,100 +50,6 @@ class Annotator.Plugin.Touch.Editor extends Annotator.Delegator
 
     @_setupQuoteField()
     @_setupAndroidRedrawHack()
-
-    # Attempts to circumvent MobileSafari's automatic scrolling
-    # on keyboard open when editor is brought into focus.
-    setTimeout(->
-      instance = CKEDITOR.instances['annotator-field-0']
-      tagField = $('input#annotator-field-4');
-      instance.on('focus', (event) ->
-
-        # make sure the editor field is blurred
-        tagField.trigger('blur');
-
-        # find the scroll position before keyboard-induced scroll
-        scrollPosition = window.scrollY
-
-        # scroll back to that position
-        window.scrollTo(0, scrollPosition)
-
-        # select the tab and editor elements
-        tab = $('.annotator-touch-controls')[0]
-        editor = $('.annotator-touch-editor div')[0]
-
-        # find their current Y-positions on the page
-        tabPosition = +getComputedStyle(tab).top.replace('px', '')
-        editorPosition = +getComputedStyle(editor).top.replace('px', '')
-
-        # set their Y-positions to where they were before the keyboard open
-        tab.setAttribute('style', 'top: ' + (tabPosition + scrollPosition) + 'px;')
-        editor.setAttribute('style', 'top: ' + (editorPosition + scrollPosition) + 'px;')
-
-        console.log('editor focused: scroll position ', scrollPosition)
-
-        # reset this change when text field is blurred
-        onBlur = (event) ->
-
-          tab.setAttribute('style', '')
-          editor.setAttribute('style', '')
-
-          instance.removeListener('blur', onBlur)
-
-          console.log('editor blurred')
-
-        instance.on('blur', onBlur)
-
-      )
-
-    , 0)
-
-
-    # Attempts to circumvent MobileSafari's automatic scrolling
-    # on keyboard open when tags box is brought into focus.
-    setTimeout(->
-
-      editorInstance = CKEDITOR.instances['annotator-field-0']
-      tagField = $('input#annotator-field-4');
-      tagField.bind('focus', (event) ->
-
-        # make sure the editor field is blurred
-        editorInstance.fire('blur');
-
-        # find the scroll position before keyboard-induced scroll
-        scrollPosition = window.scrollY
-
-        # scroll back to that position
-        window.scrollTo(0, scrollPosition)
-
-        # select the tab and editor elements
-        tab = $('.annotator-touch-controls')[0]
-        editor = $('.annotator-touch-editor div')[0]
-
-        # find their current Y-positions on the page
-        tabPosition = +getComputedStyle(tab).top.replace('px', '')
-        editorPosition = +getComputedStyle(editor).top.replace('px', '')
-
-        # set their Y-positions to where they were before the keyboard open
-        tab.setAttribute('style', 'top: ' + (tabPosition + scrollPosition) + 'px;')
-        editor.setAttribute('style', 'top: ' + (editorPosition + scrollPosition) + 'px;')
-
-        console.log('tag field focused: scroll position ', scrollPosition)
-
-        # reset this change when text field is blurred
-        onBlur = (event) ->
-
-          tab.setAttribute('style', '')
-          editor.setAttribute('style', '')
-
-          tagField.unbind('blur', onBlur)
-
-          console.log('tag field blurred')
-
-        tagField.bind('blur', onBlur)
-
-      )
-
-    , 0)
 
   # Expands the quote field to display more than one line.
   #

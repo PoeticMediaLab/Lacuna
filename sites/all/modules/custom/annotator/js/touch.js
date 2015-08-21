@@ -137,6 +137,28 @@
       }
     };
 
+    Touch.prototype._stickEditor = function() {
+      var editor, editorRightOffset, editorTopOffset, styleString, tab, tabRightOffset, tabTopOffset;
+      tab = $('.annotator-touch-controls');
+      editor = $('.annotator-touch-editor .annotator-touch-widget');
+      editorTopOffset = +getComputedStyle(editor[0]).top.replace('px', '') + window.scrollY;
+      editorRightOffset = 0;
+      styleString = 'position: absolute; top: ' + editorTopOffset + 'px; right: ' + editorRightOffset + 'px; ';
+      editor.attr('style', styleString);
+      tabTopOffset = +getComputedStyle(tab[0]).top.replace('px', '') + window.scrollY;
+      tabRightOffset = +getComputedStyle(tab[0]).right.replace('px', '');
+      styleString = 'position: absolute; top: ' + tabTopOffset + 'px; right: ' + tabRightOffset + 'px;';
+      return tab.attr('style', styleString);
+    };
+
+    Touch.prototype._unstickEditor = function() {
+      var editor, tab;
+      tab = $('.annotator-touch-controls');
+      editor = $('.annotator-touch-editor div');
+      editor.attr('style', '');
+      return tab.attr('style', '');
+    };
+
     Touch.prototype._setupAnnotatorEvents = function() {
       this.editor = new Touch.Editor(this.annotator.editor);
       this.viewer = new Touch.Viewer(this.annotator.viewer);
@@ -163,8 +185,9 @@
             document.selection.empty();
           }
           if (window.getSelection && window.getSelection().removeAllRanges) {
-            return window.getSelection().removeAllRanges();
+            window.getSelection().removeAllRanges();
           }
+          return _this._stickEditor();
         };
       })(this));
       this.annotator.viewer.on("show", (function(_this) {
@@ -180,6 +203,7 @@
           _this.controls.removeClass('tab-out');
           _this.editor.element.addClass('tab-in');
           _this.controls.addClass('tab-in');
+          _this._unstickEditor();
           return _this.utils.nextTick(function() {
             if (_this.highlighter) {
               _this.highlighter.enable().deselect();

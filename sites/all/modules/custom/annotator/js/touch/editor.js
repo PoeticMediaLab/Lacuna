@@ -30,8 +30,8 @@
       quote: "<button class=\"annotator-quote-toggle\">" + _t("expand") + "</button>\n<span class=\"quote\"></span>"
     };
 
-    function Editor(editor1, options) {
-      this.editor = editor1;
+    function Editor(editor, options) {
+      this.editor = editor;
       this._onOverlayTap = bind(this._onOverlayTap, this);
       this._onCancel = bind(this._onCancel, this);
       this._onSubmit = bind(this._onSubmit, this);
@@ -42,6 +42,7 @@
       this.element.wrapInner('<div class="annotator-touch-widget" />');
       this.element.find("form").addClass("annotator-touch-widget-inner");
       this.element.find(".annotator-controls a").addClass("annotator-button");
+      this.element.detach().appendTo('body');
       this.element.undelegate("textarea", "keydown");
       this.on("hide", (function(_this) {
         return function() {
@@ -50,56 +51,6 @@
       })(this));
       this._setupQuoteField();
       this._setupAndroidRedrawHack();
-      setTimeout(function() {
-        var instance, tagField;
-        instance = CKEDITOR.instances['annotator-field-0'];
-        tagField = $('input#annotator-field-4');
-        return instance.on('focus', function(event) {
-          var editor, editorPosition, onBlur, scrollPosition, tab, tabPosition;
-          tagField.trigger('blur');
-          scrollPosition = window.scrollY;
-          window.scrollTo(0, scrollPosition);
-          tab = $('.annotator-touch-controls')[0];
-          editor = $('.annotator-touch-editor div')[0];
-          tabPosition = +getComputedStyle(tab).top.replace('px', '');
-          editorPosition = +getComputedStyle(editor).top.replace('px', '');
-          tab.setAttribute('style', 'top: ' + (tabPosition + scrollPosition) + 'px;');
-          editor.setAttribute('style', 'top: ' + (editorPosition + scrollPosition) + 'px;');
-          console.log('editor focused: scroll position ', scrollPosition);
-          onBlur = function(event) {
-            tab.setAttribute('style', '');
-            editor.setAttribute('style', '');
-            instance.removeListener('blur', onBlur);
-            return console.log('editor blurred');
-          };
-          return instance.on('blur', onBlur);
-        });
-      }, 0);
-      setTimeout(function() {
-        var editorInstance, tagField;
-        editorInstance = CKEDITOR.instances['annotator-field-0'];
-        tagField = $('input#annotator-field-4');
-        return tagField.bind('focus', function(event) {
-          var editor, editorPosition, onBlur, scrollPosition, tab, tabPosition;
-          editorInstance.fire('blur');
-          scrollPosition = window.scrollY;
-          window.scrollTo(0, scrollPosition);
-          tab = $('.annotator-touch-controls')[0];
-          editor = $('.annotator-touch-editor div')[0];
-          tabPosition = +getComputedStyle(tab).top.replace('px', '');
-          editorPosition = +getComputedStyle(editor).top.replace('px', '');
-          tab.setAttribute('style', 'top: ' + (tabPosition + scrollPosition) + 'px;');
-          editor.setAttribute('style', 'top: ' + (editorPosition + scrollPosition) + 'px;');
-          console.log('tag field focused: scroll position ', scrollPosition);
-          onBlur = function(event) {
-            tab.setAttribute('style', '');
-            editor.setAttribute('style', '');
-            tagField.unbind('blur', onBlur);
-            return console.log('tag field blurred');
-          };
-          return tagField.bind('blur', onBlur);
-        });
-      }, 0);
     }
 
     Editor.prototype.showQuote = function() {
