@@ -6,6 +6,8 @@ version = "7.x-1.0"
 
 configure = admin/structure/stitch
 
+files[] = sewing_kit.test
+
 dependencies[] = course
 dependencies[] = views_bulk_operations
 dependencies[] = entityreference
