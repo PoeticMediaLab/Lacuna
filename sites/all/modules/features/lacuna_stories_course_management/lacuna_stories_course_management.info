@@ -1,0 +1,15 @@
+name = Course Management
+description = Functionality for Instructors to manage a course
+core = 7.x
+package = Lacuna Stories
+version = 7.x-1.0
+dependencies[] = course
+dependencies[] = views
+features[ctools][] = views:views_default:3.0
+features[features_api][] = api:2
+features[views_view][] = all_content
+features[views_view][] = all_emails
+features[views_view][] = bulk_update_annotations
+features[views_view][] = curate_tags
+features_exclude[dependencies][ctools] = ctools
+project path = sites/all/modules/features
