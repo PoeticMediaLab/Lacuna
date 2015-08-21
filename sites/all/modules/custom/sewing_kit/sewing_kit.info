@@ -11,3 +11,4 @@ files[] = sewing_kit.test
 dependencies[] = course
 dependencies[] = views_bulk_operations
 dependencies[] = entityreference
+dependencies[] = annotation
