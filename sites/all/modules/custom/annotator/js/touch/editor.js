@@ -51,10 +51,12 @@
       this._setupQuoteField();
       this._setupAndroidRedrawHack();
       setTimeout(function() {
-        var instance;
+        var instance, tagField;
         instance = CKEDITOR.instances['annotator-field-0'];
+        tagField = $('input#annotator-field-4');
         return instance.on('focus', function(event) {
           var editor, editorPosition, onBlur, scrollPosition, tab, tabPosition;
+          tagField.trigger('blur');
           scrollPosition = window.scrollY;
           window.scrollTo(0, scrollPosition);
           tab = $('.annotator-touch-controls')[0];
@@ -63,19 +65,23 @@
           editorPosition = +getComputedStyle(editor).top.replace('px', '');
           tab.setAttribute('style', 'top: ' + (tabPosition + scrollPosition) + 'px;');
           editor.setAttribute('style', 'top: ' + (editorPosition + scrollPosition) + 'px;');
+          console.log('editor focused: scroll position ', scrollPosition);
           onBlur = function(event) {
             tab.setAttribute('style', '');
             editor.setAttribute('style', '');
-            return instance.removeListener('blur', onBlur);
+            instance.removeListener('blur', onBlur);
+            return console.log('editor blurred');
           };
           return instance.on('blur', onBlur);
         });
       }, 0);
       setTimeout(function() {
-        var field;
-        field = $('input#annotator-field-4');
-        return field.bind('focus', function(event) {
+        var editorInstance, tagField;
+        editorInstance = CKEDITOR.instances['annotator-field-0'];
+        tagField = $('input#annotator-field-4');
+        return tagField.bind('focus', function(event) {
           var editor, editorPosition, onBlur, scrollPosition, tab, tabPosition;
+          editorInstance.fire('blur');
           scrollPosition = window.scrollY;
           window.scrollTo(0, scrollPosition);
           tab = $('.annotator-touch-controls')[0];
@@ -84,12 +90,14 @@
           editorPosition = +getComputedStyle(editor).top.replace('px', '');
           tab.setAttribute('style', 'top: ' + (tabPosition + scrollPosition) + 'px;');
           editor.setAttribute('style', 'top: ' + (editorPosition + scrollPosition) + 'px;');
+          console.log('tag field focused: scroll position ', scrollPosition);
           onBlur = function(event) {
             tab.setAttribute('style', '');
             editor.setAttribute('style', '');
-            return field.unbind('blur', onBlur);
+            tagField.unbind('blur', onBlur);
+            return console.log('tag field blurred');
           };
-          return field.bind('blur', onBlur);
+          return tagField.bind('blur', onBlur);
         });
       }, 0);
     }

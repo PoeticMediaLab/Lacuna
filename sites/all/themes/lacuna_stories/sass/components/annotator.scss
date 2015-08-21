@@ -467,9 +467,12 @@ li.annotator-checkbox[style] {
 *	Tags styles
 *	from annotator/css/tags.css
 */
-
-.ui-autocomplete {
-  z-index: 2000;
+@media all and (max-width: 959px) {
+  .ui-autocomplete {
+    z-index: 2000;
+    overflow-y: scroll;
+    height: 150px;
+  }
 }
 
 .ui-autocomplete-category {

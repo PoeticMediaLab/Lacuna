@@ -55,7 +55,11 @@ class Annotator.Plugin.Touch.Editor extends Annotator.Delegator
     # on keyboard open when editor is brought into focus.
     setTimeout(->
       instance = CKEDITOR.instances['annotator-field-0']
+      tagField = $('input#annotator-field-4');
       instance.on('focus', (event) ->
+
+        # make sure the editor field is blurred
+        tagField.trigger('blur');
 
         # find the scroll position before keyboard-induced scroll
         scrollPosition = window.scrollY
@@ -75,6 +79,8 @@ class Annotator.Plugin.Touch.Editor extends Annotator.Delegator
         tab.setAttribute('style', 'top: ' + (tabPosition + scrollPosition) + 'px;')
         editor.setAttribute('style', 'top: ' + (editorPosition + scrollPosition) + 'px;')
 
+        console.log('editor focused: scroll position ', scrollPosition)
+
         # reset this change when text field is blurred
         onBlur = (event) ->
 
@@ -82,6 +88,8 @@ class Annotator.Plugin.Touch.Editor extends Annotator.Delegator
           editor.setAttribute('style', '')
 
           instance.removeListener('blur', onBlur)
+
+          console.log('editor blurred')
 
         instance.on('blur', onBlur)
 
@@ -94,8 +102,12 @@ class Annotator.Plugin.Touch.Editor extends Annotator.Delegator
     # on keyboard open when tags box is brought into focus.
     setTimeout(->
 
-      field = $('input#annotator-field-4');
-      field.bind('focus', (event) ->
+      editorInstance = CKEDITOR.instances['annotator-field-0']
+      tagField = $('input#annotator-field-4');
+      tagField.bind('focus', (event) ->
+
+        # make sure the editor field is blurred
+        editorInstance.fire('blur');
 
         # find the scroll position before keyboard-induced scroll
         scrollPosition = window.scrollY
@@ -115,15 +127,19 @@ class Annotator.Plugin.Touch.Editor extends Annotator.Delegator
         tab.setAttribute('style', 'top: ' + (tabPosition + scrollPosition) + 'px;')
         editor.setAttribute('style', 'top: ' + (editorPosition + scrollPosition) + 'px;')
 
+        console.log('tag field focused: scroll position ', scrollPosition)
+
         # reset this change when text field is blurred
         onBlur = (event) ->
 
           tab.setAttribute('style', '')
           editor.setAttribute('style', '')
 
-          field.unbind('blur', onBlur)
+          tagField.unbind('blur', onBlur)
 
-        field.bind('blur', onBlur)
+          console.log('tag field blurred')
+
+        tagField.bind('blur', onBlur)
 
       )
 
