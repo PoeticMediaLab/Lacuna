@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the Threads feature.
+ */
+
+include_once 'lacuna_stories_threads.features.inc';
