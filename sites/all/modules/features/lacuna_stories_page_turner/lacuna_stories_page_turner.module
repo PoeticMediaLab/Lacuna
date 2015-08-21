@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the Page Turner feature.
+ */
+
+include_once 'lacuna_stories_page_turner.features.inc';
