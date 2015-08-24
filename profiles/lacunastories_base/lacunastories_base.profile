@@ -16,37 +16,37 @@ if (!function_exists("system_form_install_configure_form_alter")) {
  * Adding neccessary blocks:
  * 1. a phoney empty block to activate second sidebar
  */
-function lacunastories_base_block_info()
-{
-    $theme = "lacuna_stories";
-    $blocks = array();
-    $regions = system_region_list($theme, REGIONS_VISIBLE);
-    if(array_key_exists('sidebar_second', $regions)){    
-        $blocks['sidebar_second_empty'] = array(
-            "info" => "Phony block to activate second sidebar",
-            'region' => 'sidebar_second',
-            'theme' => "lacuna_stories",
-            'status' => 1,
-            'weight' => 0,
-            'pages' => 'document/*',
-            'visibility' => BLOCK_VISIBILITY_LISTED,
-        );
-    }
-    return $blocks;
-}
+//function lacunastories_base_block_info()
+//{
+//    $theme = "lacuna_stories";
+//    $blocks = array();
+//    $regions = system_region_list($theme, REGIONS_VISIBLE);
+//    if(array_key_exists('sidebar_second', $regions)){
+//        $blocks['sidebar_second_empty'] = array(
+//            "info" => "Phony block to activate second sidebar",
+//            'region' => 'sidebar_second',
+//            'theme' => "lacuna_stories",
+//            'status' => 1,
+//            'weight' => 0,
+//            'pages' => 'document/*',
+//            'visibility' => BLOCK_VISIBILITY_LISTED,
+//        );
+//    }
+//    return $blocks;
+//}
 
 /**
  * Implementing hook_block_view
  * Goes in pair with hook_block_info
  */
-function lacunastories_base_block_view($delta)
-{
-    $block = array();
-    if($delta == 'sidebar_second_empty'){
-        $block['content'] = "<b></b>";
-    }
-    return $block;
-}
+//function lacunastories_base_block_view($delta)
+//{
+//    $block = array();
+//    if($delta == 'sidebar_second_empty'){
+//        $block['content'] = "<b></b>";
+//    }
+//    return $block;
+//}
 
 /**
  * Implements hook_install_tasks().
@@ -65,8 +65,6 @@ function lacunastories_base_install_tasks($install_state) {
     'lacunastories_base_create_publication_state_workflow' => array(),
     'lacunastories_base_late_feature_and_module_enabling' => array(),
     'lacunastories_base_revert_features_final' => array(),
-
-
   );
   return $tasks;
 }
@@ -398,8 +396,11 @@ function lacunastories_base_create_publication_state_workflow() {
 // Enable any modules or features that need to be enabled after other installation tasks are done
 function lacunastories_base_late_feature_and_module_enabling () {
   $enable = array(
-    'lacuna_stories_views', // this needs to happen late because it is dependent on lacuna_stories_workflows, which can only be enabled late
-    'lacuna_stories_workflows', // this needs to happen after the workflow is created
+		'lacuna_stories_materials',	// Depends on the Workflow for Materials Publications
+		'lacuna_stories_threads',
+		'lacuna_stories_responses',
+		'lacuna_stories_menus', // Depends on static content
+		'lacuna_stores_irb_form', // Gets created on install
   );
   module_enable($enable);
 }

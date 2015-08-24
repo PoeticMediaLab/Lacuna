@@ -44,12 +44,12 @@ dependencies[] = php
 dependencies[] = rdf
 dependencies[] = search
 dependencies[] = shortcut
-dependencies[] = statistics
+;dependencies[] = statistics
 dependencies[] = system
 dependencies[] = taxonomy
 dependencies[] = text
-dependencies[] = tracker
-dependencies[] = update
+;dependencies[] = tracker
+;dependencies[] = update
 dependencies[] = user
 ; Date/Time
 dependencies[] = date
@@ -82,6 +82,7 @@ dependencies[] = media_wysiwyg_view_mode
 dependencies[] = media_youtube
 ; Organic groups
 dependencies[] = og
+dependencies[] = og_ui
 dependencies[] = og_access
 ; Other
 dependencies[] = advanced_help
@@ -89,7 +90,6 @@ dependencies[] = backup_migrate
 dependencies[] = chosen
 dependencies[] = entity
 dependencies[] = entity_token
-dependencies[] = file_entity
 dependencies[] = htmlpurifier
 dependencies[] = libraries
 dependencies[] = mediaelement
@@ -112,9 +112,10 @@ dependencies[] = popup_ui
 dependencies[] = superfish
 dependencies[] = wysiwyg
 ; Views
-dependencies[] = better_exposed_filters
+;dependencies[] = better_exposed_filters
 dependencies[] = views
 dependencies[] = views_bulk_operations
+dependencies[] = popup_views_integration
 
 ; Visualization
 dependencies[] = d3
@@ -127,16 +128,20 @@ dependencies[] = workflow
 dependencies[] = workflow_access
 dependencies[] = workflow_views
 dependencies[] = workflowfield
-; views
-dependencies[] = popup_views_integration
 
 ; Lacuna Stories
-dependencies[] = course
-dependencies[] = annotation
-dependencies[] = annotator
-dependencies[] = lacuna_visualizations
-dependencies[] = sewing_kit
-dependencies[] = user_account
 dependencies[] = features
+dependencies[] = lacuna_stories_system
+dependencies[] = course
+dependencies[] = lacuna_stories_annotations
+dependencies[] = lacuna_stories_biblio
+dependencies[] = lacuna_stories_course_management
+dependencies[] = lacuna_stories_media
+dependencies[] = lacuna_stories_menus
+dependencies[] = lacuna_stories_page_turner
+dependencies[] = lacuna_stories_peer_groups
+dependencies[] = lacuna_stories_people
+dependencies[] = lacuna_stories_tags
+dependencies[] = lacuna_visualizations
 
 
