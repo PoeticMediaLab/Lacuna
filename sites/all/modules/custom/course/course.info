@@ -9,6 +9,7 @@ dependencies[] = context
 dependencies[] = ctools
 dependencies[] = date
 dependencies[] = ds
+dependencies[] = entity
 dependencies[] = entityreference
 dependencies[] = features
 dependencies[] = field_permissions

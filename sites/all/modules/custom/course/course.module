@@ -802,15 +802,15 @@ function course_clone_material($biblio) {
 
 function course_block_info() {
     $blocks = array();
-    $blocks['course_finish_material_block'] = array(
-      'info' => t('Finish Adding Material'),
-      'cache' => DRUPAL_NO_CACHE,
-      'status' => TRUE,
-      'region' => 'help',
-      'visibility' => BLOCK_VISIBILITY_NOTLISTED,
-      'pages' => "node/*/edit\nadmin*",
-      'theme' => 'lacuna_stories'
-    );
+		$blocks['course_finish_material_block'] = array(
+			'info' => t('Finish Adding Material'),
+			'cache' => DRUPAL_NO_CACHE,
+			'status' => TRUE,
+			'region' => 'help',
+			'visibility' => BLOCK_VISIBILITY_NOTLISTED,
+			'pages' => "node/*/edit\nadmin*",
+			'theme' => 'lacuna_stories'
+		);
     return $blocks;
 }
 
