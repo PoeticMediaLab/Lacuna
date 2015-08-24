@@ -21,6 +21,18 @@ function lacuna_stories_materials_user_default_permissions() {
     'module' => 'node',
   );
 
+  // Exported permission: 'create field_media'.
+  $permissions['create field_media'] = array(
+    'name' => 'create field_media',
+    'roles' => array(
+      'Content Manager' => 'Content Manager',
+      'Instructor' => 'Instructor',
+      'Site Administrator' => 'Site Administrator',
+      'Student' => 'Student',
+    ),
+    'module' => 'field_permissions',
+  );
+
   // Exported permission: 'create field_status'.
   $permissions['create field_status'] = array(
     'name' => 'create field_status',
@@ -103,6 +115,16 @@ function lacuna_stories_materials_user_default_permissions() {
     'module' => 'node',
   );
 
+  // Exported permission: 'edit field_media'.
+  $permissions['edit field_media'] = array(
+    'name' => 'edit field_media',
+    'roles' => array(
+      'Content Manager' => 'Content Manager',
+      'Site Administrator' => 'Site Administrator',
+    ),
+    'module' => 'field_permissions',
+  );
+
   // Exported permission: 'edit field_status'.
   $permissions['edit field_status'] = array(
     'name' => 'edit field_status',
@@ -122,6 +144,18 @@ function lacuna_stories_materials_user_default_permissions() {
       'authenticated user' => 'authenticated user',
     ),
     'module' => 'node',
+  );
+
+  // Exported permission: 'edit own field_media'.
+  $permissions['edit own field_media'] = array(
+    'name' => 'edit own field_media',
+    'roles' => array(
+      'Content Manager' => 'Content Manager',
+      'Instructor' => 'Instructor',
+      'Site Administrator' => 'Site Administrator',
+      'Student' => 'Student',
+    ),
+    'module' => 'field_permissions',
   );
 
   // Exported permission: 'edit own field_status'.
@@ -175,12 +209,32 @@ function lacuna_stories_materials_user_default_permissions() {
     'module' => 'taxonomy',
   );
 
+  // Exported permission: 'view field_media'.
+  $permissions['view field_media'] = array(
+    'name' => 'view field_media',
+    'roles' => array(
+      'Site Administrator' => 'Site Administrator',
+      'authenticated user' => 'authenticated user',
+    ),
+    'module' => 'field_permissions',
+  );
+
   // Exported permission: 'view field_status'.
   $permissions['view field_status'] = array(
     'name' => 'view field_status',
     'roles' => array(
       'Content Manager' => 'Content Manager',
       'Site Administrator' => 'Site Administrator',
+    ),
+    'module' => 'field_permissions',
+  );
+
+  // Exported permission: 'view own field_media'.
+  $permissions['view own field_media'] = array(
+    'name' => 'view own field_media',
+    'roles' => array(
+      'Site Administrator' => 'Site Administrator',
+      'authenticated user' => 'authenticated user',
     ),
     'module' => 'field_permissions',
   );
