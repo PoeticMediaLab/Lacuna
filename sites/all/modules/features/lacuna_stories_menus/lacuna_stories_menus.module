@@ -12,12 +12,14 @@ include_once 'lacuna_stories_menus.features.inc';
 function lacuna_stories_menus_block_info_alter(&$blocks, $theme, $code_blocks){
 
   //  Enable and hide titles for blocks superfish 1 (Course context menu, aka Main menu) & superfish 2 (Institutional context menu)
-//  $blocks['superfish'][1]['status'] = 1;
-//  $blocks['superfish'][1]['title'] = "<none>";
-//  $blocks['superfish'][2]['status'] = 1;
-//  $blocks['superfish'][2]['title'] = "<none>";
+//	if (isset($blocks['superfish'])) {
+//		$blocks['superfish'][1]['status'] = 1;
+//		$blocks['superfish'][1]['title'] = "<none>";
+//		$blocks['superfish'][2]['status'] = 1;
+//		$blocks['superfish'][2]['title'] = "<none>";
+//	}
 
   // Hide the user login block, which is enabled by default
-//  $blocks['user']['login']['status'] = 0;
+  $blocks['user']['login']['status'] = 0;
 
 }
