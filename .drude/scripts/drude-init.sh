@@ -167,7 +167,7 @@ site_install
 #local_settings
 #compass_compile
 init_behat
-run_behat
+#run_behat
 
 echo -e "${green}All done!${NC}"
 echo -e "${green}Add ${SITE_DOMAIN} to your hosts file (/etc/hosts), e.g.:${NC}"
