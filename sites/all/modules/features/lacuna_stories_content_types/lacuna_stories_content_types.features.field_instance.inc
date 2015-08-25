@@ -1820,11 +1820,11 @@ function lacuna_stories_content_types_field_default_field_instances() {
     'description' => 'Describe why these pieces are stitched together',
     'display' => array(
       'default' => array(
-        'label' => 'above',
+        'label' => 'hidden',
         'module' => 'text',
         'settings' => array(),
         'type' => 'text_default',
-        'weight' => 0,
+        'weight' => 1,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -1865,7 +1865,7 @@ function lacuna_stories_content_types_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 1,
+        'weight' => 14,
       ),
       'teaser' => array(
         'label' => 'above',

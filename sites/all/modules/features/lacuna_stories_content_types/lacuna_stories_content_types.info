@@ -41,6 +41,7 @@ features[context][] = annotation_filters
 features[context][] = stitchings_edit
 features[context][] = tag_clouds
 features[ctools][] = context:context:3
+features[ctools][] = ds:ds:1
 features[ctools][] = field_group:field_group:1
 features[ctools][] = file_entity:file_type:1
 features[ctools][] = strongarm:strongarm:1

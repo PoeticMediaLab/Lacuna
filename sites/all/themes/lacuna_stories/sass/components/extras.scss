@@ -148,7 +148,7 @@ body {
     top: 0;
     left: 0;
     transform: translate(20%, 20%);
-    -webkit-transform: translate(20%, 20%);
+    -webkit-transform: translate(5%, 20%);
     float: left;
     vertical-align: baseline;
 }
@@ -193,9 +193,10 @@ body {
 @media (max-width: 965px) and (min-width: 541px) {
 	.banner-wrapper {
     height: 400px;
-    width: 100%;
+    width: 150%;
+    margin-left: -25%;
     background-color: #8FA3B6;
-    background-image: linear-gradient(to right, #8FA3B6, #FCFCFC 50%);
+    background-image: linear-gradient(to right, #8FA3B6, #FCFCFC 80%);
 
 }
 
@@ -206,10 +207,12 @@ body {
     position: relative;
     top: 0;
     left: 0;
-    transform: translate(25%, 15%);
-    -webkit-transform: translate(25%, 15%);
-    float: left;
+    transform: translateY(25%);
+    -webkit-transform: translateY(25%);
+    /*float: left;*/
     vertical-align: baseline;
+    margin: auto;
+    text-align: center;
 }
 
 .annotating span {
@@ -252,10 +255,11 @@ body {
 
 @media (max-width: 540px) {
 .banner-wrapper {
-    height: 250px;
-    width: 100%;
+    height: 150px;
+    width: 150%;
     background-color: #8FA3B6;
-    background-image: linear-gradient(to right, #8FA3B6, #FCFCFC 90%);
+    /*background-image: linear-gradient(to right, #8FA3B6, #FCFCFC 90%);*/
+    margin-left: -25%;
 }
 
 .lacuna-stories-about {
@@ -267,8 +271,8 @@ body {
     position: relative;
     top: 0;
     left: 0;
-    transform: translate(0%, 90%);
-    -webkit-transform: translate(0%, 90%);
+    transform: translateY(37%);
+    -webkit-transform: translateY(37%);
 }
 
 .lacuna-stories-image {
@@ -397,3 +401,26 @@ body {
     width: auto;
     font-family: "Source Sans Pro", sans-serif;
 }
+
+/*styling the Stitching view for threads*/
+.view-stitchings {
+    border-top: 1px solid #bbb;
+    .view-content {
+        padding-bottom: 25px;
+    }
+    .view-footer {
+        p {
+            padding-top: 25px;
+            border-top: 1px solid #bbb;
+        }
+    }
+    table {
+        font-family: "Baskerville Libre", Georgia, "Times New Roman", "DejaVu Serif", serif;
+        font-size: 18px;
+    }
+}
+
+#comments {
+    border-top: 1px solid #bbb;
+}
+

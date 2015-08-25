@@ -18,7 +18,7 @@ function lacuna_stories_views_field_default_field_instances() {
     'description' => '',
     'display' => array(
       'default' => array(
-        'label' => 'above',
+        'label' => 'inline',
         'module' => 'og_ui',
         'settings' => array(),
         'type' => 'og_list_default',
@@ -33,11 +33,12 @@ function lacuna_stories_views_field_default_field_instances() {
     ),
     'entity_type' => 'node',
     'field_name' => 'og_group_ref',
-    'label' => 'Groups audience',
-    'required' => FALSE,
+    'label' => 'Course',
+    'required' => 0,
     'settings' => array(
       'behaviors' => array(
         'og_widget' => array(
+          'access_override' => 0,
           'admin' => array(
             'widget_type' => 'entityreference_autocomplete',
           ),
@@ -62,6 +63,7 @@ function lacuna_stories_views_field_default_field_instances() {
       ),
     ),
     'widget' => array(
+      'active' => 0,
       'module' => 'og',
       'settings' => array(),
       'type' => 'og_complex',
@@ -71,7 +73,7 @@ function lacuna_stories_views_field_default_field_instances() {
 
   // Translatables
   // Included for use with string extractors like potx.
-  t('Groups audience');
+  t('Course');
 
   return $field_instances;
 }
