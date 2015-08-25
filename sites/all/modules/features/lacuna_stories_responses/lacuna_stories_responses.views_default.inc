@@ -210,17 +210,12 @@ function lacuna_stories_responses_views_default_views() {
   $handler->display->display_options['relationships']['uid']['id'] = 'uid';
   $handler->display->display_options['relationships']['uid']['table'] = 'node';
   $handler->display->display_options['relationships']['uid']['field'] = 'uid';
-  /* Field: Content: Image */
+  /* Field: Broken/missing handler */
   $handler->display->display_options['fields']['field_image']['id'] = 'field_image';
   $handler->display->display_options['fields']['field_image']['table'] = 'field_data_field_image';
   $handler->display->display_options['fields']['field_image']['field'] = 'field_image';
   $handler->display->display_options['fields']['field_image']['label'] = '';
   $handler->display->display_options['fields']['field_image']['element_label_colon'] = FALSE;
-  $handler->display->display_options['fields']['field_image']['click_sort_column'] = 'fid';
-  $handler->display->display_options['fields']['field_image']['settings'] = array(
-    'image_style' => 'thumbnails_for_browsing',
-    'image_link' => 'content',
-  );
   /* Field: Content: Title */
   $handler->display->display_options['fields']['title']['id'] = 'title';
   $handler->display->display_options['fields']['title']['table'] = 'node';
@@ -228,7 +223,7 @@ function lacuna_stories_responses_views_default_views() {
   $handler->display->display_options['fields']['title']['label'] = '';
   $handler->display->display_options['fields']['title']['alter']['word_boundary'] = FALSE;
   $handler->display->display_options['fields']['title']['alter']['ellipsis'] = FALSE;
-  /* Field: User: Display Name */
+  /* Field: : field_display_name */
   $handler->display->display_options['fields']['field_display_name']['id'] = 'field_display_name';
   $handler->display->display_options['fields']['field_display_name']['table'] = 'field_data_field_display_name';
   $handler->display->display_options['fields']['field_display_name']['field'] = 'field_display_name';
