@@ -25,8 +25,13 @@ function lacuna_stories_materials_views_default_views() {
   $handler->display->display_options['title'] = 'Materials';
   $handler->display->display_options['use_ajax'] = TRUE;
   $handler->display->display_options['use_more_always'] = FALSE;
-  $handler->display->display_options['access']['type'] = 'php';
-  $handler->display->display_options['access']['php_access'] = 'return course_get_selected_course() != FALSE;';
+  $handler->display->display_options['access']['type'] = 'role';
+  $handler->display->display_options['access']['role'] = array(
+    3 => '3',
+    4 => '4',
+    5 => '5',
+    6 => '6',
+  );
   $handler->display->display_options['cache']['type'] = 'time';
   $handler->display->display_options['cache']['results_lifespan'] = '21600';
   $handler->display->display_options['cache']['results_lifespan_custom'] = '0';
@@ -81,7 +86,7 @@ function lacuna_stories_materials_views_default_views() {
   $handler->display->display_options['fields']['path_1']['exclude'] = TRUE;
   $handler->display->display_options['fields']['path_1']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['path_1']['absolute'] = TRUE;
-  /* Field: Content: Image */
+  /* Field: Broken/missing handler */
   $handler->display->display_options['fields']['field_image']['id'] = 'field_image';
   $handler->display->display_options['fields']['field_image']['table'] = 'field_data_field_image';
   $handler->display->display_options['fields']['field_image']['field'] = 'field_image';
@@ -89,12 +94,6 @@ function lacuna_stories_materials_views_default_views() {
   $handler->display->display_options['fields']['field_image']['alter']['path'] = '[path_1]';
   $handler->display->display_options['fields']['field_image']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['field_image']['hide_empty'] = TRUE;
-  $handler->display->display_options['fields']['field_image']['click_sort_column'] = 'fid';
-  $handler->display->display_options['fields']['field_image']['settings'] = array(
-    'image_style' => 'thumbnails_for_browsing',
-    'image_link' => 'content',
-  );
-  $handler->display->display_options['fields']['field_image']['delta_offset'] = '0';
   /* Field: Content: Link */
   $handler->display->display_options['fields']['view_node']['id'] = 'view_node';
   $handler->display->display_options['fields']['view_node']['table'] = 'views_entity_node';
@@ -187,16 +186,6 @@ function lacuna_stories_materials_views_default_views() {
   $handler->display->display_options['sorts']['biblio_sort_title']['relationship'] = 'field_bibliographic_entry_target_id';
   $handler->display->display_options['sorts']['biblio_sort_title']['exposed'] = TRUE;
   $handler->display->display_options['sorts']['biblio_sort_title']['expose']['label'] = 'Title';
-  /* Contextual filter: Content: Groups audience (og_group_ref) */
-  $handler->display->display_options['arguments']['og_group_ref_target_id']['id'] = 'og_group_ref_target_id';
-  $handler->display->display_options['arguments']['og_group_ref_target_id']['table'] = 'og_membership';
-  $handler->display->display_options['arguments']['og_group_ref_target_id']['field'] = 'og_group_ref_target_id';
-  $handler->display->display_options['arguments']['og_group_ref_target_id']['default_action'] = 'default';
-  $handler->display->display_options['arguments']['og_group_ref_target_id']['default_argument_type'] = 'php';
-  $handler->display->display_options['arguments']['og_group_ref_target_id']['default_argument_options']['code'] = 'return course_get_selected_course();';
-  $handler->display->display_options['arguments']['og_group_ref_target_id']['summary']['number_of_records'] = '0';
-  $handler->display->display_options['arguments']['og_group_ref_target_id']['summary']['format'] = 'default_summary';
-  $handler->display->display_options['arguments']['og_group_ref_target_id']['summary_options']['items_per_page'] = '25';
   $handler->display->display_options['filter_groups']['operator'] = 'OR';
   /* Filter criterion: Content: Type */
   $handler->display->display_options['filters']['type_1']['id'] = 'type_1';
@@ -299,20 +288,6 @@ function lacuna_stories_materials_views_default_views() {
   $handler->display->display_options['fields']['path_1']['alter']['path'] = '[path]';
   $handler->display->display_options['fields']['path_1']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['path_1']['absolute'] = TRUE;
-  /* Field: Content: Image */
-  $handler->display->display_options['fields']['field_image']['id'] = 'field_image';
-  $handler->display->display_options['fields']['field_image']['table'] = 'field_data_field_image';
-  $handler->display->display_options['fields']['field_image']['field'] = 'field_image';
-  $handler->display->display_options['fields']['field_image']['label'] = '';
-  $handler->display->display_options['fields']['field_image']['alter']['path'] = '[path_1]';
-  $handler->display->display_options['fields']['field_image']['element_label_colon'] = FALSE;
-  $handler->display->display_options['fields']['field_image']['hide_empty'] = TRUE;
-  $handler->display->display_options['fields']['field_image']['click_sort_column'] = 'fid';
-  $handler->display->display_options['fields']['field_image']['settings'] = array(
-    'image_style' => 'thumbnails_for_browsing',
-    'image_link' => 'content',
-  );
-  $handler->display->display_options['fields']['field_image']['delta_offset'] = '0';
   /* Field: Content: Link */
   $handler->display->display_options['fields']['view_node']['id'] = 'view_node';
   $handler->display->display_options['fields']['view_node']['table'] = 'views_entity_node';

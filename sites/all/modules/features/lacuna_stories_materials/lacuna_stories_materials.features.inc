@@ -33,7 +33,6 @@ function lacuna_stories_materials_default_Workflow() {
     "system_roles" : {
       "-1" : "(author)",
       "1" : "anonymous user",
-      "8" : "SUNet User",
       "2" : "authenticated user",
       "5" : "Site Administrator",
       "3" : "Content Manager",

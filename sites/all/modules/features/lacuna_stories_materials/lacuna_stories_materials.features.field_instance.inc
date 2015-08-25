@@ -213,61 +213,6 @@ function lacuna_stories_materials_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-document-field_image'
-  $field_instances['node-document-field_image'] = array(
-    'bundle' => 'document',
-    'deleted' => 0,
-    'description' => '',
-    'display' => array(
-      'default' => array(
-        'label' => 'hidden',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 8,
-      ),
-      'teaser' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
-      ),
-    ),
-    'entity_type' => 'node',
-    'field_name' => 'field_image',
-    'label' => 'Cover Image',
-    'required' => 1,
-    'settings' => array(
-      'alt_field' => 0,
-      'default_image' => 0,
-      'file_directory' => '',
-      'file_extensions' => 'png gif jpg jpeg',
-      'max_filesize' => '',
-      'max_resolution' => '',
-      'media_library_include_in_library' => FALSE,
-      'min_resolution' => '',
-      'title_field' => 0,
-      'user_register_form' => FALSE,
-    ),
-    'widget' => array(
-      'active' => 1,
-      'module' => 'media',
-      'settings' => array(
-        'allowed_schemes' => array(
-          0 => 'public',
-          1 => 'private',
-        ),
-        'allowed_types' => array(
-          0 => 'image',
-        ),
-        'browser_plugins' => array(),
-        'preview_image_style' => 'medium',
-        'progress_indicator' => 'throbber',
-      ),
-      'type' => 'media_generic',
-      'weight' => 1,
-    ),
-  );
-
   // Exported field_instance: 'node-document-field_media'
   $field_instances['node-document-field_media'] = array(
     'bundle' => 'document',
@@ -429,45 +374,6 @@ function lacuna_stories_materials_field_default_field_instances() {
       'settings' => array(),
       'type' => 'options_buttons',
       'weight' => 1,
-    ),
-  );
-
-  // Exported field_instance: 'node-document-field_tags'
-  $field_instances['node-document-field_tags'] = array(
-    'bundle' => 'document',
-    'default_value' => NULL,
-    'deleted' => 0,
-    'description' => '',
-    'display' => array(
-      'default' => array(
-        'label' => 'inline',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 14,
-      ),
-      'teaser' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
-      ),
-    ),
-    'entity_type' => 'node',
-    'field_name' => 'field_tags',
-    'label' => 'Tags',
-    'required' => 0,
-    'settings' => array(
-      'user_register_form' => FALSE,
-    ),
-    'widget' => array(
-      'active' => 0,
-      'module' => 'taxonomy',
-      'settings' => array(
-        'autocomplete_path' => 'taxonomy/autocomplete',
-        'size' => 60,
-      ),
-      'type' => 'taxonomy_autocomplete',
-      'weight' => 5,
     ),
   );
 
@@ -692,14 +598,12 @@ function lacuna_stories_materials_field_default_field_instances() {
   t('Bibliographic Entry');
   t('Copyright');
   t('Course');
-  t('Cover Image');
   t('Genre');
   t('If there is a PDF or other file version of this document, attach it here.');
   t('Media');
   t('Medium');
   t('Priority');
   t('Status');
-  t('Tags');
   t('Text');
   t('The actual text of the document.');
   t('The medium or media of this document.');
