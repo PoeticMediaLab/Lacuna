@@ -28,7 +28,6 @@ features[field_base][] = field_how_i_learn
 features[field_base][] = field_learning_goals
 features[field_base][] = field_major_degree
 features[field_base][] = field_year_in_program
-features[menu_links][] = main-menu_people:people
 features[user_permission][] = access notify
 features[user_permission][] = access site-wide contact form
 features[user_permission][] = access user contact forms
