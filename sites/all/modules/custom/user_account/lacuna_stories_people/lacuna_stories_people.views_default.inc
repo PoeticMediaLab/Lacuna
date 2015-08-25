@@ -24,8 +24,8 @@ function lacuna_stories_people_views_default_views() {
   $handler = $view->new_display('default', 'Master', 'default');
   $handler->display->display_options['title'] = 'People';
   $handler->display->display_options['use_more_always'] = FALSE;
-  $handler->display->display_options['access']['type'] = 'php';
-  $handler->display->display_options['access']['php_access'] = 'return course_get_selected_course();';
+  $handler->display->display_options['access']['type'] = 'perm';
+  $handler->display->display_options['access']['perm'] = 'access user profiles';
   $handler->display->display_options['cache']['type'] = 'none';
   $handler->display->display_options['query']['type'] = 'views_query';
   $handler->display->display_options['exposed_form']['type'] = 'basic';
@@ -52,14 +52,10 @@ function lacuna_stories_people_views_default_views() {
   $handler->display->display_options['fields']['rid']['label'] = '';
   $handler->display->display_options['fields']['rid']['alter']['max_length'] = '50';
   $handler->display->display_options['fields']['rid']['element_label_colon'] = FALSE;
-  /* Sort criterion: User: Created date */
-  $handler->display->display_options['sorts']['created']['id'] = 'created';
-  $handler->display->display_options['sorts']['created']['table'] = 'users';
-  $handler->display->display_options['sorts']['created']['field'] = 'created';
-  /* Sort criterion: User: Display Name (field_display_name) */
-  $handler->display->display_options['sorts']['field_display_name_value']['id'] = 'field_display_name_value';
-  $handler->display->display_options['sorts']['field_display_name_value']['table'] = 'field_data_field_display_name';
-  $handler->display->display_options['sorts']['field_display_name_value']['field'] = 'field_display_name_value';
+  /* Sort criterion: User: Uid */
+  $handler->display->display_options['sorts']['uid']['id'] = 'uid';
+  $handler->display->display_options['sorts']['uid']['table'] = 'users';
+  $handler->display->display_options['sorts']['uid']['field'] = 'uid';
   /* Filter criterion: User: Active */
   $handler->display->display_options['filters']['status']['id'] = 'status';
   $handler->display->display_options['filters']['status']['table'] = 'users';
