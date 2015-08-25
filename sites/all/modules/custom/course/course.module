@@ -184,58 +184,64 @@ function course_switch_course_link ($row, $view) {
   $gid = $row->nid;
   $title = $row->title;
   if (($view->current_display == 'not_enrolled') && !user_access('administer group')) {
-		// Allow users w/ admin group permissions to switch context to any course
+		// User can only switch to enrolled courses
     return l($title, drupal_get_path_alias('node/' . $gid));
-  };
+  }
 	if ($current_course = course_get_selected_course()) {
 		if ($gid == $current_course) {
 			$title .= " (current course)";
 		}
 	}
-  return l($title, 'switch-course/' . $gid);
+	// Allow only users w/ admin group permissions to switch context to any course
+	return l($title, 'switch-course/' . $gid);
 }
 
 /**
  * Implements hook_views_query_alter().
  */
 function course_views_query_alter(&$view, &$query) {
-  switch ($view->name) {
+	$gid = course_get_selected_course();
 
-    // Filter courses views for enrolled and not enrolled
-    case 'courses':
-      if($view->name == "courses") {
-        switch ($view->current_display) {
-          case 'not_enrolled':
-            // This cannot be done in the view. It needs to be done in a query alter. See: https://www.drupal.org/node/596860#comment-10030507
-            $query->add_where_expression(2, 'node.nid NOT IN (SELECT gid FROM og_membership WHERE etid = ***CURRENT_USER***)');
-            break;
-          case 'enrolled':
-            // This could be done in the view. Doing here for simplicity and organization.
-            $query->add_where_expression(2, 'node.nid IN (SELECT gid FROM og_membership WHERE etid = ***CURRENT_USER***)');
-            break;
-        }
-      }
-      break;
+	if ($gid) {
+		// Filter node content by course
+		$where_node_views = array('responses', 'materials', 'threads', 'all-content', 'my-writing');
+		if (in_array($view->name, $where_node_views)) {
+			$query->add_where_expression(2, 'node.nid IN (SELECT etid FROM og_membership WHERE gid = ' . $gid . ')');
+		}
 
-    // Filter course-specific views to the course context
-    // Way easier this way than with a custom views filters, and equally performant.
-    case 'people':
-      $query->add_where_expression(2, 'users.uid IN (SELECT etid FROM og_membership WHERE gid = ' . course_get_selected_course() . ')');
-      break;
-    case 'responses':
-    case 'documents':
-        switch ($view->current_display) {
-          case 'materials':
-            $query->add_where_expression(2, 'node.nid IN (SELECT etid FROM og_membership WHERE gid = ' . course_get_selected_course() . ')');
-            $query->group_operator = 'AND'; // Better Exposed Filters workaround
-          break;
-          case 'course_block':
-            $query->add_where_expression(2, 'node.nid IN (SELECT etid FROM og_membership WHERE gid = ' . course_get_selected_course() . ')');
-            $query->group_operator = 'AND'; // Better Exposed Filters workaround
-          break;
-        }
-      break;
-  }
+		// Filter users by course
+		$where_user_views = array('people', 'all-email');
+		if (in_array($view->name, $where_user_views)) {
+			$query->add_where_expression(2, 'user.uid IN (SELECT etid FROM og_membership WHERE gid = ' . $gid . ')');
+		}
+
+		// Filter annotation tags by course
+		if ($view->name == 'curate-tags') {
+			// TODO: filter by gid == field_term_course.field_term_course_target_id
+			// LEFT JOIN {field_data_field_term_course} field_data_field_term_course ON taxonomy_term_data.tid = field_data_field_term_course.entity_id
+//			$query->add_where_expression(2, '');
+		}
+
+		if ($view->name == 'bibliography_entity_reference_autocomplete') {
+			// TODO: LEFT JOIN field_data_field_bibliographic_entry ON node.nid = field_data_field_bibliographic_entry.field_bibliographic_entry_target_id AND (field_data_field_bibliographic_entry.entity_type = 'node' AND field_data_field_bibliographic_entry.deleted = '0')
+//			$query->add_where_expression(2, '');
+		}
+	}
+
+	// Filter courses views for enrolled and not enrolled
+	if ($view->name == 'courses') {
+		switch ($view->current_display) {
+			case 'not_enrolled':
+				// This cannot be done in the view. It needs to be done in a query alter.
+				// @see https://www.drupal.org/node/596860#comment-10030507
+				$query->add_where_expression(2, 'node.nid NOT IN (SELECT gid FROM og_membership WHERE etid = ***CURRENT_USER***)');
+				break;
+			case 'enrolled':
+				// This could be done in the view. Doing here for simplicity and organization.
+				$query->add_where_expression(2, 'node.nid IN (SELECT gid FROM og_membership WHERE etid = ***CURRENT_USER***)');
+				break;
+		}
+	}
 }
 
 /**
@@ -290,7 +296,10 @@ function course_views_pre_build(&$view) {
       $current_course = course_get_selected_course();
       $view->display_handler->handlers['filter']['og_group_ref_target_id']->value = array($current_course=>$current_course);
       global $user;
-      $view->display_handler->handlers['filter']['author_select']->value = array($user->uid => $user->uid);
+			if (isset($view->display_handler->handlers['filter']['author_select'])) {
+				$view->display_handler->handlers['filter']['author_select']->value = array($user->uid => $user->uid);
+			}
+
 
       break;
 
@@ -300,16 +309,18 @@ function course_views_pre_build(&$view) {
 function course_get_terms_for_current_course($taxonomy_name) {
 	$gid = course_get_selected_course();
 	$taxonomy = array();
-	$query = new EntityFieldQuery();
-	$result = $query->entityCondition('entity_type', 'taxonomy_term')
-		->entityCondition('bundle', $taxonomy_name)
-		->fieldCondition('field_term_course', 'target_id', $gid, '=')
-		->propertyOrderBy('weight')
-		->execute();
-	if (isset($result['taxonomy_term'])) {
-		foreach(array_keys($result['taxonomy_term']) as $tid) {
-			$wrapper = entity_metadata_wrapper('taxonomy_term', taxonomy_term_load($tid));
-			$taxonomy[$tid] = $wrapper->name->value();
+	if ($gid) {
+		$query = new EntityFieldQuery();
+		$result = $query->entityCondition('entity_type', 'taxonomy_term')
+			->entityCondition('bundle', $taxonomy_name)
+			->fieldCondition('field_term_course', 'target_id', $gid, '=')
+			->propertyOrderBy('weight')
+			->execute();
+		if (isset($result['taxonomy_term'])) {
+			foreach(array_keys($result['taxonomy_term']) as $tid) {
+				$wrapper = entity_metadata_wrapper('taxonomy_term', taxonomy_term_load($tid));
+				$taxonomy[$tid] = $wrapper->name->value();
+			}
 		}
 	}
 	return $taxonomy;

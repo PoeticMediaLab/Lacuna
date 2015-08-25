@@ -199,14 +199,16 @@ function course_get_taxonomy_term_in_current_course($vocab_name, $term) {
 		return FALSE;
 	}
 	$gid = course_get_selected_course();
-	$query = new EntityFieldQuery();
-	$result = $query->entityCondition('entity_type', 'taxonomy_term')
-		->entityCondition('bundle', $vocab_name)
-		->fieldCondition('field_term_course', 'target_id', $gid, '=')
-		->propertyCondition('name', $term)
-		->execute();
-	if (isset($result['taxonomy_term'])) {
-		return $result['taxonomy_term'];
+	if ($gid) {
+		$query = new EntityFieldQuery();
+		$result = $query->entityCondition('entity_type', 'taxonomy_term')
+			->entityCondition('bundle', $vocab_name)
+			->fieldCondition('field_term_course', 'target_id', $gid, '=')
+			->propertyCondition('name', $term)
+			->execute();
+		if (isset($result['taxonomy_term'])) {
+			return $result['taxonomy_term'];
+		}
 	}
 	return FALSE;
 }
