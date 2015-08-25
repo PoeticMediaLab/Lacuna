@@ -27,7 +27,7 @@
         return tags;
       },
       stringifyTags: function(array) {
-        return array.join(",");
+        return array.join(", ");
       }
     };
 
@@ -49,13 +49,6 @@
       this.annotator.viewer.addField({
         load: this.updateViewer
       });
-      if (this.annotator.plugins.Filter) {
-        this.annotator.plugins.Filter.addFilter({
-          label: Annotator._t('Tag'),
-          property: 'tags',
-          isFiltered: Tags.filterCallback
-        });
-      }
       return this.input = $(this.field).find(':input');
     };
 
@@ -69,6 +62,7 @@
 
     Tags.prototype.updateField = function(field, annotation) {
       var value;
+      console.log(annotation.tags);
       value = '';
       if (annotation.tags) value = this.stringifyTags(annotation.tags);
       return this.input.val(value);
@@ -78,16 +72,34 @@
       return annotation.tags = this.parseTags(this.input.val());
     };
 
+    Tags.prototype.sortTags = function(a, b) {
+      return a.label.localeCompare(b.label);
+    };
+
     Tags.prototype.updateAutocompleteTags = function(event, annotation) {
       var tag, tags, _i, _len, _ref;
-      tags = Drupal.settings.annotator_tags;
+      tags = (function() {
+        var _i, _len, _ref, _results;
+        _ref = Drupal.settings.annotator_tags.tags;
+        _results = [];
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          tag = _ref[_i];
+          _results.push(tag.label);
+        }
+        return _results;
+      })();
       _ref = annotation.tags;
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         tag = _ref[_i];
-        if (__indexOf.call(tags, tag) < 0) tags.push(tag);
+        if (__indexOf.call(tags, tag) < 0) {
+          Drupal.settings.annotator_tags.tags.push({
+            label: tag,
+            flagged: 0
+          });
+        }
       }
       return this.input.catcomplete({
-        source: tags
+        source: Drupal.settings.annotator_tags.tags.sort(this.sortTags)
       });
     };
 
@@ -95,8 +107,7 @@
       field = $(field);
       if (annotation.tags && $.isArray(annotation.tags) && annotation.tags.length) {
         return field.addClass('annotator-tags').html(function() {
-          var string;
-          return string = $.map(annotation.tags, function(tag) {
+          return $.map(annotation.tags, function(tag) {
             return '<span class="annotator-tag">' + Annotator.Util.escape(tag) + '</span>';
           }).join(' ');
         });

@@ -232,7 +232,7 @@ function theme_flag_admin_page($variables) {
 /**
  * Menu callback for adding a new flag.
  *
- * @param $entity_type
+ * @param string|NULL $entity_type
  *  The entity type for the new flag, taken from the path argument. If not
  *  present (i.e., '/add'), a form showing all possible flag types is shown.
  *  Otherwise, this shows a form for adding af flag the given type.
@@ -796,9 +796,9 @@ function flag_check_link_types($element) {
 /**
  * Clears various caches when one or more flags are modified.
  *
- * @param $entity_types
+ * @param string|array $entity_types
  *  The entity types for the flags. May be a single value or an array.
- * @param $is_insert_or_delete
+ * @param bool $is_insert_or_delete
  *  Whether the modified flag is being inserted (saved for the first time) or
  *  deleted. This results in a more vigorous clearing of caches. In
  *  particular, when no flags exist yet, no Field admin UI paths exist and these

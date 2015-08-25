@@ -6,10 +6,7 @@ core = 7.x
 configure = admin/config/content/annotator
 
 files[] = includes/AnnotatorPlugin.class.inc
-files[] = plugins/annotator/AuthAnnotatorPlugin.class.inc
-files[] = plugins/annotator/I18nAnnotatorPlugin.class.inc
-files[] = plugins/annotator/MarkdownAnnotatorPlugin.class.inc
-files[] = plugins/annotator/PermissionsAnnotatorPlugin.class.inc
+files[] = plugins/annotator/AuthorAnnotatorPlugin.class.inc
 files[] = plugins/annotator/TagsAnnotatorPlugin.class.inc
 files[] = plugins/annotator/UnsupportedAnnotatorPlugin.class.inc
 files[] = plugins/annotator/CategoriesAnnotatorPlugin.class.inc
@@ -18,7 +15,7 @@ files[] = plugins/annotator/TouchAnnotatorPlugin.class.inc
 files[] = plugins/annotator/PrivacyAnnotatorPlugin.class.inc
 files[] = plugins/annotator/CommentAnnotatorPlugin.class.inc
 files[] = plugins/annotator/RichtextAnnotatorPlugin.class.inc
-
+files[] = plugins/annotator/HistogramAnnotatorPlugin.class.inc
 
 dependencies[] = ctools
 dependencies[] = jquery_update

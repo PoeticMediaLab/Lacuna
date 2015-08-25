@@ -9,8 +9,8 @@
  */
 function lacuna_stories_rules_default_rules_configuration() {
   $items = array();
-  $items['rules_after_irb_form_completed_direct_user_to_materials'] = entity_import('rules_config', '{ "rules_after_irb_form_completed_direct_user_to_materials" : {
-      "LABEL" : "After IRB Form Completed, Direct User to Materials",
+  $items['lacuna_stories_rules_irb_form_complete_complete_profile'] = entity_import('rules_config', '{ "lacuna_stories_rules_irb_form_complete_complete_profile" : {
+      "LABEL" : "After IRB Form Completed, Ask User to Complete Profile",
       "PLUGIN" : "reaction rule",
       "OWNER" : "rules",
       "REQUIRES" : [ "webform_rules", "rules" ],
@@ -18,12 +18,13 @@ function lacuna_stories_rules_default_rules_configuration() {
       "IF" : [
         { "webform_has_id" : {
             "form_id" : [ "form_id" ],
-            "selected_webform" : { "value" : { "webform-client-form-67" : "webform-client-form-67" } }
+            "selected_webform" : { "value" : { "webform-client-form-1" : "webform-client-form-1" } }
           }
         }
       ],
       "DO" : [
-        { "drupal_message" : { "message" : "\\u003Cspan id=\\u0022irb-complete-message\\u0022\\u003EBegin \\u003Ca href=\\u0022[site:url]\\u0022\\u003EExploring Materials\\u003C\\/a\\u003E\\u003C\\/span\\u003E" } }
+        { "redirect" : { "url" : "[user:edit-url]" } },
+        { "drupal_message" : { "message" : "Welcome to Lacuna Stories. Please tell us about yourself by completing your profile." } }
       ]
     }
   }');
@@ -32,7 +33,7 @@ function lacuna_stories_rules_default_rules_configuration() {
       "PLUGIN" : "reaction rule",
       "OWNER" : "rules",
       "REQUIRES" : [ "rules" ],
-      "ON" : { "node_insert--blog" : { "bundle" : "blog" } },
+      "ON" : { "node_insert--response" : { "bundle" : "response" } },
       "DO" : [
         { "drupal_message" : {
             "message" : "Your response has been saved. Please note: if you make changes to your response, any annotations already made on this piece may disappear or be in the wrong location. To avoid this issue, you can set your response to \\u0022Unpublished\\u0022 until you are ready to share it with others. To do so, visit the \\u003Ca href=\\u0022\\/my-writing\\u0022\\u003EMy Writing\\u003C\\/a\\u003E page.",
@@ -79,22 +80,26 @@ function lacuna_stories_rules_default_rules_configuration() {
       "ON" : { "node_insert--annotation" : { "bundle" : "annotation" } },
       "IF" : [
         { "node_is_of_type" : {
-            "node" : [ "node:annotation-reference" ],
-            "type" : { "value" : { "blog" : "blog", "thread" : "thread" } }
+            "node" : [ "node:field-annotation-reference" ],
+            "type" : { "value" : { "response" : "response", "thread" : "thread" } }
           }
         },
-        { "NOT data_is" : { "data" : [ "node:private" ], "value" : 1 } },
         { "NOT data_is" : {
             "data" : [ "node:author" ],
-            "value" : [ "node:annotation-reference:author" ]
+            "value" : [ "node:field-annotation-reference:author" ]
+          }
+        },
+        { "data_is" : {
+            "data" : [ "node:field-annotation-audience" ],
+            "value" : { "value" : { "everyone" : "everyone" } }
           }
         }
       ],
       "DO" : [
         { "mail" : {
-            "to" : [ "node:annotation-reference:author:mail" ],
-            "subject" : "New annotation of [node:annotation-reference:title] on Lacuna Stories: [site:name]",
-            "message" : "Dear [node:annotation-reference:author:field-display-name],\\r\\n\\r\\nYour post on Lacuna Stories: [site:name], \\u0022[node:annotation-reference:title]\\u0022 has been annotated by [node:author:field-display-name]:\\r\\n\\r\\n[node:text]\\r\\n\\r\\nTo view this annotation, visit the following link:\\r\\n\\r\\n[node:annotation-reference:url]?id=[node:nid]\\r\\n\\r\\nSincerely,\\r\\n\\r\\nThe Lacuna Stories Team",
+            "to" : [ "node:field-annotation-reference:author:mail" ],
+            "subject" : "New annotation of [node:field-annotation-reference:title] on Lacuna Stories: [site:name]",
+            "message" : "Dear [node:field-annotation-reference:author:field-display-name],\\r\\n\\r\\nYour post on Lacuna Stories: [site:name], \\u0022[node:field-annotation-reference:title]\\u0022 has been annotated by [node:author:field-display-name]:\\r\\n\\r\\n[node:text]\\r\\n\\r\\nTo view this annotation, visit the following link:\\r\\n\\r\\n[node:field-annotation-reference:url]?id=[node:nid]\\r\\n\\r\\nSincerely,\\r\\n\\r\\nThe Lacuna Stories Team",
             "language" : [ "" ]
           }
         }

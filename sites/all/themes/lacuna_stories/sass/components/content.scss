@@ -4,10 +4,7 @@
 .field-label {
   margin-bottom: 10px;
 }
-.submitted {
-  font-style: italic;
-  font-size: 0.9em;
-}
+
 
 #comments {
   margin-top: 40px;
@@ -37,11 +34,57 @@ ul#ui-id-1.ui-autocomplete {
 }
 
 // Hide the "Username's blog" text on responses
-li.blog_usernames_blog {
+li.response_usernames_response {
   display: none !important;
 }
 
 // Hide the "Text Format" stuff when creating a thread
 fieldset#edit-thread-description-format {
   display: none;
+}
+
+/*  Styles for Response header with user information.
+*/
+
+.response-user-information {
+
+  .user-picture {
+    margin-right: 3em;
+    margin-bottom: 1em;
+    float: left;
+  }
+
+  .username-and-date {
+
+    padding-top: 70px;
+    font-family: "Arial", sans-serif;
+
+    .username {
+
+      font-size: xx-large;
+      font-weight: bold;
+      text-decoration: none;
+      color: black;
+      line-height: 150%;
+
+    }
+
+    .date {
+
+      font-size: large;
+
+    }
+  }
+}
+
+// The XX reads statistic
+li.statistics_counter {
+  float: right;
+  margin-bottom: 1em;
+  margin-right: 2em;
+}
+
+#document-authors {
+  font-weight: normal;
+  font-size: .75em;
 }

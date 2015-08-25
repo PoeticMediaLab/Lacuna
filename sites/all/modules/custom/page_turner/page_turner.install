@@ -1,0 +1,71 @@
+<?php
+/**
+ * @file
+ * Install the Page Turner module.
+ *
+ * Mike Widner <mikewidner@stanford.edu>
+ **/
+
+/**
+ * Implements hook_install()
+ **/
+function page_turner_install() {
+  // Create a checkbox for user profiles that controls
+  // if they use the Page Turner or not
+//  $t = get_t();
+//  $field = array(
+//    'field_name' => 'field_page_turner_active',
+//    'type' => 'list_boolean',
+//    'title' => $t('Page Turner'),
+//    'cardinality' => 1,
+//    'settings' => array(
+//      'allowed_values' => array(
+//        '0' => 'Do not use Page Turner',
+//        '1' => 'Use Page Turner to read long text',
+//      )
+//    )
+//  );
+//  $instance = array(
+//    'field_name' => 'field_page_turner_active',
+//    'entity_type' => 'user',
+//    'bundle' => 'user',
+//    'label' => $t('Page Turner'),
+//    'description' => t('Page Turner will change the display of long text so that, rather than an infinite scroll, you will see single pages at a time'),
+//    'default_value' => array(0 => array('value' => '1')),
+//    'widget' => array(
+//      'active' => TRUE,
+//      'module' => 'options',
+//      'settings' => array(),
+//      'type' => 'options_onoff',
+//    ),
+//    'settings' => array(
+//      'user_register_form' => TRUE,
+//    ),
+//  );
+//  field_create_field($field);
+//  field_create_instance($instance);
+}
+
+/**
+ * Implements hook_uninstall()
+ */
+function page_turner_uninstall() {
+  // Let's be nice and *actually* uninstall
+  variable_del('page_turner_minlength');
+  variable_del('page_turner_pagelength');
+  variable_del('page_turner_breaks');
+  variable_del('page_turner_node_types');
+  field_delete_field('field_page_turner_active');
+}
+
+/**
+ * Change order in which Page Turner module loads
+ */
+function page_turner_update_7101() {
+	// This module needs to fire before the Annotator Histogram plugin loads
+	// So, let's change our module weight
+	db_update('system')
+		->fields(array('weight' => -100))
+		->condition('name', 'page_turner', '=')
+		->execute();
+}

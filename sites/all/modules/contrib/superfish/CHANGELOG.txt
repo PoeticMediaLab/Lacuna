@@ -33,7 +33,7 @@ Version 1.9-beta5, 2012-10-25
 - #1455724 Tweaked the if statement.
 - #1158926 Libraries API is no longer mandatory.
 - #1534734 Applied a patch to make it easier to theme hyperlinks.
-- #1539894 Added a new feature to make it possible to hide hyperlink descriptions ('title' attribute).
+- #1539894 Added new feature to hide hyperlink descriptions ('title' attribute).
 - #1700566 Block form tweaked.
 - #1570796 Added README.txt file.
 
@@ -45,14 +45,14 @@ Version 1.9-beta3, 2011-11-20
 ----------------------
 - #1117348 [Fixed] Fixed the $output array.
 - #1158890, #1158926 [Fixed] hook_requirements.
-- #1111668, #1124998, #1144698, #1153712, #1107496, #1147596 [Fixed] Update script removed.
+- #1111668, #1124998, #1144698, #1153712, #1107496, #1147596 Update removed.
 - #925944, #979202, #1112928, #1123734 [Fixed] i18n function added back.
 - #1117568 [Fixed] Added prefix "sf-".
 - #1138278 [Fixed] Added a 0 to the "Path levels" options.
 - #1282708 [New feature] Take the "Expanded by default" option into effect.
-- #1126574, #1167776, #1190688 [Fixed] No more conflicts with other menu-related modules.
-- #1184642, #1194244, #1191050, #1179838 [Improvement] Superfish now uses Drupal behvaiours.
-- #776480, #1140910, #1165838 [Improvement] Superfish now scans the /styles folder.
+- #1126574, #1167776, #1190688 Fixed conflicts with menu-related modules.
+- #1184642, #1194244, #1191050, #1179838 Superfish now uses Drupal behvaiours.
+- #776480, #1140910, #1165838 Superfish now scans the /styles folder.
 - #1231378 [New feature] Drush integration.
 - #1246378, #1298846 [Fixed] cache_get issues.
 - #1141848 [Improvement] Added the standard "menu" class.
@@ -71,7 +71,7 @@ Version 1.9-beta, 2011-03-23
 - #798722 [New feature] Path to Superfish library.
 - #801238 [Improvement] "middle" class added.
 - #849566 [Improvement] "neutral" style added.
-- #866006 [New feature] jQuery Supposition plugin added and heavily heavily modified.
+- #866006 [New feature] jQuery Supposition plugin added and heavily modified.
 - #906038 [New feature] Multi-column sub-menus.
 - #913548 Admin form tweaks.
 - #929146 [Fixed]
@@ -79,7 +79,7 @@ Version 1.9-beta, 2011-03-23
 - #975182 [Improvement] hook_uninstall added.
 - #993322, #1002766 [Improvement] "Item depth" class added.
 - [New feature] New slide-in effects.
-- [Improvement] Menu caching added using a patch originally provided for NiceMenus.
+- [Improvement] Menu cache added by a patch originally provided for NiceMenus.
 - [Improvement] hoverIntent moved to block settings.
 - [Improvement] Superfish.css
 - [Improvement] Blocks number in the admin form.
@@ -90,17 +90,20 @@ Version 1.9-beta, 2011-03-23
 
 Version 1.6, 2010-04-12
 ----------------------
-- #764152, #741528  [Bug fixed] A previous modification to the links was causing problems regarding the <front> tag.
+- #764152, #741528 Previous modification was causing problems with <front> tag.
 - #761446 [Improvement] More space for HTML wrappers.
 
 Version 1.5, 2010-04-02
 ----------------------
-- #758148 [Bug fixed] Fade in\out effect is enabled by default and could not be disabled hence removed from SF block settings; It should be noted that any trick for disabling the fade effect (jQuery .animate Opacity) was causing JavaScript errors.
+- #758148 [Bug fixed] Fade in\out effect is enabled by default and could not be
+                      disabled hence removed from SF block settings; It should
+                      be noted that any trick for disabling the fade effect
+                      (jQuery .animate Opacity) was causing JavaScript errors.
 - #753412 [New feature] HTML Wrapper for Main UL.
 
 Version 1.4, 2010-03-27
 ----------------------
-- #748474 [New features] New classes added first\last, zebra striping, item count.
+- #748474 [New features] New classes added first\last, zebra, item count.
 - #743164, #718676 [Bug fixed] Active tab in NavBar menus.
 - #741528 [New feature] HTML Wrappers for hyperlinks, and link texts.
 - #716622 [New feature] Path for extra CSS files.

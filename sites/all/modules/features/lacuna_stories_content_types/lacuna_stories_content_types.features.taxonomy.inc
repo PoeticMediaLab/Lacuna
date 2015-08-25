@@ -36,7 +36,7 @@ function lacuna_stories_content_types_taxonomy_default_vocabularies() {
       'name' => 'Annotation Tags',
       'machine_name' => 'annotation_tags',
       'description' => 'User-generated tags for annotations',
-      'hierarchy' => 1,
+      'hierarchy' => 0,
       'module' => 'annotation',
       'weight' => 1,
       'rdf_mapping' => array(
@@ -170,9 +170,9 @@ function lacuna_stories_content_types_taxonomy_default_vocabularies() {
         ),
       ),
     ),
-    'unit' => array(
-      'name' => 'Unit',
-      'machine_name' => 'unit',
+    'units' => array(
+      'name' => 'Units',
+      'machine_name' => 'units',
       'description' => 'Organize content by units in the syllabus',
       'hierarchy' => 0,
       'module' => 'taxonomy',
