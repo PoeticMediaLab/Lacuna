@@ -9,8 +9,8 @@
  */
 function lacuna_stories_rules_default_rules_configuration() {
   $items = array();
-  $items['rules_after_irb_form_completed_direct_user_to_materials'] = entity_import('rules_config', '{ "rules_after_irb_form_completed_direct_user_to_materials" : {
-      "LABEL" : "After IRB Form Completed, Direct User to Materials",
+  $items['lacuna_stories_rules_irb_form_complete_complete_profile'] = entity_import('rules_config', '{ "lacuna_stories_rules_irb_form_complete_complete_profile" : {
+      "LABEL" : "After IRB Form Completed, Ask User to Complete Profile",
       "PLUGIN" : "reaction rule",
       "OWNER" : "rules",
       "REQUIRES" : [ "webform_rules", "rules" ],
@@ -22,7 +22,10 @@ function lacuna_stories_rules_default_rules_configuration() {
           }
         }
       ],
-      "DO" : [ { "redirect" : { "url" : "[site:url]" } } ]
+      "DO" : [
+        { "redirect" : { "url" : "[user:edit-url]" } },
+        { "drupal_message" : { "message" : "Welcome to Lacuna Stories. Please tell us about yourself by completing your profile." } }
+      ]
     }
   }');
   $items['rules_notice_about_annotations_on_responses'] = entity_import('rules_config', '{ "rules_notice_about_annotations_on_responses" : {

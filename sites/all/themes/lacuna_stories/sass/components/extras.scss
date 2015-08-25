@@ -1,3 +1,9 @@
+/*moving course title to top of page*/
+.course-name {
+    position: relative;
+    top: -100px;
+}
+
 /*views fluid grid styling for enrolled courses view*/
 .views-fluid-grid-item {
 	background-color: #fafafa !important;
@@ -30,11 +36,13 @@ li.views-fluid-grid-inline.views-fluid-grid-item.views-row:hover {
 	}
 	.views-field-field-course-year {
 		padding-left: 10px;
-		padding-top: 10px;
+		/*padding-top: 10px;*/
+        font-size: 0.9em;
 	}
 	.views-field-field-course-id {
 		padding-left: 10px;
 		padding-bottom: 10px;
+        font-size: 0.9em;
 	}
 	.views-field-field-name {
 		padding-left: 10px;
@@ -47,6 +55,7 @@ li.views-fluid-grid-inline.views-fluid-grid-item.views-row:hover {
 		padding-left: 10px;
 		position: relative;
 		font-family: "Source Sans Pro", sans-serif;
+        line-height: 1.2em;
 	}
 }
 
@@ -68,7 +77,8 @@ li.views-fluid-grid-inline.views-fluid-grid-item.views-row:hover {
     position: relative;
     top: 0;
     left: 0;
-    transform: translate(40%, 20%);
+    transform: translate(47%, 20%);
+    -webkit-transform: translate(47%, 20%);
     float: left;
     vertical-align: baseline;
 }
@@ -100,20 +110,28 @@ li.views-fluid-grid-inline.views-fluid-grid-item.views-row:hover {
     height: 400px;
     width: 400px;
     border: 1px solid black;
-    background-image: url(http://s4.postimg.org/o8uky8ixp/Screenshot_2015_08_11_16_29_19.png);
+    background-image: url(http://stanford.lacunastories.com/sites/default/files/styles/large/public/Screenshot%202015-08-18%2011.49.41.png?itok=vmQEav_2);
     background-size: cover;
     background-position: center;
     position: relative;
     right: 0;
     transform: translatex(-501%);
+    -webkit-transform: translatex(-501%);
     box-shadow: 3px 0px 5px 0 #666464;
 }
 body {
 	overflow-x: hidden;
 }
+
+
+#page {
+    overflow-x: visible !important;
 }
 
-@media (max-width: 1199px) and (min-width: 915px) {
+
+}
+
+@media (max-width: 1199px) and (min-width: 965px) {
 	.banner-wrapper {
     height: 400px;
     width: 100%;
@@ -130,6 +148,7 @@ body {
     top: 0;
     left: 0;
     transform: translate(20%, 20%);
+    -webkit-transform: translate(20%, 20%);
     float: left;
     vertical-align: baseline;
 }
@@ -161,7 +180,7 @@ body {
     height: 400px;
     width: 400px;
     border: 1px solid black;
-    background-image: url(http://s4.postimg.org/o8uky8ixp/Screenshot_2015_08_11_16_29_19.png);
+    background-image: url(http://stanford.lacunastories.com/sites/default/files/styles/large/public/Screenshot%202015-08-18%2011.49.41.png?itok=vmQEav_2);
     background-size: cover;
     background-position: center;
     position: relative;
@@ -171,7 +190,7 @@ body {
 }
 }
 
-@media (max-width: 915px) and (min-width: 541px) {
+@media (max-width: 965px) and (min-width: 541px) {
 	.banner-wrapper {
     height: 400px;
     width: 100%;
@@ -188,6 +207,7 @@ body {
     top: 0;
     left: 0;
     transform: translate(25%, 15%);
+    -webkit-transform: translate(25%, 15%);
     float: left;
     vertical-align: baseline;
 }
@@ -248,6 +268,7 @@ body {
     top: 0;
     left: 0;
     transform: translate(0%, 90%);
+    -webkit-transform: translate(0%, 90%);
 }
 
 .lacuna-stories-image {
@@ -264,4 +285,115 @@ body {
     color: #000000;
     line-height: 20px;
 }
+}
+
+
+/*styling for "about this course" page*/
+.node-course {
+    .group-header {
+        width: 100%;
+        height: 35vh;
+        overflow: hidden;
+        border-bottom: 1px solid #d1d5d3;
+    }
+
+    .field-name-field-course-image img {
+        width: 100%;
+        height: auto;
+        transform: translateY(-50%);
+        -webkit-transform: translateY(-50%);
+    }
+    .field-name-field-course-title {
+        font-family: "Source Sans Pro", serif;
+        font-size: 3em;
+        padding-top: 25px;
+        padding-bottom: 10px;
+        text-align: left;
+        letter-spacing: -.03em;
+        text-transform: uppercase;
+        color: #1588ba;
+        line-height: 1em;
+        margin-left: 5%;
+        margin-right: 5%;
+    }
+
+    .field-name-field-name {
+      margin-left: 5%;
+      margin-right: 5%;
+      font-family: "Source Sans Pro", sans-serif;
+      font-size: 2em;
+    }
+
+    .field-name-field-department {
+      margin-left: 5%;
+      margin-right: 5%;
+      font-family: "Source Sans Pro", sans-serif;
+      font-size: 1.5em;
+    }
+
+    .field-name-body {
+      margin-left: 5%;
+      margin-right: 5%;
+      text-align: justify;
+    }
+
+    .group-left {
+      width: 58%;
+    }
+
+    .group-right {
+      width: 40%;
+      box-shadow: inset 0 0 3px 0 rgba(0,0,0,0.15);
+      border: 1px solid #d1d5d3;
+      margin-top: 40px;
+    }
+    .field-name-field-course-term {
+      margin-left: 10%;
+      margin-right: 20%;
+      border-bottom: 1px dotted #d1d5d3;
+      padding-top: 25px;
+        .field-items {
+          float: right;
+        }
+    }
+    .field-name-field-course-year {
+      margin-left: 10%;
+      margin-right: 20%;
+      border-bottom: 1px dotted #d1d5d3;
+        .field-items {
+          float: right;
+        }
+    }
+    .field-name-field-course-id {
+      margin-left: 10%;
+      margin-right: 20%;
+      border-bottom: 1px dotted #d1d5d3;
+        .field-items {
+          float: right;
+        }
+    }
+    .field-name-field-start-date {
+      margin-left: 10%;
+      margin-right: 20%;
+      border-bottom: 1px dotted #d1d5d3;
+        .field-items {
+          float: right;
+        }
+    }
+    .field-name-field-end-date {
+      margin-left: 10%;
+      margin-right: 20%;
+      border-bottomn: 1px dotted #d1d5d3;
+        .field-items {
+          float: right;
+        }
+    }
+}
+
+/*styling for "enroll" button on course pages*/
+.enroll-button {
+    margin-left: 3%;
+    font-size: 1em;
+    width: auto;
+    font-family: "Source Sans Pro", sans-serif;
 }

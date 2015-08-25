@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the WebAuth feature.
+ */
+
+include_once 'lacuna_stories_webauth.features.inc';

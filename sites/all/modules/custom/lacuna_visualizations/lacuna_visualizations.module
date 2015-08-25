@@ -29,7 +29,7 @@
 // library's directory. (I believe; haven't tested yet)
 // 3. add name of directory to the array below.
 // 4. add an entry in lacuna_visualizations_menu
-// 5. create callback function (lacuna_visualizations_mapview is an
+// 5. create callback function (lacuna_visualizations_responses is an
 // example here) that uses EntityFieldQuery to pull in data and call
 // graphapi functions (or just d3_draw).
 // 6. remember to set the library name in $options.
@@ -260,7 +260,7 @@ function lacuna_visualizations_menu() {
   	  'title' => 'Responses Map',
   	  'description' => 'Visualization showing links between responses and primary sources',
   	  'access arguments' => array('create response content'),
-  	  'page callback' => 'lacuna_visualizations_mapview',
+  	  'page callback' => 'lacuna_visualizations_responses',
   	  'type' => MENU_NORMAL_ITEM,
   	  ),
     'visualization/journey' => array(
@@ -413,30 +413,32 @@ function lacuna_visualizations_journeyview() {
   return theme('graphapi_dispatch', array('graph' => $graph, 'config' => $options));
 }  // end function lacuna_visualizations_journeyview()
 
-function get_document_id_for_biblio($nid) {
-  //Find appropriate material for that biblio entry.
-  $docQuery = new EntityFieldQuery();
-  $docQuery
-    ->entityCondition('entity_type', 'node')
-    ->entityCondition('bundle', 'document')
-    ->fieldCondition('field_bibliographic_entry', 'target_id', $nid, '=');
-  $docResult = $docQuery->execute();
-  if (count($docResult['node'])>0){
-    $results = array_keys($docResult['node']);
-    // PHP 5.3 won't dereference arrays from functions directly
-    return $results[0];
-  }
-  else {
-    return null;
-  }
-}
+//function get_document_id_for_biblio($nid) {
+//  //Find appropriate material for that biblio entry.
+//  $docQuery = new EntityFieldQuery();
+//  $docQuery
+//    ->entityCondition('entity_type', 'node')
+//    ->entityCondition('bundle', 'document')
+//    ->fieldCondition('field_bibliographic_entry', 'target_id', $nid, '=');
+//  $docResult = $docQuery->execute();
+//  if (count($docResult['node'])>0){
+//    $results = array_keys($docResult['node']);
+//    // PHP 5.3 won't dereference arrays from functions directly
+//    return $results[0];
+//  }
+//  else {
+//    return null;
+//  }
+//}
 
 function get_link_url($docId, $nid) {
-  if ($docId != null){
-    return $GLOBALS['base_url'] . '/node/' . $docId;
+	global $base_url;
+	$url = $base_url . '/';
+  if (!empty($docId)){
+    return $url . drupal_get_path_alias('node/' . $docId);
   }
   else {
-    return $GLOBALS['base_url'] . '/node/' . $nid;
+    return $url . drupal_get_path_alias('node/' . $nid);
   }
 }
 
@@ -458,23 +460,58 @@ function get_image($item, $docId) {
  * Visualization showing links between student responses and primary
  * sources.
  */
-function lacuna_visualizations_mapview() {
+function lacuna_visualizations_responses() {
 
+	$nids = array();
   $graph = graphapi_new_graph();
+	$gid = course_get_selected_course();
 
-  $responseQuery = new EntityFieldQuery();
-  $responseQuery
-      ->entityCondition('entity_type', 'node')
-      ->entityCondition('bundle', array('biblio', 'response'));
-  $result = $responseQuery->execute();
-  $nids = array_keys($result['node']);
+	// Because OG has no API for getting all group content per group ಠ_ಠ
+	$sql = "SELECT nid FROM node n
+               INNER JOIN og_membership ogm ON n.nid = ogm.etid
+               WHERE ogm.gid = '" . $gid . "'
+               AND ogm.entity_type = 'node'
+               AND n.type IN ('document', 'response')
+               AND n.status = '" . NODE_PUBLISHED . "'";
+	$result = db_query($sql)->fetchAll();
+	$nids = array();
+	foreach ($result as $row) {
+		$nids[] = $row->nid;
+	}
+
+	// All documents and responses for current course
   $nodes = node_load_multiple($nids);
+
+	$biblio_ids = array();
+	foreach ($nodes as $node) {
+		if ($node->type == 'document') {
+			$biblio_ids[] = $node->field_bibliographic_entry[$node->language][0]['target_id'];
+		}
+	}
+
+	// Load all relevant bibliography references
+	$biblios = node_load_multiple($biblio_ids);
+	$nodes = array_merge($nodes, $biblios);
+
+	// Generate document->bibliography mappings
+	foreach ($nodes as $node) {
+		if ($node->type == 'document') {
+			$doc_ids[$node->field_bibliographic_entry[$node->language][0]['target_id']] = $node->nid;
+		}
+	}
 
   foreach ($nodes as $item) {
 	 // this array will eventually contain all relevant info about responses and document: author, timestamp, etc.
 	 // added to nodes before graphapi passes off to d3.
-    $docId = get_document_id_for_biblio($item->nid);
-    // var_dump($docId);
+		if ($item->type == 'response') {
+			$docId = $doc_ids[$item->field_bibliographic_entry[$item->language][0]['target_id']];
+		}
+		if ($item->type == 'biblio') {
+			$docId = $doc_ids[$item->nid];
+		}
+		if ($item->type == 'document') {
+			continue; // we just load those for ease of setup
+		}
     $dataArray = array(
       'itemType' => $item->type,
       // author set below -- $item->name for responses, but
@@ -502,7 +539,6 @@ function lacuna_visualizations_mapview() {
 		if ($item->type == "biblio") {
 			$document_abstract = strip_tags($item->biblio_abst_e);
 			$dataArray['document_abstract'] = $document_abstract;
-			$author = ' ';
 			if (isset($item->biblio_contributors[0])) {
 				$count = count($item->biblio_contributors);
 				for ($i = 0; $i < $count; $i++) {
@@ -560,7 +596,7 @@ function lacuna_visualizations_mapview() {
   	'drawDocumentCircle' => true,
   );
   return theme('graphapi_dispatch', array('graph' => $graph, 'config' => $options));
-}  // end function lacuna_visualizations_mapview()
+}  // end function lacuna_visualizations_responses()
 
 // Implements hook_library()
 // To load our vis-specific libraries
@@ -642,7 +678,7 @@ function lacuna_visualizations_annotation_dashboard_data() {
     }
   }
 
-  $canReadAll = user_access('access any private annotation');
+  $canReadAll = in_array('Instructor', $user->roles);
   $userNames = array();   // only load users once
   $annotations = array();
 
@@ -696,11 +732,11 @@ function lacuna_visualizations_annotation_dashboard_data() {
     }
 
     // Remove or sanitize data we don't want to expose: annotations, usernames, etc.
+		$data->text = str_repeat("x", strlen($data->text)); // provide length w/o exposing data
+		unset($data->quote);
+		unset($data->tags);
+		unset($data->uid);
     if (!$canReadAll && ($annotation->uid != $user->uid)) {
-			$data->text = "";
-			$data->quote = "";
-			$data->annotation_tags = Array();
-
       if (!array_key_exists($annotation->uid, $userNames)) {
         // anonymize with slight UID obfuscation
         // should use a hash or something to make it harder to decipher

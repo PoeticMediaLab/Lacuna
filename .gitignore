@@ -6,3 +6,5 @@ sites/*/files
 sites/*/private
 
 sites/all/themes/lacuna_stories/.sass-cache/
+
+.DS_Store

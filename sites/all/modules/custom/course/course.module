@@ -372,6 +372,21 @@ function course_form_views_exposed_form_alter(&$form, &$form_state) {
 		$form['lastname']['#options'] = course_get_authors_for_current_course();
 	}
 
+	// Use display name via Realname module, not user account name for author exposed form
+	// Filter authors to only those in current course
+	if (isset($form['author_select'])) {
+		$uids = array_keys($form['author_select']['#options']);
+		$form['author_select']['#options'] = array();	// wipe options
+		$gid = course_get_selected_course();
+		foreach ($uids as $uid) {
+			$account = user_load($uid);
+			$groups = og_get_groups_by_user($account, 'node');
+			if (in_array($gid, $groups)) {
+				$form['author_select']['#options'][$uid] = format_username($account);
+			}
+		}
+	}
+
   if ($form['#id'] == 'views-exposed-form-sewing-kit-page') {
 
     // Restrict the group filter options to (a) courses, (b) that the user is a member of
@@ -498,8 +513,10 @@ function course_node_update($node) {
 
 function course_form_document_node_form_alter(&$form, &$form_state, $form_id) {
   $document = node_load($form['nid']['#value']);
-	$default_unit = '';
-	$default_doc_genre = '';
+	$unit_options = course_get_terms_for_current_course('units');
+	$genre_options = course_get_terms_for_current_course('genre_doc');
+	$default_unit = array_shift(array_keys($unit_options));
+	$default_genre = array_shift(array_keys($genre_options));
 
 	// Per-course units taxonomy
 	if (isset($document->field_unit[LANGUAGE_NONE])) {
@@ -510,7 +527,7 @@ function course_form_document_node_form_alter(&$form, &$form_state, $form_id) {
     '#type' => 'select',
     '#size' => 60,
     '#default_value' => $default_unit,
-    '#options' => course_get_terms_for_current_course('units'),
+    '#options' => $unit_options,
 		'#required' => TRUE,
   );
 
@@ -523,7 +540,7 @@ function course_form_document_node_form_alter(&$form, &$form_state, $form_id) {
 		'#type' => 'select',
 		'#size' => 60,
 		'#default_value' => $default_genre,
-		'#options' => course_get_terms_for_current_course('genre_doc'),
+		'#options' => $genre_options,
 		'#required' => TRUE,
 	);
 
@@ -541,7 +558,7 @@ function course_form_document_node_form_alter(&$form, &$form_state, $form_id) {
   $form['field_bibliographic_entry']['#access'] = FALSE;
 
 	// Finish up form
-  $form['title']['#title'] = 'Material Title to Be Displayed to Students';
+  $form['title']['#title'] = 'Title to Be Displayed to Students';
   $form['actions']['submit']['#value'] = 'Save (Finished Adding Material)';
   $form['actions']['submit']['#submit'] = array('course_add_document_form_submit');
 
@@ -608,6 +625,11 @@ function course_form_biblio_node_form_alter(&$form, &$form_state, $form_id) {
 
 // NB: Needs to be in .module so it is always loaded or it can be excluded from module_implements() cache
 function course_form_course_node_form_alter(&$form, &$form_state, $form_id) {
+	// ensure AJAX media upload still has all the includes
+	// @see https://www.drupal.org/node/1118114#comment-4575298
+	$files = (isset($form_state['build_info']['files'])) ? $form_state['build_info']['files'] : array();
+	$files[] = drupal_get_path('module', 'node') . '/node.pages.inc';
+	$form_state['build_info']['files'] = $files;
   $form['#submit'] = array('course_create_form_submit');
   $form['actions']['submit']['#submit'][] = 'course_create_form_submit';
 }

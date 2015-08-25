@@ -47,6 +47,7 @@
       this.field = this.annotator.editor.addField({
         label: Annotator._t('Privacy')
       });
+      $(this.field).addClass(this.className["default"] + ' fa fa-lock');
       return this.annotator.viewer.addField({
         load: this.updateViewer
       });
