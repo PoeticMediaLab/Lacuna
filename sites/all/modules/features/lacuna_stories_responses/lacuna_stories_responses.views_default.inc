@@ -187,16 +187,28 @@ function lacuna_stories_responses_views_default_views() {
   $handler = $view->new_display('default', 'Master', 'default');
   $handler->display->display_options['title'] = 'Responses';
   $handler->display->display_options['use_more_always'] = FALSE;
-  $handler->display->display_options['access']['type'] = 'php';
-  $handler->display->display_options['access']['php_access'] = 'return course_get_selected_course();';
-  $handler->display->display_options['cache']['type'] = 'none';
+  $handler->display->display_options['access']['type'] = 'role';
+  $handler->display->display_options['access']['role'] = array(
+    3 => '3',
+    4 => '4',
+    5 => '5',
+    6 => '6',
+  );
+  $handler->display->display_options['cache']['type'] = 'time';
+  $handler->display->display_options['cache']['results_lifespan'] = '3600';
+  $handler->display->display_options['cache']['results_lifespan_custom'] = '0';
+  $handler->display->display_options['cache']['output_lifespan'] = '21600';
+  $handler->display->display_options['cache']['output_lifespan_custom'] = '0';
   $handler->display->display_options['query']['type'] = 'views_query';
   $handler->display->display_options['exposed_form']['type'] = 'basic';
   $handler->display->display_options['exposed_form']['options']['reset_button'] = TRUE;
   $handler->display->display_options['exposed_form']['options']['reset_button_label'] = 'View All';
   $handler->display->display_options['exposed_form']['options']['autosubmit'] = TRUE;
   $handler->display->display_options['pager']['type'] = 'full';
-  $handler->display->display_options['pager']['options']['items_per_page'] = '25';
+  $handler->display->display_options['pager']['options']['items_per_page'] = '50';
+  $handler->display->display_options['pager']['options']['offset'] = '0';
+  $handler->display->display_options['pager']['options']['id'] = '0';
+  $handler->display->display_options['pager']['options']['quantity'] = '9';
   $handler->display->display_options['style_plugin'] = 'default';
   $handler->display->display_options['row_plugin'] = 'fields';
   /* No results behavior: Global: Text area */
@@ -210,12 +222,6 @@ function lacuna_stories_responses_views_default_views() {
   $handler->display->display_options['relationships']['uid']['id'] = 'uid';
   $handler->display->display_options['relationships']['uid']['table'] = 'node';
   $handler->display->display_options['relationships']['uid']['field'] = 'uid';
-  /* Field: Broken/missing handler */
-  $handler->display->display_options['fields']['field_image']['id'] = 'field_image';
-  $handler->display->display_options['fields']['field_image']['table'] = 'field_data_field_image';
-  $handler->display->display_options['fields']['field_image']['field'] = 'field_image';
-  $handler->display->display_options['fields']['field_image']['label'] = '';
-  $handler->display->display_options['fields']['field_image']['element_label_colon'] = FALSE;
   /* Field: Content: Title */
   $handler->display->display_options['fields']['title']['id'] = 'title';
   $handler->display->display_options['fields']['title']['table'] = 'node';
@@ -223,13 +229,6 @@ function lacuna_stories_responses_views_default_views() {
   $handler->display->display_options['fields']['title']['label'] = '';
   $handler->display->display_options['fields']['title']['alter']['word_boundary'] = FALSE;
   $handler->display->display_options['fields']['title']['alter']['ellipsis'] = FALSE;
-  /* Field: : field_display_name */
-  $handler->display->display_options['fields']['field_display_name']['id'] = 'field_display_name';
-  $handler->display->display_options['fields']['field_display_name']['table'] = 'field_data_field_display_name';
-  $handler->display->display_options['fields']['field_display_name']['field'] = 'field_display_name';
-  $handler->display->display_options['fields']['field_display_name']['relationship'] = 'uid';
-  $handler->display->display_options['fields']['field_display_name']['label'] = '';
-  $handler->display->display_options['fields']['field_display_name']['element_label_colon'] = FALSE;
   /* Field: Content: Post date */
   $handler->display->display_options['fields']['created']['id'] = 'created';
   $handler->display->display_options['fields']['created']['table'] = 'node';
@@ -250,16 +249,6 @@ function lacuna_stories_responses_views_default_views() {
   $handler->display->display_options['sorts']['created']['table'] = 'node';
   $handler->display->display_options['sorts']['created']['field'] = 'created';
   $handler->display->display_options['sorts']['created']['order'] = 'DESC';
-  /* Contextual filter: Content: Groups audience (og_group_ref) */
-  $handler->display->display_options['arguments']['og_group_ref_target_id']['id'] = 'og_group_ref_target_id';
-  $handler->display->display_options['arguments']['og_group_ref_target_id']['table'] = 'og_membership';
-  $handler->display->display_options['arguments']['og_group_ref_target_id']['field'] = 'og_group_ref_target_id';
-  $handler->display->display_options['arguments']['og_group_ref_target_id']['default_action'] = 'default';
-  $handler->display->display_options['arguments']['og_group_ref_target_id']['default_argument_type'] = 'php';
-  $handler->display->display_options['arguments']['og_group_ref_target_id']['default_argument_options']['code'] = 'return course_get_selected_course();';
-  $handler->display->display_options['arguments']['og_group_ref_target_id']['summary']['number_of_records'] = '0';
-  $handler->display->display_options['arguments']['og_group_ref_target_id']['summary']['format'] = 'default_summary';
-  $handler->display->display_options['arguments']['og_group_ref_target_id']['summary_options']['items_per_page'] = '25';
   /* Filter criterion: Content: Published */
   $handler->display->display_options['filters']['status']['id'] = 'status';
   $handler->display->display_options['filters']['status']['table'] = 'node';
@@ -273,25 +262,6 @@ function lacuna_stories_responses_views_default_views() {
   $handler->display->display_options['filters']['type']['field'] = 'type';
   $handler->display->display_options['filters']['type']['value'] = array(
     'response' => 'response',
-  );
-  /* Filter criterion: Broken/missing handler */
-  $handler->display->display_options['filters']['author_select']['id'] = 'author_select';
-  $handler->display->display_options['filters']['author_select']['table'] = 'node';
-  $handler->display->display_options['filters']['author_select']['field'] = 'author_select';
-  $handler->display->display_options['filters']['author_select']['exposed'] = TRUE;
-  $handler->display->display_options['filters']['author_select']['expose']['operator_id'] = 'author_select_op';
-  $handler->display->display_options['filters']['author_select']['expose']['label'] = 'Limit by Author';
-  $handler->display->display_options['filters']['author_select']['expose']['operator'] = 'author_select_op';
-  $handler->display->display_options['filters']['author_select']['expose']['identifier'] = 'author_select';
-  $handler->display->display_options['filters']['author_select']['expose']['multiple'] = TRUE;
-  $handler->display->display_options['filters']['author_select']['expose']['remember_roles'] = array(
-    2 => '2',
-    1 => 0,
-    5 => 0,
-    3 => 0,
-    4 => 0,
-    6 => 0,
-    7 => 0,
   );
 
   /* Display: Page */
