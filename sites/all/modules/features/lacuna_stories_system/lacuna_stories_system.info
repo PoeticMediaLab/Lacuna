@@ -5,8 +5,6 @@ package = Lacuna Stories
 version = 7.x-2.0
 project = lacuna_stories_system
 
-files[] = lacuna_stories_views_handler_filter_author_select.inc
-
 dependencies[] = admin_menu
 dependencies[] = admin_menu_toolbar
 dependencies[] = advanced_help
