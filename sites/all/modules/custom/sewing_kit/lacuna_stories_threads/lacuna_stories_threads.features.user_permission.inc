@@ -69,14 +69,18 @@ function lacuna_stories_threads_user_default_permissions() {
   // Exported permission: 'publish any thread content'.
   $permissions['publish any thread content'] = array(
     'name' => 'publish any thread content',
-    'roles' => array(),
+    'roles' => array(
+      'Site Administrator' => 'Site Administrator',
+    ),
     'module' => 'publishcontent',
   );
 
   // Exported permission: 'publish editable thread content'.
   $permissions['publish editable thread content'] = array(
     'name' => 'publish editable thread content',
-    'roles' => array(),
+    'roles' => array(
+      'Site Administrator' => 'Site Administrator',
+    ),
     'module' => 'publishcontent',
   );
 
@@ -85,6 +89,8 @@ function lacuna_stories_threads_user_default_permissions() {
     'name' => 'publish own thread content',
     'roles' => array(
       'Instructor' => 'Instructor',
+      'Site Administrator' => 'Site Administrator',
+      'Student' => 'Student',
     ),
     'module' => 'publishcontent',
   );
@@ -92,14 +98,18 @@ function lacuna_stories_threads_user_default_permissions() {
   // Exported permission: 'unpublish any thread content'.
   $permissions['unpublish any thread content'] = array(
     'name' => 'unpublish any thread content',
-    'roles' => array(),
+    'roles' => array(
+      'Site Administrator' => 'Site Administrator',
+    ),
     'module' => 'publishcontent',
   );
 
   // Exported permission: 'unpublish editable thread content'.
   $permissions['unpublish editable thread content'] = array(
     'name' => 'unpublish editable thread content',
-    'roles' => array(),
+    'roles' => array(
+      'Site Administrator' => 'Site Administrator',
+    ),
     'module' => 'publishcontent',
   );
 
@@ -108,6 +118,8 @@ function lacuna_stories_threads_user_default_permissions() {
     'name' => 'unpublish own thread content',
     'roles' => array(
       'Instructor' => 'Instructor',
+      'Site Administrator' => 'Site Administrator',
+      'Student' => 'Student',
     ),
     'module' => 'publishcontent',
   );

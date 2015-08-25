@@ -4,24 +4,33 @@
  */
 
 // ViewsExposedFormTest inherits from DrupalWebTest
-class SewingKitTestCase extends ViewsExposedFormTest {
+class SewingKitTestCase extends DrupalWebTestCase {
 	protected $privileged_user;
 
 	public static function getInfo() {
 		return array(
-			'name' => 'Test Sewing Kit',
+			'name' => 'Sewing Kit',
 			'description' => 'Ensure that the Sewing Kit works correctly',
-			'group' => 'Sewing_Kit'
+			'group' => 'Lacuna Stories'
 		);
 	}
 
 	public function setUp() {
-		parent::setUp(array('lacuna_stories_threads'));
-		$this->privileged_user = $this->drupalCreateUser(array(
-			'create annotation content',
-			'create thread content'
-		));
+		$this->profile = 'lacunastories_base';
+		parent::setUp(
+			array(
+				'entity',
+				'lacuna_stories_threads'
+			)
+		);
+		$this->privileged_user = $this->drupalCreateUser(
+			array(
+				'create annotations',
+				'create thread content'
+			)
+		);
 		$this->drupalLogin($this->privileged_user);
+		$this->verbose('<pre>' . print_r($this->privileged_user, TRUE) . '</pre>');
 	}
 
 	public function testSewingKitThreadCreate() {

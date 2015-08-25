@@ -185,7 +185,7 @@ function lacuna_stories_threads_views_default_views() {
   $handler->display->display_options['fields']['field_annotation_text']['alter']['max_length'] = '150';
   $handler->display->display_options['fields']['field_annotation_text']['alter']['trim'] = TRUE;
   $handler->display->display_options['fields']['field_annotation_text']['type'] = 'text_plain';
-  /* Field: User: Display Name */
+  /* Field: : field_display_name */
   $handler->display->display_options['fields']['field_display_name']['id'] = 'field_display_name';
   $handler->display->display_options['fields']['field_display_name']['table'] = 'field_data_field_display_name';
   $handler->display->display_options['fields']['field_display_name']['field'] = 'field_display_name';
@@ -479,7 +479,7 @@ function lacuna_stories_threads_views_default_views() {
   $handler->display->display_options['fields']['thread_description']['alter']['max_length'] = '300';
   $handler->display->display_options['fields']['thread_description']['alter']['trim'] = TRUE;
   $handler->display->display_options['fields']['thread_description']['type'] = 'text_plain';
-  /* Field: User: Display Name */
+  /* Field: : field_display_name */
   $handler->display->display_options['fields']['field_display_name']['id'] = 'field_display_name';
   $handler->display->display_options['fields']['field_display_name']['table'] = 'field_data_field_display_name';
   $handler->display->display_options['fields']['field_display_name']['field'] = 'field_display_name';
