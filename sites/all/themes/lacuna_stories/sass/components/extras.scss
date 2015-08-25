@@ -401,3 +401,26 @@ body {
     width: auto;
     font-family: "Source Sans Pro", sans-serif;
 }
+
+/*styling the Stitching view for threads*/
+.view-stitchings {
+    border-top: 1px solid #bbb;
+    .view-content {
+        padding-bottom: 25px;
+    }
+    .view-footer {
+        p {
+            padding-top: 25px;
+            border-top: 1px solid #bbb;
+        }
+    }
+    table {
+        font-family: "Baskerville Libre", Georgia, "Times New Roman", "DejaVu Serif", serif;
+        font-size: 18px;
+    }
+}
+
+#comments {
+    border-top: 1px solid #bbb;
+}
+
