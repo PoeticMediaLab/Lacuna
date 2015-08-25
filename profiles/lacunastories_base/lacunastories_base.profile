@@ -61,10 +61,11 @@ function lacunastories_base_install_tasks($install_state) {
     'lacunastories_base_set_jquery_default' => array(), // set JQuery version to 1.7
     'lacunastories_base_set_media_settings' => array(),
     'lacunastories_base_set_annotator_settings' => array(),
-    'lacunastories_base_default_tax_terms' => array(),
     'lacunastories_base_create_publication_state_workflow' => array(),
     'lacunastories_base_late_feature_and_module_enabling' => array(),
-    'lacunastories_base_revert_features_final' => array(),
+		'lacunastories_base_revert_features_final' => array(),
+		// Must come after feature enable to ensure taxonomies for default terms exist
+		'lacunastories_base_default_tax_terms' => array(),
   );
   return $tasks;
 }
@@ -296,7 +297,8 @@ function lacunastories_base_default_tax_terms () {
     ),
   );
   foreach ($taxonomy as $vocabulary_name => $terms) {
-    // Add a default term to the vocabulary.
+    // Add a default term to each vocabulary.
+		// Vocabularies are created in a feature
     $vocabulary = taxonomy_vocabulary_machine_name_load($vocabulary_name);
     foreach ($terms as $term) {
       taxonomy_term_save((object) array(
@@ -395,14 +397,13 @@ function lacunastories_base_create_publication_state_workflow() {
 
 // Enable any modules or features that need to be enabled after other installation tasks are done
 function lacunastories_base_late_feature_and_module_enabling () {
-  $enable = array(
+  $module_list = array(
 		'lacuna_stories_materials',	// Depends on the Workflow for Materials Publications
-		'lacuna_stories_threads',
-		'lacuna_stories_responses',
-		'lacuna_stories_menus', // Depends on static content
-		'lacuna_stores_irb_form', // Gets created on install
+		'lacuna_stories_threads',	// Depends on Materials
+		'lacuna_stories_responses',	// Depends on Materials
+		'lacuna_stores_irb_form', // Webform is created on install
   );
-  module_enable($enable);
+  module_enable($module_list);
 }
 
 // ensure features are reverted since things have been done since the initial reversion in hook_install
