@@ -15,8 +15,10 @@ function lacuna_stories_menus_block_info_alter(&$blocks, $theme, $code_blocks){
 //	if (isset($blocks['superfish'])) {
 //		$blocks['superfish'][1]['status'] = 1;
 //		$blocks['superfish'][1]['title'] = "<none>";
+//		$blocks['superfish'][1]['description'] = 'Main menu inside a course";
 //		$blocks['superfish'][2]['status'] = 1;
 //		$blocks['superfish'][2]['title'] = "<none>";
+//		$blocks['superfish'][2]['description'] = 'Menu when viewing all courses";
 //	}
 
   // Hide the user login block, which is enabled by default
