@@ -24,31 +24,36 @@ function lacuna_stories_responses_menu_default_menu_links() {
     'external' => 0,
     'has_children' => 0,
     'expanded' => 0,
-    'weight' => 0,
-    'customized' => 0,
+    'weight' => -49,
+    'customized' => 1,
+    'parent_identifier' => 'main-menu_create:<nolink>',
   );
-  // Exported menu link: main-menu_responses:responses
-  $menu_links['main-menu_responses:responses'] = array(
+  // Exported menu link: main-menu_write-a-response:node/add/response
+  $menu_links['main-menu_write-a-response:node/add/response'] = array(
     'menu_name' => 'main-menu',
-    'link_path' => 'responses',
-    'router_path' => 'responses',
-    'link_title' => 'Responses',
+    'link_path' => 'node/add/response',
+    'router_path' => 'node/add/response',
+    'link_title' => 'Write a Response',
     'options' => array(
-      'identifier' => 'main-menu_responses:responses',
+      'attributes' => array(
+        'title' => '',
+      ),
+      'identifier' => 'main-menu_write-a-response:node/add/response',
     ),
-    'module' => 'system',
+    'module' => 'menu',
     'hidden' => 0,
     'external' => 0,
     'has_children' => 0,
     'expanded' => 0,
-    'weight' => 0,
-    'customized' => 0,
+    'weight' => -50,
+    'customized' => 1,
+    'parent_identifier' => 'main-menu_create:<nolink>',
   );
 
   // Translatables
   // Included for use with string extractors like potx.
   t('My Writing');
-  t('Responses');
+  t('Write a Response');
 
   return $menu_links;
 }
