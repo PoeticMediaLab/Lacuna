@@ -179,4 +179,17 @@ function annotator_check_annotatable_node () {
       drupal_set_message('You are viewing content that is either not within your current course or not yet ready to annotate. Annotations on this content are disabled. You may ' . l('return to the front page', '<front>') . ' to change courses.'); // This can happen if a user is already logged in with a course context set, and they access the node directly from browser (non-referred) or they've clicked to this node from the Sewing Kit (as of writing, the only way content is linked to other courses), or if it's an admin user coming from admin/content, etc.
     }
   }
+	return FALSE;
+}
+
+/**
+ * Implements hook_page_alter().
+ */
+function annotator_page_alter(&$page) {
+	// Add the sidebar region for the Annotation Filters
+	if (annotator_check_annotatable_node()) {
+		$page['sidebar_second'] = array(
+			'#markup' => '<span></span>'
+		);
+	}
 }
