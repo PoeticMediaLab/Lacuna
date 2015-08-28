@@ -18,6 +18,7 @@ function lacuna_stories_threads_user_default_permissions() {
       'Instructor' => 'Instructor',
       'Site Administrator' => 'Site Administrator',
       'Student' => 'Student',
+      'administrator' => 'administrator',
     ),
     'module' => 'node',
   );
@@ -28,6 +29,7 @@ function lacuna_stories_threads_user_default_permissions() {
     'roles' => array(
       'Content Manager' => 'Content Manager',
       'Site Administrator' => 'Site Administrator',
+      'administrator' => 'administrator',
     ),
     'module' => 'node',
   );
@@ -40,6 +42,7 @@ function lacuna_stories_threads_user_default_permissions() {
       'Instructor' => 'Instructor',
       'Site Administrator' => 'Site Administrator',
       'Student' => 'Student',
+      'administrator' => 'administrator',
     ),
     'module' => 'node',
   );
@@ -50,6 +53,7 @@ function lacuna_stories_threads_user_default_permissions() {
     'roles' => array(
       'Content Manager' => 'Content Manager',
       'Site Administrator' => 'Site Administrator',
+      'administrator' => 'administrator',
     ),
     'module' => 'node',
   );
@@ -62,6 +66,7 @@ function lacuna_stories_threads_user_default_permissions() {
       'Instructor' => 'Instructor',
       'Site Administrator' => 'Site Administrator',
       'Student' => 'Student',
+      'administrator' => 'administrator',
     ),
     'module' => 'node',
   );
@@ -71,6 +76,7 @@ function lacuna_stories_threads_user_default_permissions() {
     'name' => 'publish any thread content',
     'roles' => array(
       'Site Administrator' => 'Site Administrator',
+      'administrator' => 'administrator',
     ),
     'module' => 'publishcontent',
   );
@@ -80,6 +86,7 @@ function lacuna_stories_threads_user_default_permissions() {
     'name' => 'publish editable thread content',
     'roles' => array(
       'Site Administrator' => 'Site Administrator',
+      'administrator' => 'administrator',
     ),
     'module' => 'publishcontent',
   );
@@ -91,6 +98,8 @@ function lacuna_stories_threads_user_default_permissions() {
       'Instructor' => 'Instructor',
       'Site Administrator' => 'Site Administrator',
       'Student' => 'Student',
+      'administrator' => 'administrator',
+      'authenticated user' => 'authenticated user',
     ),
     'module' => 'publishcontent',
   );
@@ -100,6 +109,7 @@ function lacuna_stories_threads_user_default_permissions() {
     'name' => 'unpublish any thread content',
     'roles' => array(
       'Site Administrator' => 'Site Administrator',
+      'administrator' => 'administrator',
     ),
     'module' => 'publishcontent',
   );
@@ -109,6 +119,7 @@ function lacuna_stories_threads_user_default_permissions() {
     'name' => 'unpublish editable thread content',
     'roles' => array(
       'Site Administrator' => 'Site Administrator',
+      'administrator' => 'administrator',
     ),
     'module' => 'publishcontent',
   );
@@ -120,6 +131,8 @@ function lacuna_stories_threads_user_default_permissions() {
       'Instructor' => 'Instructor',
       'Site Administrator' => 'Site Administrator',
       'Student' => 'Student',
+      'administrator' => 'administrator',
+      'authenticated user' => 'authenticated user',
     ),
     'module' => 'publishcontent',
   );

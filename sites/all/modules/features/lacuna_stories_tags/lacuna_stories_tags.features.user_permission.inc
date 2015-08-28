@@ -14,6 +14,8 @@ function lacuna_stories_tags_user_default_permissions() {
   $permissions['delete terms in annotation_tags'] = array(
     'name' => 'delete terms in annotation_tags',
     'roles' => array(
+      'Content Manager' => 'Content Manager',
+      'Site Administrator' => 'Site Administrator',
       'administrator' => 'administrator',
     ),
     'module' => 'taxonomy',
@@ -23,7 +25,9 @@ function lacuna_stories_tags_user_default_permissions() {
   $permissions['edit terms in annotation_tags'] = array(
     'name' => 'edit terms in annotation_tags',
     'roles' => array(
+      'Content Manager' => 'Content Manager',
       'Instructor' => 'Instructor',
+      'Site Administrator' => 'Site Administrator',
       'Student' => 'Student',
       'administrator' => 'administrator',
     ),
@@ -34,6 +38,9 @@ function lacuna_stories_tags_user_default_permissions() {
   $permissions['flag curated_tag'] = array(
     'name' => 'flag curated_tag',
     'roles' => array(
+      'Content Manager' => 'Content Manager',
+      'Instructor' => 'Instructor',
+      'Site Administrator' => 'Site Administrator',
       'administrator' => 'administrator',
     ),
     'module' => 'flag',
@@ -43,6 +50,9 @@ function lacuna_stories_tags_user_default_permissions() {
   $permissions['unflag curated_tag'] = array(
     'name' => 'unflag curated_tag',
     'roles' => array(
+      'Content Manager' => 'Content Manager',
+      'Instructor' => 'Instructor',
+      'Site Administrator' => 'Site Administrator',
       'administrator' => 'administrator',
     ),
     'module' => 'flag',

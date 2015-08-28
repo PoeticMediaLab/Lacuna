@@ -14,8 +14,12 @@ function lacuna_stories_page_turner_user_default_permissions() {
   $permissions['flag page_turner_bookmark'] = array(
     'name' => 'flag page_turner_bookmark',
     'roles' => array(
+      'Content Manager' => 'Content Manager',
       'Instructor' => 'Instructor',
+      'Site Administrator' => 'Site Administrator',
       'Student' => 'Student',
+      'administrator' => 'administrator',
+      'authenticated user' => 'authenticated user',
     ),
     'module' => 'flag',
   );
@@ -24,8 +28,12 @@ function lacuna_stories_page_turner_user_default_permissions() {
   $permissions['unflag page_turner_bookmark'] = array(
     'name' => 'unflag page_turner_bookmark',
     'roles' => array(
+      'Content Manager' => 'Content Manager',
       'Instructor' => 'Instructor',
+      'Site Administrator' => 'Site Administrator',
       'Student' => 'Student',
+      'administrator' => 'administrator',
+      'authenticated user' => 'authenticated user',
     ),
     'module' => 'flag',
   );

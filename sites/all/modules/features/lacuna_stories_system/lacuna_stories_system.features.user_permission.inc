@@ -14,6 +14,7 @@ function lacuna_stories_system_user_default_permissions() {
   $permissions['administer filters'] = array(
     'name' => 'administer filters',
     'roles' => array(
+      'Site Administrator' => 'Site Administrator',
       'administrator' => 'administrator',
     ),
     'module' => 'filter',
@@ -46,6 +47,7 @@ function lacuna_stories_system_user_default_permissions() {
   $permissions['use text format php_code'] = array(
     'name' => 'use text format php_code',
     'roles' => array(
+      'Site Administrator' => 'Site Administrator',
       'administrator' => 'administrator',
     ),
     'module' => 'filter',

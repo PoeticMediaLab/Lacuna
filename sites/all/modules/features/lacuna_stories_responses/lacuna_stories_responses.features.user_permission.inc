@@ -14,6 +14,7 @@ function lacuna_stories_responses_user_default_permissions() {
   $permissions['access comments'] = array(
     'name' => 'access comments',
     'roles' => array(
+      'Site Administrator' => 'Site Administrator',
       'administrator' => 'administrator',
     ),
     'module' => 'comment',
@@ -22,28 +23,62 @@ function lacuna_stories_responses_user_default_permissions() {
   // Exported permission: 'create response content'.
   $permissions['create response content'] = array(
     'name' => 'create response content',
-    'roles' => array(),
+    'roles' => array(
+      'Content Manager' => 'Content Manager',
+      'Instructor' => 'Instructor',
+      'Site Administrator' => 'Site Administrator',
+      'Student' => 'Student',
+      'administrator' => 'administrator',
+    ),
     'module' => 'node',
   );
 
   // Exported permission: 'delete any response content'.
   $permissions['delete any response content'] = array(
     'name' => 'delete any response content',
-    'roles' => array(),
+    'roles' => array(
+      'Content Manager' => 'Content Manager',
+      'Instructor' => 'Instructor',
+      'Site Administrator' => 'Site Administrator',
+      'Student' => 'Student',
+      'administrator' => 'administrator',
+    ),
     'module' => 'node',
   );
 
   // Exported permission: 'delete own response content'.
   $permissions['delete own response content'] = array(
     'name' => 'delete own response content',
-    'roles' => array(),
+    'roles' => array(
+      'Content Manager' => 'Content Manager',
+      'Instructor' => 'Instructor',
+      'Site Administrator' => 'Site Administrator',
+      'Student' => 'Student',
+      'administrator' => 'administrator',
+    ),
     'module' => 'node',
+  );
+
+  // Exported permission: 'delete terms in genre_response'.
+  $permissions['delete terms in genre_response'] = array(
+    'name' => 'delete terms in genre_response',
+    'roles' => array(
+      'Content Manager' => 'Content Manager',
+      'Instructor' => 'Instructor',
+      'Site Administrator' => 'Site Administrator',
+      'administrator' => 'administrator',
+    ),
+    'module' => 'taxonomy',
   );
 
   // Exported permission: 'edit any response content'.
   $permissions['edit any response content'] = array(
     'name' => 'edit any response content',
-    'roles' => array(),
+    'roles' => array(
+      'Content Manager' => 'Content Manager',
+      'Site Administrator' => 'Site Administrator',
+      'administrator' => 'administrator',
+    ),
     'module' => 'node',
   );
 
@@ -51,6 +86,7 @@ function lacuna_stories_responses_user_default_permissions() {
   $permissions['edit own comments'] = array(
     'name' => 'edit own comments',
     'roles' => array(
+      'Site Administrator' => 'Site Administrator',
       'administrator' => 'administrator',
     ),
     'module' => 'comment',
@@ -59,14 +95,33 @@ function lacuna_stories_responses_user_default_permissions() {
   // Exported permission: 'edit own response content'.
   $permissions['edit own response content'] = array(
     'name' => 'edit own response content',
-    'roles' => array(),
+    'roles' => array(
+      'Content Manager' => 'Content Manager',
+      'Instructor' => 'Instructor',
+      'Site Administrator' => 'Site Administrator',
+      'Student' => 'Student',
+      'administrator' => 'administrator',
+    ),
     'module' => 'node',
+  );
+
+  // Exported permission: 'edit terms in genre_response'.
+  $permissions['edit terms in genre_response'] = array(
+    'name' => 'edit terms in genre_response',
+    'roles' => array(
+      'Content Manager' => 'Content Manager',
+      'Instructor' => 'Instructor',
+      'Site Administrator' => 'Site Administrator',
+      'administrator' => 'administrator',
+    ),
+    'module' => 'taxonomy',
   );
 
   // Exported permission: 'post comments'.
   $permissions['post comments'] = array(
     'name' => 'post comments',
     'roles' => array(
+      'Site Administrator' => 'Site Administrator',
       'administrator' => 'administrator',
     ),
     'module' => 'comment',
@@ -76,6 +131,7 @@ function lacuna_stories_responses_user_default_permissions() {
   $permissions['skip comment approval'] = array(
     'name' => 'skip comment approval',
     'roles' => array(
+      'Site Administrator' => 'Site Administrator',
       'administrator' => 'administrator',
     ),
     'module' => 'comment',
