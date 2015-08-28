@@ -90,10 +90,10 @@ function lacuna_stories_materials_strongarm() {
     'extra_fields' => array(
       'form' => array(
         'title' => array(
-          'weight' => '0',
+          'weight' => '3',
         ),
         'path' => array(
-          'weight' => '3',
+          'weight' => '8',
         ),
       ),
       'display' => array(),
