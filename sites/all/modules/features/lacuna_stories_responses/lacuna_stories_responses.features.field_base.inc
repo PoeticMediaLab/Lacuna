@@ -10,13 +10,13 @@
 function lacuna_stories_responses_field_default_field_bases() {
   $field_bases = array();
 
-  // Exported field_base: 'field_genre_bibliograpy'
-  $field_bases['field_genre_bibliograpy'] = array(
+  // Exported field_base: 'field_bibliographic_item'
+  $field_bases['field_bibliographic_item'] = array(
     'active' => 1,
     'cardinality' => -1,
     'deleted' => 0,
     'entity_types' => array(),
-    'field_name' => 'field_genre_bibliograpy',
+    'field_name' => 'field_bibliographic_item',
     'field_permissions' => array(
       'type' => 0,
     ),
@@ -45,32 +45,6 @@ function lacuna_stories_responses_field_default_field_bases() {
     ),
     'translatable' => 0,
     'type' => 'entityreference',
-  );
-
-  // Exported field_base: 'field_genre_media'
-  $field_bases['field_genre_media'] = array(
-    'active' => 1,
-    'cardinality' => -1,
-    'deleted' => 0,
-    'entity_types' => array(),
-    'field_name' => 'field_genre_media',
-    'field_permissions' => array(
-      'type' => 0,
-    ),
-    'indexes' => array(
-      'fid' => array(
-        0 => 'fid',
-      ),
-    ),
-    'locked' => 0,
-    'module' => 'file',
-    'settings' => array(
-      'display_default' => 0,
-      'display_field' => 0,
-      'uri_scheme' => 'public',
-    ),
-    'translatable' => 0,
-    'type' => 'file',
   );
 
   // Exported field_base: 'field_response_genre'

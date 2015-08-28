@@ -54,8 +54,8 @@ function lacuna_stories_responses_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-response-field_genre_bibliograpy'
-  $field_instances['node-response-field_genre_bibliograpy'] = array(
+  // Exported field_instance: 'node-response-field_bibliographic_item'
+  $field_instances['node-response-field_bibliographic_item'] = array(
     'bundle' => 'response',
     'default_value' => NULL,
     'deleted' => 0,
@@ -68,7 +68,7 @@ function lacuna_stories_responses_field_default_field_instances() {
           'link' => FALSE,
         ),
         'type' => 'entityreference_label',
-        'weight' => 4,
+        'weight' => 10,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -78,8 +78,8 @@ function lacuna_stories_responses_field_default_field_instances() {
       ),
     ),
     'entity_type' => 'node',
-    'field_name' => 'field_genre_bibliograpy',
-    'label' => 'Bibliograpy',
+    'field_name' => 'field_bibliographic_item',
+    'label' => 'Bibliographic Item',
     'required' => 0,
     'settings' => array(
       'user_register_form' => FALSE,
@@ -88,28 +88,30 @@ function lacuna_stories_responses_field_default_field_instances() {
       'active' => 1,
       'module' => 'entityreference',
       'settings' => array(
-        'apply_chosen' => 0,
         'match_operator' => 'CONTAINS',
         'path' => '',
         'size' => 60,
       ),
       'type' => 'entityreference_autocomplete',
-      'weight' => 3,
+      'weight' => 7,
     ),
   );
 
-  // Exported field_instance: 'node-response-field_genre_media'
-  $field_instances['node-response-field_genre_media'] = array(
+  // Exported field_instance: 'node-response-field_image'
+  $field_instances['node-response-field_image'] = array(
     'bundle' => 'response',
     'deleted' => 0,
-    'description' => 'Add as many media files as necessary',
+    'description' => 'Choose an icon to represent this blog post when browsing. All browsing icons on Lacuna Stories are portrait dimensions, so please try to choose this proportion of image or crop it yourself before uploading. If you upload a landscape image, it will likely become skewed in the automated cropping. Also make sure your image is larger than 220 pixels wide and 320 pixels tall. If not, you can change that in programs like Mac Preview by selecting TOOLS --> ADJUST SIZE and increase the pixels.',
     'display' => array(
       'default' => array(
         'label' => 'above',
-        'module' => 'file',
-        'settings' => array(),
-        'type' => 'file_default',
-        'weight' => 5,
+        'module' => 'image',
+        'settings' => array(
+          'image_link' => '',
+          'image_style' => '',
+        ),
+        'type' => 'image',
+        'weight' => 11,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -119,14 +121,18 @@ function lacuna_stories_responses_field_default_field_instances() {
       ),
     ),
     'entity_type' => 'node',
-    'field_name' => 'field_genre_media',
-    'label' => 'Media',
-    'required' => 0,
+    'field_name' => 'field_image',
+    'label' => 'Post Icon',
+    'required' => 1,
     'settings' => array(
-      'description_field' => 0,
+      'alt_field' => 0,
+      'default_image' => 0,
       'file_directory' => '',
-      'file_extensions' => 'txt pdf jpg gif jpeg png wmv mov mp3 wav ogg doc dox',
+      'file_extensions' => 'png gif jpg jpeg',
       'max_filesize' => '',
+      'max_resolution' => '',
+      'min_resolution' => '',
+      'title_field' => 0,
       'user_register_form' => FALSE,
     ),
     'widget' => array(
@@ -139,7 +145,64 @@ function lacuna_stories_responses_field_default_field_instances() {
           'youtube' => 0,
         ),
         'allowed_types' => array(
-          'application' => 0,
+          'audio' => 0,
+          'document' => 0,
+          'image' => 'image',
+          'video' => 0,
+        ),
+        'browser_plugins' => array(
+          'media_default--media_browser_1' => 0,
+          'media_default--media_browser_my_files' => 'media_default--media_browser_my_files',
+          'media_internet' => 0,
+          'upload' => 'upload',
+        ),
+      ),
+      'type' => 'media_generic',
+      'weight' => 1,
+    ),
+  );
+
+  // Exported field_instance: 'node-response-field_media'
+  $field_instances['node-response-field_media'] = array(
+    'bundle' => 'response',
+    'deleted' => 0,
+    'description' => 'Add as many media files as necessary',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'file',
+        'settings' => array(),
+        'type' => 'file_default',
+        'weight' => 12,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_media',
+    'label' => 'Media',
+    'required' => 0,
+    'settings' => array(
+      'description_field' => 0,
+      'file_directory' => '',
+      'file_extensions' => 'png gif jpg jpeg mpg mp4 wmv ogg mp3 wav',
+      'max_filesize' => '',
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'media',
+      'settings' => array(
+        'allowed_schemes' => array(
+          'public' => 'public',
+          'vimeo' => 'vimeo',
+          'youtube' => 'youtube',
+        ),
+        'allowed_types' => array(
           'audio' => 'audio',
           'document' => 0,
           'image' => 'image',
@@ -153,7 +216,7 @@ function lacuna_stories_responses_field_default_field_instances() {
         ),
       ),
       'type' => 'media_generic',
-      'weight' => 1,
+      'weight' => 3,
     ),
   );
 
@@ -192,7 +255,7 @@ function lacuna_stories_responses_field_default_field_instances() {
         'apply_chosen' => 1,
       ),
       'type' => 'options_select',
-      'weight' => 5,
+      'weight' => 9,
     ),
   );
 
@@ -232,7 +295,7 @@ function lacuna_stories_responses_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'taxonomy_autocomplete',
-      'weight' => 4,
+      'weight' => 8,
     ),
   );
 
@@ -293,7 +356,7 @@ function lacuna_stories_responses_field_default_field_instances() {
       'module' => 'og',
       'settings' => array(),
       'type' => 'og_complex',
-      'weight' => 6,
+      'weight' => 10,
     ),
   );
 
@@ -337,12 +400,14 @@ function lacuna_stories_responses_field_default_field_instances() {
   // Translatables
   // Included for use with string extractors like potx.
   t('Add as many media files as necessary');
-  t('Bibliograpy');
+  t('Bibliographic Item');
   t('Body');
+  t('Choose an icon to represent this blog post when browsing. All browsing icons on Lacuna Stories are portrait dimensions, so please try to choose this proportion of image or crop it yourself before uploading. If you upload a landscape image, it will likely become skewed in the automated cropping. Also make sure your image is larger than 220 pixels wide and 320 pixels tall. If not, you can change that in programs like Mac Preview by selecting TOOLS --> ADJUST SIZE and increase the pixels.');
   t('Course');
   t('Genre');
   t('Groups audience');
   t('Media');
+  t('Post Icon');
   t('Tags');
 
   return $field_instances;
