@@ -65,6 +65,30 @@ function lacuna_stories_materials_views_api($module = NULL, $api = NULL) {
 }
 
 /**
+ * Implements hook_image_default_styles().
+ */
+function lacuna_stories_materials_image_default_styles() {
+  $styles = array();
+
+  // Exported image style: thumbnails_for_browsing.
+  $styles['thumbnails_for_browsing'] = array(
+    'label' => 'Thumbnails for Browsing',
+    'effects' => array(
+      1 => array(
+        'name' => 'image_resize',
+        'data' => array(
+          'width' => 220,
+          'height' => 320,
+        ),
+        'weight' => 1,
+      ),
+    ),
+  );
+
+  return $styles;
+}
+
+/**
  * Implements hook_node_info().
  */
 function lacuna_stories_materials_node_info() {
