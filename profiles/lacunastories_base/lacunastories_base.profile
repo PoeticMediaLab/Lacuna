@@ -73,8 +73,7 @@ function lacunastories_base_install_tasks($install_state) {
 /*
   Creating Digital research consent webform.
  */
-function lacunastories_base_create_research_consent_webform()
-{
+function lacunastories_base_create_research_consent_webform() {
   $node = new stdClass();
   $node->type = 'webform';
   node_object_prepare($node);
