@@ -42,7 +42,7 @@ function lacuna_stories_biblio_strongarm() {
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'biblio_auto_citekey';
-  $strongarm->value = 1;
+  $strongarm->value = 0;
   $export['biblio_auto_citekey'] = $strongarm;
 
   $strongarm = new stdClass();
@@ -70,7 +70,7 @@ function lacuna_stories_biblio_strongarm() {
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'biblio_base_title';
-  $strongarm->value = 'Biblio';
+  $strongarm->value = 'Bibliography';
   $export['biblio_base_title'] = $strongarm;
 
   $strongarm = new stdClass();
@@ -260,7 +260,7 @@ function lacuna_stories_biblio_strongarm() {
   $strongarm->api_version = 1;
   $strongarm->name = 'biblio_lookup_links';
   $strongarm->value = array(
-    'google' => 'google',
+    'google' => 0,
   );
   $export['biblio_lookup_links'] = $strongarm;
 
@@ -275,7 +275,7 @@ function lacuna_stories_biblio_strongarm() {
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'biblio_node_layout';
-  $strongarm->value = 'tabular';
+  $strongarm->value = 'cite';
   $export['biblio_node_layout'] = $strongarm;
 
   $strongarm = new stdClass();
@@ -359,7 +359,7 @@ function lacuna_stories_biblio_strongarm() {
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'biblio_settings__active_tab';
-  $strongarm->value = 'edit-biblio-crossref';
+  $strongarm->value = 'edit-links';
   $export['biblio_settings__active_tab'] = $strongarm;
 
   $strongarm = new stdClass();
