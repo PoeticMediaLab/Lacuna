@@ -46,6 +46,24 @@ function lacuna_stories_course_management_menu_default_menu_links() {
     'customized' => 1,
     'parent_identifier' => 'main-menu_manage:<nolink>',
   );
+  // Exported menu link: main-menu_bulk-update-annotations:bulk-update-annotations
+  $menu_links['main-menu_bulk-update-annotations:bulk-update-annotations'] = array(
+    'menu_name' => 'main-menu',
+    'link_path' => 'bulk-update-annotations',
+    'router_path' => 'bulk-update-annotations',
+    'link_title' => 'Bulk Update Annotations',
+    'options' => array(
+      'identifier' => 'main-menu_bulk-update-annotations:bulk-update-annotations',
+    ),
+    'module' => 'system',
+    'hidden' => 0,
+    'external' => 0,
+    'has_children' => 0,
+    'expanded' => 0,
+    'weight' => -47,
+    'customized' => 1,
+    'parent_identifier' => 'main-menu_manage:<nolink>',
+  );
   // Exported menu link: main-menu_curate-tags:curate-tags
   $menu_links['main-menu_curate-tags:curate-tags'] = array(
     'menu_name' => 'main-menu',
@@ -69,6 +87,7 @@ function lacuna_stories_course_management_menu_default_menu_links() {
   // Included for use with string extractors like potx.
   t('All Content');
   t('All Emails');
+  t('Bulk Update Annotations');
   t('Curate Tags');
 
   return $menu_links;
