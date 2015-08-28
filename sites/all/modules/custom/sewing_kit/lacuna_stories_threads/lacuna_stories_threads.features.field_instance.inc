@@ -69,9 +69,96 @@ function lacuna_stories_threads_field_default_field_instances() {
     ),
   );
 
+  // Exported field_instance: 'node-thread-thread_description'
+  $field_instances['node-thread-thread_description'] = array(
+    'bundle' => 'thread',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => 'Describe why these pieces are stitched together',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'text',
+        'settings' => array(),
+        'type' => 'text_default',
+        'weight' => 0,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'thread_description',
+    'label' => 'Description of My Thread',
+    'required' => TRUE,
+    'settings' => array(
+      'text_processing' => 1,
+      'user_register_form' => FALSE,
+    ),
+    'type' => 'text_long',
+    'weight' => 0,
+    'widget' => array(
+      'format' => 'full_html',
+      'module' => 'text',
+      'settings' => array(
+        'rows' => 5,
+      ),
+      'type' => 'text_textarea',
+      'weight' => 31,
+    ),
+  );
+
+  // Exported field_instance: 'node-thread-thread_reference'
+  $field_instances['node-thread-thread_reference'] = array(
+    'bundle' => 'thread',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => 'References to the content stitched together',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 1,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'thread_reference',
+    'label' => 'My Stitchings',
+    'required' => TRUE,
+    'settings' => array(
+      'user_register_form' => FALSE,
+    ),
+    'type' => 'entityreference',
+    'weight' => 1,
+    'widget' => array(
+      'module' => 'entityreference',
+      'settings' => array(
+        'match_operator' => 'CONTAINS',
+        'path' => '',
+        'size' => 60,
+      ),
+      'type' => 'entityreference_autocomplete',
+      'weight' => 32,
+    ),
+  );
+
   // Translatables
   // Included for use with string extractors like potx.
+  t('Describe why these pieces are stitched together');
+  t('Description of My Thread');
   t('Groups audience');
+  t('My Stitchings');
+  t('References to the content stitched together');
 
   return $field_instances;
 }

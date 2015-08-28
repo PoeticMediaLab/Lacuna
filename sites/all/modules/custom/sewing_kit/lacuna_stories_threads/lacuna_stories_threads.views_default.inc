@@ -134,6 +134,10 @@ function lacuna_stories_threads_views_default_views() {
   $handler->display->display_options['relationships']['field_annotation_reference_target_id']['table'] = 'field_data_field_annotation_reference';
   $handler->display->display_options['relationships']['field_annotation_reference_target_id']['field'] = 'field_annotation_reference_target_id';
   $handler->display->display_options['relationships']['field_annotation_reference_target_id']['label'] = 'Annotated Content';
+  /* Relationship: Content: Author */
+  $handler->display->display_options['relationships']['uid']['id'] = 'uid';
+  $handler->display->display_options['relationships']['uid']['table'] = 'node';
+  $handler->display->display_options['relationships']['uid']['field'] = 'uid';
   /* Field: Bulk operations: Content */
   $handler->display->display_options['fields']['views_bulk_operations']['id'] = 'views_bulk_operations';
   $handler->display->display_options['fields']['views_bulk_operations']['table'] = 'node';
@@ -180,6 +184,12 @@ function lacuna_stories_threads_views_default_views() {
   $handler->display->display_options['fields']['field_annotation_text']['alter']['max_length'] = '150';
   $handler->display->display_options['fields']['field_annotation_text']['alter']['trim'] = TRUE;
   $handler->display->display_options['fields']['field_annotation_text']['type'] = 'text_plain';
+  /* Field: User: Display Name */
+  $handler->display->display_options['fields']['field_display_name']['id'] = 'field_display_name';
+  $handler->display->display_options['fields']['field_display_name']['table'] = 'field_data_field_display_name';
+  $handler->display->display_options['fields']['field_display_name']['field'] = 'field_display_name';
+  $handler->display->display_options['fields']['field_display_name']['relationship'] = 'uid';
+  $handler->display->display_options['fields']['field_display_name']['label'] = 'Annotator';
   /* Field: Content: Tags */
   $handler->display->display_options['fields']['field_annotation_tags']['id'] = 'field_annotation_tags';
   $handler->display->display_options['fields']['field_annotation_tags']['table'] = 'field_data_field_annotation_tags';
