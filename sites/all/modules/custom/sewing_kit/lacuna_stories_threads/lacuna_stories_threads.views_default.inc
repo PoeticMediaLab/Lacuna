@@ -236,28 +236,6 @@ function lacuna_stories_threads_views_default_views() {
     'annotation' => 'annotation',
   );
   $handler->display->display_options['filters']['type']['group'] = 1;
-  /* Filter criterion: Broken/missing handler */
-  $handler->display->display_options['filters']['author_select']['id'] = 'author_select';
-  $handler->display->display_options['filters']['author_select']['table'] = 'node';
-  $handler->display->display_options['filters']['author_select']['field'] = 'author_select';
-  $handler->display->display_options['filters']['author_select']['operator'] = 'in';
-  $handler->display->display_options['filters']['author_select']['value'] = array();
-  $handler->display->display_options['filters']['author_select']['group'] = 1;
-  $handler->display->display_options['filters']['author_select']['exposed'] = TRUE;
-  $handler->display->display_options['filters']['author_select']['expose']['operator_id'] = 'author_select_op';
-  $handler->display->display_options['filters']['author_select']['expose']['label'] = 'Annotator';
-  $handler->display->display_options['filters']['author_select']['expose']['operator'] = 'author_select_op';
-  $handler->display->display_options['filters']['author_select']['expose']['identifier'] = 'author_select';
-  $handler->display->display_options['filters']['author_select']['expose']['multiple'] = TRUE;
-  $handler->display->display_options['filters']['author_select']['expose']['remember_roles'] = array(
-    2 => '2',
-    1 => 0,
-    5 => 0,
-    3 => 0,
-    4 => 0,
-    6 => 0,
-    7 => 0,
-  );
   /* Filter criterion: Content: Groups audience (og_group_ref) */
   $handler->display->display_options['filters']['og_group_ref_target_id']['id'] = 'og_group_ref_target_id';
   $handler->display->display_options['filters']['og_group_ref_target_id']['table'] = 'og_membership';
@@ -270,6 +248,26 @@ function lacuna_stories_threads_views_default_views() {
   $handler->display->display_options['filters']['og_group_ref_target_id']['expose']['operator'] = 'og_group_ref_target_id_op';
   $handler->display->display_options['filters']['og_group_ref_target_id']['expose']['identifier'] = 'og_group_ref_target_id';
   $handler->display->display_options['filters']['og_group_ref_target_id']['expose']['remember_roles'] = array(
+    2 => '2',
+    1 => 0,
+    5 => 0,
+    3 => 0,
+    4 => 0,
+    6 => 0,
+    7 => 0,
+  );
+  /* Filter criterion: Content: Author (select list) */
+  $handler->display->display_options['filters']['author_select']['id'] = 'author_select';
+  $handler->display->display_options['filters']['author_select']['table'] = 'node';
+  $handler->display->display_options['filters']['author_select']['field'] = 'author_select';
+  $handler->display->display_options['filters']['author_select']['group'] = 1;
+  $handler->display->display_options['filters']['author_select']['exposed'] = TRUE;
+  $handler->display->display_options['filters']['author_select']['expose']['operator_id'] = 'author_select_op';
+  $handler->display->display_options['filters']['author_select']['expose']['label'] = 'Annotator';
+  $handler->display->display_options['filters']['author_select']['expose']['operator'] = 'author_select_op';
+  $handler->display->display_options['filters']['author_select']['expose']['identifier'] = 'author_select';
+  $handler->display->display_options['filters']['author_select']['expose']['multiple'] = TRUE;
+  $handler->display->display_options['filters']['author_select']['expose']['remember_roles'] = array(
     2 => '2',
     1 => 0,
     5 => 0,
