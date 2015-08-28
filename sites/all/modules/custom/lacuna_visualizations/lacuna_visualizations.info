@@ -8,4 +8,6 @@ package = Lacuna Stories
 dependencies[] = d3
 dependencies[] = graphapi
 dependencies[] = course
+dependencies[] = lacuna_stories_responses
+dependencies[] = lacuna_stories_annotations
 stylesheets[all][] = ./lacuna_visualizations.css
