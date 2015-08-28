@@ -1,10 +1,9 @@
 name = Common
-description = Common base modules for Lacuna Stories
+description = Common base modules and settings for Lacuna Stories
 core = 7.x
 package = Lacuna Stories
 version = 7.x-2.0
 project = lacuna_stories_system
-
 dependencies[] = admin_menu
 dependencies[] = admin_menu_toolbar
 dependencies[] = advanced_help
@@ -67,4 +66,6 @@ features[variable][] = honeypot_form_webforms
 features[variable][] = honeypot_log
 features[variable][] = honeypot_protect_all_forms
 features[variable][] = honeypot_time_limit
+features[wysiwyg][] = filtered_html
+features[wysiwyg][] = full_html
 project path = sites/all/modules/features
