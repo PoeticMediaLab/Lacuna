@@ -181,8 +181,16 @@ function lacunastories_base_create_basic_pages()
   $content[2]["title"] = "Student User Guide";
   $content[2]["body"] = file_get_contents(DRUPAL_ROOT . "/profiles/lacunastories_base/basic pages/student_user_guide.html");;
 
-  foreach($content as $page)
-  {
+	// Figure out the id of the Help menu item
+	$main_menu = menu_load_links('main-menu');
+	foreach ($main_menu as $menu_link) {
+		if ($menu_link['link_title'] == 'Help') {
+			$plid = $menu_link['mlid'];
+			break;
+		}
+	}
+
+  foreach ($content as $page) {
     $node = new stdClass(); // We create a new node object
     $node->type = "page"; // Or any other content type you want
     $node->title = $page["title"];
@@ -192,6 +200,7 @@ function lacunastories_base_create_basic_pages()
     $node->menu['enabled'] = TRUE;
     $node->menu['link_title'] = $node->title;
     $node->menu['description'] = ''; // Needed even if empty to avoid notices.
+		$node->plid = $plid; // Put under correct menu parent
 
     node_object_prepare($node); // Set some default values.
     $node->uid = 1; // Or any id you wish
