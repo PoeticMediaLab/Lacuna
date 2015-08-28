@@ -12,43 +12,6 @@ if (!function_exists("system_form_install_configure_form_alter")) {
 }
 
 /**
- * Implementing hook_block_info
- * Adding neccessary blocks:
- * 1. a phoney empty block to activate second sidebar
- */
-//function lacunastories_base_block_info()
-//{
-//    $theme = "lacuna_stories";
-//    $blocks = array();
-//    $regions = system_region_list($theme, REGIONS_VISIBLE);
-//    if(array_key_exists('sidebar_second', $regions)){
-//        $blocks['sidebar_second_empty'] = array(
-//            "info" => "Phony block to activate second sidebar",
-//            'region' => 'sidebar_second',
-//            'theme' => "lacuna_stories",
-//            'status' => 1,
-//            'weight' => 0,
-//            'pages' => 'document/*',
-//            'visibility' => BLOCK_VISIBILITY_LISTED,
-//        );
-//    }
-//    return $blocks;
-//}
-
-/**
- * Implementing hook_block_view
- * Goes in pair with hook_block_info
- */
-//function lacunastories_base_block_view($delta)
-//{
-//    $block = array();
-//    if($delta == 'sidebar_second_empty'){
-//        $block['content'] = "<b></b>";
-//    }
-//    return $block;
-//}
-
-/**
  * Implements hook_install_tasks().
  * Profile install tasks run after the main profile installation in lacunastories_base_install
  */
