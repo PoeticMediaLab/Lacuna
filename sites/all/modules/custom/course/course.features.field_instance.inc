@@ -1073,7 +1073,7 @@ function course_field_default_field_instances() {
           'status' => TRUE,
         ),
       ),
-      'user_register_form' => 1,
+      'user_register_form' => 0,
     ),
     'view modes' => array(
       'full' => array(
@@ -1092,7 +1092,7 @@ function course_field_default_field_instances() {
       'module' => 'og',
       'settings' => array(),
       'type' => 'og_complex',
-      'weight' => 7,
+      'weight' => 19,
     ),
   );
 
@@ -1145,7 +1145,7 @@ function course_field_default_field_instances() {
       'module' => 'og',
       'settings' => array(),
       'type' => 'og_complex',
-      'weight' => 8,
+      'weight' => 10,
     ),
   );
 

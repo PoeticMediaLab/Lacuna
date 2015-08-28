@@ -28,6 +28,7 @@ function course_user_default_permissions() {
       'Content Manager' => 'Content Manager',
       'Instructor' => 'Instructor',
       'Site Administrator' => 'Site Administrator',
+      'administrator' => 'administrator',
       'anonymous user' => 'anonymous user',
     ),
     'module' => 'field_permissions',
@@ -73,6 +74,7 @@ function course_user_default_permissions() {
     'roles' => array(
       'Content Manager' => 'Content Manager',
       'Site Administrator' => 'Site Administrator',
+      'administrator' => 'administrator',
     ),
     'module' => 'field_permissions',
   );
@@ -97,6 +99,7 @@ function course_user_default_permissions() {
       'Content Manager' => 'Content Manager',
       'Instructor' => 'Instructor',
       'Site Administrator' => 'Site Administrator',
+      'administrator' => 'administrator',
     ),
     'module' => 'field_permissions',
   );
@@ -107,6 +110,7 @@ function course_user_default_permissions() {
     'roles' => array(
       'Content Manager' => 'Content Manager',
       'Site Administrator' => 'Site Administrator',
+      'administrator' => 'administrator',
     ),
     'module' => 'field_permissions',
   );
