@@ -18,7 +18,7 @@ function lacuna_stories_people_field_default_field_bases() {
     'entity_types' => array(),
     'field_name' => 'field_about_me',
     'field_permissions' => array(
-      'type' => 0,
+      'type' => 2,
     ),
     'indexes' => array(
       'format' => array(
@@ -151,7 +151,7 @@ function lacuna_stories_people_field_default_field_bases() {
     'entity_types' => array(),
     'field_name' => 'field_how_i_learn',
     'field_permissions' => array(
-      'type' => 0,
+      'type' => 2,
     ),
     'indexes' => array(
       'format' => array(
@@ -173,7 +173,7 @@ function lacuna_stories_people_field_default_field_bases() {
     'entity_types' => array(),
     'field_name' => 'field_learning_goals',
     'field_permissions' => array(
-      'type' => 0,
+      'type' => 2,
     ),
     'indexes' => array(
       'format' => array(
