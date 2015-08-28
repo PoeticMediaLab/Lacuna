@@ -27,14 +27,14 @@ function lacuna_stories_peer_groups_menu_default_menu_links() {
     'external' => 0,
     'has_children' => 0,
     'expanded' => 0,
-    'weight' => -47,
+    'weight' => 0,
     'customized' => 1,
     'parent_identifier' => 'main-menu_connect:<nolink>',
   );
+
   // Translatables
   // Included for use with string extractors like potx.
   t('Peer Groups');
-
 
   return $menu_links;
 }
