@@ -45,7 +45,9 @@
         </h1>
       <?php endif; ?>
 
-      <?php if ($site_slogan): ?>
+      <?php if ($site_slogan):
+        // TODO: Add title of currently selected course
+        ?>
         <div class="header__site-slogan" id="site-slogan"><?php print $site_slogan; ?></div>
       <?php endif; ?>
     </div>
