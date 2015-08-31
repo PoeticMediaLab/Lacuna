@@ -49,20 +49,20 @@ function course_menu() {
     'type' => MENU_NORMAL_ITEM,
     'file' => 'course.pages.inc',
   );
-	$items['ajax/add-term/%'] = array(
-		'page callback' => 'course_ajax_add_term',
-		'page arguments' => array(2),
-		'access callback' => 'course_access',
-		'type' => MENU_CALLBACK,
-		'file' => 'course.pages.inc',
- 	);
-	$items['ajax/delete-term/%/%'] = array(
-		'page callback' => 'course_ajax_delete_term',
-		'page arguments' => array(2,3),
-		'access callback' => 'course_access',
-		'type' => MENU_CALLBACK,
-		'file' => 'course.pages.inc',
-	);
+  $items['ajax/add-term/%'] = array(
+    'page callback' => 'course_ajax_add_term',
+    'page arguments' => array(2),
+    'access callback' => 'course_access',
+    'type' => MENU_CALLBACK,
+    'file' => 'course.pages.inc',
+  );
+  $items['ajax/delete-term/%/%'] = array(
+    'page callback' => 'course_ajax_delete_term',
+    'page arguments' => array(2,3),
+    'access callback' => 'course_access',
+    'type' => MENU_CALLBACK,
+    'file' => 'course.pages.inc',
+  );
   $items['admin/config/content/lacuna-courses'] = array(
     'title' => 'Course Creation Settings',
     'page callback' => 'drupal_get_form',
@@ -92,6 +92,13 @@ function course_menu() {
     'access callback' => 'course_get_selected_course',
     'type' => MENU_NORMAL_ITEM,
     'file' => 'course.pages.inc',
+  );
+  $items['course-tags/autocomplete/%/%'] = array(
+    'page callback' => 'course_tags_autocomplete',
+    'page arguments' => array(2, 3),
+    'access callback' => 'course_get_selected_course',
+    'type' => MENU_CALLBACK,
+    'file' => 'course.pages.inc'
   );
   return $items;
 }
@@ -144,37 +151,37 @@ function course_admin_form() {
     '#required' => TRUE,
   );
 
-	$form['taxonomies'] = array(
-		'#type' => 'fieldset',
-		'#title' => t('Default Taxonomies'),
-		'#collapsible' => FALSE,
-		'#collapsed' => FALSE,
-		'#description' => t('Set the default values that all new courses will receive. Separate each item by commas. Instructors will have a chance to change these when setting up their course.')
-	);
+  $form['taxonomies'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Default Taxonomies'),
+    '#collapsible' => FALSE,
+    '#collapsed' => FALSE,
+    '#description' => t('Set the default values that all new courses will receive. Separate each item by commas. Instructors will have a chance to change these when setting up their course.')
+  );
 
-	$form['taxonomies']['course_default_units'] = array(
-		'#type' => 'textfield',
-		'#title' => t('Units'),
-		'#description' => t('Used to organize readings into units'),
-		'#required' => TRUE,
-		'#default_value' => variable_get('course_default_units', 'Week 1, Week 2'),
-	);
+  $form['taxonomies']['course_default_units'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Units'),
+    '#description' => t('Used to organize readings into units'),
+    '#required' => TRUE,
+    '#default_value' => variable_get('course_default_units', 'Week 1, Week 2'),
+  );
 
-	$form['taxonomies']['course_default_genre_doc'] = array(
-		'#type' => 'textfield',
-		'#title' => t('Genre - Materials'),
-		'#description' => t('Used to classify materials by genre'),
-		'#required' => TRUE,
-		'#default_value' => variable_get('course_default_genre_doc', 'Fiction, Scholarship'),
-	);
+  $form['taxonomies']['course_default_genre_doc'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Genre - Materials'),
+    '#description' => t('Used to classify materials by genre'),
+    '#required' => TRUE,
+    '#default_value' => variable_get('course_default_genre_doc', 'Fiction, Scholarship'),
+  );
 
-	$form['taxonomies']['course_default_genre_response'] = array(
-		'#type' => 'textfield',
-		'#title' => t('Genre - Responses'),
-		'#description' => t('Used to classify student responses by genre'),
-		'#required' => TRUE,
-		'#default_value' => variable_get('course_default_genre_response', 'Essay, Fiction, Other, Reflection, Summary'),
-	);
+  $form['taxonomies']['course_default_genre_response'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Genre - Responses'),
+    '#description' => t('Used to classify student responses by genre'),
+    '#required' => TRUE,
+    '#default_value' => variable_get('course_default_genre_response', 'Essay, Fiction, Other, Reflection, Summary'),
+  );
 
   return system_settings_form($form);
 }
@@ -219,12 +226,24 @@ function course_views_query_alter(&$view, &$query) {
 		if ($view->name == 'curate-tags') {
 			// TODO: filter by gid == field_term_course.field_term_course_target_id
 			// LEFT JOIN {field_data_field_term_course} field_data_field_term_course ON taxonomy_term_data.tid = field_data_field_term_course.entity_id
-//			$query->add_where_expression(2, '');
+//			$course_term_query = new EntityFieldQuery();
+			//TODO: get the target_id for the given terms
+			// may need to do a hook_field_views_data_alter() to add relationship
+//			$result = $course_term_query->entityCondition('entity_type', 'node')
+//				->entityCondition('bundle', 'document')
+//			$query->add_where_expression(2, 'taxonomy_term_data.tid IN (SELECT etid FROM og_membership WHERE gid = ' . $gid . ')');
 		}
 
+    // Autocomplete Bibliography field in Responses with only relevant bibliographic entries
 		if ($view->name == 'bibliography_entity_reference_autocomplete') {
-			// TODO: LEFT JOIN field_data_field_bibliographic_entry ON node.nid = field_data_field_bibliographic_entry.field_bibliographic_entry_target_id AND (field_data_field_bibliographic_entry.entity_type = 'node' AND field_data_field_bibliographic_entry.deleted = '0')
-//			$query->add_where_expression(2, '');
+      $result = db_query('SELECT b.field_bibliographic_entry_target_id
+        FROM field_data_field_bibliographic_entry b
+        LEFT JOIN node n ON n.nid = b.entity_id
+        LEFT JOIN og_membership ogm ON n.nid = ogm.etid
+        WHERE ogm.entity_type = :entity_type
+        AND ogm.gid = :gid', array(':entity_type' => 'node', ':gid' => $gid));
+      $biblio_ids = array_keys($result->fetchAllKeyed());
+			$query->add_where(2, 'node.nid', $biblio_ids, 'IN');
 		}
 	}
 
@@ -587,31 +606,65 @@ function course_form_document_node_form_alter(&$form, &$form_state, $form_id) {
 function course_form_response_node_form_alter(&$form, &$form_state, $form_id) {
 	$response = node_load($form['nid']['#value']);
 	// Filter Response Genre to course
-	$default_genre = $response->field_response_genre[LANGUAGE_NONE][0]['tid'];
+	$genre_options = course_get_terms_for_current_course('genre_response');
+	$default_genre = array_shift(array_keys($genre_options));
+	if (isset($response->field_response_genre[LANGUAGE_NONE])) {
+		$default_genre = $response->field_response_genre[LANGUAGE_NONE][0]['tid'];
+	}
 	$form['genre_response'] = array(
-		'#title' => 'Genres',
+		'#title' => t('Genres'),
 		'#type' => 'select',
 		'#size' => 60,
 		'#default_value' => $default_genre,
-		'#options' => course_get_terms_for_current_course('genre_response'),
+		'#options' => $genre_options,
 		'#required' => TRUE,
 	);
 	$form['#group_children']['genre_response'] = 'group_genre_about';
-
 	$form['field_response_genre']['#access'] = FALSE;	// hide this field
-	$form['#submit'] = array('course_add_response_form_submit');
-	$form['actions']['submit']['#submit'][] = 'course_add_response_form_submit';
+
+  // Note: hard-coded taxonomy name
+  // would be better to load this dynamically based on the existing field's taxonomy reference
+  $form['tags'] = array(
+    '#title' => t('Tags'),
+    '#type' => 'textfield',
+    '#size' => 60,
+    '#autocomplete_path' => 'course-tags/autocomplete/annotation_tags'
+  );
+  $form['field_tags']['#access'] = FALSE;
+  $form['#group_children']['tags'] = 'group_genre_about';
+
+  $form['og_group_ref']['#access'] = FALSE;	// We'll set the course automatically
+  $form['actions']['submit']['#submit'] = array('course_add_response_form_submit');
 	$form['actions']['submit']['#value'] = 'Save Response';
 }
 
 // Handle setting custom values
 function course_add_response_form_submit($form, &$form_state) {
-	$node = node_form_submit_build_node($form, $form_state);
+  ddl($form_state);
+  return;
+  $node = node_form_submit_build_node($form, $form_state);
 	$node->status = NODE_PUBLISHED;
 
+  ddl($node);
 	// Update node with our filtered values
-	$node->field_response_genre[LANGUAGE_NONE][0]['tid'] = $form_state['values']['genre_response'];
-	node_save($node);
+//	$node->field_response_genre[$node->language][0]['tid'] = $form_state['values']['genre_response'];
+  node_save($node);
+
+  // Automatically assign to current course
+  $gid = course_get_selected_course();
+  if ($gid && $node->nid) {
+    og_group('node', $gid,
+      array(
+        'entity_type' => 'node',
+        'entity' => $node,
+        'field_name' => 'og_group_ref',
+        'state' => OG_STATE_ACTIVE
+      )
+    );
+    drupal_goto(drupal_get_path_alias('node/' . $node->nid));
+  } else {
+    drupal_set_message('There was a problem saving your response', 'warning');
+  }
 }
 
 function course_form_biblio_node_form_alter(&$form, &$form_state, $form_id) {

@@ -298,3 +298,14 @@ function course_about_course() {
     drupal_goto(drupal_get_path_alias('node/' . $current_course));
   }
 }
+
+// Autocomplete tags, but only for current course
+function course_tags_autocomplete($name, $match) {
+	$terms = array();
+	foreach (course_get_terms_for_current_course($name) as $tid => $term) {
+		if (preg_match('/' . $match . '/i', $term)) {
+			$terms[$tid] = $term;
+		}
+	}
+	drupal_json_output($terms);
+}
