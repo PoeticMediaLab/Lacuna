@@ -213,13 +213,13 @@ function course_views_query_alter(&$view, &$query) {
 		// Filter node content by course
 		$where_node_views = array('responses', 'materials', 'threads', 'all-content', 'my-writing');
 		if (in_array($view->name, $where_node_views)) {
-			$query->add_where_expression(2, 'node.nid IN (SELECT etid FROM og_membership WHERE gid = ' . $gid . ')');
+			$query->add_where_expression(2, 'node.nid IN (SELECT etid FROM og_membership WHERE entity_type = "nide" AND gid = ' . $gid . ')');
 		}
 
 		// Filter users by course
 		$where_user_views = array('people', 'all-email');
 		if (in_array($view->name, $where_user_views)) {
-			$query->add_where_expression(2, 'user.uid IN (SELECT etid FROM og_membership WHERE gid = ' . $gid . ')');
+			$query->add_where_expression(2, "users.uid IN (SELECT etid FROM og_membership WHERE gid = " . $gid . " AND og_membership.entity_type = 'user')");
 		}
 
 		// Filter annotation tags by course
