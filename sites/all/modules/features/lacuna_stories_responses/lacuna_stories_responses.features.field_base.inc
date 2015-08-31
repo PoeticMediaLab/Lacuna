@@ -96,7 +96,7 @@ function lacuna_stories_responses_field_default_field_bases() {
     'settings' => array(
       'allowed_values' => array(
         0 => array(
-          'vocabulary' => 'tags',
+          'vocabulary' => 'annotation_tags',
           'parent' => 0,
         ),
       ),
