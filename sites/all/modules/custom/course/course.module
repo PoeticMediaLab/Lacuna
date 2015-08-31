@@ -622,16 +622,11 @@ function course_form_response_node_form_alter(&$form, &$form_state, $form_id) {
 	$form['#group_children']['genre_response'] = 'group_genre_about';
 	$form['field_response_genre']['#access'] = FALSE;	// hide this field
 
+  // Customize the autocomplete to filter by course tags
   // Note: hard-coded taxonomy name
   // would be better to load this dynamically based on the existing field's taxonomy reference
-  $form['tags'] = array(
-    '#title' => t('Tags'),
-    '#type' => 'textfield',
-    '#size' => 60,
-    '#autocomplete_path' => 'course-tags/autocomplete/annotation_tags'
-  );
-  $form['field_tags']['#access'] = FALSE;
-  $form['#group_children']['tags'] = 'group_genre_about';
+  $lang = $form['language']['#value'];
+  $form['field_tags'][$lang]['#autocomplete_path'] = 'course-tags/autocomplete/annotation_tags';
 
   $form['og_group_ref']['#access'] = FALSE;	// We'll set the course automatically
   $form['actions']['submit']['#submit'] = array('course_add_response_form_submit');
@@ -640,14 +635,12 @@ function course_form_response_node_form_alter(&$form, &$form_state, $form_id) {
 
 // Handle setting custom values
 function course_add_response_form_submit($form, &$form_state) {
-  ddl($form_state);
-  return;
+
   $node = node_form_submit_build_node($form, $form_state);
 	$node->status = NODE_PUBLISHED;
 
-  ddl($node);
 	// Update node with our filtered values
-//	$node->field_response_genre[$node->language][0]['tid'] = $form_state['values']['genre_response'];
+	$node->field_response_genre[$node->language][0]['tid'] = $form_state['values']['genre_response'];
   node_save($node);
 
   // Automatically assign to current course

@@ -300,12 +300,14 @@ function course_about_course() {
 }
 
 // Autocomplete tags, but only for current course
+// TODO: Add curated tags distinction
+// TODO: Add comma-separated values for multiples
 function course_tags_autocomplete($name, $match) {
-	$terms = array();
+	$matches = array();
 	foreach (course_get_terms_for_current_course($name) as $tid => $term) {
 		if (preg_match('/' . $match . '/i', $term)) {
-			$terms[$tid] = $term;
+			$matches[$term] = $term;
 		}
 	}
-	drupal_json_output($terms);
+	drupal_json_output($matches);
 }
