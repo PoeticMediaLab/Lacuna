@@ -77,6 +77,11 @@ fieldset#edit-thread-description-format {
   }
 }
 
+// Ensure that the response shows up beneath the user information
+.node-response .field-name-body {
+  padding-top: 105px;
+}
+
 // The XX reads statistic
 li.statistics_counter {
   float: right;
