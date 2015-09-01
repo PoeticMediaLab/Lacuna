@@ -211,9 +211,9 @@ function course_views_query_alter(&$view, &$query) {
 
 	if ($gid) {
 		// Filter node content by course
-		$where_node_views = array('responses', 'materials', 'threads', 'all-content', 'my-writing');
+		$where_node_views = array('responses', 'documents', 'threads', 'all_content', 'my_writing');
 		if (in_array($view->name, $where_node_views)) {
-			$query->add_where_expression(2, 'node.nid IN (SELECT etid FROM og_membership WHERE entity_type = "nide" AND gid = ' . $gid . ')');
+			$query->add_where_expression(0, 'node.nid IN (SELECT etid FROM og_membership WHERE gid = ' . $gid . ')');
 		}
 
 		// Filter users by course
@@ -313,7 +313,7 @@ function course_views_pre_build(&$view) {
       // Set some default values on the exposed filters for Course and Annotator
       // There is a bug that prevents clearing default values (ie. searching for all) when the exposed filter is multivalued (see: https://www.drupal.org/node/2452729), so for now I have set these two filters to single value.
       $current_course = course_get_selected_course();
-      $view->display_handler->handlers['filter']['og_group_ref_target_id']->value = array($current_course=>$current_course);
+//      $view->display_handler->handlers['filter']['og_group_ref_target_id']->value = array($current_course=>$current_course);
       global $user;
 			if (isset($view->display_handler->handlers['filter']['author_select'])) {
 				$view->display_handler->handlers['filter']['author_select']->value = array($user->uid => $user->uid);
@@ -626,7 +626,7 @@ function course_form_response_node_form_alter(&$form, &$form_state, $form_id) {
   // Note: hard-coded taxonomy name
   // would be better to load this dynamically based on the existing field's taxonomy reference
   $lang = $form['language']['#value'];
-  $form['field_tags'][$lang]['#autocomplete_path'] = 'course-tags/autocomplete/annotation_tags';
+//  $form['field_tags'][$lang]['#autocomplete_path'] = 'course-tags/autocomplete/annotation_tags';
 
   $form['og_group_ref']['#access'] = FALSE;	// We'll set the course automatically
   $form['actions']['submit']['#submit'] = array('course_add_response_form_submit');
