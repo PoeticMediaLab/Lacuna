@@ -90,6 +90,7 @@ features[user_role][] = Content Manager
 features[user_role][] = Instructor
 features[user_role][] = Site Administrator
 features[user_role][] = Student
+features[variable][] = realname_pattern
 features[variable][] = user_admin_role
 features[variable][] = user_cancel_method
 features[variable][] = user_email_verification
