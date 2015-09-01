@@ -37,7 +37,6 @@ function debug_to_console( $data ) {
 
         <!-- Update to Response user information header. -->
         <div class="submitted response-user-information">
-          <?php print $user_picture; ?>
           <div class="username-and-date">
             <?php print $name; ?>
             <br>
@@ -49,6 +48,7 @@ function debug_to_console( $data ) {
                                       $langcode = NULL); ?>
             </span>
           </div>
+          <?php print $user_picture; ?>
         </div>
 
       <?php endif; ?>
