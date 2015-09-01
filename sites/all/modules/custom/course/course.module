@@ -209,7 +209,6 @@ function course_switch_course_link ($row, $view) {
 function course_views_query_alter(&$view, &$query) {
 	$gid = course_get_selected_course();
 
-  dpm($view);
 	if ($gid) {
 		// Filter node content by course
 		$where_node_views = array('responses', 'documents', 'threads', 'all_content', 'my_writing', 'sewing-kit');
@@ -313,7 +312,7 @@ function course_views_pre_build(&$view) {
 
       // Set some default values on the exposed filters for Course and Annotator
       // There is a bug that prevents clearing default values (ie. searching for all) when the exposed filter is multivalued (see: https://www.drupal.org/node/2452729), so for now I have set these two filters to single value.
-      $current_course = course_get_selected_course();
+//      $current_course = course_get_selected_course();
 //      $view->display_handler->handlers['filter']['og_group_ref_target_id']->value = array($current_course=>$current_course);
       global $user;
 			if (isset($view->display_handler->handlers['filter']['author_select'])) {
@@ -388,14 +387,6 @@ function course_get_authors_for_current_course() {
 		}
 	}
 	return $authors;
-}
-
-function course_limit_exposed_filter_nodes($values) {
-
-}
-
-function course_limit_exposed_filter_tags($values) {
-
 }
 
 /**
@@ -635,7 +626,8 @@ function course_form_response_node_form_alter(&$form, &$form_state, $form_id) {
 	$response = node_load($form['nid']['#value']);
 	// Filter Response Genre to course
 	$genre_options = course_get_terms_for_current_course('genre_response');
-	$default_genre = array_shift(array_keys($genre_options));
+  $tids = array_keys($genre_options); // Avoid PHP warning about passing by reference :(
+	$default_genre = array_shift($tids);
 	if (isset($response->field_response_genre[LANGUAGE_NONE])) {
 		$default_genre = $response->field_response_genre[LANGUAGE_NONE][0]['tid'];
 	}

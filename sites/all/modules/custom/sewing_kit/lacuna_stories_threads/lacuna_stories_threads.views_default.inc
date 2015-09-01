@@ -37,32 +37,34 @@ function lacuna_stories_threads_views_default_views() {
   $handler->display->display_options['style_plugin'] = 'table';
   $handler->display->display_options['style_options']['columns'] = array(
     'views_bulk_operations' => 'views_bulk_operations',
-    'field_display_name' => 'field_display_name',
-    'title' => 'title',
-    'field_annotation_text' => 'field_annotation_text',
+    'field_annotation_audience' => 'field_annotation_audience',
+    'og_group_ref' => 'og_group_ref',
     'field_annotation_quote' => 'field_annotation_quote',
-    'field_annotation_category' => 'field_annotation_category',
+    'field_annotation_text' => 'field_annotation_text',
+    'field_display_name' => 'field_display_name',
     'field_annotation_tags' => 'field_annotation_tags',
-    'title_1' => 'title_1',
-    'path' => 'path',
-    'nid' => 'nid',
+    'field_annotation_category' => 'field_annotation_category',
     'field_annotation_reference' => 'field_annotation_reference',
+    'php' => 'php',
   );
-  $handler->display->display_options['style_options']['default'] = '-1';
+  $handler->display->display_options['style_options']['default'] = 'field_display_name';
   $handler->display->display_options['style_options']['info'] = array(
     'views_bulk_operations' => array(
       'align' => '',
       'separator' => '',
       'empty_column' => 0,
     ),
-    'field_display_name' => array(
-      'sortable' => 1,
-      'default_sort_order' => 'asc',
+    'field_annotation_audience' => array(
       'align' => '',
       'separator' => '',
       'empty_column' => 0,
     ),
-    'title' => array(
+    'og_group_ref' => array(
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'field_annotation_quote' => array(
       'sortable' => 0,
       'default_sort_order' => 'asc',
       'align' => '',
@@ -76,14 +78,7 @@ function lacuna_stories_threads_views_default_views() {
       'separator' => '',
       'empty_column' => 0,
     ),
-    'field_annotation_quote' => array(
-      'sortable' => 0,
-      'default_sort_order' => 'asc',
-      'align' => '',
-      'separator' => '',
-      'empty_column' => 0,
-    ),
-    'field_annotation_category' => array(
+    'field_display_name' => array(
       'sortable' => 1,
       'default_sort_order' => 'asc',
       'align' => '',
@@ -93,30 +88,23 @@ function lacuna_stories_threads_views_default_views() {
     'field_annotation_tags' => array(
       'align' => '',
       'separator' => '',
-      'empty_column' => 0,
+      'empty_column' => 1,
     ),
-    'title_1' => array(
+    'field_annotation_category' => array(
       'sortable' => 1,
       'default_sort_order' => 'asc',
       'align' => '',
       'separator' => '',
-      'empty_column' => 0,
-    ),
-    'path' => array(
-      'align' => '',
-      'separator' => '',
-      'empty_column' => 0,
-    ),
-    'nid' => array(
-      'sortable' => 0,
-      'default_sort_order' => 'asc',
-      'align' => '',
-      'separator' => '',
-      'empty_column' => 0,
+      'empty_column' => 1,
     ),
     'field_annotation_reference' => array(
       'sortable' => 1,
       'default_sort_order' => 'asc',
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'php' => array(
       'align' => '',
       'separator' => '',
       'empty_column' => 0,
@@ -156,21 +144,6 @@ function lacuna_stories_threads_views_default_views() {
       'label' => '',
     ),
   );
-  /* Field: Content: Audience */
-  $handler->display->display_options['fields']['field_annotation_audience']['id'] = 'field_annotation_audience';
-  $handler->display->display_options['fields']['field_annotation_audience']['table'] = 'field_data_field_annotation_audience';
-  $handler->display->display_options['fields']['field_annotation_audience']['field'] = 'field_annotation_audience';
-  $handler->display->display_options['fields']['field_annotation_audience']['exclude'] = TRUE;
-  $handler->display->display_options['fields']['field_annotation_audience']['delta_offset'] = '0';
-  /* Field: Content: Groups audience */
-  $handler->display->display_options['fields']['og_group_ref']['id'] = 'og_group_ref';
-  $handler->display->display_options['fields']['og_group_ref']['table'] = 'og_membership';
-  $handler->display->display_options['fields']['og_group_ref']['field'] = 'og_group_ref';
-  $handler->display->display_options['fields']['og_group_ref']['exclude'] = TRUE;
-  $handler->display->display_options['fields']['og_group_ref']['settings'] = array(
-    'link' => 0,
-  );
-  $handler->display->display_options['fields']['og_group_ref']['delta_offset'] = '0';
   /* Field: Content: Excerpt */
   $handler->display->display_options['fields']['field_annotation_quote']['id'] = 'field_annotation_quote';
   $handler->display->display_options['fields']['field_annotation_quote']['table'] = 'field_data_field_annotation_quote';
@@ -208,15 +181,21 @@ function lacuna_stories_threads_views_default_views() {
   $handler->display->display_options['fields']['field_annotation_reference']['settings'] = array(
     'link' => 1,
   );
+  /* Field: Content: Audience */
+  $handler->display->display_options['fields']['field_annotation_audience']['id'] = 'field_annotation_audience';
+  $handler->display->display_options['fields']['field_annotation_audience']['table'] = 'field_data_field_annotation_audience';
+  $handler->display->display_options['fields']['field_annotation_audience']['field'] = 'field_annotation_audience';
+  $handler->display->display_options['fields']['field_annotation_audience']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['field_annotation_audience']['delta_offset'] = '0';
   /* Field: Content: Groups audience */
-  $handler->display->display_options['fields']['og_group_ref_1']['id'] = 'og_group_ref_1';
-  $handler->display->display_options['fields']['og_group_ref_1']['table'] = 'og_membership';
-  $handler->display->display_options['fields']['og_group_ref_1']['field'] = 'og_group_ref';
-  $handler->display->display_options['fields']['og_group_ref_1']['relationship'] = 'field_annotation_reference_target_id';
-  $handler->display->display_options['fields']['og_group_ref_1']['settings'] = array(
-    'link' => 1,
+  $handler->display->display_options['fields']['og_group_ref']['id'] = 'og_group_ref';
+  $handler->display->display_options['fields']['og_group_ref']['table'] = 'og_membership';
+  $handler->display->display_options['fields']['og_group_ref']['field'] = 'og_group_ref';
+  $handler->display->display_options['fields']['og_group_ref']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['og_group_ref']['settings'] = array(
+    'link' => 0,
   );
-  $handler->display->display_options['fields']['og_group_ref_1']['delta_offset'] = '0';
+  $handler->display->display_options['fields']['og_group_ref']['delta_offset'] = '0';
   /* Field: Global: PHP */
   $handler->display->display_options['fields']['php']['id'] = 'php';
   $handler->display->display_options['fields']['php']['table'] = 'views';
@@ -246,26 +225,6 @@ function lacuna_stories_threads_views_default_views() {
     'annotation' => 'annotation',
   );
   $handler->display->display_options['filters']['type']['group'] = 1;
-  /* Filter criterion: Content: Groups audience (og_group_ref) */
-  $handler->display->display_options['filters']['og_group_ref_target_id']['id'] = 'og_group_ref_target_id';
-  $handler->display->display_options['filters']['og_group_ref_target_id']['table'] = 'og_membership';
-  $handler->display->display_options['filters']['og_group_ref_target_id']['field'] = 'og_group_ref_target_id';
-  $handler->display->display_options['filters']['og_group_ref_target_id']['relationship'] = 'field_annotation_reference_target_id';
-  $handler->display->display_options['filters']['og_group_ref_target_id']['group'] = 1;
-  $handler->display->display_options['filters']['og_group_ref_target_id']['exposed'] = TRUE;
-  $handler->display->display_options['filters']['og_group_ref_target_id']['expose']['operator_id'] = 'og_group_ref_target_id_op';
-  $handler->display->display_options['filters']['og_group_ref_target_id']['expose']['label'] = 'Course';
-  $handler->display->display_options['filters']['og_group_ref_target_id']['expose']['operator'] = 'og_group_ref_target_id_op';
-  $handler->display->display_options['filters']['og_group_ref_target_id']['expose']['identifier'] = 'og_group_ref_target_id';
-  $handler->display->display_options['filters']['og_group_ref_target_id']['expose']['remember_roles'] = array(
-    2 => '2',
-    1 => 0,
-    5 => 0,
-    3 => 0,
-    4 => 0,
-    6 => 0,
-    7 => 0,
-  );
   /* Filter criterion: Content: Author (select list) */
   $handler->display->display_options['filters']['author_select']['id'] = 'author_select';
   $handler->display->display_options['filters']['author_select']['table'] = 'node';
@@ -448,6 +407,13 @@ function lacuna_stories_threads_views_default_views() {
       'empty_column' => 0,
     ),
   );
+  /* No results behavior: Global: Text area */
+  $handler->display->display_options['empty']['area']['id'] = 'area';
+  $handler->display->display_options['empty']['area']['table'] = 'views';
+  $handler->display->display_options['empty']['area']['field'] = 'area';
+  $handler->display->display_options['empty']['area']['empty'] = TRUE;
+  $handler->display->display_options['empty']['area']['content'] = 'No threads have been created for this course yet. How sad. Why don\'t you create one?';
+  $handler->display->display_options['empty']['area']['format'] = 'filtered_html';
   /* Relationship: Entity Reference: Referenced Entity */
   $handler->display->display_options['relationships']['thread_reference_target_id']['id'] = 'thread_reference_target_id';
   $handler->display->display_options['relationships']['thread_reference_target_id']['table'] = 'field_data_thread_reference';
