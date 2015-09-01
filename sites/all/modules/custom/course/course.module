@@ -208,10 +208,9 @@ function course_switch_course_link ($row, $view) {
  */
 function course_views_query_alter(&$view, &$query) {
 	$gid = course_get_selected_course();
-
 	if ($gid) {
 		// Filter node content by course
-		$where_node_views = array('responses', 'documents', 'threads', 'all_content', 'my_writing', 'sewing-kit');
+		$where_node_views = array('responses', 'documents', 'threads', 'all_content', 'my_writing', 'sewing-kit', 'user_s_responses', 'user_s_comments', 'my_annotations_view');
 		if (in_array($view->name, $where_node_views)) {
 			$query->add_where_expression(0, "node.nid IN (SELECT etid FROM og_membership WHERE gid = " . $gid . " AND og_membership.entity_type = 'node')");
 		}
