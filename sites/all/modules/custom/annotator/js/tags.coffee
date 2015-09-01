@@ -103,7 +103,6 @@ class Annotator.Plugin.Tags extends Annotator.Plugin
   #
   # Returns nothing.
   updateField: (field, annotation) =>
-    console.log(annotation.tags)
     value = ''
     value = this.stringifyTags(annotation.tags) if annotation.tags
     @input.val(value)

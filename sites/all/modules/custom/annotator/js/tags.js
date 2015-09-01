@@ -62,7 +62,6 @@
 
     Tags.prototype.updateField = function(field, annotation) {
       var value;
-      console.log(annotation.tags);
       value = '';
       if (annotation.tags) value = this.stringifyTags(annotation.tags);
       return this.input.val(value);
