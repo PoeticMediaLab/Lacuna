@@ -500,8 +500,7 @@ function course_sewing_kit_shared_with($data) {
 }
 
 // Get the currently selected course
-// Note: If you need to rename this function, be aware that it's used in
-// many, many views in PHP fields
+// Used extensively, so be careful if you refactor
 function course_get_selected_course() {
   global $user;
 	$result = db_query('SELECT c.gid FROM {' . COURSE_CURRENT_TABLE . '} c WHERE c.uid = :uid', array(':uid' => (int) $user->uid));
