@@ -25,6 +25,7 @@ features[features_api][] = api:2
 features[field_base][] = field_bibliographic_item
 features[field_base][] = field_response_genre
 features[field_base][] = field_tags
+features[field_group][] = group_about|node|response|default
 features[field_group][] = group_genre_about|node|response|form
 features[field_instance][] = node-response-body
 features[field_instance][] = node-response-field_bibliographic_item
