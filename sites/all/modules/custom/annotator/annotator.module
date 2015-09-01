@@ -168,7 +168,9 @@ function annotator_check_annotatable_node () {
     $current_node = node_load(arg(1));
     $anno_ref_field = field_info_field('field_annotation_reference');
     $annotatable_types = $anno_ref_field['settings']['handler_settings']['target_bundles'];
-    if (in_array($current_node->type, $annotatable_types) && workflow_node_current_state($current_node) == WORKFLOW_READY_STATE) {
+    $workflow_state = workflow_node_current_state($current_node);
+    // Account for nodes that don't have a workflow status
+    if (in_array($current_node->type, $annotatable_types) && (empty($workflow_state) || $workflow_state == WORKFLOW_READY_STATE)) {
       $current_course = course_get_selected_course();
       foreach ($current_node->og_group_ref[$current_node->language] as $current_node_parent_group) {
         if ($current_node_parent_group['target_id'] == $current_course) {
