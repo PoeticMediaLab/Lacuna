@@ -383,6 +383,15 @@ function course_get_authors_for_current_course() {
 	return $authors;
 }
 
+// Limit an exposed filter for taxonomy terms to those given
+function course_limit_exposed_filter_tags(&$form, $field, $terms) {
+  foreach ($form[$field]['#options'] as $tid => $term) {
+    if (!isset($terms[$tid])) {
+      unset($form[$field]['#options'][$tid]);
+    }
+  }
+}
+
 /**
  * Implements hook_form_FORM_ID_alter().
  */
@@ -410,6 +419,12 @@ function course_form_views_exposed_form_alter(&$form, &$form_state) {
 			}
 		}
 	}
+
+  // Filter Taxonomy terms
+  if (isset($form['field_tags_tid'])) {
+    course_limit_exposed_filter_tags($form, 'field_tags_tid', course_get_terms_for_current_course('annotation_tags'));
+//    $form['field_tags_tid']['#options'] = course_get_terms_for_current_course('annotation_tags');
+  }
 
   if ($form['#id'] == 'views-exposed-form-sewing-kit-page') {
     // Restrict the tag filter options to tags on annotations on documents in courses in which the user is a member. Otherwise we will have inapplicable tags here even with no filters set. Plus tags may be considered private content.
@@ -444,15 +459,16 @@ function course_form_views_exposed_form_alter(&$form, &$form_state) {
     $records = $query->execute();
     if (count($records)) {
       $group_tag_options = array_keys($records['taxonomy_term']);
-    } */
-
-    // For trans-course Sewing Kit, comment out the next line
-    $group_tag_options = array_keys(course_get_terms_for_current_course('annotation_tags'));
+    }
     foreach ($form['field_annotation_tags_tid']['#options'] as $existing_tag_option_tid => $existing_tag_option_name) {
       if (!in_array($existing_tag_option_tid, $group_tag_options)) {
         unset ($form['field_annotation_tags_tid']['#options'][$existing_tag_option_tid]);
       }
-    }
+    }*/
+
+    // For trans-course Sewing Kit, comment out the next line
+    course_limit_exposed_filter_tags($form, 'field_annotation_tags_tid', course_get_terms_for_current_course('annotation_tags'));
+
     // Restrict exposed filter list of annotated content to current course
     $gid = course_get_selected_course();
     $query = new EntityFieldQuery();
