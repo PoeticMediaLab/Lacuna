@@ -112,7 +112,7 @@ function lacuna_stories_system_wysiwyg_default_profiles() {
       'css_path' => '',
       'stylesSet' => '',
       'block_formats' => 'p,address,pre,h2,h3,h4,h5,h6,div',
-      'advanced__active_tab' => 'edit-basic',
+      'advanced__active_tab' => 'edit-appearance',
       'forcePasteAsPlainText' => 0,
     ),
     'rdf_mapping' => array(),
