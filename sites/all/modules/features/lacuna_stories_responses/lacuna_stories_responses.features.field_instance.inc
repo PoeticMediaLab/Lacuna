@@ -10,6 +10,44 @@
 function lacuna_stories_responses_field_default_field_instances() {
   $field_instances = array();
 
+  // Exported field_instance: 'comment-comment_node_response-comment_body'
+  $field_instances['comment-comment_node_response-comment_body'] = array(
+    'bundle' => 'comment_node_response',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'hidden',
+        'module' => 'text',
+        'settings' => array(),
+        'type' => 'text_default',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'comment',
+    'field_name' => 'comment_body',
+    'label' => 'Comment',
+    'required' => 1,
+    'settings' => array(
+      'text_processing' => 0,
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'text',
+      'settings' => array(
+        'maxlength_js' => '',
+        'maxlength_js_enforce' => 0,
+        'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
+        'maxlength_js_truncate_html' => 0,
+        'rows' => 5,
+      ),
+      'type' => 'text_textarea',
+      'weight' => 0,
+    ),
+  );
+
   // Exported field_instance: 'node-response-body'
   $field_instances['node-response-body'] = array(
     'bundle' => 'response',
@@ -399,6 +437,7 @@ function lacuna_stories_responses_field_default_field_instances() {
   t('Bibliographic Item');
   t('Body');
   t('Choose an icon to represent this blog post when browsing. All browsing icons on Lacuna Stories are portrait dimensions, so please try to choose this proportion of image or crop it yourself before uploading. If you upload a landscape image, it will likely become skewed in the automated cropping. Also make sure your image is larger than 220 pixels wide and 320 pixels tall. If not, you can change that in programs like Mac Preview by selecting TOOLS --> ADJUST SIZE and increase the pixels.');
+  t('Comment');
   t('Course');
   t('Genre');
   t('Groups audience');
