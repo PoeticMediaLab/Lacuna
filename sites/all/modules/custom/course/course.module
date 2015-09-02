@@ -205,6 +205,7 @@ function course_switch_course_link ($row, $view) {
 
 /**
  * Implements hook_views_query_alter().
+ * Updates existing views to that their results are limited to the current course
  */
 function course_views_query_alter(&$view, &$query) {
 	$gid = course_get_selected_course();
@@ -222,15 +223,9 @@ function course_views_query_alter(&$view, &$query) {
 		}
 
 		// Filter annotation tags by course
-		if ($view->name == 'curate-tags') {
-			// TODO: filter by gid == field_term_course.field_term_course_target_id
-			// LEFT JOIN {field_data_field_term_course} field_data_field_term_course ON taxonomy_term_data.tid = field_data_field_term_course.entity_id
-//			$course_term_query = new EntityFieldQuery();
-			//TODO: get the target_id for the given terms
-			// may need to do a hook_field_views_data_alter() to add relationship
-//			$result = $course_term_query->entityCondition('entity_type', 'node')
-//				->entityCondition('bundle', 'document')
-//			$query->add_where_expression(2, 'taxonomy_term_data.tid IN (SELECT etid FROM og_membership WHERE gid = ' . $gid . ')');
+		if ($view->name == 'curate_tags') {
+      $taxonomy = course_get_terms_for_current_course('annotation_tags');
+			$query->add_where(0, 'tid', array_keys($taxonomy), 'IN');
 		}
 
     // Autocomplete Bibliography field in Responses with only relevant bibliographic entries
@@ -417,47 +412,49 @@ function course_form_views_exposed_form_alter(&$form, &$form_state) {
 	}
 
   if ($form['#id'] == 'views-exposed-form-sewing-kit-page') {
-    // NOTE: To make Sewing Kit work across multiple course, uncomment this section
-    // Restrict the group filter options to (a) courses, (b) that the user is a member of
-//    $group_options = array('All' => '- Any -');
-//    $groups = og_get_groups_by_user();
-//    foreach ($groups['node'] as $gid) {
-//      $group = node_load($gid);
-//      if ($group->type == 'course') {
-//        $group_options[$gid] = $group->title;
-//      }
-//    }
-//    $form['og_group_ref_target_id']['#options'] = $group_options;
-
     // Restrict the tag filter options to tags on annotations on documents in courses in which the user is a member. Otherwise we will have inapplicable tags here even with no filters set. Plus tags may be considered private content.
-    $gid = course_get_selected_course();
+    /* NOTE: To make Sewing Kit work *across* courses for users, uncomment this section
+
+// Restrict the group filter options to (a) courses, (b) that the user is a member of
+    $group_options = array('All' => '- Any -');
+    $groups = og_get_groups_by_user();
+    foreach ($groups['node'] as $gid) {
+      $group = node_load($gid);
+      if ($group->type == 'course') {
+        $group_options[$gid] = $group->title;
+      }
+    }
+    $form['og_group_ref_target_id']['#options'] = $group_options;
+
+
     $group_tag_options = array();
-//
-    // NOTE: To make Sewing Kit work *across* courses for users, uncomment this section
-//    $user_groups = array_keys(og_get_groups_by_user(NULL, 'node'));
-//    $course_groups = array();
-//    foreach ($user_groups as $user_group) {
-//      $group = node_load($user_group);
-//      if ($group->type == 'course') {
-//        $course_groups[] = $user_group;
-//      }
-//    }
+    $user_groups = array_keys(og_get_groups_by_user(NULL, 'node'));
+    $course_groups = array();
+    foreach ($user_groups as $user_group) {
+      $group = node_load($user_group);
+      if ($group->type == 'course') {
+        $course_groups[] = $user_group;
+      }
+    }
     $query = new EntityFieldQuery();
     $query->entityCondition('entity_type', 'taxonomy_term');
     $query->entityCondition('bundle', 'annotation_tags');
     // For trans-course Sewing Kit
-//    $query->fieldCondition('field_term_course', 'target_id', $course_groups, 'IN');
-    $query->fieldCondition('field_term_course', 'target_id', $gid);
+    $query->fieldCondition('field_term_course', 'target_id', $course_groups, 'IN');
     $records = $query->execute();
     if (count($records)) {
       $group_tag_options = array_keys($records['taxonomy_term']);
-    }
+    } */
+
+    // For trans-course Sewing Kit, comment out the next line
+    $group_tag_options = array_keys(course_get_terms_for_current_course('annotation_tags'));
     foreach ($form['field_annotation_tags_tid']['#options'] as $existing_tag_option_tid => $existing_tag_option_name) {
       if (!in_array($existing_tag_option_tid, $group_tag_options)) {
         unset ($form['field_annotation_tags_tid']['#options'][$existing_tag_option_tid]);
       }
     }
     // Restrict exposed filter list of annotated content to current course
+    $gid = course_get_selected_course();
     $query = new EntityFieldQuery();
     $result = $query->entityCondition('entity_type', 'node')
       ->entityCondition('bundle', array('document', 'response'), 'IN')
