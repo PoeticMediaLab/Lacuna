@@ -372,11 +372,12 @@ function lacuna_stories_threads_views_default_views() {
   $handler->display->display_options['style_plugin'] = 'table';
   $handler->display->display_options['style_options']['columns'] = array(
     'title' => 'title',
+    'name' => 'name',
+    'nid' => 'nid',
     'thread_description' => 'thread_description',
-    'field_display_name' => 'field_display_name',
     'created' => 'created',
   );
-  $handler->display->display_options['style_options']['default'] = '-1';
+  $handler->display->display_options['style_options']['default'] = 'created';
   $handler->display->display_options['style_options']['info'] = array(
     'title' => array(
       'sortable' => 1,
@@ -385,15 +386,22 @@ function lacuna_stories_threads_views_default_views() {
       'separator' => '',
       'empty_column' => 0,
     ),
-    'thread_description' => array(
+    'name' => array(
+      'sortable' => 1,
+      'default_sort_order' => 'asc',
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'nid' => array(
       'sortable' => 0,
       'default_sort_order' => 'asc',
       'align' => '',
       'separator' => '',
       'empty_column' => 0,
     ),
-    'field_display_name' => array(
-      'sortable' => 1,
+    'thread_description' => array(
+      'sortable' => 0,
       'default_sort_order' => 'asc',
       'align' => '',
       'separator' => '',
@@ -429,6 +437,12 @@ function lacuna_stories_threads_views_default_views() {
   $handler->display->display_options['fields']['title']['field'] = 'title';
   $handler->display->display_options['fields']['title']['alter']['word_boundary'] = FALSE;
   $handler->display->display_options['fields']['title']['alter']['ellipsis'] = FALSE;
+  /* Field: User: Name */
+  $handler->display->display_options['fields']['name']['id'] = 'name';
+  $handler->display->display_options['fields']['name']['table'] = 'users';
+  $handler->display->display_options['fields']['name']['field'] = 'name';
+  $handler->display->display_options['fields']['name']['relationship'] = 'uid';
+  $handler->display->display_options['fields']['name']['label'] = 'Author';
   /* Field: COUNT(DISTINCT Content: Nid) */
   $handler->display->display_options['fields']['nid']['id'] = 'nid';
   $handler->display->display_options['fields']['nid']['table'] = 'node';
@@ -472,6 +486,25 @@ function lacuna_stories_threads_views_default_views() {
     'thread' => 'thread',
   );
   $handler->display->display_options['filters']['type']['group'] = 1;
+  /* Filter criterion: Content: Author (select list) */
+  $handler->display->display_options['filters']['author_select']['id'] = 'author_select';
+  $handler->display->display_options['filters']['author_select']['table'] = 'node';
+  $handler->display->display_options['filters']['author_select']['field'] = 'author_select';
+  $handler->display->display_options['filters']['author_select']['exposed'] = TRUE;
+  $handler->display->display_options['filters']['author_select']['expose']['operator_id'] = 'author_select_op';
+  $handler->display->display_options['filters']['author_select']['expose']['label'] = 'Limit by Author';
+  $handler->display->display_options['filters']['author_select']['expose']['operator'] = 'author_select_op';
+  $handler->display->display_options['filters']['author_select']['expose']['identifier'] = 'author_select';
+  $handler->display->display_options['filters']['author_select']['expose']['multiple'] = TRUE;
+  $handler->display->display_options['filters']['author_select']['expose']['remember_roles'] = array(
+    2 => '2',
+    1 => 0,
+    5 => 0,
+    3 => 0,
+    4 => 0,
+    6 => 0,
+    7 => 0,
+  );
 
   /* Display: Page */
   $handler = $view->new_display('page', 'Page', 'page');
