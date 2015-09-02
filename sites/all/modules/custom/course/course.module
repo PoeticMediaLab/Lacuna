@@ -308,10 +308,10 @@ function course_views_pre_build(&$view) {
       // There is a bug that prevents clearing default values (ie. searching for all) when the exposed filter is multivalued (see: https://www.drupal.org/node/2452729), so for now I have set these two filters to single value.
 //      $current_course = course_get_selected_course();
 //      $view->display_handler->handlers['filter']['og_group_ref_target_id']->value = array($current_course=>$current_course);
-      global $user;
-			if (isset($view->display_handler->handlers['filter']['author_select'])) {
-				$view->display_handler->handlers['filter']['author_select']->value = array($user->uid => $user->uid);
-			}
+//      global $user;
+//			if (isset($view->display_handler->handlers['filter']['author_select'])) {
+//				$view->display_handler->handlers['filter']['author_select']->value = array($user->uid => $user->uid);
+//			}
 
 
       break;
