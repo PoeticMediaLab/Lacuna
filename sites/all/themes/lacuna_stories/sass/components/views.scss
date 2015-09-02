@@ -72,7 +72,7 @@ $views-link-color: #808080;
 $views-link-hover-color: #1588BA;
 .view-documents,
 .view-responses,
-.view-my-threads,
+.view-threads,
 .view-sewing-kit,
 .view-my-content,
 .view-all-content,
@@ -82,7 +82,7 @@ $views-link-hover-color: #1588BA;
     display: none;
   }
   .views-widget-sort-by {
-    .form-type-bef-link {
+    //.form-type-bef-link {
       float: left;
       margin: 0 10px 0 15px;
       a {
@@ -93,10 +93,10 @@ $views-link-hover-color: #1588BA;
       a:hover {
         color: $views-link-hover-color;
       }
-    }
-    .form-type-bef-link.selected a {
-      color: $views-link-hover-color;
-    }
+    //}
+    //.form-type-bef-link.selected a {
+    //  color: $views-link-hover-color;
+    //}
   }
   img {
     width: auto;
