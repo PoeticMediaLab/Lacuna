@@ -14,12 +14,15 @@ class views_lacuna_stories_views_handler_filter_author_select extends views_hand
 	function get_value_options() {
 		$users_list = entity_load('user');
 
+    $users = array();
 		foreach ($users_list as $user) {
-			$users[$user->uid] = format_username($user);
+			$users[$user->uid] = $user->name;
 		}
 
 		// We don't need Guest user here, so remove it.
 		unset($users[0]);
+    // Also remove super user
+    unset($users[1]);
 
 		// Sort by username.
 		natsort($users);
