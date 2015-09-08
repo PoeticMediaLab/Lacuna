@@ -15,6 +15,7 @@ dependencies[] = webform_rules
 features[ctools][] = strongarm:strongarm:1
 features[features_api][] = api:2
 features[field_instance][] = node-webform-body
+features[flag][] = irb_form_completed
 features[node][] = webform
 features[user_permission][] = access all webform results
 features[user_permission][] = access own webform results
