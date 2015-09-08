@@ -597,6 +597,14 @@ function annotation_api_entity_prepare($annotation, $op) {
         'groups' => $built_peer_groups,
       );
 
+      // Set permissions for edit and delete controls
+      $canEdit = $annotation->uid == $user->uid || user_access('edit any annotation content');
+      $canDelete = $annotation->uid == $user->uid || user_access('delete any annotation content');
+      $entity->permissions = array(
+        'edit' => $canEdit,
+        'del' => $canDelete
+      );
+
       // Links
       // href = link to annotation in node via scrollTo in Filters plugin
       $nid = $annotation->field_annotation_reference[$annotation->language][0]['target_id'];
