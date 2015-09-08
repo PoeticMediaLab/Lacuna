@@ -242,7 +242,8 @@ function lacunastories_base_set_annotator_settings() {
     'Tags' => 'Tags',
     'Privacy' => 'Privacy',
 		'Histogram' => 'Histogram',
-		'Author' => 'Author'
+		'Author' => 'Author',
+    'Controls' => 'Controls'
   ));
 }
 

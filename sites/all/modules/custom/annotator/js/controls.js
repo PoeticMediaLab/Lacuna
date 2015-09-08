@@ -20,7 +20,6 @@
     };
 
     Controls.prototype.updateViewer = function(field, annotation, controls) {
-      console.log(annotation);
       if ((annotation.permissions != null)) {
         if (!annotation.permissions.edit) controls.hideEdit();
         if (!annotation.permissions.del) return controls.hideDelete();

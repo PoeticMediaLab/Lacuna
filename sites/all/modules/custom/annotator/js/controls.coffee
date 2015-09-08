@@ -12,7 +12,6 @@ class Annotator.Plugin.Controls extends Annotator.Plugin
     })
 
   updateViewer: (field, annotation, controls) =>
-    console.log(annotation)
     if (annotation.permissions?)
       if (!annotation.permissions.edit)
         controls.hideEdit()
