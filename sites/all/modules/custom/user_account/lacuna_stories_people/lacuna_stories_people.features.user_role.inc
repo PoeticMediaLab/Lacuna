@@ -22,6 +22,12 @@ function lacuna_stories_people_user_default_roles() {
     'weight' => 4,
   );
 
+  // Exported role: Researcher.
+  $roles['Researcher'] = array(
+    'name' => 'Researcher',
+    'weight' => 11,
+  );
+
   // Exported role: Site Administrator.
   $roles['Site Administrator'] = array(
     'name' => 'Site Administrator',
