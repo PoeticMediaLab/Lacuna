@@ -137,16 +137,58 @@
       }
     };
 
+    Touch.prototype._stickEditor = function() {
+      var editor, editorRightOffset, editorTopOffset, styleString, tab, tabRightOffset, tabTopOffset;
+      tab = $('.annotator-touch-controls.annotator-touch-widget');
+      editor = $('.annotator-touch-editor .annotator-touch-widget');
+      editorTopOffset = +getComputedStyle(editor[0]).top.replace('px', '') + window.scrollY;
+      editorRightOffset = 0;
+      styleString = 'position: absolute; top: ' + editorTopOffset + 'px; right: ' + editorRightOffset + 'px; ';
+      editor.attr('style', styleString);
+      tabTopOffset = +getComputedStyle(tab[0]).top.replace('px', '') + window.scrollY;
+      tabRightOffset = +getComputedStyle(tab[0]).right.replace('px', '');
+      styleString = 'position: absolute; top: ' + tabTopOffset + 'px; right: ' + tabRightOffset + 'px;';
+      tab.attr('style', styleString);
+      return editor.parent().attr('style', 'left: 0px; top: 0px;');
+    };
+
+    Touch.prototype._unstickEditor = function() {
+      var editor, tab;
+      tab = $('.annotator-touch-controls.annotator-touch-widget');
+      editor = $('.annotator-touch-editor .annotator-touch-widget');
+      editor.attr('style', '');
+      return tab.attr('style', '');
+    };
+
     Touch.prototype._setupAnnotatorEvents = function() {
       this.editor = new Touch.Editor(this.annotator.editor);
       this.viewer = new Touch.Viewer(this.annotator.viewer);
+      this.editor.element.addClass('tab-in');
+      this.controls.addClass('tab-in');
       this.annotator.editor.on("show", (function(_this) {
         return function() {
+          var hiddenFilters;
           _this._clearWatchForSelection();
           _this.annotator.onAdderMousedown();
           if (_this.highlighter) {
-            return _this.highlighter.disable();
+            _this.highlighter.disable();
           }
+          _this.editor.element.removeClass('tab-in');
+          _this.controls.removeClass('tab-in');
+          _this.editor.element.addClass('tab-out');
+          _this.controls.addClass('tab-out');
+          hiddenFilters = $('#annotation-filters-wrapper:not(.hidden)');
+          if (hiddenFilters.length > 0) {
+            hiddenFilters.addClass('hidden');
+          }
+          document.execCommand('Unselect');
+          if (document.selection) {
+            document.selection.empty();
+          }
+          if (window.getSelection && window.getSelection().removeAllRanges) {
+            window.getSelection().removeAllRanges();
+          }
+          return _this._stickEditor();
         };
       })(this));
       this.annotator.viewer.on("show", (function(_this) {
@@ -158,6 +200,11 @@
       })(this));
       this.annotator.editor.on("hide", (function(_this) {
         return function() {
+          _this.editor.element.removeClass('tab-out');
+          _this.controls.removeClass('tab-out');
+          _this.editor.element.addClass('tab-in');
+          _this.controls.addClass('tab-in');
+          _this._unstickEditor();
           return _this.utils.nextTick(function() {
             if (_this.highlighter) {
               _this.highlighter.enable().deselect();
@@ -274,7 +321,8 @@
             };
           })(this);
           this.annotator.subscribe('beforeAnnotationCreated', onAnnotationCreated);
-          return this.annotator.onAdderClick(event);
+          this.annotator.onAdderClick(event);
+          return window.dispatchEvent(new Event('resize'));
         }
       }
     };

@@ -186,6 +186,40 @@ class Annotator.Plugin.Touch extends Annotator.Plugin
     @toggle.bind("tap": @_onToggleTap)
     @toggle.hide() unless @options.useHighlighter
 
+  # Sets the Editor panel to absolute positioning to prevent the keyboard
+  # from moving the panel all around the screen.
+  _stickEditor: ->
+    # select the tab and editor elements
+    tab = $('.annotator-touch-controls.annotator-touch-widget')
+    editor = $('.annotator-touch-editor .annotator-touch-widget')
+
+    # set the editor position to absolute
+    editorTopOffset = +getComputedStyle(editor[0]).top.replace('px', '') + window.scrollY
+    editorRightOffset = 0
+    styleString = 'position: absolute; top: ' + editorTopOffset + 'px; right: ' + editorRightOffset + 'px; '
+    editor.attr('style', styleString)
+
+    # set the tab position to absolute
+    tabTopOffset = +getComputedStyle(tab[0]).top.replace('px', '') + window.scrollY
+    tabRightOffset = +getComputedStyle(tab[0]).right.replace('px', '')
+    styleString = 'position: absolute; top: ' + tabTopOffset + 'px; right: ' + tabRightOffset + 'px;'
+    tab.attr('style', styleString);
+
+    # something styles the editor wrapper so the box appears off-screen,
+    # so this undoes that.
+    editor.parent().attr('style', 'left: 0px; top: 0px;')
+
+  # Reverts the Editor panel to fixed positioning.
+  _unstickEditor: ->
+    # select the tab and editor elements
+    tab = $('.annotator-touch-controls.annotator-touch-widget')
+    editor = $('.annotator-touch-editor .annotator-touch-widget')
+
+    # remove style tags
+    editor.attr('style', '')
+    tab.attr('style', '')
+
+
   # Setup method that creates the @editor and @viewer properties. Should
   # only be called once by the @pluginInit() method.
   #
@@ -195,16 +229,49 @@ class Annotator.Plugin.Touch extends Annotator.Plugin
     @editor = new Touch.Editor(@annotator.editor)
     @viewer = new Touch.Viewer(@annotator.viewer)
 
+    # start with closed annotator tab
+    @editor.element.addClass('tab-in')
+    @controls.addClass('tab-in')
+
     # Ensure the annotate buttom is hidden when the interface is visible.
     @annotator.editor.on "show", =>
       @_clearWatchForSelection()
       @annotator.onAdderMousedown()
       @highlighter.disable() if @highlighter
 
+      # open annotator tab
+      @editor.element.removeClass('tab-in')
+      @controls.removeClass('tab-in')
+      @editor.element.addClass('tab-out')
+      @controls.addClass('tab-out')
+
+
+      # hide annotator filters tab if visible
+      hiddenFilters = $('#annotation-filters-wrapper:not(.hidden)')
+      hiddenFilters.addClass('hidden') if hiddenFilters.length > 0
+
+      # attempt to deselect the selection
+      document.execCommand('Unselect')
+      document.selection.empty() if (document.selection)
+      window.getSelection().removeAllRanges() if window.getSelection and window.getSelection().removeAllRanges
+
+      # stick the editor to the page with absolute positioning
+      @_stickEditor()
+
     @annotator.viewer.on "show", =>
       @highlighter.disable() if @highlighter
 
     @annotator.editor.on "hide", =>
+
+      # close annotator tab
+      @editor.element.removeClass('tab-out')
+      @controls.removeClass('tab-out')
+      @editor.element.addClass('tab-in')
+      @controls.addClass('tab-in')
+
+      # unstick the editor from the page
+      @_unstickEditor()
+
       @utils.nextTick =>
         @highlighter.enable().deselect() if @highlighter
         @_watchForSelection()
@@ -356,6 +423,11 @@ class Annotator.Plugin.Touch extends Annotator.Plugin
         # Trigger the main adder handler which handles displaying the editor
         # and triggering the correct events for persistance.
         @annotator.onAdderClick(event)
+
+        # Trigger a resize event to fix bug where editor
+        # text field would be un-focusable for an unknown
+        # reason.
+        window.dispatchEvent(new Event('resize'))
 
   # Event callback for tap events on highlights and displays the Viewer.
   # Allows events on anchor elements and those with the
