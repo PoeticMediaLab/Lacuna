@@ -38,7 +38,8 @@ function lacuna_stories_materials_default_Workflow() {
       "3" : "Content Manager",
       "4" : "Instructor",
       "6" : "Student",
-      "7" : "administrator"
+      "7" : "administrator",
+      "8" : "Researcher"
     }
   }');
 
