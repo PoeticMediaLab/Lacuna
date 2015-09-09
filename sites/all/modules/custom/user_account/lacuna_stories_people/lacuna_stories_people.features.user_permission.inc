@@ -162,6 +162,7 @@ function lacuna_stories_people_user_default_permissions() {
       'Student' => 'Student',
       'administrator' => 'administrator',
       'anonymous user' => 'anonymous user',
+      'authenticated user' => 'authenticated user',
     ),
     'module' => 'field_permissions',
   );
@@ -177,6 +178,7 @@ function lacuna_stories_people_user_default_permissions() {
       'Student' => 'Student',
       'administrator' => 'administrator',
       'anonymous user' => 'anonymous user',
+      'authenticated user' => 'authenticated user',
     ),
     'module' => 'field_permissions',
   );
@@ -192,6 +194,7 @@ function lacuna_stories_people_user_default_permissions() {
       'Student' => 'Student',
       'administrator' => 'administrator',
       'anonymous user' => 'anonymous user',
+      'authenticated user' => 'authenticated user',
     ),
     'module' => 'field_permissions',
   );
@@ -207,6 +210,7 @@ function lacuna_stories_people_user_default_permissions() {
       'Student' => 'Student',
       'administrator' => 'administrator',
       'anonymous user' => 'anonymous user',
+      'authenticated user' => 'authenticated user',
     ),
     'module' => 'field_permissions',
   );
@@ -222,6 +226,7 @@ function lacuna_stories_people_user_default_permissions() {
       'Student' => 'Student',
       'administrator' => 'administrator',
       'anonymous user' => 'anonymous user',
+      'authenticated user' => 'authenticated user',
     ),
     'module' => 'field_permissions',
   );
@@ -286,6 +291,7 @@ function lacuna_stories_people_user_default_permissions() {
       'Site Administrator' => 'Site Administrator',
       'Student' => 'Student',
       'administrator' => 'administrator',
+      'authenticated user' => 'authenticated user',
     ),
     'module' => 'field_permissions',
   );
@@ -300,6 +306,7 @@ function lacuna_stories_people_user_default_permissions() {
       'Site Administrator' => 'Site Administrator',
       'Student' => 'Student',
       'administrator' => 'administrator',
+      'authenticated user' => 'authenticated user',
     ),
     'module' => 'field_permissions',
   );
@@ -314,6 +321,7 @@ function lacuna_stories_people_user_default_permissions() {
       'Site Administrator' => 'Site Administrator',
       'Student' => 'Student',
       'administrator' => 'administrator',
+      'authenticated user' => 'authenticated user',
     ),
     'module' => 'field_permissions',
   );
@@ -328,6 +336,7 @@ function lacuna_stories_people_user_default_permissions() {
       'Site Administrator' => 'Site Administrator',
       'Student' => 'Student',
       'administrator' => 'administrator',
+      'authenticated user' => 'authenticated user',
     ),
     'module' => 'field_permissions',
   );
@@ -342,6 +351,7 @@ function lacuna_stories_people_user_default_permissions() {
       'Site Administrator' => 'Site Administrator',
       'Student' => 'Student',
       'administrator' => 'administrator',
+      'authenticated user' => 'authenticated user',
     ),
     'module' => 'field_permissions',
   );
@@ -428,6 +438,7 @@ function lacuna_stories_people_user_default_permissions() {
       'Site Administrator' => 'Site Administrator',
       'Student' => 'Student',
       'administrator' => 'administrator',
+      'authenticated user' => 'authenticated user',
     ),
     'module' => 'field_permissions',
   );
@@ -442,6 +453,7 @@ function lacuna_stories_people_user_default_permissions() {
       'Site Administrator' => 'Site Administrator',
       'Student' => 'Student',
       'administrator' => 'administrator',
+      'authenticated user' => 'authenticated user',
     ),
     'module' => 'field_permissions',
   );
@@ -456,6 +468,7 @@ function lacuna_stories_people_user_default_permissions() {
       'Site Administrator' => 'Site Administrator',
       'Student' => 'Student',
       'administrator' => 'administrator',
+      'authenticated user' => 'authenticated user',
     ),
     'module' => 'field_permissions',
   );
@@ -470,6 +483,7 @@ function lacuna_stories_people_user_default_permissions() {
       'Site Administrator' => 'Site Administrator',
       'Student' => 'Student',
       'administrator' => 'administrator',
+      'authenticated user' => 'authenticated user',
     ),
     'module' => 'field_permissions',
   );
