@@ -42,6 +42,8 @@ class Annotator.Plugin.Touch.Editor extends Annotator.Delegator
     @element.find("form").addClass("annotator-touch-widget-inner")
     @element.find(".annotator-controls a").addClass("annotator-button")
 
+    @element.detach().appendTo('body');
+
     # Remove the "return to submit" listener.
     @element.undelegate("textarea", "keydown")
     @on "hide", => @element.find(":focus").blur()
@@ -159,6 +161,9 @@ class Annotator.Plugin.Touch.Editor extends Annotator.Delegator
     event.preventDefault()
     @editor.submit()
 
+    # to prevent keyboard from staying up
+    document.activeElement.blur()
+
   # Event handler for the cancel button in the editor.
   #
   # event - A jQuery.Event tap event object.
@@ -168,10 +173,13 @@ class Annotator.Plugin.Touch.Editor extends Annotator.Delegator
     event.preventDefault()
     @editor.hide()
 
+    # to prevent keyboard from staying up
+    document.activeElement.blur()
+
   # Event handler for the overlay.
   #
   # event - A jQuery.Event click event object.
   #
   # Returns nothing.
   _onOverlayTap: (event) =>
-    @editor.hide() if event.target is @element[0]
+    # @editor.hide() if event.target is @element[0]

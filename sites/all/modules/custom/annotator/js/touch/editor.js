@@ -42,6 +42,7 @@
       this.element.wrapInner('<div class="annotator-touch-widget" />');
       this.element.find("form").addClass("annotator-touch-widget-inner");
       this.element.find(".annotator-controls a").addClass("annotator-button");
+      this.element.detach().appendTo('body');
       this.element.undelegate("textarea", "keydown");
       this.on("hide", (function(_this) {
         return function() {
@@ -142,19 +143,17 @@
 
     Editor.prototype._onSubmit = function(event) {
       event.preventDefault();
-      return this.editor.submit();
+      this.editor.submit();
+      return document.activeElement.blur();
     };
 
     Editor.prototype._onCancel = function(event) {
       event.preventDefault();
-      return this.editor.hide();
+      this.editor.hide();
+      return document.activeElement.blur();
     };
 
-    Editor.prototype._onOverlayTap = function(event) {
-      if (event.target === this.element[0]) {
-        return this.editor.hide();
-      }
-    };
+    Editor.prototype._onOverlayTap = function(event) {};
 
     return Editor;
 
