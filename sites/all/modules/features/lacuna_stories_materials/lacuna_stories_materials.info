@@ -57,7 +57,6 @@ features[field_instance][] = node-document-field_priority
 features[field_instance][] = node-document-field_status
 features[field_instance][] = node-document-field_tags
 features[field_instance][] = node-document-field_unit
-features[field_instance][] = node-document-group_content_access
 features[field_instance][] = node-document-og_group_ref
 features[field_instance][] = taxonomy_term-genre_doc-field_term_course
 features[field_instance][] = taxonomy_term-units-field_term_course

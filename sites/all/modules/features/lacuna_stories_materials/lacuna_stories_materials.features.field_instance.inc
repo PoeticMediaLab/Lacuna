@@ -515,59 +515,6 @@ function lacuna_stories_materials_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-document-group_content_access'
-  $field_instances['node-document-group_content_access'] = array(
-    'bundle' => 'document',
-    'default_value' => array(
-      0 => array(
-        'value' => 2,
-      ),
-    ),
-    'deleted' => 0,
-    'description' => '',
-    'display' => array(
-      'default' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 11,
-      ),
-      'teaser' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
-      ),
-    ),
-    'entity_type' => 'node',
-    'field_name' => 'group_content_access',
-    'label' => 'Visibility',
-    'required' => 1,
-    'settings' => array(
-      'user_register_form' => FALSE,
-    ),
-    'view modes' => array(
-      'full' => array(
-        'label' => 'above',
-        'type' => 'list_default',
-      ),
-      'teaser' => array(
-        'label' => 'above',
-        'type' => 'list_default',
-      ),
-    ),
-    'widget' => array(
-      'active' => 1,
-      'module' => 'options',
-      'settings' => array(
-        'apply_chosen' => '',
-      ),
-      'type' => 'options_select',
-      'weight' => 9,
-    ),
-    'widget_type' => 'options_select',
-  );
-
   // Exported field_instance: 'node-document-og_group_ref'
   $field_instances['node-document-og_group_ref'] = array(
     'bundle' => 'document',
@@ -711,7 +658,6 @@ function lacuna_stories_materials_field_default_field_instances() {
   t('The medium or media of this document.');
   t('To which course(s) is this document assigned?');
   t('Unit');
-  t('Visibility');
 
   return $field_instances;
 }
