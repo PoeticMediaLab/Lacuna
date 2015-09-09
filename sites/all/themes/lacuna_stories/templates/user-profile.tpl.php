@@ -138,8 +138,8 @@ function customPrintViewsBlock($blockName)
             $anImgURL = $themePath . "/images/user-profile-images/annotation_logo.png";
             $resMapImgURL = $themePath . "/images/user-profile-images/responses_map_logo.png";
             $annotationsURL = $annotationsIsEmpty ? "#" : $bPath . "sewing-kit"."?author_select[]={$profile_user->uid}";
-            $anVisualizationURL = $annotationsIsEmpty ? "#" : $bPath . "visualization/dashboard?u_id={$profile_user->uid}";
-            $responsesMapURL = $responsesIsEmpty ? "#" : $bPath . "visualization/responses?u_id={$profile_user->uid}";
+            $anVisualizationURL = $annotationsIsEmpty ? "#" : $bPath . "visualization/dashboard?uid={$profile_user->uid}";
+            $responsesMapURL = $responsesIsEmpty ? "#" : $bPath . "visualization/responses?uid={$profile_user->uid}";
         ?>
         <span class="caption">My Learning</span>
         <div class="field-wrapper">

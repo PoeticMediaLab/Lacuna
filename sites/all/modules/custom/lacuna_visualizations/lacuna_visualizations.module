@@ -682,6 +682,7 @@ function lacuna_visualizations_annotation_dashboard_data() {
   $userNames = array();   // only load users once
   $annotations = array();
 
+  ddl($all);
   // Fields need for db query:
   // created, uid, annotation_reference, text, quote, private, annotation_tags, category
   $allNodes = node_load_multiple($all);
@@ -732,10 +733,11 @@ function lacuna_visualizations_annotation_dashboard_data() {
     }
 
     // Remove or sanitize data we don't want to expose: annotations, usernames, etc.
-		$data->text = str_repeat("x", strlen($data->text)); // provide length w/o exposing data
+    if (!empty($data->text)) {
+      $data->text = str_repeat("x", strlen($data->text)); // provide length w/o exposing data
+    }
 		unset($data->quote);
 		unset($data->tags);
-		unset($data->uid);
     if (!$canReadAll && ($annotation->uid != $user->uid)) {
       if (!array_key_exists($annotation->uid, $userNames)) {
         // anonymize with slight UID obfuscation

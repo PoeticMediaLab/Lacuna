@@ -241,7 +241,7 @@ function main(data) {
 					radius: 50
 				},
 				bar: {
-					width: 550,
+					width: 500,
 					height: 250,
 					padding: {
 						top: 40,
@@ -260,9 +260,9 @@ function main(data) {
 				},
 				node: {	max: .5,
 						min: .1 },
-				string: { length: 45 },
+				string: { length: 38 },
 				radius: 25,
-				column: {user: 100, doc: 500}	// X coords for the two columns
+				column: {user: 100, doc: 450}	// X coords for the two columns
 				};
 
 	// TODO: loop through settings; overwrite matching variables
