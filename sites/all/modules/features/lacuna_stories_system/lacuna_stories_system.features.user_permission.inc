@@ -15,6 +15,7 @@ function lacuna_stories_system_user_default_permissions() {
     'name' => 'access content',
     'roles' => array(
       'Content Manager' => 'Content Manager',
+      'Researcher' => 'Researcher',
       'Site Administrator' => 'Site Administrator',
       'anonymous user' => 'anonymous user',
       'authenticated user' => 'authenticated user',
@@ -129,6 +130,7 @@ function lacuna_stories_system_user_default_permissions() {
     'roles' => array(
       'Content Manager' => 'Content Manager',
       'Instructor' => 'Instructor',
+      'Researcher' => 'Researcher',
       'Site Administrator' => 'Site Administrator',
       'Student' => 'Student',
     ),
@@ -140,6 +142,7 @@ function lacuna_stories_system_user_default_permissions() {
     'name' => 'view revisions',
     'roles' => array(
       'Content Manager' => 'Content Manager',
+      'Researcher' => 'Researcher',
       'Site Administrator' => 'Site Administrator',
     ),
     'module' => 'node',
