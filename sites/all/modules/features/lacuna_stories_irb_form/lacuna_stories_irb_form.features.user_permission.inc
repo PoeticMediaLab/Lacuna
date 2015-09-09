@@ -14,6 +14,7 @@ function lacuna_stories_irb_form_user_default_permissions() {
   $permissions['access all webform results'] = array(
     'name' => 'access all webform results',
     'roles' => array(
+      'Researcher' => 'Researcher',
       'Site Administrator' => 'Site Administrator',
       'administrator' => 'administrator',
     ),
@@ -34,6 +35,7 @@ function lacuna_stories_irb_form_user_default_permissions() {
   $permissions['access own webform submissions'] = array(
     'name' => 'access own webform submissions',
     'roles' => array(
+      'Researcher' => 'Researcher',
       'Site Administrator' => 'Site Administrator',
       'administrator' => 'administrator',
     ),
@@ -54,6 +56,7 @@ function lacuna_stories_irb_form_user_default_permissions() {
   $permissions['delete own webform submissions'] = array(
     'name' => 'delete own webform submissions',
     'roles' => array(
+      'Researcher' => 'Researcher',
       'Site Administrator' => 'Site Administrator',
       'administrator' => 'administrator',
     ),
@@ -74,6 +77,7 @@ function lacuna_stories_irb_form_user_default_permissions() {
   $permissions['edit own webform submissions'] = array(
     'name' => 'edit own webform submissions',
     'roles' => array(
+      'Researcher' => 'Researcher',
       'Site Administrator' => 'Site Administrator',
       'administrator' => 'administrator',
     ),
