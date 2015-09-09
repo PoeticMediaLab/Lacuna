@@ -110,6 +110,7 @@ function course_user_default_permissions() {
     'name' => 'view og_user_node',
     'roles' => array(
       'Content Manager' => 'Content Manager',
+      'Researcher' => 'Researcher',
       'Site Administrator' => 'Site Administrator',
       'administrator' => 'administrator',
     ),
