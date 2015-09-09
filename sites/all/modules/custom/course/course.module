@@ -700,8 +700,8 @@ function course_form_biblio_node_form_alter(&$form, &$form_state, $form_id) {
     '#type' => 'hidden',
     '#default_value' => -1,
   );
-  $form['#submit'] = array('course_add_material_form_submit');
-  $form['actions']['submit']['#submit'][] = 'course_add_material_form_submit';
+  $form['#submit'] = array('course_add_biblio_form_submit');
+  $form['actions']['submit']['#submit'][] = 'course_add_biblio_form_submit';
   $form['actions']['submit']['#value'] = 'Save Bibliographic Information';
   $form['additional_settings']['#access'] = FALSE;
 
@@ -751,22 +751,16 @@ function course_create_form_submit($form, &$form_state) {
 	}
 }
 
-function course_add_material_form_submit($form, &$form_state) {
+// Create a new, blank document to associate with the new biblio node
+// Pre-populated with bibliographic entity reference
+function course_create_blank_document($biblio) {
   $gid = course_get_selected_course();
-  // have to save in a cookie b/c biblio module form refreshes the page on type selection and borks with initial form render
-	$copyright = '';
-	if (isset($_COOKIE['course-material-type-' . $gid])) {
-		$copyright = check_plain($_COOKIE['course-material-type-' . $gid]);
-	}
 
-  $biblio = new stdClass();
-  $biblio->type = BIBLIO_NODE_TYPE;
-  foreach($form_state['values'] as $k => $v) {
-    $biblio->$k = $v;
+  // have to save in a cookie b/c biblio module form refreshes the page on type selection and borks with initial form render
+  $copyright = '';
+  if (isset($_COOKIE['course-material-type-' . $gid])) {
+    $copyright = check_plain($_COOKIE['course-material-type-' . $gid]);
   }
-  node_object_prepare($biblio);
-  $biblio->status = NODE_PUBLISHED; // make all biblios published
-  node_save($biblio);
 
   $document = new stdClass();
   $document->type = DOCUMENT_NODE_TYPE;
@@ -776,31 +770,50 @@ function course_add_material_form_submit($form, &$form_state) {
   $document->field_doc_text[LANGUAGE_NONE][0]['format']  = filter_default_format();
 
   node_object_prepare($document);
-//  $document->og_group_ref[LANGUAGE_NONE][0]['target_id'] = $gid;
+
   $document->field_bibliographic_entry[LANGUAGE_NONE][0]['target_id'] = $biblio->nid;
   $document->status = NODE_PUBLISHED; // make all documents published
   $taxo = array_pop(taxonomy_get_term_by_name($copyright));
   if ($taxo) {
     $document->field_copyright[LANGUAGE_NONE][0]['tid'] = $taxo->tid;
   }
-	node_save($document);
+  node_save($document);
 
-	// Add to course group
-	og_group('node', $gid, array(
-		'entity_type' => 'node',
-		'entity' => $document,
-		'field_name' => 'og_group_ref',
-		'state' => OG_STATE_ACTIVE
-	));
-	$form_state['rebuild'] = TRUE;
   course_push_unfinished_doc_queue($document->nid);
 
+  // Add to course group
+  og_group('node', $gid, array(
+    'entity_type' => 'node',
+    'entity' => $document,
+    'field_name' => 'og_group_ref',
+    'state' => OG_STATE_ACTIVE
+  ));
+  $form_state['rebuild'] = TRUE;
+
   if ($document->nid) {
-    drupal_set_message("The Material's bibliographic information has been saved, please finish adding course-specific details.");
-    drupal_goto("node/{$document->nid}/edit");
+    drupal_set_message("The document's bibliographic information has been saved. Now provide the document's text and course-specific information.");
+    drupal_goto("node/" . $document->nid . "/edit");
+  } else {
+    drupal_set_message("There was an error adding your material. Please try again or contact the Lacuna Stories team.", 'error');
   }
-  else {
-    drupal_set_message("There was an error adding your material, please try again or contact the Lacuna Stories team", 'error');
+}
+
+function course_add_biblio_form_submit($form, &$form_state) {
+  $biblio = new stdClass();
+  $biblio->type = BIBLIO_NODE_TYPE;
+  foreach($form_state['values'] as $k => $v) {
+    $biblio->$k = $v;
+  }
+  node_object_prepare($biblio);
+  $biblio->status = NODE_PUBLISHED; // make all biblios published
+
+  $isUpdate = isset($biblio->nid) || isset($biblio->is_new);
+  node_save($biblio);
+  // If this is an update to an existing biblio node,
+  // Then do not add to unfinished queue
+  // And do not create a new blank document
+  if (!$isUpdate) {
+    course_create_blank_document($biblio);
   }
 }
 
