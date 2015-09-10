@@ -129,6 +129,46 @@ function lacuna_stories_annotations_field_default_field_instances() {
     ),
   );
 
+  // Exported field_instance: 'node-annotation-field_annotation_private'
+  $field_instances['node-annotation-field_annotation_private'] = array(
+    'bundle' => 'annotation',
+    'default_value' => array(
+      0 => array(
+        'value' => 1,
+      ),
+    ),
+    'deleted' => 0,
+    'description' => 'Decide if this annotation is private or not',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'list',
+        'settings' => array(),
+        'type' => 'list_default',
+        'weight' => 2,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_annotation_private',
+    'label' => 'Private',
+    'required' => TRUE,
+    'settings' => array(
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'module' => 'options',
+      'settings' => array(),
+      'type' => 'options_buttons',
+      'weight' => 2,
+    ),
+  );
+
   // Exported field_instance: 'node-annotation-field_annotation_quote'
   $field_instances['node-annotation-field_annotation_quote'] = array(
     'bundle' => 'annotation',
@@ -456,10 +496,12 @@ function lacuna_stories_annotations_field_default_field_instances() {
   t('Annotation Text');
   t('Audience');
   t('Category');
+  t('Decide if this annotation is private or not');
   t('Excerpt');
   t('Groups');
   t('If Instructor Viewable is checked, instructors for which courses should be able to view this?');
   t('Instructor Viewable by Instructors of these Courses');
+  t('Private');
   t('Public Visibility');
   t('Ranges');
   t('The URI of the annotated work');
