@@ -93,12 +93,17 @@ function annotation_get_term_id($term_name, $taxonomy_name) {
   $tid = NULL;
   $course_id = course_get_selected_course();
   foreach ($terms as $term) {
-    if (isset($term->field_term_course) &&
-        ($term->vid == $taxonomy->vid) &&
-        ($term->field_term_course[LANGUAGE_NONE][0]['target_id'] == $course_id))
-    {
+    if ($term->vid == $taxonomy->vid) {
+      if (isset($term->field_term_course)) {
+        // course-specific term
+        if ($term->field_term_course[LANGUAGE_NONE][0]['target_id'] == $course_id) {
+          $tid = $term->tid;
+        }
+      } else {
+        // Not a course-specific taxonomy term
         $tid = $term->tid;
-        break;  // go with the first match
+      }
+      break;  // go with the first match
     }
   }
   return($tid);
