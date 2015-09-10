@@ -587,6 +587,7 @@ function annotation_api_entity_prepare($annotation, $op) {
         }
       }
       // Get built peer groups, and mark those that are selected for this annotation
+      // TODO: Refactor for performance
       $built_peer_groups = annotation_build_peer_groups();
       foreach ($built_peer_groups as $group_type => $group_type_possible_groups) {
         foreach ($group_type_possible_groups as $group_nid => $group_properties) {
