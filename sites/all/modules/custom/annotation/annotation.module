@@ -319,7 +319,9 @@ function annotation_copy_field_values_to_drupal_standard_fields () {
 
 // Build peer groups array chunk
 // Peer groups are marked as not selected (the default for new annotations).
-function annotation_build_peer_groups () {
+function annotation_build_peer_groups() {
+  $groups = array();
+  // TODO: Take $user_groups as a variable; call only once
   if ($user_groups = og_get_groups_by_user()) {
     $user_groups = array_keys($user_groups['node']);
 
@@ -334,10 +336,9 @@ function annotation_build_peer_groups () {
         );
       }
     }
-    return array(
-      'peer_groups' => $peer_groups
-    );
+    $groups['peer_groups'] = $peer_groups;
   }
+  return $groups;
 }
 
 
