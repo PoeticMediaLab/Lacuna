@@ -678,7 +678,7 @@ function lacuna_visualizations_annotation_dashboard_data() {
     }
   }
 
-  $canReadAll = in_array('instructor', $user->roles);
+  $canReadAll = in_array('Instructor', $user->roles);
   $userNames = array();   // only load users once
   $annotations = array();
 

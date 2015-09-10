@@ -21,13 +21,13 @@
     "use strict";
 Drupal.d3.annotations_dashboard = function (select, settings) {
 
-d3.json(settings.config.data_url, function (error, data) {
-    if (error) {
-    	console.error(error);
-    } else {
-      main(data);
-    }
-});
+    d3.json(settings.config.data_url, function (error, data) {
+      if (error) {
+        console.error(error);
+      } else {
+        main(data);
+      }
+    });
 
 /***************
  *
