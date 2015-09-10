@@ -9,8 +9,7 @@
 
 
 // implement hook_menu_alter
-function user_account_menu_alter(&$items) 
-{
+function lacuna_user_account_menu_alter(&$items) {
   $items['user/%user/edit']['type'] = MENU_CALLBACK;
   $items['user/%user/track']['type'] = MENU_CALLBACK;
   $items['user/%user/shortcuts']['type'] = MENU_CALLBACK;
@@ -24,10 +23,8 @@ function user_account_menu_alter(&$items)
  * @param $form_id
  * Implements hook_form_alter().
  */
-function user_account_form_alter(&$form, &$form_state, $form_id) {
+function lacuna_user_account_form_alter(&$form, &$form_state, $form_id) {
   if ($form_id == 'user_profile_form') {
-		// Hide account 'status' radio buttons
-		$form['account']['status']['#access'] = FALSE;
 		// Next, wrap account settings in a fieldset
 		$form['account_settings'] = array(
 			'#type' => 'fieldset',
@@ -37,5 +34,13 @@ function user_account_form_alter(&$form, &$form_state, $form_id) {
 		);
 		$form['account_settings']['items'] = $form['account'];
 		$form['account']['#access'] = FALSE;
+    unset($form['account']);
+    $form['#validate'][0] = 'lacuna_user_account_form_validate';
   }
+}
+
+function lacuna_user_account_form_validate($form, &$form_state) {
+  $form['account'] = $form['account_settings']['items'];
+  // original validation function
+  user_account_form_validate($form, $form_state);
 }
