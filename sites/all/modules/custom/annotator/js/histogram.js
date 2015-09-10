@@ -49,6 +49,7 @@
       this.calculateDimensions = __bind(this.calculateDimensions, this);
       this.calculateDensity = __bind(this.calculateDensity, this);
       this.assignBarsPerNode = __bind(this.assignBarsPerNode, this);
+      this.countAnnotations = __bind(this.countAnnotations, this);
       this.countAnnotation = __bind(this.countAnnotation, this);
       this.getPageLength = __bind(this.getPageLength, this);
       this.getPageNumber = __bind(this.getPageNumber, this);
@@ -154,18 +155,36 @@
       }
     };
 
-    Histogram.prototype.countAnnotation = function(annotation) {
+    Histogram.prototype.countAnnotation = function(node) {
       var id;
-      id = parseInt(annotation.dataset.annotationId, 10);
-      if (__indexOf.call(this.counted, id) < 0 && !annotation.classList.contains(this.selector.hidden)) {
-        this.counted.push(id);
+      if (node.classList.contains(this.selector.annotation)) {
+        id = parseInt(node.dataset.annotationId, 10);
+        if (__indexOf.call(this.counted, id) < 0 && !node.classList.contains(this.selector.hidden)) {
+          this.counted.push(id);
+        }
         return true;
       }
       return false;
     };
 
+    Histogram.prototype.countAnnotations = function(node) {
+      var child, _i, _len, _ref, _results;
+      if (node.nodeType === Node.ELEMENT_NODE) {
+        this.countAnnotation(node);
+        if (node.hasChildNodes()) {
+          _ref = node.childNodes;
+          _results = [];
+          for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+            child = _ref[_i];
+            _results.push(this.countAnnotations(child));
+          }
+          return _results;
+        }
+      }
+    };
+
     Histogram.prototype.assignBarsPerNode = function(node, length) {
-      var annotation, child, totalBars, _i, _j, _len, _len2, _ref, _ref2;
+      var child, totalBars, _i, _len, _ref;
       if (length == null) length = 0;
       _ref = node.childNodes;
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
@@ -183,16 +202,7 @@
           }
           this.counted = [];
         }
-        if (child.nodeType === Node.ELEMENT_NODE && child.classList.contains(this.selector.annotation)) {
-          this.countAnnotation(child);
-          if (child.hasChildNodes()) {
-            _ref2 = child.querySelectorAll('.' + this.selector.annotation);
-            for (_j = 0, _len2 = _ref2.length; _j < _len2; _j++) {
-              annotation = _ref2[_j];
-              this.countAnnotation(annotation);
-            }
-          }
-        }
+        this.countAnnotations(child);
       }
       return length;
     };

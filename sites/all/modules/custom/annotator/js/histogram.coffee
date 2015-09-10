@@ -130,12 +130,24 @@ class Annotator.Plugin.Histogram extends Annotator.Plugin
     else
       return 0
 
-  countAnnotation: (annotation) =>
-    id = parseInt(annotation.dataset.annotationId, 10)
-    if id not in @counted and not annotation.classList.contains(@selector.hidden)
-      @counted.push(id) # don't over-count multi-span annotations
+  countAnnotation: (node) =>
+    if node.classList.contains(@selector.annotation)
+      id = parseInt(node.dataset.annotationId, 10)
+      if id not in @counted and not node.classList.contains(@selector.hidden)
+        @counted.push(id) # don't over-count multi-span annotations
+#      if node.hasChildNodes() # possible overlapping annotations; count them, too
+#        for child in node.querySelectorAll('.' + @selector.annotation)
+#          @countAnnotation(child)
       return true
     return false
+
+  # Wrapper for counting that handles nested elements
+  countAnnotations: (node) =>
+    if node.nodeType == Node.ELEMENT_NODE
+      @countAnnotation(node)
+      if node.hasChildNodes()
+        for child in node.childNodes
+          @countAnnotations(child)
 
   # Calculate the bars per node based on number of annotations
   assignBarsPerNode: (node, length = 0) =>
@@ -150,11 +162,7 @@ class Annotator.Plugin.Histogram extends Annotator.Plugin
         while totalBars-- # fill in remaining bars with zeros
           @bars.push(0)
         @counted = []
-      if child.nodeType == Node.ELEMENT_NODE and child.classList.contains(@selector.annotation)
-        @countAnnotation(child)
-        if child.hasChildNodes() # possible overlapping annotations; count them, too
-          for annotation in child.querySelectorAll('.' + @selector.annotation)
-            @countAnnotation(annotation)
+      @countAnnotations(child)
     return length
 
   # Loop through all nodes and calculate annotation density
