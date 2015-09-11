@@ -49,7 +49,7 @@
               $gid = course_get_selected_course();
               $course = node_load($gid);
         ?>
-          <a href="<?php print drupal_get_path_alias('node/' . $course->nid); ?>" title="<?php print t('About this Course'); ?>"></span><span id="course-name"><?php print $course->title; ?>
+          <a href="/materials" title="Materials"></span><span id="course-name"><?php print $course->title; ?>
         <?php endif; ?>
           </span></a>
         </h1>
