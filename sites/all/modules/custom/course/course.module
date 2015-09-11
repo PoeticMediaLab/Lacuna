@@ -74,7 +74,8 @@ function course_menu() {
     'title' => 'Switch Courses',
     'page callback' => 'course_switch_course',
     'page arguments' => array(1),
-    'access callback' => 'course_access',
+    'access callback' => 'course_switch_access',
+    'access arguments' => array(1),
     'type' => MENU_NORMAL_ITEM,
     'file' => 'course.pages.inc',
   );
@@ -109,10 +110,23 @@ function course_menu() {
 function course_access() {
   global $user;
   $key = "Course_Auth_Code_User_" . $user->uid;
+  $canCreate = user_access('create course content');
 
   // we only want to check access when we are actually on a protected page
   // not just when eg the link is displayed and the access functions are called.
   if (!course_is_protected_page()) {
+    return TRUE;
+  }
+
+  // No auth code required plus, permissions to create a course
+  if ($canCreate && !variable_get('course_require_auth')) {
+    return TRUE;
+  }
+
+  // Allow instructors to add materials to an existing course w/o course auth code
+  $allowed_paths = array('course-setup/organize', 'course-setup/add-materials');
+  $gid = course_get_selected_course();
+  if ($canCreate && !empty($gid) && in_array(current_path(), $allowed_paths)) {
     return TRUE;
   }
 
@@ -122,10 +136,10 @@ function course_access() {
     drupal_goto('user/login', array('query' => array('destination' => 'course-setup')));
   }
   // NO PERMS
-  elseif (!user_access("create course content")) {
-    drupal_set_message("Please contact the Lacuna Stories Team, your user does not have access to create a course", 'error', FALSE);
+  elseif (!$canCreate) {
+    drupal_set_message("Please contact the Lacuna Stories Team. Your account does not have access to create a course.", 'error', FALSE);
+    return FALSE;
   }
-  // Check for the auth code key and compare them
   elseif (($cache = cache_get($key)) && $_COOKIE['Drupal_visitor_' . $key] == $cache->data) {
     // VALID
     return TRUE;
@@ -138,17 +152,39 @@ function course_access() {
 }
 
 function course_is_protected_page() {
-  return (preg_match("/course-setup/", current_path()) && current_path() != 'course-setup');
+  $current_path = current_path();
+  return (preg_match("/course-setup/", $current_path) && $current_path != 'course-setup');
 }
 
 function course_admin_form() {
   $form = array();
-  $form['course_authcode'] = array(
+  $form['authorization'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Authorization'),
+    '#collapsible' => FALSE,
+    '#collapsed' => FALSE,
+  );
+
+  $form['authorization']['course_require_auth'] = array(
+    '#type' => 'radios',
+    '#title' => t('Require Code to Create Courses?'),
+    '#description' => t('Select "Yes" to require instructors to have the authorization code before creating a course.'),
+    '#default_value' => variable_get('course_require_auth', TRUE),
+    '#options' => array(TRUE => 'Yes', FALSE => 'No'),
+    '#required' => TRUE,
+  );
+
+  $form['authorization']['course_authcode'] = array(
     '#type' => 'textfield',
     '#title' => t('Authorization Code'),
-		'#description' => t('Set the authorization code needed to create a Lacuna Stories Course.'),
-    '#default_value' => variable_get('course_authcode', 's3kr3t'),
-    '#required' => TRUE,
+    '#description' => t('Set the authorization code needed to create a Lacuna Stories Course.'),
+    '#default_value' => variable_get('course_authcode', 'ChangeMe!'),
+    '#required' => FALSE,
+    '#states' => array(
+      'visible' => array(
+        ':input[name="course_require_auth"]' => array('value' => 1)
+      )
+    )
   );
 
   $form['taxonomies'] = array(
@@ -186,11 +222,16 @@ function course_admin_form() {
   return system_settings_form($form);
 }
 
+// Can user switch to given course?
+function course_switch_access($gid) {
+  return user_access('administer group') || og_is_member('node', 'gid');
+}
+
 // Dynamic link from the course listings sets context or not before going to the course node
-function course_switch_course_link ($row, $view) {
+function course_switch_course_link($row, $view) {
   $gid = $row->nid;
   $title = $row->title;
-  if (($view->current_display == 'not_enrolled') && !user_access('administer group')) {
+  if (($view->current_display == 'not_enrolled') && !course_switch_access($gid)) {
 		// User can only switch to enrolled courses
     return l($title, drupal_get_path_alias('node/' . $gid));
   }

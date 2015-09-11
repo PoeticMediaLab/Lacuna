@@ -27,7 +27,7 @@ function course_authcode_form($form, &$form_state) {
 }
 
 function course_authcode_form_submit($form, &$form_state) {
-  $authcode = variable_get('course_authcode', 's3kr3t');
+  $authcode = variable_get('course_authcode');
   if ($authcode == $form['authcode']['#value']) {
     // save a token for a week to ensure the Auth Code was entered on subsequent pages
     // see course_access()
@@ -250,7 +250,7 @@ function course_ajax_delete_term($vocab_name, $term) {
 function course_add_material() {
   global $base_url;
 
-  $output = "<p>Please find your materials using the methods below, in the order they are assigned. You, as the instructor, are responsible for determining if the online or e-access materials you are assigning your students are available at your home institution. If they are, your students will likely not have to pay for these materials. Otherwise, they will be charged. This is a cumbersome part of digital course setup, but an important one. It also allows the Lacuna Stories team to most efficiently assist you securing materials not available from your institutions digital resources. If you have any questions at any time, please send a quick email to " .l('info@lacunastories.com', 'mailto:info@lacunastories.com', array('absolute' => TRUE)) . " and someone from our team will assist you.</p><br /><div class='add-materials'>";
+  $output = "<p>You, as the instructor, are responsible for determining if the online or e-access materials you are assigning your students are available at your home institution. If you have any questions at any time, please email " .l('info@lacunastories.com', 'mailto:info@lacunastories.com', array('absolute' => TRUE)) . " and someone from our team will assist you.</p><br /><div class='add-materials'>";
 
 //  $output .= "<div id='archived-materials' class='explanation'><div>Add Lacuna Stories Archived Materials. These materials may be free or available for a fee for your students. In either case, these are already digitized and using these materials will save you or the Lacuna Stories team time.</div><button class='form-submit'><a href='" . $base_url . "/archived-materials'>Search Lacuna Stories</a></button></div>";
 
@@ -275,16 +275,16 @@ function course_add_material() {
   return $output;
 }
 
+
+// Switch currently-selected course
+// Access managed via access callback in hook_menu()
 function course_switch_course($gid) {
   if ($group = node_load($gid)) {
     if ($group->type == 'course') {
-      if (user_access('administer group') || og_is_member('node', $gid)) {
-        _course_set_selected_course($gid);
-        drupal_goto('materials'); // After setting the context, redirect user to the course materials page
-      }
+      _course_set_selected_course($gid);
+      drupal_goto('materials'); // After setting the context, redirect user to the course materials page
     }
   }
-  drupal_access_denied();
 }
 
 // blank page
