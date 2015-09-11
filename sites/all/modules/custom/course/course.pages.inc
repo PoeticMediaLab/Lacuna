@@ -275,18 +275,6 @@ function course_add_material() {
   return $output;
 }
 
-
-// Switch currently-selected course
-// Access managed via access callback in hook_menu()
-function course_switch_course($gid) {
-  if ($group = node_load($gid)) {
-    if ($group->type == 'course') {
-      _course_set_selected_course($gid);
-      drupal_goto('materials'); // After setting the context, redirect user to the course materials page
-    }
-  }
-}
-
 // blank page
 function course_blank_page() {
   return ' ';

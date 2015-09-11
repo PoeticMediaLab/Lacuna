@@ -27,36 +27,32 @@ li.views-fluid-grid-inline.views-fluid-grid-item.views-row:hover {
 
 
 .view-courses {
-	.views-field-php {
-		position: relative;
-		padding-left: 10px;
-			h3 {
-				font-family: "Source sans pro", sans-serif;
-			}
-	}
-	.views-field-field-course-year {
-		padding-left: 10px;
-		/*padding-top: 10px;*/
-        font-size: 0.9em;
-	}
-	.views-field-field-course-id {
-		padding-left: 10px;
-		padding-bottom: 10px;
-        font-size: 0.9em;
-	}
-	.views-field-field-name {
-		padding-left: 10px;
-		padding-bottom: 10px;
-		position: relative;
-		font-weight: 600;
-		font-family: "Source Sans Pro", sans-serif;
-	}
-	.views-field-body {
-		padding-left: 10px;
-		position: relative;
-		font-family: "Source Sans Pro", sans-serif;
-        line-height: 1.2em;
-	}
+  .views-field {
+    padding-left: 10px;
+    font-family: "Source sans pro", sans-serif;
+  }
+  .views-field-title {
+    font-size: 1.2em;
+    line-height: 1.2em;
+  }
+  .views-field-field-name,
+  .views-field-body {
+    position: relative;
+  }
+  .views-field-field-course-year,
+  .views-field-field-course-id {
+    font-size: 0.9em;
+  }
+  .views-field-field-course-id,
+  .views-field-field-name {
+    padding-bottom: 10px;
+  }
+  .views-field-field-name {
+    font-weight: 600;
+  }
+  .views-field-body {
+    line-height: 1.2em;
+  }
 }
 
 /*styling for front page banner*/

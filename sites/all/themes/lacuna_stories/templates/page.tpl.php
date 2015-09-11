@@ -49,7 +49,7 @@
               $gid = course_get_selected_course();
               $course = node_load($gid);
         ?>
-          <a href="/materials" title="Materials"></span><span id="course-name"><?php print $course->title; ?>
+          <a href="<?php print base_path(); ?>materials" title="Materials"></span><span id="course-name"><?php print $course->title; ?>
         <?php endif; ?>
           </span></a>
         </h1>

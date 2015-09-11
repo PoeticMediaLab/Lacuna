@@ -70,15 +70,6 @@ function course_menu() {
     'access arguments' => array('administer site configuration'),
     'type' => MENU_NORMAL_ITEM,
    );
-  $items['switch-course/%'] = array(
-    'title' => 'Switch Courses',
-    'page callback' => 'course_switch_course',
-    'page arguments' => array(1),
-    'access callback' => 'course_switch_access',
-    'access arguments' => array(1),
-    'type' => MENU_NORMAL_ITEM,
-    'file' => 'course.pages.inc',
-  );
   // Empty home (front) page, added onto via context
   $items['home'] = array(
     'page callback' => 'course_blank_page',
@@ -227,21 +218,11 @@ function course_switch_access($gid) {
   return user_access('administer group') || og_is_member('node', $gid);
 }
 
-// Dynamic link from the course listings sets context or not before going to the course node
-function course_switch_course_link($row, $view) {
-  $gid = $row->nid;
-  $title = $row->title;
-  if (($view->current_display == 'not_enrolled') && !course_switch_access($gid)) {
-		// User can only switch to enrolled courses
-    return l($title, drupal_get_path_alias('node/' . $gid));
+// Switch course context when a new course viewed, if allowed
+function course_node_view($node, $view_mode, $langcode) {
+  if (($node->type == 'course') && course_switch_access($node->nid)) {
+    _course_set_selected_course($node->nid);
   }
-	if ($current_course = course_get_selected_course()) {
-		if ($gid == $current_course) {
-			$title .= " (current course)";
-		}
-	}
-	// Allow only users w/ admin group permissions to switch context to any course
-	return l($title, 'switch-course/' . $gid);
 }
 
 /**
@@ -308,22 +289,6 @@ function course_views_pre_render(&$view) {
   // TODO: This is not not specific to courses. Once we have a general core feature, move this there
   drupal_add_js(drupal_get_path('module', 'course') . '/js/prevent-auto-submit.js', array('weight' => 10));
   switch ($view->name) {
-
-    // Tweak titles of course-specific views to show the course name
-//    case 'people':
-//    case 'responses':
-//    case 'documents':
-//      $title_map = array (
-//        'people' => 'People',
-//        'responses' => 'Responses',
-//        'documents' => 'Materials',
-//      );
-//      if ("course_block" != $view->current_display && $current_course = course_get_selected_course()) {
-//        $course = node_load($current_course);
-//        $view->set_title ($title_map[$view->name] . ' in ' . $course->title);
-//      }
-//      break;
-
     case 'courses':
       // "Not Enrolled" title is redundant when anon is viewing (front page), so hide the title
       if (user_is_anonymous()) {
@@ -332,8 +297,7 @@ function course_views_pre_render(&$view) {
       break;
     case 'archived_materials':
       drupal_add_css(drupal_get_path('module', 'course') . '/course.css');
-    break;
-
+      break;
   }
 }
 
@@ -359,6 +323,7 @@ function course_views_pre_build(&$view) {
 
   }
 }
+
 // Filter taxonomy terms to return only those relevant for current course
 function course_get_terms_for_current_course($taxonomy_name) {
 	$gid = course_get_selected_course();
