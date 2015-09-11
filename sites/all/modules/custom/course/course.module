@@ -310,19 +310,19 @@ function course_views_pre_render(&$view) {
   switch ($view->name) {
 
     // Tweak titles of course-specific views to show the course name
-    case 'people':
-    case 'responses':
-    case 'documents':
-      $title_map = array (
-        'people' => 'People',
-        'responses' => 'Responses',
-        'documents' => 'Materials',
-      );
-      if ("course_block" != $view->current_display && $current_course = course_get_selected_course()) {
-        $course = node_load($current_course);
-        $view->set_title ($title_map[$view->name] . ' in ' . $course->title);
-      }
-      break;
+//    case 'people':
+//    case 'responses':
+//    case 'documents':
+//      $title_map = array (
+//        'people' => 'People',
+//        'responses' => 'Responses',
+//        'documents' => 'Materials',
+//      );
+//      if ("course_block" != $view->current_display && $current_course = course_get_selected_course()) {
+//        $course = node_load($current_course);
+//        $view->set_title ($title_map[$view->name] . ' in ' . $course->title);
+//      }
+//      break;
 
     case 'courses':
       // "Not Enrolled" title is redundant when anon is viewing (front page), so hide the title
@@ -943,17 +943,17 @@ function course_clone_material($biblio) {
 }
 
 function course_block_info() {
-    $blocks = array();
-		$blocks['course_finish_material_block'] = array(
-			'info' => t('Finish Adding Material'),
-			'cache' => DRUPAL_NO_CACHE,
-			'status' => TRUE,
-			'region' => 'help',
-			'visibility' => BLOCK_VISIBILITY_NOTLISTED,
-			'pages' => "node/*/edit\nadmin*",
-			'theme' => 'lacuna_stories'
-		);
-    return $blocks;
+  $blocks = array();
+  $blocks['course_finish_material_block'] = array(
+    'info' => t('Finish Adding Material'),
+    'cache' => DRUPAL_NO_CACHE,
+    'status' => TRUE,
+    'region' => 'help',
+    'visibility' => BLOCK_VISIBILITY_NOTLISTED,
+    'pages' => "node/*/edit\nadmin*",
+    'theme' => 'lacuna_stories'
+  );
+  return $blocks;
 }
 
 
@@ -965,7 +965,7 @@ function course_block_view($delta = '') {
       $block['content'] = array(
         '#markup' => course_finish_material_block_content()
       );
-    break;
+      break;
   }
 
   return $block;
