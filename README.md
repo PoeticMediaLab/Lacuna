@@ -8,39 +8,50 @@ Sample Behat tests also included.
 **On Windows** you will need a Linux-type shell. Install [Babun](http://babun.github.io/) before proceeding and run all commands in it.  
 Instructions were not tested with other shells on Windows.
 
-1. Create directory structure (e.g. in your home directory)
-    
-    ```
-    mkdir -p Projects/drude-testing
-    cd drude-testing
-    ```
-
-2. Install `dsh` (Drude Shell)
+1. Install `dsh` (Drude Shell)
 
     ```
     sudo curl -L https://raw.githubusercontent.com/blinkreaction/drude/develop/bin/dsh  -o /usr/local/bin/dsh
     sudo chmod +x /usr/local/bin/dsh
     ```
 
-3. Install Drude and prerequisites (latest dev version)
-
-    ```
-    DRUDE_BRANCH=develop B2D_BRANCH=develop dsh install
-    ```
+2. Create the `<Projects>` directory
     
-4. In the end you will be prompted to relaunch you shell and run:
+    ```
+    mkdir Projects
+    cd Projects
+    ```
+
+3. Install Drude's prerequisites (vagrant, virtualbox, boot2docker-vagrant)
 
     ```
-    dsh up
+    dsh install prerequisites
+    dsh install boot2docker
+    ```
+   
+4. Clone this repo into the Projects directory
+
+    ```
+    git clone https://github.com/blinkreaction/drude-testing.git
+    cd drude-testing
     ```
 
-5. Install Drupal
+5. Set up `settings.local.php` in `sites/default`
+ 
+    ```
+    cd docroot/sites/default
+    cp example.settings.local.php settings.local.php
+    ```
 
+6. Install Drupal
+ 
     ```
     dsh drush si -y
     ```
 
-6. Point your browser to
+7. Add `192.168.10.10  hello-world.drude` to your hosts file
+
+8. Point your browser to
 
     ```
     http://hello-world.drude
@@ -51,7 +62,7 @@ Instructions were not tested with other shells on Windows.
 Site provisioning can be automated using `dsh init`, which calls the shell script in [.drude/scripts/drude-init.sh](.drude/scripts/drude-init.sh).  
 This script is meant to be modified per project. The one in this repo will give you a good starting point.
 
-Some commond tasks that can be handled by the init script:
+Some common tasks that can be handled by the init script:
 
 - initialize local settings files (Docker Compose, Drupal, Behat, etc.)
 - import DB / perform a site install
