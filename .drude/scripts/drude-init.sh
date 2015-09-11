@@ -72,15 +72,39 @@ init_settings ()
   _copy_settings_file 'docker-compose.yml.dist' 'docker-compose.yml'
   #_copy_settings_file "docroot/sites/example.sites.local.php" "docroot/sites/sites.local.php"
   _copy_settings_file "docroot/sites/${SITE_DIRECTORY}/example.settings.local.php" "docroot/sites/${SITE_DIRECTORY}/settings.local.php"
+  _copy_settings_file "docroot/sites/site1/example.settings.local.php" "docroot/sites/site1/settings.local.php"
+  _copy_settings_file "docroot/sites/site2/example.settings.local.php" "docroot/sites/site2/settings.local.php"
 }
 
 # Install the site
+# @param $1 site-name (domain)
 site_install ()
 {
   cd $GIT_ROOT
   cd docroot
+
+  echo -e "${yellow}Installing site ${1}...${NC}"
+
+  local site_name=''
+  if [[ $1 != '' ]]; then
+    # Append site name to the argements list if provided
+    site_name="-l $1 --site-name=$1"
+  fi
   # We disable email sending here so site-install does not return an error
-  dsh exec 'PHP_OPTIONS="-d sendmail_path=`which true`" drush site-install -y'
+  dsh exec "PHP_OPTIONS="'"-d sendmail_path=`which true`"'" drush site-install -y ${site_name}"
+}
+
+# Create a new DB
+# @param $1 DB name
+db_create ()
+{
+  echo -e "${yellow}Creating DB ${1}...${NC}"
+
+  local database=${1}
+  local mysql_exec='mysql -h $DB_1_PORT_3306_TCP_ADDR --user=root --password=$DB_1_ENV_MYSQL_ROOT_PASSWORD -e ';
+  local query="DROP DATABASE IF EXISTS ${database}; CREATE DATABASE ${database}; GRANT ALL ON ${database}.* TO "'$DB_1_ENV_MYSQL_USER'"@'%'"
+
+  dsh exec "${mysql_exec} \"${query}\""
 }
 
 
@@ -162,6 +186,12 @@ dsh reset
 # Give MySQL some time to start before importing the DB
 sleep 5
 site_install
+
+# Uncomment line below to install site 1
+#db_create 'site1' && site_install 'hello-world1.drude'
+# Uncomment line below to install site 2
+#db_create 'site2' && site_install 'hello-world2.drude'
+
 #db_import
 #db_updates
 #local_settings
