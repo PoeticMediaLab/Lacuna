@@ -1,0 +1,87 @@
+From 640840b3135c800e86028c2dabd997283ed1f738 Mon Sep 17 00:00:00 2001
+From: victor <victor@dom.de>
+Date: Thu, 2 Apr 2015 18:24:37 +0200
+Subject: [PATCH] merge with special_menu_items_access
+
+---
+ special_menu_items.module | 53 +++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 53 insertions(+)
+
+diff --git a/special_menu_items.module b/special_menu_items.module
+index ebebcf9..8a04e9a 100644
+--- a/special_menu_items.module
++++ b/special_menu_items.module
+@@ -16,6 +16,20 @@
+ *Implementation of hook_menu()
+ */
+ function special_menu_items_menu() {
++  $items['<nolink>/%/%'] = array(
++    'page callback'    => 'drupal_not_found',
++    'access callback'  => 'special_menu_items_callback',
++    'access arguments' => array(1, 2, 3, 4, 5, 6, 7),
++    'type'             => MENU_CALLBACK,
++  );
++
++  $items['<separator>/%/%'] = array(
++    'page callback'    => 'drupal_not_found',
++    'access callback'  => 'special_menu_items_callback',
++    'access arguments' => array(1, 2, 3, 4, 5, 6, 7),
++    'type'             => MENU_CALLBACK,
++  );
++
+   $items['<nolink>'] = array(
+     'page callback' => 'drupal_not_found',
+     'access callback' => TRUE,
+@@ -127,6 +141,16 @@ function special_menu_items_form_menu_edit_item_alter(&$form, &$form_state) {
+ 
+    $form['link_path']['#default_value'] = $default_value;
+    $form['link_path']['#description'] .=  ' ' . t('Enter "%nolink" to generate non-linkable item, enter "%separator" to generate separator item.', array('%nolink' => '<nolink>', '%separator' => '<separator>'));
++
++   $desc = t("Add a slash and extra path information after %nolink or
++      %separator to hide the no-link or separator item based on a user's access
++      to the given path, for example %nolink_example to only show the non-link
++      menu item to people with permission to create page nodes.", array(
++        '%nolink' => '<nolink>',
++        '%separator' => '<separator>',
++        '%nolink_example' => '<nolink>/node/add/page')
++      );
++   $form['link_path']['#description'] .=  ' ' . $desc;
+   }
+ }
+ 
+@@ -197,3 +221,32 @@ function special_menu_items_menu_link_update($link) {
+ }
+  *
+  */
++
++/**
++ * Implements template_preprocess_link().
++ *
++ * Remove the extra part of the path we added to check access
++ */
++function special_menu_items_preprocess_link(&$vars) {
++  if (strpos($vars['path'], '<nolink>') === 0 && strlen($vars['path']) > 8) {
++    $vars['path'] = '<nolink>';
++  }
++  if (strpos($vars['path'], '<separator>') === 0 && strlen($vars['path']) > 11) {
++    $vars['path'] = '<separator>';
++  }
++}
++
++/**
++ * Access callback for special menu items access.
++ */
++function special_menu_items_callback($p1, $p2, $p3, $p4, $p5, $p6, $p7) {
++  $path_parts = array_filter(compact('p1', 'p2', 'p3', 'p4', 'p5', 'p6', 'p7'));
++  $access_path = implode('/', $path_parts);
++  $item = menu_get_item($access_path);
++  if ($item['access']) {
++    return TRUE;
++  }
++  else {
++    return FALSE;
++  }
++}
+-- 
+1.9.5 (Apple Git-50.3)
+

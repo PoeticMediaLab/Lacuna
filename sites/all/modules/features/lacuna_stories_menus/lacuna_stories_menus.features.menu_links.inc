@@ -110,26 +110,6 @@ function lacuna_stories_menus_menu_default_menu_links() {
     'weight' => -44,
     'customized' => 1,
   );
-  // Exported menu link: main-menu_manage:<nolink>
-  $menu_links['main-menu_manage:<nolink>'] = array(
-    'menu_name' => 'main-menu',
-    'link_path' => '<nolink>',
-    'router_path' => '<nolink>',
-    'link_title' => 'Manage',
-    'options' => array(
-      'attributes' => array(
-        'title' => '',
-      ),
-      'identifier' => 'main-menu_manage:<nolink>',
-    ),
-    'module' => 'menu',
-    'hidden' => 0,
-    'external' => 0,
-    'has_children' => 1,
-    'expanded' => 0,
-    'weight' => -45,
-    'customized' => 1,
-  );
   // Exported menu link: main-menu_reflect:<nolink>
   $menu_links['main-menu_reflect:<nolink>'] = array(
     'menu_name' => 'main-menu',
@@ -262,7 +242,6 @@ function lacuna_stories_menus_menu_default_menu_links() {
   t('Help');
   t('Log In');
   t('Log Out');
-  t('Manage');
   t('Reflect');
   t('Register');
 

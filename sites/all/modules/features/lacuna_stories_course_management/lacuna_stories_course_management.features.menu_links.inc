@@ -29,7 +29,7 @@ function lacuna_stories_course_management_menu_default_menu_links() {
     'expanded' => 0,
     'weight' => -50,
     'customized' => 1,
-    'parent_identifier' => 'main-menu_manage:<nolink>',
+    'parent_identifier' => 'main-menu_manage:<nolink>/node/add/course',
   );
   // Exported menu link: main-menu_all-content:all-content
   $menu_links['main-menu_all-content:all-content'] = array(
@@ -47,7 +47,7 @@ function lacuna_stories_course_management_menu_default_menu_links() {
     'expanded' => 0,
     'weight' => -47,
     'customized' => 1,
-    'parent_identifier' => 'main-menu_manage:<nolink>',
+    'parent_identifier' => 'main-menu_manage:<nolink>/node/add/course',
   );
   // Exported menu link: main-menu_all-emails:all-emails
   $menu_links['main-menu_all-emails:all-emails'] = array(
@@ -65,7 +65,7 @@ function lacuna_stories_course_management_menu_default_menu_links() {
     'expanded' => 0,
     'weight' => -46,
     'customized' => 1,
-    'parent_identifier' => 'main-menu_manage:<nolink>',
+    'parent_identifier' => 'main-menu_manage:<nolink>/node/add/course',
   );
   // Exported menu link: main-menu_bulk-update-annotations:bulk-update-annotations
   $menu_links['main-menu_bulk-update-annotations:bulk-update-annotations'] = array(
@@ -83,7 +83,7 @@ function lacuna_stories_course_management_menu_default_menu_links() {
     'expanded' => 0,
     'weight' => -45,
     'customized' => 1,
-    'parent_identifier' => 'main-menu_manage:<nolink>',
+    'parent_identifier' => 'main-menu_manage:<nolink>/node/add/course',
   );
   // Exported menu link: main-menu_curate-tags:curate-tags
   $menu_links['main-menu_curate-tags:curate-tags'] = array(
@@ -101,7 +101,27 @@ function lacuna_stories_course_management_menu_default_menu_links() {
     'expanded' => 0,
     'weight' => -48,
     'customized' => 1,
-    'parent_identifier' => 'main-menu_manage:<nolink>',
+    'parent_identifier' => 'main-menu_manage:<nolink>/node/add/course',
+  );
+  // Exported menu link: main-menu_manage:<nolink>/node/add/course
+  $menu_links['main-menu_manage:<nolink>/node/add/course'] = array(
+    'menu_name' => 'main-menu',
+    'link_path' => '<nolink>/node/add/course',
+    'router_path' => '<nolink>/%/%',
+    'link_title' => 'Manage',
+    'options' => array(
+      'attributes' => array(
+        'title' => '',
+      ),
+      'identifier' => 'main-menu_manage:<nolink>/node/add/course',
+    ),
+    'module' => 'menu',
+    'hidden' => 0,
+    'external' => 0,
+    'has_children' => 1,
+    'expanded' => 0,
+    'weight' => -45,
+    'customized' => 1,
   );
   // Exported menu link: main-menu_organize-materials:course-setup/organize
   $menu_links['main-menu_organize-materials:course-setup/organize'] = array(
@@ -122,7 +142,7 @@ function lacuna_stories_course_management_menu_default_menu_links() {
     'expanded' => 0,
     'weight' => -49,
     'customized' => 1,
-    'parent_identifier' => 'main-menu_manage:<nolink>',
+    'parent_identifier' => 'main-menu_manage:<nolink>/node/add/course',
   );
 
   // Translatables
@@ -132,6 +152,7 @@ function lacuna_stories_course_management_menu_default_menu_links() {
   t('All Emails');
   t('Bulk Update Annotations');
   t('Curate Tags');
+  t('Manage');
   t('Organize Materials');
 
   return $menu_links;

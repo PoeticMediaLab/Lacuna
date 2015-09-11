@@ -23,7 +23,6 @@ features[menu_links][] = main-menu_connect:<nolink>
 features[menu_links][] = main-menu_create:<nolink>
 features[menu_links][] = main-menu_explore:<nolink>
 features[menu_links][] = main-menu_help:<nolink>
-features[menu_links][] = main-menu_manage:<nolink>
 features[menu_links][] = main-menu_reflect:<nolink>
 features[menu_links][] = menu-institutional-menu_about:http://www.lacunastories.com
 features[menu_links][] = menu-institutional-menu_courses:<front>
