@@ -100,13 +100,15 @@ article.node-document {
   overflow-x: hidden;
 }
 
-#course-name {
-
-    /*
-    *   Added as part of making header menu work on smaller screens.
-    */
-    padding-left: 10px;
-
+#subtitle {
+  /*
+  *   Added as part of making header menu work on smaller screens.
+  */
+  padding-left: 10px;
+  #course-name {
+    display: block;
+    font-size: medium;
+  }
 }
 
 b {
