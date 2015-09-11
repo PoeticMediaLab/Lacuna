@@ -224,7 +224,7 @@ function course_admin_form() {
 
 // Can user switch to given course?
 function course_switch_access($gid) {
-  return user_access('administer group') || og_is_member('node', 'gid');
+  return user_access('administer group') || og_is_member('node', $gid);
 }
 
 // Dynamic link from the course listings sets context or not before going to the course node
