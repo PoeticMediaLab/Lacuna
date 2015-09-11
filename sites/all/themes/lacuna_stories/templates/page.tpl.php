@@ -43,7 +43,9 @@
         <h1 class="header__site-name" id="site-name">
           <a href="<?php print $front_page; ?>" title="<?php print t('Home'); ?>" class="header__site-link" rel="home"><span><?php print $site_name; ?>
         <?php
-            if (!drupal_is_front_page() && module_exists('course')):
+            if (module_exists('course') &&
+                !drupal_is_front_page() &&
+                !preg_match('/course-setup$/', current_path())):
               $gid = course_get_selected_course();
               $course = node_load($gid);
         ?>
