@@ -371,6 +371,135 @@ function lacuna_stories_threads_views_default_views() {
   $export['sewing-kit'] = $view;
 
   $view = new view();
+  $view->name = 'stitchings';
+  $view->description = '';
+  $view->tag = 'default';
+  $view->base_table = 'node';
+  $view->human_name = 'Stitchings';
+  $view->core = 7;
+  $view->api_version = '3.0';
+  $view->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
+
+  /* Display: Master */
+  $handler = $view->new_display('default', 'Master', 'default');
+  $handler->display->display_options['title'] = 'Stitchings';
+  $handler->display->display_options['use_more_always'] = FALSE;
+  $handler->display->display_options['access']['type'] = 'perm';
+  $handler->display->display_options['cache']['type'] = 'none';
+  $handler->display->display_options['query']['type'] = 'views_query';
+  $handler->display->display_options['exposed_form']['type'] = 'basic';
+  $handler->display->display_options['pager']['type'] = 'none';
+  $handler->display->display_options['style_plugin'] = 'table';
+  /* Relationship: Thread */
+  $handler->display->display_options['relationships']['reverse_thread_reference_node']['id'] = 'reverse_thread_reference_node';
+  $handler->display->display_options['relationships']['reverse_thread_reference_node']['table'] = 'node';
+  $handler->display->display_options['relationships']['reverse_thread_reference_node']['field'] = 'reverse_thread_reference_node';
+  $handler->display->display_options['relationships']['reverse_thread_reference_node']['ui_name'] = 'Thread';
+  $handler->display->display_options['relationships']['reverse_thread_reference_node']['label'] = 'Thread';
+  /* Relationship: Annotated Content */
+  $handler->display->display_options['relationships']['field_annotation_reference_target_id']['id'] = 'field_annotation_reference_target_id';
+  $handler->display->display_options['relationships']['field_annotation_reference_target_id']['table'] = 'field_data_field_annotation_reference';
+  $handler->display->display_options['relationships']['field_annotation_reference_target_id']['field'] = 'field_annotation_reference_target_id';
+  $handler->display->display_options['relationships']['field_annotation_reference_target_id']['ui_name'] = 'Annotated Content';
+  $handler->display->display_options['relationships']['field_annotation_reference_target_id']['label'] = 'Annotated Content';
+  /* Field: Draggableviews: Content */
+  $handler->display->display_options['fields']['draggableviews']['id'] = 'draggableviews';
+  $handler->display->display_options['fields']['draggableviews']['table'] = 'node';
+  $handler->display->display_options['fields']['draggableviews']['field'] = 'draggableviews';
+  $handler->display->display_options['fields']['draggableviews']['label'] = '';
+  $handler->display->display_options['fields']['draggableviews']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['draggableviews']['element_default_classes'] = FALSE;
+  $handler->display->display_options['fields']['draggableviews']['hide_alter_empty'] = FALSE;
+  $handler->display->display_options['fields']['draggableviews']['draggableviews']['ajax'] = 1;
+  /* Field: Content: Annotated Content */
+  $handler->display->display_options['fields']['field_annotation_reference']['id'] = 'field_annotation_reference';
+  $handler->display->display_options['fields']['field_annotation_reference']['table'] = 'field_data_field_annotation_reference';
+  $handler->display->display_options['fields']['field_annotation_reference']['field'] = 'field_annotation_reference';
+  $handler->display->display_options['fields']['field_annotation_reference']['settings'] = array(
+    'link' => 1,
+  );
+  /* Field: Content: Excerpt */
+  $handler->display->display_options['fields']['field_annotation_quote']['id'] = 'field_annotation_quote';
+  $handler->display->display_options['fields']['field_annotation_quote']['table'] = 'field_data_field_annotation_quote';
+  $handler->display->display_options['fields']['field_annotation_quote']['field'] = 'field_annotation_quote';
+  $handler->display->display_options['fields']['field_annotation_quote']['alter']['max_length'] = '200';
+  $handler->display->display_options['fields']['field_annotation_quote']['alter']['trim'] = TRUE;
+  $handler->display->display_options['fields']['field_annotation_quote']['type'] = 'text_plain';
+  $handler->display->display_options['fields']['field_annotation_quote']['settings'] = array(
+    'trim_length' => '600',
+  );
+  /* Field: Content: Annotation Text */
+  $handler->display->display_options['fields']['field_annotation_text']['id'] = 'field_annotation_text';
+  $handler->display->display_options['fields']['field_annotation_text']['table'] = 'field_data_field_annotation_text';
+  $handler->display->display_options['fields']['field_annotation_text']['field'] = 'field_annotation_text';
+  $handler->display->display_options['fields']['field_annotation_text']['type'] = 'text_plain';
+  /* Field: Content: Category */
+  $handler->display->display_options['fields']['field_annotation_category']['id'] = 'field_annotation_category';
+  $handler->display->display_options['fields']['field_annotation_category']['table'] = 'field_data_field_annotation_category';
+  $handler->display->display_options['fields']['field_annotation_category']['field'] = 'field_annotation_category';
+  $handler->display->display_options['fields']['field_annotation_category']['type'] = 'taxonomy_term_reference_plain';
+  /* Field: Content: Tags */
+  $handler->display->display_options['fields']['field_annotation_tags']['id'] = 'field_annotation_tags';
+  $handler->display->display_options['fields']['field_annotation_tags']['table'] = 'field_data_field_annotation_tags';
+  $handler->display->display_options['fields']['field_annotation_tags']['field'] = 'field_annotation_tags';
+  $handler->display->display_options['fields']['field_annotation_tags']['type'] = 'taxonomy_term_reference_plain';
+  $handler->display->display_options['fields']['field_annotation_tags']['delta_offset'] = '0';
+  /* Field: Content: Nid */
+  $handler->display->display_options['fields']['nid']['id'] = 'nid';
+  $handler->display->display_options['fields']['nid']['table'] = 'node';
+  $handler->display->display_options['fields']['nid']['field'] = 'nid';
+  $handler->display->display_options['fields']['nid']['exclude'] = TRUE;
+  /* Field: Content: Path */
+  $handler->display->display_options['fields']['path']['id'] = 'path';
+  $handler->display->display_options['fields']['path']['table'] = 'node';
+  $handler->display->display_options['fields']['path']['field'] = 'path';
+  $handler->display->display_options['fields']['path']['relationship'] = 'field_annotation_reference_target_id';
+  $handler->display->display_options['fields']['path']['exclude'] = TRUE;
+  /* Field: Global: Custom text */
+  $handler->display->display_options['fields']['nothing']['id'] = 'nothing';
+  $handler->display->display_options['fields']['nothing']['table'] = 'views';
+  $handler->display->display_options['fields']['nothing']['field'] = 'nothing';
+  $handler->display->display_options['fields']['nothing']['label'] = '';
+  $handler->display->display_options['fields']['nothing']['alter']['text'] = '<a class="fa fa-eye" href="[path]?id=[nid]" target="_blank"></a>';
+  $handler->display->display_options['fields']['nothing']['alter']['absolute'] = TRUE;
+  $handler->display->display_options['fields']['nothing']['alter']['target'] = '_blank';
+  $handler->display->display_options['fields']['nothing']['element_label_colon'] = FALSE;
+  /* Sort criterion: Draggableviews: Weight */
+  $handler->display->display_options['sorts']['weight']['id'] = 'weight';
+  $handler->display->display_options['sorts']['weight']['table'] = 'draggableviews_structure';
+  $handler->display->display_options['sorts']['weight']['field'] = 'weight';
+  $handler->display->display_options['sorts']['weight']['draggableviews_setting_view'] = 'stitchings:block';
+  $handler->display->display_options['sorts']['weight']['draggableviews_setting_new_items_bottom_list'] = 1;
+  /* Contextual filter: Content: Nid */
+  $handler->display->display_options['arguments']['nid']['id'] = 'nid';
+  $handler->display->display_options['arguments']['nid']['table'] = 'node';
+  $handler->display->display_options['arguments']['nid']['field'] = 'nid';
+  $handler->display->display_options['arguments']['nid']['relationship'] = 'reverse_thread_reference_node';
+  $handler->display->display_options['arguments']['nid']['default_action'] = 'default';
+  $handler->display->display_options['arguments']['nid']['default_argument_type'] = 'node';
+  $handler->display->display_options['arguments']['nid']['summary']['number_of_records'] = '0';
+  $handler->display->display_options['arguments']['nid']['summary']['format'] = 'default_summary';
+  $handler->display->display_options['arguments']['nid']['summary_options']['items_per_page'] = '25';
+  /* Filter criterion: Content: Published */
+  $handler->display->display_options['filters']['status']['id'] = 'status';
+  $handler->display->display_options['filters']['status']['table'] = 'node';
+  $handler->display->display_options['filters']['status']['field'] = 'status';
+  $handler->display->display_options['filters']['status']['value'] = 1;
+  $handler->display->display_options['filters']['status']['group'] = 1;
+  $handler->display->display_options['filters']['status']['expose']['operator'] = FALSE;
+  /* Filter criterion: Content: Type */
+  $handler->display->display_options['filters']['type']['id'] = 'type';
+  $handler->display->display_options['filters']['type']['table'] = 'node';
+  $handler->display->display_options['filters']['type']['field'] = 'type';
+  $handler->display->display_options['filters']['type']['value'] = array(
+    'annotation' => 'annotation',
+  );
+
+  /* Display: Block */
+  $handler = $view->new_display('block', 'Block', 'block');
+  $export['stitchings'] = $view;
+
+  $view = new view();
   $view->name = 'threads';
   $view->description = '';
   $view->tag = 'default';
