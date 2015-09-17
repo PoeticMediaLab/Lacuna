@@ -88,9 +88,9 @@ function lacuna_stories_people_field_default_field_instances() {
         'input_format_custom' => '',
         'label_position' => 'none',
         'text_parts' => array(),
-        'year_range' => '-10:+0',
+        'year_range' => '-80:+0',
       ),
-      'type' => 'date_popup',
+      'type' => 'date_text',
       'weight' => 13,
     ),
   );
