@@ -41,7 +41,7 @@ function sewing_kit_stitch(&$node, $context) {
 			$sewing_kit_thread->title = $context['thread_new'];
 			$sewing_kit_thread->type = 'thread';
 			node_object_prepare($sewing_kit_thread);
-			$sewing_kit_thread->language = $node->language;
+			$sewing_kit_thread->language = LANGUAGE_NONE;
 			$sewing_kit_thread->uid = $user->uid;
 			$sewing_kit_thread->status = NODE_PUBLISHED; // (1 or 0): published or not
 			$sewing_kit_thread->promote = NODE_NOT_PROMOTED; // (1 or 0): promoted to front page
