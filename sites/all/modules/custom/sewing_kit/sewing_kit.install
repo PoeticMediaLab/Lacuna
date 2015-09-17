@@ -116,3 +116,9 @@ function sewing_kit_uninstall() {
   field_delete_field('thread_reference'); // delete entityreference field
   field_delete_field('thread_description'); // delete thread description field
 }
+
+function sewing_kit_update_7101() {
+  $instance = field_info_instance('node', 'thread_description', 'thread');
+  $instance['label'] = t('Description');
+  field_update_instance($instance);
+}
