@@ -424,6 +424,7 @@ function lacuna_stories_threads_views_default_views() {
   $handler->display->display_options['fields']['field_annotation_quote']['field'] = 'field_annotation_quote';
   $handler->display->display_options['fields']['field_annotation_quote']['alter']['max_length'] = '200';
   $handler->display->display_options['fields']['field_annotation_quote']['alter']['trim'] = TRUE;
+  $handler->display->display_options['fields']['field_annotation_quote']['element_class'] = 'fix-width-15';
   $handler->display->display_options['fields']['field_annotation_quote']['type'] = 'text_plain';
   $handler->display->display_options['fields']['field_annotation_quote']['settings'] = array(
     'trim_length' => '600',
@@ -432,6 +433,7 @@ function lacuna_stories_threads_views_default_views() {
   $handler->display->display_options['fields']['field_annotation_text']['id'] = 'field_annotation_text';
   $handler->display->display_options['fields']['field_annotation_text']['table'] = 'field_data_field_annotation_text';
   $handler->display->display_options['fields']['field_annotation_text']['field'] = 'field_annotation_text';
+  $handler->display->display_options['fields']['field_annotation_text']['element_class'] = 'fix-width-15';
   $handler->display->display_options['fields']['field_annotation_text']['type'] = 'text_plain';
   /* Field: Content: Category */
   $handler->display->display_options['fields']['field_annotation_category']['id'] = 'field_annotation_category';
