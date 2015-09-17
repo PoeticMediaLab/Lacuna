@@ -32,7 +32,7 @@ function annotation_node_type_insert($content_type) {
     }
 
     // Add taxonomy for categories
-    // TODO: Move to Annotator module -- fits with categories plugin?
+    // TODO: Move to Annotator module -- fits with categories plugin
     if (!taxonomy_vocabulary_machine_name_load(ANNOTATION_CATEGORY_TAXONOMY)) {
       _annotation_create_categories_taxonomy();
     }
