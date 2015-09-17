@@ -184,7 +184,7 @@ function lacuna_stories_threads_field_default_field_instances() {
     ),
     'entity_type' => 'node',
     'field_name' => 'thread_description',
-    'label' => 'Description of My Thread',
+    'label' => 'Description',
     'required' => TRUE,
     'settings' => array(
       'text_processing' => 1,
@@ -250,7 +250,7 @@ function lacuna_stories_threads_field_default_field_instances() {
   // Translatables
   // Included for use with string extractors like potx.
   t('Describe why these pieces are stitched together');
-  t('Description of My Thread');
+  t('Description');
   t('Groups audience');
   t('Image');
   t('My Stitchings');

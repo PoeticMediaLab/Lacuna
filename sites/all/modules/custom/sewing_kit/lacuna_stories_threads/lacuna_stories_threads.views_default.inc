@@ -608,7 +608,7 @@ function lacuna_stories_threads_views_default_views() {
   $handler->display->display_options['fields']['nid']['group_type'] = 'count_distinct';
   $handler->display->display_options['fields']['nid']['label'] = 'Stitchings';
   $handler->display->display_options['fields']['nid']['exclude'] = TRUE;
-  /* Field: Content: Description of My Thread */
+  /* Field: Content: Description */
   $handler->display->display_options['fields']['thread_description']['id'] = 'thread_description';
   $handler->display->display_options['fields']['thread_description']['table'] = 'field_data_thread_description';
   $handler->display->display_options['fields']['thread_description']['field'] = 'thread_description';
