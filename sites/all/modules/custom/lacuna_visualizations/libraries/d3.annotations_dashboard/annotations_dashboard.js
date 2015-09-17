@@ -968,13 +968,17 @@ function main(data) {
         doc_ids = current.map(function (value, index) { return value['doc_id']})
                     .filter(function (value, index, self) { return self.indexOf(value) === index;});
         // get unique uids
-        users = current.map(function (value, index) { return value['username']})
+        users = current.map(function (value, index) { return value['uid']})
             .filter(function (value, index, self) { return self.indexOf(value) === index;});
         if (doc_ids.length) {
-            href += 'field_annotation_reference_target_id[]=' + doc_ids.join(',') + '&';
+			for (var i = 0; i < doc_ids.length; i++) {
+				href += 'field_annotation_reference_target_id[]=' + doc_ids[i] + '&';
+			}
         }
         if (users.length) {
-            href += 'edit-author-select=' + users.join(',');
+			for (var i = 0; i < users.length; i++) {
+				href += 'author_select[]=' + users[i] + '&';
+			}
         }
         sewing_kit.attr('href', href)
 	}
