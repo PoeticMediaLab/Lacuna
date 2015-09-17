@@ -104,34 +104,6 @@ function lacuna_stories_annotations_field_default_field_bases() {
     'type' => 'entityreference',
   );
 
-  // Exported field_base: 'field_annotation_private'
-  $field_bases['field_annotation_private'] = array(
-    'active' => 1,
-    'cardinality' => 1,
-    'default' => 1,
-    'deleted' => 0,
-    'entity_types' => array(),
-    'field_name' => 'field_annotation_private',
-    'indexes' => array(
-      'value' => array(
-        0 => 'value',
-      ),
-    ),
-    'locked' => 1,
-    'module' => 'list',
-    'not null' => TRUE,
-    'settings' => array(
-      'allowed_value_function' => '',
-      'allowed_values' => array(
-        0 => 'No',
-        1 => 'Yes',
-      ),
-      'allowed_values_function' => '',
-    ),
-    'translatable' => 0,
-    'type' => 'list_boolean',
-  );
-
   // Exported field_base: 'field_annotation_quote'
   $field_bases['field_annotation_quote'] = array(
     'active' => 1,
