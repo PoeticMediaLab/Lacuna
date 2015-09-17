@@ -737,19 +737,10 @@ function lacuna_visualizations_annotation_dashboard_data() {
     }
 		unset($data->quote);
 		unset($data->tags);
-//    if (!$canReadAll && ($annotation->uid != $user->uid)) {
-//      if (!array_key_exists($annotation->uid, $userNames)) {
-//        // anonymize with slight UID obfuscation
-//        // should use a hash or something to make it harder to decipher
-//        // but "view user profile" permissions *should* be limited anyway
-//        $userNames[$annotation->uid] = "Student #1" . $annotation->uid;
-//      }
-//    }
-//    elseif ($canReadAll || $annotation->uid == $user->uid) {
-      if (!array_key_exists($annotation->uid, $userNames)) {
-        $userNames[$annotation->uid] = format_username($users[$annotation->uid]);
-      }
-//    }
+
+    if (!array_key_exists($annotation->uid, $userNames)) {
+      $userNames[$annotation->uid] = format_username($users[$annotation->uid]);
+    }
     $data->username = $userNames[$annotation->uid];
     array_push($annotations, $data);
   }
