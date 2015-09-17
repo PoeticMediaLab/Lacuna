@@ -135,9 +135,6 @@ class Annotator.Plugin.Histogram extends Annotator.Plugin
       id = parseInt(node.dataset.annotationId, 10)
       if id not in @counted and not node.classList.contains(@selector.hidden)
         @counted.push(id) # don't over-count multi-span annotations
-#      if node.hasChildNodes() # possible overlapping annotations; count them, too
-#        for child in node.querySelectorAll('.' + @selector.annotation)
-#          @countAnnotation(child)
       return true
     return false
 
@@ -188,10 +185,10 @@ class Annotator.Plugin.Histogram extends Annotator.Plugin
       @layout.height = window.innerHeight # keep in viewport
       # [0][0] because d3 likes arrays almost as much as Drupal
       d3.select(@histogramContainer[0][0].parentNode)
-      .attr('width', @layout.width)
-      .attr('height', @layout.height)
-      .style('float', 'left')
-      .style('padding-left', '5px')
+        .attr('width', @layout.width)
+        .attr('height', @layout.height)
+        .style('float', 'left')
+        .style('padding-left', '5px')
 
   setBarDimensions: (length) =>
     # Get the length of only the document text, not the annotations
