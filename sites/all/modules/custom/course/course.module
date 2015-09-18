@@ -485,10 +485,10 @@ function course_form_views_exposed_form_alter(&$form, &$form_state) {
     if (isset($result['node'])) {
       $nids = array_keys($result['node']);
     }
-    foreach ($form['field_annotation_reference_target_id']['#options'] as $type => $values) {
-      foreach ($form['field_annotation_reference_target_id']['#options'][$type] as $nid => $title) {
+    foreach ($form['document']['#options'] as $type => $values) {
+      foreach ($form['document']['#options'][$type] as $nid => $title) {
         if (!in_array($nid, $nids)) {
-          unset($form['field_annotation_reference_target_id']['#options'][$type][$nid]);
+          unset($form['document']['#options'][$type][$nid]);
         }
       }
     }
