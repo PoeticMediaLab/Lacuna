@@ -689,7 +689,10 @@ function lacuna_visualizations_annotation_dashboard_data() {
 	// Load all document and users at once to speed up query time
 	$documents = node_load_multiple(array_map("get_doc_id", $allNodes));
 	$users = user_load_multiple(array_map("get_uid", $allNodes));
-
+  foreach ($users as $user) {
+    $userNames[$user->uid] = format_username($user);
+  }
+  $terms = array();
 	$field_prefix = 'field_annotation_';	// to convert from Drupal field names to viz
 	// Convert from Drupal format to a simpler data format for viz
 	foreach ($allNodes as $annotation) {
@@ -717,12 +720,18 @@ function lacuna_visualizations_annotation_dashboard_data() {
 		$data->audience = ucfirst($annotation->field_annotation_audience[$annotation->language][0]['value']);
 
 		// Taxonomies: tags and categories
-    $fields = array('tags', 'category');
+    // Note: removed tags for now; not shown, so no need to load them
+    $fields = array('category');
     foreach ($fields as $field) {
       $data->{$field} = array();
       if (isset($annotation->{$field_prefix . $field}[$annotation->language][0]['tid'])) {
         foreach ($annotation->{$field_prefix . $field}[$annotation->language] as $tag) {
-          $term = taxonomy_term_load($tag['tid']);
+          if (!isset($terms[$tag['tid']])) {
+            $term = taxonomy_term_load($tag['tid']);
+            $terms[$tag['tid']] = $term;
+          } else {
+            $term = $terms[$tag['tid']];
+          }
           array_push($data->{$field}, $term->name);
         }
       }
@@ -738,9 +747,6 @@ function lacuna_visualizations_annotation_dashboard_data() {
 		unset($data->quote);
 		unset($data->tags);
 
-    if (!array_key_exists($annotation->uid, $userNames)) {
-      $userNames[$annotation->uid] = format_username($users[$annotation->uid]);
-    }
     $data->username = $userNames[$annotation->uid];
     array_push($annotations, $data);
   }
