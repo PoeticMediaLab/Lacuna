@@ -146,6 +146,12 @@ function lacuna_stories_threads_views_default_views() {
       'override_label' => 0,
       'label' => '',
     ),
+    'action::views_data_export_action_csv_export' => array(
+      'selected' => 1,
+      'skip_confirmation' => 1,
+      'override_label' => 1,
+      'label' => 'Export',
+    ),
   );
   /* Field: Content: Annotated Content */
   $handler->display->display_options['fields']['field_annotation_reference']['id'] = 'field_annotation_reference';
@@ -160,12 +166,14 @@ function lacuna_stories_threads_views_default_views() {
   $handler->display->display_options['fields']['field_annotation_quote']['field'] = 'field_annotation_quote';
   $handler->display->display_options['fields']['field_annotation_quote']['alter']['max_length'] = '150';
   $handler->display->display_options['fields']['field_annotation_quote']['alter']['trim'] = TRUE;
+  $handler->display->display_options['fields']['field_annotation_quote']['element_class'] = 'fix-width-15';
   /* Field: Content: Annotation Text */
   $handler->display->display_options['fields']['field_annotation_text']['id'] = 'field_annotation_text';
   $handler->display->display_options['fields']['field_annotation_text']['table'] = 'field_data_field_annotation_text';
   $handler->display->display_options['fields']['field_annotation_text']['field'] = 'field_annotation_text';
   $handler->display->display_options['fields']['field_annotation_text']['alter']['max_length'] = '150';
   $handler->display->display_options['fields']['field_annotation_text']['alter']['trim'] = TRUE;
+  $handler->display->display_options['fields']['field_annotation_text']['element_class'] = 'fix-width-15';
   $handler->display->display_options['fields']['field_annotation_text']['type'] = 'text_plain';
   /* Field: User: Display Name */
   $handler->display->display_options['fields']['field_display_name']['id'] = 'field_display_name';
@@ -420,6 +428,111 @@ if (module_exists(\'course\')) {
   $handler->display->display_options['menu']['name'] = 'main-menu';
   $handler->display->display_options['menu']['context'] = 0;
   $handler->display->display_options['menu']['context_only_inline'] = 0;
+
+  /* Display: Data export */
+  $handler = $view->new_display('views_data_export', 'Data export', 'views_data_export_1');
+  $handler->display->display_options['defaults']['group_by'] = FALSE;
+  $handler->display->display_options['pager']['type'] = 'none';
+  $handler->display->display_options['pager']['options']['offset'] = '0';
+  $handler->display->display_options['style_plugin'] = 'views_data_export_doc';
+  $handler->display->display_options['style_options']['provide_file'] = 1;
+  $handler->display->display_options['style_options']['parent_sort'] = 0;
+  $handler->display->display_options['defaults']['relationships'] = FALSE;
+  /* Relationship: Entity Reference: Referenced Entity */
+  $handler->display->display_options['relationships']['field_annotation_reference_target_id']['id'] = 'field_annotation_reference_target_id';
+  $handler->display->display_options['relationships']['field_annotation_reference_target_id']['table'] = 'field_data_field_annotation_reference';
+  $handler->display->display_options['relationships']['field_annotation_reference_target_id']['field'] = 'field_annotation_reference_target_id';
+  $handler->display->display_options['relationships']['field_annotation_reference_target_id']['label'] = 'Annotated Content';
+  /* Relationship: Content: Author */
+  $handler->display->display_options['relationships']['uid']['id'] = 'uid';
+  $handler->display->display_options['relationships']['uid']['table'] = 'node';
+  $handler->display->display_options['relationships']['uid']['field'] = 'uid';
+  /* Relationship: Entity Reference: Referenced Entity */
+  $handler->display->display_options['relationships']['field_bibliographic_item_target_id']['id'] = 'field_bibliographic_item_target_id';
+  $handler->display->display_options['relationships']['field_bibliographic_item_target_id']['table'] = 'field_data_field_bibliographic_item';
+  $handler->display->display_options['relationships']['field_bibliographic_item_target_id']['field'] = 'field_bibliographic_item_target_id';
+  $handler->display->display_options['relationships']['field_bibliographic_item_target_id']['relationship'] = 'field_annotation_reference_target_id';
+  $handler->display->display_options['relationships']['field_bibliographic_item_target_id']['label'] = 'Biblio - Response';
+  /* Relationship: Entity Reference: Referenced Entity */
+  $handler->display->display_options['relationships']['field_bibliographic_entry_target_id']['id'] = 'field_bibliographic_entry_target_id';
+  $handler->display->display_options['relationships']['field_bibliographic_entry_target_id']['table'] = 'field_data_field_bibliographic_entry';
+  $handler->display->display_options['relationships']['field_bibliographic_entry_target_id']['field'] = 'field_bibliographic_entry_target_id';
+  $handler->display->display_options['relationships']['field_bibliographic_entry_target_id']['relationship'] = 'field_annotation_reference_target_id';
+  $handler->display->display_options['relationships']['field_bibliographic_entry_target_id']['label'] = 'Biblio - Document';
+  $handler->display->display_options['defaults']['fields'] = FALSE;
+  /* Field: Biblio: Biblio Citation */
+  $handler->display->display_options['fields']['citation']['id'] = 'citation';
+  $handler->display->display_options['fields']['citation']['table'] = 'biblio';
+  $handler->display->display_options['fields']['citation']['field'] = 'citation';
+  $handler->display->display_options['fields']['citation']['relationship'] = 'field_bibliographic_item_target_id';
+  $handler->display->display_options['fields']['citation']['label'] = 'Bibliographic Citation';
+  $handler->display->display_options['fields']['citation']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['citation']['hide_empty'] = TRUE;
+  $handler->display->display_options['fields']['citation']['style_name'] = 'chicago';
+  $handler->display->display_options['fields']['citation']['export_links'] = 0;
+  $handler->display->display_options['fields']['citation']['file_attachments'] = 0;
+  $handler->display->display_options['fields']['citation']['open_url_link'] = 0;
+  /* Field: Biblio: Biblio Citation */
+  $handler->display->display_options['fields']['citation_1']['id'] = 'citation_1';
+  $handler->display->display_options['fields']['citation_1']['table'] = 'biblio';
+  $handler->display->display_options['fields']['citation_1']['field'] = 'citation';
+  $handler->display->display_options['fields']['citation_1']['relationship'] = 'field_bibliographic_entry_target_id';
+  $handler->display->display_options['fields']['citation_1']['label'] = 'Bibliographic Citation';
+  $handler->display->display_options['fields']['citation_1']['empty'] = '[citation]';
+  $handler->display->display_options['fields']['citation_1']['hide_empty'] = TRUE;
+  $handler->display->display_options['fields']['citation_1']['style_name'] = 'chicago';
+  $handler->display->display_options['fields']['citation_1']['export_links'] = 0;
+  $handler->display->display_options['fields']['citation_1']['file_attachments'] = 0;
+  $handler->display->display_options['fields']['citation_1']['open_url_link'] = 0;
+  /* Field: Content: Excerpt */
+  $handler->display->display_options['fields']['field_annotation_quote']['id'] = 'field_annotation_quote';
+  $handler->display->display_options['fields']['field_annotation_quote']['table'] = 'field_data_field_annotation_quote';
+  $handler->display->display_options['fields']['field_annotation_quote']['field'] = 'field_annotation_quote';
+  $handler->display->display_options['fields']['field_annotation_quote']['alter']['max_length'] = '150';
+  $handler->display->display_options['fields']['field_annotation_quote']['alter']['trim'] = TRUE;
+  $handler->display->display_options['fields']['field_annotation_quote']['element_class'] = 'fix-width-15';
+  /* Field: Content: Annotation Text */
+  $handler->display->display_options['fields']['field_annotation_text']['id'] = 'field_annotation_text';
+  $handler->display->display_options['fields']['field_annotation_text']['table'] = 'field_data_field_annotation_text';
+  $handler->display->display_options['fields']['field_annotation_text']['field'] = 'field_annotation_text';
+  $handler->display->display_options['fields']['field_annotation_text']['alter']['max_length'] = '150';
+  $handler->display->display_options['fields']['field_annotation_text']['element_class'] = 'fix-width-15';
+  $handler->display->display_options['fields']['field_annotation_text']['type'] = 'text_plain';
+  /* Field: User: Display Name */
+  $handler->display->display_options['fields']['field_display_name']['id'] = 'field_display_name';
+  $handler->display->display_options['fields']['field_display_name']['table'] = 'field_data_field_display_name';
+  $handler->display->display_options['fields']['field_display_name']['field'] = 'field_display_name';
+  $handler->display->display_options['fields']['field_display_name']['relationship'] = 'uid';
+  $handler->display->display_options['fields']['field_display_name']['label'] = 'Annotator';
+  /* Field: Content: Tags */
+  $handler->display->display_options['fields']['field_annotation_tags']['id'] = 'field_annotation_tags';
+  $handler->display->display_options['fields']['field_annotation_tags']['table'] = 'field_data_field_annotation_tags';
+  $handler->display->display_options['fields']['field_annotation_tags']['field'] = 'field_annotation_tags';
+  $handler->display->display_options['fields']['field_annotation_tags']['type'] = 'taxonomy_term_reference_plain';
+  $handler->display->display_options['fields']['field_annotation_tags']['delta_offset'] = '0';
+  /* Field: Content: Category */
+  $handler->display->display_options['fields']['field_annotation_category']['id'] = 'field_annotation_category';
+  $handler->display->display_options['fields']['field_annotation_category']['table'] = 'field_data_field_annotation_category';
+  $handler->display->display_options['fields']['field_annotation_category']['field'] = 'field_annotation_category';
+  $handler->display->display_options['fields']['field_annotation_category']['type'] = 'taxonomy_term_reference_plain';
+  $handler->display->display_options['defaults']['filter_groups'] = FALSE;
+  $handler->display->display_options['defaults']['filters'] = FALSE;
+  /* Filter criterion: Content: Published */
+  $handler->display->display_options['filters']['status']['id'] = 'status';
+  $handler->display->display_options['filters']['status']['table'] = 'node';
+  $handler->display->display_options['filters']['status']['field'] = 'status';
+  $handler->display->display_options['filters']['status']['value'] = 1;
+  $handler->display->display_options['filters']['status']['group'] = 1;
+  $handler->display->display_options['filters']['status']['expose']['operator'] = FALSE;
+  /* Filter criterion: Content: Type */
+  $handler->display->display_options['filters']['type']['id'] = 'type';
+  $handler->display->display_options['filters']['type']['table'] = 'node';
+  $handler->display->display_options['filters']['type']['field'] = 'type';
+  $handler->display->display_options['filters']['type']['value'] = array(
+    'annotation' => 'annotation',
+  );
+  $handler->display->display_options['filters']['type']['group'] = 1;
+  $handler->display->display_options['path'] = 'export/annotations';
   $export['sewing-kit'] = $view;
 
   $view = new view();

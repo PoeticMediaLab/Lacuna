@@ -24,12 +24,15 @@ select#edit-thread-add {
   .views-widget-filter-created_1 {
     display: none;
   }
-  input[id^='edit-actionsewing-kit-stitch'] {
+  .fieldset-wrapper {
+    margin-left: 33%;
+  }
+  input[id^='edit-actionsewing-kit-stitch'],
+  input[id^='edit-actionviews-data-export-action-csv-export'] {
     width: 200px;
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
+    display: inline-block;
     height: 50px;
+    font-size: 14pt;
   }
   .chosen-container {
     max-width: 60% !important;
