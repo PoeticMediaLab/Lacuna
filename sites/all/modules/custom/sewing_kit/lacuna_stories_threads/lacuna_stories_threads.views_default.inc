@@ -147,6 +147,13 @@ function lacuna_stories_threads_views_default_views() {
       'label' => '',
     ),
   );
+  /* Field: Content: Annotated Content */
+  $handler->display->display_options['fields']['field_annotation_reference']['id'] = 'field_annotation_reference';
+  $handler->display->display_options['fields']['field_annotation_reference']['table'] = 'field_data_field_annotation_reference';
+  $handler->display->display_options['fields']['field_annotation_reference']['field'] = 'field_annotation_reference';
+  $handler->display->display_options['fields']['field_annotation_reference']['settings'] = array(
+    'link' => 1,
+  );
   /* Field: Content: Excerpt */
   $handler->display->display_options['fields']['field_annotation_quote']['id'] = 'field_annotation_quote';
   $handler->display->display_options['fields']['field_annotation_quote']['table'] = 'field_data_field_annotation_quote';
@@ -177,13 +184,6 @@ function lacuna_stories_threads_views_default_views() {
   $handler->display->display_options['fields']['field_annotation_category']['table'] = 'field_data_field_annotation_category';
   $handler->display->display_options['fields']['field_annotation_category']['field'] = 'field_annotation_category';
   $handler->display->display_options['fields']['field_annotation_category']['type'] = 'taxonomy_term_reference_plain';
-  /* Field: Content: Annotated Content */
-  $handler->display->display_options['fields']['field_annotation_reference']['id'] = 'field_annotation_reference';
-  $handler->display->display_options['fields']['field_annotation_reference']['table'] = 'field_data_field_annotation_reference';
-  $handler->display->display_options['fields']['field_annotation_reference']['field'] = 'field_annotation_reference';
-  $handler->display->display_options['fields']['field_annotation_reference']['settings'] = array(
-    'link' => 1,
-  );
   /* Field: Content: Audience */
   $handler->display->display_options['fields']['field_annotation_audience']['id'] = 'field_annotation_audience';
   $handler->display->display_options['fields']['field_annotation_audience']['table'] = 'field_data_field_annotation_audience';

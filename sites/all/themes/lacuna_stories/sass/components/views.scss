@@ -20,11 +20,11 @@ select#edit-thread-add {
   fieldset.container-inline {
     border: 0;
   }
-  #edit-posted-after-wrapper,
-  #edit-posted-before-wrapper {
+  .views-widget-filter-created,
+  .views-widget-filter-created_1 {
     display: none;
   }
-  #edit-actionsewing-kit-stitch {
+  input[id^='edit-actionsewing-kit-stitch'] {
     width: 200px;
     display: block;
     margin-left: auto;
