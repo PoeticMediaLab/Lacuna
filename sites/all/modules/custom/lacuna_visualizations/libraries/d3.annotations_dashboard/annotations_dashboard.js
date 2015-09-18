@@ -956,31 +956,42 @@ function main(data) {
 	 *************/
 
     // Update the link for the "View in Sewing Kit" button
-    // TODO: Add time filters to Sewing Kit
 	function update_view_all() {
     	var sewing_kit = $('a#view_annotations'),
             href = sewing_kit.attr('href'),
             current = annotations.current(),
             doc_ids,
-            users;
-        href = href.split('?')[0] + '?'  // drop query string
+            users,
+            dates,
+            sortedDates,
+            query = [];
+        href = href.split('?')[0];   // drop query string
         // Get unique doc ids in current annotations
         doc_ids = current.map(function (value, index) { return value['doc_id']})
                     .filter(function (value, index, self) { return self.indexOf(value) === index;});
         // get unique uids
         users = current.map(function (value, index) { return value['uid']})
             .filter(function (value, index, self) { return self.indexOf(value) === index;});
+
+        dates = current.map(function (value, index) { return parseInt(value['created'], 10) } );
+
         if (doc_ids.length) {
 			for (var i = 0; i < doc_ids.length; i++) {
-				href += 'field_annotation_reference_target_id[]=' + doc_ids[i] + '&';
+                query.push('document[]=' + doc_ids[i]);
 			}
         }
         if (users.length) {
 			for (var i = 0; i < users.length; i++) {
-				href += 'author_select[]=' + users[i] + '&';
+                query.push('author[]=' + users[i]);
 			}
         }
-        sewing_kit.attr('href', href)
+        if (dates.length) {
+            var date = new Date(Math.min.apply(Math, dates));
+            query.push('posted_after=' + date.toISOString());
+            date = new Date(Math.max.apply(Math, dates));
+            query.push('posted_before=' + date.toISOString());
+        }
+        sewing_kit.attr('href', href + '?' + query.join('&'));
 	}
 
 	// Provide a legend for the pie chart colors

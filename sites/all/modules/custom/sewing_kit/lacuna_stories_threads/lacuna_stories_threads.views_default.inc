@@ -136,12 +136,12 @@ function lacuna_stories_threads_views_default_views() {
   $handler->display->display_options['fields']['views_bulk_operations']['label'] = 'Select for Thread';
   $handler->display->display_options['fields']['views_bulk_operations']['vbo_settings']['display_type'] = '1';
   $handler->display->display_options['fields']['views_bulk_operations']['vbo_settings']['enable_select_all_pages'] = 1;
+  $handler->display->display_options['fields']['views_bulk_operations']['vbo_settings']['row_clickable'] = 1;
   $handler->display->display_options['fields']['views_bulk_operations']['vbo_settings']['force_single'] = 0;
   $handler->display->display_options['fields']['views_bulk_operations']['vbo_settings']['entity_load_capacity'] = '10';
   $handler->display->display_options['fields']['views_bulk_operations']['vbo_operations'] = array(
     'action::sewing_kit_stitch' => array(
       'selected' => 1,
-      'postpone_processing' => 0,
       'skip_confirmation' => 1,
       'override_label' => 0,
       'label' => '',
@@ -205,7 +205,11 @@ function lacuna_stories_threads_views_default_views() {
   $handler->display->display_options['fields']['php']['field'] = 'php';
   $handler->display->display_options['fields']['php']['label'] = 'Shared With';
   $handler->display->display_options['fields']['php']['use_php_setup'] = 0;
-  $handler->display->display_options['fields']['php']['php_output'] = '<?php print course_sewing_kit_shared_with ($data) ?>';
+  $handler->display->display_options['fields']['php']['php_output'] = '<?php 
+if (module_exists(\'course\')) {
+  print course_sewing_kit_shared_with($data);
+}
+?>';
   $handler->display->display_options['fields']['php']['use_php_click_sortable'] = '0';
   $handler->display->display_options['fields']['php']['php_click_sortable'] = '';
   /* Field: Content: Path */
@@ -258,9 +262,9 @@ function lacuna_stories_threads_views_default_views() {
   $handler->display->display_options['filters']['author_select']['group'] = 1;
   $handler->display->display_options['filters']['author_select']['exposed'] = TRUE;
   $handler->display->display_options['filters']['author_select']['expose']['operator_id'] = 'author_select_op';
-  $handler->display->display_options['filters']['author_select']['expose']['label'] = 'Annotator';
+  $handler->display->display_options['filters']['author_select']['expose']['label'] = 'Limit by Annotator';
   $handler->display->display_options['filters']['author_select']['expose']['operator'] = 'author_select_op';
-  $handler->display->display_options['filters']['author_select']['expose']['identifier'] = 'author_select';
+  $handler->display->display_options['filters']['author_select']['expose']['identifier'] = 'author';
   $handler->display->display_options['filters']['author_select']['expose']['multiple'] = TRUE;
   $handler->display->display_options['filters']['author_select']['expose']['remember_roles'] = array(
     2 => '2',
@@ -270,6 +274,7 @@ function lacuna_stories_threads_views_default_views() {
     4 => 0,
     6 => 0,
     7 => 0,
+    8 => 0,
   );
   /* Filter criterion: Content: Annotated Content (field_annotation_reference) */
   $handler->display->display_options['filters']['field_annotation_reference_target_id']['id'] = 'field_annotation_reference_target_id';
@@ -278,9 +283,9 @@ function lacuna_stories_threads_views_default_views() {
   $handler->display->display_options['filters']['field_annotation_reference_target_id']['group'] = 1;
   $handler->display->display_options['filters']['field_annotation_reference_target_id']['exposed'] = TRUE;
   $handler->display->display_options['filters']['field_annotation_reference_target_id']['expose']['operator_id'] = 'field_annotation_reference_target_id_op';
-  $handler->display->display_options['filters']['field_annotation_reference_target_id']['expose']['label'] = 'Annotated Content';
+  $handler->display->display_options['filters']['field_annotation_reference_target_id']['expose']['label'] = 'Limit by Material';
   $handler->display->display_options['filters']['field_annotation_reference_target_id']['expose']['operator'] = 'field_annotation_reference_target_id_op';
-  $handler->display->display_options['filters']['field_annotation_reference_target_id']['expose']['identifier'] = 'field_annotation_reference_target_id';
+  $handler->display->display_options['filters']['field_annotation_reference_target_id']['expose']['identifier'] = 'document';
   $handler->display->display_options['filters']['field_annotation_reference_target_id']['expose']['multiple'] = TRUE;
   $handler->display->display_options['filters']['field_annotation_reference_target_id']['expose']['remember_roles'] = array(
     2 => '2',
@@ -290,6 +295,7 @@ function lacuna_stories_threads_views_default_views() {
     4 => 0,
     6 => 0,
     7 => 0,
+    8 => 0,
   );
   /* Filter criterion: Content: Tags (field_annotation_tags) */
   $handler->display->display_options['filters']['field_annotation_tags_tid']['id'] = 'field_annotation_tags_tid';
@@ -298,7 +304,7 @@ function lacuna_stories_threads_views_default_views() {
   $handler->display->display_options['filters']['field_annotation_tags_tid']['group'] = 1;
   $handler->display->display_options['filters']['field_annotation_tags_tid']['exposed'] = TRUE;
   $handler->display->display_options['filters']['field_annotation_tags_tid']['expose']['operator_id'] = 'field_annotation_tags_tid_op';
-  $handler->display->display_options['filters']['field_annotation_tags_tid']['expose']['label'] = 'Tags';
+  $handler->display->display_options['filters']['field_annotation_tags_tid']['expose']['label'] = 'Limit by Tags';
   $handler->display->display_options['filters']['field_annotation_tags_tid']['expose']['operator'] = 'field_annotation_tags_tid_op';
   $handler->display->display_options['filters']['field_annotation_tags_tid']['expose']['identifier'] = 'field_annotation_tags_tid';
   $handler->display->display_options['filters']['field_annotation_tags_tid']['expose']['multiple'] = TRUE;
@@ -310,6 +316,7 @@ function lacuna_stories_threads_views_default_views() {
     4 => 0,
     6 => 0,
     7 => 0,
+    8 => 0,
   );
   $handler->display->display_options['filters']['field_annotation_tags_tid']['reduce_duplicates'] = TRUE;
   $handler->display->display_options['filters']['field_annotation_tags_tid']['type'] = 'select';
@@ -322,7 +329,7 @@ function lacuna_stories_threads_views_default_views() {
   $handler->display->display_options['filters']['field_annotation_category_tid']['group'] = 1;
   $handler->display->display_options['filters']['field_annotation_category_tid']['exposed'] = TRUE;
   $handler->display->display_options['filters']['field_annotation_category_tid']['expose']['operator_id'] = 'field_annotation_category_tid_op';
-  $handler->display->display_options['filters']['field_annotation_category_tid']['expose']['label'] = 'Category';
+  $handler->display->display_options['filters']['field_annotation_category_tid']['expose']['label'] = 'Limit by Category';
   $handler->display->display_options['filters']['field_annotation_category_tid']['expose']['operator'] = 'field_annotation_category_tid_op';
   $handler->display->display_options['filters']['field_annotation_category_tid']['expose']['identifier'] = 'field_annotation_category_tid';
   $handler->display->display_options['filters']['field_annotation_category_tid']['expose']['multiple'] = TRUE;
@@ -334,6 +341,7 @@ function lacuna_stories_threads_views_default_views() {
     4 => 0,
     6 => 0,
     7 => 0,
+    8 => 0,
   );
   $handler->display->display_options['filters']['field_annotation_category_tid']['reduce_duplicates'] = TRUE;
   $handler->display->display_options['filters']['field_annotation_category_tid']['type'] = 'select';
@@ -345,7 +353,7 @@ function lacuna_stories_threads_views_default_views() {
   $handler->display->display_options['filters']['field_annotation_audience_value']['group'] = 1;
   $handler->display->display_options['filters']['field_annotation_audience_value']['exposed'] = TRUE;
   $handler->display->display_options['filters']['field_annotation_audience_value']['expose']['operator_id'] = 'field_annotation_audience_value_op';
-  $handler->display->display_options['filters']['field_annotation_audience_value']['expose']['label'] = 'Shared With';
+  $handler->display->display_options['filters']['field_annotation_audience_value']['expose']['label'] = 'Limit by Sharing';
   $handler->display->display_options['filters']['field_annotation_audience_value']['expose']['operator'] = 'field_annotation_audience_value_op';
   $handler->display->display_options['filters']['field_annotation_audience_value']['expose']['identifier'] = 'field_annotation_audience_value';
   $handler->display->display_options['filters']['field_annotation_audience_value']['expose']['multiple'] = TRUE;
@@ -357,6 +365,50 @@ function lacuna_stories_threads_views_default_views() {
     4 => 0,
     6 => 0,
     7 => 0,
+    8 => 0,
+  );
+  /* Filter criterion: After */
+  $handler->display->display_options['filters']['created']['id'] = 'created';
+  $handler->display->display_options['filters']['created']['table'] = 'node';
+  $handler->display->display_options['filters']['created']['field'] = 'created';
+  $handler->display->display_options['filters']['created']['ui_name'] = 'After';
+  $handler->display->display_options['filters']['created']['operator'] = '>=';
+  $handler->display->display_options['filters']['created']['group'] = 1;
+  $handler->display->display_options['filters']['created']['exposed'] = TRUE;
+  $handler->display->display_options['filters']['created']['expose']['operator_id'] = 'created_op';
+  $handler->display->display_options['filters']['created']['expose']['label'] = 'After';
+  $handler->display->display_options['filters']['created']['expose']['operator'] = 'created_op';
+  $handler->display->display_options['filters']['created']['expose']['identifier'] = 'posted_after';
+  $handler->display->display_options['filters']['created']['expose']['remember_roles'] = array(
+    2 => '2',
+    1 => 0,
+    5 => 0,
+    3 => 0,
+    4 => 0,
+    6 => 0,
+    7 => 0,
+    8 => 0,
+  );
+  /* Filter criterion: Before */
+  $handler->display->display_options['filters']['created_1']['id'] = 'created_1';
+  $handler->display->display_options['filters']['created_1']['table'] = 'node';
+  $handler->display->display_options['filters']['created_1']['field'] = 'created';
+  $handler->display->display_options['filters']['created_1']['ui_name'] = 'Before';
+  $handler->display->display_options['filters']['created_1']['operator'] = '<=';
+  $handler->display->display_options['filters']['created_1']['exposed'] = TRUE;
+  $handler->display->display_options['filters']['created_1']['expose']['operator_id'] = 'created_1_op';
+  $handler->display->display_options['filters']['created_1']['expose']['label'] = 'Before';
+  $handler->display->display_options['filters']['created_1']['expose']['operator'] = 'created_1_op';
+  $handler->display->display_options['filters']['created_1']['expose']['identifier'] = 'posted_before';
+  $handler->display->display_options['filters']['created_1']['expose']['remember_roles'] = array(
+    2 => '2',
+    1 => 0,
+    5 => 0,
+    3 => 0,
+    4 => 0,
+    6 => 0,
+    7 => 0,
+    8 => 0,
   );
 
   /* Display: Page */
