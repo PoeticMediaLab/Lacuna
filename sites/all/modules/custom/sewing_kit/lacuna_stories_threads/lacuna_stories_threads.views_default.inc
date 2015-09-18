@@ -434,8 +434,9 @@ if (module_exists(\'course\')) {
   $handler->display->display_options['defaults']['group_by'] = FALSE;
   $handler->display->display_options['pager']['type'] = 'none';
   $handler->display->display_options['pager']['options']['offset'] = '0';
-  $handler->display->display_options['style_plugin'] = 'views_data_export_doc';
+  $handler->display->display_options['style_plugin'] = 'views_data_export_txt';
   $handler->display->display_options['style_options']['provide_file'] = 1;
+  $handler->display->display_options['style_options']['filename'] = '%view%timestamp-full.txt';
   $handler->display->display_options['style_options']['parent_sort'] = 0;
   $handler->display->display_options['defaults']['relationships'] = FALSE;
   /* Relationship: Entity Reference: Referenced Entity */
@@ -489,7 +490,6 @@ if (module_exists(\'course\')) {
   $handler->display->display_options['fields']['field_annotation_quote']['table'] = 'field_data_field_annotation_quote';
   $handler->display->display_options['fields']['field_annotation_quote']['field'] = 'field_annotation_quote';
   $handler->display->display_options['fields']['field_annotation_quote']['alter']['max_length'] = '150';
-  $handler->display->display_options['fields']['field_annotation_quote']['alter']['trim'] = TRUE;
   $handler->display->display_options['fields']['field_annotation_quote']['element_class'] = 'fix-width-15';
   /* Field: Content: Annotation Text */
   $handler->display->display_options['fields']['field_annotation_text']['id'] = 'field_annotation_text';
@@ -515,23 +515,6 @@ if (module_exists(\'course\')) {
   $handler->display->display_options['fields']['field_annotation_category']['table'] = 'field_data_field_annotation_category';
   $handler->display->display_options['fields']['field_annotation_category']['field'] = 'field_annotation_category';
   $handler->display->display_options['fields']['field_annotation_category']['type'] = 'taxonomy_term_reference_plain';
-  $handler->display->display_options['defaults']['filter_groups'] = FALSE;
-  $handler->display->display_options['defaults']['filters'] = FALSE;
-  /* Filter criterion: Content: Published */
-  $handler->display->display_options['filters']['status']['id'] = 'status';
-  $handler->display->display_options['filters']['status']['table'] = 'node';
-  $handler->display->display_options['filters']['status']['field'] = 'status';
-  $handler->display->display_options['filters']['status']['value'] = 1;
-  $handler->display->display_options['filters']['status']['group'] = 1;
-  $handler->display->display_options['filters']['status']['expose']['operator'] = FALSE;
-  /* Filter criterion: Content: Type */
-  $handler->display->display_options['filters']['type']['id'] = 'type';
-  $handler->display->display_options['filters']['type']['table'] = 'node';
-  $handler->display->display_options['filters']['type']['field'] = 'type';
-  $handler->display->display_options['filters']['type']['value'] = array(
-    'annotation' => 'annotation',
-  );
-  $handler->display->display_options['filters']['type']['group'] = 1;
   $handler->display->display_options['path'] = 'export/annotations';
   $export['sewing-kit'] = $view;
 
