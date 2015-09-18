@@ -17,7 +17,8 @@ input[type="submit"] {
 .lacuna-button,
 .form-submit,
 .page-turner-bookmark-button,
-.af-button-large {
+.af-button-large,
+#edit-actionsewing-kit-stitch {
   background-color: #c4df2c;
   background-image: linear-gradient(to bottom, #c4df2c, #88b551);
   background-repeat: repeat-x;
@@ -56,7 +57,9 @@ input[type="submit"] {
 .form-submit:hover,
 .form-submit:focus,
 .af-button-large:hover,
-.af-button-large:focus {
+.af-button-large:focus,
+#edit-actionsewing-kit-stitch:hover,
+#edit-actionsewing-kit-stitch:focus {
   background-color: #88b551;
   color: #FFFFFF;
   background-position: 0 -15px;

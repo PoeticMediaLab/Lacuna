@@ -16,13 +16,31 @@ select#edit-thread-add {
 }
 
 /* The "Add to Thread" button for Sewing Kit */
-#edit-actionsewing-kit-stitch {
-  width:200px;
-  display:block;
-  margin-left: auto;
-  margin-right: auto;
-  height: 50px;
+.view-sewing-kit {
+  fieldset.container-inline {
+    border: 0;
+  }
+  #edit-posted-after-wrapper,
+  #edit-posted-before-wrapper {
+    display: none;
+  }
+  #edit-actionsewing-kit-stitch {
+    width: 200px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    height: 50px;
+  }
+  .chosen-container {
+    max-width: 60% !important;
+  }
+  .views-exposed-form {
+    label {
+      width: 15%;
+    }
+  }
 }
+
 
 /* Center the "Select all" options */
 .vbo-fieldset-select-all {
