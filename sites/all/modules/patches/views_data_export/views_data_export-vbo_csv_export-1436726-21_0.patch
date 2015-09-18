@@ -1,0 +1,89 @@
+diff --git a/views_data_export.module b/views_data_export.module
+index 92d9bf2..158a418 100644
+--- a/views_data_export.module
++++ b/views_data_export.module
+@@ -228,6 +228,84 @@ function views_data_export_clear($export_id) {
+   views_data_export_view_clear($export_id);
+ }
+ 
++/**
++ * Implements hook_action_info().
++ */
++function views_data_export_action_info() {
++  return array(
++    'views_data_export_action_csv_export' => array(
++      'type' => 'entity',
++      'label' => t('Export to CSV'),
++      'configurable' => FALSE,
++      'aggregate' => TRUE,
++      'behavior' => array('views_data_export_export_csv'),
++    ),
++  );
++}
++
++/**
++ * CSV export action callback.
++ */
++function views_data_export_action_csv_export($entity, &$context) {
++
++  if (isset($context['view_info'])) {
++    $view = views_get_view($context['view_info']['name']);
++    $display_id = FALSE;
++
++    foreach ($view->display as $display) {
++      if ($display->display_plugin == 'views_data_export') {
++        $display_id = $display->id;
++        break;
++      }
++    }
++
++    if ($display_id) {
++      $args = array();
++      // If a subset of the available entities was selected, provide the list
++      // of selected IDs to the view as a contrived argument, which we'll
++      // use later to alter the query.
++      // Extra code for backward/forward compatibility.
++      // @see https://www.drupal.org/node/2488146.
++      if (isset($context['view_info']['total_rows'])) {
++        $total_rows = $context['view_info']['total_rows'];
++      }
++      else {
++        $countView = clone $view;
++        $countView->execute($context['view_info']['display']);
++        $total_rows = $countView->total_rows;
++      }
++      $entity_ids = array_keys($entity);
++      if (count($entity_ids) < $total_rows) {
++        $args['entity_ids'] = $entity_ids;
++      }
++      $view->execute_display($display_id, $args);
++      // If the export is configured to run as a batch job, it will handle the
++      // display of progress & result/download pages, deliver the generated
++      // file, and never return here. Otherwise, executing the display here
++      // won't cause the file to be delivered to the browser for download.
++      // Dying here ensures that it does, but there must be a better way.
++      die();
++    }
++    else {
++      drupal_set_message(t("Can't export data, because the !view view does not have a !display display.", array('!view' => $view->name, '!display' => 'views_data_export')), 'error');
++    }
++  }
++}
++
++/**
++ * Implements hook_views_query_alter().
++ */
++function views_data_export_views_query_alter(&$view, &$query) {
++  if ($view->display_handler->plugin_name == 'views_data_export') {
++    // If an explicit list of entity IDs was provided, use that to refine the
++    // query.
++    if (isset($view->args['entity_ids'])) {
++      $query->add_where(0, $view->base_table . '.' . $view->base_field, $view->args['entity_ids'], 'IN');
++      // Now remove this fake argument to avoid confusion.
++      unset($view->args['entity_ids']);
++    }
++  }
++}
+ 
+ /**
+  * Store a view in the object cache.
