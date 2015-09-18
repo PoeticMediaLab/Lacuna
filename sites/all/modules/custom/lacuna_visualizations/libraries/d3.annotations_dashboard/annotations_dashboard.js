@@ -982,7 +982,7 @@ function main(data) {
         }
         if (users.length) {
 			for (var i = 0; i < users.length; i++) {
-                query.push('author[]=' + users[i]);
+                query.push('author_select[]=' + users[i]);
 			}
         }
         if (dates.length) {

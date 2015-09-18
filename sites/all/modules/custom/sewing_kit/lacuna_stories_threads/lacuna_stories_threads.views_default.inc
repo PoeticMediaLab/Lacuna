@@ -264,7 +264,7 @@ if (module_exists(\'course\')) {
   $handler->display->display_options['filters']['author_select']['expose']['operator_id'] = 'author_select_op';
   $handler->display->display_options['filters']['author_select']['expose']['label'] = 'Limit by Annotator';
   $handler->display->display_options['filters']['author_select']['expose']['operator'] = 'author_select_op';
-  $handler->display->display_options['filters']['author_select']['expose']['identifier'] = 'author';
+  $handler->display->display_options['filters']['author_select']['expose']['identifier'] = 'author_select';
   $handler->display->display_options['filters']['author_select']['expose']['multiple'] = TRUE;
   $handler->display->display_options['filters']['author_select']['expose']['remember_roles'] = array(
     2 => '2',
