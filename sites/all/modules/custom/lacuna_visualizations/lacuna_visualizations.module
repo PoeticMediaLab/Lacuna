@@ -653,7 +653,6 @@ function get_uid($annotation) {
 
 function lacuna_visualizations_annotation_dashboard_data() {
   // Prepare the data for the dashboard, output as JSON
-  global $user;
 
 	$course_id = course_get_selected_course();	// get current course ID
 	// Get all annotations that are on a document or response in the current course
@@ -674,9 +673,9 @@ function lacuna_visualizations_annotation_dashboard_data() {
 
 	// Load all document and users at once to speed up query time
 	$documents = node_load_multiple(array_map("get_doc_id", $annotations));
-	$users = user_load_multiple(array_map("get_uid", $annotations));
-  foreach ($users as $user) {
-    $userNames[$user->uid] = format_username($user);
+	$annotators = user_load_multiple(array_map("get_uid", $annotations));
+  foreach ($annotators as $annotator) {
+    $userNames[$annotator->uid] = format_username($annotator);
   }
   $terms = array();
 	$field_prefix = 'field_annotation_';	// to convert from Drupal field names to viz
