@@ -656,46 +656,32 @@ function lacuna_visualizations_annotation_dashboard_data() {
   global $user;
 
 	$course_id = course_get_selected_course();	// get current course ID
-	$query = new EntityFieldQuery();
-	// Get ids of all annotatable content for current course
-	$target_ids = $query->entityCondition('entity_type', 'node')
-		->entityCondition('bundle', array('document', 'response'), 'IN')
-		->fieldCondition('og_group_ref', 'target_id', $course_id)
-		->execute();
-
 	// Get all annotations that are on a document or response in the current course
-	$query = new EntityFieldQuery();
-	$result = $query->entityCondition('entity_type', 'node')
-		->entityCondition('bundle', 'annotation')
-		->fieldCondition('field_annotation_reference', 'target_id', array_keys($target_ids['node']), 'IN')
-		->addTag('DANGEROUS_ACCESS_CHECK_OPT_OUT')
-		->execute();
+	$query = db_query('
+    SELECT entity_id
+    FROM {field_data_field_annotation_reference} AS ar
+    LEFT JOIN {og_membership} AS og
+    ON ar.field_annotation_reference_target_id = og.etid
+    WHERE og.gid = :gid
+    AND og.entity_type = :node', array(':gid' => $course_id, ':node' => 'node'));
+  $annotation_ids = array_keys($query->fetchAllAssoc('entity_id'));
 
-  if (isset($result['node'])) {
-    $all = array();
-    foreach ($result['node'] as $row) {
-      array_push($all, $row->nid);
-    }
-  }
-
-  $canReadAll = in_array('Instructor', $user->roles);
   $userNames = array();   // only load users once
-  $annotations = array();
-
+  $results = array();
   // Fields need for db query:
   // created, uid, annotation_reference, text, quote, private, annotation_tags, category
-  $allNodes = node_load_multiple($all);
+  $annotations = node_load_multiple($annotation_ids);
 
 	// Load all document and users at once to speed up query time
-	$documents = node_load_multiple(array_map("get_doc_id", $allNodes));
-	$users = user_load_multiple(array_map("get_uid", $allNodes));
+	$documents = node_load_multiple(array_map("get_doc_id", $annotations));
+	$users = user_load_multiple(array_map("get_uid", $annotations));
   foreach ($users as $user) {
     $userNames[$user->uid] = format_username($user);
   }
   $terms = array();
 	$field_prefix = 'field_annotation_';	// to convert from Drupal field names to viz
 	// Convert from Drupal format to a simpler data format for viz
-	foreach ($allNodes as $annotation) {
+	foreach ($annotations as $annotation) {
     // Create a new data object, populate only with necessary data
     // Make it harder to leak unintended data
     $data = new StdClass();
@@ -748,9 +734,9 @@ function lacuna_visualizations_annotation_dashboard_data() {
 		unset($data->tags);
 
     $data->username = $userNames[$annotation->uid];
-    array_push($annotations, $data);
+    array_push($results, $data);
   }
 
-  drupal_json_output($annotations);
+  drupal_json_output($results);
   drupal_exit();
 }
