@@ -411,6 +411,12 @@ function course_form_views_exposed_form_alter(&$form, &$form_state) {
 		$form['lastname']['#options'] = course_get_authors_for_current_course();
 	}
 
+  if ('views-exposed-form-responses-page' == $form['#id']) {
+    // Limit response genre per course
+    // TODO: Fix response_genre -> genre_response order swap
+    $form['field_response_genre_tid']['#options'] = course_get_terms_for_current_course('genre_response');
+  }
+
 	// Use display name via Realname module, not user account name for author exposed form
 	// Filter authors to only those in current course
 	if (isset($form['author_select'])) {
