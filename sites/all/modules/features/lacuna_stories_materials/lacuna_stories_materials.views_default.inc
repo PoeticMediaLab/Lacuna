@@ -69,6 +69,22 @@ function lacuna_stories_materials_views_default_views() {
   $handler->display->display_options['relationships']['field_bibliographic_entry_target_id']['table'] = 'field_data_field_bibliographic_entry';
   $handler->display->display_options['relationships']['field_bibliographic_entry_target_id']['field'] = 'field_bibliographic_entry_target_id';
   $handler->display->display_options['relationships']['field_bibliographic_entry_target_id']['label'] = 'Biblio';
+  /* Relationship: Content: Taxonomy terms on node */
+  $handler->display->display_options['relationships']['term_node_tid']['id'] = 'term_node_tid';
+  $handler->display->display_options['relationships']['term_node_tid']['table'] = 'node';
+  $handler->display->display_options['relationships']['term_node_tid']['field'] = 'term_node_tid';
+  $handler->display->display_options['relationships']['term_node_tid']['label'] = 'units';
+  $handler->display->display_options['relationships']['term_node_tid']['vocabularies'] = array(
+    'units' => 'units',
+    'copyright_status' => 0,
+    'genre_doc' => 0,
+    'genre_response' => 0,
+    'medium' => 0,
+    'priority' => 0,
+    'tags' => 0,
+    'annotation_categories' => 0,
+    'annotation_tags' => 0,
+  );
   /* Field: Content: Path */
   $handler->display->display_options['fields']['path']['id'] = 'path';
   $handler->display->display_options['fields']['path']['table'] = 'node';
@@ -369,10 +385,11 @@ function lacuna_stories_materials_views_default_views() {
   $handler->display->display_options['fields']['biblio_authors']['auth_category'] = '1';
   $handler->display->display_options['fields']['biblio_authors']['initialize'] = 0;
   $handler->display->display_options['defaults']['sorts'] = FALSE;
-  /* Sort criterion: Content: Unit (field_unit) */
-  $handler->display->display_options['sorts']['field_unit_tid']['id'] = 'field_unit_tid';
-  $handler->display->display_options['sorts']['field_unit_tid']['table'] = 'field_data_field_unit';
-  $handler->display->display_options['sorts']['field_unit_tid']['field'] = 'field_unit_tid';
+  /* Sort criterion: Taxonomy term: Weight */
+  $handler->display->display_options['sorts']['weight']['id'] = 'weight';
+  $handler->display->display_options['sorts']['weight']['table'] = 'taxonomy_term_data';
+  $handler->display->display_options['sorts']['weight']['field'] = 'weight';
+  $handler->display->display_options['sorts']['weight']['relationship'] = 'term_node_tid';
   /* Sort criterion: Content: Priority (field_priority) */
   $handler->display->display_options['sorts']['field_priority_tid']['id'] = 'field_priority_tid';
   $handler->display->display_options['sorts']['field_priority_tid']['table'] = 'field_data_field_priority';

@@ -515,6 +515,59 @@ function lacuna_stories_materials_field_default_field_instances() {
     ),
   );
 
+  // Exported field_instance: 'node-document-group_content_access'
+  $field_instances['node-document-group_content_access'] = array(
+    'bundle' => 'document',
+    'default_value' => array(
+      0 => array(
+        'value' => 2,
+      ),
+    ),
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 11,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'group_content_access',
+    'label' => 'Visibility',
+    'required' => 1,
+    'settings' => array(
+      'user_register_form' => FALSE,
+    ),
+    'view modes' => array(
+      'full' => array(
+        'label' => 'above',
+        'type' => 'list_default',
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'type' => 'list_default',
+      ),
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'options',
+      'settings' => array(
+        'apply_chosen' => '',
+      ),
+      'type' => 'options_select',
+      'weight' => 9,
+    ),
+    'widget_type' => 'options_select',
+  );
+
   // Exported field_instance: 'node-document-og_group_ref'
   $field_instances['node-document-og_group_ref'] = array(
     'bundle' => 'document',
@@ -560,6 +613,44 @@ function lacuna_stories_materials_field_default_field_instances() {
       'settings' => array(),
       'type' => 'og_complex',
       'weight' => 13,
+    ),
+  );
+
+  // Exported field_instance:
+  // 'taxonomy_term-annotation_tags-field_annotation_tag_course'
+  $field_instances['taxonomy_term-annotation_tags-field_annotation_tag_course'] = array(
+    'bundle' => 'annotation_tags',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'entityreference',
+        'settings' => array(
+          'link' => FALSE,
+        ),
+        'type' => 'entityreference_label',
+        'weight' => 1,
+      ),
+    ),
+    'entity_type' => 'taxonomy_term',
+    'field_name' => 'field_annotation_tag_course',
+    'label' => 'Course(s)',
+    'required' => 1,
+    'settings' => array(
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'entityreference',
+      'settings' => array(
+        'match_operator' => 'CONTAINS',
+        'path' => '',
+        'size' => 60,
+      ),
+      'type' => 'entityreference_autocomplete',
+      'weight' => 32,
     ),
   );
 
@@ -645,6 +736,7 @@ function lacuna_stories_materials_field_default_field_instances() {
   t('Bibliographic Entry');
   t('Copyright');
   t('Course');
+  t('Course(s)');
   t('Cover Image');
   t('Genre');
   t('If there is a PDF or other file version of this document, attach it here.');
@@ -658,6 +750,7 @@ function lacuna_stories_materials_field_default_field_instances() {
   t('The medium or media of this document.');
   t('To which course(s) is this document assigned?');
   t('Unit');
+  t('Visibility');
 
   return $field_instances;
 }
