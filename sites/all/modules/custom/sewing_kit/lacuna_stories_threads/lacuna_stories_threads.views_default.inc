@@ -40,15 +40,18 @@ function lacuna_stories_threads_views_default_views() {
   $handler->display->display_options['style_plugin'] = 'table';
   $handler->display->display_options['style_options']['columns'] = array(
     'views_bulk_operations' => 'views_bulk_operations',
-    'field_annotation_audience' => 'field_annotation_audience',
-    'og_group_ref' => 'og_group_ref',
+    'field_annotation_reference' => 'field_annotation_reference',
     'field_annotation_quote' => 'field_annotation_quote',
     'field_annotation_text' => 'field_annotation_text',
     'field_display_name' => 'field_display_name',
     'field_annotation_tags' => 'field_annotation_tags',
     'field_annotation_category' => 'field_annotation_category',
-    'field_annotation_reference' => 'field_annotation_reference',
+    'field_annotation_audience' => 'field_annotation_audience',
+    'og_group_ref' => 'og_group_ref',
     'php' => 'php',
+    'path' => 'path',
+    'nid' => 'nid',
+    'nothing' => 'nothing',
   );
   $handler->display->display_options['style_options']['default'] = 'field_display_name';
   $handler->display->display_options['style_options']['info'] = array(
@@ -57,18 +60,15 @@ function lacuna_stories_threads_views_default_views() {
       'separator' => '',
       'empty_column' => 0,
     ),
-    'field_annotation_audience' => array(
-      'align' => '',
-      'separator' => '',
-      'empty_column' => 0,
-    ),
-    'og_group_ref' => array(
+    'field_annotation_reference' => array(
+      'sortable' => 1,
+      'default_sort_order' => 'asc',
       'align' => '',
       'separator' => '',
       'empty_column' => 0,
     ),
     'field_annotation_quote' => array(
-      'sortable' => 0,
+      'sortable' => 1,
       'default_sort_order' => 'asc',
       'align' => '',
       'separator' => '',
@@ -100,14 +100,34 @@ function lacuna_stories_threads_views_default_views() {
       'separator' => '',
       'empty_column' => 1,
     ),
-    'field_annotation_reference' => array(
-      'sortable' => 1,
-      'default_sort_order' => 'asc',
+    'field_annotation_audience' => array(
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'og_group_ref' => array(
       'align' => '',
       'separator' => '',
       'empty_column' => 0,
     ),
     'php' => array(
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'path' => array(
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'nid' => array(
+      'sortable' => 0,
+      'default_sort_order' => 'asc',
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'nothing' => array(
       'align' => '',
       'separator' => '',
       'empty_column' => 0,
