@@ -4,6 +4,9 @@
  * Course Creation Page; Menu callback.
  */
 function course_create_authorize() {
+  if (!variable_get('course_require_auth')) {
+    drupal_goto('course-setup/add-course');
+  }
   $output = "Thanks for your interest in setting up a Lacuna Stories course. Currently, courses are only being created after instructors have had a consultation with the Lacuna Stories team. To arrange a consultation, email <a href='info@lacunastories.com'>info@lacunastories.com</a>. If you have already been approved to create a course, please enter the Course Setup Code given to you by a Lacuna Stories team member.";
 
   $authcode_form = drupal_render(drupal_get_form('course_authcode_form'));
