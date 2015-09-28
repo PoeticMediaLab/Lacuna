@@ -653,7 +653,6 @@ function get_uid($annotation) {
 
 function lacuna_visualizations_annotation_dashboard_data() {
   // Prepare the data for the dashboard, output as JSON
-
 	$course_id = course_get_selected_course();	// get current course ID
 	// Get all annotations that are on a document or response in the current course
 	$query = db_query('
