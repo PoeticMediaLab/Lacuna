@@ -24,6 +24,7 @@ function sewing_kit_action_info() {
       'vbo_configurable' => FALSE,
       'triggers' => array('any'),
       'aggregate' => TRUE,
+      // @see https://www.drupal.org/node/2542120
       'behavior' => array('views_property'), // just check for viewing permissions
     ),
   );
@@ -151,4 +152,13 @@ function sewing_kit_stitch_submit($form, $form_state) {
     unset($return['thread_description']);
   }
   return $return;
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ * Hide some fields from users that they don't need.
+ */
+function sewing_kit_form_thread_node_form_alter(&$form, &$form_state, $form_id) {
+  $form['og_group_ref']['#access'] = FALSE;
+  $form['thread_reference']['#access'] = FALSE;
 }
