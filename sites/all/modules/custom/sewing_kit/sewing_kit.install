@@ -84,7 +84,7 @@ function _thread_install_instances() {
       'weight' => 0,
       'widget' => array(
         'type' => 'text_textarea',
-        'format' => 'full_html'
+        'format' => 'filtered_html'
       ),
       'settings' => array(
         'text_processing' => '1'

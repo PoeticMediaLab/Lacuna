@@ -47,7 +47,7 @@ function sewing_kit_stitch(&$node, $context) {
     $sewing_kit_thread->promote = NODE_NOT_PROMOTED; // (1 or 0): promoted to front page
     $sewing_kit_thread->comment = COMMENT_NODE_OPEN; // allow commenting
     $sewing_kit_thread->thread_description[LANGUAGE_NONE][0]['value'] = $context['thread_description']['value'];
-    $sewing_kit_thread->thread_description[LANGUAGE_NONE][0]['format'] = 'full_html';
+    $sewing_kit_thread->thread_description[LANGUAGE_NONE][0]['format'] = 'filtered_html';
     $sewing_kit_thread->thread_reference[LANGUAGE_NONE] = array();
   }
 
@@ -123,7 +123,7 @@ function sewing_kit_stitch_form($settings) {
   $form['thread_description'] = array(
     '#type' => 'text_format',
     '#base_type' => 'textarea',
-    '#format' => 'full_html',
+    '#format' => 'filtered_html',
     '#title' => t('Description'),
     '#default_value' => 'Enter a description here',
     '#rows' => 5,
