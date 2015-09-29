@@ -6,7 +6,6 @@ version = 7.x-2.0
 dependencies[] = lacuna_stories_annotations
 dependencies[] = sewing_kit
 dependencies[] = views_data_export
-dependencies[] = views_lacuna_stories
 features[ctools][] = context:context:3
 features[ctools][] = ds:ds:1
 features[ctools][] = strongarm:strongarm:1

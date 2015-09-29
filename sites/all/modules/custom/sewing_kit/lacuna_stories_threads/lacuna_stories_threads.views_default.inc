@@ -558,6 +558,83 @@ if (module_exists(\'course\')) {
   $handler->display->display_options['exposed_form']['type'] = 'basic';
   $handler->display->display_options['pager']['type'] = 'none';
   $handler->display->display_options['style_plugin'] = 'table';
+  $handler->display->display_options['style_options']['columns'] = array(
+    'draggableviews' => 'draggableviews',
+    'name' => 'name',
+    'field_annotation_reference' => 'field_annotation_reference',
+    'field_annotation_quote' => 'field_annotation_quote',
+    'field_annotation_text' => 'field_annotation_text',
+    'field_annotation_category' => 'field_annotation_category',
+    'field_annotation_tags' => 'field_annotation_tags',
+    'nid' => 'nid',
+    'path' => 'path',
+    'nothing' => 'nothing',
+  );
+  $handler->display->display_options['style_options']['default'] = 'field_annotation_reference';
+  $handler->display->display_options['style_options']['info'] = array(
+    'draggableviews' => array(
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'name' => array(
+      'sortable' => 1,
+      'default_sort_order' => 'asc',
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'field_annotation_reference' => array(
+      'sortable' => 1,
+      'default_sort_order' => 'asc',
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'field_annotation_quote' => array(
+      'sortable' => 0,
+      'default_sort_order' => 'asc',
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'field_annotation_text' => array(
+      'sortable' => 0,
+      'default_sort_order' => 'asc',
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'field_annotation_category' => array(
+      'sortable' => 1,
+      'default_sort_order' => 'asc',
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'field_annotation_tags' => array(
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'nid' => array(
+      'sortable' => 0,
+      'default_sort_order' => 'asc',
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'path' => array(
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'nothing' => array(
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+  );
   /* Relationship: Thread */
   $handler->display->display_options['relationships']['reverse_thread_reference_node']['id'] = 'reverse_thread_reference_node';
   $handler->display->display_options['relationships']['reverse_thread_reference_node']['table'] = 'node';
@@ -570,6 +647,10 @@ if (module_exists(\'course\')) {
   $handler->display->display_options['relationships']['field_annotation_reference_target_id']['field'] = 'field_annotation_reference_target_id';
   $handler->display->display_options['relationships']['field_annotation_reference_target_id']['ui_name'] = 'Annotated Content';
   $handler->display->display_options['relationships']['field_annotation_reference_target_id']['label'] = 'Annotated Content';
+  /* Relationship: Content: Author */
+  $handler->display->display_options['relationships']['uid']['id'] = 'uid';
+  $handler->display->display_options['relationships']['uid']['table'] = 'node';
+  $handler->display->display_options['relationships']['uid']['field'] = 'uid';
   /* Field: Draggableviews: Content */
   $handler->display->display_options['fields']['draggableviews']['id'] = 'draggableviews';
   $handler->display->display_options['fields']['draggableviews']['table'] = 'node';
@@ -579,6 +660,12 @@ if (module_exists(\'course\')) {
   $handler->display->display_options['fields']['draggableviews']['element_default_classes'] = FALSE;
   $handler->display->display_options['fields']['draggableviews']['hide_alter_empty'] = FALSE;
   $handler->display->display_options['fields']['draggableviews']['draggableviews']['ajax'] = 1;
+  /* Field: User: Name */
+  $handler->display->display_options['fields']['name']['id'] = 'name';
+  $handler->display->display_options['fields']['name']['table'] = 'users';
+  $handler->display->display_options['fields']['name']['field'] = 'name';
+  $handler->display->display_options['fields']['name']['relationship'] = 'uid';
+  $handler->display->display_options['fields']['name']['label'] = 'Annotator';
   /* Field: Content: Annotated Content */
   $handler->display->display_options['fields']['field_annotation_reference']['id'] = 'field_annotation_reference';
   $handler->display->display_options['fields']['field_annotation_reference']['table'] = 'field_data_field_annotation_reference';
