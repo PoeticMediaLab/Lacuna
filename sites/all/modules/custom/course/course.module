@@ -426,7 +426,7 @@ function course_form_views_exposed_form_alter(&$form, &$form_state) {
 		foreach ($uids as $uid) {
 			$account = user_load($uid);
 			$groups = og_get_groups_by_user($account, 'node');
-			if (in_array($gid, $groups)) {
+			if (!empty($groups) && in_array($gid, $groups)) {
 				$form['author_select']['#options'][$uid] = format_username($account);
 			}
 		}
