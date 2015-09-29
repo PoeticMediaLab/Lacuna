@@ -2,11 +2,9 @@ name = Sewing Kit
 description = Adds ability to stitch together items in a Sewing Kit
 package = Lacuna Stories
 core = 7.x
-version = "7.x-1.0"
+version = "7.x-1.1"
 
 configure = admin/structure/stitch
-
-files[] = tests/sewing_kit.test
 
 dependencies[] = course
 dependencies[] = views_bulk_operations
