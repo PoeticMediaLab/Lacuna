@@ -561,7 +561,7 @@ function lacuna_visualizations_responses() {
 			$dataArray['author'] = $item->name;
 
 			// draw links based off of node's field_bibliographic_entry.
-      if ($item->field_bibliographic_entry) {
+      if (isset($item->field_bibliographic_entry)) {
         $linkArray = $item->field_bibliographic_entry;
         for ($i = 0; $i < count($linkArray[LANGUAGE_NONE]); $i++) {
           $linkedNid = $linkArray[LANGUAGE_NONE][$i]['target_id'];
