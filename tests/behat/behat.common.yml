@@ -42,9 +42,9 @@ docker:
   extensions:
     Behat\MinkExtension:
       # URL of the site when accessed inside Drude.
-      base_url: http://hello-world.drude
+      base_url: http://drupal7.drude
       selenium2:
-        wd_host: http://drude-testing.browser.docker:4444/wd/hub
+        wd_host: http://drude-d7-testing.browser.docker:4444/wd/hub
       # Stick with chrome by default. It's 2x faster than firefox or phantomjs (your results may vary).
       browser_name: chrome
     Drupal\DrupalExtension:
