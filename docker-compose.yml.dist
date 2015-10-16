@@ -17,8 +17,8 @@ web:
   links:
     - cli
   environment:
-    - VIRTUAL_HOST=hello-world.drude,hello-world1.drude,hello-world2.drude,pusya.drude
-    - DOMAIN_NAME=drude-testing.web.docker
+    - VIRTUAL_HOST=drupal7.drude,drupal7-site1.drude,drupal7-site2.drude
+    - DOMAIN_NAME=drude-d7-testing.web.docker
 
 # DB node
 db:
@@ -60,7 +60,7 @@ cli:
     # Uncomment this and the memcached service definition below to start using memcached.
     #- memcached
   environment:
-    - DOMAIN_NAME=drude-testing.cli.docker
+    - DOMAIN_NAME=drude-d7-testing.cli.docker
 
 # Memcached node
 # Uncomment the service definition section below and the link in the cli service above to start using memcached.
@@ -70,7 +70,7 @@ cli:
 #   environment:
 #     # Memcached memory limit in megabytes
 #     - MEMCACHED_MEMORY_LIMIT=128
-#     - DOMAIN_NAME=drude-testing.memcached.docker
+#     - DOMAIN_NAME=drude-d7-testing.memcached.docker
 
 # ngrok node
 # Uncomment the service definition section below to start using ngrok for sharing your local web server with the world.
@@ -84,7 +84,7 @@ cli:
 #   links:
 #     - web:http
 #   environment:
-#     - DOMAIN_NAME=drude-testing.ngrok.docker
+#     - DOMAIN_NAME=drude-d7-testing.ngrok.docker
 
 # selenium2 node
 # Uncomment the service definition section below and the link in the web service above to start using selenium2 driver for Behat tests requiring JS support.
@@ -94,4 +94,4 @@ browser:
   ports:
     - "4444"
   environment:
-    - DOMAIN_NAME=drude-testing.browser.docker
+    - DOMAIN_NAME=drude-d7-testing.browser.docker

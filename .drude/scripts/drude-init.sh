@@ -4,7 +4,7 @@ set -e
 # Set to the appropriate site directory
 SITE_DIRECTORY='default'
 # Set to the appropriate site directory
-SITE_DOMAIN='hello-world.drude'
+SITE_DOMAIN='drupal7.drude'
 # Set to the appropriate site alias for the DB source
 #SOURCE_ALIAS='@none'
 
@@ -188,9 +188,9 @@ sleep 5
 site_install
 
 # Uncomment line below to install site 1
-#db_create 'site1' && site_install 'hello-world1.drude'
+#db_create 'site1' && site_install 'drupal7-site1.drude'
 # Uncomment line below to install site 2
-#db_create 'site2' && site_install 'hello-world2.drude'
+#db_create 'site2' && site_install 'drupal7-site2.drude'
 
 #db_import
 #db_updates
