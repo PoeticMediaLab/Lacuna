@@ -11,7 +11,7 @@ Instructions were not tested with other shells on Windows.
 1. Install `dsh` (Drude Shell)
 
     ```
-    sudo curl -L https://raw.githubusercontent.com/blinkreaction/drude/develop/bin/dsh  -o /usr/local/bin/dsh
+    sudo curl -L https://raw.githubusercontent.com/blinkreaction/drude/master/bin/dsh  -o /usr/local/bin/dsh
     sudo chmod +x /usr/local/bin/dsh
     ```
 

@@ -4,7 +4,7 @@
 # Web node
 web:
   hostname: web
-  image: blinkreaction/drupal-apache:2.2
+  image: blinkreaction/drupal-apache:2.2-stable
   ports:
     - "80"
     - "443"
@@ -37,13 +37,13 @@ db:
     - DOMAIN_NAME=drude-testing.db.docker
   volumes:
      # MySQL configuration overrides
-     - "./.drude/etc/mysql/my.cnf:/etc/mysql/conf.d/z_my.cnf"
+     - "./.drude/etc/mysql/my.cnf:/opt/etc/my.cnf.d/z_my.cnf"
 
 # CLI node
 # Used for all console commands and tools.
 cli:
   hostname: cli
-  image: blinkreaction/drupal-cli:php-5.6
+  image: blinkreaction/drupal-cli:stable
   volumes:
     # Project root folder mapping
     - *project_root
