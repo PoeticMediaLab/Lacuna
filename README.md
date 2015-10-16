@@ -49,13 +49,14 @@ Instructions were not tested with other shells on Windows.
     dsh drush si -y
     ```
 
-7. Add `192.168.10.10  hello-world.drude` to your hosts file
+7. Add `192.168.10.10  drupal7.drude` to your hosts file
 
 8. Point your browser to
 
     ```
     http://hello-world.drude
     ```
+
 
 ## More automation with 'dsh init'
 
@@ -71,6 +72,36 @@ Some common tasks that can be handled by the init script:
 - apply local settings (e.g. enable/disable modules, updates variable values)
 - run Behat tests available in the repo
 
-Try it - run in this project repo:
+Try it:
 
+    ```
     dsh init
+    ```
+
+
+## Behat test examples
+
+Behat tests are stored in [tests/behat](tests/behat). To launcht then run: 
+
+    ```
+    dsh behat
+    ```
+
+
+## Drupal multisite example
+
+There are two additional sites configured in this project:
+
+ - drupal7-site1.drude
+ - drupal7-site2.drude
+
+To install them uncomment the following block in [.drude/scripts/drude-init.sh](.drude/scripts/drude-init.sh):
+
+   ```
+    # Uncomment line below to install site 1
+    db_create 'site1' && site_install 'drupal7-site1.drude'
+    # Uncomment line below to install site 2
+    db_create 'site2' && site_install 'drupal7-site2.drude'
+   ```
+
+Run `dsh init`. You may have to add both domains to your hosts file.
