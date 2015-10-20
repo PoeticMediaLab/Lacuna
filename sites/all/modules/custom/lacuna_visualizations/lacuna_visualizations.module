@@ -504,7 +504,8 @@ function lacuna_visualizations_responses() {
 	 // this array will eventually contain all relevant info about responses and document: author, timestamp, etc.
 	 // added to nodes before graphapi passes off to d3.
 		if ($item->type == 'response') {
-			$docId = $doc_ids[$item->field_bibliographic_entry[$item->language][0]['target_id']];
+      // Note the different field name for biblio refs in Responses
+			$docId = $doc_ids[$item->field_bibliographic_item[$item->language][0]['target_id']];
 		}
 		if ($item->type == 'biblio') {
 			$docId = $doc_ids[$item->nid];
@@ -572,7 +573,7 @@ function lacuna_visualizations_responses() {
           	graphapi_set_link_data($graph, $title,	$nodes[$linkedNid]->title, $item->created);
           }
         }
-      } // end if($item->field_bibliographic_entry)
+      } // end if($item->field_bibliographic_item)
     }	// end if($item->type == "response")
     graphapi_set_node_data($graph, $title, $dataArray);
   }
