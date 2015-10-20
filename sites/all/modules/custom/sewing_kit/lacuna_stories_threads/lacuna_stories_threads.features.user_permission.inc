@@ -10,6 +10,16 @@
 function lacuna_stories_threads_user_default_permissions() {
   $permissions = array();
 
+  // Exported permission: 'access draggableviews'.
+  $permissions['access draggableviews'] = array(
+    'name' => 'access draggableviews',
+    'roles' => array(
+      'administrator' => 'administrator',
+      'authenticated user' => 'authenticated user',
+    ),
+    'module' => 'draggableviews',
+  );
+
   // Exported permission: 'create thread content'.
   $permissions['create thread content'] = array(
     'name' => 'create thread content',
@@ -43,6 +53,7 @@ function lacuna_stories_threads_user_default_permissions() {
       'Site Administrator' => 'Site Administrator',
       'Student' => 'Student',
       'administrator' => 'administrator',
+      'authenticated user' => 'authenticated user',
     ),
     'module' => 'node',
   );
@@ -67,6 +78,7 @@ function lacuna_stories_threads_user_default_permissions() {
       'Site Administrator' => 'Site Administrator',
       'Student' => 'Student',
       'administrator' => 'administrator',
+      'authenticated user' => 'authenticated user',
     ),
     'module' => 'node',
   );
