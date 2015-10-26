@@ -114,7 +114,7 @@ function course_field_default_field_instances() {
         'module' => 'image',
         'settings' => array(
           'image_link' => '',
-          'image_style' => 'large',
+          'image_style' => '',
         ),
         'type' => 'image',
         'weight' => 0,
@@ -859,9 +859,8 @@ function course_field_default_field_instances() {
     'display' => array(
       'default' => array(
         'label' => 'above',
-        'module' => 'list',
         'settings' => array(),
-        'type' => 'list_default',
+        'type' => 'hidden',
         'weight' => 19,
       ),
       'teaser' => array(
@@ -910,9 +909,12 @@ function course_field_default_field_instances() {
     'description' => 'Determine if this is an OG group.',
     'display' => array(
       'default' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
+        'label' => 'hidden',
+        'module' => 'og_ui',
+        'settings' => array(
+          'field_name' => 'og_user_node',
+        ),
+        'type' => 'og_group_subscribe',
         'weight' => 28,
       ),
       'teaser' => array(
