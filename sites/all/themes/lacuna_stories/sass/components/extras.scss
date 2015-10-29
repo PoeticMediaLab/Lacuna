@@ -396,7 +396,7 @@ body {
 
 /*give subscription request link appearance of lacuna-button*/
 .node-course {
-  a.group.subscribe.request {
+  a.group.subscribe.request, a.group.unsubscribe, a.group.subscribe {
     background-color: #c4df2c;
     background-image: linear-gradient(to bottom, #c4df2c, #88b551);
     background-repeat: repeat-x;
@@ -424,5 +424,17 @@ body {
     margin-right: 5px;
     margin-left: 2.78%;
 
+  }
+  .field-name-group-group span.group.manager {
+    font-family: "Source Sans Pro",serif;
+    font-size: 1.5em;
+    padding-top: 25px;
+    padding-bottom: 10px;
+    text-align: left;
+    letter-spacing: -.03em;
+    color: #1588ba;
+    line-height: 1em;
+    margin-left: 2.78%;
+    margin-right: 5%;
   }
 }
