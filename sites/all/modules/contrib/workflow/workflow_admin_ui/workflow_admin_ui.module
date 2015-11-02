@@ -39,13 +39,13 @@ function workflow_admin_ui_help($path, $arg) {
 
     case 'admin/modules':
     case 'admin/config/workflow/workflow':
-    case 'admin/config/workflow/workflow/manage/%/states':
+    // case 'admin/config/workflow/workflow/manage/%/states': // Already has its own text.
       if (module_exists('workflownode') && module_exists('workflowfield')) {
         $m = t('Do not enable Workfow Node and Workflow Field submodules at the
           same time (unless you are in a migration phase). Visit the <a href=
           "@url">modules</a> page.', array('@url' => url('admin/modules',
           array('fragment' => 'Workflow'))));
-        drupal_set_message($m, 'error');
+        drupal_set_message($m, 'warning');
       }
       return;
 

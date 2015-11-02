@@ -1,6 +1,6 @@
-name = Workflow Revert
-description = "Adds a 'Revert' link to the first workflow history row."
-dependencies[] = workflow
+name = Workflow Notify OG
+description = Notify roles by OG groups of Workflow transitions.
+dependencies[] = workflow_notify
 core = 7.x
 package = Workflow
 

@@ -172,7 +172,7 @@ function hook_workflow_permitted_state_transitions_alter(array &$transitions, ar
  * If you change the state on the Node Form (Edit modus), you need the hook
  * hook_form_alter(). See below for more info.
  */
-function workflowfield_form_workflow_transition_form_alter(&$form, &$form_state, $form_id) {
+function hook_form_workflow_transition_form_alter(&$form, &$form_state, $form_id) {
 
   // Get the Entity.
   $entity = $form['workflow']['workflow_entity']['#value'];
@@ -208,7 +208,7 @@ function workflowfield_form_workflow_transition_form_alter(&$form, &$form_state,
  *
  * Use this hook to alter the form on a Node Form, Comment Form (Edit page).
  */
-function workflowfield_form_alter(&$form, $form_state, $form_id) {
+function hook_form_alter(&$form, $form_state, $form_id) {
 
   // Get the Entity.
   $entity = $form['#entity'];
@@ -221,3 +221,11 @@ function workflowfield_form_alter(&$form, $form_state, $form_id) {
   // Get the current state and act upon it.
   // .. copy code from the hook above.
 }
+
+/*
+ * Implements hook_field_attach_form().
+ */
+function workflow_field_attach_form($entity_type, $entity, &$form, &$form_state, $langcode){
+  // @see http://drupal.stackexchange.com/questions/101857/difference-between-hook-form-alter-and-hook-field-attach-form
+}
+

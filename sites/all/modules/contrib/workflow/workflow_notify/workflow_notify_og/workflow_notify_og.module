@@ -1,0 +1,114 @@
+<?php
+/**
+ * @file
+ * Notify roles by OG Groups for Workflow state transitions.
+ */
+
+/**
+ * Implements hook_workflow_notify().
+ * @param $op - The operation (columns, users).
+ * @param $args - The arguments for this call.
+ *    - may be:
+ *      'columns' - the current list of table headings.
+ *      'users' - The current list of users.
+ *      'node' - The current node for getting groups focus.
+ *      'state' - The state the node is moving to.
+ *
+ * @return none - Modify the list by reference.
+ */
+function workflow_notify_og_workflow_notify($op, &$args) {
+  switch ($op) {
+    case 'columns':
+      // Add the column heading for this module.
+      $args['columns']['limit_by_group'] = t('Limit by group');
+      break;
+
+    case 'users':
+      $limit = variable_get('workflow_notify_og', array());
+      // Is this a state we care about?
+      if (isset($limit[$args['state']]) && $limit[$args['state']]) {
+        // Yes, so get the node's groups and make sure it has some.
+        $groups = field_get_items('node', $args['node'], 'og_group_ref');
+        if ($groups) {
+          // Get the list of user accounts and check each one.
+          $accounts = $args['users'];
+          foreach ($accounts as $uid => $account) {
+            $keep = FALSE;
+            // Check each group for user's membership.
+            foreach ($groups as $group) {
+              if (og_is_member('node', $group['target_id'], 'user', $account)) {
+                $keep = TRUE;
+                break;
+              }
+            }
+            // Do we find a group?
+            if ($keep == FALSE) {
+              // No, so remove them from the list.
+              unset($args['users'][$uid]);
+            }
+          }
+        }
+      }
+      break;
+
+    case 'tokens':
+      $groups = field_get_items('node', $args['node'], 'og_group_ref');
+      
+      $query = "SELECT g.entity_id AS gid, n.title AS name "
+        . "FROM {field_data_group_group} g "
+        . "INNER JOIN {node} n ON n.nid = g.entity_id "
+        . "WHERE g.deleted = 0 ";
+      $group_names = db_query($query)->fetchAllKeyed();
+
+      if (!empty($groups)) {
+        $list = array();
+        foreach ($groups as $group) {
+          $list[] = $group_names[$group['target_id']];
+        }
+        $args['tokens']['@groups'] = implode(', ', $list);
+      }
+      break;
+  }
+}
+
+/**
+ * Implements hook_form_alter().
+ * Add a column for limiting user groups by OG group.
+ */
+function workflow_notify_og_form_alter(&$form, &$form_state, $form_id) {
+  switch($form_id) {
+    case 'workflow_notify_settings_form':
+      $limit = variable_get('workflow_notify_og', array());
+
+      // Add a group limit flag to each state.
+      foreach ($form['states'] as $sid => $element) {
+        $form['states'][$sid]['limit_by_group'] = array(
+          '#type' => 'radios',
+          '#options' => array(t('No'), t('Yes')),
+          '#attributes' => array('class' => array('limit-by-group')),
+          '#default_value' => (isset($limit[$sid]) ? $limit[$sid] : 0),
+          );
+      }
+
+      // Add our submission handler.
+      $form['#submit'][] = 'workflow_notify_og_form_submit';
+  }
+}
+
+/**
+ * Submission handler.
+ */
+function workflow_notify_og_form_submit(&$form, &$form_state) {
+  $workflow = $form['#workflow'];
+  $limit = variable_get('workflow_notify_og', array());
+
+  // Check each state for limit flags.
+  foreach ($form_state['values']['states'] as $sid => $values) {
+    $limit[$sid] = $values['limit_by_group'];
+  }
+
+  // Save the new limit flags.
+  variable_set('workflow_notify_og', $limit);
+
+  $form_state['redirect'] = "admin/config/workflow/workflow/$workflow->wid";
+}

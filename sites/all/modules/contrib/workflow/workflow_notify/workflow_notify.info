@@ -1,8 +1,7 @@
-name = Workflow Node Search API
-description = "Adds Workflow Node's state information to Search API index."
+name = Workflow Notify
+description = Notify roles of Workflow transitions.
 dependencies[] = workflow
-dependencies[] = workflownode
-dependencies[] = entity
+configure = admin/config/workflow/workflow
 core = 7.x
 package = Workflow
 

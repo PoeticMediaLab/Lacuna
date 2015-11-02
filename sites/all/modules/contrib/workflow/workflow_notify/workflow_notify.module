@@ -1,0 +1,251 @@
+<?php
+/**
+ * @file
+ * Notify roles for Workflow state transitions.
+ */
+
+/**
+ * Implements hook_permission().
+ */
+function workflow_notify_permission() {
+  return array(
+    'workflow notify' => array(
+      'title' => t('Receive workflow notifications'),
+      'description' => t('The user may be notified of a workflow state change.'),
+      ),
+    );
+}
+
+/**
+ * Implements hook_help().
+ */
+function workflow_notify_help($path, $arg) {
+  switch ($path) {
+    case 'admin/config/workflow/workflow/notify/%':
+      return '<p>' . t('The selected roles will be notified of each state change selected.') . '</p>';
+  }
+}
+
+/**
+ * Implements hook_menu().
+ */
+function workflow_notify_menu() {
+  $items = array();
+
+  $items['admin/config/workflow/workflow/notify/%workflow'] = array(
+    'title' => 'Notifications',
+    'access arguments' => array('administer workflow'),
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('workflow_notify_settings_form', 5),
+    'type' => MENU_CALLBACK,
+    'file' => 'workflow_notify.admin.inc',
+    );
+
+  return $items;
+}
+
+/**
+ * Implements hook_theme().
+ */
+function workflow_notify_theme() {
+  return array(
+    'workflow_notify_settings_form' => array(
+      'render element' => 'form',
+      'file' => 'workflow_notify.admin.inc',
+      ),
+    );
+}
+
+/**
+ * Implements hook_hook_info().
+ */
+function workflow_notify_hook_info() {
+  $hooks['workflow_notify'] = array(
+    'group' => 'workflow',
+  );
+  return $hooks;
+}
+
+/**
+ * Implements hook_workflow_operations().
+ * Add an action link to this module.
+ */
+function workflow_notify_workflow_operations($op, $workflow = NULL) {
+  switch ($op) {
+    case 'workflow':
+      $actions = array(
+        'workflow_notify_settings' => array(
+          'title' => t('Notifications'),
+          'href' => "admin/config/workflow/workflow/notify/$workflow->wid",
+          'attributes' => array('alt' => t('Notify users about state changes.')),
+          ),
+        );
+
+      $actions['workflow_notify_settings']['attributes']['title'] =
+        $actions['workflow_notify_settings']['attributes']['alt'];
+
+      return $actions;
+  }
+}
+
+/**
+ * Implements hook_workflow().
+ *
+ * @param $op
+ *   The current workflow operation: 'transition permitted', 'transition pre', or 'transition post'.
+ * @param $old_state
+ *   The state ID of the current state.
+ * @param $new_state
+ *   The state ID of the new state.
+ * @param $node
+ *   The node whose workflow state is changing.
+ * @param $force
+ *   The caller indicated that the transition should be forced. (bool).
+ *   This is only available on the "pre" and "post" calls.
+ */
+function workflow_notify_workflow($op, $old_state, $new_state, $node, $force = FALSE, $entity_type, $field_name, $transition) {
+  global $user;
+  switch ($op) {
+    // React to a transition after it's done.
+    case 'transition post':
+      // See if this is a state that we notify for.
+      $notify = variable_get('workflow_notify_roles', array());
+
+      if (isset($notify[$new_state])) {
+        // List of content types.
+        $node_types = node_type_get_names();
+
+        // The name of the person making the change.
+        $changer = format_username($user);
+        $changer_mail = $user->mail;
+
+        // Okay, we are notifying someone of this change.
+        // So let's get the workflow object.
+        $workflow = workflow_get_workflows_by_type($node->type, 'node');
+
+        // And all the states.
+        $states = $workflow->states;
+
+        // Get the specific roles to notify.
+        $notify = $notify[$new_state];
+
+        // See if we want to notify the author too?
+        $notify_author = in_array(-1, $notify);
+        unset($notify[-1]);
+
+        // There could be no roles set.
+        if ($notify) {
+          // Get all the user accounts in those roles.
+          $query = "SELECT DISTINCT ur.uid "
+            . "FROM {users_roles} ur "
+            . "INNER JOIN {users} u ON u.uid = ur.uid "
+            . "WHERE ur.rid IN (:rids) "
+            . "AND u.status = 1 "
+            ;
+          $users = db_query($query, array(':rids' => $notify))->fetchCol();
+        }
+        else {
+          $users = array();
+        }
+
+        if ($notify_author) {
+          $users[] = $node->uid;
+        }
+
+        // Load all the user entities, making sure there are no duplicates.
+        $accounts = entity_load('user', array_unique($users, SORT_NUMERIC));
+
+        // Call all modules that want to limit the list.
+        $args = array(
+          'users' => $accounts,
+          'node' => $node,
+          'state' => $new_state,
+          'roles' => $notify,
+          'workflow' => $workflow,
+          );
+        foreach (module_implements('workflow_notify') as $module) {
+          $function = $module . '_workflow_notify';
+          $function('users', $args);
+        }
+
+        // Retrieve the remaining list without duplicates.
+        $accounts = $args['users'];
+        $addr_list = array();
+
+        // Just quit if there are no users.
+        if (empty($accounts)) {
+          watchdog('workflow_notify', 'No recipients - email skipped.', array(),
+            WATCHDOG_DEBUG, l(t('view'), 'node/' . $node->nid));
+          return;
+        }
+
+        foreach ($accounts as $uid => $account) {
+          $addr_list[] = format_username($account) . '<' . $account->mail . '>';
+        }
+
+        $params = array(
+          'clear' => TRUE,
+          'sanitize' => FALSE,
+          'data' => array(
+            'node' => $node,
+            'user' => $user,
+            ),
+          'filter' => variable_get('workflow_notify_filter_format_' . $workflow->wid, 'filtered_html'),
+          );
+
+        // Build the subject and body of the mail.
+        // Token replacement occurs in hook_mail().
+        // @TODO: Currently no translation occurs.
+        $params['context']['subject'] = variable_get("workflow_notify_subject_$new_state",
+          '[node:title] is now "[workflow:workflow-current-state-name]"');
+
+        $params['context']['body'] = variable_get("workflow_notify_body_$new_state",
+          '<a href="[node:url:absolute]">[node:title]</a> is now "@state".');
+
+        switch (variable_get('workflow_notify_from_address_' . $workflow->wid, 'site')) {
+          case 'site':
+            $from = variable_get('site_mail', ini_get('sendmail_from'));
+            break;
+
+          case 'changer':
+            $from = $user->mail;
+            break;
+        }
+
+        // Send the email.
+        drupal_mail('workflow_notify',
+          'workflow_notify',
+          implode(';', $addr_list),
+          language_default(),
+          $params,
+          $from);
+      }
+
+    return;
+  }
+}
+
+/**
+ * Implements hook_mail();
+ * Build email messages.
+ */
+function workflow_notify_mail($key, &$message, $params) {
+  switch ($key) {
+    case 'workflow_notify':
+      $filter = $params['filter'];
+      $message['send'] = TRUE;
+
+      $message['subject'] = filter_xss(token_replace($params['context']['subject'], $params['data'], $params));
+      $message['body'][] = check_markup(token_replace($params['context']['body'], $params['data'], $params), $filter);
+
+      watchdog('workflow_notify',
+        '<ul><li>Subject: @subject</li><li>Body: @body</li><li>To: @to</li><li>From: @from</li></ul>', array(
+          '@subject' => $message['subject'],
+          '@body' => implode('<br />', $message['body']),
+          '@to' => $message['to'],
+          '@from' => $message['from'],
+          ),
+        WATCHDOG_INFO, l(t('view'), 'node/' . $params['data']['node']->nid));
+      return;
+  }
+}

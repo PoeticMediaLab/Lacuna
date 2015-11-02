@@ -1,0 +1,29 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the Workflow module.
+ *
+ */
+
+/**
+ * Implements hook_install().
+ */
+function workflow_notify_og_install() {
+  db_update('system')
+    ->fields(array('weight' => -1))
+    ->condition('name', 'workflow_notify_og')
+    ->condition('type', 'module')
+    ->execute();
+}
+
+/**
+ * Set weight for Workflow_Notify_OG.
+ */
+function workflow_notify_og_update_7000() {
+  db_update('system')
+    ->fields(array('weight' => -1))
+    ->condition('name', 'workflow_notify_og')
+    ->condition('type', 'module')
+    ->execute();
+}
