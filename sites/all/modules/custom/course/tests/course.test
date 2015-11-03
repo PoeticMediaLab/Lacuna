@@ -11,7 +11,7 @@ class CourseTestCase extends DrupalWebTestCase {
 	}
 
 	public function setUp() {
-		$this->profile = 'lacunastories_base';
+		$this->profile = 'lacuna_stories';
 		parent::setUp(array('filter'));
 		$success = module_enable(array('course'), TRUE);
 		$this->assertTrue($success, 'Enabled: course');
