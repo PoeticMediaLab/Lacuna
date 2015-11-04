@@ -359,6 +359,7 @@ function workflow_schema() {
         'not null' => FALSE,
       ),
     ),
+    'primary key' => array('tid'),
     'indexes' => array(
       'entity_type' => array('entity_type'),
       'entity_id' => array('entity_type', 'nid'),
