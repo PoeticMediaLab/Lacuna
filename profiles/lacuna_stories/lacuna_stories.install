@@ -111,19 +111,7 @@ function lacuna_stories_install() {
       'weight' => -17,
     ),
   );
-  shortcut_set_save($shortcut_set);// Create a default role for site administrators, with all available permissions assigned.
-  $admin_role = new stdClass();
-  $admin_role->name = 'Site Administrator';
-  $admin_role->weight = 10;
-  user_role_save($admin_role);
-  user_role_grant_permissions($admin_role->rid, array_keys(module_invoke_all('permission')));
-  // Set this as the administrator role.
-  variable_set('user_admin_role', $admin_role->rid);
-
-  // Assign user 1 the "administrator" role.
-  db_insert('users_roles')
-    ->fields(array('uid' => 1, 'rid' => $admin_role->rid))
-    ->execute();
+  shortcut_set_save($shortcut_set);
 
   // Update the menu router information.
   menu_rebuild();
