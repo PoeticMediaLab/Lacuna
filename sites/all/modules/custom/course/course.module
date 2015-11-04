@@ -863,6 +863,7 @@ function course_action_info() {
     'course_bulk_clone_material' => array(
       'type' => 'node',
       'label' => t('Add Material'),
+      'configurable' => FALSE,
     ),
   );
 }
