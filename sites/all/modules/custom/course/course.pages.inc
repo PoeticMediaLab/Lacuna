@@ -107,7 +107,8 @@ function course_organize() {
 	course_add_default_terms();
   $output = "Thank you for submitting your course information to the Lacuna Stories team. You can now continue by naming the units and genres by which you would like to organize course materials. A few defaults have been chosen for you already. You may remove these by clicking on the trash icon (<span class='fa fa-trash-o'></span>). To continue, click \"Continue\"<br />";
   $output .= "<br />";
-  $output .= drupal_render(drupal_get_form('course_organize_form'));
+	$form = drupal_get_form('course_organize_form');
+  $output .= drupal_render($form);
   return $output;
 }
 
