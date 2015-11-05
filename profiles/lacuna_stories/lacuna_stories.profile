@@ -18,41 +18,41 @@ if (!function_exists("system_form_install_configure_form_alter")) {
 function lacuna_stories_install_tasks($install_state) {
   $tasks = array (
     'lacuna_stories_create_research_consent_webform' => array(
-      'display_name' => st('Create research consent form')
+//      'display_name' => st('Create research consent form')
     ),
     'lacuna_stories_create_basic_page_type' => array(),
     'lacuna_stories_create_basic_pages' => array(
-      'display_name' => st('Create static pages')
+//      'display_name' => st('Create static pages')
     ),
     'lacuna_stories_set_basic_pages_permissions' => array(
-      'display_name' => st('Set page permissions')
-    ),
-    'lacuna_stories_manage_theme_settings' => array(
-      'display_name' => st('Tweak theme settings')
+//      'display_name' => st('Set page permissions')
     ),
     // hide main_menu(it belongs to superfish) and secondary_menu
-    'lacuna_stories_set_jquery_default' => array(
-      'display_name' => st('Set default jQuery version')
+    'lacuna_stories_manage_theme_settings' => array(
+//      'display_name' => st('Tweak theme settings')
     ),
     // set JQuery version to 1.7
+    'lacuna_stories_set_jquery_default' => array(
+//      'display_name' => st('Set default jQuery version')
+    ),
     'lacuna_stories_set_media_settings' => array(
-      'display_name' => st('Media settings')
+//      'display_name' => st('Media settings')
     ),
     'lacuna_stories_set_annotator_settings' => array(
-      'display_name' => st('Enable Annotator.js plugins')
+//      'display_name' => st('Enable Annotator.js plugins')
     ),
     'lacuna_stories_create_publication_state_workflow' => array(
-      'display_name' => st('Create publication workflow')
+//      'display_name' => st('Create publication workflow')
     ),
     'lacuna_stories_late_feature_and_module_enabling' => array(
-      'display_name' => st('Finish enabling modules')
+//      'display_name' => st('Finish enabling modules')
     ),
 		'lacuna_stories_revert_features_final' => array(
-      'display_name' => st('Revert features')
+//      'display_name' => st('Revert features')
     ),
 		// Must come after feature enable to ensure taxonomies for default terms exist
 		'lacuna_stories_default_tax_terms' => array(
-      'display_name' => st('Create default taxonomy terms')
+//      'display_name' => st('Create default taxonomy terms')
     ),
   );
   return $tasks;
@@ -69,8 +69,6 @@ function lacuna_stories_create_basic_page_type() {
       'custom' => 1,
       'modified' => 1,
       'locked' => 0,
-      'node-submitted' => 0,
-      'comment' => array('status' => 0),
     ),
   );
 
@@ -78,6 +76,19 @@ function lacuna_stories_create_basic_page_type() {
     $type = node_type_set_defaults($type);
     node_type_save($type);
     node_add_body_field($type);
+  }
+  // disable comments and author info on basic pages
+  variable_set('node_submitted_page', 0);
+  variable_set('comment_page', COMMENT_NODE_CLOSED);
+}
+
+// Return the plid for a parent menu item in main-menu with given title
+function lacuna_stores_get_main_menu_plid($title) {
+  $main_menu = menu_load_links('main-menu');
+  foreach ($main_menu as $menu_link) {
+    if ($menu_link['link_title'] == $title) {
+      return $menu_link['mlid'];
+    }
   }
 }
 
@@ -174,14 +185,6 @@ function lacuna_stories_create_research_consent_webform() {
   $node = node_submit($node); // Prepare node for a submit
   node_save($node);
 
-  // Give it the proper parent
-  $main_menu = menu_load_links('main-menu');
-  foreach ($main_menu as $menu_link) {
-    if ($menu_link['link_title'] == 'Account') {
-      $plid = $menu_link['mlid'];
-      break;
-    }
-  }
   // Node ids change, so we must add the menu item after the webform is created
   $menu_item = array(
     'link_path' => 'node/' . $node->nid,
@@ -190,11 +193,10 @@ function lacuna_stories_create_research_consent_webform() {
     'weight' => 10,
     'language' => $node->language,
     'module' => 'menu',
-    'plid' => $plid,
+    'plid' => lacuna_stores_get_main_menu_plid('Account'),
   );
   menu_link_save($menu_item);
 }
-
 
 /*
   Creating basic pages like FAQ, "Instructor's Guide", etc.
@@ -211,15 +213,6 @@ function lacuna_stories_create_basic_pages()
   $content[2]["title"] = "Student User Guide";
   $content[2]["body"] = file_get_contents(DRUPAL_ROOT . "/profiles/lacuna_stories/basic pages/student_user_guide.html");;
 
-	// Figure out the id of the Help menu item
-	$main_menu = menu_load_links('main-menu');
-	foreach ($main_menu as $menu_link) {
-		if ($menu_link['link_title'] == 'Help') {
-			$plid = $menu_link['mlid'];
-			break;
-		}
-	}
-
   foreach ($content as $page) {
     $node = new stdClass(); // We create a new node object
     $node->type = "page"; // Or any other content type you want
@@ -227,15 +220,23 @@ function lacuna_stories_create_basic_pages()
     $node->language = LANGUAGE_NONE; // Or any language code if Locale module is enabled. More on this below *
     $node->body[$node->language][0]['format']  = 'full_html';
     $node->body[$node->language][0]['value'] = $page["body"];
-    $node->menu['enabled'] = TRUE;
-    $node->menu['link_title'] = $node->title;
-    $node->menu['description'] = ''; // Needed even if empty to avoid notices.
-		$node->plid = $plid; // Put under correct menu parent
 
     node_object_prepare($node); // Set some default values.
     $node->uid = 1; // Or any id you wish
     $node = node_submit($node); // Prepare node for a submit
     node_save($node); // After this call we'll get a nid
+    // Node ids change, so we must add the menu item after the webform is created
+    $plid = lacuna_stores_get_main_menu_plid('Help');
+    $menu_item = array(
+      'link_path' => 'node/' . $node->nid,
+      'link_title' => $node->title,
+      'menu_name' => 'main-menu',
+      'weight' => 10,
+      'language' => $node->language,
+      'module' => 'menu',
+      'plid' => $plid,
+    );
+    menu_link_save($menu_item);
   }
 }
 
