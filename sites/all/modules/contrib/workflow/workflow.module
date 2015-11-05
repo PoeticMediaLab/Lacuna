@@ -687,7 +687,7 @@ function workflow_node_current_state($entity, $entity_type = 'node', &$field_nam
     }
     else {
       // Workflow Node API.
-      $field_name = '';
+      $field_name = NULL;
     }
   }
 
