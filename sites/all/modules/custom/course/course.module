@@ -587,8 +587,10 @@ function course_form_document_node_form_alter(&$form, &$form_state, $form_id) {
   $document = node_load($form['nid']['#value']);
 	$unit_options = course_get_terms_for_current_course('units');
 	$genre_options = course_get_terms_for_current_course('genre_doc');
-	$default_unit = array_shift(array_keys($unit_options));
-	$default_genre = array_shift(array_keys($genre_options));
+  $units = array_keys($unit_options);
+	$default_unit = array_shift($units);
+  $genres = array_keys($genre_options);
+	$default_genre = array_shift($genres);
 
 	// Per-course units taxonomy
 	if (isset($document->field_unit[LANGUAGE_NONE])) {
