@@ -18,7 +18,9 @@ if (!function_exists("system_form_install_configure_form_alter")) {
 function lacuna_stories_install_tasks($install_state) {
   $tasks = array (
     'lacuna_stories_create_research_consent_webform' => array(
-      'display_name' => st('Create research consent form')),
+      'display_name' => st('Create research consent form')
+    ),
+    'lacuna_stories_create_basic_page_type' => array(),
     'lacuna_stories_create_basic_pages' => array(
       'display_name' => st('Create static pages')
     ),
@@ -54,6 +56,27 @@ function lacuna_stories_install_tasks($install_state) {
     ),
   );
   return $tasks;
+}
+
+function lacuna_stories_create_basic_page_type() {
+  // Add the "Basic Page" type that appears in a standard install
+  $types = array(
+    array(
+      'type' => 'page',
+      'name' => st('Basic page'),
+      'base' => 'node_content',
+      'description' => st("Use <em>basic pages</em> for your static content, such as an 'About us' page."),
+      'custom' => 1,
+      'modified' => 1,
+      'locked' => 0,
+    ),
+  );
+
+  foreach ($types as $type) {
+    $type = node_type_set_defaults($type);
+    node_type_save($type);
+    node_add_body_field($type);
+  }
 }
 
 /*
@@ -295,11 +318,15 @@ function lacuna_stories_default_tax_terms () {
     // Add a default term to each vocabulary.
 		// Vocabularies are created in a feature
     $vocabulary = taxonomy_vocabulary_machine_name_load($vocabulary_name);
-    foreach ($terms as $term) {
-      taxonomy_term_save((object) array(
-        'name' => $term,
-        'vid' => $vocabulary->vid,
-      ));
+    if (isset($vocabulary->vid)) {
+      $weight = 0;  // weight them as ordered in their arrays
+      foreach ($terms as $name) {
+        $term = new stdClass();
+        $term->name = $name;
+        $term->vid = $vocabulary->vid;
+        $term->weight = $weight + 1;
+        taxonomy_term_save($term);
+      }
     }
   }
 }
@@ -307,7 +334,6 @@ function lacuna_stories_default_tax_terms () {
 
 // Install task: create workflow states and transitions
 function lacuna_stories_create_publication_state_workflow() {
-  module_enable(array('workflow', 'workflow_access', 'workflow_views', 'workflowfield'));
   $system_roles = user_roles();
   $workflow = NULL;
 
@@ -397,13 +423,14 @@ function lacuna_stories_late_feature_and_module_enabling () {
 		'lacuna_stories_threads',	// Depends on Materials
 		'lacuna_stories_responses',	// Depends on Materials
 		'lacuna_stores_irb_form', // Webform is created on install
+    'lacuna_stories_visualizations', // Visualizations require responses to be active
   );
   module_enable($module_list);
 }
 
 // ensure features are reverted since things have been done since the initial reversion in hook_install
 function lacuna_stories_revert_features_final () {
-  // Do it twice with a cache clear inbetween to make sure we get everything
+  // Do it twice with a cache clear in-between to make sure we get everything
   features_rebuild();
   features_revert();
   drupal_flush_all_caches();
