@@ -15,7 +15,6 @@ function lacuna_stories_responses_user_default_permissions() {
     'name' => 'access comments',
     'roles' => array(
       'Site Administrator' => 'Site Administrator',
-      'administrator' => 'administrator',
     ),
     'module' => 'comment',
   );
@@ -28,7 +27,6 @@ function lacuna_stories_responses_user_default_permissions() {
       'Instructor' => 'Instructor',
       'Site Administrator' => 'Site Administrator',
       'Student' => 'Student',
-      'administrator' => 'administrator',
     ),
     'module' => 'node',
   );
@@ -41,7 +39,6 @@ function lacuna_stories_responses_user_default_permissions() {
       'Instructor' => 'Instructor',
       'Site Administrator' => 'Site Administrator',
       'Student' => 'Student',
-      'administrator' => 'administrator',
     ),
     'module' => 'node',
   );
@@ -54,7 +51,6 @@ function lacuna_stories_responses_user_default_permissions() {
       'Instructor' => 'Instructor',
       'Site Administrator' => 'Site Administrator',
       'Student' => 'Student',
-      'administrator' => 'administrator',
     ),
     'module' => 'node',
   );
@@ -66,7 +62,6 @@ function lacuna_stories_responses_user_default_permissions() {
       'Content Manager' => 'Content Manager',
       'Instructor' => 'Instructor',
       'Site Administrator' => 'Site Administrator',
-      'administrator' => 'administrator',
     ),
     'module' => 'taxonomy',
   );
@@ -77,7 +72,6 @@ function lacuna_stories_responses_user_default_permissions() {
     'roles' => array(
       'Content Manager' => 'Content Manager',
       'Site Administrator' => 'Site Administrator',
-      'administrator' => 'administrator',
     ),
     'module' => 'node',
   );
@@ -87,7 +81,6 @@ function lacuna_stories_responses_user_default_permissions() {
     'name' => 'edit own comments',
     'roles' => array(
       'Site Administrator' => 'Site Administrator',
-      'administrator' => 'administrator',
     ),
     'module' => 'comment',
   );
@@ -100,7 +93,6 @@ function lacuna_stories_responses_user_default_permissions() {
       'Instructor' => 'Instructor',
       'Site Administrator' => 'Site Administrator',
       'Student' => 'Student',
-      'administrator' => 'administrator',
     ),
     'module' => 'node',
   );
@@ -112,7 +104,6 @@ function lacuna_stories_responses_user_default_permissions() {
       'Content Manager' => 'Content Manager',
       'Instructor' => 'Instructor',
       'Site Administrator' => 'Site Administrator',
-      'administrator' => 'administrator',
     ),
     'module' => 'taxonomy',
   );
@@ -122,7 +113,6 @@ function lacuna_stories_responses_user_default_permissions() {
     'name' => 'post comments',
     'roles' => array(
       'Site Administrator' => 'Site Administrator',
-      'administrator' => 'administrator',
     ),
     'module' => 'comment',
   );
@@ -132,7 +122,6 @@ function lacuna_stories_responses_user_default_permissions() {
     'name' => 'skip comment approval',
     'roles' => array(
       'Site Administrator' => 'Site Administrator',
-      'administrator' => 'administrator',
     ),
     'module' => 'comment',
   );
