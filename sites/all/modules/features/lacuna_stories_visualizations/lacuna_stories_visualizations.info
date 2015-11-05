@@ -8,6 +8,7 @@ dependencies[] = lacuna_stories_annotations
 dependencies[] = lacuna_stories_materials
 dependencies[] = lacuna_stories_menus
 dependencies[] = lacuna_stories_responses
+dependencies[] = lacuna_visualizations
 dependencies[] = menu
 features[features_api][] = api:2
 features[menu_links][] = main-menu_annotations-dashboard:visualization/dashboard
