@@ -438,45 +438,6 @@ function lacuna_stories_materials_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-document-field_tags'
-  $field_instances['node-document-field_tags'] = array(
-    'bundle' => 'document',
-    'default_value' => NULL,
-    'deleted' => 0,
-    'description' => '',
-    'display' => array(
-      'default' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 7,
-      ),
-      'teaser' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
-      ),
-    ),
-    'entity_type' => 'node',
-    'field_name' => 'field_tags',
-    'label' => 'Tags',
-    'required' => 0,
-    'settings' => array(
-      'user_register_form' => FALSE,
-    ),
-    'widget' => array(
-      'active' => 0,
-      'module' => 'taxonomy',
-      'settings' => array(
-        'autocomplete_path' => 'taxonomy/autocomplete',
-        'size' => 60,
-      ),
-      'type' => 'taxonomy_autocomplete',
-      'weight' => 8,
-    ),
-  );
-
   // Exported field_instance: 'node-document-field_unit'
   $field_instances['node-document-field_unit'] = array(
     'bundle' => 'document',
@@ -705,7 +666,6 @@ function lacuna_stories_materials_field_default_field_instances() {
   t('Medium');
   t('Priority');
   t('Status');
-  t('Tags');
   t('Text');
   t('The actual text of the document.');
   t('The medium or media of this document.');
