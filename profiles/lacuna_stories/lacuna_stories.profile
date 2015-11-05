@@ -69,6 +69,8 @@ function lacuna_stories_create_basic_page_type() {
       'custom' => 1,
       'modified' => 1,
       'locked' => 0,
+      'node-submitted' => 0,
+      'comment' => array('status' => 0),
     ),
   );
 
@@ -171,14 +173,24 @@ function lacuna_stories_create_research_consent_webform() {
   
   $node = node_submit($node); // Prepare node for a submit
   node_save($node);
+
+  // Give it the proper parent
+  $main_menu = menu_load_links('main-menu');
+  foreach ($main_menu as $menu_link) {
+    if ($menu_link['link_title'] == 'Account') {
+      $plid = $menu_link['mlid'];
+      break;
+    }
+  }
   // Node ids change, so we must add the menu item after the webform is created
   $menu_item = array(
     'link_path' => 'node/' . $node->nid,
     'link_title' => 'Digital Research Consent Form',
-    'menu_name' => 'main_menu',
+    'menu_name' => 'main-menu',
     'weight' => 10,
     'language' => $node->language,
-    'module' => 'menu'
+    'module' => 'menu',
+    'plid' => $plid,
   );
   menu_link_save($menu_item);
 }
