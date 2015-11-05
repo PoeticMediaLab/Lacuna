@@ -577,7 +577,7 @@ function course_node_update($node) {
   $key = "Course_Clone_Material_Docs_" . $user->uid;
   // If any the material was cloned, we needed the user to finish all the course-specific bits, check if they are saving
   // one of those nodes and remove that node from the to finish queue cookie
-  if (DOCUMENT_NODE_TYPE == $node->type && $docs = $_COOKIE['Drupal_visitor_' . $key]) {
+  if (DOCUMENT_NODE_TYPE == $node->type && isset($_COOKIE['Drupal_visitor_' . $key]) && $docs = $_COOKIE['Drupal_visitor_' . $key]) {
     course_pop_unfinished_doc_queue($node->nid);
   }
 
@@ -979,7 +979,7 @@ function course_push_unfinished_doc_queue($nid) {
   $cookie_queue = &drupal_static('course_doc_queue');
 
   $key = "Course_Clone_Material_Docs_" . $user->uid;
-  if (!isset($cookie_queue)) {
+  if (!isset($cookie_queue) && isset($_COOKIE['Drupal_visitor_' . $key])) {
     $cookie_queue = $_COOKIE['Drupal_visitor_' . $key];
   }
   if (!empty($cookie_queue)) {
