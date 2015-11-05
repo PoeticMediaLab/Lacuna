@@ -25,7 +25,6 @@ features[menu_links][] = main-menu_explore:<nolink>
 features[menu_links][] = main-menu_help:<nolink>
 features[menu_links][] = main-menu_reflect:<nolink>
 features[menu_links][] = menu-institutional-menu_about:http://www.lacunastories.com
-features[menu_links][] = menu-institutional-menu_courses:<front>
 features[menu_links][] = menu-institutional-menu_log-in:user/login
 features[menu_links][] = menu-institutional-menu_log-out:user/logout
 features[menu_links][] = menu-institutional-menu_register:user/register

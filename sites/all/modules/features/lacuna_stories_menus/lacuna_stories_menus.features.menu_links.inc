@@ -150,26 +150,6 @@ function lacuna_stories_menus_menu_default_menu_links() {
     'weight' => 0,
     'customized' => 1,
   );
-  // Exported menu link: menu-institutional-menu_courses:<front>
-  $menu_links['menu-institutional-menu_courses:<front>'] = array(
-    'menu_name' => 'menu-institutional-menu',
-    'link_path' => '<front>',
-    'router_path' => '',
-    'link_title' => 'Courses',
-    'options' => array(
-      'attributes' => array(
-        'title' => '',
-      ),
-      'identifier' => 'menu-institutional-menu_courses:<front>',
-    ),
-    'module' => 'menu',
-    'hidden' => 0,
-    'external' => 1,
-    'has_children' => 0,
-    'expanded' => 0,
-    'weight' => 0,
-    'customized' => 1,
-  );
   // Exported menu link: menu-institutional-menu_log-in:user/login
   $menu_links['menu-institutional-menu_log-in:user/login'] = array(
     'menu_name' => 'menu-institutional-menu',
@@ -236,7 +216,6 @@ function lacuna_stories_menus_menu_default_menu_links() {
   t('About');
   t('Account');
   t('Connect');
-  t('Courses');
   t('Create');
   t('Explore');
   t('Help');
