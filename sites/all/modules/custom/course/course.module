@@ -785,7 +785,8 @@ function course_create_blank_document($biblio) {
 
   $document->field_bibliographic_entry[LANGUAGE_NONE][0]['target_id'] = $biblio->nid;
   $document->status = NODE_PUBLISHED; // make all documents published
-  $taxo = array_pop(taxonomy_get_term_by_name($copyright));
+  $copyright_terms = taxonomy_get_term_by_name($copyright);
+  $taxo = array_pop($copyright_terms);
   if ($taxo) {
     $document->field_copyright[LANGUAGE_NONE][0]['tid'] = $taxo->tid;
   }
