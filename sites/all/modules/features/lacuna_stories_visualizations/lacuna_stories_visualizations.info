@@ -10,4 +10,6 @@ dependencies[] = lacuna_stories_menus
 dependencies[] = lacuna_stories_responses
 dependencies[] = menu
 features[features_api][] = api:2
+features[menu_links][] = main-menu_annotations-dashboard:visualization/dashboard
+features[menu_links][] = main-menu_responses-map:visualization/responses
 project path = sites/all/modules/features
