@@ -13,9 +13,7 @@ function course_user_default_permissions() {
   // Exported permission: 'administer exclude node title'.
   $permissions['administer exclude node title'] = array(
     'name' => 'administer exclude node title',
-    'roles' => array(
-      'administrator' => 'administrator',
-    ),
+    'roles' => array(),
     'module' => 'exclude_node_title',
   );
 
@@ -26,7 +24,6 @@ function course_user_default_permissions() {
       'Content Manager' => 'Content Manager',
       'Instructor' => 'Instructor',
       'Site Administrator' => 'Site Administrator',
-      'administrator' => 'administrator',
     ),
     'module' => 'node',
   );
@@ -38,7 +35,6 @@ function course_user_default_permissions() {
       'Content Manager' => 'Content Manager',
       'Instructor' => 'Instructor',
       'Site Administrator' => 'Site Administrator',
-      'administrator' => 'administrator',
       'anonymous user' => 'anonymous user',
     ),
     'module' => 'field_permissions',
@@ -50,7 +46,6 @@ function course_user_default_permissions() {
     'roles' => array(
       'Content Manager' => 'Content Manager',
       'Site Administrator' => 'Site Administrator',
-      'administrator' => 'administrator',
     ),
     'module' => 'node',
   );
@@ -61,7 +56,6 @@ function course_user_default_permissions() {
     'roles' => array(
       'Content Manager' => 'Content Manager',
       'Site Administrator' => 'Site Administrator',
-      'administrator' => 'administrator',
       'authenticated user' => 'authenticated user',
     ),
     'module' => 'node',
@@ -73,7 +67,6 @@ function course_user_default_permissions() {
     'roles' => array(
       'Content Manager' => 'Content Manager',
       'Site Administrator' => 'Site Administrator',
-      'administrator' => 'administrator',
     ),
     'module' => 'node',
   );
@@ -84,7 +77,6 @@ function course_user_default_permissions() {
     'roles' => array(
       'Content Manager' => 'Content Manager',
       'Site Administrator' => 'Site Administrator',
-      'administrator' => 'administrator',
     ),
     'module' => 'field_permissions',
   );
@@ -96,7 +88,6 @@ function course_user_default_permissions() {
       'Content Manager' => 'Content Manager',
       'Instructor' => 'Instructor',
       'Site Administrator' => 'Site Administrator',
-      'administrator' => 'administrator',
       'authenticated user' => 'authenticated user',
     ),
     'module' => 'node',
@@ -109,7 +100,6 @@ function course_user_default_permissions() {
       'Content Manager' => 'Content Manager',
       'Instructor' => 'Instructor',
       'Site Administrator' => 'Site Administrator',
-      'administrator' => 'administrator',
     ),
     'module' => 'field_permissions',
   );
@@ -117,18 +107,14 @@ function course_user_default_permissions() {
   // Exported permission: 'exclude any node title'.
   $permissions['exclude any node title'] = array(
     'name' => 'exclude any node title',
-    'roles' => array(
-      'administrator' => 'administrator',
-    ),
+    'roles' => array(),
     'module' => 'exclude_node_title',
   );
 
   // Exported permission: 'exclude own node title'.
   $permissions['exclude own node title'] = array(
     'name' => 'exclude own node title',
-    'roles' => array(
-      'administrator' => 'administrator',
-    ),
+    'roles' => array(),
     'module' => 'exclude_node_title',
   );
 
@@ -141,7 +127,6 @@ function course_user_default_permissions() {
       'Researcher' => 'Researcher',
       'Site Administrator' => 'Site Administrator',
       'Student' => 'Student',
-      'administrator' => 'administrator',
       'anonymous user' => 'anonymous user',
       'authenticated user' => 'authenticated user',
     ),
@@ -155,7 +140,6 @@ function course_user_default_permissions() {
       'Content Manager' => 'Content Manager',
       'Researcher' => 'Researcher',
       'Site Administrator' => 'Site Administrator',
-      'administrator' => 'administrator',
     ),
     'module' => 'field_permissions',
   );
@@ -168,7 +152,6 @@ function course_user_default_permissions() {
       'Instructor' => 'Instructor',
       'Site Administrator' => 'Site Administrator',
       'Student' => 'Student',
-      'administrator' => 'administrator',
       'authenticated user' => 'authenticated user',
     ),
     'module' => 'field_permissions',

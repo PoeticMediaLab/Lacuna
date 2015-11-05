@@ -7,8 +7,6 @@
  * As you will notice this file will only handle the <export> of Worflows,
  * including states and transitions. The <import> is handeled magically,
  * and all modifications are done in function Workflow::save().
- *
- * @see http://foxinbox.org/content/features-magic-how-features-adds-additional-items-export for an introduction.
  */
 
 define('WORKFLOW_FEATURES_AUTHOR_NAME', 'workflow_features_author_name');
@@ -86,7 +84,7 @@ class WorkflowFeaturesController extends EntityDefaultFeaturesController {
   /**
    * Overridden to not delete upon revert.
    */
-/*
+  /*
   function revert($module = NULL) {
     // Loads defaults from feature code.
     $defaults = features_get_default($entity_type, $module);
@@ -96,7 +94,7 @@ class WorkflowFeaturesController extends EntityDefaultFeaturesController {
       }
     }
   }
- */
+   */
 }
 
 /**
@@ -110,7 +108,6 @@ function workflow_features_pipe_field_base_alter(&$pipe, $data, $export) {
       // $info = field_info_field($field_name);
       $field = _workflow_info_field($field_name);
       if ($field['type'] == 'workflow') {
-
         // $field['settings']['wid'] can be numeric or named.
         $workflow = workflow_load_single($field['settings']['wid']);
         $pipe['Workflow'][] = $workflow->name;

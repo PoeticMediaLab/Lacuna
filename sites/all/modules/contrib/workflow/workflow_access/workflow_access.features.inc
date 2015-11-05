@@ -125,7 +125,12 @@ function workflow_access_features_export_render($module_name, $data, $export = N
  * into the workflow_access table.
  */
 function workflow_access_features_rebuild($module) {
-  $workflow_access_records = module_invoke($module, 'workflow_access_features_default_settings');
+  // @see d.o. https://www.drupal.org/node/2472501
+//  $workflow_access_records = module_invoke($module, 'workflow_access_features_default_settings');
+  if (!$workflow_access_records = features_get_default('workflow_access', $module)) {
+    return;
+  }
+
   // Retrieve the workflow IDs.
   $wids = array();
   foreach ($workflow_access_records as $workflow_name => $state) {
@@ -134,12 +139,14 @@ function workflow_access_features_rebuild($module) {
   }
 
   foreach ($wids as $workflow_name => $wid) {
-    $states = $workflow->getStates($all = TRUE);
-    foreach ($states as $state) {
-      // Remove all workflow access records for states belonging to this
-      // workflow. We don't want lingering entries - we only want the ones we're
-      // about to insert.
-      workflow_access_delete_workflow_access_by_sid($state->sid);
+    $workflow = workflow_load_by_name($workflow_name);
+    if (!empty($workflow) && $states = $workflow->getStates($all = TRUE)) {
+      foreach ($states as $state) {
+        // Remove all workflow access records for states belonging to this
+        // workflow. We don't want lingering entries - we only want the ones we're
+        // about to insert.
+        workflow_access_delete_workflow_access_by_sid($state->sid);
+      }
     }
   }
 

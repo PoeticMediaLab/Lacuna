@@ -42,6 +42,9 @@ abstract class WorkflowD7Base {
     return $this->instance;
   }
 
+  public function delete() {
+  }
+
   protected function getSettings() {
     $settings = isset($this->instance['widget']['settings']) ? $this->instance['widget']['settings'] : array();
     $field_info = self::settings();

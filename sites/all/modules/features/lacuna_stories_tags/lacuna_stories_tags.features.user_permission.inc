@@ -16,7 +16,6 @@ function lacuna_stories_tags_user_default_permissions() {
     'roles' => array(
       'Content Manager' => 'Content Manager',
       'Site Administrator' => 'Site Administrator',
-      'administrator' => 'administrator',
     ),
     'module' => 'taxonomy',
   );
@@ -29,7 +28,6 @@ function lacuna_stories_tags_user_default_permissions() {
       'Instructor' => 'Instructor',
       'Site Administrator' => 'Site Administrator',
       'Student' => 'Student',
-      'administrator' => 'administrator',
     ),
     'module' => 'taxonomy',
   );
@@ -41,7 +39,6 @@ function lacuna_stories_tags_user_default_permissions() {
       'Content Manager' => 'Content Manager',
       'Instructor' => 'Instructor',
       'Site Administrator' => 'Site Administrator',
-      'administrator' => 'administrator',
     ),
     'module' => 'flag',
   );
@@ -53,7 +50,6 @@ function lacuna_stories_tags_user_default_permissions() {
       'Content Manager' => 'Content Manager',
       'Instructor' => 'Instructor',
       'Site Administrator' => 'Site Administrator',
-      'administrator' => 'administrator',
     ),
     'module' => 'flag',
   );

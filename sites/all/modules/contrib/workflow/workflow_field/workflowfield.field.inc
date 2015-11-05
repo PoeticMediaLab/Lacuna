@@ -96,11 +96,22 @@ function _workflowfield_metadata_property_get($entity, array $options, $name, $e
       // Sometimes that is not widget, or the submit function has not been processed yet.
 
       // On a normal widget:
-      $data[$columns[0]] = $sid = isset($data['value']) ? $data['value'] : 0;
+      $sid = isset($data['value']) ? $data['value'] : 0;
       // On a workflow form widget:
-      $data[$columns[0]] = $sid = isset($data['workflow']['workflow_sid']) ? $data['workflow']['workflow_sid'] : $sid;
+      $sid = isset($data['workflow']['workflow_sid']) ? $data['workflow']['workflow_sid'] : $sid;
 
-      $values[$delta] = $data[$columns[0]];
+      // The workflow widget was not loaded properly. @see #2597307.
+      // So we need to reload the entity to extract the correct value.
+      if (!$sid && isset($data['workflow'])) {
+        // $new_entity = $entity->original; // is NULL :-(
+        list($entity_id, , ) = entity_extract_ids($entity_type, $entity);
+        $new_entity = entity_load_single($entity_type, $entity_id);
+        $workflow = $new_entity->{$name}[$langcode][$delta];
+        $sid = isset($workflow['value']) ? (int) $workflow['value'] : 0;
+      }
+
+      $data[$columns[0]] = $sid;
+      $values[$delta] = $sid;
     }
   }
   // For an empty single-valued field, we have to return NULL.
@@ -180,29 +191,19 @@ function workflowfield_field_update($entity_type, $entity, array $field, $instan
     $referenced_entity_id = $entity->nid;
     // Load the node again, since the passed node doesn't contain proper 'type' field.
     $referenced_entity = entity_load_single($referenced_entity_type, $referenced_entity_id);
+    // Normalize the contents of the workflow field.
+    $items[0]['value'] = _workflow_get_sid_by_items($items);
 
-    if ($field_name) {
-      // Execute the transition upon the node. Afterwards, $items is in form as expected by Field API.
-      // Remember, we don't know if the transition is scheduled or not.
-      $widget = new WorkflowDefaultWidget($field, $instance, $referenced_entity_type, $referenced_entity);
-      $widget->submit($form, $form_state, $items); // $items is a proprietary D7 parameter.
-
-      // Since we are saving the comment only, we must save the node separately.
-      entity_save($referenced_entity_type, $referenced_entity);
-    }
-    else {
-      // Execute the transition upon the node. Afterwards, $items is in form as expected by Field API.
-      // Remember, we don't know if the transition is scheduled or not.
-      $widget = new WorkflowDefaultWidget($field, $instance, $referenced_entity_type, $referenced_entity);
-      $widget->submit($form, $form_state, $items); // $items is a proprietary D7 parameter.
-
-      // Since we are saving the comment only, we must save the node separately.
-      entity_save($referenced_entity_type, $referenced_entity);
-    }
+    // Execute the transition upon the node. Afterwards, $items is in form as expected by Field API.
+    // Remember, we don't know if the transition is scheduled or not.
+    $widget = new WorkflowTransitionForm($field, $instance, $referenced_entity_type, $referenced_entity);
+    $widget->submitForm($form, $form_state, $items); // $items is a proprietary D7 parameter.
+    // // Since we are saving the comment only, we must save the node separately.
+    // entity_save($referenced_entity_type, $referenced_entity);
   }
   else {
-    $widget = new WorkflowDefaultWidget($field, $instance, $entity_type, $entity);
-    $widget->submit($form, $form_state, $items); // $items is a proprietary D7 parameter.
+    $widget = new WorkflowTransitionForm($field, $instance, $entity_type, $entity);
+    $widget->submitForm($form, $form_state, $items); // $items is a proprietary D7 parameter.
   }
 }
 
@@ -227,8 +228,8 @@ function workflowfield_field_prepare_view($entity_type, $entities, $field, $inst
 
   foreach ($items as $id => &$item_array) {
     foreach ($item_array as $index => &$item) {
-      if (!isset($item['value']) && isset($item['workflow']['workflow_sid'])) {
-        $item['value'] = $item['workflow']['workflow_sid'];
+      if (!isset($item['value'])) {
+        $item['value'] = isset($item['workflow']['workflow_sid']) ? $item['workflow']['workflow_sid'] : '';
       }
     }
   }
