@@ -11,7 +11,7 @@
 function workflow_enable() {
   $message = t('Thanks for using Workflow. To maintain workflows, enable the
     <a href="!url_ui">Workflow UI module</a>. To add a Workflow Field to your
-    entity, enable the <a href="!url">Workflow Field module</a>.',
+    entity, enable the <a href="!url_field">Workflow Field module</a>.',
     array(
       '!url_ui' => url('admin/config/modules'),
       '!url_field' => url('admin/config/modules'),
@@ -279,6 +279,11 @@ function workflow_schema() {
   );
   $schema['workflow_scheduled_transition'] = array(
     'fields' => array(
+      'tid' => array(
+        'description' => 'The unique ID for this record.',
+        'type' => 'serial',
+        'not null' => TRUE,
+      ),
       'entity_type' => array(
         'description' => 'The type of entity this transition belongs to.',
         'type' => 'varchar',
@@ -354,6 +359,7 @@ function workflow_schema() {
         'not null' => FALSE,
       ),
     ),
+    'primary key' => array('tid'),
     'indexes' => array(
       'entity_type' => array('entity_type'),
       'entity_id' => array('entity_type', 'nid'),
@@ -452,6 +458,7 @@ function workflow_schema() {
     'primary key' => array('hid'),
     'indexes' => array(
       'sid' => array('entity_type', 'nid', 'sid'),
+      'nid' => array('nid'),
     ),
   );
   $schema['workflow_node'] = array(
@@ -761,7 +768,8 @@ function workflow_update_7015() {
 
   // Load&save workflows, to populate the label.
   // Do this after all db-updates!!
-  foreach (workflow_load_multiple() as $workflow) {
+  // Do not use workflow_*() functions.
+  foreach (entity_load('Workflow') as $workflow) {
     $workflow->save();
     // Load&save workflow states, to populate the state name.
     foreach ($workflow->getStates(TRUE, TRUE) as $state) {
@@ -771,4 +779,25 @@ function workflow_update_7015() {
 
   // The update system is going to flush all caches,
   // including the updated Rules Action, so nothing to do here.
+}
+
+/**
+ * Add an index to {workflow_node_history}.nid.
+ */
+function workflow_update_7016() {
+  if (db_field_exists('workflow_node_history', 'nid') && !db_index_exists('workflow_node_history', 'nid')) {
+    db_add_index('workflow_node_history', 'nid', array('nid'));
+  }
+}
+
+/**
+ * Add a primary key to {workflow_scheduled_transition}.
+ */
+function workflow_update_7017() {
+  db_add_field('workflow_scheduled_transition', 'tid', array(
+    'type' => 'serial',
+    ), array(
+    'primary key' => array('tid'),
+  ));
+  return t('Added stid primary key to {workflow_scheduled_transition}');
 }

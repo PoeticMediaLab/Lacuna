@@ -77,14 +77,14 @@ function _thread_install_instances() {
   return array(
     'thread_description' => array(
       'field_name' => 'thread_description',
-      'label' => t('Description of My Thread'),
+      'label' => t('Description'),
       'description' => t('Describe why these pieces are stitched together'),
       'type' => 'text_long',
       'required' => TRUE,
       'weight' => 0,
       'widget' => array(
         'type' => 'text_textarea',
-        'format' => 'full_html'
+        'format' => 'filtered_html'
       ),
       'settings' => array(
         'text_processing' => '1'
@@ -115,4 +115,10 @@ function sewing_kit_uninstall() {
   node_type_delete('thread'); // delete our node type on uninstall
   field_delete_field('thread_reference'); // delete entityreference field
   field_delete_field('thread_description'); // delete thread description field
+}
+
+function sewing_kit_update_7101() {
+  $instance = field_info_instance('node', 'thread_description', 'thread');
+  $instance['label'] = t('Description');
+  field_update_instance($instance);
 }

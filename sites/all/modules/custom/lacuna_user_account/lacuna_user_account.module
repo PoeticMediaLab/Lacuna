@@ -1,0 +1,46 @@
+<?php
+/**
+ *
+ * Adding hook_menu_alter to override and change tabs present in user account
+ *
+ * Hayk Tepanyan <tehayk@stanford.edu>
+ *
+ */
+
+
+// implement hook_menu_alter
+function lacuna_user_account_menu_alter(&$items) {
+  $items['user/%user/edit']['type'] = MENU_CALLBACK;
+  $items['user/%user/track']['type'] = MENU_CALLBACK;
+  $items['user/%user/shortcuts']['type'] = MENU_CALLBACK;
+  $items['user/%user/contact']['type'] = MENU_CALLBACK;
+  $items['user/%user/notify']['type'] = MENU_CALLBACK;
+}
+
+/**
+ * @param $form
+ * @param $form_state
+ * @param $form_id
+ * Implements hook_form_alter().
+ */
+function lacuna_user_account_form_alter(&$form, &$form_state, $form_id) {
+  if ($form_id == 'user_profile_form') {
+		// Next, wrap account settings in a fieldset
+		$form['account_settings'] = array(
+			'#type' => 'fieldset',
+			'#title' => t('Account Settings'),
+			'#weight' => -100,
+			'#collapsible' => TRUE,
+		);
+		$form['account_settings']['items'] = $form['account'];
+		$form['account']['#access'] = FALSE;
+    unset($form['account']);
+    $form['#validate'][0] = 'lacuna_user_account_form_validate';
+  }
+}
+
+function lacuna_user_account_form_validate($form, &$form_state) {
+  $form['account'] = $form['account_settings']['items'];
+  // original validation function
+  user_account_form_validate($form, $form_state);
+}

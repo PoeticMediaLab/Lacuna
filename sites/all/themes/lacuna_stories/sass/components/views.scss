@@ -16,13 +16,34 @@ select#edit-thread-add {
 }
 
 /* The "Add to Thread" button for Sewing Kit */
-#edit-actionsewing-kit-stitch {
-  width:200px;
-  display:block;
-  margin-left: auto;
-  margin-right: auto;
-  height: 50px;
+.view-sewing-kit {
+  fieldset.container-inline {
+    border: 0;
+  }
+  .views-widget-filter-created,
+  .views-widget-filter-created_1 {
+    display: none;
+  }
+  .fieldset-wrapper {
+    margin-left: 33%;
+  }
+  input[id^='edit-actionsewing-kit-stitch'],
+  input[id^='edit-actionviews-data-export-action-csv-export'] {
+    width: 200px;
+    display: inline-block;
+    height: 50px;
+    font-size: 14pt;
+  }
+  .chosen-container {
+    max-width: 60% !important;
+  }
+  .views-exposed-form {
+    label {
+      width: 15%;
+    }
+  }
 }
+
 
 /* Center the "Select all" options */
 .vbo-fieldset-select-all {
@@ -72,7 +93,7 @@ $views-link-color: #808080;
 $views-link-hover-color: #1588BA;
 .view-documents,
 .view-responses,
-.view-my-threads,
+.view-threads,
 .view-sewing-kit,
 .view-my-content,
 .view-all-content,
@@ -82,7 +103,7 @@ $views-link-hover-color: #1588BA;
     display: none;
   }
   .views-widget-sort-by {
-    .form-type-bef-link {
+    //.form-type-bef-link {
       float: left;
       margin: 0 10px 0 15px;
       a {
@@ -93,10 +114,10 @@ $views-link-hover-color: #1588BA;
       a:hover {
         color: $views-link-hover-color;
       }
-    }
-    .form-type-bef-link.selected a {
-      color: $views-link-hover-color;
-    }
+    //}
+    //.form-type-bef-link.selected a {
+    //  color: $views-link-hover-color;
+    //}
   }
   img {
     width: auto;
@@ -119,12 +140,7 @@ $views-link-hover-color: #1588BA;
     float: left;
     margin-right: 10px;
   }
-  .views-widget {
-    display: inline;
-    input[type=text] {
-      width: 20%;
-    }
-  }
+
   .form-type-bef-checkbox {
     float: left;
     margin: 0px 5px 0px 10px;
@@ -143,7 +159,14 @@ $views-link-hover-color: #1588BA;
   margin-top: 0px;
   margin-right: 80px;
 }
-
+.view-courses {
+  li.views-fluid-grid-item {
+    width: 32%;
+  }
+  div.views-fluid-grid h3 {
+    text-align: left;
+  }
+}
 table.views-table {
   width: 100%;
 }
@@ -176,6 +199,9 @@ table.views-table {
   td.views-field-category {
     text-align: center;
   }
+  .form-item-field-annotation-reference-target-id .form-select {
+    width: 50%;
+  }
 }
 
 .view-people {
@@ -206,4 +232,16 @@ div#block-views-bibliography-block {
     cursor: text;
     color: black;
   }
+}
+
+// For "Cite As" block
+div#block-views-cite-as-block {
+  padding-left: 5em;
+  padding-top: 1em;
+}
+
+.fix-width-15 {
+  width: 15%;
+  padding-left: 2px;
+  padding-right: 2px;
 }

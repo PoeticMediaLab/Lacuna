@@ -78,3 +78,19 @@ form#user-register-form {
 table.tabledrag-processed td label {
   display: inline-block;
 }
+
+// For Page-Turner page range
+#page-turner-pages-numbers {
+  border: solid 1px gray;
+  padding-left: 2px;
+  padding-right: 2px;
+}
+
+#course-set-up-materials-form {
+  .term {
+    .name {
+      padding-left: 5px;
+    }
+  }
+}
+

@@ -1,10 +1,12 @@
-name = Annotation
+name = Annotation Store
 description = Provides storage and retrieval of annotations
 package = Lacuna Stories
 core = 7.x
+version = "7.x-1.0"
 
 files[] = plugins/annotator/StoreAnnotatorPlugin.class.inc
 
+dependencies[] = course
 dependencies[] = ctools
 dependencies[] = entityreference
 dependencies[] = link

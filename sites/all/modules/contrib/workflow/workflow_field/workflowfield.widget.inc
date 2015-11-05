@@ -40,35 +40,40 @@ function workflowfield_field_widget_form(&$form, &$form_state, $field, $instance
     // We are now on the 'Manage Fields | Edit' settings page, so do nothing.
     return $element;
   }
-
-  if (isset($element['#entity_type'])) {
+  elseif (!isset($element['#entity_type'])) {
+    // Not used: On an Entity View page, the widget is shown via
+    // workflowfield_field_formatter_view() and workflow_transition_form().
+    return $element;
+  }
+  else {
     // We are on an Entity add/edit page.
-    if (empty($field['settings']['widget']['hide'])) {
-      // Show the widget.
-      $entity_type = $element['#entity_type'];
-      $entity = $element['#entity'];
-    }
-    else {
-      // But we want the widget to be hidden, because states are only to be
+    if (!empty($field['settings']['widget']['hide'])) {
+      // We want the widget to be hidden, when states are only to be
       // changed via Workflow History tab.
-      // This is needed, because D7 does not have a <hidden> widget.
+      // This setting is needed, because D7 core does't have a <hidden> widget.
       // @todo D8: remove this, since hidden widgets are available.
       return $element;
     }
-  }
-  else {
-    // Not used: On an Entity View page, the widget is shown via
-    // workflowfield_field_formatter_view() and workflow_transition_form().
-  }
+    else {
+      // Show the widget.
+      $entity_type = $element['#entity_type'];
+      $entity = $element['#entity'];
 
-  if ($entity_type == 'comment') {
-    // On a comment form, get the referenced entity.
-    $entity_type = 'node'; // Comments are only possible on nodes.
-    $entity = $form['#node'];
+      if ($entity_type == 'comment') {
+        // On a comment form, get the referenced entity.
+        $entity_type = 'node'; // Comments are only possible on nodes.
+        $entity = $form['#node'];
+        // Make sure no action buttons are added.
+        $instance['widget']['settings']['submit_function'] = array();
+      }
+
+      // Build a new $element.
+      // Do not use drupal_get_form() or you'll have a form in a form.
+      $element = array();
+      $widget = new WorkflowTransitionForm($field, $instance, $entity_type, $entity);
+      $element = $widget->buildForm($element, $form_state);
+      return $element;
+    }
   }
-
-  $widget = new WorkflowDefaultWidget($field, $instance, $entity_type, $entity);
-  $element += $widget->formElement($items, $delta, $element, $form, $form_state);
-
   return $element;
 }

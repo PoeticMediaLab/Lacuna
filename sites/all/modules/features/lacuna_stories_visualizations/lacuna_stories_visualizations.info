@@ -1,0 +1,16 @@
+name = Visualizations
+description = Data visualizations
+core = 7.x
+package = Lacuna Stories
+version = 7.x-2.0
+dependencies[] = features
+dependencies[] = lacuna_stories_annotations
+dependencies[] = lacuna_stories_materials
+dependencies[] = lacuna_stories_menus
+dependencies[] = lacuna_stories_responses
+dependencies[] = lacuna_visualizations
+dependencies[] = menu
+features[features_api][] = api:2
+features[menu_links][] = main-menu_annotations-dashboard:visualization/dashboard
+features[menu_links][] = main-menu_responses-map:visualization/responses
+project path = sites/all/modules/features

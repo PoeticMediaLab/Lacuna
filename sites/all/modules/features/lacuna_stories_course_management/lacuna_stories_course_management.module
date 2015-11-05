@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the Course Management feature.
+ */
+
+include_once 'lacuna_stories_course_management.features.inc';

@@ -1,0 +1,17 @@
+<?php
+/*
+ * manages menu tab add/remove in user account
+ *
+ * Hayk Tepanyan <tehayk@stanford.edu>
+ *
+ */
+
+
+// implements hook_node_info
+function lacuna_user_account_install()
+{
+  db_update('system')
+    ->fields(array('weight' => 1000))
+    ->condition('name', 'lacuna_user_account', '=')
+    ->execute();
+}

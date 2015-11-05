@@ -41,13 +41,6 @@ function lacuna_stories_system_strongarm() {
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
-  $strongarm->name = 'honeypot_form_blog_node_form';
-  $strongarm->value = 0;
-  $export['honeypot_form_blog_node_form'] = $strongarm;
-
-  $strongarm = new stdClass();
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
   $strongarm->name = 'honeypot_form_comment_node_annotation_form';
   $strongarm->value = 0;
   $export['honeypot_form_comment_node_annotation_form'] = $strongarm;
@@ -69,13 +62,6 @@ function lacuna_stories_system_strongarm() {
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
-  $strongarm->name = 'honeypot_form_comment_node_blog_form';
-  $strongarm->value = 0;
-  $export['honeypot_form_comment_node_blog_form'] = $strongarm;
-
-  $strongarm = new stdClass();
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
   $strongarm->name = 'honeypot_form_comment_node_course_form';
   $strongarm->value = 0;
   $export['honeypot_form_comment_node_course_form'] = $strongarm;
@@ -93,6 +79,13 @@ function lacuna_stories_system_strongarm() {
   $strongarm->name = 'honeypot_form_comment_node_page_form';
   $strongarm->value = 0;
   $export['honeypot_form_comment_node_page_form'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'honeypot_form_comment_node_response_form';
+  $strongarm->value = 0;
+  $export['honeypot_form_comment_node_response_form'] = $strongarm;
 
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
@@ -142,6 +135,13 @@ function lacuna_stories_system_strongarm() {
   $strongarm->name = 'honeypot_form_page_node_form';
   $strongarm->value = 0;
   $export['honeypot_form_page_node_form'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'honeypot_form_response_node_form';
+  $strongarm->value = 0;
+  $export['honeypot_form_response_node_form'] = $strongarm;
 
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */

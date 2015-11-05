@@ -1,0 +1,9 @@
+name = Views Customizations
+description = Lacuna Stories custom hooks for Views
+core = 7.x
+package = Lacuna Stories
+version = 7.x-2.0
+
+files[] = views_lacuna_stories_views_handler_filter_author_select.inc
+
+dependencies[] = views

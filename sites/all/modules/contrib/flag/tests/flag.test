@@ -13,10 +13,10 @@ abstract class FlagTestCaseBase extends DrupalWebTestCase {
   /**
    * Helper to create a flag from an array of data and clear caches etc.
    *
-   * @param $flag_data
+   * @param array $flag_data
    *  An array of flag data.
    *
-   * @return
+   * @return flag_flag
    *  The flag object.
    */
   function createFlag($flag_data) {

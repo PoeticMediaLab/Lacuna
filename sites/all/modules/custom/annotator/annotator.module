@@ -1,6 +1,7 @@
 <?php
 
 define('ANNOTATOR_VERSION', '1.2.9');
+define('WORKFLOW_READY_STATE', 3); // Workflow state "Ready to Annotate"
 /**
  * Implements hook_init().
  */
@@ -10,15 +11,18 @@ function annotator_init() {
     if (module_exists('locale')) {
       drupal_add_library('annotator', 'jsgettext', TRUE);
     }*/
-    $library = libraries_load('annotator');
-    if ($library['loaded'] == FALSE) {
-      drupal_set_message($library['error message'], 'error');
-      return 'Please download and install ' . l( $library['name'], $library['download url'] ) . '!';
+    // Only load the annotator and its plugins if we are on an annotatable node
+    if (annotator_check_annotatable_node()) {
+      $library = libraries_load('annotator');
+      if ($library['loaded'] == FALSE) {
+        drupal_set_message($library['error message'], 'error');
+        return 'Please download and install ' . l($library['name'], $library['download url']) . '!';
+      }
+      drupal_add_js(array('annotator' => array('element' => variable_get('annotator_element', '.node'))), 'setting');
+      drupal_add_js(drupal_get_path('module', 'annotator') . '/js/annotator.js');
+      drupal_add_css(drupal_get_path('module', 'annotator') . '/css/style.css');
+      annotator_execute_plugins();
     }
-    drupal_add_js(array('annotator' => array('element' => variable_get('annotator_element','.node'))), 'setting');
-    drupal_add_js(drupal_get_path('module', 'annotator') . '/js/annotator.js');
-    drupal_add_css(drupal_get_path('module', 'annotator') . '/css/style.css');
-    annotator_execute_plugins();
   }
 }
 
@@ -148,5 +152,48 @@ function annotator_execute_plugins($annotation = NULL, $op = NULL) {
  * Implements hook_TYPE_alter().
  */
 function annotator_annotation_alter($entity, $op) {
-  annotator_execute_plugins($entity, $op);
+  // Only load the annotator and its plugins if we are on an annotatable node
+  if (annotator_check_annotatable_node()) {
+    annotator_execute_plugins($entity, $op);
+  }
+}
+
+/**
+ * Check if we are currently on an annotatable node
+ * If so, return the node.
+ */
+function annotator_check_annotatable_node () {
+
+  if (arg(0) == 'node' && is_numeric (arg(1))) {
+    $current_node = node_load(arg(1));
+    $anno_ref_field = field_info_field('field_annotation_reference');
+    $annotatable_types = $anno_ref_field['settings']['handler_settings']['target_bundles'];
+    $workflow_state = workflow_node_current_state($current_node);
+    // Account for nodes that don't have a workflow status
+    if (in_array($current_node->type, $annotatable_types) && (empty($workflow_state) || $workflow_state == WORKFLOW_READY_STATE)) {
+      $current_course = course_get_selected_course();
+      foreach ($current_node->og_group_ref[$current_node->language] as $current_node_parent_group) {
+        if ($current_node_parent_group['target_id'] == $current_course) {
+          return $current_node; // User is on an annotatable, and the node corresponds to their current context
+        }
+      }
+
+      if (node_access('view', $current_node)) {
+        drupal_set_message('Annotations on this content are disabled. This document is either not within your current course or not yet ready to annotate. You may ' . l('return to the front page', '<front>') . ' to change courses.', 'warning', FALSE); // This can happen if a user is already logged in with a course context set, and they access the node directly from browser (non-referred) or they've clicked to this node from the Sewing Kit (as of writing, the only way content is linked to other courses), or if it's an admin user coming from admin/content, etc.
+      }
+    }
+  }
+	return FALSE;
+}
+
+/**
+ * Implements hook_page_alter().
+ */
+function annotator_page_alter(&$page) {
+	// Add the sidebar region for the Annotation Filters
+	if (annotator_check_annotatable_node()) {
+		$page['sidebar_second'] = array(
+			'#markup' => '<span></span>'
+		);
+	}
 }

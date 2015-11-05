@@ -613,3 +613,30 @@ Issue #2374587 by Karsa: Workflow node doesn't set the state of a newly created 
 Issue #2373103: Fixed Notice 'Undefined index' in list_field_formatter_view() when previewing a node.
 Issue #2308677: Fixed regression: 'Workflow current: Current state' is missing when creating a contextual filter
 Issue #2400211: Added Views support for non-node entity types
+
+Since 7.x-2.5
+Issue #2340011: Fixed Error "Workflow 0 cannot be loaded" when using Workflow Node and Workflow Rules
+Issue #2401481: Fixed error when creating a Transition, parameter values() is discarded
+Issue #2401493: Added $transition->getTimestamp()
+Issue #2401511: Renamed hook-functions in workflownode module
+Issue #2406175: Implemented a WorkflowTransitionForm form object
+Issue #1559680: Make Transitions fieldable entities -1-
+Issue #2406175: Uniformed creation of form_id
+Issue #2406175: Moved WorkfowTransitionEdit to th WorkflowTransitionForm form object
+Issue #2441821: Fixed wrong link
+Issue #2441821: Fixed error
+Issue #2441821: Better determination of field_name
+Issue #2421157: Added Block for viewing/changing a Workflow State
+Issue #2417193 by kaare: Added stub for undefined method WorkflowItem::delete()
+Issue #2430243: Fixed fragile check for entity edit mode in WorkflowTransitionForm::submitForm()
+Issue #2467103: State is lost when comment with Workflow Widget is submitted, and node has end-state
+Issue #2546152 by NancyDru: Added submodule workflow_notify.
+Issue #2532128 by wayaslij: EntityMetadataWrapper $property call should first check if method exists
+Issue #2413593 by kyoder: Fixed EntityMetadataWrapperException in workflow.tokens.inc
+Issue #2169859 by kyoder, BAHbKA: Problems with Workflow Access Features
+Issue #2373103 by chilic: Notice in Node Preview mode in list_field_formatter_view()
+Issue #2472501 by alan-io1: Use features_get_default in hook_features_rebuild
+Issue #2484325 by GuyPaddock: Error on Site installation: table Workflows doesn't exist
+Issue #2376557 by deetergp: Token 'comment' does not work
+Issue #2351299 by johnv: Prepare D8-Port: split class files
+Issue #2484297 by vasi, bartvig, GuyPaddock: Features import / revert broken in 2.5+

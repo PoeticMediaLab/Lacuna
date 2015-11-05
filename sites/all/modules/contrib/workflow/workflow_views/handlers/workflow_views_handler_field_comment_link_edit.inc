@@ -39,8 +39,11 @@ class workflow_views_handler_field_comment_link_edit extends views_handler_field
     if (!user_access('edit workflow comment')) {
       return;
     }
-    $hid = $values->{$this->aliases['hid']};
+    if (!$hid = $values->{$this->aliases['hid']}) {
+      // No link if entity has no history.
+      return;
+    }
     $text = empty($this->options['text']) ? t('edit comment') : $this->options['text'];
-    return l($text, "workflow-comment/$hid/edit", array('query' => drupal_get_destination()));
+    return l($text, "workflow_transition/$hid/edit", array('query' => drupal_get_destination()));
   }
 }

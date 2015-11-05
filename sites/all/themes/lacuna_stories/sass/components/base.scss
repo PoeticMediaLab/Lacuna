@@ -2,7 +2,49 @@
 
 $link-color: #1588ba;
 $link-color-hover: #094762;
-$bg-color: #F8F8F8;
+//$bg-color: #F8F8F8;
+//$bg-color: #eee;
+$bg-color: white;
+
+body {
+  // font-family defined in _init
+  background-color: $bg-color;
+  line-height: 1.5em;
+  box-shadow: none;
+
+  //  added min window width
+  min-width: 600px;
+}
+
+/*  Adds 5em margins to left and right of document
+*   article page body text.
+*/
+article.node {
+  padding-bottom: 2em;
+  padding-top: 2em;
+  .field,
+  .form-item,
+  .form-actions,
+  header,
+  fieldset
+  {
+    margin-left: 5em;
+    margin-right: 5em;
+  }
+  fieldset .field {
+    margin-left: 0;
+    margin-right: 0;
+  }
+  section#comments h2 {
+    margin-left: 2.5em;
+  }
+}
+
+article.node-document {
+  .field-type-text-long {
+    min-height: 800px;
+  }
+}
 
 #name-and-slogan {
   font-size: 1em;
@@ -16,8 +58,12 @@ $bg-color: #F8F8F8;
 }
 
 .header__name-and-slogan {
-  float: none !important;
-  margin-top: 50px;
+  /*
+  *   Changed from
+  *     float: none !important;
+  *     margin-top: 50px;
+  *   as part of making header menus work on smaller window widths.
+  */
 }
 
 #site-name {
@@ -29,15 +75,16 @@ $bg-color: #F8F8F8;
   font-weight: normal;
 }
 
-body {
-  // font-family defined in _init
-  background-color: $bg-color;
-  line-height: 1.5em;
-}
 
 #main {
-  padding-top: 0px !important;
-  top: -50px !important;
+  /*
+  *   Changed from
+  *     padding-top: 0px !important;
+  *     top: -50px !important;
+  *   as part of making header menus work on smaller window widths.
+  */
+  padding-top: 1rem;
+
 }
 
 #page {
@@ -45,9 +92,23 @@ body {
   padding: 15px;
   margin: auto;
   position: relative;
-  background-color: white;
-  box-shadow: 0px 0px 10px #888888;
+  background-color: $bg-color;
+  box-shadow: none;
   padding-bottom: 100px;
+  //  added to remove gutter on the right at some smaller window
+  //  resize positions
+  overflow-x: hidden;
+}
+
+#subtitle {
+  /*
+  *   Added as part of making header menu work on smaller screens.
+  */
+  padding-left: 10px;
+  #course-name {
+    display: block;
+    font-size: medium;
+  }
 }
 
 b {
@@ -70,6 +131,10 @@ article.node {
   font-family: $base-serif-font-family;
   font-size: 18px;
   line-height: 1.5em;
+  background-color: $bg-color;
+  border: solid 1px gray;
+  box-shadow: 0px 0px 10px #888888;
+  margin-top: 1.5em;
 }
 
 /* fix to avoid drop down menu overwrite of message pane */

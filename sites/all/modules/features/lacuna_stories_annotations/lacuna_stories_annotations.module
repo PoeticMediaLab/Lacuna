@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the Annotations feature.
+ */
+
+include_once 'lacuna_stories_annotations.features.inc';

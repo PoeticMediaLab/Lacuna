@@ -1,0 +1,49 @@
+<?php
+/**
+ * Tests for the Sewing Kit module
+ */
+
+// ViewsExposedFormTest inherits from DrupalWebTest
+class SewingKitTestCase extends DrupalWebTestCase {
+	protected $privileged_user;
+
+	public static function getInfo() {
+		return array(
+			'name' => 'Sewing Kit',
+			'description' => 'Ensure that the Sewing Kit works correctly',
+			'group' => 'Lacuna Stories'
+		);
+	}
+
+	public function setUp() {
+		$this->profile = 'lacunastories_base';
+		parent::setUp(
+			array(
+				'entity',
+				'lacuna_stories_threads'
+			)
+		);
+		$this->privileged_user = $this->drupalCreateUser(
+			array(
+				'create annotations',
+				'create thread content'
+			)
+		);
+		$this->drupalLogin($this->privileged_user);
+		$this->verbose('<pre>' . print_r($this->privileged_user, TRUE) . '</pre>');
+	}
+
+	public function testSewingKitThreadCreate() {
+		$annotation = array();
+		$annotation['title'] = $this->randomName(8);
+		$annotation['field_annotation_text[und][0][value]'] = $this->randomString(50);
+		$this->drupalPost('node/add/annotation', $annotation, t('Save'));
+		$node = node_load(array('title' => $annotation['title']));
+		$thread = array();
+		$thread['title'] = $this->randomName(8);
+		$thread['thread_description[und][0][value]'] = $this->randomString(300);
+		$thread['thread_reference[und][0][target_id]'] = $node->nid;
+		$this->drupalPost('node/add/thread', $thread, t('Save'));
+		$this->assertText(t('Thread @title has been created.', array('@title' => $thread['title'])));
+	}
+}

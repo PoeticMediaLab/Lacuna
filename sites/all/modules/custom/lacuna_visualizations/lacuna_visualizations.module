@@ -29,7 +29,7 @@
 // library's directory. (I believe; haven't tested yet)
 // 3. add name of directory to the array below.
 // 4. add an entry in lacuna_visualizations_menu
-// 5. create callback function (lacuna_visualizations_mapview is an
+// 5. create callback function (lacuna_visualizations_responses is an
 // example here) that uses EntityFieldQuery to pull in data and call
 // graphapi functions (or just d3_draw).
 // 6. remember to set the library name in $options.
@@ -259,14 +259,14 @@ function lacuna_visualizations_menu() {
     'visualization/responses' => array(
   	  'title' => 'Responses Map',
   	  'description' => 'Visualization showing links between responses and primary sources',
-  	  'access arguments' => array('create blog content'),
-  	  'page callback' => 'lacuna_visualizations_mapview',
+  	  'access arguments' => array('create response content'),
+  	  'page callback' => 'lacuna_visualizations_responses',
   	  'type' => MENU_NORMAL_ITEM,
   	  ),
     'visualization/journey' => array(
   	  'title' => 'Journey view',
   	  'description' => 'Visualization showing student movement through the site',
-  	  'access arguments' => array('create blog content'),
+  	  'access arguments' => array('create response content'),
   	  'page callback' => 'lacuna_visualizations_journeyview',
   	  'type' => MENU_NORMAL_ITEM,
   	),
@@ -288,19 +288,19 @@ function lacuna_visualizations_menu() {
 }
 
 /**
- * Visualization showing links between student blog posts and primary
+ * Visualization showing links between student responses and primary
  * sources. (version I'm currently working on).
  */
 function lacuna_visualizations_journeyview() {
 
-  // BJA uses EntityFieldQuery to pull all the 'blog' and 'document' nodes
+  // BJA uses EntityFieldQuery to pull all the 'response' and 'document' nodes
   // BJA in the future, this should read from a view(?) rather than being
   // BJA hard-coded here.
-  $blogQuery = new EntityFieldQuery();
-    $blogQuery
+  $responseQuery = new EntityFieldQuery();
+    $responseQuery
         ->entityCondition('entity_type', 'node')
-        ->entityCondition('bundle', array('biblio', 'blog'));
-  $result = $blogQuery->execute();
+        ->entityCondition('bundle', array('biblio', 'response'));
+  $result = $responseQuery->execute();
   $nids = array_keys($result['node']);
   $nodes = node_load_multiple($nids);
 
@@ -312,11 +312,11 @@ function lacuna_visualizations_journeyview() {
   	$uids = array_keys($usersResult['user']);
   	$users = user_load_multiple($uids);
 
-  	 // this array will eventually contain all relevant info about blogs and document: author, timestamp, etc.
+  	 // this array will eventually contain all relevant info about responses and document: author, timestamp, etc.
   	 // added to nodes before graphapi passes off to d3.
     $dataArray = array(
       'itemType' => $item->type,
-  		// author set below -- $item->name for blog posts, but
+  		// author set below -- $item->name for responses, but
   		// more complicated for biblio entries.
   		'author'	=> ' ',
       'title'     => $item->title,
@@ -331,7 +331,7 @@ function lacuna_visualizations_journeyview() {
   		// added to all links before graphapi passes off to d3.
   		// Currently only contains a date (the time that the source
   		// node was created; currently assuming that all links are
-  		// created at the same time as the blog post they're
+  		// created at the same time as the response they're
   		// associated with.
     if (!$dataArray['author']) {
       $dataArray['author'] = "None";
@@ -353,7 +353,7 @@ function lacuna_visualizations_journeyview() {
   			}
   		}
   	}
-    if ($item->type == "blog") {
+    if ($item->type == "response") {
 
   		$dataArray['author'] = $users[$item->uid]->field_display_name->und[0].safe_value;
 
@@ -395,7 +395,7 @@ function lacuna_visualizations_journeyview() {
 					  echo "<br />";
 				  }
 			  } */
-        }	// end if($item->type == "blog")
+        }	// end if($item->type == "response")
         graphapi_set_node_data($graph, $title, $dataArray);
     }
 
@@ -413,30 +413,32 @@ function lacuna_visualizations_journeyview() {
   return theme('graphapi_dispatch', array('graph' => $graph, 'config' => $options));
 }  // end function lacuna_visualizations_journeyview()
 
-function get_document_id_for_biblio($nid) {
-  //Find appropriate material for that biblio entry.
-  $docQuery = new EntityFieldQuery();
-  $docQuery
-    ->entityCondition('entity_type', 'node')
-    ->entityCondition('bundle', 'document')
-    ->fieldCondition('field_bibliographic_entry', 'target_id', $nid, '=');
-  $docResult = $docQuery->execute();
-  if (count($docResult['node'])>0){
-    $results = array_keys($docResult['node']);
-    // PHP 5.3 won't dereference arrays from functions directly
-    return $results[0];
-  }
-  else {
-    return null;
-  }
-}
+//function get_document_id_for_biblio($nid) {
+//  //Find appropriate material for that biblio entry.
+//  $docQuery = new EntityFieldQuery();
+//  $docQuery
+//    ->entityCondition('entity_type', 'node')
+//    ->entityCondition('bundle', 'document')
+//    ->fieldCondition('field_bibliographic_entry', 'target_id', $nid, '=');
+//  $docResult = $docQuery->execute();
+//  if (count($docResult['node'])>0){
+//    $results = array_keys($docResult['node']);
+//    // PHP 5.3 won't dereference arrays from functions directly
+//    return $results[0];
+//  }
+//  else {
+//    return null;
+//  }
+//}
 
 function get_link_url($docId, $nid) {
-  if ($docId != null){
-    return $GLOBALS['base_url'] . '/node/' . $docId;
+	global $base_url;
+	$url = $base_url . '/';
+  if (!empty($docId)){
+    return $url . drupal_get_path_alias('node/' . $docId);
   }
   else {
-    return $GLOBALS['base_url'] . '/node/' . $nid;
+    return $url . drupal_get_path_alias('node/' . $nid);
   }
 }
 
@@ -448,36 +450,72 @@ function get_image($item, $docId) {
       return '<center>'.theme('image_style', array('style_name' => 'thumbnails_for_browsing', 'path' => $node->field_image[LANGUAGE_NONE][0]['uri'])).'</center>';
     }
   }
-  else if ($item->type == "blog") {
+  else if ($item->type == "response") {
     return '<center>'.theme('image_style', array('style_name' => 'thumbnails_for_browsing', 'path' => $item->field_image[LANGUAGE_NONE][0]['uri'])).'</center>';
   }
   return "";
 }
 
 /**
- * Visualization showing links between student blog posts and primary
+ * Visualization showing links between student responses and primary
  * sources.
  */
-function lacuna_visualizations_mapview() {
+function lacuna_visualizations_responses() {
 
+	$nids = array();
   $graph = graphapi_new_graph();
+	$gid = course_get_selected_course();
 
-  $blogQuery = new EntityFieldQuery();
-  $blogQuery
-      ->entityCondition('entity_type', 'node')
-      ->entityCondition('bundle', array('biblio', 'blog'));
-  $result = $blogQuery->execute();
-  $nids = array_keys($result['node']);
+	// Because OG has no API for getting all group content per group ಠ_ಠ
+	$sql = "SELECT nid FROM node n
+               INNER JOIN og_membership ogm ON n.nid = ogm.etid
+               WHERE ogm.gid = '" . $gid . "'
+               AND ogm.entity_type = 'node'
+               AND n.type IN ('document', 'response')
+               AND n.status = '" . NODE_PUBLISHED . "'";
+	$result = db_query($sql)->fetchAll();
+	$nids = array();
+	foreach ($result as $row) {
+		$nids[] = $row->nid;
+	}
+
+	// All documents and responses for current course
   $nodes = node_load_multiple($nids);
 
+	$biblio_ids = array();
+	foreach ($nodes as $node) {
+		if ($node->type == 'document') {
+			$biblio_ids[] = $node->field_bibliographic_entry[$node->language][0]['target_id'];
+		}
+	}
+
+	// Load all relevant bibliography references
+	$biblios = node_load_multiple($biblio_ids);
+	$nodes = array_merge($nodes, $biblios);
+
+	// Generate document->bibliography mappings
+	foreach ($nodes as $node) {
+		if ($node->type == 'document') {
+			$doc_ids[$node->field_bibliographic_entry[$node->language][0]['target_id']] = $node->nid;
+		}
+	}
+
   foreach ($nodes as $item) {
-	 // this array will eventually contain all relevant info about blogs and document: author, timestamp, etc.
+	 // this array will eventually contain all relevant info about responses and document: author, timestamp, etc.
 	 // added to nodes before graphapi passes off to d3.
-    $docId = get_document_id_for_biblio($item->nid);
-    // var_dump($docId);
+		if ($item->type == 'response') {
+      // Note the different field name for biblio refs in Responses
+			$docId = $doc_ids[$item->field_bibliographic_item[$item->language][0]['target_id']];
+		}
+		if ($item->type == 'biblio') {
+			$docId = $doc_ids[$item->nid];
+		}
+		if ($item->type == 'document') {
+			continue; // we just load those for ease of setup
+		}
     $dataArray = array(
       'itemType' => $item->type,
-      // author set below -- $item->name for blog posts, but
+      // author set below -- $item->name for responses, but
       // more complicated for biblio entries.
       'author'=> null,
       'u_id' => $item->uid,
@@ -494,7 +532,7 @@ function lacuna_visualizations_mapview() {
 		// added to all links before graphapi passes off to d3.
 		// Currently only contains a date (the time that the source
 		// node was created; currently assuming that all links are
-		// created at the same time as the blog post they're
+		// created at the same time as the response they're
 		// associated with.
     $title = $item->title;
 		/* pull out data needed for biblio nodes and add it to
@@ -502,7 +540,6 @@ function lacuna_visualizations_mapview() {
 		if ($item->type == "biblio") {
 			$document_abstract = strip_tags($item->biblio_abst_e);
 			$dataArray['document_abstract'] = $document_abstract;
-			$author = ' ';
 			if (isset($item->biblio_contributors[0])) {
 				$count = count($item->biblio_contributors);
 				for ($i = 0; $i < $count; $i++) {
@@ -521,11 +558,11 @@ function lacuna_visualizations_mapview() {
 			}
 		}
 
-    if ($item->type == "blog") {
+    if ($item->type == "response") {
 			$dataArray['author'] = $item->name;
 
 			// draw links based off of node's field_bibliographic_entry.
-      if ($item->field_bibliographic_entry) {
+      if (isset($item->field_bibliographic_entry)) {
         $linkArray = $item->field_bibliographic_entry;
         for ($i = 0; $i < count($linkArray[LANGUAGE_NONE]); $i++) {
           $linkedNid = $linkArray[LANGUAGE_NONE][$i]['target_id'];
@@ -536,8 +573,8 @@ function lacuna_visualizations_mapview() {
           	graphapi_set_link_data($graph, $title,	$nodes[$linkedNid]->title, $item->created);
           }
         }
-      } // end if($item->field_bibliographic_entry)
-    }	// end if($item->type == "blog")
+      } // end if($item->field_bibliographic_item)
+    }	// end if($item->type == "response")
     graphapi_set_node_data($graph, $title, $dataArray);
   }
 
@@ -560,7 +597,7 @@ function lacuna_visualizations_mapview() {
   	'drawDocumentCircle' => true,
   );
   return theme('graphapi_dispatch', array('graph' => $graph, 'config' => $options));
-}  // end function lacuna_visualizations_mapview()
+}  // end function lacuna_visualizations_responses()
 
 // Implements hook_library()
 // To load our vis-specific libraries
@@ -605,107 +642,100 @@ function lacuna_visualizations_annotation_dashboard() {
   // return theme('graphapi_dispatch', array('graph' => null, 'config' => $settings));
 }
 
-// TODO: Improve performance - this function is really slow
+
+// an array map function to return the document id
+function get_doc_id($annotation) {
+	return $annotation->field_annotation_reference[$annotation->language][0]['target_id'];
+}
+
+function get_uid($annotation) {
+	return $annotation->uid;
+}
+
 function lacuna_visualizations_annotation_dashboard_data() {
   // Prepare the data for the dashboard, output as JSON
-  global $user;
+	$course_id = course_get_selected_course();	// get current course ID
+	// Get all annotations that are on a document or response in the current course
+	$query = db_query('
+    SELECT entity_id
+    FROM {field_data_field_annotation_reference} AS ar
+    LEFT JOIN {og_membership} AS og
+    ON ar.field_annotation_reference_target_id = og.etid
+    WHERE og.gid = :gid
+    AND og.entity_type = :node', array(':gid' => $course_id, ':node' => 'node'));
+  $annotation_ids = array_keys($query->fetchAllAssoc('entity_id'));
 
-  // Query all annotations with no access checks
-  // $query = new EntityFieldQuery();
-  // $result = $query->entityCondition('entity_type', 'node')
-  //     ->entityCondition('bundle', 'annotation')
-  //     ->addTag('DANGEROUS_ACCESS_CHECK_OPT_OUT')
-  //     ->execute();
-
-  $result = db_query("SELECT nid FROM {node} WHERE type = :type", array(
-  ':type' => 'annotation'));
-
-  if ($result) {
-    $all = array();
-    foreach ($result->fetchAll() as $row) {
-      array_push($all, $row->nid);
-    }
-  }
-
-
-  $canReadAll = user_access('access any private annotation');
-  $documentNames = array(); // to cut down on db queries
-  $userNames = array();   // same as previous - only load users once
-  $annotations = array();
-
+  $userNames = array();   // only load users once
+  $results = array();
   // Fields need for db query:
   // created, uid, annotation_reference, text, quote, private, annotation_tags, category
-  $allNodes = node_load_multiple($all);
+  $annotations = node_load_multiple($annotation_ids);
 
-  foreach ($allNodes as $annotation) {
+	// Load all document and users at once to speed up query time
+	$documents = node_load_multiple(array_map("get_doc_id", $annotations));
+	$annotators = user_load_multiple(array_map("get_uid", $annotations));
+  foreach ($annotators as $annotator) {
+    $userNames[$annotator->uid] = format_username($annotator);
+  }
+  $terms = array();
+	$field_prefix = 'field_annotation_';	// to convert from Drupal field names to viz
+	// Convert from Drupal format to a simpler data format for viz
+	foreach ($annotations as $annotation) {
     // Create a new data object, populate only with necessary data
     // Make it harder to leak unintended data
     $data = new StdClass();
     $data->id = $annotation->nid;
     $data->created = $annotation->created * 1000; // convert to milliseconds for d3
     $data->updated = $annotation->changed * 1000;
-    $data->u_id = $annotation->uid;
+    $data->uid = $annotation->uid;
 
-    // For readability
-    $target_id = $annotation->annotation_reference[$annotation->language][0]['target_id'];
-    $data->doc_id = $target_id;
-    if (!array_key_exists($target_id, $documentNames)) {
-      $document = node_load($target_id);
-      // TODO: use Biblio reference short title instead
-      // TODO: check that something is returned
-      $documentNames[$target_id] = $document->title;
-    }
-    $data->documentTitle = $documentNames[$target_id];
+		$target_id = $annotation->field_annotation_reference[$annotation->language][0]['target_id'];
+		$data->doc_id = $target_id;
+		$data->documentTitle = $documents[$target_id]->title;
 
-    // Convert from Drupal format to a simpler data format for viz
-    // TODO: Refactor the next two loops into a single function
-    // Put function in a helper library for general use here and Annotation Store
-
-    $fields = array('text', 'quote', 'private');
+		// Text content
+    $fields = array('text', 'quote');
     foreach ($fields as $field) {
-      if (isset($annotation->{$field}[$annotation->language][0]['value'])) {
-        $data->{$field} = $annotation->{$field}[$annotation->language][0]['value'];
+      if (isset($annotation->{$field_prefix . $field}[$annotation->language][0]['value'])) {
+        $data->{$field} = $annotation->{$field_prefix . $field}[$annotation->language][0]['value'];
       }
     }
-    $data->private ? $data->private = 'Private' : $data->private = 'Public';
-    // TODO: Refactor "annotation_tags" to be "tags" -- must wait until 1.0
-    // Not a good idea to change it for existing alpha or beta sites
-    $fields = array('annotation_tags', 'category');
+
+		// Sharing options; we just need the overall option (Private, Everyone, etc.), not details
+		$data->audience = ucfirst($annotation->field_annotation_audience[$annotation->language][0]['value']);
+
+		// Taxonomies: tags and categories
+    // Note: removed tags for now; not shown, so no need to load them
+    $fields = array('category');
     foreach ($fields as $field) {
       $data->{$field} = array();
-      if (isset($annotation->{$field}[$annotation->language][0]['tid'])) {
-        foreach ($annotation->{$field}[$annotation->language] as $tag) {
-          $term = taxonomy_term_load($tag['tid']);
+      if (isset($annotation->{$field_prefix . $field}[$annotation->language][0]['tid'])) {
+        foreach ($annotation->{$field_prefix . $field}[$annotation->language] as $tag) {
+          if (!isset($terms[$tag['tid']])) {
+            $term = taxonomy_term_load($tag['tid']);
+            $terms[$tag['tid']] = $term;
+          } else {
+            $term = $terms[$tag['tid']];
+          }
           array_push($data->{$field}, $term->name);
         }
       }
     }
     if ($data->category) {
-      $data->category = $data->category[0];
+      $data->category = $data->category[0];	// set default to first category
     }
-    // Secure fields of private annotations, usernames, etc.
-    $isPrivate = $annotation->private[$annotation->language][0]['value'];
-    if (!$canReadAll && ($annotation->uid != $user->uid)) {
-      if ($isPrivate) {
-        $data->text = "";
-        $data->quote = "";
-        $data->annotation_tags = Array();
-      }
-      if (!array_key_exists($annotation->uid, $userNames)) {
-        // anonymize with slight UID obfuscation
-        // should use a hash or something to make it harder to decipher
-        // but "view user profile" permissions *should* be limited anyway
-        $userNames[$annotation->uid] = "Student #1" . $annotation->uid;
-      }
+
+    // Remove or sanitize data we don't want to expose: annotations, usernames, etc.
+    if (!empty($data->text)) {
+      $data->text = str_repeat("x", strlen($data->text)); // provide length w/o exposing data
     }
-    elseif ($canReadAll || $annotation->uid == $user->uid) {
-      if (!array_key_exists($annotation->uid, $userNames)) {
-        $userNames[$annotation->uid] = format_username(user_load($annotation->uid));
-      }
-    }
+		unset($data->quote);
+		unset($data->tags);
+
     $data->username = $userNames[$annotation->uid];
-    array_push($annotations, $data);
+    array_push($results, $data);
   }
-  drupal_json_output($annotations);
+
+  drupal_json_output($results);
   drupal_exit();
 }

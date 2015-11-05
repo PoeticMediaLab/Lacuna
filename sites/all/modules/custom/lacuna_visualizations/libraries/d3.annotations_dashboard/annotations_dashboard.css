@@ -24,19 +24,18 @@ div#time_brush {
   background-color: rgba(250,250,250,.8);
 }
 
-div#dashboard-buttons {
-  position: relative;
-	height: 0; /* for not taking up space */
-  top: -60px;
-  margin-left: 25px;
+.dashboard-buttons {
+    position: relative;
+    height: 0; /* for not taking up space */
+    margin-left: 25px;
 }
 
 div.help_text {
-	width: 30%;
+    width: 200px;
 	padding-left: 20px;
-  visibility: hidden;
-  float: right;
-  z-index: 100 !important;
+    visibility: hidden;
+    float: right;
+    z-index: 100 !important;
 }
 
 div#piecharts {
@@ -48,12 +47,13 @@ div#piecharts {
 div#pie_types {
   width: 520px;
   margin-left: 0px;
-  margin-top: 25px;
+  margin-top: 0px;
+  margin-bottom: 10px;
   height: 225px;
 }
 
 div#time_brush {
-  height: 450px;
+  height: 400px;
   width: 520px;
 }
 
@@ -69,7 +69,7 @@ div#network {
 
 div#legend {
   position: relative;
-  top: -164px;
+  top: 70px;
   left: 430px;
   height: 0;
 }
@@ -122,11 +122,12 @@ h3 {
   padding-top: 0px;
   margin-top: 0px;
   display: inline-block;
-  margin-left: 33%;
+    margin-left: 20px;
 }
 
 .help {
-  display: inline-block;
+    display: inline-block;
+    margin-right: 25px;
 }
 
 .help_text {
@@ -164,15 +165,15 @@ div#annotations_table_draw_wrapper label {
 	padding-left: 25px;
 }
 
-.simple_overlay .close {
-    background-image:url(/media/img/overlay/close.png);
-    position:absolute;
-    right:-15px;
-    top:-15px;
-    cursor:pointer;
-    height:35px;
-    width:35px;
-}
+/*.simple_overlay .close {*/
+    /*background-image:url("/media/img/overlay/close.png");*/
+    /*position:absolute;*/
+    /*right:-15px;*/
+    /*top:-15px;*/
+    /*cursor:pointer;*/
+    /*height:35px;*/
+    /*width:35px;*/
+/*}*/
 
 div.tooltip table {
   text-rendering: optimizeLegibility;
@@ -229,13 +230,18 @@ td.value {
   vertical-align: top;
 }
 
-#dashboard #visual-content td#right
+#dashboard #visual-content #right
 {
-  text-align: right;
+    text-align: right;
+    top: 52px;
+    position: absolute;
+    left: 650px;
 }
-#dashboard #visual-content td#right div.right-part
+#dashboard #visual-content #right div.right-part
 {
-  text-align: left;
+    text-align: left;
+    position: relative;
+    top: 20px;
 }
 
 #dashboard div.column

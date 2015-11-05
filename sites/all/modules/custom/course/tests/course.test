@@ -1,0 +1,31 @@
+<?php
+class CourseTestCase extends DrupalWebTestCase {
+	protected $privileged_user;
+
+	public static function getInfo() {
+		return array(
+			'name' => 'Course',
+			'description' => 'Ensure that Courses works correctly',
+			'group' => 'Lacuna Stories'
+		);
+	}
+
+	public function setUp() {
+		$this->profile = 'lacuna_stories';
+		parent::setUp(array('filter'));
+		$success = module_enable(array('course'), TRUE);
+		$this->assertTrue($success, 'Enabled: course');
+		$this->resetAll();
+		$this->privileged_user = $this->drupalCreateUser(
+			array(
+
+			)
+		);
+		$this->drupalLogin($this->privileged_user);
+	}
+
+	public function testCourseCreation() {
+
+	}
+
+}

@@ -1,0 +1,77 @@
+.page-turner {
+
+}
+
+.page-turner-hidden {
+  display: none;
+}
+
+#page-turner-nav {
+  width: 100%;
+  height: 50px;
+  clear: both;
+}
+
+rect#page-turner-nav {
+  fill: rgba(240,240,240,.5);
+  stroke: none;
+}
+
+#page-turner-brush {
+  fill: rgba(200,200,200, .1);
+  stroke: rgba(100, 100, 100, .75);
+  stroke-width: 1px;
+  shape-rendering: crispEdges;
+  height: 60px;
+}
+
+#page-turner-pages-container {
+  float: right;
+  font-size: 12px;
+  cursor: default;
+  margin-top: -20px;
+  margin-bottom: 10px;
+}
+
+#page-turner-pages-numbers {
+  text-align: end;
+  cursor: text;
+}
+
+.page-turner-ticks line,
+.page-turner-ticks path {
+  fill: none;
+  stroke: rgba(0, 0, 0, .1);
+  shape-rendering: crispEdges;
+}
+
+.page-turner-break line,
+.page-turner-break path {
+  fill: none;
+  stroke: black;
+  stroke-opacity: .5;
+  stroke-width: 3px;
+}
+
+.page-turner-pager {
+  cursor: pointer;
+  font-size: 3em !important;
+  vertical-align: middle;
+  display: inline-block;
+}
+
+#page-turner-prev {
+  float: left;
+  margin-right: 1%;
+}
+
+#page-turner-next {
+  float: right;
+}
+
+.page-turner-number {
+  text-align: center;
+  font-weight: normal;
+  padding-top: 20px;
+  padding-bottom: 5px;
+}
