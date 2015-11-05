@@ -324,8 +324,9 @@ function lacuna_stories_default_tax_terms () {
         $term = new stdClass();
         $term->name = $name;
         $term->vid = $vocabulary->vid;
-        $term->weight = $weight + 1;
+        $term->weight = $weight;
         taxonomy_term_save($term);
+        ++$weight;
       }
     }
   }
@@ -422,7 +423,7 @@ function lacuna_stories_late_feature_and_module_enabling () {
 		'lacuna_stories_materials',	// Depends on the Workflow for Materials Publications
 		'lacuna_stories_threads',	// Depends on Materials
 		'lacuna_stories_responses',	// Depends on Materials
-		'lacuna_stores_irb_form', // Webform is created on install
+		'lacuna_stories_irb_form', // Webform is created on install
     'lacuna_stories_visualizations', // Visualizations require responses to be active
   );
   module_enable($module_list);
