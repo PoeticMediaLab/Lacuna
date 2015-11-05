@@ -171,6 +171,16 @@ function lacuna_stories_create_research_consent_webform() {
   
   $node = node_submit($node); // Prepare node for a submit
   node_save($node);
+  // Node ids change, so we must add the menu item after the webform is created
+  $menu_item = array(
+    'link_path' => 'node/' . $node->nid,
+    'link_title' => 'Digital Research Consent Form',
+    'menu_name' => 'main_menu',
+    'weight' => 10,
+    'language' => $node->language,
+    'module' => 'menu'
+  );
+  menu_link_save($menu_item);
 }
 
 
