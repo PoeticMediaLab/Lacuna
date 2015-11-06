@@ -99,6 +99,7 @@ function workflow_form_alter(&$form, &$form_state, $form_id) {
     $submit_action = $form['actions']['submit'];
 
     $current_sid = $workflow_form['workflow_sid']['#default_value'];
+    $scheduled = isset($workflow_form['workflow_scheduling']['scheduled']) && $workflow_form['workflow_scheduling']['scheduled']['#default_value'];
 
     // Get the min weight for our buttons.
     $option_weight = isset($submit_action['#weight']) ? $submit_action['#weight'] : 0;
@@ -145,7 +146,7 @@ function workflow_form_alter(&$form, &$form_state, $form_id) {
 
       // Hide the same-state button in some cases.
       // Alternative: use hide($element);
-      if ($same_state_button) {
+      if ($same_state_button && !$scheduled) {
         if (substr( $form['#form_id'], 0, 24) == 'workflow_transition_form') {
           // Hide same-state-button on the transition-form (that is:
           // view page or workflow history tab) if there is nothing to do.
@@ -207,7 +208,10 @@ function workflow_transition_form(array $form, array &$form_state, array $field,
  * a transition to be executed later by cron.
  */
 function workflow_transition_form_validate($form, &$form_state) {
-  // Empty. But required.
+  // Even if this function is empty, it must exist.
+  // Validate the attached fields.
+  // field_attach_form_validate('WorkflowTransition', $form_state['values'], $form, $form_state);
+
   // $transition_form = new WorkflowTransitionForm($field, $instance, $entity_type, $entity);
   // return $transition_form->submitForm($form, $form_state, $items);
 }

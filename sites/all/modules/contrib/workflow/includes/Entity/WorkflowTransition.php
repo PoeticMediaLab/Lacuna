@@ -717,7 +717,7 @@ class WorkflowTransitionController extends EntityAPIController {
       }
       else {
         unset($entity->hid);
-        $entity->stamp = REQUEST_TIME;
+        $entity->stamp = isset($entity->stamp) ? $entity->stamp : REQUEST_TIME;
 
         return parent::save($entity, $transaction);
       }

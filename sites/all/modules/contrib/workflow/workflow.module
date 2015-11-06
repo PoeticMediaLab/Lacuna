@@ -687,7 +687,7 @@ function workflow_node_current_state($entity, $entity_type = 'node', &$field_nam
     }
     else {
       // Workflow Node API.
-      $field_name = NULL;
+      $field_name = '';
     }
   }
 
@@ -708,7 +708,7 @@ function workflow_node_current_state($entity, $entity_type = 'node', &$field_nam
   }
 
   // No current state. Use creation state.
-  if (!$sid && $field_name !== NULL) {
+  if (!empty($sid) && $field_name !== NULL) {
     $sid = _workflow_get_workflow_creation_sid($entity_type, $entity, $field_name);
   }
 

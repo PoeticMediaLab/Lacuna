@@ -66,6 +66,8 @@ function _workflow_rules_workflow_check_given_state($sid, array $sids) {
  *   An array of new sids to meet the condition.
  * @param array $condition
  *   A RulesCondition->settings array.
+ *
+ * @return bool
  */
 function _workflow_rules_node_check_transition($node, array $old_sids, array $new_sids, array $condition) {
   if (!$last_transition = workflow_transition_load_single('node', $node->nid, '')) {
@@ -89,6 +91,8 @@ function _workflow_rules_node_check_transition($node, array $old_sids, array $ne
  *   The node with the new values. Other entity types are not supported.
  * @param array $sids
  *   An array of State IDs to meet the condition.
+ *
+ * @return bool
  */
 function _workflow_rules_node_check_state($node, array $sids) {
   // Provide a fast exit if this is a node type without Workflow.
