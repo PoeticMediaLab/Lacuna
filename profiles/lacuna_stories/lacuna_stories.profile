@@ -21,7 +21,7 @@ function lacuna_stories_install_tasks($install_state) {
 //      'display_name' => st('Create research consent form')
     ),
     'lacuna_stories_create_basic_page_type' => array(),
-    'lacuna_stories_create_basic_pages' => array(
+    'lacuna_stories_create_default_content' => array(
 //      'display_name' => st('Create static pages')
     ),
     'lacuna_stories_set_basic_pages_permissions' => array(
@@ -201,17 +201,16 @@ function lacuna_stories_create_research_consent_webform() {
 /*
   Creating basic pages like FAQ, "Instructor's Guide", etc.
  */
-function lacuna_stories_create_basic_pages()
-{
+function lacuna_stories_create_default_content() {
 
   $content[0]["title"] = "FAQ";
-  $content[0]["body"] = file_get_contents(DRUPAL_ROOT . "/profiles/lacuna_stories/basic pages/faq.html");;
+  $content[0]["body"] = file_get_contents(DRUPAL_ROOT . "/profiles/lacuna_stories/content/faq.html");;
 
   $content[1]["title"] = "Instructor's Guide";
-  $content[1]["body"] = file_get_contents(DRUPAL_ROOT . "/profiles/lacuna_stories/basic pages/instructors_guide.html");
+  $content[1]["body"] = file_get_contents(DRUPAL_ROOT . "/profiles/lacuna_stories/content/instructors_guide.html");
 
   $content[2]["title"] = "Student User Guide";
-  $content[2]["body"] = file_get_contents(DRUPAL_ROOT . "/profiles/lacuna_stories/basic pages/student_user_guide.html");;
+  $content[2]["body"] = file_get_contents(DRUPAL_ROOT . "/profiles/lacuna_stories/content/student_user_guide.html");;
 
   foreach ($content as $page) {
     $node = new stdClass(); // We create a new node object
@@ -238,6 +237,13 @@ function lacuna_stories_create_basic_pages()
     );
     menu_link_save($menu_item);
   }
+
+  // Add the front page banner block
+  $block = array(
+    'title' => '<none>',
+    'description' => 'Front Page Banner',
+    'body' => file_get_content_headers(DRUPAL_ROOT . "/profiles/lacuna_stories/content/banner.html")
+  );
 }
 
 /*
