@@ -49,7 +49,7 @@ Speaking of plugins, we've developed a number of new ones for the 1.x branch of 
 
 ## Installation Instructions
 
-Follow the standard Drupal installation process (https://www.drupal.org/documentation/install), but instead of downloading the code as stated in Step 1, download our code instead:
+Follow the standard [Drupal installation process](https://www.drupal.org/documentation/install), but instead of downloading the code as stated in Step 1, download our code instead:
 
 ```
 git clone https://github.com/PoeticMediaLab/LacunaStories.git
@@ -88,7 +88,9 @@ Lacuna Stories is designed to be used for courses, so all documents that you wou
 Unless you are the only person who will be using your instance Lacuna Stories, you'll probably want to add new users. There are four main roles that users can have: "Site Administrator", "Content Manager", "Instructor", and "Student":
 
 #### Site Administrator
-This role has full access to manage the entire site, which includes enabling or disabling modules, backing up the database, creating and deleting users, and adding or deleting any and all types of content. It is recommended that only people with technical expertise managing and building Drupal sites have this role. NOTE: If visitors cannot register accounts, then only Site Administrators are able to add new users.
+This role has full access to manage the entire site, which includes enabling or disabling modules, backing up the database, creating and deleting users, and adding or deleting any and all types of content. It is recommended that only people with technical expertise managing and building Drupal sites have this role.
+
+*Note*: If visitors cannot register accounts, then only Site Administrators are able to add new users.
 
 #### Content Mananger
 This role can add, delete, and edit courses and materials within courses. They do not need to be enrolled in a course to make changes to it. Typically, these users may be research assistants or others who help your team set up and manage courses for instructors.
@@ -100,6 +102,7 @@ Users with this role can create new courses, add materials to courses, manage th
 Students can enroll in a course, read and annotate course materials, write responses, comment on the responses of others in their course, create peer groups for smaller group work, and manage their own profiles.
 
 ### Add Students and Instructors to a Course
+After users have accounts on the site, they need to be members of a course to access materials. From the "About this Course" page, click on the "Group" tab (we use [Organic Groups](https://www.drupal.org/project/og) to organize courses). Next, click "Add people". Under the "User name" field, start typing the names of students and instructors who should be part of this course. For instructors, check the "administrator member" box before submitting the form. When ready, click the "Add users" button. Repeat as needed.
 
 ## Reading, Annotating, and Writing
 Please see the Instructor's Guide, Student Guide, and FAQ that come included with Lacuna Stories under the "Help" menu. We also have several helpful videos and other documentation on our [project website](http://www.lacunastories.com).
