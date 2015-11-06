@@ -37,6 +37,7 @@ class WorkflowItem extends WorkflowD7Base {// D8: extends ConfigFieldItemBase im
           'widget' => array(
             'options' => 'select',
             'name_as_title' => 1,
+            'fieldset' => 0,
             'hide' => 0,
             'schedule' => 1,
             'schedule_timezone' => 1,
@@ -60,6 +61,13 @@ class WorkflowItem extends WorkflowD7Base {// D8: extends ConfigFieldItemBase im
 
   /**
    * Implements hook_field_settings_form() -> ConfigFieldItemInterface::settingsForm().
+   *
+   * @param array $form
+   * @param array $form_state
+   * @param $has_data
+   *
+   * @return array $element
+   *   The newly constructed element.
    */
   public function settingsForm(array $form, array &$form_state, $has_data) {
     $field_info = self::getInfo();
@@ -69,11 +77,13 @@ class WorkflowItem extends WorkflowD7Base {// D8: extends ConfigFieldItemBase im
 
     // Create list of all Workflow types. Include an initial empty value.
     // Validate each workflow, and generate a message if not complete.
+    /* @var $workflow Workflow */
     $workflows = array();
     $workflows[''] = t('- Select a value -');
-    foreach (workflow_load_multiple() as $wid => $workflow) {
-      if ($workflow->isValid()) {
-        $workflows[$wid] = check_plain($workflow->label()); // No t() on settings page.
+    foreach ($workflows += workflow_get_workflow_names() as $wid => $label) {
+      $workflow = workflow_load_single($wid);
+      if ($wid && !$workflow->isValid()) {
+        unset($workflows[$wid]);
       }
     }
 
@@ -127,6 +137,16 @@ class WorkflowItem extends WorkflowD7Base {// D8: extends ConfigFieldItemBase im
         workflow. Some can be altered per widget instance.'
       ),
     );
+    $fieldset_options = array(0 => t('No fieldset'), 1 => t('Collapsible fieldset'), 2 => t('Collapsed fieldset'));
+    $element['widget']['fieldset'] = array(
+      '#type' => 'select',
+      '#options' => $fieldset_options,
+      '#title' => t('Show the form in a fieldset?'),
+      '#default_value' => $settings['widget']['fieldset'],
+      '#description' => t("The Widget can be wrapped in a visible fieldset. You'd
+        do this when you use the widget on a Node Edit page."
+      ),
+    );
     $element['widget']['options'] = array(
       '#type' => 'select',
       '#title' => t('How to show the available states'),
@@ -153,7 +173,7 @@ class WorkflowItem extends WorkflowD7Base {// D8: extends ConfigFieldItemBase im
         'Using Workflow Field, the widget is always shown when editing an
         Entity. Set this checkbox in case you only want to change the status
         on the Workflow History tab or on the Node View. (This checkbox is
-        only needed because Drupal core does not have a <hidden> widget.)'
+        only needed because Drupal core does not have a "hidden" widget.)'
       ),
     );
     $element['widget']['name_as_title'] = array(
@@ -240,142 +260,11 @@ class WorkflowItem extends WorkflowD7Base {// D8: extends ConfigFieldItemBase im
     return $element;
   }
 
-  /*
-   * Currently, there are no instance Settings.
-   * hook_field_instance_settings_form() -> ConfigFieldItemInterface::instanceSettingsForm()
-   */
-  // public function instanceSettingsForm(array $form, array &$form_state, $has_data) {
-  // }
-
-  /**
-   * Does NOT not implement hook_field_presave().
-   *
-   * Since $nid is needed, but not yet known at this moment.
-   * hook_field_presave() -> FieldItemInterface::preSave()
-   */
-  // function workflowfield_field_presave($entity_type, $entity, $field, $instance, $langcode, &$items) {
-  // }
-
   /**
    * Implements hook_field_insert() -> FieldItemInterface::insert().
    */
   public function insert() {
     return $this->update();
-  }
-
-  /**
-   * Implements hook_field_update() -> FieldItemInterface::update().
-   *
-   * @todo: ATM, it is not used anymore. But it should replace DefaultWidget::submit().
-   * 
-   * It is called also from hook_field_insert(), since we need $nid to store {workflow_node_history}.
-   * We cannot use hook_field_presave(), since $nid is not yet known at that moment.
-   *
-   * "Contrary to the old D7 hooks, the methods do not receive the parent entity
-   * "or the langcode of the field values as parameters. If needed, those can be accessed
-   * "by the getEntity() and getLangcode() methods on the Field and FieldItem classes.
-   */
-  public function update(&$items) {// ($entity_type, $entity, $field, $instance, $langcode, &$items) {
-
-    $field_name = $this->field['field_name'];
-    // $field['settings']['wid'] can be numeric or named.
-    $workflow = workflow_load_single($this->field['settings']['wid']);
-    $wid = $workflow->wid;
-
-    // @todo D8: remove below lines.
-    $entity = $this->entity;
-    $entity_type = $this->entity_type;
-    $entity_id = entity_id($entity_type, $entity);
-
-    if (!$entity) {
-      // No entity available, we are on the field Settings page - 'default value' field.
-      // This is hidden from the admin, because the default value can be different for every user.
-    }
-    elseif (!$entity_id && $entity_type == 'comment') {
-      // Not possible: a comment on a non-existent node.
-    }
-    elseif ($entity_id && $this->entity_type == 'comment') {
-      // This happens when we are on an entity's comment.
-      $referenced_entity_type = 'node'; // Comments only exist on nodes.
-      $referenced_entity = entity_load_single($referenced_entity_type, $entity_id); // Comments only exist on nodes.
-
-      // Submit the data. $items is reset by reference to normal value, and is magically saved by the field itself.
-      $form = array();
-      $form_state = array();
-      $widget = new WorkflowDefaultWidget($this->field, $this->instance, $referenced_entity_type, $referenced_entity);
-      $widget->submit($form, $form_state, $items); // $items is a proprietary D7 parameter.
-
-      // Remember: we are on a comment form, so the comment is saved automatically, but the referenced entity is not.
-      // @todo: probably we'd like to do this form within the Widget, but
-      // $todo: that does not know wether we are on a comment or a node form.
-      //
-      // Widget::submit() returns the new value in a 'sane' state.
-      // Save the referenced entity, but only is transition succeeded, and is not scheduled.
-      $old_sid = _workflow_get_sid_by_items($referenced_entity->{$field_name}[LANGUAGE_NONE]);
-      $new_sid = _workflow_get_sid_by_items($items);
-      if ($old_sid != $new_sid) {
-        $referenced_entity->{$field_name}[LANGUAGE_NONE] = $items;
-        entity_save($referenced_entity_type, $referenced_entity);
-      }
-    }
-    elseif ($this->entity_type != 'comment') {
-      if (isset($items[0]['value'])) {
-        // A 'normal' options.module-widget is used, and $items[0]['value'] is already properly set.
-      }
-      elseif (isset($items[0]['workflow'])) {
-        // The WorkflowDefaultWidget is used.
-        // Submit the data. $items is reset by reference to normal value, and is magically saved by the field itself.
-        $form = array();
-        $form_state = array();
-        $widget = new WorkflowDefaultWidget($this->field, $this->instance, $entity_type, $entity);
-        $widget->submit($form, $form_state, $items); // $items is a proprietary D7 parameter.
-      }
-      else {
-        drupal_set_message(t('error in WorkfowItem->update()'), 'error');
-      }
-    }
-    // A 'normal' node add page.
-    // We should not be here, since we only do inserts after $entity_id is known.
-    // $current_sid = workflow_load_single($wid)->getCreationSid();
-  }
-
-  /**
-   * Implements hook_field_delete() -> FieldItemInterface::delete().
-   */
-  public function delete($items) {
-    global $user;
-
-    $entity_type = $this->entity_type;
-    $entity = $this->entity;
-    $entity_id = entity_id($entity_type, $entity);
-    $field_name = $this->field['field_name'];
-
-    // Delete the record in {workflow_node} - not for Workflow Field.
-    // Use a one-liner for better code analysis when grepping on old code.
-    (!$field_name) ? workflow_delete_workflow_node_by_nid($entity_id) : NULL;
-
-    // Add a history record in {workflow_node_history}.
-    // @see drupal.org/node/2165349, comment by Bastlynn:
-    // The reason for this history log upon delete is because Workflow module
-    // has historically been used to track node states and accountability in
-    // business environments where accountability for changes over time is
-    // *absolutely* required. Think banking and/or particularly strict
-    // retention policies for legal reasons.
-    //
-    // However, a deleted nid may be re-used under certain circumstances:
-    // e.g., working with InnoDB or after restart the DB server.
-    // This may cause that old history is associated with a new node.
-    $old_sid = _workflow_get_sid_by_items($items);
-    $new_sid = (int) WORKFLOW_DELETION;
-    $comment = t('Entity deleted.');
-    $transition = new WorkflowTransition();
-    $transition->setValues($entity_type, $entity, $field_name, $old_sid, $new_sid, $user->uid, REQUEST_TIME, $comment);
-    $transition->save();
-
-    // Delete all records for this node in {workflow_scheduled_transition}.
-    foreach (WorkflowScheduledTransition::load($entity_type, $entity_id, $field_name) as $scheduled_transition) {
-      $scheduled_transition->delete();
-    }
   }
 
   /**
@@ -388,16 +277,17 @@ class WorkflowItem extends WorkflowD7Base {// D8: extends ConfigFieldItemBase im
    * @param int $wid
    *   The Workflow Id.
    *
-   * @return
-   *   The string representation of the $values array:
-   *    - Values are separated by a carriage return.
-   *    - Each value is in the format "value|label" or "value".
+   * @return string
+   * The string representation of the $values array:
+   * - Values are separated by a carriage return.
+   * - Each value is in the format "value|label" or "value".
    */
   protected function _allowed_values_string($wid = 0) {
     $lines = array();
     $states = workflow_state_load_multiple($wid);
     $previous_wid = -1;
 
+    /* @var $state WorkflowState */
     foreach ($states as $state) {
       // Only show enabled states.
       if ($state->isActive()) {

@@ -22,8 +22,7 @@ Drupal.wysiwyg.editor.attach.whizzywig = function(context, params, settings) {
   }
   // Whizzywig needs to have the width set 'inline'.
   var $field = $('#' + params.field);
-  var originalValues = Drupal.wysiwyg.instances[params.field];
-  originalValues.originalStyle = $field.attr('style');
+  this.originalStyle = $field.attr('style');
   $field.css('width', $field.width() + 'px');
 
   // Attach editor.
@@ -36,8 +35,9 @@ Drupal.wysiwyg.editor.attach.whizzywig = function(context, params, settings) {
  * Detach a single or all editors.
  */
 Drupal.wysiwyg.editor.detach.whizzywig = function (context, params, trigger) {
+  var instance = this;
   var detach = function (index) {
-    var id = whizzies[index], $field = $('#' + id), instance = Drupal.wysiwyg.instances[id];
+    var id = whizzies[index], $field = $('#' + id);
 
     // Save contents of editor back into textarea.
     $field.val(instance.getContent());
@@ -53,7 +53,9 @@ Drupal.wysiwyg.editor.detach.whizzywig = function (context, params, trigger) {
     whizzies.splice(index, 1);
 
     // Restore original textarea styling.
-    $field.removeAttr('style').attr('style', instance.originalStyle);
+    if ('originalStyle' in instance) {
+      $field.removeAttr('style').attr('style', instance.originalStyle);
+    }
   }
 
   if (typeof params != 'undefined') {
@@ -103,6 +105,15 @@ Drupal.wysiwyg.editor.instance.whizzywig = {
      clone.body.innerHTML = $field.val();
     }
     return tidyH(clone);
+  },
+
+  isFullscreen: function () {
+    // This relies on a global function which uses a global variable...
+    var idTa_old = idTa;
+    idTa = this.field;
+    var fullscreen = isFullscreen();
+    idTa = idTa_old;
+    return fullscreen;
   }
 };
 })(jQuery);

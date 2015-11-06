@@ -1,30 +1,33 @@
 
-VIEWS GLOBAL FILTER CONFIGURATION (7.x)
+GLOBAL FILTER FOR VIEWS & CONTEXTS (D7)
 =======================================
 
-This module takes advantage of the Session Cache API to store your visitors'
-filter settings during their browsing experience, and beyond. So you need to
-download and enable the small module http://drupal.org/project/session_cache.
-Session Cache API's out-of-the-box configuration is fine for now.
+This module remembers your visitors' filter settings while they are on your site
+and beyond (i.e. until they return). The filter settings can be used to filter
+views across multiple pages and to switch "contexts", like page layouts, see
+http://drupal.org/project/context.
+ 
+Global Filter takes advantage of the small Session Cache API module,
+http://drupal.org/project/session_cache. Please enable it. Its out-of-the-box
+configuration is fine for now.
 
-A global filter is based on either a field or a view. A search term text box may
-also be used as a global filter. It is treated like a field. Similarly, if you
-have the Location or Geofield modules installed then you may also globally
-filter by proximity. See the special section below for details.
-
-Fields execute just that little faster and are more straight-forward to use, so
-maybe pick a field unless you want to reduce the set of field values that may
-be selected by your visitors, in which case you'll generally have to resort to a
-View.
+The values that may be selected from a global filter are based on either a field
+or a view. A search term text box may also be used as a global filter. It is
+treated like a field. If you have the Location or Geofield modules installed
+then you may also globally filter by proximity. See the special section below
+for details.
+Fields execute just that little faster and are more straight-forward to use than
+views, so pick a field as your global filter unless you want to reduce the set
+of field values that may be selected, in which case you'll generally have to
+resort to a view.
 
 Fields are defined on the Structure >> Content types >> Manage fields and
 Configuration >> Account settings >> Manage fields pages. An overview of all
 fields on your system can be viewed via a link on the Administer >> Reports
 page.
 
-0) You normally use this module in the context of Views, so enable that module
-together with Views Global Filter.
-
+GLOBAL FILTER FOR VIEWS
+=======================
 1) A couple of filter blocks, named "Global filter block 1" and "Global filter
 block 2" will now be available at Structure >> Blocks. If you want to use more
 than two global filter blocks, you can create more blocks at Configuration >>
@@ -41,7 +44,7 @@ re-order your items if necessary. The remaining items will be ignored. The view
 does not need to have a page or block display associated with it and may even
 be disabled -- it will still operate correctly as a global filter.
 2b) After you have selected a widget, press "Save block". The page will refresh
-and you will be able add more filters to the same block by opening the next
+and you will be able to add more filters to the same block by opening the next
 field set under the one just saved.
 2c) After saving the block you can also select global filter defaults. The
 default will remain active until the user makes a different filter selection. If
@@ -50,7 +53,8 @@ authenticated users can override the global filter default with their personal
 choice on their profile.
 
 3) With your global filter block(s) configured, you can now use them to channel
-the selected values into Contextual Filters (as opposed to regular filters).
+the selected values into a view's Contextual Filter (as opposed to a regular
+filter).
 On the View edit page, open the Advanced field-set on the right. Then next to
 Contextual Filters click Add and select the item corresponding to the global
 filter source in the previous step. If you selected a View in step 2) then tick
@@ -63,16 +67,20 @@ After pressing "Add and configure..." on the next panel, press the radio button
 3b) When you chose a View as the source for the global filter, select Type
 "Global filter (view)" and then select the View(s) driving this filter.
 
-4) Apply and Save the View.
+4) Apply and Save the view.
 
-When you already have contextual filters defined on the View and want to keep
-them, make sure the Global Filter contextual filter is last in the list and
-that when typing the View's path in your browser you append arguments for the
-contextual filters that precede the global filter.
+That's it. Repeat steps 3) and 4) for the remaining views that need to use your
+global filters.
 
-That's all. Repeat steps 3) and 4) for the remaining Views that need to use your
-global filters. Make sure that under "Page Settings" the Path does NOT contain
-percent signs for arguments that you wish to apply a Global Filter to.
+Make sure that under "Page Settings" the Path does NOT contain percent signs for
+arguments that you wish to apply a Global Filter to. In other words, the percent
+signs in the Path should stop at the first Global Filter. So, if you have one
+normal contextual filter, followed by one global filter, you'll have one percent
+sign. When typing the view's path in your browser address bar, append arguments
+for the normal contextual filters that precede the global filter. Use "all" to
+skip a filter: /your-view-with-contextual-filters/all. If you type a URL
+argument in the position of a global filter, you temporarily override the
+current global filter value without setting it.
 
 By default each global filter widget comes with a Set button to activate the
 selection. However if you tick the appropriate check-box on the filter's
@@ -88,12 +96,50 @@ or in emails to direct the reader to a pre-filtered view of your site.
 You can have a total of up to 20 global filters across 1-20 global filter
 blocks.
 
+GLOBAL FILTER TO SET CONTEXTS
+=============================
+Instead of using a global filter to simultaneously filter views, you can use it
+with the Context module, http://drupal.org/project/context, as a condition for
+setting contexts.
+For instance you can create a global filter block with a drop-down of
+countries and then create session conditions for various country names, so that
+your site reacts to the globally selected country. And using a PHP code snippet
+for the default you could pre-select the drop-down with the visitor's country
+based on their IP address, via http://drupal.org/project/smart_ip. See:
+http://drupal.org/node/2318193
+
+To set up a session condition you need to install and enable Session Context,
+http://drupal.org/project/session_context.
+Then at admin/structure/context/settings/session, use the following format to
+create a condition: global_filter:field_NAME=VALUE  (no spaces, except in VALUE)
+This condition will then be available at /admin/structure/context/add, when you
+select Session as the condition from the drop-down.
+
+For instance, to make the Context module react to taxonomy term 21 being
+globally selected by the visitor, enter in the text area at
+admin/structure/context/settings/session:
+  global_filter:field_tags=21
+Ignore the note below the text area.
+You can require multiple values being set on the filter by using a comma:
+   global_filter:field_tags=21,36,9
+This means: react with the selected context only when all three taxonomy terms
+are selected in a multi-valued widget, like a combo-box or check boxes.
+You can achieve OR-logic (i.e. "one of") by adding single-valued session
+conditions separately:
+  global_filter:field_tags=21
+  global_filter:field_tags=36
+
+CAVEAT: the Context Session module currently does not support any of the caching
+options available through Session Cache API, except for "session". Verify that
+at admin/config/development/session_cache, the radio button "on the server,
+in $_SESSION memory" is pressed, when you use Context Session.
+
 GLOBAL FILTER TAXONOMY WITH HIERARCHICAL SELECT
 ===============================================
 If you wish to use the taxonomy selection widget provided by the Hierarchical
 Select module, you can. When configuring the Hierarchical Select widget on the
 field, you will be prompted to press either "Save term lineage" or "Save only
-the deepest term". Both work with Views Global Filter, but "Save term lineage"
+the deepest term". Both work with Global Filter, but "Save term lineage"
 gives you greater flexibility when using the hierarchical select as the widget
 for your global filters.
 Say you have a three-tiered taxonomy of Country, State and City and created a
@@ -114,7 +160,7 @@ architecturally different from Date FIELDS (discussed below). When used as
 contextual filters "created" and "updated" are supported as single values only.
 However you can use them as contextual ranges via the Views Contextual Range
 Filter module. When used this way, you can enter ranges for "created" and
-"updated" dates via the Range widget in Views Global Filter.
+"updated" dates via the Range widget in Global Filter.
 
 As far as general date FIELDS go, here is how it works.
 We assume that in addition to Views you have the Date module enabled. If your

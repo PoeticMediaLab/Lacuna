@@ -17,6 +17,7 @@ $plugin = array(
   'description' => t('Workflow states.'),
   'required context' => new ctools_context_required(t('Form'), 'node_form'),
   'category' => t('Form'),
+  'render callback' => 'workflownode_node_form_workflow_content_type_render',
 );
 
 /**

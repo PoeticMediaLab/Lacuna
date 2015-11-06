@@ -48,9 +48,7 @@ function course_og_features_default_permissions() {
 
   // Exported og permission: 'node:course:create response content'
   $permissions['node:course:create response content'] = array(
-    'roles' => array(
-      'administrator member' => 'administrator member',
-    ),
+    'roles' => array(),
   );
 
   // Exported og permission: 'node:course:delete any annotation content'
@@ -69,9 +67,7 @@ function course_og_features_default_permissions() {
 
   // Exported og permission: 'node:course:delete any response content'
   $permissions['node:course:delete any response content'] = array(
-    'roles' => array(
-      'administrator member' => 'administrator member',
-    ),
+    'roles' => array(),
   );
 
   // Exported og permission: 'node:course:delete own annotation content'
@@ -92,10 +88,7 @@ function course_og_features_default_permissions() {
 
   // Exported og permission: 'node:course:delete own response content'
   $permissions['node:course:delete own response content'] = array(
-    'roles' => array(
-      'administrator member' => 'administrator member',
-      'member' => 'member',
-    ),
+    'roles' => array(),
   );
 
   // Exported og permission: 'node:course:manage members'
@@ -154,9 +147,7 @@ function course_og_features_default_permissions() {
 
   // Exported og permission: 'node:course:update any response content'
   $permissions['node:course:update any response content'] = array(
-    'roles' => array(
-      'administrator member' => 'administrator member',
-    ),
+    'roles' => array(),
   );
 
   // Exported og permission: 'node:course:update group'
@@ -184,10 +175,7 @@ function course_og_features_default_permissions() {
 
   // Exported og permission: 'node:course:update own response content'
   $permissions['node:course:update own response content'] = array(
-    'roles' => array(
-      'administrator member' => 'administrator member',
-      'member' => 'member',
-    ),
+    'roles' => array(),
   );
 
   return $permissions;

@@ -1,0 +1,18 @@
+commit 70278549c695c76d8e08a6e6fa854affbe6867b4
+Author: Mike Widner <mikewidner@gmail.com>
+Date:   Wed Nov 4 17:39:55 2015 +0000
+
+    Fixed MySQL error in Workflow install for current dev version
+
+diff --git a/sites/all/modules/contrib/workflow/workflow.install b/sites/all/modules/contrib/workflow/workflow.install
+index a815d39..b9730ba 100644
+--- a/sites/all/modules/contrib/workflow/workflow.install
++++ b/sites/all/modules/contrib/workflow/workflow.install
+@@ -359,6 +359,7 @@ function workflow_schema() {
+         'not null' => FALSE,
+       ),
+     ),
++    'primary key' => array('tid'),
+     'indexes' => array(
+       'entity_type' => array('entity_type'),
+       'entity_id' => array('entity_type', 'nid'),

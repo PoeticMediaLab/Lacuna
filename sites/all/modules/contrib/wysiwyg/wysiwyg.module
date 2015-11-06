@@ -195,7 +195,8 @@ function wysiwyg_pre_render_text_format($element) {
   // filter_process_format() copies properties to the expanded 'value' child
   // element. Skip this text format widget, if it contains no 'format' or when
   // the current user does not have access to edit the value.
-  if (!isset($element['format']) || !empty($element['value']['#disabled'])) {
+  // Simplify module creates an extra incomplete 'format' on the base field.
+  if (!isset($element['format']['format']) || !empty($element['value']['#disabled'])) {
     return $element;
   }
   // Allow modules to programmatically enforce no client-side editor by setting
@@ -399,6 +400,11 @@ function wysiwyg_load_editor($profile) {
     }
   }
 
+  // Check if settings were already added on the page that makes an AJAX call.
+  if (isset($_POST['ajax_page_state']) && !empty($_POST['ajax_page_state']['js'][$path . '/wysiwyg.js'])) {
+    $settings_added = TRUE;
+  }
+
   // Add basic Wysiwyg settings if any editor has been added.
   if (!isset($settings_added) && $loaded[$name]) {
     drupal_add_js(array('wysiwyg' => array(
@@ -500,24 +506,32 @@ function wysiwyg_add_plugin_settings($profile) {
   $proxy = (isset($editor['proxy plugin']) ? key($editor['proxy plugin']) : '');
 
   // Process native editor plugins.
-  if (isset($editor['plugin settings callback'])) {
-    // @todo Require PHP 5.1 in 3.x and use array_intersect_key().
-    $profile_plugins_native = array();
-    foreach ($plugins[$editor['name']] as $plugin => $meta) {
-      // Skip Drupal plugins (handled below).
-      if ($plugin === $proxy) {
-        continue;
-      }
-      // Only keep native plugins that are enabled in this profile.
-      if (isset($profile->settings['buttons'][$plugin])) {
-        $profile_plugins_native[$plugin] = $meta;
+  $profile_plugins_native = array();
+  foreach ($plugins[$editor['name']] as $plugin => $meta) {
+    // Skip Drupal plugins (handled below) and 'core' functionality.
+    if ($plugin === $proxy || $plugin === 'default') {
+      continue;
+    }
+    // Only keep native plugins that are enabled in this profile.
+    if (isset($profile->settings['buttons'][$plugin])) {
+      $profile_plugins_native[$plugin] = $meta;
+      if (!isset($processed_plugins[$editor['name']][$plugin])) {
+        if (isset($editor['plugin meta callback'])) {
+          // Invoke the editor's plugin meta callback, so it can populate the
+          // global metadata for native plugins with required values.
+          $meta['name'] = $plugin;
+          if (($native_meta = call_user_func($editor['plugin meta callback'], $editor, $meta))) {
+            drupal_add_js(array('wysiwyg' => array('plugins' => array('native' => array($editor['name'] => array($plugin => $native_meta))))), 'setting');
+          }
+        }
+        $processed_plugins[$editor['name']][$plugin] = $meta;
       }
     }
+  }
+  if (!empty($profile_plugins_native) && isset($editor['plugin settings callback'])) {
     // Invoke the editor's plugin settings callback, so it can populate the
-    // settings for native external plugins with required values.
-    $settings_native = call_user_func($editor['plugin settings callback'], $editor, $profile, $profile_plugins_native);
-
-    if ($settings_native) {
+    // format specific settings for native plugins with required values.
+    if (($settings_native = call_user_func($editor['plugin settings callback'], $editor, $profile, $profile_plugins_native))) {
       drupal_add_js(array('wysiwyg' => array('plugins' => array('format' . $profile->format => array('native' => $settings_native)))), 'setting');
     }
   }
@@ -535,9 +549,13 @@ function wysiwyg_add_plugin_settings($profile) {
           // Load the Drupal plugin's JavaScript.
           drupal_add_js($meta['js path'] . '/' . $meta['js file']);
           // Add plugin-specific settings.
-          if (isset($meta['settings'])) {
-            drupal_add_js(array('wysiwyg' => array('plugins' => array('drupal' => array($plugin => $meta['settings'])))), 'setting');
+          $settings = (isset($meta['settings']) ? $meta['settings'] : array());
+          $settings['title'] = $meta['title'];
+          $settings['icon'] = base_path() . $meta['icon path'] . '/' . $meta['icon file'];
+          if (!empty($meta['css path']) && !empty($meta['css file'])) {
+            $settings['css'] = base_path() . $meta['css path'] . '/' . $meta['css file'];
           }
+          drupal_add_js(array('wysiwyg' => array('plugins' => array('drupal' => array($plugin => $settings)))), 'setting');
         }
         else {
           $profile_plugins_drupal[$plugin] = $processed_plugins[$proxy][$plugin];
@@ -1018,51 +1036,56 @@ function wysiwyg_get_path($library, $base_path = FALSE) {
  * @ingroup libraries
  */
 function wysiwyg_get_libraries() {
-  global $profile;
-
-  // When this function is called during Drupal's initial installation process,
-  // the name of the profile that is about to be installed is stored in the
-  // global $profile variable. At all other times, the regular system variable
-  // contains the name of the current profile, and we can call variable_get()
-  // to determine the profile.
-  if (!isset($profile)) {
-    $profile = variable_get('install_profile', 'default');
+  if (function_exists('libraries_get_libraries')) {
+    $directories = libraries_get_libraries();
   }
+  else {
+    global $profile;
 
-  $directory = 'libraries';
-  $searchdir = array();
-  $config = conf_path();
+    // When this function is called during Drupal's initial installation process,
+    // the name of the profile that is about to be installed is stored in the
+    // global $profile variable. At all other times, the regular system variable
+    // contains the name of the current profile, and we can call variable_get()
+    // to determine the profile.
+    if (!isset($profile)) {
+      $profile = variable_get('install_profile', 'default');
+    }
 
-  // The 'profiles' directory contains pristine collections of modules and
-  // themes as organized by a distribution.  It is pristine in the same way
-  // that /modules is pristine for core; users should avoid changing anything
-  // there in favor of sites/all or sites/<domain> directories.
-  if (file_exists("profiles/$profile/$directory")) {
-    $searchdir[] = "profiles/$profile/$directory";
-  }
+    $directory = 'libraries';
+    $searchdir = array();
+    $config = conf_path();
 
-  // Always search sites/all/*.
-  $searchdir[] = 'sites/all/' . $directory;
+    // The 'profiles' directory contains pristine collections of modules and
+    // themes as organized by a distribution.  It is pristine in the same way
+    // that /modules is pristine for core; users should avoid changing anything
+    // there in favor of sites/all or sites/<domain> directories.
+    if (file_exists("profiles/$profile/$directory")) {
+      $searchdir[] = "profiles/$profile/$directory";
+    }
 
-  // Also search sites/<domain>/*.
-  if (file_exists("$config/$directory")) {
-    $searchdir[] = "$config/$directory";
-  }
+    // Always search sites/all/*.
+    $searchdir[] = 'sites/all/' . $directory;
 
-  // Retrieve list of directories.
-  // @todo Core: Allow to scan for directories.
-  $directories = array();
-  $nomask = array('CVS');
-  foreach ($searchdir as $dir) {
-    if (is_dir($dir) && $handle = opendir($dir)) {
-      while (FALSE !== ($file = readdir($handle))) {
-        if (!in_array($file, $nomask) && $file[0] != '.') {
-          if (is_dir("$dir/$file")) {
-            $directories[$file] = "$dir/$file";
+    // Also search sites/<domain>/*.
+    if (file_exists("$config/$directory")) {
+      $searchdir[] = "$config/$directory";
+    }
+
+    // Retrieve list of directories.
+    // @todo Core: Allow to scan for directories.
+    $directories = array();
+    $nomask = array('CVS');
+    foreach ($searchdir as $dir) {
+      if (is_dir($dir) && $handle = opendir($dir)) {
+        while (FALSE !== ($file = readdir($handle))) {
+          if (!in_array($file, $nomask) && $file[0] != '.') {
+            if (is_dir("$dir/$file")) {
+              $directories[$file] = "$dir/$file";
+            }
           }
         }
+        closedir($handle);
       }
-      closedir($handle);
     }
   }
 

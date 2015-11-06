@@ -18,7 +18,6 @@ function lacuna_stories_biblio_user_default_permissions() {
       'Instructor' => 'Instructor',
       'Site Administrator' => 'Site Administrator',
       'Student' => 'Student',
-      'administrator' => 'administrator',
       'authenticated user' => 'authenticated user',
     ),
     'module' => 'biblio',
@@ -29,7 +28,6 @@ function lacuna_stories_biblio_user_default_permissions() {
     'name' => 'administer biblio',
     'roles' => array(
       'Site Administrator' => 'Site Administrator',
-      'administrator' => 'administrator',
     ),
     'module' => 'biblio',
   );
@@ -39,7 +37,6 @@ function lacuna_stories_biblio_user_default_permissions() {
     'name' => 'edit biblio authors',
     'roles' => array(
       'Site Administrator' => 'Site Administrator',
-      'administrator' => 'administrator',
     ),
     'module' => 'biblio',
   );
@@ -49,7 +46,6 @@ function lacuna_stories_biblio_user_default_permissions() {
     'name' => 'edit by all biblio authors',
     'roles' => array(
       'Site Administrator' => 'Site Administrator',
-      'administrator' => 'administrator',
     ),
     'module' => 'biblio',
   );
@@ -59,7 +55,6 @@ function lacuna_stories_biblio_user_default_permissions() {
     'name' => 'import from file',
     'roles' => array(
       'Site Administrator' => 'Site Administrator',
-      'administrator' => 'administrator',
     ),
     'module' => 'biblio',
   );
@@ -69,7 +64,6 @@ function lacuna_stories_biblio_user_default_permissions() {
     'name' => 'show download links',
     'roles' => array(
       'Site Administrator' => 'Site Administrator',
-      'administrator' => 'administrator',
     ),
     'module' => 'biblio',
   );
@@ -79,7 +73,6 @@ function lacuna_stories_biblio_user_default_permissions() {
     'name' => 'show export links',
     'roles' => array(
       'Site Administrator' => 'Site Administrator',
-      'administrator' => 'administrator',
     ),
     'module' => 'biblio',
   );
@@ -89,7 +82,6 @@ function lacuna_stories_biblio_user_default_permissions() {
     'name' => 'show filter tab',
     'roles' => array(
       'Site Administrator' => 'Site Administrator',
-      'administrator' => 'administrator',
     ),
     'module' => 'biblio',
   );
@@ -99,7 +91,6 @@ function lacuna_stories_biblio_user_default_permissions() {
     'name' => 'show own download links',
     'roles' => array(
       'Site Administrator' => 'Site Administrator',
-      'administrator' => 'administrator',
     ),
     'module' => 'biblio',
   );
@@ -109,7 +100,6 @@ function lacuna_stories_biblio_user_default_permissions() {
     'name' => 'show sort links',
     'roles' => array(
       'Site Administrator' => 'Site Administrator',
-      'administrator' => 'administrator',
     ),
     'module' => 'biblio',
   );
@@ -119,7 +109,6 @@ function lacuna_stories_biblio_user_default_permissions() {
     'name' => 'view full text',
     'roles' => array(
       'Site Administrator' => 'Site Administrator',
-      'administrator' => 'administrator',
     ),
     'module' => 'biblio',
   );

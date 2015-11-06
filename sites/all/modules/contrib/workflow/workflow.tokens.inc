@@ -42,7 +42,7 @@ function workflow_token_info_alter(&$data) {
     // Add a token for scheduling, in 'seconds ago' format.
     if ($object == 'date' && !isset($tokens['seconds'])) {
       $tokens['seconds'] = array(
-        'name'  => 'Seconds-since',
+        'name' => 'Seconds-since',
         'description' => "A date in 'seconds ago' format (<i>604800</i>). Use it for easy scheduling workflow transitions.",
         'module' => 'workflow',
       );
@@ -180,6 +180,14 @@ function workflow_tokens($type, $tokens, array $data = array(), array $options =
     foreach ($tokens as $name => $original) {
       if (FALSE !== strpos($name, ':')) {
         // This is a chained property (contains ':').
+        $name_parts = explode(':', $name);
+        switch (end($name_parts)) {
+          case 'comment':
+            if (isset($entity->workflow_transitions) && isset($entity->workflow_transitions[$name_parts[0]])) {
+              $replacements[$original] = $entity->workflow_transitions[$name_parts[0]]->$name_parts[1];
+            }
+            break;
+        }
       }
       elseif (isset($data['workflow_token_type'])) {
         // This part taken from entity_token_tokens().
@@ -187,8 +195,9 @@ function workflow_tokens($type, $tokens, array $data = array(), array $options =
         $property_name = str_replace('-', '_', $name);
         try {
           if ($name == 'workflow' ||
-              $name == 'states' ||
-              $name == 'transitions') {
+            $name == 'states' ||
+            $name == 'transitions'
+          ) {
             $replacement = _workflow_token_get_token($wrapper->$property_name, $options);
           }
           else {
@@ -197,8 +206,7 @@ function workflow_tokens($type, $tokens, array $data = array(), array $options =
           if (isset($replacement)) {
             $replacements[$original] = $replacement;
           }
-        }
-        catch (EntityMetadataWrapperException $e) {
+        } catch (EntityMetadataWrapperException $e) {
           // dpm('token not found: ' . $name);
           // If tokens for not existing values are requested, just do nothing.
         }
@@ -217,20 +225,23 @@ function workflow_tokens($type, $tokens, array $data = array(), array $options =
       $replacements += token_generate('entity', $sub_tokens, $sub_data, $options);
     }
 
-    // If this is a WorkflowField, get subtokens for it.
-    $name_parts = explode(':', $name, 2);
-    $field_name = reset($name_parts);
-    if ($field_name != 'created' && isset($entity->{$field_name}) && $sub_tokens = token_find_with_prefix($tokens, $field_name)) {
-      $transition = _workflow_tokens_get_transition($entity_type, $entity, $field_name);
-      $sub_data = array(
-        'WorkflowTransition' => $transition,
-        'workflow_token_type' => 'WorkflowTransition',
-      );
-      $sub_data += $data;
-      $replacements += token_generate('entity', $sub_tokens, $sub_data, $options);
-    }
-
     if (isset($data['WorkflowTransition'])) {
+      // If this is a WorkflowField, get subtokens for it.
+      $name_parts = explode(':', $name, 2);
+      $field_name = reset($name_parts);
+      if ($field_name != 'created'
+          && isset($entity->{$field_name})
+          && $sub_tokens = token_find_with_prefix($tokens, $field_name)
+      ) {
+        $transition = _workflow_tokens_get_transition($entity_type, $entity, $field_name);
+        $sub_data = array(
+          'WorkflowTransition' => $transition,
+          'workflow_token_type' => 'WorkflowTransition',
+        );
+        $sub_data += $data;
+        $replacements += token_generate('entity', $sub_tokens, $sub_data, $options);
+      }
+
       $transition = $data['WorkflowTransition'];
       $field_name = $transition->field_name;
 

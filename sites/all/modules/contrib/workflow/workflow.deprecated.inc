@@ -64,6 +64,8 @@ function workflow_get_wid_label($wid) {
  * @param mixed $wid
  *   The ID of the workflow.
  *
+ * @return int
+ *
  * @deprecated: workflow_get_creation_state_by_wid($wid) --> $workflow->getCreationSid().
  */
 function workflow_get_creation_state_by_wid($wid) {

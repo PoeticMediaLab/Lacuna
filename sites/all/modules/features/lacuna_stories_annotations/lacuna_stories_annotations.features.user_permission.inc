@@ -16,7 +16,6 @@ function lacuna_stories_annotations_user_default_permissions() {
     'roles' => array(
       'Content Manager' => 'Content Manager',
       'Site Administrator' => 'Site Administrator',
-      'administrator' => 'administrator',
     ),
     'module' => 'annotator',
   );
@@ -29,7 +28,6 @@ function lacuna_stories_annotations_user_default_permissions() {
       'Instructor' => 'Instructor',
       'Site Administrator' => 'Site Administrator',
       'Student' => 'Student',
-      'administrator' => 'administrator',
     ),
     'module' => 'node',
   );
@@ -42,7 +40,6 @@ function lacuna_stories_annotations_user_default_permissions() {
       'Instructor' => 'Instructor',
       'Site Administrator' => 'Site Administrator',
       'Student' => 'Student',
-      'administrator' => 'administrator',
     ),
     'module' => 'annotator',
   );
@@ -53,7 +50,6 @@ function lacuna_stories_annotations_user_default_permissions() {
     'roles' => array(
       'Content Manager' => 'Content Manager',
       'Site Administrator' => 'Site Administrator',
-      'administrator' => 'administrator',
     ),
     'module' => 'node',
   );
@@ -64,7 +60,6 @@ function lacuna_stories_annotations_user_default_permissions() {
     'roles' => array(
       'Content Manager' => 'Content Manager',
       'Site Administrator' => 'Site Administrator',
-      'administrator' => 'administrator',
       'authenticated user' => 'authenticated user',
     ),
     'module' => 'node',
@@ -76,7 +71,6 @@ function lacuna_stories_annotations_user_default_permissions() {
     'roles' => array(
       'Content Manager' => 'Content Manager',
       'Site Administrator' => 'Site Administrator',
-      'administrator' => 'administrator',
     ),
     'module' => 'taxonomy',
   );
@@ -87,7 +81,6 @@ function lacuna_stories_annotations_user_default_permissions() {
     'roles' => array(
       'Content Manager' => 'Content Manager',
       'Site Administrator' => 'Site Administrator',
-      'administrator' => 'administrator',
     ),
     'module' => 'node',
   );
@@ -98,7 +91,6 @@ function lacuna_stories_annotations_user_default_permissions() {
     'roles' => array(
       'Content Manager' => 'Content Manager',
       'Site Administrator' => 'Site Administrator',
-      'administrator' => 'administrator',
     ),
     'module' => 'annotator',
   );
@@ -109,7 +101,6 @@ function lacuna_stories_annotations_user_default_permissions() {
     'roles' => array(
       'Content Manager' => 'Content Manager',
       'Site Administrator' => 'Site Administrator',
-      'administrator' => 'administrator',
       'authenticated user' => 'authenticated user',
     ),
     'module' => 'node',
@@ -123,7 +114,6 @@ function lacuna_stories_annotations_user_default_permissions() {
       'Instructor' => 'Instructor',
       'Site Administrator' => 'Site Administrator',
       'Student' => 'Student',
-      'administrator' => 'administrator',
     ),
     'module' => 'annotator',
   );
@@ -134,7 +124,6 @@ function lacuna_stories_annotations_user_default_permissions() {
     'roles' => array(
       'Content Manager' => 'Content Manager',
       'Site Administrator' => 'Site Administrator',
-      'administrator' => 'administrator',
     ),
     'module' => 'taxonomy',
   );
@@ -144,7 +133,6 @@ function lacuna_stories_annotations_user_default_permissions() {
     'name' => 'publish any annotation content',
     'roles' => array(
       'Site Administrator' => 'Site Administrator',
-      'administrator' => 'administrator',
     ),
     'module' => 'publishcontent',
   );
@@ -154,7 +142,6 @@ function lacuna_stories_annotations_user_default_permissions() {
     'name' => 'publish editable annotation content',
     'roles' => array(
       'Site Administrator' => 'Site Administrator',
-      'administrator' => 'administrator',
     ),
     'module' => 'publishcontent',
   );
@@ -164,7 +151,6 @@ function lacuna_stories_annotations_user_default_permissions() {
     'name' => 'publish own annotation content',
     'roles' => array(
       'Site Administrator' => 'Site Administrator',
-      'administrator' => 'administrator',
       'authenticated user' => 'authenticated user',
     ),
     'module' => 'publishcontent',
@@ -175,7 +161,6 @@ function lacuna_stories_annotations_user_default_permissions() {
     'name' => 'unpublish any annotation content',
     'roles' => array(
       'Site Administrator' => 'Site Administrator',
-      'administrator' => 'administrator',
     ),
     'module' => 'publishcontent',
   );
@@ -185,7 +170,6 @@ function lacuna_stories_annotations_user_default_permissions() {
     'name' => 'unpublish editable annotation content',
     'roles' => array(
       'Site Administrator' => 'Site Administrator',
-      'administrator' => 'administrator',
     ),
     'module' => 'publishcontent',
   );
@@ -195,7 +179,6 @@ function lacuna_stories_annotations_user_default_permissions() {
     'name' => 'unpublish own annotation content',
     'roles' => array(
       'Site Administrator' => 'Site Administrator',
-      'administrator' => 'administrator',
       'authenticated user' => 'authenticated user',
     ),
     'module' => 'publishcontent',
@@ -209,7 +192,6 @@ function lacuna_stories_annotations_user_default_permissions() {
       'Instructor' => 'Instructor',
       'Site Administrator' => 'Site Administrator',
       'Student' => 'Student',
-      'administrator' => 'administrator',
     ),
     'module' => 'annotator',
   );

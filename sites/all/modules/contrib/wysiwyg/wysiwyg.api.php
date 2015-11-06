@@ -224,8 +224,10 @@ function hook_INCLUDE_editor() {
     'settings callback' => 'wysiwyg_ckeditor_settings',
     // A callback to supply definitions of available editor plugins.
     'plugin callback' => 'wysiwyg_ckeditor_plugins',
-    // A callback to convert administrative plugin settings for a editor profile
-    // into JavaScript settings.
+    // A callback to supply global metadata for a single native external plugin.
+    'plugin meta callback' => 'wysiwyg_ckeditor_plugin_meta',
+    // A callback to convert administrative plugin settings for an editor
+    // profile into JavaScript settings per profile.
     'plugin settings callback' => 'wysiwyg_ckeditor_plugin_settings',
     // (optional) Defines the proxy plugin that handles plugins provided by
     // Drupal modules, which work in all editors that support proxy plugins.

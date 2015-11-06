@@ -9,8 +9,8 @@ function course_create_authorize() {
   }
   $output = "Thanks for your interest in setting up a Lacuna Stories course. Currently, courses are only being created after instructors have had a consultation with the Lacuna Stories team. To arrange a consultation, email <a href='info@lacunastories.com'>info@lacunastories.com</a>. If you have already been approved to create a course, please enter the Course Setup Code given to you by a Lacuna Stories team member.";
 
-  $authcode_form = drupal_render(drupal_get_form('course_authcode_form'));
-  return $output . " " . $authcode_form;
+  $authcode_form = drupal_get_form('course_authcode_form');
+  return $output . " " . drupal_render($authcode_form);
 }
 
 function course_authcode_form($form, &$form_state) {
@@ -107,7 +107,8 @@ function course_organize() {
 	course_add_default_terms();
   $output = "Thank you for submitting your course information to the Lacuna Stories team. You can now continue by naming the units and genres by which you would like to organize course materials. A few defaults have been chosen for you already. You may remove these by clicking on the trash icon (<span class='fa fa-trash-o'></span>). To continue, click \"Continue\"<br />";
   $output .= "<br />";
-  $output .= drupal_render(drupal_get_form('course_organize_form'));
+	$form = drupal_get_form('course_organize_form');
+  $output .= drupal_render($form);
   return $output;
 }
 

@@ -3,51 +3,12 @@
 /**
  * @file
  * Contains workflow\includes\Entity\WorkflowState.
+ * Contains workflow\includes\Entity\WorkflowStateController.
  */
 
-class WorkflowStateController extends EntityAPIController {
-
-  public function save($entity, DatabaseTransaction $transaction = NULL) {
-    // Create the machine_name.
-    if (empty($entity->name)) {
-      if ($label = $entity->state) {
-        $entity->name = str_replace(' ', '_', strtolower($label));
-      }
-      else {
-        $entity->name = 'state_' . $entity->sid;
-      }
-    }
-
-    $return = parent::save($entity, $transaction);
-    if ($return) {
-      $workflow = $entity->getWorkflow();
-      // Maintain the new object in the workflow.
-      $workflow->states[$entity->sid] = $entity;
-    }
-
-    // Reset the cache for the affected workflow.
-    workflow_reset_cache($entity->wid);
-
-    return $return;
-  }
-
-  public function delete($ids, DatabaseTransaction $transaction = NULL) {
-    // @todo: replace with parent.
-    foreach ($ids as $id) {
-      if ($state = workflow_state_load($id)) {
-        $wid = $state->wid;
-        db_delete('workflow_states')
-          ->condition('sid', $state->sid)
-          ->execute();
-
-        // Reset the cache for the affected workflow.
-        workflow_reset_cache($wid);
-      }
-    }
-  }
-
-}
-
+/**
+ * Class WorkflowState
+ */
 class WorkflowState extends Entity {
   // Since workflows do not change, it is implemented as a singleton.
   protected static $states = array();
@@ -66,16 +27,14 @@ class WorkflowState extends Entity {
   /**
    * Constructor.
    *
-   * @param int $wid
-   *   The Workflow ID for which a new State is created.
-   * @param string $name
-   *   The name of the new State. If '(creation)', a CreationState is generated.
+   * @param array $values
+   * @param string $entityType
    */
   public function __construct(array $values = array(), $entityType = 'WorkflowState') {
     // Please be aware that $entity_type and $entityType are different things!
 
     // Keep official name and external name equal. Both are required.
-    // @todo: stil needed? test import, manual creation, programmatic creation, etc.
+    // @todo: still needed? test import, manual creation, programmatic creation, etc.
     if (!isset($values['state']) && isset($values['name'])) {
       $values['state'] = $values['name'];
     }
@@ -111,7 +70,7 @@ class WorkflowState extends Entity {
    * @param int $wid
    *   An optional Workflow ID, to check if the requested State is valid for the Workflow.
    *
-   * @return mixed $state
+   * @return WorkflowState|NULL|FALSE $state
    *   WorkflowState if state is successfully loaded,
    *   NULL if not loaded,
    *   FALSE if state does not belong to requested Workflow.
@@ -136,9 +95,9 @@ class WorkflowState extends Entity {
    * @return array $states
    *   An array of cached states.
    *
-   * @deprecated workflow_get_workflow_states --> workflow_state_load_multiple
-   * @deprecated workflow_get_workflow_states_all --> workflow_state_load_multiple
-   * @deprecated workflow_get_other_states_by_sid --> workflow_state_load_multiple
+   * D7.x-2.x: deprecated workflow_get_workflow_states --> workflow_state_load_multiple
+   * D7.x-2.x: deprecated workflow_get_workflow_states_all --> workflow_state_load_multiple
+   * D7.x-2.x: deprecated workflow_get_other_states_by_sid --> workflow_state_load_multiple
    */
   public static function getStates($wid = 0, $reset = FALSE) {
     if ($reset) {
@@ -155,7 +114,14 @@ class WorkflowState extends Entity {
       // Just for grins, add a tag that might result in modifications.
       $query->addTag('workflow_states');
 
-      $query->execute()->fetchAll(PDO::FETCH_CLASS, 'WorkflowState');
+      // @see #2285983 for using SQLite.
+      // $query->execute()->fetchAll(PDO::FETCH_CLASS, 'WorkflowState');
+      /* @var $tmp DatabaseStatementBase */
+      $statement = $query->execute();
+      $statement->setFetchMode(PDO::FETCH_CLASS,'WorkflowState');
+      foreach ($statement->fetchAll() as $state) {
+        self::$states[$state->sid] = $state;
+      }
     }
 
     if (!$wid) {
@@ -178,8 +144,14 @@ class WorkflowState extends Entity {
    * Get all states in the system, with options to filter, only where a workflow exists.
    *
    * May return more then one State, since a name is not (yet) an UUID.
+   *
+   * @param $name
+   * @param int $wid
+   *
+   * @return WorkflowState
    */
   public static function loadByName($name, $wid = 0) {
+    /* @var $state WorkflowState */
     foreach ($states = self::getStates($wid) as $state) {
       if ($name == $state->getName()) {
         return $state;
@@ -194,7 +166,7 @@ class WorkflowState extends Entity {
    * @param int $new_sid
    *   The state ID, to which all affected entities must be moved.
    *
-   * @deprecated workflow_delete_workflow_states_by_sid() --> WorkflowState->deactivate() + delete()
+   * D7.x-2.x: deprecated workflow_delete_workflow_states_by_sid() --> WorkflowState->deactivate() + delete()
    */
   public function deactivate($new_sid) {
     global $user; // We can use global, since deactivate() is a UI-only function.
@@ -210,7 +182,7 @@ class WorkflowState extends Entity {
 
     // Re-parent any nodes that we don't want to orphan, whilst deactivating a State.
     // This is called in WorkflowState::deactivate().
-    // @todo: reparent Workflow Field, whilst deactivating a state.
+    // @todo: re-parent Workflow Field, whilst deactivating a state.
     if ($new_sid) {
       // A candidate for the batch API.
       // @TODO: Future updates should seriously consider setting this with batch.
@@ -234,6 +206,7 @@ class WorkflowState extends Entity {
 
     // Delete the transitions this state is involved in.
     $workflow = workflow_load_single($this->wid);
+    /* @var $transition WorkflowTransition */
     foreach ($workflow->getTransitionsBySid($current_sid, 'ALL') as $transition) {
       $transition->delete();
     }
@@ -293,6 +266,12 @@ class WorkflowState extends Entity {
    *
    * If not, a formatter must be shown, since there are no valid options.
    *
+   * @param $entity_type
+   * @param $entity
+   * @param $field_name
+   * @param $user
+   * @param $force
+   *
    * @return bool $show_widget
    *   TRUE = a form (a.k.a. widget) must be shown; FALSE = no form, a formatter must be shown instead.
    */
@@ -320,9 +299,12 @@ class WorkflowState extends Entity {
    *   The type of the entity at hand.
    * @param object $entity
    *   The entity at hand. May be NULL (E.g., on a Field settings page).
+   * @param string $field_name
+   * @param null $user
+   * @param bool $force
    *
    * @return array
-   *   An array of tid=>transition pairs with allowed transitions for State.
+   * An array of tid=>transition pairs with allowed transitions for State.
    */
   public function getTransitions($entity_type = '', $entity = NULL, $field_name = '', $user = NULL, $force = FALSE) {
     $transitions = array();
@@ -416,6 +398,9 @@ class WorkflowState extends Entity {
    *   The type of the entity at hand.
    * @param object $entity
    *   The entity at hand. May be NULL (E.g., on a Field settings page).
+   * @param $field_name
+   * @param $user
+   * @param bool $force
    *
    * @return array
    *   An array of sid=>label pairs.
@@ -423,7 +408,7 @@ class WorkflowState extends Entity {
    *   If $this->sid is 0 or FALSE, then labels of ALL states of the State's
    *   Workflow are returned.
    *
-   * @deprecated workflow_field_choices() --> WorkflowState->getOptions()
+   * D7.x-2.x: deprecated workflow_field_choices() --> WorkflowState->getOptions()
    */
   public function getOptions($entity_type, $entity, $field_name, $user, $force = FALSE) {
     // Define an Entity-specific cache per page load.
@@ -450,10 +435,11 @@ class WorkflowState extends Entity {
       // We cannot use getTransitions, since there are no ConfigTransitions
       // from State with ID 0, and we do not want to repeat States.
       foreach ($workflow->getStates() as $state) {
-        $options[$state->value()] = check_plain(t($state->label()));
+        $options[$state->value()] = $state->label(); // Translation is done later.
       }
     }
     else {
+      /* @var $transition WorkflowTransition */
       $transitions = $this->getTransitions($entity_type, $entity, $field_name, $user, $force);
       foreach ($transitions as $transition) {
         // Get the label of the transition, and if empty of the target state.
@@ -464,7 +450,7 @@ class WorkflowState extends Entity {
           $label = $target_state ? $target_state->label() : '';
         }
         $new_sid = $transition->target_sid;
-        $options[$new_sid] = check_plain(t($label));
+        $options[$new_sid] = $label; // Translation is done later.
       }
 
       // Include current state for same-state transitions, except when $sid = 0.
@@ -472,8 +458,14 @@ class WorkflowState extends Entity {
       // but only if the transitions have been saved at least one time.
       if ($current_sid && ($current_sid != $workflow->getCreationSid())) {
         if (!isset($options[$current_sid])) {
-          $options[$current_sid] = check_plain(t($this->label()));
+          $options[$current_sid] = $this->label(); // Translation is done later.
         }
+      }
+
+      // Properly fix the labels.
+      // Translate, convert '&', make secure.
+      foreach($options as $key => $label) {
+        $options[$key] = html_entity_decode(check_plain(t($label)));
       }
 
       // Save to entity-specific cache.
@@ -498,7 +490,7 @@ class WorkflowState extends Entity {
       ->fields('wn')
       ->condition('sid', $sid, '=')
       ->execute();
-    $count = $result->rowCount();
+    $count = count($result->fetchAll()); // @see #2285983 for using SQLite.
 
     // Get the numbers for Workflow Field.
     $fields = _workflow_info_fields();
@@ -534,6 +526,49 @@ class WorkflowState extends Entity {
   }
   public function value() {
     return $this->sid;
+  }
+
+}
+
+class WorkflowStateController extends EntityAPIController {
+
+  public function save($entity, DatabaseTransaction $transaction = NULL) {
+    // Create the machine_name.
+    if (empty($entity->name)) {
+      if ($label = $entity->state) {
+        $entity->name = str_replace(' ', '_', strtolower($label));
+      }
+      else {
+        $entity->name = 'state_' . $entity->sid;
+      }
+    }
+
+    $return = parent::save($entity, $transaction);
+    if ($return) {
+      $workflow = $entity->getWorkflow();
+      // Maintain the new object in the workflow.
+      $workflow->states[$entity->sid] = $entity;
+    }
+
+    // Reset the cache for the affected workflow.
+    workflow_reset_cache($entity->wid);
+
+    return $return;
+  }
+
+  public function delete($ids, DatabaseTransaction $transaction = NULL) {
+    // @todo: replace with parent.
+    foreach ($ids as $id) {
+      if ($state = workflow_state_load($id)) {
+        $wid = $state->wid;
+        db_delete('workflow_states')
+          ->condition('sid', $state->sid)
+          ->execute();
+
+        // Reset the cache for the affected workflow.
+        workflow_reset_cache($wid);
+      }
+    }
   }
 
 }

@@ -613,3 +613,90 @@ Issue #2374587 by Karsa: Workflow node doesn't set the state of a newly created 
 Issue #2373103: Fixed Notice 'Undefined index' in list_field_formatter_view() when previewing a node.
 Issue #2308677: Fixed regression: 'Workflow current: Current state' is missing when creating a contextual filter
 Issue #2400211: Added Views support for non-node entity types
+
+Since 7.x-2.5
+Issue #2340011: Fixed Error "Workflow 0 cannot be loaded" when using Workflow Node and Workflow Rules
+Issue #2401481: Fixed error when creating a Transition, parameter values() is discarded
+Issue #2401493: Added $transition->getTimestamp()
+Issue #2401511: Renamed hook-functions in workflownode module
+Issue #2406175: Implemented a WorkflowTransitionForm form object
+Issue #1559680: Make Transitions fieldable entities -1-
+Issue #2406175: Uniformed creation of form_id
+Issue #2406175: Moved WorkfowTransitionEdit to th WorkflowTransitionForm form object
+Issue #2441821: Fixed wrong link
+Issue #2441821: Fixed error
+Issue #2441821: Better determination of field_name
+Issue #2421157: Added Block for viewing/changing a Workflow State
+Issue #2417193 by kaare: Added stub for undefined method WorkflowItem::delete()
+Issue #2430243: Fixed fragile check for entity edit mode in WorkflowTransitionForm::submitForm()
+Issue #2467103: State is lost when comment with Workflow Widget is submitted, and node has end-state
+Issue #2546152 by NancyDru: Added submodule workflow_notify.
+Issue #2532128 by wayaslij: EntityMetadataWrapper $property call should first check if method exists
+Issue #2413593 by kyoder: Fixed EntityMetadataWrapperException in workflow.tokens.inc
+Issue #2169859 by kyoder, BAHbKA: Problems with Workflow Access Features
+Issue #2373103 by chilic: Notice in Node Preview mode in list_field_formatter_view()
+Issue #2472501 by alan-io1: Use features_get_default in hook_features_rebuild
+Issue #2484325 by GuyPaddock: Error on Site installation: table Workflows doesn't exist
+Issue #2376557 by deetergp: Token 'comment' does not work
+Issue #2351299 by johnv: Prepare D8-Port: split class files
+Issue #2484297 by vasi, bartvig, GuyPaddock: Features import / revert broken in 2.5+
+Issue #2375261: Undo adding workflow to workflow_field features-export
+Issue #2569801 by joshf: Index {workflow_node_history}.nid
+Issue #2351299: Undo Prepare D8-Port: split class files
+Issue #2562475: Fixed Fatal PHP Error: Unsupported operand types in workflow....
+Issue #2506507: Workflow Node scheduled transition : PHP Fatal error when upd...
+Issue #2577687 by Kgaut: Fixed unclear enabling messages
+Issue #2372171: Database upgrade fails with Call to undefined function workfl...
+Issue #2587485: Fixed broken link in workflow.features.inc
+Issue #2571627: D8-port: D7-code improvements
+Issue #2600346: Enable roles for 'participate' by default on new Workflow
+Issue #2484431 by GuyPaddock: Do NOT automatically enable roles to participat...
+Issue #2502547 by djdevin, johnv: Add Entity Id to WorkflowScheduledTransition
+Issue #2600426: Fixed: Time of Scheduled Transition is not retrieved in Workf...
+Issue #2385439 by johnv: Fixed typo in code
+Issue #2514782 by johnv: Added Workflow field help text to Workflow widget
+Issue #2600808: Wrap workflow form in Fieldset
+Issue #2307303: Added dependency on entity module v7.x-1.6
+Issue #2555563 by NancyDru: Organic Groups strict access overrides Workflow A...
+Issue #2446811: Remove multiple workflows in workflow_access_node_access_reco...
+Issue #2600934 by najamfzl, johnv: Fixed PDOException: SQLSTATE[23000]: Integ...
+split form functions in own include file
+Issue #2601136: move scheduling info in own container (in WorkflowTransitionf...
+Issue #1559680: Make Transitions fieldable entities - add extra fields + fiel...
+Issue #2601240: Fixed Notice: Undefined index: id in WorkflowTransitionForm->...
+Issue #2601304: Fixed Error in Editing an existing WorkflowTransition
+Issue #2597307 by caminadaf, johnv: Fixed Workflow retrieving wrong SID on AJ...
+Issue #1511694 by joel_osc, bibishani, natew, dshields: Better integration of...
+Issue #2601304: Fixed Error in Editing an existing WorkflowTransition
+Issue #2581909: Change status via VBO
+Issue #2557905 by natanmoraes: PDOException when firing rule "Set a Workflow ...
+Issue #2601304: Error in Editing an existing WorkflowTransition
+Issue #2375261: Redo adding workflow to workflow_field features-export
+Issue #2578493: html_encode option values for workflow/state/transition
+Issue #2510958: Added css-classes to Workflow Transition Form
+Issue #2363521: Remove unnecessary action button in Node View page
+Issue #2599610 by plopesc: Schedule state change radio buttons generate confl...
+Issue #2545660: Make action buttons more unique
+Issue #2584883: [D8-port task] test all hooks
+Issue #2595247: Actions buttons: make code more local
+Issue #2600934: PDOException: SQLSTATE[23000]: Integrity constraint violation...
+Issue #2351299: Prepare D8-port: move forms in own file.
+Issue #2604914: Fatal error: Call to a member function getName() on a non-object
+Issue #2595247: Actions buttons: make code more local
+Issue #2604968: States help blocked by case switching in workflow_admin_ui_help
+Issue #2604246 by skek: Performance optimisation in Workflow::save()
+Issue #2605256 by bleedev: Unknown data property field_workflow error when de...
+Issue #2285983: Workflows Admin UI Broken on SQLite
+Issue #2581909: Change status via VBO
+Issue #2605822: Wrong default option when adding an entity with workflow
+Issue #2604048: Amend WorkflowTransition::dpm()
+Issue #2604246 by skek, danielmrichards: Performance optimisation for Workflo...
+Issue #2607150 by aronne: Workflow transitions don't respect configured permi...
+Issue #2607198 by heykarthikwithu: Add @return type and change @param values ...
+Issue #2363521: Fixed removed scheduled action button in Node View page
+Issue #2580543: Fixed warnings when displaying tokens
+Issue #318325: Add hook_widget_form_alter to workflow.api.php
+Issue #2607998: Warning: array_flip() appears when workflow_block is enabled
+Issue #2608128 by Murz: Function workflow_execute_transition() ignores timestamp of Workflow transition
+Issue #2608452 by mwidner: Fixed failing primary index in table
+Issue #2608996: Error when workflow_block on node page without workflow

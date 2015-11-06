@@ -25,6 +25,8 @@ function workflow_vbo_given_action_info() {
 
 /**
  * Implements a Drupal action. Move a node to a specified state in the workflow.
+ * @param $entity
+ * @param array $context
  */
 function workflow_vbo_given_state_action($entity, array $context) {
   global $user;
@@ -58,7 +60,7 @@ function workflow_vbo_given_state_action($entity, array $context) {
   if (!isset($entity)) {
     $entity = $context['node'];
   }
-  // In 'after saving new content', the node is already saved. Avoid sencond insert.
+  // In 'after saving new content', the node is already saved. Avoid second insert.
   // Todo: clone?
   unset($entity->is_new);
 
@@ -98,9 +100,9 @@ function workflow_vbo_given_state_action($entity, array $context) {
   // Get the Comment. Parse the $comment variables.
   $comment_string = $form_state['input']['workflow_comment'];
   $comment = t($comment_string, array(
-	      '%title' => entity_label($entity_type, $entity), // "@" and "%" will automatically run check_plain().
+      '%title' => entity_label($entity_type, $entity), // "@" and "%" will automatically run check_plain().
       '%state' => workflow_get_sid_label($new_sid),
-      '%user' => theme('username', array('account' => $user)),
+      '%user' => $user->name,
     )
   );
 
@@ -185,7 +187,7 @@ function workflow_vbo_given_state_action_form(array $context) {
 
     // Hide the submit button. VBO has its own 'next' button.
     $instance['widget']['settings']['submit_function'] = '';
-    if (!$field['id']) {
+    if (!$field_id) {
       // This is a Workflow Node workflow. Set widget options as in v7.x-1.2
       $field['settings']['widget']['comment'] = isset($workflow->options['comment_log_tab']) ? $workflow->options['comment_log_tab'] : 1; // vs. ['comment_log_node'];
       $field['settings']['widget']['current_status'] = TRUE;
@@ -200,11 +202,12 @@ function workflow_vbo_given_state_action_form(array $context) {
   // to allow multiple forms per page (in listings, with hook_forms() ).
   // Ultimately, this is a wrapper for WorkflowDefaultWidget.
   // $form['workflow_current_state'] = workflow_state_formatter($entity_type, $entity, $field, $instance);
-  $form += drupal_get_form(implode('_', array('workflow_transition_form', $entity_type, $entity_id, $field_id)), $field, $instance, $entity_type, $entity);
+  $form_id = implode('_', array('workflow_transition_form', $entity_type, $entity_id, $field_id));
+  $form += drupal_get_form($form_id, $field, $instance, $entity_type, $entity);
 
   if (!$entity) {
     // For the Advanced actions form on admin/config/system/actions, 
-    // remove the Sumbit function.
+    // remove the Submit function.
     unset($form['#submit']);
   }
 

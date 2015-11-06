@@ -138,20 +138,6 @@ function _annotation_install_fields() {
         )
       )
     ),
-    'private' => array(
-      'field_name' => 'field_annotation_private',
-      'type' => 'list_boolean',
-      'cardinality' => 1,
-      'not null' => TRUE,
-      'default' => 1,
-      'settings' => array(
-        'allowed_values' => array(
-            0 => 'No',
-            1 => 'Yes'
-        ),
-        'allowed_value_function' => ''
-      )
-    ),
   );
 }
 
@@ -171,13 +157,6 @@ function _annotation_install_instances() {
       'label' => t('Excerpt'),
       'description' => t('The text excerpt that was annotated'),
       'required' => TRUE
-    ),
-    'private' => array(
-      'field_name' => 'field_annotation_private',
-      'label' => t('Private'),
-      'description' => t('Decide if this annotation is private or not'),
-      'default_value' => array(0 => array('value' => 1)),
-      'required' => TRUE,
     ),
     'uri' => array(
       'field_name' => 'field_annotation_uri',

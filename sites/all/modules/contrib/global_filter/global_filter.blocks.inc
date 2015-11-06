@@ -144,13 +144,18 @@ function _global_filter_configure_form($block_number, $filter_key, $expand_field
   // Same name for both buttons.
   $selector_radios = ':input[name="' . $radios_name . '"]';
 
+  $note = t('If you have enabled the <a target="url_project" href="@url_project">Context Session</a> module, then you may use "global_filter:%machine_name=VALUE" as the session name to switch contexts on.', array(
+    '@url_project' => url('http://drupal.org/project/context_session'),
+    '%machine_name' => $name,
+  ));
+
   $field_options = global_filter_get_usable_fields();
   $form[$delta]['driver'][$delta . '_field'] = array(
     '#title' => t('Choose the field to be used as a global filter'),
     '#type' => 'select',
     '#default_value' => global_filter_get_parameter($filter_key, 'field'),
     '#options' => $field_options,
-    '#description' => t('The field or node property employed to populate the widget used to filter one or more views.'),
+    '#description' => t('The field or node property employed to populate the widget used to filter one or more views.') . ' ' . $note,
     '#states' => array('visible' => array($selector_radios => array('value' => 0))),
   );
 
@@ -164,7 +169,7 @@ function _global_filter_configure_form($block_number, $filter_key, $expand_field
     '#type' => 'select',
     '#default_value' => global_filter_get_parameter($filter_key, 'view'),
     '#options' => $view_options,
-    '#description' => t('The view employed to populate the widget used to filter one or more other views.'),
+    '#description' => t('The view employed to populate the widget used to filter one or more other views.') . ' ' . $note,
     '#states' => array('visible' => array($selector_radios => array('value' => 1))),
   );
 
@@ -350,7 +355,12 @@ function global_filter_block_view($delta) {
         $label = $usable_fields[$filter_name];
         $pos_colon = strpos($label, ':');
         $pos_bracket = strrpos($label, '(');
-        $blocks[$delta]['subject'] .= drupal_substr($label, $pos_colon + 2, $pos_bracket > $pos_colon ? $pos_bracket - $pos_colon - 3 : NULL);
+        if ($pos_bracket) {
+          $blocks[$delta]['subject'] .= drupal_substr($label, $pos_colon + 2, $pos_bracket > $pos_colon ? $pos_bracket - $pos_colon - 3 : NULL);
+        }
+        else {
+          $blocks[$delta]['subject'] .= drupal_substr($label, $pos_colon ? $pos_colon + 2 : 0);
+        }
       }
       $blocks[$delta]['subject'] .= ' ';
     }
@@ -436,13 +446,19 @@ function _global_filter_extract_filters_from_form($form) {
 function global_filter_get_field_labels($field_type = NULL) {
   $field_names = &drupal_static(__FUNCTION__, array());
   if (empty($field_names)) {
-    $prefix = t('Field');
-    foreach (field_info_instances() as $type_bundles) {
-      foreach ($type_bundles as $bundle_instances) {
+    $content_prefix = t('Content');
+    $field_prefix = t('Field');
+    foreach ($field_info_instances = field_info_instances() as $entity_type => $type_bundles) {
+      foreach ($type_bundles as $key => $bundle_instances) {
+        if ($entity_type == 'taxonomy_term') {
+          // Two special pseudo-fields to cover all taxonomy terms.
+          $field_names[GLOBAL_FILTER_VIEWS_TID] = $content_prefix . ': ' . t('Has taxonomy term ID');
+          $field_names[GLOBAL_FILTER_VIEWS_TID_DEPTH] = $content_prefix . ': ' . t('Has taxonomy term ID with depth');
+        }
         foreach ($bundle_instances as $field_name => $instance) {
           $field = field_info_field($field_name);
           if (empty($field_type) || $field_type == $field['type'] || ($field_type == 'list' && strpos($field['type'], 'list') === 0)) {
-            $field_names[$field_name] = $prefix . ': ' . $instance['label'] . " ($field_name)";
+            $field_names[$field_name] = $field_prefix . ': ' . $instance['label'] . " ($field_name)";
           }
         }
       }

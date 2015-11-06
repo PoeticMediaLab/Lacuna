@@ -16,7 +16,6 @@ function lacuna_stories_irb_form_user_default_permissions() {
     'roles' => array(
       'Researcher' => 'Researcher',
       'Site Administrator' => 'Site Administrator',
-      'administrator' => 'administrator',
     ),
     'module' => 'webform',
   );
@@ -26,7 +25,6 @@ function lacuna_stories_irb_form_user_default_permissions() {
     'name' => 'access own webform results',
     'roles' => array(
       'Site Administrator' => 'Site Administrator',
-      'administrator' => 'administrator',
     ),
     'module' => 'webform',
   );
@@ -37,7 +35,6 @@ function lacuna_stories_irb_form_user_default_permissions() {
     'roles' => array(
       'Researcher' => 'Researcher',
       'Site Administrator' => 'Site Administrator',
-      'administrator' => 'administrator',
     ),
     'module' => 'webform',
   );
@@ -47,7 +44,6 @@ function lacuna_stories_irb_form_user_default_permissions() {
     'name' => 'delete all webform submissions',
     'roles' => array(
       'Site Administrator' => 'Site Administrator',
-      'administrator' => 'administrator',
     ),
     'module' => 'webform',
   );
@@ -58,7 +54,6 @@ function lacuna_stories_irb_form_user_default_permissions() {
     'roles' => array(
       'Researcher' => 'Researcher',
       'Site Administrator' => 'Site Administrator',
-      'administrator' => 'administrator',
     ),
     'module' => 'webform',
   );
@@ -68,7 +63,6 @@ function lacuna_stories_irb_form_user_default_permissions() {
     'name' => 'edit all webform submissions',
     'roles' => array(
       'Site Administrator' => 'Site Administrator',
-      'administrator' => 'administrator',
     ),
     'module' => 'webform',
   );
@@ -79,7 +73,6 @@ function lacuna_stories_irb_form_user_default_permissions() {
     'roles' => array(
       'Researcher' => 'Researcher',
       'Site Administrator' => 'Site Administrator',
-      'administrator' => 'administrator',
     ),
     'module' => 'webform',
   );

@@ -135,6 +135,10 @@ Drupal.wysiwyg.editor.instance.openwysiwyg = {
       content = content.replace(/(\r\n)|(\n)/ig, '');
     }
     return content;
+  },
+
+  isFullscreen: function () {
+    return !!(WYSIWYG.maximized[this.field]);
   }
 };
 

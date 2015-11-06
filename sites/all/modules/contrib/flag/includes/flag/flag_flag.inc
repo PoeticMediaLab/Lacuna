@@ -1420,6 +1420,8 @@ class flag_flag {
    * Deletes a flag from the database.
    */
   function delete() {
+    field_attach_delete_bundle('flagging', $this->name);
+
     db_delete('flag')->condition('fid', $this->fid)->execute();
     db_delete('flagging')->condition('fid', $this->fid)->execute();
     db_delete('flag_types')->condition('fid', $this->fid)->execute();

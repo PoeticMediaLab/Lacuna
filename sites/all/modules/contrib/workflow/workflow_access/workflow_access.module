@@ -45,14 +45,31 @@ function workflow_access_menu() {
  * Implements hook_help().
  */
 function workflow_access_help($path, $arg) {
+  $help = '';
   switch ($path) {
     case 'admin/config/workflow/workflow/manage/%/access':
-      return t("WARNING: Use of the 'Edit any', 'Edit own', and even 'View
+      $help = t("WARNING: Use of the 'Edit any', 'Edit own', and even 'View
         published content' permissions for the content type may override these
         access settings. You may need to <a href='!url'>alter the priority of
         the Workflow access module</a>.", array('!url' => url('admin/config/workflow/workflow/access'))
       );
+
+      if (module_exists('og')) {
+        $help .= '<br>';
+        $help .= t('WARNING: Organic Groups (OG) is present and may interfere
+         with these settings.');
+        if (variable_get('og_node_access_strict', TRUE)) {
+          $help .= ' ';
+          $help .= t('In particular, <a href="!url">Strict node access
+            permissions</a> is enabled and may override Workflow access
+            settings.', array('!url' => url('admin/config/group/settings')));
+        }
+      }
+      break;
+    default:
+      break;
   }
+  return $help;
 }
 
 /**
@@ -84,7 +101,7 @@ function workflow_access_workflow_operations($op, $workflow = NULL, $state = NUL
       $wid = $workflow->wid;
 
       $alt = t('Control content access for @wf', array('@wf' => $workflow->getName()));
-      $actions = array(
+      $actions += array(
         'workflow_access_form' => array(
           'title' => t('Access'),
           'href' => "admin/config/workflow/workflow/manage/$wid/access",
@@ -126,7 +143,7 @@ function workflow_access_node_access_records($node) {
     // - when saving a node with workflow_node programmatically with node_save();
     // - when changing a state on a node view page/history tab;
     // - when rebuilding permissions via batch for workflow_node and workflow_field.
-    // In that case, we need to create the workflow_transions ourselves to
+    // In that case, we need to create the workflow_transitions ourselves to
     // calculate the grants.
     foreach (_workflow_info_fields($node, 'node') as $field_name => $field) {
       $old_sid = FALSE;
@@ -154,7 +171,13 @@ function workflow_access_node_access_records($node) {
   // But then again: node_access is only for nodes...
   $uid = isset($node->uid) ? $node->uid : 0;
 
+  $count = 0;
   foreach ($node->workflow_transitions as $transition) {
+    // @todo: add support for +1 workflows per entity.
+    if ($count++ == 1 ) {
+      continue;
+    }
+
     $field_name = $transition->field_name;
     $priority = variable_get('workflow_access_priority', 0);
 

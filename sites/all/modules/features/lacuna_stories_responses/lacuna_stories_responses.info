@@ -38,6 +38,7 @@ features[field_instance][] = node-response-field_tags
 features[field_instance][] = node-response-og_group_ref
 features[field_instance][] = taxonomy_term-genre_response-field_term_course
 features[menu_links][] = main-menu_my-writing:my-writing
+features[menu_links][] = main-menu_responses:responses
 features[menu_links][] = main-menu_write-a-response:node/add/response
 features[node][] = response
 features[rules_config][] = rules_notice_about_annotations_on_responses

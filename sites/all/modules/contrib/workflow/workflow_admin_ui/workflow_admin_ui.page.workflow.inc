@@ -16,6 +16,7 @@
  */
 function workflow_admin_ui_edit_form($form, &$form_state, $workflow = NULL, $op) {
   $noyes = array(t('No'), t('Yes'));
+  $fieldset_options = array(0 => t('No fieldset'), 1 => t('Collapsible fieldset'), 2 => t('Collapsed fieldset'));
 
   $form = array();
 
@@ -63,6 +64,15 @@ function workflow_admin_ui_edit_form($form, &$form_state, $workflow = NULL, $op)
     '#title' => t('Workflow form settings'),
   );
 
+  $form['basic']['fieldset'] = array(
+    '#type' => 'select',
+    '#options' => $fieldset_options,
+    '#title' => t('Show the form in a fieldset?'),
+    '#default_value' => isset($workflow->options['fieldset']) ? $workflow->options['fieldset'] : 0,
+    '#description' => t("The Widget can be wrapped in a visible fieldset. You'd
+      do this when you use the widget on a Node Edit page."
+    ),
+  );
   $form['basic']['options'] = array(
     '#type' => 'select',
     '#title' => t('How to show the available states'),

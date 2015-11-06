@@ -66,9 +66,14 @@ function _workflow_rules_workflow_check_given_state($sid, array $sids) {
  *   An array of new sids to meet the condition.
  * @param array $condition
  *   A RulesCondition->settings array.
+ *
+ * @return bool
  */
 function _workflow_rules_node_check_transition($node, array $old_sids, array $new_sids, array $condition) {
-  $last_transition = workflow_transition_load_single('node', $node->nid, '');
+  if (!$last_transition = workflow_transition_load_single('node', $node->nid, '')) {
+    return FALSE;
+  }
+
   $old_sid = $last_transition->old_sid;
   $new_sid = $last_transition->new_sid;
 
@@ -86,8 +91,16 @@ function _workflow_rules_node_check_transition($node, array $old_sids, array $ne
  *   The node with the new values. Other entity types are not supported.
  * @param array $sids
  *   An array of State IDs to meet the condition.
+ *
+ * @return bool
  */
 function _workflow_rules_node_check_state($node, array $sids) {
+  // Provide a fast exit if this is a node type without Workflow.
+  // workflow_node_current_state() will return CreationState otherwise.
+  if (!isset($node->workflow)) {
+    return FALSE;
+  }
+
   $field_name = ''; // An explicit var is needed.
   $sid = workflow_node_current_state($node, 'node', $field_name);
   return _workflow_rules_workflow_check_given_state($sid, $sids);
@@ -99,7 +112,10 @@ function _workflow_rules_node_check_state($node, array $sids) {
  * Only for Workflow Node! Workflow Field can use default Rules condition.
  */
 function _workflow_rules_node_check_previous_state($node, $sids) {
-  $last_transition = workflow_transition_load_single('node', $node->nid, '');
+  if (!$last_transition = workflow_transition_load_single('node', $node->nid, '')) {
+    return FALSE;
+  }
+
   $sid = $last_transition->old_sid;
   return _workflow_rules_workflow_check_given_state($sid, $sids);
 }
@@ -123,6 +139,9 @@ function _workflow_rules_set_state(array $parameters, RulesAction $action) {
 
   // Select the last state on the list.
   $new_sid = array_pop($parameters['workflow_state']);
+  if ($new_sid == 'ANY') {
+    $new_sid = $old_sid;
+  }
   $comment = $parameters['workflow_comment'];
 
   $transition = new WorkflowTransition();

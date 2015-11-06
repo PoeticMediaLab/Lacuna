@@ -577,7 +577,7 @@ function course_node_update($node) {
   $key = "Course_Clone_Material_Docs_" . $user->uid;
   // If any the material was cloned, we needed the user to finish all the course-specific bits, check if they are saving
   // one of those nodes and remove that node from the to finish queue cookie
-  if (DOCUMENT_NODE_TYPE == $node->type && $docs = $_COOKIE['Drupal_visitor_' . $key]) {
+  if (DOCUMENT_NODE_TYPE == $node->type && isset($_COOKIE['Drupal_visitor_' . $key]) && $docs = $_COOKIE['Drupal_visitor_' . $key]) {
     course_pop_unfinished_doc_queue($node->nid);
   }
 
@@ -587,8 +587,10 @@ function course_form_document_node_form_alter(&$form, &$form_state, $form_id) {
   $document = node_load($form['nid']['#value']);
 	$unit_options = course_get_terms_for_current_course('units');
 	$genre_options = course_get_terms_for_current_course('genre_doc');
-	$default_unit = array_shift(array_keys($unit_options));
-	$default_genre = array_shift(array_keys($genre_options));
+  $units = array_keys($unit_options);
+	$default_unit = array_shift($units);
+  $genres = array_keys($genre_options);
+	$default_genre = array_shift($genres);
 
 	// Per-course units taxonomy
 	if (isset($document->field_unit[LANGUAGE_NONE])) {
@@ -785,7 +787,8 @@ function course_create_blank_document($biblio) {
 
   $document->field_bibliographic_entry[LANGUAGE_NONE][0]['target_id'] = $biblio->nid;
   $document->status = NODE_PUBLISHED; // make all documents published
-  $taxo = array_pop(taxonomy_get_term_by_name($copyright));
+  $copyright_terms = taxonomy_get_term_by_name($copyright);
+  $taxo = array_pop($copyright_terms);
   if ($taxo) {
     $document->field_copyright[LANGUAGE_NONE][0]['tid'] = $taxo->tid;
   }
@@ -863,6 +866,7 @@ function course_action_info() {
     'course_bulk_clone_material' => array(
       'type' => 'node',
       'label' => t('Add Material'),
+      'configurable' => FALSE,
     ),
   );
 }
@@ -975,7 +979,7 @@ function course_push_unfinished_doc_queue($nid) {
   $cookie_queue = &drupal_static('course_doc_queue');
 
   $key = "Course_Clone_Material_Docs_" . $user->uid;
-  if (!isset($cookie_queue)) {
+  if (!isset($cookie_queue) && isset($_COOKIE['Drupal_visitor_' . $key])) {
     $cookie_queue = $_COOKIE['Drupal_visitor_' . $key];
   }
   if (!empty($cookie_queue)) {
