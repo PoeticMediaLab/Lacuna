@@ -55,9 +55,15 @@ Follow the standard Drupal installation process (https://www.drupal.org/document
 git clone https://github.com/PoeticMediaLab/LacunaStories.git
 ```
 
-You could, of course, download a zipfile of all the code, but we recommend using Git, which will make it easier to get updates.
+You could, of course, download a zipfile of all the code, but we recommend using Git, which will make it easier to get updates. If you choose to use git, you will want to add this repository as a remote:
+
+```
+git add remote origin https://github.com/PoeticMediaLab/LacunaStories.git
+```
 
 Proceed with the installation process. Lacuna Stories will be automatically configured. You may encounter a few PHP notices at the last stage, which you can safely ignore.
+
+We highly recommend that you install [Drush](http://www.drush.org/en/master/) to help you manage updates to the site. We will assume Drush is available later in this document.
 
 ## Post-Installation Tasks
 
@@ -103,15 +109,17 @@ Please see the Instructor's Guide, Student Guide, and FAQ that come included wit
 Like any software, Drupal has frequent updates to maintain security and to add new features. Although we will try to keep this repository up-to-date with the latest versions of all included modules and to ensure that the site continues to work, it should generally be safe for you to run standard updates on your own site (with the usual caveat that you should test on a development copy first, not on your production server). I do it all the time and the updates work fine. If you find that an update somehow breaks Lacuna Stories, please file a bug report.
 
 ## Lacuna Stories updates
-As we add new features and fix bugs, we will increment the Lacuna Stories version number and update the GitHub repository. To include these changes on your site, you will need to update your copy of the software, then run the following command from the command-line within your installion:
+As we add new features and fix bugs, we will increment the Lacuna Stories version number and update the GitHub repository. To include these changes on your site, you will need to update your copy of the software by running the following commands within your installion directory:
 
 ```
-drush updb -y && drush fra -y
+git pull origin master
+drush updb -y
+drush fra -y
 ```
 
-Alternately, you can update by going to the Features administration page (/admin/structure/features), clicking on the "Lacuna Stories" tab, and reverting each changed feature. You will then need to run the update script (update.php).
+If you do not have Drush available or have not used git, you can download the latest version of the software as a zipfile. Then, enable any updates by going to the Features administration page (/admin/structure/features), clicking on the "Lacuna Stories" tab, and reverting each changed feature. Next, run the update script (update.php).
 
-*Note*: If you have made significant customizations of your copy of Lacuna Stories, you may not want to run these updates automatically. It would be better, in that case, to check the changelog and determine if any changes will overwrite your customizations. Keep in mind, if you have made customizations that you think would be broadly useful, feel free to send us a pull request to include your code into the main distribution.
+_Note_: If you have made significant customizations of your copy of Lacuna Stories, you may not want to run these updates automatically. It would be better, in that case, to check the changelog and determine if any changes will overwrite your customizations. Keep in mind, if you have made customizations that you think would be broadly useful, feel free to send us a pull request to include your code into the main distribution.
 
 # How to Contribute
 The primary avenue for support and contributions to Lacuna Stories will be through our GitHub repository. Please use the [issues feature](https://github.com/PoeticMediaLab/LacunaStories/issues) to contact us.
