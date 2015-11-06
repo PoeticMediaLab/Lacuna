@@ -1,22 +1,17 @@
 # Welcome
 
 # What is Lacuna Stories?
+Lacuna Stories is a platform designed to enhance reading, connected learning, and discussion in the classroom by allowing students and instructors to engage deeply with their course materials through annotation. We have found it to be particularly popular in discussion-based classrooms, in language instruction, and in many other formats. Students are able to read socially, which means that they can have conversations about the readings outside of the classroom. Students can also use their annotations as the basis for longer, possibly more formal written responses by using our innovative Sewing Kit. Instructors are able to see not only how their students are engaging with the texts, but also what annotation skills they are developing. Thanks to our Annotations Dashboard, instructors can see in real-time who has annotated which documents, who is sharing their comments with others, and many other facets of student engagement.
 
 ## Overview
 ## Technical Details
-Lacuna Stories is built with Drupal, Annotator.js, and some scattered d3.js.
+Lacuna Stories is built with Drupal, Annotator.js, and d3.js. It has the same requirements as a standard Drupal installation, namely, a web server, a database (typically MySQL or MariaDB), and PHP 5.3+.
+
 ### Annotation in Drupal
 Although two modules already exist that enable annotation in Drupal (Annotator and Annotation), neither works as well as we hoped. So, we have forked both modules and made many significant improvements, which we will be offering back to the maintainers of those projects. If you just want to enable annotation in a Drupal site, but don't want the entire Lacuna Stories experience, you can grab those modules from our repository. They're under sites/all/modules/custom/. You will need both the Annotator and the Annotation module. The first enables Annotator.js. The second allows you to store annotations as regular Drupal nodes. You may want to use the versions of these modules from Lacuna Stories v1.0, which has fewer features, but less integration with courses and several new plugins than the 2.0 versions.
 
 ### Annotator.js Plugins
 Speaking of plugins, we've developed a number of new ones for the 1.x branch of Annotator.js. These plugins include advanced filters, histograms, categories, fine-grained permissions, and categorized annotation tags. Some are more integrated into Drupal than others, but if you just want to see the Annotator.js plugins, they are in the Annotator module directory.
-
-### Staying Up to Date
-#### Drupal core and contributed modules
-Like any software, Drupal has frequent updates to maintain security and to add new features. Although we will try to keep this repository up-to-date with the latest versions of all included modules and to ensure that the site continues to work, it should generally be safe for you to run standard updates on your own site (with the usual caveat that you should test on a development copy first, not on your production server). I do it all the time and the updates work fine. If you find that an update somehow breaks Lacuna Stories, please file a bug report.
-
-#### Lacuna Stories updates
-
 
 # How to Use Lacuna Stories
 
@@ -24,9 +19,9 @@ Like any software, Drupal has frequent updates to maintain security and to add n
 
 Follow the standard Drupal installation process (https://www.drupal.org/documentation/install), but instead of downloading the code as stated in Step 1, download our code instead:
 
-'''
+```
 git clone https://github.com/PoeticMediaLab/LacunaStories.git
-'''
+```
 
 Proceed with the installation process. Lacuna Stories will be automatically configured. You may encounter a few PHP notices at the last stage, which you can safely ignore.
 
@@ -69,33 +64,57 @@ Students can enroll in a course, read and annotate course materials, write respo
 # Reading, Annotating, and Writing
 Please see the Instructor's Guide, Student Guide, and FAQ that come included with Lacuna Stories under the "Help" menu. We also have several helpful videos and other documentation on our [project website](http://www.lacunastories.com).
 
-# How to Contribute
+### Staying Up to Date
+#### Drupal core and contributed modules
+Like any software, Drupal has frequent updates to maintain security and to add new features. Although we will try to keep this repository up-to-date with the latest versions of all included modules and to ensure that the site continues to work, it should generally be safe for you to run standard updates on your own site (with the usual caveat that you should test on a development copy first, not on your production server). I do it all the time and the updates work fine. If you find that an update somehow breaks Lacuna Stories, please file a bug report.
 
-## Use the Platform and Provide Feedback
+#### Lacuna Stories updates
+As we add new features and fix bugs, we will increment the Lacuna Stories version number and update the GitHub repository. To include these changes on your site, you will need to update your copy of the software, then run the following command from the command-line within your installion:
+
+```
+drush updb -y && drush fra -y
+```
+
+Alternately, you can update by going to the Features administration page (/admin/structure/features), clicking on the "Lacuna Stories" tab, and reverting each changed feature. You will then need to run the update script (update.php).
+
+Note: If you have made significant customizations of your copy of Lacuna Stories, you may not want to run these updates automatically. It would be better, in that case, to check the changelog and determine if any changes will overwrite your customizations. Keep in mind, if you have made customizations that you think would be broadly useful, feel free to send us a pull request to include your code into the main distribution.
+
+# How to Contribute
+The primary avenue for support and contributions to Lacuna Stories will be through our GitHub repository. Please use the [issues feature](https://github.com/PoeticMediaLab/LacunaStories/issues) to contact us.
+
+## Use Lacuna Stories and Provide Feedback
+Using Lacuna Stories in your teaching and research will help us learn more about how we can improve the experience... but only if you let us know! Please get in touch either through our GitHub repository or via email to info@lacunastories.com.
 
 ## Submit a Bug Report
+If you find a bug, please submit [create a bug report](https://github.com/PoeticMediaLab/LacunaStories/issues/new). Be sure to provide enough information so that we can duplicate the problem. If you're not sure how to write a good bug report, read [Mozilla's excellent guide](https://developer.mozilla.org/en-US/docs/Mozilla/QA/Bug_writing_guidelines) first.
+
+## Suggest New Features
+Do you find yourself trying to do something over and over that Lacuna Stories either doesn't make easy or won't let you do at all? Great! Let us know about it, again by submitting an issue. Please label it as an "enhancement" and we can start to discuss your idea.
 
 ## Submit a Pull Request
+Want to improve or extend Lacuna Stories yourself? That's great! Please, don't keep the changes to yourself. Fork our repository and send a pull request. If it's something we agree should be in the main distribution, we'd love to merge your request and will gladly give you credit for the work.
 
 # Credits
-Many people have put time and effort into this project. For a fuller list of the credits, see the official announcement of Lacuna Stories 2.0. Here are just the people who contributed code to the project, in boring alphabetical order.
+Many people have put time and effort into this project. For a fuller list of the credits, see the official announcement of Lacuna Stories 2.0. Here are just the people who contributed code to the project, in boring alphabetical order:
 
-Ben Allen
-Daniel Bush
-Shiraz Dindar
-Zhila Emadi
-Cody Leff
-Tim Loudon
-Rhea Pokorny
-Adi Singh
-Hayk Tepanyan
-Amanda Visconti
-Michael Widner
-Max Wolff
+* Ben Allen
+* Daniel Bush
+* Shiraz Dindar
+* Zhila Emadi
+* Cody Leff
+* Tim Loudon
+* Rhea Pokorny
+* Adi Singh
+* Hayk Tepanyan
+* Amanda Visconti
+* Michael Widner
+* Max Wolff
 
 # Supporters
 These organizations at Stanford University all contributed in substantial ways to making Lacuna Stories possible:
-* The Division of Literatures, Cultures, and Languages
-* Stanford University Libraries
-* The Office of the Vice Provost of Teaching and Learning
-* The Center for Spatial and Textual Analysis (CESTA)
+* [The Center for Interdisciplinary Digital Research (CIDR)](https://cidr.stanford.edu), Stanford University Libraries
+* [The Center for Spatial and Textual Analysis (CESTA)](https://cesta.stanford.edu)
+* [The Division of Literatures, Cultures, and Languages](https://dlcl.stanford.edu)
+* [The Office of the Vice Provost for Teaching and Learning](https://vptl.stanford.edu/)
+* [The Office of the Vice Provost for Undergraduate Education](https://undergrad.stanford.edu/about)
+
