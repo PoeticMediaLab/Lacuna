@@ -171,7 +171,12 @@ function template_preprocess_views_data_export_csv_body(&$vars) {
         }
       }
       if (!empty($vars['options']['replace_newlines'])) {
-        $output = str_replace("\n", $vars['options']['newline_replacement'], $output);
+        if (!empty($vars['options']['newline_token'])) {
+          $output = str_replace( array("\r\n", "\r", "\n"), $vars['options']['newline_replacement'], $output);
+        }
+        else {
+          $output = str_replace("\n", $vars['options']['newline_replacement'], $output);
+        }
       }
       $vars['themed_rows'][$i][$j] = $wrap . str_replace('"', $replace_value, $output) . $wrap;
     }
@@ -475,14 +480,18 @@ function _views_data_export_xml_tag_clean($tag) {
 function _views_data_export_header_shared_preprocess(&$vars) {
   $view     = $vars['view'];
   $fields   = &$view->field;
-
+  $fields_info = $view->display_handler->get_option('fields');
   $vars['header'] = array();
   foreach ($fields as $key => $field) {
     if (empty($field->options['exclude'])) {
-      $vars['header'][$key] = check_plain($field->label());
+      if (isset($fields_info) && isset($fields_info[$key]['label'])) {
+        $vars['header'][$key] = check_plain($fields_info[$key]['label']);
+      }
+      else {
+        $vars['header'][$key] = check_plain($field->label());
+      }
     }
   }
-
 }
 
 /**

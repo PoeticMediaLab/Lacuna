@@ -15,6 +15,9 @@ define('GLOBAL_FILTER_VIEWS_SEARCH_TERMS_FIELD', 'keys');
 // Requires Search API module.
 define('GLOBAL_FILTER_VIEWS_SEARCH_API_FULLTEXT', 'search_api_views_fulltext');
 
+define('GLOBAL_FILTER_VIEWS_TID', 'tid');
+define('GLOBAL_FILTER_VIEWS_TID_DEPTH', 'term_node_tid_depth');
+
 $path = DRUPAL_ROOT . '/' . drupal_get_path('module', 'global_filter');
 include_once $path . '/widgets/global_filter.datewidget.inc';
 include_once $path . '/widgets/global_filter.linkswidget.inc';
@@ -101,6 +104,8 @@ function global_filter_create_widget($filter_key, &$form, &$form_state) {
     GLOBAL_FILTER_VIEWS_PROXIMITY_FIELD,
     GLOBAL_FILTER_VIEWS_SEARCH_TERMS_FIELD,
     GLOBAL_FILTER_VIEWS_SEARCH_API_FULLTEXT,
+    GLOBAL_FILTER_VIEWS_TID,
+    GLOBAL_FILTER_VIEWS_TID_DEPTH,
   );
   if (strpos($name, 'view') === 0) {
 
@@ -550,7 +555,13 @@ function global_filter_extract_values($form_values, $language = NULL) {
   }
   $values = array();
   foreach ($form_values[$language] as $v) {
-    $values[] = is_array($v) ? reset($v) : $v;
+    if (is_array($v)) {
+      $keys = array_keys($v);
+      $values[] = array_keys($keys) === $keys ? reset($v) : $v;
+    }
+    else {
+      $values[] = $v;
+    }
   }
   return $values;
 }
@@ -576,9 +587,10 @@ function _global_filter_add_terms(&$options, $vocabulary_machine_name, $show_dep
   }
   else {
     foreach (taxonomy_get_tree($vid) as $term) {
-      // If $show_depth is set, we follow core's way and add one hyphen for each
-      // hierarchy level.
-      $options[$term->tid] = $show_depth ? (str_repeat('-', $term->depth) . $term->name) : $term->name;
+      $term_name = module_exists('i18n_taxonomy') ? i18n_taxonomy_term_name($term) : $term->name;
+      // If $show_depth is set, we follow core's way and append one hyphen for
+      // each hierarchy level.
+      $options[$term->tid] = $show_depth ? (str_repeat('-', $term->depth) . $term_name) : $term_name;
     }
   }
 }

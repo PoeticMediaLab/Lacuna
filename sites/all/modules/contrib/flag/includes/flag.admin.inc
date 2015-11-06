@@ -693,19 +693,26 @@ function flag_form_submit($form, &$form_state) {
   // We clear caches more vigorously if the flag was new.
   _flag_clear_cache($flag->entity_type, !empty($flag->is_new));
 
+  if (!empty($flag->is_new)) {
+    field_attach_create_bundle('flagging', $flag->name);
+  }
+
   // Save permissions.
   // This needs to be done after the flag cache has been cleared, so that
   // the new permissions are picked up by hook_permission().
   // This may need to move to the flag class when we implement extra permissions
   // for different flag types: http://drupal.org/node/879988
 
-  // If the flag machine name as changed, clean up all the obsolete permissions.
+  // If the flag machine name as changed, clean up all the obsolete permissions
+  // and notify FieldAPI.
   if ($flag->name != $form['#flag_name']) {
     $old_name = $form['#flag_name'];
     $permissions = array("flag $old_name", "unflag $old_name");
     foreach (array_keys(user_roles()) as $rid) {
       user_role_revoke_permissions($rid, $permissions);
     }
+
+    field_attach_rename_bundle('flagging', $old_name, $flag->name);
   }
 
   foreach (array_keys(user_roles(!module_exists('session_api'))) as $rid) {

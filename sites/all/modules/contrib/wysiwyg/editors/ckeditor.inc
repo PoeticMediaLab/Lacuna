@@ -37,15 +37,15 @@ function wysiwyg_ckeditor_editor() {
     'settings form callback' => 'wysiwyg_ckeditor_settings_form',
     'init callback' => 'wysiwyg_ckeditor_init',
     'settings callback' => 'wysiwyg_ckeditor_settings',
-    'plugin callback' => 'wysiwyg_ckeditor_plugins',
-    'plugin settings callback' => 'wysiwyg_ckeditor_plugin_settings',
+    'plugin callback' => '_wysiwyg_ckeditor_plugins',
+    'plugin meta callback' => '_wysiwyg_ckeditor_plugin_meta',
     'proxy plugin' => array(
       'drupal' => array(
         'load' => TRUE,
         'proxy' => TRUE,
       ),
     ),
-    'proxy plugin settings callback' => 'wysiwyg_ckeditor_proxy_plugin_settings',
+    'proxy plugin settings callback' => '_wysiwyg_ckeditor_proxy_plugin_settings',
     'versions' => array(
       '3.0.0.3665' => array(
         'js files' => array('ckeditor-3.0.js'),
@@ -546,46 +546,37 @@ function wysiwyg_ckeditor_settings_parse_styles($css_classes) {
 }
 
 /**
- * Build a JS settings array of native external plugins that need to be loaded separately.
+ * Build a JS settings array with global metadata for native external plugins.
  */
-function wysiwyg_ckeditor_plugin_settings($editor, $profile, $plugins) {
-  $settings = array();
-  foreach ($plugins as $name => $plugin) {
-    // Register all plugins that need to be loaded.
-    if (!empty($plugin['load'])) {
-      $settings[$name] = array();
-      // Add path for native external plugins.
-      if (empty($plugin['internal']) && isset($plugin['path'])) {
-        $settings[$name]['path'] = base_path() . $plugin['path'] . '/';
-      }
-      // Force native internal plugins to use the standard path.
-      else {
-        $settings[$name]['path'] = base_path() . $editor['library path'] . '/plugins/' . $name . '/';
-      }
-      // CKEditor defaults to 'plugin.js' on its own when filename is not set.
-      if (!empty($plugin['filename'])) {
-        $settings[$name]['fileName'] = $plugin['filename'];
-      }
+function _wysiwyg_ckeditor_plugin_meta($editor, $plugin) {
+  $meta = array();
+  $name = $plugin['name'];
+  // Register all plugins that need to be loaded.
+  if (!empty($plugin['load'])) {
+    // Add path for native external plugins.
+    if (empty($plugin['internal']) && isset($plugin['path'])) {
+      $meta['path'] = base_path() . $plugin['path'] . '/';
+    }
+    // Force native internal plugins to use the standard path.
+    else {
+      $meta['path'] = base_path() . $editor['library path'] . '/plugins/' . $name . '/';
+    }
+    // CKEditor defaults to 'plugin.js' on its own when filename is not set.
+    if (!empty($plugin['filename'])) {
+      $meta['fileName'] = $plugin['filename'];
     }
   }
-  return $settings;
+  return $meta;
 }
 
 /**
  * Build a JS settings array for Drupal plugins loaded via the proxy plugin.
  */
-function wysiwyg_ckeditor_proxy_plugin_settings($editor, $profile, $plugins) {
+function _wysiwyg_ckeditor_proxy_plugin_settings($editor, $profile, $plugins) {
   $settings = array();
   foreach ($plugins as $name => $plugin) {
-    // Populate required plugin settings.
-    $settings[$name] = $plugin['dialog settings'] + array(
-      'title' => $plugin['title'],
-      'icon' => base_path() . $plugin['icon path'] . '/' . $plugin['icon file'],
-      'iconTitle' => $plugin['icon title'],
-    );
-    if (!empty($plugin['css path']) && !empty($plugin['css file'])) {
-      $settings[$name]['css'] = base_path() . $plugin['css path'] . '/' . $plugin['css file'];
-    }
+    // Just need a list of all enabled plugins for each instance.
+    $settings[$name] = TRUE;
   }
   return $settings;
 }
@@ -593,22 +584,22 @@ function wysiwyg_ckeditor_proxy_plugin_settings($editor, $profile, $plugins) {
 /**
  * Return internal plugins for this editor; semi-implementation of hook_wysiwyg_plugin().
  */
-function wysiwyg_ckeditor_plugins($editor) {
+function _wysiwyg_ckeditor_plugins($editor) {
   $plugins = array(
     'default' => array(
       'buttons' => array(
         'Bold' => t('Bold'), 'Italic' => t('Italic'), 'Underline' => t('Underline'),
-        'Strike' => t('Strike-through'),
-        'JustifyLeft' => t('Align left'), 'JustifyCenter' => t('Align center'), 'JustifyRight' => t('Align right'), 'JustifyBlock' => t('Justify'),
+        'Strike' => t('Strike through'),
+        'JustifyLeft' => t('Align left'), 'JustifyCenter' => t('Center'), 'JustifyRight' => t('Align right'), 'JustifyBlock' => t('Justify'),
+        'BulletedList' => t('Insert/Remove Bullet list'), 'NumberedList' => t('Insert/Remove Numbered list'),
         'BidiLtr' => t('Left-to-right'), 'BidiRtl' => t('Right-to-left'),
-        'BulletedList' => t('Bullet list'), 'NumberedList' => t('Numbered list'),
         'Outdent' => t('Outdent'), 'Indent' => t('Indent'),
         'Undo' => t('Undo'), 'Redo' => t('Redo'),
         'Link' => t('Link'), 'Unlink' => t('Unlink'), 'Anchor' => t('Anchor'),
         'Image' => t('Image'),
-        'TextColor' => t('Forecolor'), 'BGColor' => t('Backcolor'),
+        'TextColor' => t('Text color'), 'BGColor' => t('Background color'),
         'Superscript' => t('Superscript'), 'Subscript' => t('Subscript'),
-        'Blockquote' => t('Blockquote'), 'Source' => t('Source code'),
+        'Blockquote' => t('Block quote'), 'Source' => t('Source code'),
         'HorizontalRule' => t('Horizontal rule'),
         'Cut' => t('Cut'), 'Copy' => t('Copy'), 'Paste' => t('Paste'),
         'PasteText' => t('Paste Text'), 'PasteFromWord' => t('Paste from Word'),
@@ -620,9 +611,9 @@ function wysiwyg_ckeditor_plugins($editor) {
         'SelectAll' => t('Select all'), 'Find' => t('Search'), 'Replace' => t('Replace'),
         'Flash' => t('Flash'), 'Smiley' => t('Smiley'),
         'CreateDiv' => t('Div container'),
-        'Iframe' => t('iFrame'),
+        'Iframe' => t('IFrame'),
         'Maximize' => t('Maximize'),
-        'SpellChecker' => t('Check spelling'), 'Scayt' => t('Check spelling as you type'),
+        'SpellChecker' => t('Check spelling'), 'Scayt' => t('Spell check as you type'),
         'About' => t('About'),
         'Templates' => t('Templates'),
       ),

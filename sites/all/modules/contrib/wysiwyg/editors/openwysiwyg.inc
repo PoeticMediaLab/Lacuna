@@ -24,7 +24,7 @@ function wysiwyg_openwysiwyg_editor() {
     'themes callback' => 'wysiwyg_openwysiwyg_themes',
     'settings form callback' => 'wysiwyg_openwysiwyg_settings_form',
     'settings callback' => 'wysiwyg_openwysiwyg_settings',
-    'plugin callback' => 'wysiwyg_openwysiwyg_plugins',
+    'plugin callback' => '_wysiwyg_openwysiwyg_plugins',
     'versions' => array(
       '1.4.7' => array(
         'js files' => array('openwysiwyg.js'),
@@ -157,7 +157,7 @@ function wysiwyg_openwysiwyg_settings($editor, $config, $theme) {
 /**
  * Return internal plugins for this editor; semi-implementation of hook_wysiwyg_plugin().
  */
-function wysiwyg_openwysiwyg_plugins($editor) {
+function _wysiwyg_openwysiwyg_plugins($editor) {
   $plugins = array(
     'default' => array(
       'buttons' => array(

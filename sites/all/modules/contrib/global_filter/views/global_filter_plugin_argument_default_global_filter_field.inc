@@ -49,20 +49,16 @@ class global_filter_plugin_argument_default_global_filter_field extends views_pl
     $exception_value = $this->argument->options['exception']['value'];
 
     if (!($filter_key = global_filter_key_by_name($views_field_name))) {
-      // Not found as a node property, maybe it's a field.
-      if (empty($this->argument->definition['field_name'])) {
-        return $exception_value;
+      // Not found as a node property, maybe it's a field or taxonomy term.
+      // "Has taxonomy term ID" shows up with $views_field_name == 'tid'
+      if (isset($this->argument->definition['field_name'])) {
+        $field_name = $this->argument->definition['field_name'];
+        $filter_key = global_filter_key_by_name($field_name);
       }
-      $field_name = $this->argument->definition['field_name'];
-      /* @todo generalise this beyond AddressField
-      $field = field_info_field($field_name);
-      if ($field['type'] == 'addressfield') {
-      $column = drupal_substr($views_field_name, strlen($field_name) + 1);
+      else {
+        $filter_key = FALSE;
       }
-      */
-      $filter_key = global_filter_key_by_name($field_name);
     }
-
     if ($filter_key) {
       $arg = global_filter_get_session_value($field_name);
       if (isset($arg) && $arg != '' && $arg != array('')) {

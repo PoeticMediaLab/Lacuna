@@ -198,7 +198,7 @@ function global_filter_set_on_session($name, $value) {
   // Gets and caches all filters.
   $prev_value = global_filter_get_session_value($name);
   if ($prev_value == $value) {
-    global_filter_debug(t('Global Filter %name: no change in value. No need to set.', array('%name' => $name)));
+    global_filter_debug(t('Global Filter @name: no change in value. No need to set.', array('@name' => $name)));
     return FALSE;
   }
 
@@ -210,10 +210,30 @@ function global_filter_set_on_session($name, $value) {
   // Update the selected filter with the new value.
   $filters[$name] = $value;
 
+  // For Context Session module, http://drupal.org/project/context_session
+  // @todo refactor into its own ugly function.
+  if (module_exists('context_session') && !empty($_SESSION)) {
+    // context_session does not support session_cache, so use $_SESSION.
+    // Note that context_session only offers boolean support: it sets a
+    // context based on the fact whether a key is present or not. So we have
+    // to fake name=value pairs. We start by clearing out old values.
+    foreach ($_SESSION as $key => $v) {
+      if (strpos($key, "global_filter:$name=") === 0) {
+        unset($_SESSION[$key]);
+      }
+    }
+    // Now set the new value. Support the AND operator. ORs are achieved by
+    // the user adding multiple session conditions.
+    $val = is_array($value) ? implode(',', array_filter($value)) : $value;
+    $_SESSION["global_filter:$name=$val"] = TRUE;
+    // If in the future Context Session accepts name|value pairs we can do this:
+    // $_SESSION["global_filter:$name"] = $val;
+  }
+
   $prev_value = !isset($prev_value) || $prev_value == '' ? t('all') : (is_array($prev_value) ? implode('+', $prev_value) : print_r($prev_value, TRUE));
   $value = !isset($value) || $value == '' ? t('all') : (is_array($value) ? implode('+', $value) : print_r($value, TRUE));
-  global_filter_debug(t('Global Filter %name: changing from %prev_value to %value', array(
-    '%name' => $name,
+  global_filter_debug(t('Global Filter @name: changing from %prev_value to %value', array(
+    '@name' => $name,
     '%prev_value' => $prev_value,
     '%value' => $value,
   )));
@@ -224,10 +244,14 @@ function global_filter_set_on_session($name, $value) {
     foreach (global_filter_get_parameter(NULL) as $filter) {
       $nm = $filter['name'];
       if ($nm && $nm != $name && $nm != 'view_autocycle') {
-        $filters[$nm] = global_filter_get_global_default($nm);
+        $filters[$nm] = $val = global_filter_get_global_default($nm);
+        $val = is_array($val) ? implode('+', array_filter($val)) : $val;
+        if (module_exists('context_var')) {
+          variable_set($nm, $val);
+        }
         global_filter_debug(t('Global Filter %name: mutex reset to global default: "%value"', array(
           '%name' => $nm,
-          '%value' => is_array($filters[$nm]) ? implode('+', $filters[$nm]) : $filters[$nm],
+          '%value' => print_r($val, TRUE),
         )));
       }
     }

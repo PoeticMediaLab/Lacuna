@@ -23,15 +23,16 @@ function wysiwyg_fckeditor_editor() {
     'themes callback' => 'wysiwyg_fckeditor_themes',
     'settings form callback' => 'wysiwyg_fckeditor_settings_form',
     'settings callback' => 'wysiwyg_fckeditor_settings',
-    'plugin callback' => 'wysiwyg_fckeditor_plugins',
-    'plugin settings callback' => 'wysiwyg_fckeditor_plugin_settings',
+    'plugin callback' => '_wysiwyg_fckeditor_plugins',
+    'plugin meta callback' => '_wysiwyg_fckeditor_plugin_meta',
+    'plugin settings callback' => '_wysiwyg_fckeditor_plugin_settings',
     'proxy plugin' => array(
       'drupal' => array(
         'load' => TRUE,
         'proxy' => TRUE,
       ),
     ),
-    'proxy plugin settings callback' => 'wysiwyg_fckeditor_proxy_plugin_settings',
+    'proxy plugin settings callback' => '_wysiwyg_fckeditor_proxy_plugin_settings',
     'versions' => array(
       '2.6' => array(
         'js files' => array('fckeditor-2.6.js'),
@@ -236,22 +237,30 @@ function wysiwyg_fckeditor_settings($editor, $config, $theme) {
 }
 
 /**
- * Build a JS settings array of native external plugins that need to be loaded separately.
+ * Build a JS settings array with global metadata for native external plugins.
  */
-function wysiwyg_fckeditor_plugin_settings($editor, $profile, $plugins) {
+function _wysiwyg_fckeditor_plugin_meta($editor, $plugin) {
+  $meta = array();
+  // Add path for native external plugins; internal ones do not need a path.
+  if (empty($plugin['internal']) && isset($plugin['path'])) {
+    // All native FCKeditor plugins use the filename fckplugin.js.
+    $meta['path'] = base_path() . $plugin['path'] . '/';
+  }
+  if (!empty($plugin['languages'])) {
+    $meta['languages'] = $plugin['languages'];
+  }
+  return $meta;
+}
+
+/**
+ * Build a JS settings array for native external plugins.
+ */
+function _wysiwyg_fckeditor_plugin_settings($editor, $profile, $plugins) {
   $settings = array();
   foreach ($plugins as $name => $plugin) {
-    // Register all plugins that need to be loaded.
     if (!empty($plugin['load'])) {
-      $settings[$name] = array();
-      // Add path for native external plugins; internal ones do not need a path.
-      if (empty($plugin['internal']) && isset($plugin['path'])) {
-        // All native FCKeditor plugins use the filename fckplugin.js.
-        $settings[$name]['path'] = base_path() . $plugin['path'] . '/';
-      }
-      if (!empty($plugin['languages'])) {
-        $settings[$name]['languages'] = $plugin['languages'];
-      }
+      // Just need a list of all enabled plugins for each instance.
+      $settings[$name] = TRUE;
     }
   }
   return $settings;
@@ -260,25 +269,20 @@ function wysiwyg_fckeditor_plugin_settings($editor, $profile, $plugins) {
 /**
  * Build a JS settings array for Drupal plugins loaded via the proxy plugin.
  */
-function wysiwyg_fckeditor_proxy_plugin_settings($editor, $profile, $plugins) {
+function _wysiwyg_fckeditor_proxy_plugin_settings($editor, $profile, $plugins) {
   $settings = array();
   foreach ($plugins as $name => $plugin) {
-    // Populate required plugin settings.
-    $settings[$name] = $plugin['dialog settings'] + array(
-      'title' => $plugin['title'],
-      'icon' => base_path() . $plugin['icon path'] . '/' . $plugin['icon file'],
-      'iconTitle' => $plugin['icon title'],
-      // @todo These should only be set if the plugin defined them.
-      'css' => base_path() . $plugin['css path'] . '/' . $plugin['css file'],
-    );
+    // Just need a list of all enabled plugins for each instance.
+    $settings[$name] = TRUE;
   }
   return $settings;
 }
 
+
 /**
  * Return internal plugins for this editor; semi-implementation of hook_wysiwyg_plugin().
  */
-function wysiwyg_fckeditor_plugins($editor) {
+function _wysiwyg_fckeditor_plugins($editor) {
   $plugins = array(
     'default' => array(
       'buttons' => array(
