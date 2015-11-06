@@ -1,11 +1,9 @@
-# Welcome
-
 # What is Lacuna Stories?
 Lacuna Stories is a platform designed to enhance reading, connected learning, and discussion in the classroom by allowing students and instructors to engage deeply with their course materials through annotation. We have found it to be particularly popular in discussion-based classrooms, in language instruction, and in many other formats. Students are able to read socially, which means that they can have conversations about the readings outside of the classroom. Students can also use their annotations as the basis for longer, possibly more formal written responses by using our innovative Sewing Kit. Instructors are able to see not only how their students are engaging with the texts, but also what annotation skills they are developing. Thanks to our Annotations Dashboard, instructors can see in real-time who has annotated which documents, who is sharing their comments with others, and many other facets of student engagement.
 
 ## Overview
 ## Technical Details
-Lacuna Stories is built with Drupal, Annotator.js, and d3.js. It has the same requirements as a standard Drupal installation, namely, a web server, a database (typically MySQL or MariaDB), and PHP 5.3+.
+Lacuna Stories is built with [Drupal](http://www.drupal.org), [Annotator.js](http://annotatorjs.org/), and [D3.js](http://d3js.org/). It has the same requirements as a standard Drupal installation, namely, a web server, a database (typically MySQL or MariaDB), and PHP 5.3+. You can read more about the [technical requirements on the Drupal website](https://www.drupal.org/requirements).
 
 ### Annotation in Drupal
 Although two modules already exist that enable annotation in Drupal (Annotator and Annotation), neither works as well as we hoped. So, we have forked both modules and made many significant improvements, which we will be offering back to the maintainers of those projects. If you just want to enable annotation in a Drupal site, but don't want the entire Lacuna Stories experience, you can grab those modules from our repository. They're under sites/all/modules/custom/. You will need both the Annotator and the Annotation module. The first enables Annotator.js. The second allows you to store annotations as regular Drupal nodes. You may want to use the versions of these modules from Lacuna Stories v1.0, which has fewer features, but less integration with courses and several new plugins than the 2.0 versions.
@@ -23,6 +21,8 @@ Follow the standard Drupal installation process (https://www.drupal.org/document
 git clone https://github.com/PoeticMediaLab/LacunaStories.git
 ```
 
+You could, of course, download a zipfile of all the code, but we recommend using Git, which will make it easier to get updates.
+
 Proceed with the installation process. Lacuna Stories will be automatically configured. You may encounter a few PHP notices at the last stage, which you can safely ignore.
 
 ## Post-Installation Tasks
@@ -30,7 +30,7 @@ Proceed with the installation process. Lacuna Stories will be automatically conf
 After installing, there are a few steps you will want to take to improve the user experience.
 
 * Disable warnings and error messages (admin/config/development/logging)
-* Enabled compression and caching (admin/config/development/performance)
+* Enable compression and caching (admin/config/development/performance)
 
 * Review the Course Creation settings (admin/config/content/lacuna-courses). These are the settings that determine the defaults for new courses. You may wish to require a password before instructors can create new courses. If so, you can set that here. You can also set the default genres, media, and priorities for documents. Be sure to click "Submit" at the bottom of the page after confirming these settings, even if you haven't changed anything; this will ensure that your site has initial values for these items.
 
@@ -61,14 +61,14 @@ Students can enroll in a course, read and annotate course materials, write respo
 
 ### Add Students and Instructors to a Course
 
-# Reading, Annotating, and Writing
+## Reading, Annotating, and Writing
 Please see the Instructor's Guide, Student Guide, and FAQ that come included with Lacuna Stories under the "Help" menu. We also have several helpful videos and other documentation on our [project website](http://www.lacunastories.com).
 
-### Staying Up to Date
-#### Drupal core and contributed modules
+# Staying Up to Date
+## Drupal core and contributed modules
 Like any software, Drupal has frequent updates to maintain security and to add new features. Although we will try to keep this repository up-to-date with the latest versions of all included modules and to ensure that the site continues to work, it should generally be safe for you to run standard updates on your own site (with the usual caveat that you should test on a development copy first, not on your production server). I do it all the time and the updates work fine. If you find that an update somehow breaks Lacuna Stories, please file a bug report.
 
-#### Lacuna Stories updates
+## Lacuna Stories updates
 As we add new features and fix bugs, we will increment the Lacuna Stories version number and update the GitHub repository. To include these changes on your site, you will need to update your copy of the software, then run the following command from the command-line within your installion:
 
 ```
