@@ -101,7 +101,7 @@ function lacuna_stories_create_research_consent_webform() {
   node_object_prepare($node);
   $node->title    = 'Digital Research Consent Form';
   $node->language = LANGUAGE_NONE; // Or other language.
-  $node->body[$node->language][0]['value'] = file_get_contents(DRUPAL_ROOT . "/profiles/lacuna_stories/basic pages/consent_form.html");;
+  $node->body[$node->language][0]['value'] = file_get_contents(DRUPAL_ROOT . "/profiles/lacuna_stories/content/consent_form.html");;
   $node->body[$node->language][0]['format']  = 'full_html';
   $node->uid = 1;     // Set admin as author
   $node->promote = 0; // Do not put this node to front page.
@@ -241,8 +241,12 @@ function lacuna_stories_create_default_content() {
   // Add the front page banner block
   $block = array(
     'title' => '<none>',
+    'theme' => '',
+    'region' => '',
+    'delta' => '',
+    'module' => 'lacuna_stories',
     'description' => 'Front Page Banner',
-    'body' => file_get_content_headers(DRUPAL_ROOT . "/profiles/lacuna_stories/content/banner.html")
+    'body' => file_get_contents(DRUPAL_ROOT . "/profiles/lacuna_stories/content/banner.html")
   );
 }
 
@@ -375,6 +379,9 @@ function lacuna_stories_create_publication_state_workflow() {
   $s1 = $workflow->createState('(creation)');
   $s2 = $workflow->createState('Draft');
   $s3 = $workflow->createState('Ready for Annotation');
+  $s1->save();
+  $s2->save();
+  $s3->save();
 
   // Define the transitions per role set in $transition_chunks
   $transition_chunks = array (
