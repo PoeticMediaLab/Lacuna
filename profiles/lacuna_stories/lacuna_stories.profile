@@ -198,8 +198,27 @@ function lacuna_stories_create_research_consent_webform() {
   menu_link_save($menu_item);
 }
 
+function lacuna_stories_block_info() {
+  $blocks = array();
+  $blocks['front_page_banner'] = array(
+    'info' => t('Front Page Banner'),
+  );
+  return $blocks;
+}
+
+function lacuna_stories_block_view($delta = '') {
+  $block = array();
+  switch ($delta) {
+    case 'front_page_banner':
+      $block['subject'] = '';
+      $block['content'] = file_get_contents(DRUPAL_ROOT . "/profiles/lacuna_stories/content/banner.html");
+      break;
+  }
+  return $block;
+}
+
 /*
-  Creating basic pages like FAQ, "Instructor's Guide", etc.
+  Creating default content like FAQ, "Instructor's Guide", etc.
  */
 function lacuna_stories_create_default_content() {
 
@@ -237,17 +256,6 @@ function lacuna_stories_create_default_content() {
     );
     menu_link_save($menu_item);
   }
-
-  // Add the front page banner block
-  $block = array(
-    'title' => '<none>',
-    'theme' => '',
-    'region' => '',
-    'delta' => '',
-    'module' => 'lacuna_stories',
-    'description' => 'Front Page Banner',
-    'body' => file_get_contents(DRUPAL_ROOT . "/profiles/lacuna_stories/content/banner.html")
-  );
 }
 
 /*
