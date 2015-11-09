@@ -61,7 +61,7 @@ You could, of course, download a zipfile of all the code, but we recommend using
 git add remote origin https://github.com/PoeticMediaLab/LacunaStories.git
 ```
 
-Proceed with the installation process. Lacuna Stories will be automatically configured. You may encounter a few PHP notices at the last stage, which you can safely ignore.
+Proceed with the installation process. Lacuna Stories will be automatically configured.
 
 We highly recommend that you install [Drush](http://www.drush.org/en/master/) to help you manage updates to the site. We will assume Drush is available later in this document.
 
