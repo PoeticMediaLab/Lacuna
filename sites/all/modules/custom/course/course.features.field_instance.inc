@@ -10,7 +10,7 @@
 function course_field_default_field_instances() {
   $field_instances = array();
 
-  // Exported field_instance: 'node-course-body'
+  // Exported field_instance: 'node-course-body'.
   $field_instances['node-course-body'] = array(
     'bundle' => 'course',
     'default_value' => NULL,
@@ -61,7 +61,7 @@ function course_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-course-field_course_id'
+  // Exported field_instance: 'node-course-field_course_id'.
   $field_instances['node-course-field_course_id'] = array(
     'bundle' => 'course',
     'default_value' => NULL,
@@ -103,7 +103,7 @@ function course_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-course-field_course_image'
+  // Exported field_instance: 'node-course-field_course_image'.
   $field_instances['node-course-field_course_image'] = array(
     'bundle' => 'course',
     'deleted' => 0,
@@ -171,7 +171,7 @@ function course_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-course-field_course_password'
+  // Exported field_instance: 'node-course-field_course_password'.
   $field_instances['node-course-field_course_password'] = array(
     'bundle' => 'course',
     'default_value' => NULL,
@@ -210,7 +210,7 @@ function course_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-course-field_course_term'
+  // Exported field_instance: 'node-course-field_course_term'.
   $field_instances['node-course-field_course_term'] = array(
     'bundle' => 'course',
     'default_value' => NULL,
@@ -247,7 +247,7 @@ function course_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-course-field_course_title'
+  // Exported field_instance: 'node-course-field_course_title'.
   $field_instances['node-course-field_course_title'] = array(
     'bundle' => 'course',
     'default_value' => NULL,
@@ -289,7 +289,7 @@ function course_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-course-field_course_year'
+  // Exported field_instance: 'node-course-field_course_year'.
   $field_instances['node-course-field_course_year'] = array(
     'bundle' => 'course',
     'default_value' => array(
@@ -332,7 +332,7 @@ function course_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-course-field_department'
+  // Exported field_instance: 'node-course-field_department'.
   $field_instances['node-course-field_department'] = array(
     'bundle' => 'course',
     'default_value' => NULL,
@@ -374,7 +374,7 @@ function course_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-course-field_discipline'
+  // Exported field_instance: 'node-course-field_discipline'.
   $field_instances['node-course-field_discipline'] = array(
     'bundle' => 'course',
     'default_value' => NULL,
@@ -412,7 +412,7 @@ function course_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-course-field_doc_attachment'
+  // Exported field_instance: 'node-course-field_doc_attachment'.
   $field_instances['node-course-field_doc_attachment'] = array(
     'bundle' => 'course',
     'deleted' => 0,
@@ -453,7 +453,7 @@ function course_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-course-field_end_date'
+  // Exported field_instance: 'node-course-field_end_date'.
   $field_instances['node-course-field_end_date'] = array(
     'bundle' => 'course',
     'deleted' => 0,
@@ -468,6 +468,7 @@ function course_field_default_field_instances() {
           'multiple_from' => '',
           'multiple_number' => '',
           'multiple_to' => '',
+          'show_remaining_days' => FALSE,
         ),
         'type' => 'date_default',
         'weight' => 11,
@@ -506,7 +507,7 @@ function course_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-course-field_enrollment'
+  // Exported field_instance: 'node-course-field_enrollment'.
   $field_instances['node-course-field_enrollment'] = array(
     'bundle' => 'course',
     'default_value' => NULL,
@@ -546,7 +547,7 @@ function course_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-course-field_name'
+  // Exported field_instance: 'node-course-field_name'.
   $field_instances['node-course-field_name'] = array(
     'bundle' => 'course',
     'default_value' => NULL,
@@ -588,7 +589,7 @@ function course_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-course-field_registered_students'
+  // Exported field_instance: 'node-course-field_registered_students'.
   $field_instances['node-course-field_registered_students'] = array(
     'bundle' => 'course',
     'default_value' => array(
@@ -630,7 +631,7 @@ function course_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-course-field_secondary_course_id'
+  // Exported field_instance: 'node-course-field_secondary_course_id'.
   $field_instances['node-course-field_secondary_course_id'] = array(
     'bundle' => 'course',
     'default_value' => NULL,
@@ -671,7 +672,7 @@ function course_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-course-field_start_date'
+  // Exported field_instance: 'node-course-field_start_date'.
   $field_instances['node-course-field_start_date'] = array(
     'bundle' => 'course',
     'deleted' => 0,
@@ -686,6 +687,7 @@ function course_field_default_field_instances() {
           'multiple_from' => '',
           'multiple_number' => '',
           'multiple_to' => '',
+          'show_remaining_days' => FALSE,
         ),
         'type' => 'date_default',
         'weight' => 10,
@@ -724,7 +726,7 @@ function course_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-course-field_syllabus'
+  // Exported field_instance: 'node-course-field_syllabus'.
   $field_instances['node-course-field_syllabus'] = array(
     'bundle' => 'course',
     'deleted' => 0,
@@ -765,7 +767,7 @@ function course_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-course-field_third_course_id'
+  // Exported field_instance: 'node-course-field_third_course_id'.
   $field_instances['node-course-field_third_course_id'] = array(
     'bundle' => 'course',
     'default_value' => NULL,
@@ -806,7 +808,7 @@ function course_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-course-field_unregistered_students'
+  // Exported field_instance: 'node-course-field_unregistered_students'.
   $field_instances['node-course-field_unregistered_students'] = array(
     'bundle' => 'course',
     'default_value' => NULL,
@@ -846,7 +848,7 @@ function course_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-course-group_access'
+  // Exported field_instance: 'node-course-group_access'.
   $field_instances['node-course-group_access'] = array(
     'bundle' => 'course',
     'default_value' => array(
@@ -898,7 +900,7 @@ function course_field_default_field_instances() {
     'widget_type' => 'options_select',
   );
 
-  // Exported field_instance: 'node-course-group_group'
+  // Exported field_instance: 'node-course-group_group'.
   $field_instances['node-course-group_group'] = array(
     'bundle' => 'course',
     'default_value' => array(
@@ -953,7 +955,7 @@ function course_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-course-og_roles_permissions'
+  // Exported field_instance: 'node-course-og_roles_permissions'.
   $field_instances['node-course-og_roles_permissions'] = array(
     'bundle' => 'course',
     'default_value' => array(
@@ -1008,7 +1010,7 @@ function course_field_default_field_instances() {
   );
 
   // Exported field_instance:
-  // 'og_membership-og_membership_type_default-og_membership_request'
+  // 'og_membership-og_membership_type_default-og_membership_request'.
   $field_instances['og_membership-og_membership_type_default-og_membership_request'] = array(
     'bundle' => 'og_membership_type_default',
     'default_value' => NULL,
@@ -1041,7 +1043,7 @@ function course_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'user-user-og_user_node'
+  // Exported field_instance: 'user-user-og_user_node'.
   $field_instances['user-user-og_user_node'] = array(
     'bundle' => 'user',
     'default_value' => NULL,
@@ -1096,7 +1098,7 @@ function course_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'user-user-og_user_node1'
+  // Exported field_instance: 'user-user-og_user_node1'.
   $field_instances['user-user-og_user_node1'] = array(
     'bundle' => 'user',
     'default_value' => NULL,

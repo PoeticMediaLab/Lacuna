@@ -10,7 +10,7 @@
 function course_field_default_field_bases() {
   $field_bases = array();
 
-  // Exported field_base: 'body'
+  // Exported field_base: 'body'.
   $field_bases['body'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -34,7 +34,7 @@ function course_field_default_field_bases() {
     'type' => 'text_with_summary',
   );
 
-  // Exported field_base: 'field_course_id'
+  // Exported field_base: 'field_course_id'.
   $field_bases['field_course_id'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -58,7 +58,7 @@ function course_field_default_field_bases() {
     'type' => 'text',
   );
 
-  // Exported field_base: 'field_course_image'
+  // Exported field_base: 'field_course_image'.
   $field_bases['field_course_image'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -83,7 +83,7 @@ function course_field_default_field_bases() {
     'type' => 'image',
   );
 
-  // Exported field_base: 'field_course_password'
+  // Exported field_base: 'field_course_password'.
   $field_bases['field_course_password'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -107,7 +107,7 @@ function course_field_default_field_bases() {
     'type' => 'text',
   );
 
-  // Exported field_base: 'field_course_term'
+  // Exported field_base: 'field_course_term'.
   $field_bases['field_course_term'] = array(
     'active' => 1,
     'cardinality' => -1,
@@ -137,7 +137,7 @@ function course_field_default_field_bases() {
     'type' => 'list_text',
   );
 
-  // Exported field_base: 'field_course_title'
+  // Exported field_base: 'field_course_title'.
   $field_bases['field_course_title'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -161,7 +161,7 @@ function course_field_default_field_bases() {
     'type' => 'text',
   );
 
-  // Exported field_base: 'field_course_year'
+  // Exported field_base: 'field_course_year'.
   $field_bases['field_course_year'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -190,7 +190,7 @@ function course_field_default_field_bases() {
     'type' => 'list_text',
   );
 
-  // Exported field_base: 'field_department'
+  // Exported field_base: 'field_department'.
   $field_bases['field_department'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -214,7 +214,7 @@ function course_field_default_field_bases() {
     'type' => 'text',
   );
 
-  // Exported field_base: 'field_discipline'
+  // Exported field_base: 'field_discipline'.
   $field_bases['field_discipline'] = array(
     'active' => 1,
     'cardinality' => 3,
@@ -257,7 +257,7 @@ function course_field_default_field_bases() {
     'type' => 'list_text',
   );
 
-  // Exported field_base: 'field_doc_attachment'
+  // Exported field_base: 'field_doc_attachment'.
   $field_bases['field_doc_attachment'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -283,7 +283,7 @@ function course_field_default_field_bases() {
     'type' => 'file',
   );
 
-  // Exported field_base: 'field_end_date'
+  // Exported field_base: 'field_end_date'.
   $field_bases['field_end_date'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -315,7 +315,7 @@ function course_field_default_field_bases() {
     'type' => 'datetime',
   );
 
-  // Exported field_base: 'field_enrollment'
+  // Exported field_base: 'field_enrollment'.
   $field_bases['field_enrollment'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -333,7 +333,7 @@ function course_field_default_field_bases() {
     'type' => 'number_integer',
   );
 
-  // Exported field_base: 'field_name'
+  // Exported field_base: 'field_name'.
   $field_bases['field_name'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -357,7 +357,7 @@ function course_field_default_field_bases() {
     'type' => 'text',
   );
 
-  // Exported field_base: 'field_registered_students'
+  // Exported field_base: 'field_registered_students'.
   $field_bases['field_registered_students'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -385,7 +385,7 @@ function course_field_default_field_bases() {
     'type' => 'list_boolean',
   );
 
-  // Exported field_base: 'field_secondary_course_id'
+  // Exported field_base: 'field_secondary_course_id'.
   $field_bases['field_secondary_course_id'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -409,7 +409,7 @@ function course_field_default_field_bases() {
     'type' => 'text',
   );
 
-  // Exported field_base: 'field_start_date'
+  // Exported field_base: 'field_start_date'.
   $field_bases['field_start_date'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -441,7 +441,7 @@ function course_field_default_field_bases() {
     'type' => 'datetime',
   );
 
-  // Exported field_base: 'field_syllabus'
+  // Exported field_base: 'field_syllabus'.
   $field_bases['field_syllabus'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -467,7 +467,7 @@ function course_field_default_field_bases() {
     'type' => 'file',
   );
 
-  // Exported field_base: 'field_third_course_id'
+  // Exported field_base: 'field_third_course_id'.
   $field_bases['field_third_course_id'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -491,7 +491,7 @@ function course_field_default_field_bases() {
     'type' => 'text',
   );
 
-  // Exported field_base: 'field_unregistered_students'
+  // Exported field_base: 'field_unregistered_students'.
   $field_bases['field_unregistered_students'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -509,7 +509,7 @@ function course_field_default_field_bases() {
     'type' => 'number_integer',
   );
 
-  // Exported field_base: 'group_content_access'
+  // Exported field_base: 'group_content_access'.
   $field_bases['group_content_access'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -538,7 +538,7 @@ function course_field_default_field_bases() {
     'type' => 'list_integer',
   );
 
-  // Exported field_base: 'og_group_ref'
+  // Exported field_base: 'og_group_ref'.
   $field_bases['og_group_ref'] = array(
     'active' => 1,
     'cardinality' => -1,
@@ -582,7 +582,7 @@ function course_field_default_field_bases() {
     'type' => 'entityreference',
   );
 
-  // Exported field_base: 'og_membership_request'
+  // Exported field_base: 'og_membership_request'.
   $field_bases['og_membership_request'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -603,7 +603,7 @@ function course_field_default_field_bases() {
     'type' => 'text_long',
   );
 
-  // Exported field_base: 'og_roles_permissions'
+  // Exported field_base: 'og_roles_permissions'.
   $field_bases['og_roles_permissions'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -631,7 +631,7 @@ function course_field_default_field_bases() {
     'type' => 'list_boolean',
   );
 
-  // Exported field_base: 'og_user_node'
+  // Exported field_base: 'og_user_node'.
   $field_bases['og_user_node'] = array(
     'active' => 1,
     'cardinality' => -1,
@@ -674,7 +674,7 @@ function course_field_default_field_bases() {
     'type' => 'entityreference',
   );
 
-  // Exported field_base: 'og_user_node1'
+  // Exported field_base: 'og_user_node1'.
   $field_bases['og_user_node1'] = array(
     'active' => 1,
     'cardinality' => -1,

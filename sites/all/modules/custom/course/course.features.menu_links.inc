@@ -10,7 +10,7 @@
 function course_menu_default_menu_links() {
   $menu_links = array();
 
-  // Exported menu link: main-menu_courses:<front>
+  // Exported menu link: main-menu_courses:<front>.
   $menu_links['main-menu_courses:<front>'] = array(
     'menu_name' => 'main-menu',
     'link_path' => '<front>',
@@ -31,7 +31,7 @@ function course_menu_default_menu_links() {
     'customized' => 1,
     'parent_identifier' => 'main-menu_account:<nolink>',
   );
-  // Exported menu link: menu-institutional-menu_courses:<front>
+  // Exported menu link: menu-institutional-menu_courses:<front>.
   $menu_links['menu-institutional-menu_courses:<front>'] = array(
     'menu_name' => 'menu-institutional-menu',
     'link_path' => '<front>',
