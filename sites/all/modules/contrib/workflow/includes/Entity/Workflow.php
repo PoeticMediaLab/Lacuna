@@ -6,6 +6,72 @@
  * Contains workflow\includes\Entity\WorkflowController.
  */
 
+/**
+ * Implements a controller class for Workflow.
+ */
+class WorkflowController extends EntityAPIControllerExportable {
+
+  // public function create(array $values = array()) {    return parent::create($values);  }
+  // public function load($ids = array(), $conditions = array()) { }
+
+  public function delete($ids, DatabaseTransaction $transaction = NULL) {
+    // @todo: replace WorkflowController::delete() with parent.
+    // @todo: throw error if not workflow->isDeletable().
+    foreach ($ids as $wid) {
+      if ($workflow = workflow_load($wid)) {
+        $workflow->delete();
+      }
+    }
+    $this->resetCache();
+  }
+
+  /**
+   * Overrides DrupalDefaultEntityController::cacheGet().
+   *
+   * Override default function, due to Core issue #1572466.
+   */
+  protected function cacheGet($ids, $conditions = array()) {
+    // Load any available entities from the internal cache.
+    if ($ids === FALSE && !$conditions) {
+      return $this->entityCache;
+    }
+    return parent::cacheGet($ids, $conditions);
+  }
+
+  /**
+   * Overrides DrupalDefaultEntityController::cacheSet().
+   */
+/*
+  // protected function cacheSet($entities) { }
+  //   return parent::cacheSet($entities);
+  // }
+ */
+
+  /**
+   * Overrides DrupalDefaultEntityController::resetCache().
+   *
+   * Called by workflow_reset_cache, to
+   * Reset the Workflow when States, Transitions have been changed.
+   */
+  // public function resetCache(array $ids = NULL) {
+  //   parent::resetCache($ids);
+  // }
+
+  /**
+   * Overrides DrupalDefaultEntityController::attachLoad().
+   */
+  protected function attachLoad(&$queried_entities, $revision_id = FALSE) {
+    foreach ($queried_entities as $entity) {
+      // Load the states, so they are already present on the next (cached) load.
+      $entity->states = $entity->getStates($all = TRUE);
+      $entity->transitions = $entity->getTransitions(FALSE);
+      $entity->typeMap = $entity->getTypeMap();
+    }
+
+    parent::attachLoad($queried_entities, $revision_id);
+  }
+}
+
 class Workflow extends Entity {
   public $wid = 0;
   public $name = '';
@@ -123,13 +189,6 @@ class Workflow extends Entity {
     if ($is_new) {
       $state = $this->getCreationState();
     }
-    // Make sure the default roles are permitted in transitions for better UX.
-    if ($is_new && (count(workflow_load_multiple()) == 1) ) {
-      foreach (user_roles() as $rid => $name) {
-        $perms = array('participate in workflow' => 1);
-        user_role_change_permissions($rid, $perms);  // <=== Enable Roles
-      }
-    }
 
     workflow_reset_cache($this->wid);
 
@@ -201,7 +260,7 @@ class Workflow extends Entity {
       $message = t('Please maintain Workflow %workflow on its <a href="@url">settings</a> page.',
         array(
           '%workflow' => $this->getName(),
-          '@url' => url('admin/config/workflow/workflow/manage/' . $this->wid),
+          '@url' => url('admin/config/workflow/workflow/edit/' . $this->wid),
         )
       );
       drupal_set_message($message, 'warning');
@@ -258,8 +317,6 @@ class Workflow extends Entity {
    *   saved directly in the database. This is because you can use States only
    *   with Transitions, and they rely on State IDs which are generated
    *   magically when saving the State. But you may need a temporary state.
-   *
-   * @return WorkflowState
    */
   public function createState($name, $save = TRUE) {
     $wid = $this->wid;
@@ -318,42 +375,6 @@ class Workflow extends Entity {
       $sid = 0;
     }
     return $sid;
-  }
-
-  /**
-   * Returns the next state for the current state.
-   *
-   * @param string $entity_type
-   *   The type of the entity at hand.
-   * @param object $entity
-   *   The entity at hand. May be NULL (E.g., on a Field settings page).
-   * @param $field_name
-   * @param $user
-   * @param bool $force
-   *
-   * @return int $sid
-   *   A state ID.
-   */
-  public function getNextSid($entity_type, $entity, $field_name, $user, $force = FALSE) {
-    $new_sid = workflow_node_current_state($entity, $entity_type, $field_name);
-
-    if ($new_sid && $new_state = workflow_state_load_single($new_sid)) {
-      /* @var $current_state WorkflowState */
-      $options = $new_state->getOptions($entity_type, $entity, $field_name, $user, $force);
-      // Loop over every option. To find the next one.
-      $flag = $new_state->isCreationState();
-      foreach ($options as $sid => $name) {
-        if ($flag) {
-          $new_sid = $sid;
-          break;
-        }
-        if ($sid == $new_state->sid) {
-          $flag = TRUE;
-        }
-      }
-    }
-
-    return $new_sid;
   }
 
   /**
@@ -457,11 +478,6 @@ class Workflow extends Entity {
    *   $conditions['sid'] : if provided, a 'from' State ID.
    *   $conditions['target_sid'] : if provided, a 'to' state ID.
    *   $conditions['roles'] : if provided, an array of roles, or 'ALL'.
-   * @param bool $reset
-   *   Indicator to reset the cache.
-   *
-   * @return array
-   *   An array of keyed transitions.
    */
   public function getTransitions($tids = FALSE, array $conditions = array(), $reset = FALSE) {
     $config_transitions = array();
@@ -500,7 +516,7 @@ class Workflow extends Entity {
       elseif ($target_sid && $target_sid != $config_transition->target_sid) {
         // Not the requested 'to' state.
       }
-      elseif ($roles == 'ALL' || $config_transition->isAllowed($roles)) {
+      elseif ($config_transition->isAllowed($roles)) {
         // Transition is allowed, permitted. Add to list.
         $config_transition->setWorkflow($this);
         $config_transitions[$config_transition->tid] = $config_transition;
@@ -610,8 +626,6 @@ class Workflow extends Entity {
 }
 
 function _workflow_rebuild_roles(array $roles, array $role_map) {
-  $cached_roles = &drupal_static(__FUNCTION__, array());
-
   // See also https://drupal.org/node/1702626 .
   $new_roles = array();
   foreach ($roles as $key => $rid) {
@@ -619,14 +633,8 @@ function _workflow_rebuild_roles(array $roles, array $role_map) {
       $new_roles[$rid] = $rid;
     }
     else {
-      if (!isset($cached_roles[$role_map[$rid]])) {
-        if ($role = user_role_load_by_name($role_map[$rid])) {
-          $cached_roles[$role_map[$rid]] = $role->rid;
-          $new_roles[$role->rid] = $cached_roles[$role_map[$rid]];
-        }
-      }
-      else {
-        $new_roles[$rid] = $cached_roles[$role_map[$rid]];
+      if ($role = user_role_load_by_name($role_map[$rid])) {
+        $new_roles[$role->rid] = $role->rid;
       }
     }
   }
@@ -638,8 +646,6 @@ function _workflow_rebuild_roles(array $roles, array $role_map) {
  *
  * @param WorkflowConfigTransition $a
  * @param WorkflowConfigTransition $b
- *
- * @return int
  */
 function _workflow_transitions_sort_by_weight($a, $b) {
   // First sort on From-State.
@@ -654,71 +660,4 @@ function _workflow_transitions_sort_by_weight($a, $b) {
   if ($new_state_a->weight < $new_state_b->weight) return -1;
   if ($new_state_a->weight > $new_state_b->weight) return +1;
   return 0;
-}
-
-
-/**
- * Implements a controller class for Workflow.
- */
-class WorkflowController extends EntityAPIControllerExportable {
-
-  // public function create(array $values = array()) {    return parent::create($values);  }
-  // public function load($ids = array(), $conditions = array()) { }
-
-  public function delete($ids, DatabaseTransaction $transaction = NULL) {
-    // @todo: replace WorkflowController::delete() with parent.
-    // @todo: throw error if not workflow->isDeletable().
-    foreach ($ids as $wid) {
-      if ($workflow = workflow_load($wid)) {
-        $workflow->delete();
-      }
-    }
-    $this->resetCache();
-  }
-
-  /**
-   * Overrides DrupalDefaultEntityController::cacheGet().
-   *
-   * Override default function, due to Core issue #1572466.
-   */
-  protected function cacheGet($ids, $conditions = array()) {
-    // Load any available entities from the internal cache.
-    if ($ids === FALSE && !$conditions) {
-      return $this->entityCache;
-    }
-    return parent::cacheGet($ids, $conditions);
-  }
-
-  /**
-   * Overrides DrupalDefaultEntityController::cacheSet().
-   */
-  /*
-    // protected function cacheSet($entities) { }
-    //   return parent::cacheSet($entities);
-    // }
-   */
-
-  /**
-   * Overrides DrupalDefaultEntityController::resetCache().
-   *
-   * Called by workflow_reset_cache, to
-   * Reset the Workflow when States, Transitions have been changed.
-   */
-  // public function resetCache(array $ids = NULL) {
-  //   parent::resetCache($ids);
-  // }
-
-  /**
-   * Overrides DrupalDefaultEntityController::attachLoad().
-   */
-  protected function attachLoad(&$queried_entities, $revision_id = FALSE) {
-    foreach ($queried_entities as $entity) {
-      // Load the states, so they are already present on the next (cached) load.
-      $entity->states = $entity->getStates($all = TRUE);
-      $entity->transitions = $entity->getTransitions(FALSE);
-      $entity->typeMap = $entity->getTypeMap();
-    }
-
-    parent::attachLoad($queried_entities, $revision_id);
-  }
 }
