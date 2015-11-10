@@ -177,10 +177,9 @@ function annotator_check_annotatable_node () {
           return $current_node; // User is on an annotatable, and the node corresponds to their current context
         }
       }
-
-      if (node_access('view', $current_node)) {
-        drupal_set_message('Annotations on this content are disabled. This document is either not within your current course or not yet ready to annotate. You may ' . l('return to the front page', '<front>') . ' to change courses.', 'warning', FALSE); // This can happen if a user is already logged in with a course context set, and they access the node directly from browser (non-referred) or they've clicked to this node from the Sewing Kit (as of writing, the only way content is linked to other courses), or if it's an admin user coming from admin/content, etc.
-      }
+    }
+    if (node_access('view', $current_node)) {
+      drupal_set_message('Annotations on this content are disabled. This document is either not within your current course or not yet ready to annotate. You may ' . l('return to the front page', '<front>') . ' to change courses.', 'warning', FALSE); // This can happen if a user is already logged in with a course context set, and they access the node directly from browser (non-referred) or they've clicked to this node from the Sewing Kit (as of writing, the only way content is linked to other courses), or if it's an admin user coming from admin/content, etc.
     }
   }
 	return FALSE;
