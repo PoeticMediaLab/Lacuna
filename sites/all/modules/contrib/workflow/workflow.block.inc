@@ -38,8 +38,11 @@ function workflow_block_view($delta) {
   if ($entity) {
     list($entity_id, , $entity_bundle) = entity_extract_ids($entity_type, $entity);
 
-    // Get the current sid. $field_name is updated with relevant value.
-    $field_name = NULL;
+    if (is_null($field_name = workflow_get_field_name($entity, $entity_type, NULL, $entity_id))) {
+      return $block;
+    }
+
+    // Get the current sid.
     $current_sid = workflow_node_current_state($entity, $entity_type, $field_name);
     $current_state = ($current_sid) ? workflow_state_load_single($current_sid) : NULL;
     $workflow = ($current_state) ? $current_state->getWorkflow() : NULL;

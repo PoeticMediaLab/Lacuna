@@ -391,7 +391,6 @@ function workflow_schema() {
         'description' => 'The current version identifier.',
         'type' => 'int',
         'unsigned' => TRUE,
-        'length' => 10,
         'not null' => FALSE,
         'default' => NULL,
       ),
