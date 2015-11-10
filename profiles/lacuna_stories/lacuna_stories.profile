@@ -325,7 +325,7 @@ function lacuna_stories_set_annotator_settings() {
     'Categories' => 'Categories',
     'Richtext' => 'Richtext',
     'Filters' => 'Filters',
-    'Comment' => 'Comment',
+//    'Comment' => 'Comment', // Disabled until fixed
     'Tags' => 'Tags',
     'Privacy' => 'Privacy',
 		'Histogram' => 'Histogram',
