@@ -14,13 +14,12 @@ function workflow_access_schema() {
     'fields' => array(
       'sid' => array(
         'type' => 'int',
+        'description' => 'The Workflow state ID.',
         'not null' => TRUE,
-        'default' => 0,
       ),
       'rid' => array(
         'type' => 'int',
         'not null' => TRUE,
-        'default' => 0,
       ),
       'grant_view' => array(
         'type' => 'int',

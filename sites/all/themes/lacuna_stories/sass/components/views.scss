@@ -245,3 +245,8 @@ div#block-views-cite-as-block {
   padding-left: 2px;
   padding-right: 2px;
 }
+
+// Hide the "Leave blank for all" text
+.views-widget .chosen-container + .description {
+  display: none;
+}

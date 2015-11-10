@@ -23,6 +23,7 @@
  *
  **/
 
+(function($) {
 /**
  *
  * Page Turner Bookmarks Model
@@ -37,7 +38,6 @@ function PTBModel(bookmarks) {
         // Ensure our page numbers are integers, not strings
         array[index] = parseInt(element, 10);
     });
-
     // Listen for page turn events and update our model
     $(document).bind('page-turner-page-changed', function(e, pages) {
         self.page = pages.start;
@@ -234,8 +234,8 @@ PTBController.prototype = {
     },
 };
 
-(function($) {
-  Drupal.behaviors.page_turner_bookmarks = {
+
+Drupal.behaviors.page_turner_bookmarks = {
     attach: function (context, settings) {
         var elements = {
             'bookmark' :
@@ -276,5 +276,5 @@ PTBController.prototype = {
         var view = new PTBView(model, elements);
         var controller = new PTBController(model, view, routes);
     } // END: attach
-  }; // END: Drupal.behaviors.page_turner_bookmarks
+}; // END: Drupal.behaviors.page_turner_bookmarks
 })(jQuery);

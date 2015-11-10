@@ -3,6 +3,7 @@ name = "Lacuna Stories"
 description = "Installation profile for Lacuna Stories."
 exclusive = TRUE
 core = "7.x"
+distribution_name = "Lacuna Stories"
 ; ----------
 ; Dependencies
 ; ----------

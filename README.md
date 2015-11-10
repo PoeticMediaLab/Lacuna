@@ -43,7 +43,7 @@ Lacuna Stories is built with [Drupal](http://www.drupal.org), [Annotator.js](htt
 Although two modules already exist that enable annotation in Drupal ([Annotator](https://www.drupal.org/project/annotator) and [Annotation](https://www.drupal.org/project/annotation)), neither is fully functional out of the box. So, we have forked both modules and made many significant improvements, which we will be offering back to the maintainers of those projects. If you just want to enable annotation in a Drupal site, but don't want the entire Lacuna Stories experience, you can grab those modules from our repository. They're under sites/all/modules/custom/. You will need both the Annotator and the Annotation module. The first enables Annotator.js. The second allows you to store annotations as regular Drupal nodes. You may want to use the versions of these modules from [Lacuna Stories v1.0](https://github.com/PoeticMediaLab/LacunaStories/tree/v1.0), which has fewer features, but less integration with courses and several new plugins than the 2.0 versions.
 
 ## Annotator.js Plugins
-Speaking of plugins, we've developed a number of new ones for the 1.x branch of Annotator.js. These plugins include advanced filters, histograms, categories, fine-grained permissions, and categorized annotation tags. Some are more integrated into Drupal than others, but if you just want to see the Annotator.js plugins, they are in the Annotator module directory.
+Speaking of plugins, we've developed a number of new ones for the 1.2.x branch of Annotator.js. These plugins include advanced filters, histograms, categories, fine-grained permissions, and categorized annotation tags. Some are more integrated into Drupal than others, but if you just want to see the Annotator.js plugins, they are in the Annotator module directory.
 
 # How to Use Lacuna Stories
 
@@ -61,7 +61,7 @@ You could, of course, download a zipfile of all the code, but we recommend using
 git add remote origin https://github.com/PoeticMediaLab/LacunaStories.git
 ```
 
-Proceed with the installation process. Lacuna Stories will be automatically configured. You may encounter a few PHP notices at the last stage, which you can safely ignore.
+Proceed with the installation process. Lacuna Stories will be automatically configured.
 
 We highly recommend that you install [Drush](http://www.drush.org/en/master/) to help you manage updates to the site. We will assume Drush is available later in this document.
 

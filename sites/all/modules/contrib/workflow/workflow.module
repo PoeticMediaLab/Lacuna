@@ -216,7 +216,7 @@ function workflow_tab_access($entity_type, $entity) {
 
   // When having multiple workflows per bundle, use Views display
   // 'Workflow history per entity' instead!
-  if (workflow_get_workflows_by_type($entity_bundle, $entity_type)) {
+  if (!is_null($field_name = workflow_get_field_name($entity, $entity_type, NULL, $entity_id))) {
     // Get the role IDs of the user. Workflow only stores Ids, not role names.
     $roles = array_keys($user->roles);
 
@@ -657,11 +657,11 @@ function workflow_get_sid_label($sid) {
  *   The entity to check. May be an EntityDrupalWrapper.
  * @param string $entity_type
  *   The entity_type of the entity to check.
- *   May be empty in case of an EntityDrupalWrapper. 
+ *   May be empty in case of an EntityDrupalWrapper.
  * @param string $field_name
  *   The name of the field of the entity to check.
  *   If NULL, the field_name is determined on the spot. This must be avoided,
- *     making multiple workflow per entity unpredictable. 
+ *     making multiple workflows per entity unpredictable.
  *     The found field_name will be returned in the param.
  *   If '', we have a workflow_node mode.
  *
@@ -669,26 +669,17 @@ function workflow_get_sid_label($sid) {
  *   The ID of the current state.
  */
 function workflow_node_current_state($entity, $entity_type = 'node', &$field_name = NULL) {
-  // @todo D8: return State object, not $sid integer.
   $sid = FALSE;
-  $langcode = LANGUAGE_NONE;
 
   if (!$entity) {
-    return $sid;
+    return $sid; // <-- exit !!!
   }
 
   // If $field_name is not known, yet, determine it.
-  if ($field_name === NULL) {
-    $fields = _workflow_info_fields($entity, $entity_type);
-    if (count($fields)) {
-      // Workflow Field API: if $field_name is not known, yet, determine it.
-      $field = reset($fields);
-      $field_name = $field['field_name'];
-    }
-    else {
-      // Workflow Node API.
-      $field_name = '';
-    }
+  $field_name = workflow_get_field_name($entity, $entity_type, $field_name);
+  if (is_null($field_name)) {
+    // This entity has no workflow.
+    return $sid; // <-- exit !!!
   }
 
   if ($field_name === '') {
@@ -697,18 +688,15 @@ function workflow_node_current_state($entity, $entity_type = 'node', &$field_nam
     // N.B. Do not use a page cache. This gives problems with Rules.
     $sid = isset($entity->workflow) ? $entity->workflow : FALSE;
   }
-  else {
-    // At this point, we may have redetermined and altered the field_name.
-    if (!$sid && $field_name !== NULL) {
-      $wrapper = entity_metadata_wrapper($entity_type, $entity);
-      // Get State ID for existing nodes (A new node has no sid - will be fetched later.)
-      // and normal node, on Node view page / Workflow history tab.
-      $sid = $wrapper->{$field_name}->value();
-    }
+  elseif ($field_name) {
+    $wrapper = entity_metadata_wrapper($entity_type, $entity);
+    // Get State ID for existing nodes (A new node has no sid - will be fetched later.)
+    // and normal node, on Node view page / Workflow history tab.
+    $sid = $wrapper->{$field_name}->value();
   }
 
   // No current state. Use creation state.
-  if (!empty($sid) && $field_name !== NULL) {
+  if (!$sid) {
     $sid = _workflow_get_workflow_creation_sid($entity_type, $entity, $field_name);
   }
 
@@ -719,12 +707,18 @@ function workflow_node_current_state($entity, $entity_type = 'node', &$field_nam
  * Gets the previous state ID of a given entity.
  */
 function workflow_node_previous_state($entity, $entity_type, $field_name) {
-  // @todo D8: return State object, not $sid integer.
   $sid = FALSE;
   $langcode = LANGUAGE_NONE;
 
   if (!$entity) {
-    return $sid;
+    return $sid; // <-- exit !!!
+  }
+
+  // If $field_name is not known, yet, determine it.
+  $field_name = workflow_get_field_name($entity, $entity_type, $field_name);
+  if (is_null($field_name)) {
+    // This entity has no workflow.
+    return $sid; // <-- exit !!!
   }
 
   if ($field_name === '') {
@@ -733,18 +727,9 @@ function workflow_node_previous_state($entity, $entity_type, $field_name) {
     // N.B. Do not use a page cache. This gives problems with Rules.
     $sid = isset($entity->workflow) ? $entity->workflow : FALSE;
   }
-  else {
-    if ($field_name === NULL) {
-      // Workflow Field API: If $field_name is not known, yet, determine it get the 1st one.)
-      $fields = _workflow_info_fields($entity, $entity_type);
-      if (count($fields)) {
-        $field = reset($fields);
-        $field_name = $field['field_name'];
-      }
-    }
-
+  elseif ($field_name) {
     // At this point, we may have redetermined and altered the field_name.
-    if ($field_name !== NULL && isset($entity->original)) {
+    if (isset($entity->original)) {
       // A changed node.
 
       $wrapper = entity_metadata_wrapper($entity_type, $entity->original);
@@ -755,8 +740,7 @@ function workflow_node_previous_state($entity, $entity_type, $field_name) {
     }
   }
 
-  // A node may not have a Workflow attached.
-  if (!$sid && $field_name !== NULL) {
+  if (!$sid) {
     if (!empty($entity->is_new)) {
       // A new Node. $is_new is not set when saving terms, etc.
       $sid = _workflow_get_workflow_creation_sid($entity_type, $entity, $field_name);
@@ -775,7 +759,7 @@ function workflow_node_previous_state($entity, $entity_type, $field_name) {
     }
   }
 
-  if (!$sid && $field_name !== NULL) {
+  if (!$sid) {
     // No history found on an existing entity.
     $sid = _workflow_get_workflow_creation_sid($entity_type, $entity, $field_name);
   }
@@ -968,6 +952,70 @@ function _workflow_get_workflow_creation_sid($entity_type, $entity, $field_name)
 }
 
 /**
+ * Determines the Workflow field_name of an entity.
+ * If an entity has more workflows, only returns the first one.
+ *
+ * Usage
+ *   if (is_null($field_name = workflow_get_field_name($entity, $entity_type))) {
+ *     return; // No workflow on this entity
+ *   }
+ *   else {
+ *     ... // WorkflowField or WorkflowNode on this entity
+ *   }
+ *
+ * @param  $entity
+ *   The entity at hand.
+ * @param $entity_type
+ * @param string $field_name (optional)
+ *   The field name. If given, will be passed as return value.
+ * @param $entity_id (optional)
+ *
+ * @return string
+ */
+function workflow_get_field_name($entity, $entity_type, $field_name = NULL, $entity_id = NULL) {
+  if (!$entity) {
+    // $entity may be empty on Entity Add page.
+    return NULL;
+  }
+
+  if ($field_name || $field_name === '') {
+    // $field_name may already be known.
+    return $field_name;
+  }
+
+  // If $field_name is not known, yet, determine it.
+  if ($field_name === NULL) {
+    if (!$entity_id) {
+      list($entity_id, , ) = entity_extract_ids($entity_type, $entity);
+    }
+
+    $field_names = &drupal_static(__FUNCTION__);
+    if (isset($field_names[$entity_type][$entity_id])) {
+      $field_name = $field_names[$entity_type][$entity_id]['field_name'];
+    }
+    else {
+      $fields = _workflow_info_fields($entity, $entity_type);
+      if (count($fields)) {
+        // Get the first field.
+        // Workflow Field API: return a field name.
+        // Workflow Node API: return ''.
+        $field = reset($fields);
+        $field_name = $field['field_name'];
+        $field_names[$entity_type][$entity_id]['field_name'] = $field_name;
+      }
+      else {
+        // No workflow at all on this entity.
+        $field_name = NULL;
+        // Use special sub-array, or it won't work for NULL.
+        $field_names[$entity_type][$entity_id]['field_name'] = $field_name;
+      }
+    }
+  }
+
+  return $field_name;
+}
+
+/**
  * Gets the workflow field names, if not known already.
  *
  * For workflow_field, multiple workflows per bundle are supported.
@@ -1078,4 +1126,37 @@ function _workflow_info_field($field_name, $workflow = NULL) {
   }
 
   return $field;
+}
+
+/**
+ * Helper function for D8-port: Get some info on screen.
+ * @see workflow_devel module
+ *
+ * Usage:
+ *   workflow_debug( __FILE__, __FUNCTION__, __LINE__, '', '');  // @todo: still test this snippet.
+ *
+ * @param string $class_name
+ * @param string $function_name
+ * @param string $line
+ * @param string $value1
+ * @param string $value2
+ *
+ */
+function workflow_debug($class_name, $function_name, $line = '', $value1 = '', $value2 = '') {
+  $debug_switch = FALSE;
+  $debug_switch = TRUE;
+
+  if (!$debug_switch) {
+    return;
+  }
+
+  $class_name_elements = explode( "\\" , $class_name);
+  $output = 'Testing... function ' . end($class_name_elements) . '::' . $function_name . '/' . $line;
+  if ($value1) {
+    $output .= ' = ' . $value1;
+  }
+  if ($value2) {
+    $output .= ' > ' . $value2;
+  }
+  drupal_set_message($output, 'warning');
 }

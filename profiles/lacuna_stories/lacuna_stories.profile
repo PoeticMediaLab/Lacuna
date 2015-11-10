@@ -21,7 +21,7 @@ function lacuna_stories_install_tasks($install_state) {
 //      'display_name' => st('Create research consent form')
     ),
     'lacuna_stories_create_basic_page_type' => array(),
-    'lacuna_stories_create_basic_pages' => array(
+    'lacuna_stories_create_default_content' => array(
 //      'display_name' => st('Create static pages')
     ),
     'lacuna_stories_set_basic_pages_permissions' => array(
@@ -101,7 +101,7 @@ function lacuna_stories_create_research_consent_webform() {
   node_object_prepare($node);
   $node->title    = 'Digital Research Consent Form';
   $node->language = LANGUAGE_NONE; // Or other language.
-  $node->body[$node->language][0]['value'] = file_get_contents(DRUPAL_ROOT . "/profiles/lacuna_stories/basic pages/consent_form.html");;
+  $node->body[$node->language][0]['value'] = file_get_contents(DRUPAL_ROOT . "/profiles/lacuna_stories/content/consent_form.html");;
   $node->body[$node->language][0]['format']  = 'full_html';
   $node->uid = 1;     // Set admin as author
   $node->promote = 0; // Do not put this node to front page.
@@ -198,20 +198,38 @@ function lacuna_stories_create_research_consent_webform() {
   menu_link_save($menu_item);
 }
 
+function lacuna_stories_block_info() {
+  $blocks = array();
+  $blocks['front_page_banner'] = array(
+    'info' => t('Front Page Banner'),
+  );
+  return $blocks;
+}
+
+function lacuna_stories_block_view($delta = '') {
+  $block = array();
+  switch ($delta) {
+    case 'front_page_banner':
+      $block['subject'] = '';
+      $block['content'] = file_get_contents(DRUPAL_ROOT . "/profiles/lacuna_stories/content/banner.html");
+      break;
+  }
+  return $block;
+}
+
 /*
-  Creating basic pages like FAQ, "Instructor's Guide", etc.
+  Creating default content like FAQ, "Instructor's Guide", etc.
  */
-function lacuna_stories_create_basic_pages()
-{
+function lacuna_stories_create_default_content() {
 
   $content[0]["title"] = "FAQ";
-  $content[0]["body"] = file_get_contents(DRUPAL_ROOT . "/profiles/lacuna_stories/basic pages/faq.html");;
+  $content[0]["body"] = file_get_contents(DRUPAL_ROOT . "/profiles/lacuna_stories/content/faq.html");;
 
   $content[1]["title"] = "Instructor's Guide";
-  $content[1]["body"] = file_get_contents(DRUPAL_ROOT . "/profiles/lacuna_stories/basic pages/instructors_guide.html");
+  $content[1]["body"] = file_get_contents(DRUPAL_ROOT . "/profiles/lacuna_stories/content/instructors_guide.html");
 
   $content[2]["title"] = "Student User Guide";
-  $content[2]["body"] = file_get_contents(DRUPAL_ROOT . "/profiles/lacuna_stories/basic pages/student_user_guide.html");;
+  $content[2]["body"] = file_get_contents(DRUPAL_ROOT . "/profiles/lacuna_stories/content/student_user_guide.html");;
 
   foreach ($content as $page) {
     $node = new stdClass(); // We create a new node object
@@ -307,7 +325,7 @@ function lacuna_stories_set_annotator_settings() {
     'Categories' => 'Categories',
     'Richtext' => 'Richtext',
     'Filters' => 'Filters',
-    'Comment' => 'Comment',
+//    'Comment' => 'Comment', // Disabled until fixed
     'Tags' => 'Tags',
     'Privacy' => 'Privacy',
 		'Histogram' => 'Histogram',
@@ -369,6 +387,9 @@ function lacuna_stories_create_publication_state_workflow() {
   $s1 = $workflow->createState('(creation)');
   $s2 = $workflow->createState('Draft');
   $s3 = $workflow->createState('Ready for Annotation');
+  $s1->save();
+  $s2->save();
+  $s3->save();
 
   // Define the transitions per role set in $transition_chunks
   $transition_chunks = array (
