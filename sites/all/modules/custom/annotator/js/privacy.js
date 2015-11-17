@@ -117,44 +117,40 @@
     };
 
     Privacy.prototype.updateViewer = function(field, annotation) {
-      var audience, audience_type, checked, gid, gids, group, group_type, groups, has_groups, _ref, _ref2, _results;
-      if (annotation.privacy_options != null) {
-        audience = '<div class="' + this.className.types.wrapper + '">';
-        _ref = annotation.privacy_options.audience;
-        _results = [];
-        for (audience_type in _ref) {
-          checked = _ref[audience_type];
-          if (checked) {
-            audience += '<span class="' + this.className.types["default"] + ' ' + this.className.types[audience_type];
-            if (audience_type === 'private') audience += ' fa fa-lock';
-            if (audience_type === 'everyone') audience += ' fa fa-unlock';
-            if ('peer-groups' === audience_type) {
-              audience += ' fa fa-users';
-              has_groups = true;
-            }
-            audience += '">' + audience_type.replace('-', ' ') + '</span>';
+      var audience, audience_type, checked, gid, gids, group, group_type, groups, has_groups, _ref, _ref2;
+      if (!(annotation.privacy_options != null)) return;
+      audience = '<div class="' + this.className.types.wrapper + '">';
+      _ref = annotation.privacy_options.audience;
+      for (audience_type in _ref) {
+        checked = _ref[audience_type];
+        if (checked) {
+          audience += '<span class="' + this.className.types["default"] + ' ' + this.className.types[audience_type];
+          if (audience_type === 'private') audience += ' fa fa-lock';
+          if (audience_type === 'everyone') audience += ' fa fa-unlock';
+          if ('peer-groups' === audience_type) {
+            audience += ' fa fa-users';
+            has_groups = true;
           }
-          audience += '</div>';
-          console.log(audience);
-          groups = '';
-          if (has_groups) {
-            groups = '<div class="' + this.className.groups.wrapper + '">';
-            _ref2 = annotation.privacy_options.groups;
-            for (group_type in _ref2) {
-              gids = _ref2[group_type];
-              for (gid in gids) {
-                group = gids[gid];
-                if (group && group.selected) {
-                  groups += '<span class="' + this.className.groups["default"] + ' checked ' + group_type + '">' + group[0] + '</span>';
-                }
-              }
-            }
-            groups += '</div>';
-          }
-          _results.push($(field).addClass(this.className["default"]).html(audience + groups));
+          audience += '">' + audience_type.replace('-', ' ') + '</span>';
         }
-        return _results;
       }
+      audience += '</div>';
+      groups = '';
+      if (has_groups) {
+        groups = '<div class="' + this.className.groups.wrapper + '">';
+        _ref2 = annotation.privacy_options.groups;
+        for (group_type in _ref2) {
+          gids = _ref2[group_type];
+          for (gid in gids) {
+            group = gids[gid];
+            if (group && group.selected) {
+              groups += '<span class="' + this.className.groups["default"] + ' checked ' + group_type + ' fa fa-check">' + group[0] + '</span>';
+            }
+          }
+        }
+        groups += '</div>';
+      }
+      return $(field).addClass(this.className["default"]).html(audience + groups);
     };
 
     return Privacy;
