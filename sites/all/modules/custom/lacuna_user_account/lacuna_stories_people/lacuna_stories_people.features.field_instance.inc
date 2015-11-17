@@ -10,7 +10,7 @@
 function lacuna_stories_people_field_default_field_instances() {
   $field_instances = array();
 
-  // Exported field_instance: 'user-user-field_about_me'
+  // Exported field_instance: 'user-user-field_about_me'.
   $field_instances['user-user-field_about_me'] = array(
     'bundle' => 'user',
     'default_value' => NULL,
@@ -23,6 +23,12 @@ function lacuna_stories_people_field_default_field_instances() {
         'settings' => array(),
         'type' => 'text_default',
         'weight' => 14,
+      ),
+      'full' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
       ),
     ),
     'entity_type' => 'user',
@@ -48,7 +54,7 @@ function lacuna_stories_people_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'user-user-field_date_of_birth'
+  // Exported field_instance: 'user-user-field_date_of_birth'.
   $field_instances['user-user-field_date_of_birth'] = array(
     'bundle' => 'user',
     'deleted' => 0,
@@ -63,9 +69,16 @@ function lacuna_stories_people_field_default_field_instances() {
           'multiple_from' => '',
           'multiple_number' => '',
           'multiple_to' => '',
+          'show_remaining_days' => FALSE,
         ),
         'type' => 'date_default',
         'weight' => 12,
+      ),
+      'full' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
       ),
     ),
     'entity_type' => 'user',
@@ -95,7 +108,7 @@ function lacuna_stories_people_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'user-user-field_display_name'
+  // Exported field_instance: 'user-user-field_display_name'.
   $field_instances['user-user-field_display_name'] = array(
     'bundle' => 'user',
     'default_value' => NULL,
@@ -108,6 +121,12 @@ function lacuna_stories_people_field_default_field_instances() {
         'settings' => array(),
         'type' => 'text_default',
         'weight' => 11,
+      ),
+      'full' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
       ),
     ),
     'entity_type' => 'user',
@@ -131,7 +150,7 @@ function lacuna_stories_people_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'user-user-field_education'
+  // Exported field_instance: 'user-user-field_education'.
   $field_instances['user-user-field_education'] = array(
     'bundle' => 'user',
     'default_value' => NULL,
@@ -144,6 +163,12 @@ function lacuna_stories_people_field_default_field_instances() {
         'settings' => array(),
         'type' => 'list_default',
         'weight' => 17,
+      ),
+      'full' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
       ),
     ),
     'entity_type' => 'user',
@@ -162,7 +187,7 @@ function lacuna_stories_people_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'user-user-field_gender'
+  // Exported field_instance: 'user-user-field_gender'.
   $field_instances['user-user-field_gender'] = array(
     'bundle' => 'user',
     'default_value' => NULL,
@@ -175,6 +200,12 @@ function lacuna_stories_people_field_default_field_instances() {
         'settings' => array(),
         'type' => 'text_default',
         'weight' => 13,
+      ),
+      'full' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
       ),
     ),
     'entity_type' => 'user',
@@ -198,7 +229,7 @@ function lacuna_stories_people_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'user-user-field_how_i_learn'
+  // Exported field_instance: 'user-user-field_how_i_learn'.
   $field_instances['user-user-field_how_i_learn'] = array(
     'bundle' => 'user',
     'default_value' => NULL,
@@ -211,6 +242,12 @@ function lacuna_stories_people_field_default_field_instances() {
         'settings' => array(),
         'type' => 'text_default',
         'weight' => 15,
+      ),
+      'full' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
       ),
     ),
     'entity_type' => 'user',
@@ -236,7 +273,7 @@ function lacuna_stories_people_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'user-user-field_learning_goals'
+  // Exported field_instance: 'user-user-field_learning_goals'.
   $field_instances['user-user-field_learning_goals'] = array(
     'bundle' => 'user',
     'default_value' => NULL,
@@ -249,6 +286,12 @@ function lacuna_stories_people_field_default_field_instances() {
         'settings' => array(),
         'type' => 'text_default',
         'weight' => 16,
+      ),
+      'full' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
       ),
     ),
     'entity_type' => 'user',
@@ -272,7 +315,7 @@ function lacuna_stories_people_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'user-user-field_major_degree'
+  // Exported field_instance: 'user-user-field_major_degree'.
   $field_instances['user-user-field_major_degree'] = array(
     'bundle' => 'user',
     'default_value' => NULL,
@@ -285,6 +328,12 @@ function lacuna_stories_people_field_default_field_instances() {
         'settings' => array(),
         'type' => 'text_default',
         'weight' => 18,
+      ),
+      'full' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
       ),
     ),
     'entity_type' => 'user',
@@ -308,7 +357,7 @@ function lacuna_stories_people_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'user-user-field_year_in_program'
+  // Exported field_instance: 'user-user-field_year_in_program'.
   $field_instances['user-user-field_year_in_program'] = array(
     'bundle' => 'user',
     'default_value' => NULL,
@@ -321,6 +370,12 @@ function lacuna_stories_people_field_default_field_instances() {
         'settings' => array(),
         'type' => 'text_default',
         'weight' => 19,
+      ),
+      'full' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
       ),
     ),
     'entity_type' => 'user',

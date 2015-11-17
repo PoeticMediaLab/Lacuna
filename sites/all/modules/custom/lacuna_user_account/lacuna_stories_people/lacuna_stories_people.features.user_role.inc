@@ -22,6 +22,12 @@ function lacuna_stories_people_user_default_roles() {
     'weight' => 4,
   );
 
+  // Exported role: Pre-authorized User.
+  $roles['Pre-authorized User'] = array(
+    'name' => 'Pre-authorized User',
+    'weight' => 12,
+  );
+
   // Exported role: Researcher.
   $roles['Researcher'] = array(
     'name' => 'Researcher',

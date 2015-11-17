@@ -10,7 +10,7 @@
 function lacuna_stories_people_menu_default_menu_links() {
   $menu_links = array();
 
-  // Exported menu link: main-menu_logout:user/logout
+  // Exported menu link: main-menu_logout:user/logout.
   $menu_links['main-menu_logout:user/logout'] = array(
     'menu_name' => 'main-menu',
     'link_path' => 'user/logout',
@@ -31,7 +31,7 @@ function lacuna_stories_people_menu_default_menu_links() {
     'customized' => 1,
     'parent_identifier' => 'main-menu_account:<nolink>',
   );
-  // Exported menu link: main-menu_my-profile:user
+  // Exported menu link: main-menu_my-profile:user.
   $menu_links['main-menu_my-profile:user'] = array(
     'menu_name' => 'main-menu',
     'link_path' => 'user',
@@ -52,7 +52,7 @@ function lacuna_stories_people_menu_default_menu_links() {
     'customized' => 1,
     'parent_identifier' => 'main-menu_account:<nolink>',
   );
-  // Exported menu link: main-menu_people:people
+  // Exported menu link: main-menu_people:people.
   $menu_links['main-menu_people:people'] = array(
     'menu_name' => 'main-menu',
     'link_path' => 'people',
