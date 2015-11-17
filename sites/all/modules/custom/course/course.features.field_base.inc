@@ -572,6 +572,7 @@ function course_field_default_field_bases() {
         ),
         'target_bundles' => array(
           'course' => 'course',
+          'peer_group' => 'peer_group',
         ),
       ),
       'handler_submit' => 'Change handler',
