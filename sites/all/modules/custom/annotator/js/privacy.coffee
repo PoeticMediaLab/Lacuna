@@ -55,7 +55,7 @@ class Annotator.Plugin.Privacy extends Annotator.Plugin
     groups = settings.groups
     for group_type, group_object of groups
       for gid, group of group_object
-        groups_html += '<label class="' + @className.groups.wrapper + '">'
+        groups_html += '<label class="' + @className.groups.wrapper + ' ' + show_groups + '">'
         checked = if group.selected then 'checked="checked"' else ''
         groups_html += '<input type="checkbox" class="' + @className.groups.default + ' ' + group_type + '" value="' + gid + '" ' + checked + ' />'
         groups_html += group[0]
@@ -84,25 +84,27 @@ class Annotator.Plugin.Privacy extends Annotator.Plugin
     annotation.privacy_options.groups = {peer_groups: peer_groups}
 
   updateViewer: (field, annotation) =>
-    if annotation.privacy_options?
-        audience = '<div class="' + @className.types.wrapper + '">'
-        for audience_type, checked of annotation.privacy_options.audience
-          if checked
-            audience += '<span class="' + @className.types.default + ' ' + @className.types[audience_type]
-            if audience_type == 'private'
-              audience += ' fa fa-lock'
-            if audience_type == 'everyone'
-              audience += ' fa fa-unlock'
-            audience += '"> ' + audience_type + '</span>'
-            if 'peer-groups' == audience_type
-              has_groups = true
-        audience += '</div>'
-        groups = ''
-        if has_groups
-          groups = '<div class="' + @className.groups.wrapper + '">'
-          for group_type, gids of annotation.privacy_options.groups
-            for gid, group of gids
-              if group && group.selected
-                groups += '<span class="' + @className.groups.default + ' checked ' + group_type + '">' + group[0] + '</span>'
-          groups += '</div>'
-        $(field).addClass(@className.default).html audience + groups
+    if not annotation.privacy_options?
+      return
+    audience = '<div class="' + @className.types.wrapper + '">'
+    for audience_type, checked of annotation.privacy_options.audience
+      if checked
+        audience += '<span class="' + @className.types.default + ' ' + @className.types[audience_type]
+        if audience_type == 'private'
+          audience += ' fa fa-lock'
+        if audience_type == 'everyone'
+          audience += ' fa fa-unlock'
+        if 'peer-groups' == audience_type
+          audience += ' fa fa-users'
+          has_groups = true
+        audience += '">' + audience_type.replace('-', ' ') + '</span>'
+    audience += '</div>'
+    groups = ''
+    if has_groups
+      groups = '<div class="' + @className.groups.wrapper + '">'
+      for group_type, gids of annotation.privacy_options.groups
+        for gid, group of gids
+          if group && group.selected
+            groups += '<span class="' + @className.groups.default + ' checked ' + group_type + ' fa fa-check">' + group[0] + '</span>'
+      groups += '</div>'
+    $(field).addClass(@className.default).html audience + groups
