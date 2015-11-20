@@ -10,7 +10,7 @@
 function lacuna_stories_responses_field_default_field_bases() {
   $field_bases = array();
 
-  // Exported field_base: 'comment_body'
+  // Exported field_base: 'comment_body'.
   $field_bases['comment_body'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -34,7 +34,7 @@ function lacuna_stories_responses_field_default_field_bases() {
     'type' => 'text_long',
   );
 
-  // Exported field_base: 'field_bibliographic_item'
+  // Exported field_base: 'field_bibliographic_item'.
   $field_bases['field_bibliographic_item'] = array(
     'active' => 1,
     'cardinality' => -1,
@@ -71,7 +71,7 @@ function lacuna_stories_responses_field_default_field_bases() {
     'type' => 'entityreference',
   );
 
-  // Exported field_base: 'field_response_genre'
+  // Exported field_base: 'field_response_genre'.
   $field_bases['field_response_genre'] = array(
     'active' => 1,
     'cardinality' => -1,
@@ -100,7 +100,7 @@ function lacuna_stories_responses_field_default_field_bases() {
     'type' => 'taxonomy_term_reference',
   );
 
-  // Exported field_base: 'field_tags'
+  // Exported field_base: 'field_tags'.
   $field_bases['field_tags'] = array(
     'active' => 1,
     'cardinality' => -1,
