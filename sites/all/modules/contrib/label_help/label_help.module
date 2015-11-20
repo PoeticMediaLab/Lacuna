@@ -1,0 +1,131 @@
+<?php
+
+/**
+ * @file
+ * This is the file description for the Label Help module.
+ *
+ * In normal rendering of textarea form fields that are text-format-enabled,
+ * the field's help text gets placed below the text format selector and tips.
+ * This means that website users are unlikely to notice and read the help text.
+ * This module creates help text to be placed directly below the field's
+ * label.
+ */
+
+/**
+ * Implements hook_form_alter().
+ */
+function label_help_form_alter(&$form, &$form_state, $form_id) {
+  $children = array_intersect_key($form, array_flip(element_children($form)));
+  foreach ($children as $key => $item) {
+    if (is_array($item) && isset($item['#language']) && isset($item[$item['#language']])
+        && isset($form['#entity_type']) && isset($form['#bundle'])
+        && ($instance = field_info_instance($form['#entity_type'], $key, $form['#bundle']))) {
+      if (!isset($instance['widget']['settings']['label_help_description'])) {
+        continue;
+      }
+      $theme_option = array(
+        'description at top' => $instance['widget']['settings']['label_help_description'],
+      );
+      // Put comments above the label for field forms of type 'container'
+      // that are specifically configured.
+      if (isset($item['#type']) && $item['#type'] == 'container' && isset($item[$item['#language']][0])) {
+        // For reasons best known to the lunatics who designed the Forms API,
+        // $form[$key][$item['#language']][0]['#theme_options'] has to be set to get
+        // this working for textarea fields, and
+        // form[$key][$item['#language']][0]['value']['#theme_options'] has to be set
+        // to get this working for one-line text fields, and
+        // form[$key][$item['#language']][0]['default']['#theme_options'] has to be set
+        // to get this working for some other fields.
+        if (isset($form[$key][$item['#language']][0]['default'])) {
+          $form[$key][$item['#language']][0]['default']['#theme_options'] = $theme_option;
+        }
+        elseif (isset($form[$key][$item['#language']][0]['value'])) {
+          $form[$key][$item['#language']][0]['value']['#theme_options'] = $theme_option;
+        }
+        // Oh, and here's what you do for entity references. That's different too. Sheesh!
+        elseif (isset($form[$key][$item['#language']][0]['target_id'])) {
+          $form[$key][$item['#language']][0]['target_id']['#theme_options'] = $theme_option;
+        }
+        // One more for cshs module.
+        elseif (isset($form[$key][$item['#language']][0]['tid'])) {
+          $form[$key][$item['#language']][0]['tid']['#theme_options'] = $theme_option;
+        }
+        else {
+          $form[$key][$item['#language']][0]['#theme_options'] = $theme_option;
+        }
+      }
+      // Move comments to the top for other field forms that
+      // are specifically configured.
+      else {
+        $form[$key][$item['#language']]['#theme_options'] = $form[$key][$item['#language']]['value']['#theme_options'] = $theme_option;
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_orm_profile2_form_alter().
+ * 
+ * @see profile2.tpl.php
+ * @see https://drupal.org/project/profile2
+ */
+function label_help_form_profile2_form_alter(&$form, &$form_state) {
+  foreach ($form as $key => $item) {
+    if (is_array($item) && isset($form[$key]['#entity_type']) && $form[$key]['#entity_type'] == 'profile2') {
+      label_help_form_alter($form[$key], $form_state, 'profile2');
+    }
+  }
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function label_help_form_field_ui_field_edit_form_alter(&$form, &$form_state, $form_id) {
+  // Add settings for file upload widgets.
+  $form['instance']['widget']['settings']['label_help_description'] = array(
+    '#type' => 'textarea',
+    '#rows' => 2,
+    '#title' => t('Label help message'),
+    '#default_value' => isset($form['#instance']['widget']['settings']['label_help_description']) ? $form['#instance']['widget']['settings']['label_help_description'] : '',
+    '#description' => t('Help text to insert below the label and above the input form element.'),
+  );
+}
+
+/**
+ * Implements hook_theme_registry_alter().
+ */
+function label_help_theme_registry_alter(&$theme_registry) {
+  // Set our custom function for theming form_element_label.
+  // Duplicate the original theme hook, under a new name. This
+  // will allow us to 'wrap' the theme function without
+  // breaking it.
+  $theme_registry['form_element_label_x'] = $theme_registry['form_element_label'];
+
+  // Because we don't need to count on drupal to re-load this file
+  // we're going to only override the 'function' key
+  // and leave the 'theme path' etc. to the core setting
+  // to avoid potential problems down the road if
+  // core changes.
+  $theme_registry['form_element_label']['function'] = 'label_help_theme_form_element_label';
+}
+
+/**
+ * Replacement for core theme_form_element_label function.
+ *
+ * Prints help text at top of field output.
+ * Because of jujitsu happening in FAPI theming/wrapping,
+ * ctools and WYSIWYG, we have to jump through some hoops 
+ * to pull this off.
+ *
+ * @param Array $variables
+ *   An array containing an element.
+ */
+function label_help_theme_form_element_label($variables) {
+  $desc = '';
+  if (isset($variables['element']['#theme_options']['description at top']) && !empty($variables['element']['#theme_options']['description at top'])) {
+    $desc = '<div class="description label-description">' . t($variables['element']['#theme_options']['description at top']) . '</div>';
+  }
+
+  // Pass element through the "real" theme hook.
+  return theme('form_element_label_x', $variables) . $desc;
+}
