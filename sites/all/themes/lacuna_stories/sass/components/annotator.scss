@@ -4,9 +4,9 @@
     border: none;
 }
 
-// For our pseudo-buttons: Categories and Privacy
-.annotator-item.fa-folder-o:before,
-.annotator-item.fa-lock:before {
+// Spacing for our icons: Categories and Privacy
+.annotator-item.fa:before,
+.annotator-item .fa:before {
     padding-left: 5px;
     padding-right: 5px;
 }
@@ -19,6 +19,8 @@
   border-radius: 6px;
   color: black;
   display: inline-block;
+  text-transform: capitalize;
+  font-style: normal;
 }
 
   /* ----------------------------------------------------------------
@@ -265,8 +267,8 @@ i.af-pager {
  *
  ***/
 
-$privacy-default: rgba(0, 228, 0, 0.2);
-$privacy-selected: rgba(0, 228, 0, .8);
+$privacy-default: rgba(17,143,5,0.33);
+$privacy-selected: rgba(19, 149, 25, 0.74);
 .annotator-privacy-types {
   padding: 0px !important;
   font-size: 12px !important;
@@ -281,11 +283,15 @@ $privacy-selected: rgba(0, 228, 0, .8);
   .annotator-privacy-type {
     padding: 6px;
     display: inline-block;
-    //top: -2.5em;
-    //position: relative;
-    //margin-left: 40%;
-    width: 33%;
     text-align: center;
+    width: 33%;
+  }
+  .annotator-privacy-types {
+    margin-left: 0px;
+  }
+  .annotator-privacy {
+    padding-left: 0;
+    padding-top: 0;
   }
   .annotator-privacy-group.checked {
     padding: 6px;
@@ -311,6 +317,10 @@ $privacy-selected: rgba(0, 228, 0, .8);
   background-color: $privacy-selected;
 }
 
+.annotator-privacy-type.annotator-privacy-peer-groups {
+  width: 45%;
+}
+
 .annotator-privacy-everyone {
   background-color: rgba(51, 255, 51, .2) !important;
 }
@@ -324,6 +334,9 @@ form.annotator-widget .annotator-privacy-groups {
 }
 form.annotator-widget .annotator-privacy-groups.show-groups {
   display: block;
+  margin-left: 15px;
+  color: black;
+  padding: 0px;
 }
 label.annotator-privacy-group {
   width: 95%;
