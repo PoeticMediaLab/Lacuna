@@ -10,7 +10,7 @@
 function lacuna_stories_responses_field_default_field_instances() {
   $field_instances = array();
 
-  // Exported field_instance: 'comment-comment_node_response-comment_body'
+  // Exported field_instance: 'comment-comment_node_response-comment_body'.
   $field_instances['comment-comment_node_response-comment_body'] = array(
     'bundle' => 'comment_node_response',
     'default_value' => NULL,
@@ -48,7 +48,7 @@ function lacuna_stories_responses_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-response-body'
+  // Exported field_instance: 'node-response-body'.
   $field_instances['node-response-body'] = array(
     'bundle' => 'response',
     'default_value' => NULL,
@@ -75,15 +75,23 @@ function lacuna_stories_responses_field_default_field_instances() {
     'entity_type' => 'node',
     'field_name' => 'body',
     'label' => 'Body',
-    'required' => FALSE,
+    'required' => 0,
     'settings' => array(
-      'display_summary' => TRUE,
+      'display_summary' => 1,
       'text_processing' => 1,
       'user_register_form' => FALSE,
     ),
     'widget' => array(
+      'active' => 1,
       'module' => 'text',
       'settings' => array(
+        'label_help_description' => 'The text you put in this box will not save unless you hit the save button. We recommend that you save regularly, or write your response in a word processing tool and then paste using the \'Paste from Word\' button.',
+        'maxlength_js' => '',
+        'maxlength_js_enforce' => 0,
+        'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
+        'maxlength_js_label_summary' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
+        'maxlength_js_summary' => '',
+        'maxlength_js_truncate_html' => 0,
         'rows' => 20,
         'summary_rows' => 5,
       ),
@@ -92,7 +100,7 @@ function lacuna_stories_responses_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-response-field_bibliographic_item'
+  // Exported field_instance: 'node-response-field_bibliographic_item'.
   $field_instances['node-response-field_bibliographic_item'] = array(
     'bundle' => 'response',
     'default_value' => NULL,
@@ -135,7 +143,7 @@ function lacuna_stories_responses_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-response-field_image'
+  // Exported field_instance: 'node-response-field_image'.
   $field_instances['node-response-field_image'] = array(
     'bundle' => 'response',
     'deleted' => 0,
@@ -196,7 +204,7 @@ function lacuna_stories_responses_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-response-field_media'
+  // Exported field_instance: 'node-response-field_media'.
   $field_instances['node-response-field_media'] = array(
     'bundle' => 'response',
     'deleted' => 0,
@@ -254,7 +262,7 @@ function lacuna_stories_responses_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-response-field_response_genre'
+  // Exported field_instance: 'node-response-field_response_genre'.
   $field_instances['node-response-field_response_genre'] = array(
     'bundle' => 'response',
     'default_value' => NULL,
@@ -293,7 +301,7 @@ function lacuna_stories_responses_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-response-field_tags'
+  // Exported field_instance: 'node-response-field_tags'.
   $field_instances['node-response-field_tags'] = array(
     'bundle' => 'response',
     'default_value' => NULL,
@@ -334,7 +342,7 @@ function lacuna_stories_responses_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-response-og_group_ref'
+  // Exported field_instance: 'node-response-og_group_ref'.
   $field_instances['node-response-og_group_ref'] = array(
     'bundle' => 'response',
     'default_value' => NULL,
@@ -394,7 +402,7 @@ function lacuna_stories_responses_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'taxonomy_term-genre_response-field_term_course'
+  // Exported field_instance: 'taxonomy_term-genre_response-field_term_course'.
   $field_instances['taxonomy_term-genre_response-field_term_course'] = array(
     'bundle' => 'genre_response',
     'default_value' => NULL,

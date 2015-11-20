@@ -393,3 +393,9 @@ body {
     width: auto;
     font-family: "Source Sans Pro", sans-serif;
 }
+
+/*styling for label help field on responses*/
+#response-node-form .label-description {
+    font-size: 1em !important;
+    color: #b22f2a !important;
+}
