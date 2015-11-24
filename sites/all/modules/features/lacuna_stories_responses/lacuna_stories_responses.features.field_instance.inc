@@ -10,7 +10,7 @@
 function lacuna_stories_responses_field_default_field_instances() {
   $field_instances = array();
 
-  // Exported field_instance: 'comment-comment_node_response-comment_body'
+  // Exported field_instance: 'comment-comment_node_response-comment_body'.
   $field_instances['comment-comment_node_response-comment_body'] = array(
     'bundle' => 'comment_node_response',
     'default_value' => NULL,
@@ -48,7 +48,7 @@ function lacuna_stories_responses_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-response-body'
+  // Exported field_instance: 'node-response-body'.
   $field_instances['node-response-body'] = array(
     'bundle' => 'response',
     'default_value' => NULL,
@@ -92,7 +92,7 @@ function lacuna_stories_responses_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-response-field_bibliographic_item'
+  // Exported field_instance: 'node-response-field_bibliographic_item'.
   $field_instances['node-response-field_bibliographic_item'] = array(
     'bundle' => 'response',
     'default_value' => NULL,
@@ -135,7 +135,7 @@ function lacuna_stories_responses_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-response-field_image'
+  // Exported field_instance: 'node-response-field_image'.
   $field_instances['node-response-field_image'] = array(
     'bundle' => 'response',
     'deleted' => 0,
@@ -145,7 +145,7 @@ function lacuna_stories_responses_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 6,
+        'weight' => 3,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -196,7 +196,7 @@ function lacuna_stories_responses_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-response-field_media'
+  // Exported field_instance: 'node-response-field_media'.
   $field_instances['node-response-field_media'] = array(
     'bundle' => 'response',
     'deleted' => 0,
@@ -254,7 +254,7 @@ function lacuna_stories_responses_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-response-field_response_genre'
+  // Exported field_instance: 'node-response-field_response_genre'.
   $field_instances['node-response-field_response_genre'] = array(
     'bundle' => 'response',
     'default_value' => NULL,
@@ -293,7 +293,7 @@ function lacuna_stories_responses_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-response-field_tags'
+  // Exported field_instance: 'node-response-field_tags'.
   $field_instances['node-response-field_tags'] = array(
     'bundle' => 'response',
     'default_value' => NULL,
@@ -334,7 +334,60 @@ function lacuna_stories_responses_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-response-og_group_ref'
+  // Exported field_instance: 'node-response-group_content_access'.
+  $field_instances['node-response-group_content_access'] = array(
+    'bundle' => 'response',
+    'default_value' => array(
+      0 => array(
+        'value' => 2,
+      ),
+    ),
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 5,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'group_content_access',
+    'label' => 'Group content visibility',
+    'required' => 1,
+    'settings' => array(
+      'user_register_form' => FALSE,
+    ),
+    'view modes' => array(
+      'full' => array(
+        'label' => 'above',
+        'type' => 'list_default',
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'type' => 'list_default',
+      ),
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'options',
+      'settings' => array(
+        'apply_chosen' => '',
+      ),
+      'type' => 'options_select',
+      'weight' => 11,
+    ),
+    'widget_type' => 'options_select',
+  );
+
+  // Exported field_instance: 'node-response-og_group_ref'.
   $field_instances['node-response-og_group_ref'] = array(
     'bundle' => 'response',
     'default_value' => NULL,
@@ -345,7 +398,7 @@ function lacuna_stories_responses_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 7,
+        'weight' => 4,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -394,7 +447,7 @@ function lacuna_stories_responses_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'taxonomy_term-genre_response-field_term_course'
+  // Exported field_instance: 'taxonomy_term-genre_response-field_term_course'.
   $field_instances['taxonomy_term-genre_response-field_term_course'] = array(
     'bundle' => 'genre_response',
     'default_value' => NULL,
@@ -440,6 +493,7 @@ function lacuna_stories_responses_field_default_field_instances() {
   t('Comment');
   t('Course');
   t('Genre');
+  t('Group content visibility');
   t('Groups audience');
   t('Media');
   t('Post Icon');
