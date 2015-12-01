@@ -114,7 +114,7 @@ function course_field_default_field_instances() {
         'module' => 'image',
         'settings' => array(
           'image_link' => '',
-          'image_style' => 'large',
+          'image_style' => '',
         ),
         'type' => 'image',
         'weight' => 0,
@@ -861,9 +861,8 @@ function course_field_default_field_instances() {
     'display' => array(
       'default' => array(
         'label' => 'above',
-        'module' => 'list',
         'settings' => array(),
-        'type' => 'list_default',
+        'type' => 'hidden',
         'weight' => 19,
       ),
       'teaser' => array(
@@ -1057,6 +1056,12 @@ function course_field_default_field_instances() {
         'type' => 'og_list_default',
         'weight' => 0,
       ),
+      'full' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
     ),
     'entity_type' => 'user',
     'field_name' => 'og_user_node',
@@ -1111,6 +1116,12 @@ function course_field_default_field_instances() {
         'settings' => array(),
         'type' => 'og_list_default',
         'weight' => 10,
+      ),
+      'full' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
       ),
     ),
     'entity_type' => 'user',
