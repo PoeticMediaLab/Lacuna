@@ -10,7 +10,7 @@
 function lacuna_stories_menus_menu_default_menu_links() {
   $menu_links = array();
 
-  // Exported menu link: main-menu_account:<nolink>
+  // Exported menu link: main-menu_account:<nolink>.
   $menu_links['main-menu_account:<nolink>'] = array(
     'menu_name' => 'main-menu',
     'link_path' => '<nolink>',
@@ -30,7 +30,7 @@ function lacuna_stories_menus_menu_default_menu_links() {
     'weight' => -46,
     'customized' => 1,
   );
-  // Exported menu link: main-menu_connect:<nolink>
+  // Exported menu link: main-menu_connect:<nolink>.
   $menu_links['main-menu_connect:<nolink>'] = array(
     'menu_name' => 'main-menu',
     'link_path' => '<nolink>',
@@ -50,7 +50,7 @@ function lacuna_stories_menus_menu_default_menu_links() {
     'weight' => -48,
     'customized' => 1,
   );
-  // Exported menu link: main-menu_create:<nolink>
+  // Exported menu link: main-menu_create:<nolink>.
   $menu_links['main-menu_create:<nolink>'] = array(
     'menu_name' => 'main-menu',
     'link_path' => '<nolink>',
@@ -70,7 +70,7 @@ function lacuna_stories_menus_menu_default_menu_links() {
     'weight' => -49,
     'customized' => 1,
   );
-  // Exported menu link: main-menu_explore:<nolink>
+  // Exported menu link: main-menu_explore:<nolink>.
   $menu_links['main-menu_explore:<nolink>'] = array(
     'menu_name' => 'main-menu',
     'link_path' => '<nolink>',
@@ -90,7 +90,7 @@ function lacuna_stories_menus_menu_default_menu_links() {
     'weight' => -50,
     'customized' => 1,
   );
-  // Exported menu link: main-menu_help:<nolink>
+  // Exported menu link: main-menu_help:<nolink>.
   $menu_links['main-menu_help:<nolink>'] = array(
     'menu_name' => 'main-menu',
     'link_path' => '<nolink>',
@@ -105,12 +105,12 @@ function lacuna_stories_menus_menu_default_menu_links() {
     'module' => 'menu',
     'hidden' => 0,
     'external' => 0,
-    'has_children' => 0,
+    'has_children' => 1,
     'expanded' => 0,
     'weight' => -44,
     'customized' => 1,
   );
-  // Exported menu link: main-menu_reflect:<nolink>
+  // Exported menu link: main-menu_reflect:<nolink>.
   $menu_links['main-menu_reflect:<nolink>'] = array(
     'menu_name' => 'main-menu',
     'link_path' => '<nolink>',
@@ -130,7 +130,7 @@ function lacuna_stories_menus_menu_default_menu_links() {
     'weight' => -47,
     'customized' => 1,
   );
-  // Exported menu link: menu-institutional-menu_about:http://www.lacunastories.com
+  // Exported menu link: menu-institutional-menu_about:http://www.lacunastories.com.
   $menu_links['menu-institutional-menu_about:http://www.lacunastories.com'] = array(
     'menu_name' => 'menu-institutional-menu',
     'link_path' => 'http://www.lacunastories.com',
@@ -150,7 +150,7 @@ function lacuna_stories_menus_menu_default_menu_links() {
     'weight' => 0,
     'customized' => 1,
   );
-  // Exported menu link: menu-institutional-menu_log-in:user/login
+  // Exported menu link: menu-institutional-menu_log-in:user/login.
   $menu_links['menu-institutional-menu_log-in:user/login'] = array(
     'menu_name' => 'menu-institutional-menu',
     'link_path' => 'user/login',
@@ -170,7 +170,7 @@ function lacuna_stories_menus_menu_default_menu_links() {
     'weight' => 0,
     'customized' => 1,
   );
-  // Exported menu link: menu-institutional-menu_log-out:user/logout
+  // Exported menu link: menu-institutional-menu_log-out:user/logout.
   $menu_links['menu-institutional-menu_log-out:user/logout'] = array(
     'menu_name' => 'menu-institutional-menu',
     'link_path' => 'user/logout',
@@ -190,7 +190,7 @@ function lacuna_stories_menus_menu_default_menu_links() {
     'weight' => 0,
     'customized' => 1,
   );
-  // Exported menu link: menu-institutional-menu_register:user/register
+  // Exported menu link: menu-institutional-menu_register:user/register.
   $menu_links['menu-institutional-menu_register:user/register'] = array(
     'menu_name' => 'menu-institutional-menu',
     'link_path' => 'user/register',

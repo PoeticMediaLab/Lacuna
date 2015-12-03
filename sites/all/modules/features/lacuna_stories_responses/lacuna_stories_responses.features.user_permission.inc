@@ -49,8 +49,10 @@ function lacuna_stories_responses_user_default_permissions() {
     'roles' => array(
       'Content Manager' => 'Content Manager',
       'Instructor' => 'Instructor',
+      'Researcher' => 'Researcher',
       'Site Administrator' => 'Site Administrator',
       'Student' => 'Student',
+      'authenticated user' => 'authenticated user',
     ),
     'module' => 'node',
   );
@@ -91,8 +93,10 @@ function lacuna_stories_responses_user_default_permissions() {
     'roles' => array(
       'Content Manager' => 'Content Manager',
       'Instructor' => 'Instructor',
+      'Researcher' => 'Researcher',
       'Site Administrator' => 'Site Administrator',
       'Student' => 'Student',
+      'authenticated user' => 'authenticated user',
     ),
     'module' => 'node',
   );

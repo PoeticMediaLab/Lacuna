@@ -10,7 +10,7 @@
 function lacuna_stories_threads_field_default_field_instances() {
   $field_instances = array();
 
-  // Exported field_instance: 'node-thread-field_image'
+  // Exported field_instance: 'node-thread-field_image'.
   $field_instances['node-thread-field_image'] = array(
     'bundle' => 'thread',
     'deleted' => 0,
@@ -60,7 +60,7 @@ function lacuna_stories_threads_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-thread-field_tags'
+  // Exported field_instance: 'node-thread-field_tags'.
   $field_instances['node-thread-field_tags'] = array(
     'bundle' => 'thread',
     'default_value' => NULL,
@@ -100,7 +100,7 @@ function lacuna_stories_threads_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-thread-og_group_ref'
+  // Exported field_instance: 'node-thread-og_group_ref'.
   $field_instances['node-thread-og_group_ref'] = array(
     'bundle' => 'thread',
     'default_value' => NULL,
@@ -161,7 +161,7 @@ function lacuna_stories_threads_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-thread-thread_description'
+  // Exported field_instance: 'node-thread-thread_description'.
   $field_instances['node-thread-thread_description'] = array(
     'bundle' => 'thread',
     'default_value' => NULL,
@@ -203,7 +203,7 @@ function lacuna_stories_threads_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-thread-thread_reference'
+  // Exported field_instance: 'node-thread-thread_reference'.
   $field_instances['node-thread-thread_reference'] = array(
     'bundle' => 'thread',
     'default_value' => NULL,

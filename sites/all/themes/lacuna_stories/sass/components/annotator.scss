@@ -267,8 +267,8 @@ i.af-pager {
  *
  ***/
 
-$privacy-default: rgba(0, 228, 0, 0.2);
-$privacy-selected: rgba(0, 228, 0, .8);
+$privacy-default: rgba(17,143,5,0.33);
+$privacy-selected: rgba(19, 149, 25, 0.74);
 .annotator-privacy-types {
   padding: 0px !important;
   font-size: 12px !important;
@@ -322,7 +322,7 @@ $privacy-selected: rgba(0, 228, 0, .8);
 }
 
 .annotator-privacy-everyone {
-  background-color: rgba(51, 255, 51, .2) !important;
+  background-color: $privacy-default !important;
 }
 
 .annotator-privacy-private {

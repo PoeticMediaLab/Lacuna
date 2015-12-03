@@ -10,7 +10,7 @@
 function lacuna_stories_responses_menu_default_menu_links() {
   $menu_links = array();
 
-  // Exported menu link: main-menu_my-writing:my-writing
+  // Exported menu link: main-menu_my-writing:my-writing.
   $menu_links['main-menu_my-writing:my-writing'] = array(
     'menu_name' => 'main-menu',
     'link_path' => 'my-writing',
@@ -28,7 +28,7 @@ function lacuna_stories_responses_menu_default_menu_links() {
     'customized' => 1,
     'parent_identifier' => 'main-menu_create:<nolink>',
   );
-  // Exported menu link: main-menu_responses:responses
+  // Exported menu link: main-menu_responses:responses.
   $menu_links['main-menu_responses:responses'] = array(
     'menu_name' => 'main-menu',
     'link_path' => 'responses',
@@ -46,7 +46,7 @@ function lacuna_stories_responses_menu_default_menu_links() {
     'customized' => 1,
     'parent_identifier' => 'main-menu_explore:<nolink>',
   );
-  // Exported menu link: main-menu_write-a-response:node/add/response
+  // Exported menu link: main-menu_write-a-response:node/add/response.
   $menu_links['main-menu_write-a-response:node/add/response'] = array(
     'menu_name' => 'main-menu',
     'link_path' => 'node/add/response',

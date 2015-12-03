@@ -10,7 +10,7 @@
 function lacuna_stories_threads_menu_default_menu_links() {
   $menu_links = array();
 
-  // Exported menu link: main-menu_sewing-kit:sewing-kit
+  // Exported menu link: main-menu_sewing-kit:sewing-kit.
   $menu_links['main-menu_sewing-kit:sewing-kit'] = array(
     'menu_name' => 'main-menu',
     'link_path' => 'sewing-kit',
@@ -28,7 +28,7 @@ function lacuna_stories_threads_menu_default_menu_links() {
     'customized' => 1,
     'parent_identifier' => 'main-menu_connect:<nolink>',
   );
-  // Exported menu link: main-menu_threads:threads
+  // Exported menu link: main-menu_threads:threads.
   $menu_links['main-menu_threads:threads'] = array(
     'menu_name' => 'main-menu',
     'link_path' => 'threads',
