@@ -337,7 +337,7 @@ function PTView(model, elements) {
                 .tickSize(-self.navbar.height))
             .selectAll(".tick")
             .classed("page-turner-break", function (d) {
-                return self.model.is_break(self.navbar.ratio * d);
+                return self.model.is_break(Math.round(self.navbar.ratio * d));  //  Added Math.round() to account for rounding errors.
             }.bind(self))
         ;
     }
