@@ -128,9 +128,7 @@
         annotation.category = this.options.emptyCategory;
         CKEDITOR.instances['annotator-field-0'].on('change', (function(_this) {
           return function(event) {
-            console.log('fired');
             if (event.editor.getData()) {
-              console.log('data found');
               _this.setSelectedCategory('Comment');
               return event.removeListener();
             }

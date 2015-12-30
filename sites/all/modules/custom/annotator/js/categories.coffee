@@ -115,9 +115,7 @@ class Annotator.Plugin.Categories extends Annotator.Plugin
     if !annotation.category?
       annotation.category = @options.emptyCategory
       CKEDITOR.instances['annotator-field-0'].on('change', (event) =>
-        console.log('fired')
         if event.editor.getData()
-          console.log('data found')
           @setSelectedCategory('Comment')
           event.removeListener()
       )
