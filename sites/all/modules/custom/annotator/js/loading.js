@@ -9,15 +9,27 @@
   Annotator.Plugin.Loading = (function(superClass) {
     extend(Loading, superClass);
 
-    function Loading() {
-      return Loading.__super__.constructor.apply(this, arguments);
+    function Loading(element) {
+      this.element = element;
     }
 
     Loading.prototype.pluginInit = function() {
+      var spinnerElement;
       if (!Annotator.supported()) {
         return;
       }
-      return console.log('hey there from the plugin!');
+      spinnerElement = this.setupElement();
+      $(this.element).prepend(spinnerElement);
+      return this.annotator.subscribe('annotationsLoaded', function() {
+        return spinnerElement.remove();
+      });
+    };
+
+    Loading.prototype.setupElement = function() {
+      var elementHTML, imageURL, spinnerElement;
+      imageURL = Drupal.settings.basePath + 'sites/all/modules/custom/annotator/images/spinner.gif';
+      elementHTML = "<span id=\"annotations-loading\">\n    <img src=\"" + imageURL + "\">\n    <span>Loading annotations...</span>\n</span>";
+      return spinnerElement = $(elementHTML);
     };
 
     return Loading;
