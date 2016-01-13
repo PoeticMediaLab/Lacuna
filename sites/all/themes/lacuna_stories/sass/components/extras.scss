@@ -9,6 +9,8 @@
 	background-color: #fafafa !important;
 	border: 1px solid #e1e1e1 !important;
 	-webkit-transition: all 1s ease;
+    -moz-transition: all 1s ease;
+    -o-transition: all 1s ease;
 	padding-bottom: 20px !important;
 }
 
@@ -28,8 +30,10 @@ li.views-fluid-grid-inline.views-fluid-grid-item.views-row:hover {
 
 .view-courses {
   .views-field {
-    padding-left: 10px;
+    padding-left: 5px;
     font-family: "Source sans pro", sans-serif;
+    padding-right: 5px;
+    padding-top: 5px;
   }
   .views-field-title {
     font-size: 1.2em;
@@ -61,8 +65,8 @@ li.views-fluid-grid-inline.views-fluid-grid-item.views-row:hover {
     /*width: 100%;*/
     background-color: #8FA3B6;
     background-image: linear-gradient(to right, #8FA3B6, #FCFCFC 50%);
-    width: 300%;
-    margin-left: -36.5%;
+    width: 400%;
+    margin-left: -58.5%;
 
 }
 
@@ -111,8 +115,8 @@ li.views-fluid-grid-inline.views-fluid-grid-item.views-row:hover {
     background-position: center;
     position: relative;
     right: 0;
-    transform: translatex(-501%);
-    -webkit-transform: translatex(-501%);
+    transform: translatex(-731%);
+    -webkit-transform: translatex(-731%);
     box-shadow: 3px 0px 5px 0 #666464;
 }
 body {
@@ -296,8 +300,8 @@ body {
     .field-name-field-course-image img {
         width: 100%;
         height: auto;
-        transform: translateY(-50%);
-        -webkit-transform: translateY(-50%);
+        transform: translateY(-35%);
+        -webkit-transform: translateY(-35%);
     }
     .field-name-field-course-title {
         font-family: "Source Sans Pro", serif;
