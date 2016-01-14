@@ -40,6 +40,7 @@ function PTModel(content, settings) {
     var self = this;
     self.content = content;
     self.settings = settings.page_turner;
+    self.settings.page_length = parseInt(self.settings.page_length, 10);  // force int
     var chunks = chunk_pages(content, self.settings);
     self._page_range = {start: 0, end: 1};   // current page range
     self.pages = chunks.pages;        // content of all pages
