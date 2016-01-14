@@ -151,7 +151,7 @@ class Annotator.Plugin.Histogram extends Annotator.Plugin
   assignBarsPerNode: (node, length = 0) =>
     for child in node.childNodes
       length += child.textContent.length
-      if length >= @barTextLength
+      if length >= @barTextLength and @barTextLength > 0
         totalBars = Math.floor(length / @barTextLength) # how many bars should we have?
         length = length % @barTextLength # save remainder for next cycle
         if @counted.length > 0
