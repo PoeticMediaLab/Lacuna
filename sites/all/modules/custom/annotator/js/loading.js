@@ -28,7 +28,7 @@
     Loading.prototype.setupElement = function() {
       var elementHTML, imageURL, spinnerElement;
       imageURL = Drupal.settings.basePath + 'sites/all/modules/custom/annotator/images/spinner.gif';
-      elementHTML = "<span id=\"annotations-loading\">\n    <img src=\"" + imageURL + "\">\n    <span>Loading annotations...</span>\n</span>";
+      elementHTML = "<span id=\"annotations-loading\">\n    <i class=\"fa fa-spinner fa-pulse\"></i>\n    <span>Loading annotations...</span>\n</span>";
       return spinnerElement = $(elementHTML);
     };
 

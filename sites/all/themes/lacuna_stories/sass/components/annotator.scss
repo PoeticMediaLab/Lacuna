@@ -490,8 +490,10 @@ li.annotator-checkbox[style] {
   top: -15px;
   background-color: #ffa;
 
-  img {
-    height: 100%;
+  i {
+    position: relative;
+    top: -4px;
+    left: 3px;
   }
 
   span {

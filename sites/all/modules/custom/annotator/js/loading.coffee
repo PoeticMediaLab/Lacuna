@@ -28,7 +28,7 @@ class Annotator.Plugin.Loading extends Annotator.Plugin
 
         elementHTML = """
             <span id="annotations-loading">
-                <img src="#{imageURL}">
+                <i class="fa fa-spinner fa-pulse"></i>
                 <span>Loading annotations...</span>
             </span>
         """
