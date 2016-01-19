@@ -260,7 +260,7 @@ function course_add_material() {
 
   $output = "<p>You, as the instructor, are responsible for determining if the online or e-access materials you are assigning your students are available at your home institution. If you have any questions at any time, please email " .l('info@lacunastories.com', 'mailto:info@lacunastories.com', array('absolute' => TRUE)) . " and someone from our team will assist you.</p><br /><div class='add-materials'>";
 
-  $output .= "<div id='archived-materials' class='explanation'><div>Add Lacuna Stories Archived Materials. These materials may be free or available for a fee for your students. In either case, these are already digitized and using these materials will save you or the Lacuna Stories team time.</div><button class='form-submit'><a href='" . $base_url . "/archived-materials'>Search Lacuna Stories</a></button></div>";
+//  $output .= "<div id='archived-materials' class='explanation'><div>Add Lacuna Stories Archived Materials. These materials may be free or available for a fee for your students. In either case, these are already digitized and using these materials will save you or the Lacuna Stories team time.</div><button class='form-submit'><a href='" . $base_url . "/archived-materials'>Search Lacuna Stories</a></button></div>";
 
 //  $output .= "<div id='e-access'><div>Add E-Access Material from my Institution. If your students have digital access to materials through your institution’s library, they may have free access to those same materials on Lacuna Stories. Save your students money!</div><button class='form-submit'>Confirm E-Access Material</button></div>";
 
