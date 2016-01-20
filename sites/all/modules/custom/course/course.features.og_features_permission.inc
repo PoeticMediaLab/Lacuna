@@ -213,6 +213,7 @@ function course_og_features_default_permissions() {
   $permissions['node:course:publish own annotation content'] = array(
     'roles' => array(
       'administrator member' => 'administrator member',
+      'member' => 'member',
     ),
   );
 
@@ -220,6 +221,7 @@ function course_og_features_default_permissions() {
   $permissions['node:course:publish own response content'] = array(
     'roles' => array(
       'administrator member' => 'administrator member',
+      'member' => 'member',
     ),
   );
 
@@ -227,6 +229,7 @@ function course_og_features_default_permissions() {
   $permissions['node:course:publish own thread content'] = array(
     'roles' => array(
       'administrator member' => 'administrator member',
+      'member' => 'member',
     ),
   );
 
@@ -303,6 +306,7 @@ function course_og_features_default_permissions() {
   $permissions['node:course:unpublish own annotation content'] = array(
     'roles' => array(
       'administrator member' => 'administrator member',
+      'member' => 'member',
     ),
   );
 
@@ -310,6 +314,7 @@ function course_og_features_default_permissions() {
   $permissions['node:course:unpublish own response content'] = array(
     'roles' => array(
       'administrator member' => 'administrator member',
+      'member' => 'member',
     ),
   );
 
@@ -317,6 +322,7 @@ function course_og_features_default_permissions() {
   $permissions['node:course:unpublish own thread content'] = array(
     'roles' => array(
       'administrator member' => 'administrator member',
+      'member' => 'member',
     ),
   );
 

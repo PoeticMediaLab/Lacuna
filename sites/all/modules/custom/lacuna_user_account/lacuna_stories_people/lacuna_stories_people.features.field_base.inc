@@ -10,7 +10,7 @@
 function lacuna_stories_people_field_default_field_bases() {
   $field_bases = array();
 
-  // Exported field_base: 'field_about_me'
+  // Exported field_base: 'field_about_me'.
   $field_bases['field_about_me'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -32,7 +32,7 @@ function lacuna_stories_people_field_default_field_bases() {
     'type' => 'text_long',
   );
 
-  // Exported field_base: 'field_date_of_birth'
+  // Exported field_base: 'field_date_of_birth'.
   $field_bases['field_date_of_birth'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -64,7 +64,7 @@ function lacuna_stories_people_field_default_field_bases() {
     'type' => 'datetime',
   );
 
-  // Exported field_base: 'field_display_name'
+  // Exported field_base: 'field_display_name'.
   $field_bases['field_display_name'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -88,7 +88,7 @@ function lacuna_stories_people_field_default_field_bases() {
     'type' => 'text',
   );
 
-  // Exported field_base: 'field_education'
+  // Exported field_base: 'field_education'.
   $field_bases['field_education'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -119,7 +119,7 @@ function lacuna_stories_people_field_default_field_bases() {
     'type' => 'list_text',
   );
 
-  // Exported field_base: 'field_gender'
+  // Exported field_base: 'field_gender'.
   $field_bases['field_gender'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -143,7 +143,7 @@ function lacuna_stories_people_field_default_field_bases() {
     'type' => 'text',
   );
 
-  // Exported field_base: 'field_how_i_learn'
+  // Exported field_base: 'field_how_i_learn'.
   $field_bases['field_how_i_learn'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -165,7 +165,7 @@ function lacuna_stories_people_field_default_field_bases() {
     'type' => 'text_long',
   );
 
-  // Exported field_base: 'field_learning_goals'
+  // Exported field_base: 'field_learning_goals'.
   $field_bases['field_learning_goals'] = array(
     'active' => 1,
     'cardinality' => 5,
@@ -189,7 +189,7 @@ function lacuna_stories_people_field_default_field_bases() {
     'type' => 'text',
   );
 
-  // Exported field_base: 'field_major_degree'
+  // Exported field_base: 'field_major_degree'.
   $field_bases['field_major_degree'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -213,7 +213,7 @@ function lacuna_stories_people_field_default_field_bases() {
     'type' => 'text',
   );
 
-  // Exported field_base: 'field_year_in_program'
+  // Exported field_base: 'field_year_in_program'.
   $field_bases['field_year_in_program'] = array(
     'active' => 1,
     'cardinality' => 1,

@@ -10,7 +10,7 @@
 function lacuna_stories_materials_menu_default_menu_links() {
   $menu_links = array();
 
-  // Exported menu link: main-menu_materials:materials
+  // Exported menu link: main-menu_materials:materials.
   $menu_links['main-menu_materials:materials'] = array(
     'menu_name' => 'main-menu',
     'link_path' => 'materials',
