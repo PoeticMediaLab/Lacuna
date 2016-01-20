@@ -128,8 +128,12 @@
         annotation.category = this.options.emptyCategory;
         CKEDITOR.instances['annotator-field-0'].on('change', (function(_this) {
           return function(event) {
+            var category;
             if (event.editor.getData()) {
-              _this.setSelectedCategory('Comment');
+              category = $(_this.field).find('.' + _this.options.classForSelectedCategory).html();
+              if (category == null) {
+                _this.setSelectedCategory('Comment');
+              }
               return event.removeListener();
             }
           };
