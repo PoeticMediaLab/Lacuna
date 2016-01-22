@@ -69,3 +69,22 @@ function course_update_7102() {
   }
   node_access_rebuild();
 }
+
+/**
+ * Strip HTML from existing course descriptions
+ */
+function course_update_7103() {
+  $query = new EntityFieldQuery();
+  $query->entityCondition('entity_type', 'node')
+    ->entityCondition('bundle', 'course');
+  $result = $query->execute();
+  if (isset($result['node'])) {
+    $nodes = entity_load('node', array_keys($result['node']));
+    foreach ($nodes as $node) {
+      $wrapper = entity_metadata_wrapper('node', $node);
+      $body = $wrapper->body->value->raw();
+      $wrapper->body->value = strip_tags(html_entity_decode($body));
+      $wrapper->save();
+    }
+  }
+}
