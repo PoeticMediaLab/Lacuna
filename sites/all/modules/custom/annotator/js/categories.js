@@ -120,9 +120,18 @@
     };
 
     Categories.prototype.highlightSelectedCategory = function(event, annotation) {
-      var category, categoryHTML, totalWidth, _i, _len, _ref;
+      var category, categoryHTML, totalWidth, _i, _len, _ref,
+        _this = this;
       if (!(annotation.category != null)) {
         annotation.category = this.options.emptyCategory;
+        CKEDITOR.instances['annotator-field-0'].on('change', function(event) {
+          var category;
+          if (event.editor.getData()) {
+            category = $(_this.field).find('.' + _this.options.classForSelectedCategory).html();
+            if (!(category != null)) _this.setSelectedCategory('Comment');
+            return event.removeListener();
+          }
+        });
       }
       categoryHTML = "";
       _ref = this.options.category;

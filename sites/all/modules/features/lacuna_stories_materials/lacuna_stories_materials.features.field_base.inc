@@ -10,7 +10,7 @@
 function lacuna_stories_materials_field_default_field_bases() {
   $field_bases = array();
 
-  // Exported field_base: 'field_bibliographic_entry'
+  // Exported field_base: 'field_bibliographic_entry'.
   $field_bases['field_bibliographic_entry'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -48,7 +48,7 @@ function lacuna_stories_materials_field_default_field_bases() {
     'type' => 'entityreference',
   );
 
-  // Exported field_base: 'field_copyright'
+  // Exported field_base: 'field_copyright'.
   $field_bases['field_copyright'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -77,7 +77,7 @@ function lacuna_stories_materials_field_default_field_bases() {
     'type' => 'taxonomy_term_reference',
   );
 
-  // Exported field_base: 'field_doc_genre'
+  // Exported field_base: 'field_doc_genre'.
   $field_bases['field_doc_genre'] = array(
     'active' => 1,
     'cardinality' => -1,
@@ -103,7 +103,7 @@ function lacuna_stories_materials_field_default_field_bases() {
     'type' => 'taxonomy_term_reference',
   );
 
-  // Exported field_base: 'field_doc_text'
+  // Exported field_base: 'field_doc_text'.
   $field_bases['field_doc_text'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -125,7 +125,7 @@ function lacuna_stories_materials_field_default_field_bases() {
     'type' => 'text_long',
   );
 
-  // Exported field_base: 'field_image'
+  // Exported field_base: 'field_image'.
   $field_bases['field_image'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -150,7 +150,7 @@ function lacuna_stories_materials_field_default_field_bases() {
     'type' => 'image',
   );
 
-  // Exported field_base: 'field_media'
+  // Exported field_base: 'field_media'.
   $field_bases['field_media'] = array(
     'active' => 1,
     'cardinality' => -1,
@@ -176,7 +176,7 @@ function lacuna_stories_materials_field_default_field_bases() {
     'type' => 'file',
   );
 
-  // Exported field_base: 'field_medium'
+  // Exported field_base: 'field_medium'.
   $field_bases['field_medium'] = array(
     'active' => 1,
     'cardinality' => -1,
@@ -205,7 +205,7 @@ function lacuna_stories_materials_field_default_field_bases() {
     'type' => 'taxonomy_term_reference',
   );
 
-  // Exported field_base: 'field_priority'
+  // Exported field_base: 'field_priority'.
   $field_bases['field_priority'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -234,7 +234,7 @@ function lacuna_stories_materials_field_default_field_bases() {
     'type' => 'taxonomy_term_reference',
   );
 
-  // Exported field_base: 'field_status'
+  // Exported field_base: 'field_status'.
   $field_bases['field_status'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -278,7 +278,7 @@ function lacuna_stories_materials_field_default_field_bases() {
     'type' => 'workflow',
   );
 
-  // Exported field_base: 'field_unit'
+  // Exported field_base: 'field_unit'.
   $field_bases['field_unit'] = array(
     'active' => 1,
     'cardinality' => 1,

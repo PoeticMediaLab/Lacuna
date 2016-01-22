@@ -10,7 +10,7 @@
 function lacuna_stories_materials_field_default_field_instances() {
   $field_instances = array();
 
-  // Exported field_instance: 'node-document-field_bibliographic_entry'
+  // Exported field_instance: 'node-document-field_bibliographic_entry'.
   $field_instances['node-document-field_bibliographic_entry'] = array(
     'bundle' => 'document',
     'default_value' => NULL,
@@ -50,7 +50,7 @@ function lacuna_stories_materials_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-document-field_copyright'
+  // Exported field_instance: 'node-document-field_copyright'.
   $field_instances['node-document-field_copyright'] = array(
     'bundle' => 'document',
     'default_value' => NULL,
@@ -86,7 +86,7 @@ function lacuna_stories_materials_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-document-field_doc_attachment'
+  // Exported field_instance: 'node-document-field_doc_attachment'.
   $field_instances['node-document-field_doc_attachment'] = array(
     'bundle' => 'document',
     'deleted' => 0,
@@ -131,7 +131,7 @@ function lacuna_stories_materials_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-document-field_doc_genre'
+  // Exported field_instance: 'node-document-field_doc_genre'.
   $field_instances['node-document-field_doc_genre'] = array(
     'bundle' => 'document',
     'default_value' => NULL,
@@ -169,7 +169,7 @@ function lacuna_stories_materials_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-document-field_doc_text'
+  // Exported field_instance: 'node-document-field_doc_text'.
   $field_instances['node-document-field_doc_text'] = array(
     'bundle' => 'document',
     'default_value' => NULL,
@@ -213,7 +213,7 @@ function lacuna_stories_materials_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-document-field_image'
+  // Exported field_instance: 'node-document-field_image'.
   $field_instances['node-document-field_image'] = array(
     'bundle' => 'document',
     'deleted' => 0,
@@ -274,7 +274,7 @@ function lacuna_stories_materials_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-document-field_media'
+  // Exported field_instance: 'node-document-field_media'.
   $field_instances['node-document-field_media'] = array(
     'bundle' => 'document',
     'deleted' => 0,
@@ -330,7 +330,7 @@ function lacuna_stories_materials_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-document-field_medium'
+  // Exported field_instance: 'node-document-field_medium'.
   $field_instances['node-document-field_medium'] = array(
     'bundle' => 'document',
     'default_value' => NULL,
@@ -366,7 +366,7 @@ function lacuna_stories_materials_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-document-field_priority'
+  // Exported field_instance: 'node-document-field_priority'.
   $field_instances['node-document-field_priority'] = array(
     'bundle' => 'document',
     'default_value' => NULL,
@@ -402,7 +402,7 @@ function lacuna_stories_materials_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-document-field_status'
+  // Exported field_instance: 'node-document-field_status'.
   $field_instances['node-document-field_status'] = array(
     'bundle' => 'document',
     'default_value' => NULL,
@@ -438,7 +438,46 @@ function lacuna_stories_materials_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-document-field_unit'
+  // Exported field_instance: 'node-document-field_tags'.
+  $field_instances['node-document-field_tags'] = array(
+    'bundle' => 'document',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 7,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_tags',
+    'label' => 'Tags',
+    'required' => 0,
+    'settings' => array(
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 0,
+      'module' => 'taxonomy',
+      'settings' => array(
+        'autocomplete_path' => 'taxonomy/autocomplete',
+        'size' => 60,
+      ),
+      'type' => 'taxonomy_autocomplete',
+      'weight' => 8,
+    ),
+  );
+
+  // Exported field_instance: 'node-document-field_unit'.
   $field_instances['node-document-field_unit'] = array(
     'bundle' => 'document',
     'default_value' => NULL,
@@ -476,7 +515,7 @@ function lacuna_stories_materials_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-document-group_content_access'
+  // Exported field_instance: 'node-document-group_content_access'.
   $field_instances['node-document-group_content_access'] = array(
     'bundle' => 'document',
     'default_value' => array(
@@ -529,7 +568,7 @@ function lacuna_stories_materials_field_default_field_instances() {
     'widget_type' => 'options_select',
   );
 
-  // Exported field_instance: 'node-document-og_group_ref'
+  // Exported field_instance: 'node-document-og_group_ref'.
   $field_instances['node-document-og_group_ref'] = array(
     'bundle' => 'document',
     'default_value' => NULL,
@@ -577,7 +616,7 @@ function lacuna_stories_materials_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'taxonomy_term-genre_doc-field_term_course'
+  // Exported field_instance: 'taxonomy_term-genre_doc-field_term_course'.
   $field_instances['taxonomy_term-genre_doc-field_term_course'] = array(
     'bundle' => 'genre_doc',
     'default_value' => NULL,
@@ -614,7 +653,7 @@ function lacuna_stories_materials_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'taxonomy_term-units-field_term_course'
+  // Exported field_instance: 'taxonomy_term-units-field_term_course'.
   $field_instances['taxonomy_term-units-field_term_course'] = array(
     'bundle' => 'units',
     'default_value' => NULL,
@@ -666,6 +705,7 @@ function lacuna_stories_materials_field_default_field_instances() {
   t('Medium');
   t('Priority');
   t('Status');
+  t('Tags');
   t('Text');
   t('The actual text of the document.');
   t('The medium or media of this document.');

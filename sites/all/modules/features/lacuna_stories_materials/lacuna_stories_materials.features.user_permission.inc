@@ -123,6 +123,7 @@ function lacuna_stories_materials_user_default_permissions() {
     'name' => 'edit field_media',
     'roles' => array(
       'Content Manager' => 'Content Manager',
+      'Instructor' => 'Instructor',
       'Site Administrator' => 'Site Administrator',
     ),
     'module' => 'field_permissions',
