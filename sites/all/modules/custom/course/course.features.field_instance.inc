@@ -182,7 +182,7 @@ function course_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 25,
+        'weight' => 28,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -385,7 +385,7 @@ function course_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 26,
+        'weight' => 29,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -422,7 +422,7 @@ function course_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 21,
+        'weight' => 24,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -471,7 +471,7 @@ function course_field_default_field_instances() {
           'show_remaining_days' => FALSE,
         ),
         'type' => 'date_default',
-        'weight' => 11,
+        'weight' => 9,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -518,7 +518,7 @@ function course_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 22,
+        'weight' => 25,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -604,7 +604,7 @@ function course_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 23,
+        'weight' => 26,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -642,7 +642,7 @@ function course_field_default_field_instances() {
         'label' => 'inline',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 8,
+        'weight' => 21,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -690,7 +690,7 @@ function course_field_default_field_instances() {
           'show_remaining_days' => FALSE,
         ),
         'type' => 'date_default',
-        'weight' => 10,
+        'weight' => 8,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -736,7 +736,7 @@ function course_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 27,
+        'weight' => 30,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -778,7 +778,7 @@ function course_field_default_field_instances() {
         'label' => 'inline',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 9,
+        'weight' => 22,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -819,7 +819,7 @@ function course_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 24,
+        'weight' => 27,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -863,7 +863,7 @@ function course_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 19,
+        'weight' => 23,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -917,7 +917,7 @@ function course_field_default_field_instances() {
           'field_name' => 'og_user_node',
         ),
         'type' => 'og_group_subscribe',
-        'weight' => 28,
+        'weight' => 10,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -972,7 +972,7 @@ function course_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 29,
+        'weight' => 31,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -1059,12 +1059,6 @@ function course_field_default_field_instances() {
         'type' => 'og_list_default',
         'weight' => 0,
       ),
-      'full' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
-      ),
     ),
     'entity_type' => 'user',
     'field_name' => 'og_user_node',
@@ -1119,12 +1113,6 @@ function course_field_default_field_instances() {
         'settings' => array(),
         'type' => 'og_list_default',
         'weight' => 10,
-      ),
-      'full' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
       ),
     ),
     'entity_type' => 'user',
