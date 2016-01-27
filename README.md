@@ -58,7 +58,7 @@ git clone https://github.com/PoeticMediaLab/LacunaStories.git
 You could, of course, download a zipfile of all the code, but we recommend using Git, which will make it easier to get updates. If you choose to use git, you will want to add this repository as a remote:
 
 ```
-git add remote origin https://github.com/PoeticMediaLab/LacunaStories.git
+git remote add origin https://github.com/PoeticMediaLab/LacunaStories.git
 ```
 
 Proceed with the installation process. Lacuna Stories will be automatically configured.
