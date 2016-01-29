@@ -24,7 +24,7 @@ class FeatureContext extends RawDrupalContext implements SnippetAcceptingContext
    * @When I edit my profile
    */
   public function iEditMyProfile() {
-    $uid = $this->whatIsMyUID();
+    $uid = $this->getCurrentUID();
     if (!$uid) {
       throw new \Exception('Cannot edit user profile when not logged in.');
     }
@@ -36,7 +36,7 @@ class FeatureContext extends RawDrupalContext implements SnippetAcceptingContext
    * Returns UID of currently logged in user...
    * by visiting the user page and loading that username *sigh*
    */
-  public function whatIsMyUID() {
+  public function getCurrentUID() {
     $element = $this->getSession()->getPage();
     $this->getSession()->visit($this->locatePath('/user'));
     if ($find = $element->find('css', 'h1#page-title')) {
@@ -45,6 +45,13 @@ class FeatureContext extends RawDrupalContext implements SnippetAcceptingContext
       return $user->uid;
     }
     return FALSE;
+  }
+
+  /**
+   * @Given /^I am enrolled in the "([^"]*)" course$/
+   */
+  public function iAmEnrolledInCourse($course_name) {
+    
   }
 
   /**

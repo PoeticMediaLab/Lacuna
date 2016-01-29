@@ -5,13 +5,6 @@ Feature: user_profile
   I need to be able to edit my profile
 
   Scenario Outline: Users should be able to fill out all the fields in their profiles
-#    Given I am on "/user/login"
-#    And I fill in "Username" with "Student A"
-#    And I fill in "Password" with "studenta"
-#    And I click "Log in"
-#    Given users:
-#    | name      | status  |
-#    | Student A | 1       |
     When I am logged in as a user with the "authenticated user" role
     And I edit my profile
     Then I should see <field>
