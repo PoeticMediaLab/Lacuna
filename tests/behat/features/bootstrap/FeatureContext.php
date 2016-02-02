@@ -1,6 +1,6 @@
 <?php
 
-use Drupal\DrupalExtension\Context\RawDrupalContext;
+use Drupal\DrupalExtension\Context\DrupalContext;
 use Behat\Behat\Context\SnippetAcceptingContext;
 use Behat\Gherkin\Node\PyStringNode;
 use Behat\Gherkin\Node\TableNode;
@@ -8,7 +8,7 @@ use Behat\Gherkin\Node\TableNode;
 /**
  * Defines application features from the specific context.
  */
-class FeatureContext extends RawDrupalContext implements SnippetAcceptingContext {
+class FeatureContext extends DrupalContext implements SnippetAcceptingContext {
 
   /**
    * Initializes context.
@@ -24,31 +24,29 @@ class FeatureContext extends RawDrupalContext implements SnippetAcceptingContext
    * @When I edit my profile
    */
   public function iEditMyProfile() {
-    $uid = $this->getCurrentUID();
-    if (!$uid) {
+    if (!$this->user->uid) {
       throw new \Exception('Cannot edit user profile when not logged in.');
     }
-    $this->getSession()->visit('/user/' . $uid . '/edit');
-    return TRUE;
+    return $this->getSession()->visit('/user/' . $this->user->uid . '/edit');
   }
 
   /**
-   * Returns UID of currently logged in user...
-   * by visiting the user page and loading that username *sigh*
+   * @Given a/an :role user named :username exists
    */
-  public function getCurrentUID() {
-    $element = $this->getSession()->getPage();
-    $this->getSession()->visit($this->locatePath('/user'));
-    if ($find = $element->find('css', 'h1#page-title')) {
-      $username = $find->getText();
-      $user = user_load_by_name($username);
-      return $user->uid;
-    }
-    return FALSE;
+  public function userOfRoleExists($role_name, $username) {
+    $role = user_role_load_by_name($role_name);
+    $user = (object) array(
+      'name' => $username,
+      'pass' => '',
+      'roles' => array(
+        $role->rid => $role->name
+      ),
+    );
+    $user = $this->userCreate($user);
   }
 
   /**
-   * @Given /^I am enrolled in the "([^"]*)" course$/
+   * @Given I am enrolled in the :course_name course
    */
   public function iAmEnrolledInCourse($course_name) {
     
