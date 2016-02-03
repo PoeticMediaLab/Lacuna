@@ -13,11 +13,10 @@ function lacuna_stories_people_default_rules_configuration() {
       "LABEL" : "Automatically Assign Student Role",
       "PLUGIN" : "reaction rule",
       "OWNER" : "rules",
-      "REQUIRES" : [ "rules", "logintoboggan_rules" ],
-      "ON" : { "logintoboggan_validated" : [] },
+      "REQUIRES" : [ "rules" ],
+      "ON" : { "user_insert" : [] },
       "DO" : [
-        { "user_remove_role" : { "account" : [ "account" ], "roles" : { "value" : { "9" : "9" } } } },
-        { "user_add_role" : { "account" : [ "account" ], "roles" : { "value" : { "6" : "6" } } } }
+        { "user_add_role" : { "account" : [ "account" ], "roles" : { "value" : { "7" : "7" } } } }
       ]
     }
   }');
