@@ -27,7 +27,7 @@ class FeatureContext extends DrupalContext implements SnippetAcceptingContext {
     if (!$this->user->uid) {
       throw new \Exception('Cannot edit user profile when not logged in.');
     }
-    return $this->getSession()->visit('/user/' . $this->user->uid . '/edit');
+    $this->getSession()->visit('/user/' . $this->user->uid . '/edit');
   }
 
   /**
@@ -37,19 +37,72 @@ class FeatureContext extends DrupalContext implements SnippetAcceptingContext {
     $role = user_role_load_by_name($role_name);
     $user = (object) array(
       'name' => $username,
-      'pass' => '',
+      'pass' => user_password(),
+      'email' =>  preg_replace('/\s+/', '_', $username) . '@lacunastories.com',
       'roles' => array(
         $role->rid => $role->name
       ),
     );
-    $user = $this->userCreate($user);
+    $this->userCreate($user);
   }
 
   /**
-   * @Given I am enrolled in the :course_name course
+   * @param $node_type
+   * @param $node_title
+   *
+   * Find a node by its title. If duplicate node titles, will return the first.
+   * @return bool|mixed
    */
-  public function iAmEnrolledInCourse($course_name) {
-    
+  public function findNodeByTitle($node_type, $node_title) {
+    $found_node = FALSE;
+    // First check our test-generated nodes
+    foreach ($this->nodes as $node) {
+      if ($node->type == $node_type and $node->title == $node_title) {
+        $found_node = $node;
+        break;
+      }
+    }
+    // Not found there. Query for existing nodes.
+    if (!$found_node) {
+      $query = new EntityFieldQuery();
+      $result = $query->entityCondition('entity_type', 'node')
+        ->propertyCondition('type', $node_type)
+        ->propertyCondition('title', $node_title)
+        ->propertyCondition('status', 1)
+        ->range(0,1)
+        ->execute();
+
+      if (!empty($result['node'])) {
+        $found_node = array_pop($result['node']);
+      }
+    }
+    return $found_node;
+  }
+
+  /**
+   * @When I go to the :type node named/titled :node_title
+   */
+  public function iGoToNodeTypeNamed($node_type, $node_title) {
+    $node = $this->findNodeByTitle($node_type, $node_title);
+    if (!$node) {
+      throw new \Exception(sprintf('No %s node with title %s exists!', $node_type, $node_title));
+    }
+    $this->getSession()->visit('/node/' . $node->nid);
+  }
+
+  /**
+   * @Given I am enrolled in the :course_title course
+   */
+  public function iAmEnrolledInCourse($course_title) {
+    $group = $this->findNodeByTitle('course', $course_title);
+    $membership = og_group('node', $group->nid, array(
+      "entity type" => "user",
+      "entity" => $this->user,
+      "field_name" => "og_user_node",
+    ));
+    if (!$membership) {
+      throw new \Exception(sprintf("User %s could not be enrolled in course %s", $this->user->name, $group->title));
+    }
   }
 
   /**
