@@ -111,7 +111,26 @@ class FeatureContext extends DrupalContext implements SnippetAcceptingContext {
   }
 
   /**
-   * @Given :user is enrolled in the :course_title course
+   * @param $user
+   * @param $course_title
+   * @throws \Exception
+   */
+  private function makeInstructorOfCourse($user, $course_title) {
+    // For now, instructors are all admins of the group
+    $group_role = 'administrator member';
+    $group = $this->findNodeByTitle('course', $course_title);
+    $roles = og_roles('node', $group->type, $group->nid);
+    $rid = array_search($group_role, $roles);
+
+    if (!$rid) {
+      throw new \Exception(sprintf("'%s' is not a valid group role.", $group_role));
+    }
+
+    og_role_grant('node', $group->nid, $user->uid, $rid);
+  }
+
+  /**
+   * @Given :username is enrolled in the :course_title course
    */
   public function isEnrolledInCourse($username, $course_title) {
     $user = user_load_by_name($username);
@@ -123,6 +142,18 @@ class FeatureContext extends DrupalContext implements SnippetAcceptingContext {
    */
   public function iAmEnrolledInCourse($course_title) {
     $this->enrollUserInCourse($this->user, $course_title);
+  }
+
+  /**
+   * @param $username
+   * @param $course_title
+   * @throws \Exception
+   * @Given :username is an/the instructor in/of the :course_title course
+   */
+  public function isInstructorOfCourse($username, $course_title) {
+    $user = user_load_by_name($username);
+    $this->enrollUserInCourse($user, $course_title);
+    $this->makeInstructorOfCourse($user, $course_title);
   }
 
   /**

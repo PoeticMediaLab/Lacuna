@@ -13,8 +13,10 @@ Feature: Courses as Student
     And "Student A" is enrolled in the "Course Alpha" course
     And a "Student" user named "Student B" exists
     And "Student B" is enrolled in the "Course Beta" course
-#    And an "Instructor" user named "Instructor A" exists
-#    And an "Instructor" user named "Instructor B" exists
+    And an "Instructor" user named "Instructor A" exists
+    And "Instructor A" is an instructor in the "Course Alpha" course
+    And an "Instructor" user named "Instructor B" exists
+    And "Instructor B" is an instructor in the "Course Beta" course
 
   Scenario Outline:
     Given I am logged in as "Student A"
