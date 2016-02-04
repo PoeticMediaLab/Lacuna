@@ -36,6 +36,7 @@ Feature: Courses as Student
      When I go to the "course" node named "Course Beta"
      Then I should see "Course Beta" in the "Page Title"
      And I should not see <link> in the "Main Menu" region
+     And I should see "About" in the "Main Menu"
 
      Examples:
        | link    |
