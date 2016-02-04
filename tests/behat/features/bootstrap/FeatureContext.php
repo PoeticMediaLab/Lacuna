@@ -91,18 +91,38 @@ class FeatureContext extends DrupalContext implements SnippetAcceptingContext {
   }
 
   /**
-   * @Given I am enrolled in the :course_title course
+   * @param $user
+   * @param $course_title
+   * @return bool
+   * @throws \Exception
+   * @throws \OgException
    */
-  public function iAmEnrolledInCourse($course_title) {
+  private function enrollUserInCourse($user, $course_title) {
     $group = $this->findNodeByTitle('course', $course_title);
     $membership = og_group('node', $group->nid, array(
       "entity type" => "user",
-      "entity" => $this->user,
+      "entity" => $user,
       "field_name" => "og_user_node",
     ));
     if (!$membership) {
-      throw new \Exception(sprintf("User %s could not be enrolled in course %s", $this->user->name, $group->title));
+      throw new \Exception(sprintf("User %s could not be enrolled in course %s", $user->name, $group->title));
     }
+    return TRUE;
+  }
+
+  /**
+   * @Given :user is enrolled in the :course_title course
+   */
+  public function isEnrolledInCourse($username, $course_title) {
+    $user = user_load_by_name($username);
+    $this->enrollUserInCourse($user, $course_title);
+  }
+
+  /**
+   * @Given I am enrolled in the :course_title course
+   */
+  public function iAmEnrolledInCourse($course_title) {
+    $this->enrollUserInCourse($this->user, $course_title);
   }
 
   /**

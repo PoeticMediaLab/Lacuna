@@ -10,13 +10,14 @@ Feature: Courses as Student
     | Course Alpha  |
     | Course Beta   |
     And a "Student" user named "Student A" exists
-#    And a "Student" user named "Student B" exists
+    And "Student A" is enrolled in the "Course Alpha" course
+    And a "Student" user named "Student B" exists
+    And "Student B" is enrolled in the "Course Beta" course
 #    And an "Instructor" user named "Instructor A" exists
 #    And an "Instructor" user named "Instructor B" exists
 
   Scenario Outline:
     Given I am logged in as "Student A"
-    And I am enrolled in the "Course Alpha" course
     When I go to the "course" node named "Course Alpha"
     Then I should see "Course Alpha" in the "Page Title" region
     And I should see "Course Alpha" in the "Course Selected" region
