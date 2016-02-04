@@ -7,7 +7,7 @@ Feature: Main Menu
   Scenario Outline: Main Menu
     Given I am logged in as a user with the "authenticated user" role
     When I am on the homepage
-    Then I should see the link <link> in the "header" region
+    Then I should see the link <link> in the "Main Menu" region
 
     Examples:
       | link      |

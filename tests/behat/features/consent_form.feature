@@ -9,7 +9,7 @@ Feature: consent_form
   Scenario: Students should be able to access the Digital Research Consent Form
     Given I am logged in as a user with the "Student" role
     When I go to "/digital-research-consent-form"
-    Then I should see "Digital Research Consent Form" in the "page_title"
+    Then I should see "Digital Research Consent Form" in the "Page Title"
 
   Scenario: Students should be able to fill out the form
     Given I am logged in as a user with the "Student" role
