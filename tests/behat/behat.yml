@@ -26,10 +26,11 @@ default:
         success_message_selector: "div.messages.status"
       region_map:
         header: "#header"
-        subtitle: "#subtitle"
+        Course Selected: "#subtitle"
         main: "#main"
+        Main Menu: "div.region-header"
         content: "#content"
-        page_title: "#page-title"
+        Page Title: "#page-title"
         page_turner: "#page-turner-nav"
         text: "article.node"
         annotation_filters: "#annotation-filters-wrapper"
