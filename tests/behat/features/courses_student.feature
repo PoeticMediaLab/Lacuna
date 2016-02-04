@@ -30,3 +30,18 @@ Feature: Courses as Student
     | Reflect |
     | Account |
     | Help    |
+
+   Scenario Outline:
+     Given I am logged in as "Student A"
+     When I go to the "course" node named "Course Beta"
+     Then I should see "Course Beta" in the "Page Title"
+     And I should not see <link> in the "Main Menu" region
+
+     Examples:
+       | link    |
+       | Explore |
+       | Create  |
+       | Connect |
+       | Reflect |
+       | Account |
+       | Help    |
