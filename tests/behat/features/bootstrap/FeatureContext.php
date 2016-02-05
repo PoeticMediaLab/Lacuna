@@ -156,6 +156,28 @@ class FeatureContext extends DrupalContext implements SnippetAcceptingContext {
     $this->makeInstructorOfCourse($user, $course_title);
   }
 
+
+  /**
+   * Associates a given node with a course
+   * Necessary because we add that context on form submit
+   * which doesn't happen when the API creates nodes
+   * @Given :type :title is content for course :course_title
+   */
+  public function nodeIsContentOfCourse($node_type, $node_title, $course_title) {
+    $node = $this->findNodeByTitle($node_type, $node_title);
+    $course = $this->findNodeByTitle('course', $course_title);
+    $membership = og_group('node', $course->nid,
+      array(
+        'entity_type' => 'node',
+        'entity' => $node,
+        'field_name' => 'og_group_ref',
+        'state' => OG_STATE_ACTIVE
+      )
+    );
+    if (!$membership) {
+      throw new \Exception(sprintf("Could not add %s '%s' to course '%s'"), $node_type, $node_title, $course_title);
+    }
+  }
   /**
    * @Given /^I am (?:a|an) "([^"]*)" of the current group$/
    */
