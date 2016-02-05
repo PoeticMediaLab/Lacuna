@@ -18,6 +18,7 @@ class Annotator.Plugin.Histogram extends Annotator.Plugin
     bar: 'annotation-histogram-bar'
     pageTurner: 'page-turner-nav'
     pageBreak: 'page-turner-number'
+    annotatorWrapper: 'annotator-wrapper'
 
   # Initializes the histogram plugin
   pluginInit: ->
@@ -150,7 +151,7 @@ class Annotator.Plugin.Histogram extends Annotator.Plugin
   assignBarsPerNode: (node, length = 0) =>
     for child in node.childNodes
       length += child.textContent.length
-      if length >= @barTextLength
+      if length >= @barTextLength and @barTextLength > 0
         totalBars = Math.floor(length / @barTextLength) # how many bars should we have?
         length = length % @barTextLength # save remainder for next cycle
         if @counted.length > 0
@@ -182,13 +183,14 @@ class Annotator.Plugin.Histogram extends Annotator.Plugin
       @layout.width = document.getElementById(@layout.container).offsetWidth
       @layout.height = document.getElementById(@selector.pageTurner).offsetHeight   # assume page turner
     else
-      @layout.height = window.innerHeight # keep in viewport
+      @layout.height = document.getElementsByClassName(@selector.annotatorWrapper)[0].clientHeight # keep in viewport
       # [0][0] because d3 likes arrays almost as much as Drupal
       d3.select(@histogramContainer[0][0].parentNode)
         .attr('width', @layout.width)
         .attr('height', @layout.height)
         .style('float', 'left')
         .style('padding-left', '5px')
+        .style('top', '3em')
 
   setBarDimensions: (length) =>
     # Get the length of only the document text, not the annotations

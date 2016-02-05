@@ -18,7 +18,8 @@
       histogramWrapperID: 'annotation-histogram-wrapper',
       bar: 'annotation-histogram-bar',
       pageTurner: 'page-turner-nav',
-      pageBreak: 'page-turner-number'
+      pageBreak: 'page-turner-number',
+      annotatorWrapper: 'annotator-wrapper'
     };
 
     Histogram.prototype.pluginInit = function() {
@@ -190,7 +191,7 @@
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         child = _ref[_i];
         length += child.textContent.length;
-        if (length >= this.barTextLength) {
+        if (length >= this.barTextLength && this.barTextLength > 0) {
           totalBars = Math.floor(length / this.barTextLength);
           length = length % this.barTextLength;
           if (this.counted.length > 0) {
@@ -235,8 +236,8 @@
         this.layout.width = document.getElementById(this.layout.container).offsetWidth;
         return this.layout.height = document.getElementById(this.selector.pageTurner).offsetHeight;
       } else {
-        this.layout.height = window.innerHeight;
-        return d3.select(this.histogramContainer[0][0].parentNode).attr('width', this.layout.width).attr('height', this.layout.height).style('float', 'left').style('padding-left', '5px');
+        this.layout.height = document.getElementsByClassName(this.selector.annotatorWrapper)[0].clientHeight;
+        return d3.select(this.histogramContainer[0][0].parentNode).attr('width', this.layout.width).attr('height', this.layout.height).style('float', 'left').style('padding-left', '5px').style('top', '3em');
       }
     };
 

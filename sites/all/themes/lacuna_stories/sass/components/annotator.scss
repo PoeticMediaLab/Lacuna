@@ -322,7 +322,7 @@ $privacy-selected: rgba(19, 149, 25, 0.74);
 }
 
 .annotator-privacy-everyone {
-  background-color: rgba(51, 255, 51, .2) !important;
+  background-color: $privacy-default !important;
 }
 
 .annotator-privacy-private {
@@ -459,7 +459,6 @@ li.annotator-checkbox[style] {
 
 /* For vertical alignment */
 #annotation-histogram-wrapper {
-  position: fixed;
   margin-left: 1em;
   svg {
     position: relative;

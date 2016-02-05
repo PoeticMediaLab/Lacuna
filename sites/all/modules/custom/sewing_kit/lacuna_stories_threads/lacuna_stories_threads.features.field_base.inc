@@ -10,7 +10,7 @@
 function lacuna_stories_threads_field_default_field_bases() {
   $field_bases = array();
 
-  // Exported field_base: 'thread_description'
+  // Exported field_base: 'thread_description'.
   $field_bases['thread_description'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -31,7 +31,7 @@ function lacuna_stories_threads_field_default_field_bases() {
     'type' => 'text_long',
   );
 
-  // Exported field_base: 'thread_reference'
+  // Exported field_base: 'thread_reference'.
   $field_bases['thread_reference'] = array(
     'active' => 1,
     'cardinality' => -1,

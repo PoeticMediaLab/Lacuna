@@ -234,6 +234,10 @@ function course_create_taxonomy_term($vocab, $tag, $weight = 0) {
 function course_ajax_add_term($vocab_name) {
 	$terms = check_plain($_POST['terms']);
 	$vocab = taxonomy_vocabulary_machine_name_load($vocab_name);
+  // TODO: Load existing terms
+  // TODO: Determine highest weight
+  // TODO: Increment by one
+  // TODO: Pass weight to course_create_taxonomy_term()
 	foreach(explode(',', $terms) as $term) {
 		course_create_taxonomy_term($vocab, $term);
 	}

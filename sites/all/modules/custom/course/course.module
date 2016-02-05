@@ -671,9 +671,10 @@ function course_form_response_node_form_alter(&$form, &$form_state, $form_id) {
   // Note: hard-coded taxonomy name
   // would be better to load this dynamically based on the existing field's taxonomy reference
   $lang = $form['language']['#value'];
-//  $form['field_tags'][$lang]['#autocomplete_path'] = 'course-tags/autocomplete/annotation_tags';
+  $form['field_tags'][$lang]['#autocomplete_path'] = 'course-tags/autocomplete/annotation_tags';
 
   $form['og_group_ref']['#access'] = FALSE;	// We'll set the course automatically
+  $form['group_content_access']['#access'] = FALSE; // hide confusing option; always private
   $form['actions']['submit']['#submit'] = array('course_add_response_form_submit');
 	$form['actions']['submit']['#value'] = 'Save Response';
 }
@@ -685,7 +686,10 @@ function course_add_response_form_submit($form, &$form_state) {
 	$node->status = NODE_PUBLISHED;
 
 	// Update node with our filtered values
-	$node->field_response_genre[$node->language][0]['tid'] = $form_state['values']['genre_response'];
+  $wrapper = entity_metadata_wrapper('node', $node);
+  $wrapper->field_response_genre[] = $form_state['values']['genre_response'];
+  $wrapper->group_content_access->set(OG_CONTENT_ACCESS_PRIVATE);
+  $wrapper->save();
   node_save($node);
 
   // Automatically assign to current course
@@ -706,10 +710,6 @@ function course_add_response_form_submit($form, &$form_state) {
 }
 
 function course_form_biblio_node_form_alter(&$form, &$form_state, $form_id) {
-//  $form['course_nid'] = array(
-//    '#type' => 'hidden',
-//    '#value' => arg(1),
-//  );
   $form['copyright_status'] = array(
     '#type' => 'hidden',
     '#default_value' => -1,
