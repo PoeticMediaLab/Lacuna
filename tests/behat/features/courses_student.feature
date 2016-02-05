@@ -6,17 +6,17 @@ Feature: Courses as Student
 
   Background:
     Given "course" content:
-    | title         |
-    | Course Alpha  |
-    | Course Beta   |
+      | title         |
+      | Course Alpha  |
+      | Course Beta   |
+    And "response" content:
+      | title       | author    | body              |
+      | Response A  | Student A | Student B smells  |
+      | Response B  | Student B | Student A stinks  |
     And a "Student" user named "Student A" exists
     And "Student A" is enrolled in the "Course Alpha" course
     And a "Student" user named "Student B" exists
     And "Student B" is enrolled in the "Course Beta" course
-    And an "Instructor" user named "Instructor A" exists
-    And "Instructor A" is an instructor in the "Course Alpha" course
-    And an "Instructor" user named "Instructor B" exists
-    And "Instructor B" is an instructor in the "Course Beta" course
 
   Scenario Outline:
     Given I am logged in as "Student A"
@@ -49,3 +49,14 @@ Feature: Courses as Student
        | Reflect |
        | Account |
        | Help    |
+
+    Scenario:
+      Given I am logged in as "Student A"
+      When I am on "/responses"
+      Then I should see "Responses" in the "Page Title"
+      And I should see "Response A" in the "View" region
+
+    Scenario:
+      Given I am logged in as "Student B"
+      When I go to the "response" node titled "Response A"
+      Then I should see "Access Denied"
