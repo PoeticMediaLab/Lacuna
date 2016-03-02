@@ -132,9 +132,7 @@ function course_og_features_default_permissions() {
 
   // Exported og permission: 'node:course:manage roles'
   $permissions['node:course:manage roles'] = array(
-    'roles' => array(
-      'administrator member' => 'administrator member',
-    ),
+    'roles' => array(),
   );
 
   // Exported og permission: 'node:course:publish any annotation content'
