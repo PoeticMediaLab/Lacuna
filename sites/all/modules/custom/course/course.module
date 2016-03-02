@@ -148,7 +148,13 @@ function course_is_protected_page() {
 }
 
 function course_admin_form() {
+
+  global $base_url;
   $form = array();
+
+  $form['info'] = array(
+    '#markup' => 'To set up a new course, visit <a href="/course-setup">' . $base_url . '/course-setup</a>'
+  );
   $form['authorization'] = array(
     '#type' => 'fieldset',
     '#title' => t('Authorization'),
