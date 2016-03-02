@@ -69,6 +69,7 @@ features[variable][] = node_options_response
 features[variable][] = node_preview_response
 features[variable][] = node_submitted_response
 features[variable][] = pathauto_node_response_pattern
+features[variable][] = pathauto_taxonomy_term_annotation_tags_pattern
 features[variable][] = pathauto_taxonomy_term_genre_response_pattern
 features[views_view][] = my_content
 features[views_view][] = responses
