@@ -9,7 +9,9 @@ default:
   extensions:
     Behat\MinkExtension:
       goutte: ~
-      selenium2: ~
+      selenium2:
+        wd_host: http://lacunastories.dev:4444/wd/hub
+        capabilities: {"browser": "firefox", "version": "21"}
       base_url: http://lacunastories.dev
     Drupal\DrupalExtension:
       blackbox: ~
@@ -30,7 +32,7 @@ default:
         main: "#main"
         Main Menu: "div.region-header"
         Content: "#content"
-        View: "div.view-content"
+        View Content: "div.view-content"
         Page Title: "#page-title"
         page_turner: "#page-turner-nav"
         text: "article.node"
