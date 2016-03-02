@@ -10,7 +10,7 @@ class views_php_plugin_pager extends views_php_plugin_wrapper  {
   /**
    * Perform any needed actions just prior to the query executing.
    */
-  public function pre_execute(&$query) {
+  public function pre_execute($query) {
     $this->wrapped->pre_execute($query);
 
     foreach (array(/*'argument',*/ 'field', 'filter', 'sort', /*'relationship'*/) as $type) {
@@ -37,6 +37,14 @@ class views_php_plugin_pager extends views_php_plugin_wrapper  {
       }
     }
 
+    $this->wrapped->total_items = count($this->wrapped->view->result);
+    $this->wrapped->update_page_info();
+
+    $item_per_page = $this->wrapped->get_items_per_page();
+    if ($item_per_page > 0) {
+      $offset = $this->wrapped->get_current_page() * $item_per_page + $this->wrapped->get_offset();
+      $this->wrapped->view->result = array_slice($this->wrapped->view->result, $offset, $item_per_page);
+    }
     $this->wrapped->post_execute($result);
   }
 
