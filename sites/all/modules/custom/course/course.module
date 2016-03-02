@@ -531,13 +531,24 @@ function course_get_selected_course() {
 	foreach ($result as $record) {
 		return($record->gid);
 	}
+  // Uh-oh. We don't have a course set yet. Should we?
+  // Note: this only happens the first time we check for a selected course
+  // which affects only the call to this function in the main menu context
+  $groups = og_get_groups_by_user($user, 'node');
+  // Just set it to the first course node result
+  if ($groups) {
+    $gid = array_shift($groups);
+    $group = node_load($gid);
+    if ($group->type == 'course') {
+      _course_set_selected_course($gid);
+      return $gid;
+    }
+  }
+  return FALSE;
 }
 
 function _course_set_selected_course($gid) {
-  // NB: do your own error handling and permissions checking if you use this setter directly
   global $user;
-  // Global user does not contain OG memberships, so saving that will lose them for the user. Load the user first and use that
-  // see: https://www.drupal.org/node/1502916#comment-6444954.
 	if (empty($gid)) {
 		return;
 	}

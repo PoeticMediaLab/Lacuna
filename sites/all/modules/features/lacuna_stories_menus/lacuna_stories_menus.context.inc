@@ -55,13 +55,26 @@ function lacuna_stories_menus_context_default_contexts() {
         0 => TRUE,
       ),
       'options' => array(
-        'phpcode' => 'if (!course_get_selected_course()) return TRUE;
+        'phpcode' => '$current_node = menu_get_object();
+$current_course_id = course_get_selected_course();
 
-',
+// Enrolled in a course, but on a view
+// Return here to avoid warnings about trying to get properties from a NULL value
+if (($current_node == NULL) && ($current_course_id != FALSE)) {
+  return FALSE;
+}
+
+// Enrolled in a course, but viewing a course node that isn\'t the currently enrolled course
+if (($current_node->type == \'course\') && 
+  ($current_course_id != (int) $current_node->nid))
+{
+  return TRUE;
+}',
       ),
     ),
     'user' => array(
       'values' => array(
+        'Pre-authorized User' => 'Pre-authorized User',
         'anonymous user' => 'anonymous user',
       ),
     ),
