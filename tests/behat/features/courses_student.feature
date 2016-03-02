@@ -62,4 +62,4 @@ Feature: Courses as Student
     Scenario:
       Given I am logged in as "Student B"
       When I go to the "response" node titled "Response A"
-      Then I should see "Access Denied"
+      Then I should see "Access Denied" in the "Content" region
