@@ -38,7 +38,9 @@ function session_cache_file_directory($bin = NULL) {
       array('@url' => url('admin/config/media/file-system'))), 'warning', FALSE);
     return FALSE;
   }
-  $path = DRUPAL_ROOT . "/$path/session_cache";
+  // Use the absolute path as is, if it starts with a slash.
+  $path = preg_match('/^\//', $path) ? $path : DRUPAL_ROOT . "/$path";
+  $path .= '/session_cache';
 
   // @todo Use file_prepare_directory(&$path, FILE_CREATE_DIRECTORY)
   if (!file_exists($path) && !@mkdir($path)) {
