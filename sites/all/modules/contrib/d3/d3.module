@@ -50,12 +50,13 @@ function d3_permission() {
 function d3_theme() {
   foreach (libraries_info() as $path => $library) {
     // Call this function to get all fields - i.e. library path.
-    $library = libraries_load($path);
+    $library = libraries_detect($path);
     // If a template was specified in the .info file or hook_libraries_info.
     if (isset($library['template'])) {
       // Change d3.[library name] to d3_[library name] for a theme key.
       $theme_key = str_replace('.', '_', $library['machine name']);
       $themes[$theme_key] = array(
+        'variables' => array(),
         'template' => $library['template'],
         'path' => $library['library path'],
       );
@@ -63,7 +64,11 @@ function d3_theme() {
   }
 
   $themes['d3'] = array(
-    'variables' => array(),
+    'variables' => array(
+      'type' => NULL,
+      'library' => array(),
+      'vis_id' => NULL,
+    ),
     'template' => 'd3',
   );
 
@@ -351,6 +356,13 @@ function d3_default_libraries() {
  *   Rendered chart html
  */
 function d3_draw($vis) {
+  // Type is required for correct processing.
+  $type = !empty($vis['type']) ? strtolower($vis['type']) : FALSE;
+  if (!$type) {
+    drupal_set_message(t('No chart type specified'), 'error');
+    return;
+  }
+
   // Ensure we have d3 installed, don't just show a blank screen.
   $d3 = libraries_load('d3');
   if (empty($d3['installed'])) {
@@ -358,18 +370,15 @@ function d3_draw($vis) {
     return;
   }
 
+  $output = array('#theme' => 'd3');
   // If user selected cdn, we need to load this manually.
   // @see http://drupal.org/node/864376
   if (!empty($d3['cdn'])) {
-    drupal_add_js($d3['library path'] . '/' . $d3['files']['js']['data'], array('type' => 'external', 'group' => JS_LIBRARY));
-  }
-
-  // Type is required for correct processing.
-  $type = isset($vis['type']) ? strtolower($vis['type']) : NULL;
-
-  if (!$type) {
-    drupal_set_message(t('No chart type specified'), 'error');
-    return;
+    $output['#attached']['js'][] = array(
+      'data' => $d3['library path'] . '/' . $d3['files']['js']['data'],
+      'type' => 'external',
+      'group' => JS_LIBRARY,
+    );
   }
 
   // Form library name - convention is going to be d3.[library].
@@ -377,12 +386,11 @@ function d3_draw($vis) {
 
   // Check for library instance / definition.
   if ($lib = libraries_load($library_name)) {
-    $vis['library'] = $lib;
-    $vis['library']['library name'] = str_replace('.', '_', $library_name);
     // Enforce lowercase change.
-    $vis['type'] = $type;
+    $output['#library'] = $lib + array('library name' => str_replace('.', '_', $library_name));
+    $output['#type'] = $type;
     // Store as vis_id because key ['id'] will get overridden.
-    $vis['vis_id'] = $vis['id'];
+    $output['#vis_id'] = $vis['id'];
 
     // Now add to the behaviors to execute on page load.
     $js = array(
@@ -390,11 +398,13 @@ function d3_draw($vis) {
         'inventory' => array($vis['id'] => $vis),
       ),
     );
-    drupal_add_js($js, 'setting');
+    $output['#attached']['js'][] = array(
+      'data' => $js,
+      'type' => 'setting',
+    );
 
     // Renders the html - .tpl.php if specified or default d3.tpl.php.
-    return theme('d3', $vis);
-
+    return render($output);
   }
   else {
     drupal_set_message(t('Invalid chart type %type and/or library %library_name is not installed', array(
@@ -468,7 +478,7 @@ function d3_graphapi_settings_form($values) {
     '#description' => t('Use this d3 library as the default to render graphapi visualizations'),
     '#type' => 'select',
     '#options' => $options,
-    '#default_value' => $values['library'],
+    '#default_value' => isset($values['library']) ? $values['library'] : key($options),
   );
 
   return $form;

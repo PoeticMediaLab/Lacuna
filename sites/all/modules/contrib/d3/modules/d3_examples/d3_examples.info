@@ -4,9 +4,9 @@ core = 7.x
 package = Visualization
 dependencies[] = d3
 
-; Information added by Drupal.org packaging script on 2015-04-11
-version = "7.x-1.0-alpha1"
+; Information added by Drupal.org packaging script on 2015-12-27
+version = "7.x-1.0-alpha2"
 core = "7.x"
 project = "d3"
-datestamp = "1428785584"
+datestamp = "1451186943"
 
