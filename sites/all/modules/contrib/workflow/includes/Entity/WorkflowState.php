@@ -169,25 +169,24 @@ class WorkflowState extends Entity {
    * D7.x-2.x: deprecated workflow_delete_workflow_states_by_sid() --> WorkflowState->deactivate() + delete()
    */
   public function deactivate($new_sid) {
-    global $user; // We can use global, since deactivate() is a UI-only function.
-
     $current_sid = $this->sid;
     $force = TRUE;
 
     // Notify interested modules. We notify first to allow access to data before we zap it.
-    // E.g., Node API (@todo Field API):
+    // E.g., Node API implements this.
     // - re-parents any nodes that we don't want to orphan, whilst deactivating a State.
     // - delete any lingering node to state values.
     module_invoke_all('workflow', 'state delete', $current_sid, $new_sid, NULL, $force);
 
     // Re-parent any nodes that we don't want to orphan, whilst deactivating a State.
-    // This is called in WorkflowState::deactivate().
-    // @todo: re-parent Workflow Field, whilst deactivating a state.
     if ($new_sid) {
       // A candidate for the batch API.
       // @TODO: Future updates should seriously consider setting this with batch.
 
+      global $user; // We can use global, since deactivate() is a UI-only function.
       $comment = t('Previous state deleted');
+
+      // Re-assign workflow_node nodes.
       foreach (workflow_get_workflow_node_by_sid($current_sid) as $workflow_node) {
         // @todo: add Field support in 'state delete', by using workflow_node_history or reading current field.
         $entity_type = 'node';
@@ -200,11 +199,35 @@ class WorkflowState extends Entity {
         // For Workflow Node, only {workflow_node} and {workflow_node_history} are updated. For Field, also the Entity itself.
         $new_sid = workflow_execute_transition($entity_type, $entity, $field_name, $transition, $force);
       }
+      // Re-assign workflow_field_entities.
+      foreach(_workflow_info_fields() as $field_name => $field_info) {
+        $query = new EntityFieldQuery();
+        $query->fieldCondition($field_name, 'value', $current_sid, '=');
+        $result = $query->execute();
+        foreach ($result as $entity_type => $entities) {
+          if ($entity_type == 'comment') {
+            // Do not reset comments.
+            continue;
+          }
+          foreach ($entities as $entity_id => $entity) {
+            $entity = entity_load_single($entity_type, $entity_id);
+            /* @var $transition WorkflowTransition */
+            $transition = new WorkflowTransition();
+            $transition->setValues($entity_type, $entity, $field_name, $current_sid, $new_sid, $user->uid, REQUEST_TIME, $comment, TRUE);
+            $transition->force($force);
+
+            // Execute Transition, invoke 'pre' and 'post' events, save new state in Field-table, save also in workflow_transition_history.
+            // For Workflow Node, only {workflow_node} and {workflow_transition_history} are updated. For Field, also the Entity itself.
+            $new_sid = workflow_execute_transition($entity_type, $entity, $field_name, $transition, $force);
+          }
+        }
+      }
+
     }
     // Delete any lingering node to state values.
     workflow_delete_workflow_node_by_sid($current_sid);
 
-    // Delete the transitions this state is involved in.
+    // Delete the config transitions this state is involved in.
     $workflow = workflow_load_single($this->wid);
     /* @var $transition WorkflowTransition */
     foreach ($workflow->getTransitionsBySid($current_sid, 'ALL') as $transition) {

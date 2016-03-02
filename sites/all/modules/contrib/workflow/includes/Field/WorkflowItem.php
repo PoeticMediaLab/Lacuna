@@ -118,13 +118,14 @@ class WorkflowItem extends WorkflowD7Base {// D8: extends ConfigFieldItemBase im
     // If no Workflow type is selected yet, do not show anything.
     if ($wid) {
       // Get a string representation to show all options.
+      $allowed_values = workflow_state_load_multiple($wid);
       $allowed_values_string = $this->_allowed_values_string($wid);
 
       $element['allowed_values_string'] = array(
         '#type' => 'textarea',
         '#title' => t('Allowed values for the selected Workflow type'),
         '#default_value' => $allowed_values_string,
-        '#rows' => 10,
+        '#rows' => count($allowed_values),
         '#access' => TRUE, // User can see the data,
         '#disabled' => TRUE, // .. but cannot change them.
       );

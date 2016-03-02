@@ -700,3 +700,10 @@ Issue #2607998: Warning: array_flip() appears when workflow_block is enabled
 Issue #2608128 by Murz: Function workflow_execute_transition() ignores timestamp of Workflow transition
 Issue #2608452 by mwidner: Fixed failing primary index in table
 Issue #2608996: Error when workflow_block on node page without workflow
+
+Since 7.x-2.6
+Issue #2612648: Implement WorkflowInterface
+Issue #2611514: Fixed Re-assigning WorkflowField when disabling state
+Issue #2612598: Fixed Warning: Missing argument n for workflow_notify_workflow()
+Issue #2613194: Show field_name in Workflow history tab
+Issue #2613204: Fixed WSOD when adding/editing a non-node entity with workflow_field

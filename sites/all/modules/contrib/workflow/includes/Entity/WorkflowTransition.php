@@ -662,7 +662,6 @@ class WorkflowTransition extends Entity {
     $user = $transition->getUser();
     $user_name = ($user) ? $user->name : 'unknown username';
     $t_string = get_class($this) . ' ' . (isset($this->hid) ? $this->hid : '') . ' ' . ($function ? ("in function '$function'") : '');
-    $t_string = $this->getEntityTypeId() . ' ' . $this->id() ;
     $output[] = 'Entity  = ' . ((!$entity) ? 'NULL' : ($entity_type . '/' . $entity_bundle . '/' . $entity_id));
     $output[] = 'Field   = ' . $transition->getFieldName();
     $output[] = 'From/To = ' . $transition->old_sid . ' > ' . $transition->new_sid . ' @ ' . $time;

@@ -8,9 +8,9 @@ dependencies[] = workflow
 package = Workflow
 core = 7.x
 
-; Information added by Drupal.org packaging script on 2015-11-09
-version = "7.x-2.6"
+; Information added by Drupal.org packaging script on 2015-12-31
+version = "7.x-2.8"
 core = "7.x"
 project = "workflow"
-datestamp = "1447077041"
+datestamp = "1451565855"
 

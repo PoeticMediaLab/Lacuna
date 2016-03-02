@@ -13,7 +13,6 @@
  * Replaced by http://drupal.org/node/1367530.
  */
 function workflow_admin_ui_states_form($form, &$form_state, $workflow, $op) {
-  // drupal_set_title(t('Workflow: @label', array('@label' => $workflow->label())));
   $form = array();
   $form['#tree'] = TRUE;
   $form['workflow'] = array(
@@ -41,22 +40,26 @@ function workflow_admin_ui_states_form($form, &$form_state, $workflow, $op) {
     // Allow modules to insert operations per state.
     $links = module_invoke_all('workflow_operations', 'state', $workflow, $state);
 
+    $sid = $state->sid;
+    $label = $state->label();
+    $count = $state->count();
+
     // Make it impossible to reassign to the same state that is disabled.
-    if ($state->isCreationState() || !$state->sid || !$state->isActive()) {
+    if ($state->isCreationState() || !$sid || !$state->isActive()) {
       $current_state = array();
       $current_state_list = array();
     }
     else {
-      $current_state = array($state->sid => $state_list[$state->sid]);
+      $current_state = array($sid => $state_list[$sid]);
       $current_state_list = array_diff($state_list, $current_state);
     }
 
-    $form['states'][$state->sid] = array(
+    $form['states'][$sid] = array(
       'state' => array(
         '#type' => 'textfield',
         '#size' => 30,
         '#maxlength' => 255,
-        '#default_value' => check_plain($state->label()),
+        '#default_value' => check_plain($label),
       ),
 
       'name' => array(
@@ -68,7 +71,7 @@ function workflow_admin_ui_states_form($form, &$form_state, $workflow, $op) {
         '#default_value' => $state->getName(),
         '#machine_name' => array(
           'exists' => 'workflow_admin_ui_states_validate_state_machine_name',
-          'source' => array('states', $state->sid, 'state'),
+          'source' => array('states', $sid, 'state'),
           'replace_pattern' => '[^a-z0-9_()]+', // Added '()' characters from exclusion list since creation state has it.
         ),
       ),
@@ -99,7 +102,7 @@ function workflow_admin_ui_states_form($form, &$form_state, $workflow, $op) {
 
       'count' => array(
         '#type' => 'value',
-        '#value' => $state->count(),
+        '#value' => $count,
       ),
 
       'ops' => array(
@@ -110,27 +113,27 @@ function workflow_admin_ui_states_form($form, &$form_state, $workflow, $op) {
 
     // Don't let the creation state change weight or status or name.
     if ($state->isCreationState()) {
-      $form['states'][$state->sid]['weight']['#value'] = $minweight;
-      $form['states'][$state->sid]['sysid']['#value'] = 1;
-      $form['states'][$state->sid]['state']['#disabled'] = TRUE;
-      $form['states'][$state->sid]['name']['#disabled'] = TRUE;
-      $form['states'][$state->sid]['status']['#disabled'] = TRUE;
-      $form['states'][$state->sid]['reassign']['#type'] = 'hidden';
-      $form['states'][$state->sid]['reassign']['#disabled'] = TRUE;
+      $form['states'][$sid]['weight']['#value'] = $minweight;
+      $form['states'][$sid]['sysid']['#value'] = 1;
+      $form['states'][$sid]['state']['#disabled'] = TRUE;
+      $form['states'][$sid]['name']['#disabled'] = TRUE;
+      $form['states'][$sid]['status']['#disabled'] = TRUE;
+      $form['states'][$sid]['reassign']['#type'] = 'hidden';
+      $form['states'][$sid]['reassign']['#disabled'] = TRUE;
     }
     // New state and disabled states cannot be reassigned.
-    if (!$state->sid || !$state->isActive()) {
-      $form['states'][$state->sid]['reassign']['#type'] = 'hidden';
-      $form['states'][$state->sid]['reassign']['#disabled'] = TRUE;
+    if (!$sid || !$state->isActive() || ($count == 0) ) {
+      $form['states'][$sid]['reassign']['#type'] = 'hidden';
+      $form['states'][$sid]['reassign']['#disabled'] = TRUE;
     }
     // Disabled states cannot be renamed (and is a visual clue, too.).
     if (!$state->isActive()) {
-      $form['states'][$state->sid]['state']['#disabled'] = TRUE;
+      $form['states'][$sid]['state']['#disabled'] = TRUE;
     }
     // Set a proper weight to the new state.
     $maxweight = max($maxweight, $state->weight);
-    if (!$state->sid) {
-      $form['states'][$state->sid]['weight']['#default_value'] = $maxweight + 1;
+    if (!$sid) {
+      $form['states'][$sid]['weight']['#default_value'] = $maxweight + 1;
     }
   }
 
@@ -235,11 +238,6 @@ function workflow_admin_ui_states_form_validate($form, &$form_state) {
           $message = 'The %state state has content; you must reassign the content to another state.';
           form_set_error("states'][$sid]['reassign'", t($message, $args));
         }
-      }
-      if (module_exists('workflowfield')) {
-        // @todo: Reassign states for Workflow Field.
-        $message = 'Deactivating state %state for does not reassign Fields of type Workflow with this status.';
-        drupal_set_message(t($message, $args), 'warning');
       }
     }
   }

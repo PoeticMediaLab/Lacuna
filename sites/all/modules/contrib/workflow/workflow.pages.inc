@@ -53,7 +53,8 @@ function workflow_tab_page($entity_type, $entity = NULL) {
   $rows = array();
   $current_themed = FALSE;
   $limit = variable_get('workflow_states_per_page', 20);
-  foreach (workflow_transition_load_multiple($entity_type, array($entity_id), $field_name, $limit) as $history) {
+  // Get the history for any field_name.
+  foreach (workflow_transition_load_multiple($entity_type, array($entity_id), NULL, $limit) as $history) {
     $old_state_name = $new_state_name = '';
 
     $label = $name = '';
@@ -142,12 +143,20 @@ function workflow_tab_page($entity_type, $entity = NULL) {
   $last = count($rows) - 1;
   $rows[$last]['class'][] = 'last';
 
-  $header = array(t('Date'), t('Old State'), t('New State'), t('By'), t('Comment'));
+  $header = array(t('Date'), t('Field name'), t('Old State'), t('New State'), t('By'), t('Comment'));
   $header[] = array('data' => t('Operations'));
 
   // Only display the table if there's anything in it.
   if ($rows) {
-    $output .= theme('workflow_history_table', array('header' => $header, 'rows' => $rows, 'footer' => !empty($footer_needed)));
+    $variables = array(
+      'header' => $header,
+      'rows' => $rows,
+      'footer' => !empty($footer_needed),
+      'entity' => $entity,
+      'entity_type' => $entity_type,
+    );
+
+    $output .= theme('workflow_history_table', $variables);
     $output .= theme('pager', array('tags' => $limit));
   }
   return $output;
@@ -167,6 +176,7 @@ function theme_workflow_history_table_row($variables) {
   $row = array(
     'data' => array(
       array('data' => format_date($transition->stamp), 'class' => array('timestamp')),
+      array('data' => $transition->field_name, 'class' => array('field-name')),
       array('data' => $old_state_name, 'class' => array('previous-state-name')),
       array('data' => $state_name, 'class' => array('state-name')),
       array('data' => theme('username', array('account' => $transition->getUser())), 'class' => array('user-name')),
@@ -186,18 +196,30 @@ function theme_workflow_history_table($variables) {
   $header = $variables['header'];
   $rows = $variables['rows'];
   $footer = $variables['footer'];
-  $extra_column = 5;
+  $entity = $variables['entity'];
+  $entity_type = $variables['entity_type'];
+  $column_field_name = 1;
+  $column_operations = 6;
 
   // Remove the Operations column if none are added.
   $empty = TRUE;
   foreach ($rows as $row) {
-    $empty &= empty($row['data'][$extra_column]);
+    $empty &= empty($row['data'][$column_operations]);
   }
   if ($empty) {
     foreach ($rows as &$row) {
-      unset($row['data'][$extra_column]);
-      unset($header[$extra_column]);
+      unset($row['data'][$column_operations]);
+      unset($header[$column_operations]);
     }
+  }
+
+  // Remove the Field name column if only 1 workflow_field exists.
+  if (count(_workflow_info_fields($entity, $entity_type)) < 2) {
+    foreach ($rows as &$row) {
+      unset($row['data'][$column_field_name]);
+      unset($header[$column_field_name]);
+    }
+
   }
 
   $output = theme('table', array('header' => $header, 'rows' => $rows, 'caption' => t('Workflow History')));
