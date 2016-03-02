@@ -9,15 +9,20 @@
  * Implements hook_uninstall().
  */
 function superfish_uninstall() {
-  db_delete('variable')->condition('name', '%%superfish%%', 'LIKE')->execute();
+  db_delete('variable')->condition('name', 'superfish_%%', 'LIKE')->execute();
   db_delete('block')->condition('module', 'superfish')->execute();
+  db_delete('block_role')->condition('module', 'superfish')->execute();
 }
 
 /**
  * Implements hook_enable().
  */
 function superfish_enable() {
-  drupal_set_message(check_plain('To use Superfish go to the administer blocks page and enable a Superfish block.'));
+  if (superfish_library_check()){
+    drupal_set_message(t('In order to use Superfish, go to the <a href="@block">Blocks</a> page and enable a Superfish block.', array('@block' => 'structure/block')));
+  } else {
+    drupal_set_message(t('Superfish library is missing. Please refer to the <a href="@documentation">plugin documentation</a> for how you can fix this issue; Once done, go to the <a href="@block">Blocks</a> page and enable a Superfish block.', array('@documentation' => 'http://drupal.org/node/1125896', '@block' => 'structure/block')), 'warning');
+  }
 }
 
 /**
@@ -30,17 +35,8 @@ function superfish_requirements($phase) {
     $t = get_t();
     // Ensure the Superfish library is present.
     $requirements['superfish']['title'] = $t('Superfish library');
-    if (module_exists('libraries') && function_exists('libraries_get_libraries')) {
-      $library = libraries_get_libraries();
-      $superfish_installed = (isset($library['superfish'])) ? TRUE : FALSE;
-    }
-    elseif (file_exists('sites/all/libraries/superfish/superfish.js') || file_exists('profiles/' . drupal_get_profile() . '/libraries/superfish/superfish.js')) {
-      $superfish_installed = TRUE;
-    }
-    else {
-      $superfish_installed = FALSE;
-    }
-    if ($superfish_installed) {
+
+    if (superfish_library_check()) {
       $requirements['superfish']['value'] = $t('Installed');
       $requirements['superfish']['severity'] = REQUIREMENT_OK;
     }
@@ -51,13 +47,29 @@ function superfish_requirements($phase) {
     }
 
     // Check the uploaded Superfish library version.
-    if (superfish_library_version() != '1.2-beta2') {
+    if (superfish_library_version() != '1.2') {
       $requirements['superfish']['value'] = $t('Not supported');
       $requirements['superfish']['severity'] = REQUIREMENT_ERROR;
       $requirements['superfish']['description'] = $t('The Superfish library requires an update. You can find the update instructions on !link.', array('!link' => l($t('Superfish project homepage'), 'http://drupal.org/project/superfish')));
     }
   }
   return $requirements;
+}
+
+/**
+ * Verifies Superfish library is present.
+ */
+function superfish_library_check() {
+  if (function_exists('libraries_get_libraries')) {
+    $library = libraries_get_libraries();
+    if (isset($library['superfish'])) {
+      return TRUE;
+    }
+  }
+  elseif (file_exists('sites/all/libraries/superfish/superfish.js') || file_exists('profiles/' . drupal_get_profile() . '/libraries/superfish/superfish.js')) {
+    return TRUE;
+  }
+  return FALSE;
 }
 
 /**
