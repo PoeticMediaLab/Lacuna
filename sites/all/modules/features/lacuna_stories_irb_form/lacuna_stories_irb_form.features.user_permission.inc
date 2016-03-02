@@ -35,6 +35,7 @@ function lacuna_stories_irb_form_user_default_permissions() {
     'roles' => array(
       'Researcher' => 'Researcher',
       'Site Administrator' => 'Site Administrator',
+      'authenticated user' => 'authenticated user',
     ),
     'module' => 'webform',
   );
@@ -54,6 +55,7 @@ function lacuna_stories_irb_form_user_default_permissions() {
     'roles' => array(
       'Researcher' => 'Researcher',
       'Site Administrator' => 'Site Administrator',
+      'authenticated user' => 'authenticated user',
     ),
     'module' => 'webform',
   );
@@ -73,6 +75,7 @@ function lacuna_stories_irb_form_user_default_permissions() {
     'roles' => array(
       'Researcher' => 'Researcher',
       'Site Administrator' => 'Site Administrator',
+      'authenticated user' => 'authenticated user',
     ),
     'module' => 'webform',
   );

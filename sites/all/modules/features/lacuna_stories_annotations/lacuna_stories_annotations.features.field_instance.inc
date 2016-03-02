@@ -10,7 +10,7 @@
 function lacuna_stories_annotations_field_default_field_instances() {
   $field_instances = array();
 
-  // Exported field_instance: 'node-annotation-field_annotation_audience'
+  // Exported field_instance: 'node-annotation-field_annotation_audience'.
   $field_instances['node-annotation-field_annotation_audience'] = array(
     'bundle' => 'annotation',
     'default_value' => NULL,
@@ -47,7 +47,7 @@ function lacuna_stories_annotations_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-annotation-field_annotation_category'
+  // Exported field_instance: 'node-annotation-field_annotation_category'.
   $field_instances['node-annotation-field_annotation_category'] = array(
     'bundle' => 'annotation',
     'default_value' => NULL,
@@ -86,7 +86,8 @@ function lacuna_stories_annotations_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-annotation-field_annotation_ins_viewable_co'
+  // Exported field_instance:
+  // 'node-annotation-field_annotation_ins_viewable_co'.
   $field_instances['node-annotation-field_annotation_ins_viewable_co'] = array(
     'bundle' => 'annotation',
     'default_value' => NULL,
@@ -129,7 +130,7 @@ function lacuna_stories_annotations_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-annotation-field_annotation_quote'
+  // Exported field_instance: 'node-annotation-field_annotation_quote'.
   $field_instances['node-annotation-field_annotation_quote'] = array(
     'bundle' => 'annotation',
     'default_value' => NULL,
@@ -168,7 +169,7 @@ function lacuna_stories_annotations_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-annotation-field_annotation_ranges'
+  // Exported field_instance: 'node-annotation-field_annotation_ranges'.
   $field_instances['node-annotation-field_annotation_ranges'] = array(
     'bundle' => 'annotation',
     'default_value' => NULL,
@@ -206,7 +207,7 @@ function lacuna_stories_annotations_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-annotation-field_annotation_reference'
+  // Exported field_instance: 'node-annotation-field_annotation_reference'.
   $field_instances['node-annotation-field_annotation_reference'] = array(
     'bundle' => 'annotation',
     'default_value' => NULL,
@@ -248,7 +249,7 @@ function lacuna_stories_annotations_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-annotation-field_annotation_text'
+  // Exported field_instance: 'node-annotation-field_annotation_text'.
   $field_instances['node-annotation-field_annotation_text'] = array(
     'bundle' => 'annotation',
     'default_value' => NULL,
@@ -287,7 +288,7 @@ function lacuna_stories_annotations_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-annotation-field_annotation_uri'
+  // Exported field_instance: 'node-annotation-field_annotation_uri'.
   $field_instances['node-annotation-field_annotation_uri'] = array(
     'bundle' => 'annotation',
     'default_value' => NULL,
@@ -338,7 +339,7 @@ function lacuna_stories_annotations_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-annotation-group_content_access'
+  // Exported field_instance: 'node-annotation-group_content_access'.
   $field_instances['node-annotation-group_content_access'] = array(
     'bundle' => 'annotation',
     'default_value' => NULL,
@@ -388,7 +389,7 @@ function lacuna_stories_annotations_field_default_field_instances() {
     'widget_type' => 'options_select',
   );
 
-  // Exported field_instance: 'node-annotation-og_group_ref'
+  // Exported field_instance: 'node-annotation-og_group_ref'.
   $field_instances['node-annotation-og_group_ref'] = array(
     'bundle' => 'annotation',
     'default_value' => NULL,
