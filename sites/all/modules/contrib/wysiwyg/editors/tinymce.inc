@@ -39,6 +39,7 @@ function wysiwyg_tinymce_editor() {
         'proxy' => TRUE,
       ),
     ),
+    'proxy plugin settings callback' => '_wysiwyg_tinymce_proxy_plugin_settings',
     'versions' => array(
       '2.1' => array(
         'js files' => array('tinymce-2.js'),
@@ -515,6 +516,18 @@ function _wysiwyg_tinymce_plugin_name($op, $name) {
     }
     return $name;
   }
+}
+
+/**
+ * Build a JS settings array for Drupal plugins loaded via the proxy plugin.
+ */
+function _wysiwyg_tinymce_proxy_plugin_settings($editor, $profile, $plugins) {
+  $settings = array();
+  foreach ($plugins as $name => $plugin) {
+    // Just need a list of all enabled plugins for each instance.
+    $settings[$name] = TRUE;
+  }
+  return $settings;
 }
 
 /**

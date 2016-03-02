@@ -168,8 +168,13 @@ Drupal.behaviors.attachWysiwyg = {
     if (/KDE/.test(navigator.vendor)) {
       return;
     }
+    var wysiwygs = $('.wysiwyg:input', context);
+    if (!wysiwygs.length) {
+      // No new fields, nothing to update.
+      return;
+    }
     updateInternalState(settings.wysiwyg, context);
-    $('.wysiwyg:input', context).once('wysiwyg', function () {
+    wysiwygs.once('wysiwyg', function () {
       // Skip processing if the element is unknown or does not exist in this
       // document. Can happen after a form was removed but Drupal.ajax keeps a
       // lingering reference to the form and calls Drupal.attachBehaviors().
@@ -465,6 +470,10 @@ function updateInternalState(settings, context) {
       // Clone, so original settings are not overwritten.
       Drupal.wysiwyg.editor.init[editor](jQuery.extend(true, {}, settings.configs[editor]), getPluginInfo('global:' + editor));
       _initializedLibraries[editor] = true;
+    }
+    // Update libraries, in case new plugins etc have not been initialized yet.
+    else if (typeof Drupal.wysiwyg.editor.update[editor] === 'function') {
+      Drupal.wysiwyg.editor.update[editor](jQuery.extend(true, {}, settings.configs[editor]), getPluginInfo('global:' + editor));
     }
   }
   //settings.configs = {};

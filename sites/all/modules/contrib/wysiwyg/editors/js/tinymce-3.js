@@ -3,14 +3,7 @@
 /**
  * Initialize editor instances.
  *
- * @todo Is the following note still valid for 3.x?
- * This function needs to be called before the page is fully loaded, as
- * calling tinyMCE.init() after the page is loaded breaks IE6.
- *
- * @param editorSettings
- *   An object containing editor settings for each input format.
- * @param pluginInfo
- *   An object containing global plugin configuration.
+ * @see Drupal.wysiwyg.editor.init.ckeditor()
  */
 Drupal.wysiwyg.editor.init.tinymce = function(settings, pluginInfo) {
   // Fix Drupal toolbar obscuring editor toolbar in fullscreen mode.
@@ -29,15 +22,28 @@ Drupal.wysiwyg.editor.init.tinymce = function(settings, pluginInfo) {
       delete ed._drupalWysiwygInstance;
     }
   });
+  // Register new plugins.
+  Drupal.wysiwyg.editor.update.tinymce(settings, pluginInfo);
+};
 
+/**
+ * Update the editor library when new settings are available.
+ *
+ * @see Drupal.wysiwyg.editor.update.ckeditor()
+ */
+Drupal.wysiwyg.editor.update.tinymce = function(settings, pluginInfo) {
   // Load native external plugins.
   // Array syntax required; 'native' is a predefined token in JavaScript.
   for (var plugin in pluginInfo['native']) {
-    tinymce.PluginManager.load(plugin, pluginInfo['native'][plugin]);
+    if (!(plugin in tinymce.PluginManager.lookup || plugin in tinymce.PluginManager.urls)) {
+      tinymce.PluginManager.load(plugin, pluginInfo['native'][plugin]);
+    }
   }
   // Load Drupal plugins.
   for (var plugin in pluginInfo.drupal) {
-    Drupal.wysiwyg.editor.instance.tinymce.addPlugin(plugin, pluginInfo.drupal[plugin]);
+    if (!(plugin in tinymce.PluginManager.lookup)) {
+      Drupal.wysiwyg.editor.instance.tinymce.addPlugin(plugin, pluginInfo.drupal[plugin]);
+    }
   }
 };
 
