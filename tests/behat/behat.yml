@@ -35,4 +35,5 @@ default:
         page_turner: "#page-turner-nav"
         text: "article.node"
         annotation_filters: "#annotation-filters-wrapper"
+        Admin Menu: "#admin-menu"
 
