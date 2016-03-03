@@ -33,7 +33,7 @@ function course_authcode_form_submit($form, &$form_state) {
   $authcode = variable_get('course_authcode');
   if ($authcode == $form['authcode']['#value']) {
     // save a token for a week to ensure the Auth Code was entered on subsequent pages
-    // see course_access()
+    // see course_setup_access()
     global $user;
     $key = "Course_Auth_Code_User_" . $user->uid;
     $token = md5(uniqid(rand(), true));

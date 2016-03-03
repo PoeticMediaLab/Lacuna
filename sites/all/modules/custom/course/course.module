@@ -21,7 +21,7 @@ function course_menu() {
     'title' => 'Create a New Course',
     'description' => 'course creation.',
     'page callback' => 'course_create_authorize',
-    'access callback' => 'course_access',
+    'access callback' => 'course_setup_access',
     'type' => MENU_NORMAL_ITEM,
     'file' => 'course.pages.inc',
   );
@@ -29,7 +29,7 @@ function course_menu() {
     'title' => 'Creating a New Course',
     'description' => 'course creation.',
     'page callback' => 'course_create',
-    'access callback' => 'course_access',
+    'access callback' => 'course_setup_access',
     'type' => MENU_NORMAL_ITEM,
     'file' => 'course.pages.inc',
   );
@@ -37,7 +37,7 @@ function course_menu() {
     'title' => 'Organize Materials',
     'description' => 'Organize course.',
     'page callback' => 'course_organize',
-    'access callback' => 'course_access',
+    'access callback' => 'course_setup_access',
     'type' => MENU_NORMAL_ITEM,
     'file' => 'course.pages.inc',
   );
@@ -45,21 +45,21 @@ function course_menu() {
     'title' => 'Add Material',
     'description' => 'Add course material.',
     'page callback' => 'course_add_material',
-    'access callback' => 'course_access',
+    'access callback' => 'course_setup_access',
     'type' => MENU_NORMAL_ITEM,
     'file' => 'course.pages.inc',
   );
   $items['ajax/add-term/%'] = array(
     'page callback' => 'course_ajax_add_term',
     'page arguments' => array(2),
-    'access callback' => 'course_access',
+    'access callback' => 'course_setup_access',
     'type' => MENU_CALLBACK,
     'file' => 'course.pages.inc',
   );
   $items['ajax/delete-term/%/%'] = array(
     'page callback' => 'course_ajax_delete_term',
     'page arguments' => array(2,3),
-    'access callback' => 'course_access',
+    'access callback' => 'course_setup_access',
     'type' => MENU_CALLBACK,
     'file' => 'course.pages.inc',
   );
@@ -98,7 +98,7 @@ function course_menu() {
 /**
  * check permissions and token to create a course
  */
-function course_access() {
+function course_setup_access() {
   global $user;
   $key = "Course_Auth_Code_User_" . $user->uid;
   $canCreate = user_access('create course content');
