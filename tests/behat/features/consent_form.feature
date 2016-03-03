@@ -8,12 +8,12 @@ Feature: consent_form
   # Because a check on / for the "Log out" link confirms being logged in
   Scenario: Students should be able to access the Digital Research Consent Form
     Given I am logged in as a user with the "Student" role
-    When I go to "/digital-research-consent-form"
+    When I go to "/webform/digital-research-consent-form"
     Then I should see "Digital Research Consent Form" in the "Page Title"
 
   Scenario: Students should be able to fill out the form
     Given I am logged in as a user with the "Student" role
-    When I go to "/digital-research-consent-form"
+    When I go to "/webform/digital-research-consent-form"
     And I select "yes" from "edit-submitted-agree-1"
     And I select "yes" from "edit-submitted-over-18-1"
     And I press the "Submit" button
