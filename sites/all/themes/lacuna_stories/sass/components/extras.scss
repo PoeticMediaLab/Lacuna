@@ -442,3 +442,18 @@ body {
     margin-right: 5%;
   }
 }
+
+/*theming for LoginToboggan login/registration page*/
+.toboggan-unified #login-message {
+    font-family: "Source Sans Pro", sans-serif;
+    color: #1588ba;
+    padding-bottom: 25px;
+}
+/*remove border from LoginToboggan default style for button*/
+.toboggan-unified #login-links a.lt-active, .toboggan-unified #login-links a.lt-active:hover {
+    border: none !important;
+}
+
+.toboggan-unified #login-links a {
+}
+
