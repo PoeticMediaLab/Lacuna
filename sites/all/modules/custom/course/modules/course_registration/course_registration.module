@@ -35,9 +35,6 @@ function course_menu_alter(&$items) {
 /**
  * Deny access if a user is a member of a course group,
  * but not yet approved
- *
- * If pending, deny immediately.
- * Otherwise, check default accesses.
  */
 function course_registration_content_access($arguments) {
   $access = FALSE;
