@@ -242,13 +242,6 @@ function course_views_query_alter(&$view, &$query) {
   $where_node_views = array('responses', 'documents', 'threads', 'all_content', 'my_writing', 'sewing_kit', 'user_s_responses', 'user_s_comments', 'my_annotations_view');
   $where_user_views = array('people', 'all_emails');
 	$gid = course_get_selected_course();
-  // Debugging
-  if (!empty($gid)) {
-    $node = node_load($gid);
-    ddl($node, 'group');
-    ddl($view, 'view');
-  }
-  // END Debugging
 
   if (empty($gid)) {
     $gid = -1;  // No active group, prevent access to all course content
