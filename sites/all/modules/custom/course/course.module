@@ -222,6 +222,7 @@ function course_admin_form() {
 
 // Can user switch to given course?
 function course_switch_access($gid) {
+  // Note: og_is_member returns TRUE only for Active members, not pending or blocked
   return user_access('administer group') || og_is_member('node', $gid);
 }
 
