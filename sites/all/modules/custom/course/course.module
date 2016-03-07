@@ -239,7 +239,7 @@ function course_node_view($node, $view_mode, $langcode) {
  */
 function course_views_query_alter(&$view, &$query) {
   // List of the views to alter
-  $where_node_views = array('responses', 'documents', 'threads', 'all_content', 'my_writing', 'sewing-kit', 'user_s_responses', 'user_s_comments', 'my_annotations_view');
+  $where_node_views = array('responses', 'documents', 'threads', 'all_content', 'my_writing', 'sewing_kit', 'user_s_responses', 'user_s_comments', 'my_annotations_view');
   $where_user_views = array('people', 'all_emails');
 	$gid = course_get_selected_course();
   if (empty($gid)) {
@@ -256,6 +256,7 @@ function course_views_query_alter(&$view, &$query) {
 		// Filter users by course
 		if (in_array($view->name, $where_user_views)) {
 			$query->add_where_expression(2, "users.uid IN (SELECT etid FROM og_membership WHERE gid = " . $gid . " AND og_membership.entity_type = 'user')");
+      ddl($query);
 		}
 
 		// Filter annotation tags by course
@@ -1039,4 +1040,14 @@ function course_node_delete($node) {
 			}
 		}
 	}
+}
+
+/**
+ * @param $account
+ * Implements hook_user_delete(). Delete entries from course_current table.
+ */
+function course_user_delete($account) {
+  db_delete(COURSE_CURRENT_TABLE)
+    ->condition('uid', $account->uid)
+    ->execute();
 }
