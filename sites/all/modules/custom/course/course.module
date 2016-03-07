@@ -774,6 +774,7 @@ function course_create_form_submit($form, &$form_state) {
 			'status' => NODE_PUBLISHED,
 			'comment' => 0,
 			'promote' => 0,
+      'path' => array('pathauto' => TRUE),
 		);
 		$course = entity_create('node', array_merge($form_state['values'], $values));
 		$course_wrapper = entity_metadata_wrapper('node', $course);
