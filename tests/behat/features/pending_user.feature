@@ -13,7 +13,6 @@
     Scenario Outline:
       Given I am logged in as a user with the "Student" role
       And I am pending enrollment in the "Course Alpha" course
-      And my currently selected course is "Course Alpha"
       When I am on <url>
       # 403 == Access denied
       Then the response status code should be 403
@@ -27,7 +26,6 @@
     Scenario Outline:
       Given I am logged in as a user with the "Student" role
       And I am pending enrollment in the "Course Alpha" course
-      And my currently selected course is "Course Alpha"
       When I visit <url>
       # Refactor to have a "Then the view should be empty" step
       Then I should not see a "div.view-content" element
@@ -37,7 +35,6 @@
       | "/materials"                          |
       | "/responses"                          |
       | "/people"                             |
-      | "/node/add/response"                  |
       | "/threads"                            |
       | "/peer-groups"                        |
       | "/my-writing"                         |
@@ -47,7 +44,6 @@
     Scenario:
       Given I am logged in as a user with the "Student" role
       And I am pending enrollment in the "Course Alpha" course
-      And my currently selected course is "Course Alpha"
       When I visit "/sewing-kit"
       # Refactor to have a "Then the view should be empty" step
       Then I should see a "div.vbo-views-form-empty" element

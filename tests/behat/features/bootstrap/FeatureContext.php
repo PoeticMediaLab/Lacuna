@@ -1,10 +1,8 @@
 <?php
 
+use Behat\Behat\Definition\Call;
 use Drupal\DrupalExtension\Context\DrupalContext;
 use Behat\Behat\Context\SnippetAcceptingContext;
-use Behat\Gherkin\Node\PyStringNode;
-use Behat\Gherkin\Node\TableNode;
-use Behat\Mink\Driver\Selenium2Driver;
 
 /**
  * Defines application features from the specific context.
@@ -98,12 +96,13 @@ class FeatureContext extends DrupalContext implements SnippetAcceptingContext {
    * @throws \Exception
    * @throws \OgException
    */
-  private function enrollUserInCourse($user, $course_title) {
+  private function enrollUserInCourse($user, $course_title, $state = OG_STATE_ACTIVE) {
     $group = $this->findNodeByTitle('course', $course_title);
     $membership = og_group('node', $group->nid, array(
       "entity type" => "user",
       "entity" => $user,
       "field_name" => "og_user_node",
+      "state" => $state
     ));
     if (!$membership) {
       throw new \Exception(sprintf("User %s could not be enrolled in course %s", $user->name, $group->title));
@@ -178,6 +177,33 @@ class FeatureContext extends DrupalContext implements SnippetAcceptingContext {
     if (!$membership) {
       throw new \Exception(sprintf("Could not add %s '%s' to course '%s'"), $node_type, $node_title, $course_title);
     }
+  }
+
+  /**
+   * @Given I am pending enrollment in the :course_title course
+   */
+  public function IAmPendingEnrollment($course_title) {
+    $this->enrollUserInCourse($this->user, $course_title, OG_STATE_PENDING);
+  }
+
+  /**
+   * @Given My currently selected course is :course_title
+   */
+  public function myCurrentCourseIs($course_title) {
+    $course = $this->findNodeByTitle('course', $course_title);
+    if (! course_set_selected_course($course->nid, $this->user->uid)) {
+      throw new Exception('Could not set current course');
+    }
+  }
+
+  /**
+   * @Then I should be denied access
+   */
+  public function IAmDeniedAccess() {
+    // Note: if the access denied page changes, change this
+//    new Call\Then
+//    \Drupal\DrupalExtension\Context\MinkContext::assertRegionText('Access denied', 'Page Title');
+//    throw new Exception('I was not denied access');
   }
 }
 
