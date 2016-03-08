@@ -559,12 +559,13 @@ function course_get_selected_course() {
   return FALSE;
 }
 
-function course_set_selected_course($gid, $uid = NULL) {
-  global $user;
+function course_set_selected_course($gid, $uid = NULL, $access_check = TRUE) {
   if (!isset($uid)) {
+    global $user;
     $uid = $user->uid;
   }
-	if (empty($gid) || !course_switch_access($gid)) {
+  // Tests need to bypass the access check
+	if (empty($gid) || ($access_check && !course_switch_access($gid))) {
 		return FALSE;
 	}
 	try {
