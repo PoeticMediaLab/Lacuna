@@ -109,7 +109,6 @@ features[user_permission][] = view own field_major_degree
 features[user_permission][] = view own field_year_in_program
 features[user_role][] = Content Manager
 features[user_role][] = Instructor
-features[user_role][] = Pre-authorized User
 features[user_role][] = Researcher
 features[user_role][] = Site Administrator
 features[user_role][] = Student
