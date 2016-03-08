@@ -204,7 +204,6 @@ function annotation_drupal_format($entity, $update = FALSE) {
         break;
 
       case 'privacy_options':
-
         // Save these privacy options as the default for this user for new annotations on this document
         $privacy_defaults = array();
         if (isset ($user->data['annotation_privacy_defaults'])) {
@@ -302,7 +301,6 @@ function annotation_drupal_format($entity, $update = FALSE) {
       $annotation->field_annotation_category[$annotation->language][0]['tid'] = $category_terms[0]->tid;
     }
   }
-
   return($annotation);
 }
 
