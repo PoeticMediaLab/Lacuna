@@ -18,8 +18,6 @@ input[type="submit"] {
 .form-submit,
 .page-turner-bookmark-button,
 .af-button-large,
-a.group.subscribe,
-.toboggan-unified #login-links a,
 input[id^='edit-actionsewing-kit-stitch'],
 input[id^='edit-actionviews-data-export-action-csv-export']{
   background-color: #c4df2c;
@@ -46,8 +44,7 @@ input[id^='edit-actionviews-data-export-action-csv-export']{
   text-align: center;
   vertical-align: middle;
   font-weight: normal;
-  min-width: 135px;
-  width: auto;
+  width: 135px;
   margin-right: 5px;
 }
 .vbo-table-select-all-pages.form-submit {
@@ -62,7 +59,6 @@ input[id^='edit-actionviews-data-export-action-csv-export']{
 .form-submit:focus,
 .af-button-large:hover,
 .af-button-large:focus,
-.toboggan-unified #login-links a.lt-active, .toboggan-unified #login-links a.lt-active:hover,
 input[id^='edit-actionsewing-kit-stitch']:hover,
 input[id^='edit-actionsewing-kit-stitch']:focus,
 input[id^='edit-actionviews-data-export-action-csv-export']:hover,
