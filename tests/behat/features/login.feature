@@ -12,7 +12,7 @@ Feature: login
     Given I am not logged in
     When I am on the homepage
     And I click "Log In" in the "header"
-    Then I should see "User account" in the "Content" region
+    Then I should see "You are not logged in." in the "Content" region
 
   @api
   Scenario: A logged in user should not see "Log In"
