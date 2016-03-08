@@ -1,8 +1,8 @@
 <?php
 
-use Behat\Behat\Definition\Call;
 use Drupal\DrupalExtension\Context\DrupalContext;
 use Behat\Behat\Context\SnippetAcceptingContext;
+use Behat\Gherkin\Node\TableNode;
 
 /**
  * Defines application features from the specific context.
@@ -191,7 +191,7 @@ class FeatureContext extends DrupalContext implements SnippetAcceptingContext {
    */
   public function myCurrentCourseIs($course_title) {
     $course = $this->findNodeByTitle('course', $course_title);
-    if (! course_set_selected_course($course->nid, $this->user->uid)) {
+    if (! course_set_selected_course($course->nid, $this->user->uid, FALSE)) {
       throw new Exception('Could not set current course');
     }
   }
@@ -204,6 +204,48 @@ class FeatureContext extends DrupalContext implements SnippetAcceptingContext {
 //    new Call\Then
 //    \Drupal\DrupalExtension\Context\MinkContext::assertRegionText('Access denied', 'Page Title');
 //    throw new Exception('I was not denied access');
+  }
+
+  /**
+   *
+   * Creates an annotation by current user with values set:
+   * | audience     | category      | tags       | text             |
+   * | private, peer-groups, instructor, everyone|
+   * @Given annotations on :document:
+   */
+  public function createAnnotations($document_title, TableNode $annotationsTable) {
+    global $user;
+    // Need to load the user from the Author field in this case
+    $user = $this->user;  // Needed for module's routines
+    $document = $this->findNodeByTitle('document', $document_title);
+    // Access the Annotation Store functions
+    include_once(DRUPAL_ROOT . '/sites/all/modules/custom/annotation/annotation.store.inc');
+    foreach ($annotationsTable->getHash() as $data) {
+      $annotation = (object) $data;
+      if (isset($annotation->audience)) {
+        // Special case for audience
+        // default; must have all values set
+        $audiences = array(
+          'private' => 0 ,
+          'instructor' => 0,
+          'peer-groups' => 0,
+          'everyone' => 0
+        );
+        $annotation->privacy_options['audience'] = $audiences;
+        foreach (explode(',', $annotation->audience) as $audience) {
+          $annotation->privacy_options['audience'][strtolower($audience)] = 1;
+        }
+        unset($annotation->audience);
+      }
+      // Annotator.js formats the URI this way
+      global $base_root;
+      $uri = entity_uri('node', $document);
+      $annotation->uri = $base_root . base_path() . $uri['path'];
+      $annotation = annotation_drupal_format($annotation);
+      $annotation->uid = $this->user->uid;
+      $annotation = node_submit($annotation);
+      node_save($annotation);
+    }
   }
 }
 
