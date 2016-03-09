@@ -187,6 +187,14 @@ class FeatureContext extends DrupalContext implements SnippetAcceptingContext {
   }
 
   /**
+   * @Given :user is pending enrollment in the :course_title course
+   */
+  public function userIsPendingEnrollment($username, $course_title) {
+    $user = user_load_by_name($username);
+    $this->enrollUserInCourse($user, $course_title, OG_STATE_PENDING);
+  }
+
+  /**
    * @Given My currently selected course is :course_title
    */
   public function myCurrentCourseIs($course_title) {
