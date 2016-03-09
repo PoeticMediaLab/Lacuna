@@ -18,7 +18,7 @@ define('NEW_THREAD', -1);
 function sewing_kit_action_info() {
   return array(
     'sewing_kit_stitch' => array(
-      'type' => 'entity',
+      'type' => 'node',
       'label' => t('Add to Thread'),
       'configurable' => TRUE,
       'vbo_configurable' => FALSE,
