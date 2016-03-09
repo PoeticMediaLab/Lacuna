@@ -63,7 +63,7 @@ function lacuna_stories_course_management_menu_default_menu_links() {
     'external' => 0,
     'has_children' => 0,
     'expanded' => 0,
-    'weight' => -49,
+    'weight' => -48,
     'customized' => 1,
     'parent_identifier' => 'main-menu_manage-users:<nolink>',
   );
@@ -102,6 +102,24 @@ function lacuna_stories_course_management_menu_default_menu_links() {
     'weight' => -48,
     'customized' => 1,
     'parent_identifier' => 'main-menu_manage:<nolink>/node/add/course',
+  );
+  // Exported menu link: main-menu_manage-enrollment:manage-enrollment.
+  $menu_links['main-menu_manage-enrollment:manage-enrollment'] = array(
+    'menu_name' => 'main-menu',
+    'link_path' => 'manage-enrollment',
+    'router_path' => 'manage-enrollment',
+    'link_title' => 'Manage Enrollment',
+    'options' => array(
+      'identifier' => 'main-menu_manage-enrollment:manage-enrollment',
+    ),
+    'module' => 'system',
+    'hidden' => 0,
+    'external' => 0,
+    'has_children' => 0,
+    'expanded' => 0,
+    'weight' => -50,
+    'customized' => 1,
+    'parent_identifier' => 'main-menu_manage-users:<nolink>',
   );
   // Exported menu link: main-menu_manage-users:<nolink>.
   $menu_links['main-menu_manage-users:<nolink>'] = array(
@@ -165,27 +183,6 @@ function lacuna_stories_course_management_menu_default_menu_links() {
     'customized' => 1,
     'parent_identifier' => 'main-menu_manage:<nolink>/node/add/course',
   );
-  // Exported menu link: main-menu_pending-users:pending-users.
-  $menu_links['main-menu_pending-users:pending-users'] = array(
-    'menu_name' => 'main-menu',
-    'link_path' => 'pending-users',
-    'router_path' => 'pending-users',
-    'link_title' => 'Pending Users',
-    'options' => array(
-      'attributes' => array(
-        'title' => '',
-      ),
-      'identifier' => 'main-menu_pending-users:pending-users',
-    ),
-    'module' => 'menu',
-    'hidden' => 0,
-    'external' => 0,
-    'has_children' => 0,
-    'expanded' => 0,
-    'weight' => -50,
-    'customized' => 1,
-    'parent_identifier' => 'main-menu_manage-users:<nolink>',
-  );
 
   // Translatables
   // Included for use with string extractors like potx.
@@ -195,9 +192,9 @@ function lacuna_stories_course_management_menu_default_menu_links() {
   t('Bulk Update Annotations');
   t('Curate Tags');
   t('Manage');
+  t('Manage Enrollment');
   t('Manage Users');
   t('Organize Materials');
-  t('Pending Users');
 
   return $menu_links;
 }
