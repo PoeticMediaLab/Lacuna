@@ -18,6 +18,8 @@ input[type="submit"] {
 .form-submit,
 .page-turner-bookmark-button,
 .af-button-large,
+input#edit-actioncourse-registration-approve,
+input#edit-actioncourse-registration-block,
 input[id^='edit-actionsewing-kit-stitch'],
 input[id^='edit-actionviews-data-export-action-csv-export']{
   background-color: #c4df2c;
@@ -59,6 +61,8 @@ input[id^='edit-actionviews-data-export-action-csv-export']{
 .form-submit:focus,
 .af-button-large:hover,
 .af-button-large:focus,
+input#edit-actioncourse-registration-approve:hover,
+input#edit-actioncourse-registration-block:hover,
 input[id^='edit-actionsewing-kit-stitch']:hover,
 input[id^='edit-actionsewing-kit-stitch']:focus,
 input[id^='edit-actionviews-data-export-action-csv-export']:hover,

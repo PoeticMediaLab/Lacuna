@@ -250,3 +250,39 @@ div#block-views-cite-as-block {
 .views-widget .chosen-container + .description {
   display: none;
 }
+
+.view-manage-enrollment {
+  fieldset#edit-select.container-inline {
+    border: none;
+    text-align: center;
+  }
+  div.vbo-select-all-markup {
+    display: none !important;
+  }
+
+  input.form-submit {
+    width: 200px;
+    display: inline-block;
+    height: 50px;
+    font-size: 18pt !important;
+  }
+  input#edit-actioncourse-registration-approve {
+
+  }
+  input#edit-actioncourse-registration-block {
+    background-color: #ba0024;
+    background-image: linear-gradient(to bottom, #ff0025, #ba0024);
+    background-repeat: repeat-x;
+  }
+  input#edit-actioncourse-registration-block:hover {
+    background-color: #ba0024;
+  }
+
+  div.view-grouping {
+    border: solid 1px lightgrey;
+    padding: 5px;
+  }
+  div.view-grouping-header {
+    font-size: large;
+  }
+}

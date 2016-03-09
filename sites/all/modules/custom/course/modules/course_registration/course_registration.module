@@ -49,3 +49,70 @@ function course_registration_content_access($arguments) {
 
   return $access;
 }
+
+/**
+ * Implements hook_action_info().
+ *
+ * Create new VBO for activating/blocking course members
+ */
+function course_registration_action_info() {
+  $defaults = array(
+    'type' => 'user',
+    'configurable' => FALSE,
+    'vbo_configurable' => FALSE,
+    'aggregate' => TRUE,
+    'behavior' => array('changes_property'),
+    // Probably wrong; OG implements its own permissions
+    'permissions' => array('approve and deny subscription'),
+  );
+
+  $actions = array(
+    'course_registration_approve' => array(
+      'label' => t('Approve'),
+    ),
+    'course_registration_block' => array(
+      'label' => t('Block'),
+    ),
+  );
+
+  // Add in the common default settings
+  foreach (array_keys($actions) as $action) {
+    foreach ($defaults as $key => $val) {
+      $actions[$action][$key] = $val;
+    }
+  }
+  return $actions;
+}
+
+/**
+ * @param $users
+ * @param $context
+ *
+ * Approve a student's enrollment in the instructor's current course.
+ */
+function course_registration_approve(&$users, $context) {
+  $gid = course_get_selected_course();
+  foreach ($users as $user) {
+    $membership = og_get_membership('node', $gid, 'user', $user->uid);
+    $membership->state = OG_STATE_ACTIVE;
+    ddl(OG_STATE_PENDING, 'pending');
+    ddl(OG_STATE_ACTIVE, 'active');
+    ddl($membership);
+    og_membership_save($membership);
+  }
+}
+
+/**
+ * @param $users
+ * @param $context
+ *
+ * Block a student from the instructor's current course.
+ */
+function course_registration_block(&$users, $context) {
+  $gid = course_get_selected_course();
+  foreach ($users as $user) {
+    $membership = og_get_membership('node', $gid, 'user', $user->uid);
+    $membership->state = OG_STATE_BLOCKED;
+    og_membership_save($membership);
+  }
+}
