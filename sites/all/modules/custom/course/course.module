@@ -227,8 +227,9 @@ function course_switch_access($gid) {
 }
 
 // Switch course context when a new course viewed, if allowed
+// course_set_selected_course does our permissions check
 function course_node_view($node, $view_mode, $langcode) {
-  if (($node->type == 'course') && course_switch_access($node->nid)) {
+  if ($view_mode == 'full' && $node->type == 'course') {
     course_set_selected_course($node->nid);
   }
 }
@@ -560,15 +561,16 @@ function course_get_selected_course() {
 }
 
 function course_set_selected_course($gid, $uid = NULL, $access_check = TRUE) {
-  if (!isset($uid)) {
-    global $user;
-    $uid = $user->uid;
-  }
-  // Tests need to bypass the access check
+  // Check for access to switch course
+  // Behat tests need to be able to bypass this, though, hence $access_check
 	if (empty($gid) || ($access_check && !course_switch_access($gid))) {
 		return FALSE;
 	}
 	try {
+    if (!isset($uid)) {
+      global $user;
+      $uid = $user->uid;
+    }
 		db_merge(COURSE_CURRENT_TABLE)
 			->key(array('uid' => (int) $uid))
 			->fields(array('gid' => $gid))
