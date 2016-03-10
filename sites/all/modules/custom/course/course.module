@@ -843,13 +843,6 @@ function course_create_blank_document($biblio) {
 }
 
 function course_add_biblio_form_submit($form, &$form_state) {
-  if (course_get_selected_course() == FALSE) {
-    // Tried to add a biblio item, but no course selected.
-    drupal_set_message(t('Sorry, but you need to be listed as an instructor of a course to add new materials.'), 'error');
-    drupal_access_denied();
-    drupal_exit();
-  }
-
   $biblio = new stdClass();
   $biblio->type = BIBLIO_NODE_TYPE;
   foreach($form_state['values'] as $k => $v) {
@@ -1027,6 +1020,16 @@ function course_push_unfinished_doc_queue($nid) {
   user_cookie_save(array($key => $cookie_queue));
 }
 
+/**
+ * Implements hook_node_access(). Prevent users from adding materials when they haven't selected a course context yet.
+ */
+function course_node_access($node, $op, $account) {
+  if ($op == 'create' || $op == 'update' || $op == 'delete') {
+    if (course_get_selected_course() == FALSE) {
+      return NODE_ACCESS_DENY;
+    }
+  }
+}
 
 /**
  * Implements hook_node_delete(). Delete related taxonomy terms when course deleted.
