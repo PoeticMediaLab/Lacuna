@@ -1,5 +1,5 @@
 @api
-Feature: Courses as Student
+Feature: courses_student
   In order to participate in a course
   As a student
   I should be able to read course texts and responses and write responses
