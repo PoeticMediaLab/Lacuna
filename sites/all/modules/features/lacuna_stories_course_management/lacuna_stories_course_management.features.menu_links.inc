@@ -49,24 +49,6 @@ function lacuna_stories_course_management_menu_default_menu_links() {
     'customized' => 1,
     'parent_identifier' => 'main-menu_manage:<nolink>/node/add/course',
   );
-  // Exported menu link: main-menu_all-emails:all-emails.
-  $menu_links['main-menu_all-emails:all-emails'] = array(
-    'menu_name' => 'main-menu',
-    'link_path' => 'all-emails',
-    'router_path' => 'all-emails',
-    'link_title' => 'All Emails',
-    'options' => array(
-      'identifier' => 'main-menu_all-emails:all-emails',
-    ),
-    'module' => 'system',
-    'hidden' => 0,
-    'external' => 0,
-    'has_children' => 0,
-    'expanded' => 0,
-    'weight' => -48,
-    'customized' => 1,
-    'parent_identifier' => 'main-menu_manage-users:<nolink>',
-  );
   // Exported menu link: main-menu_bulk-update-annotations:bulk-update-annotations.
   $menu_links['main-menu_bulk-update-annotations:bulk-update-annotations'] = array(
     'menu_name' => 'main-menu',
@@ -103,42 +85,21 @@ function lacuna_stories_course_management_menu_default_menu_links() {
     'customized' => 1,
     'parent_identifier' => 'main-menu_manage:<nolink>/node/add/course',
   );
-  // Exported menu link: main-menu_manage-enrollment:manage-enrollment.
-  $menu_links['main-menu_manage-enrollment:manage-enrollment'] = array(
+  // Exported menu link: main-menu_manage-students:manage-students.
+  $menu_links['main-menu_manage-students:manage-students'] = array(
     'menu_name' => 'main-menu',
-    'link_path' => 'manage-enrollment',
-    'router_path' => 'manage-enrollment',
-    'link_title' => 'Manage Enrollment',
+    'link_path' => 'manage-students',
+    'router_path' => 'manage-students',
+    'link_title' => 'Manage Students',
     'options' => array(
-      'identifier' => 'main-menu_manage-enrollment:manage-enrollment',
+      'identifier' => 'main-menu_manage-students:manage-students',
     ),
     'module' => 'system',
     'hidden' => 0,
     'external' => 0,
     'has_children' => 0,
     'expanded' => 0,
-    'weight' => -50,
-    'customized' => 1,
-    'parent_identifier' => 'main-menu_manage-users:<nolink>',
-  );
-  // Exported menu link: main-menu_manage-users:<nolink>.
-  $menu_links['main-menu_manage-users:<nolink>'] = array(
-    'menu_name' => 'main-menu',
-    'link_path' => '<nolink>',
-    'router_path' => '<nolink>',
-    'link_title' => 'Manage Users',
-    'options' => array(
-      'attributes' => array(
-        'title' => '',
-      ),
-      'identifier' => 'main-menu_manage-users:<nolink>',
-    ),
-    'module' => 'menu',
-    'hidden' => 0,
-    'external' => 0,
-    'has_children' => 1,
-    'expanded' => 0,
-    'weight' => -44,
+    'weight' => -46,
     'customized' => 1,
     'parent_identifier' => 'main-menu_manage:<nolink>/node/add/course',
   );
@@ -188,12 +149,10 @@ function lacuna_stories_course_management_menu_default_menu_links() {
   // Included for use with string extractors like potx.
   t('Add Materials');
   t('All Content');
-  t('All Emails');
   t('Bulk Update Annotations');
   t('Curate Tags');
   t('Manage');
-  t('Manage Enrollment');
-  t('Manage Users');
+  t('Manage Students');
   t('Organize Materials');
 
   return $menu_links;
