@@ -12,7 +12,6 @@ dependencies[] = menu
 dependencies[] = special_menu_items
 dependencies[] = strongarm
 dependencies[] = superfish
-features[context][] = course_context
 features[context][] = institutional_context
 features[ctools][] = context:context:3
 features[ctools][] = strongarm:strongarm:1
