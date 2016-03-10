@@ -25,7 +25,7 @@ function lacuna_stories_install_tasks($install_state) {
 //      'display_name' => st('Create static pages')
     ),
     'lacuna_stories_set_basic_pages_permissions' => array(
-      'display_name' => st('Set page permissions')
+//      'display_name' => st('Set page permissions')
     ),
     // hide main_menu(it belongs to superfish) and secondary_menu
     'lacuna_stories_manage_theme_settings' => array(
