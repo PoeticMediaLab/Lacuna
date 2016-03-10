@@ -43,10 +43,12 @@ if ($current_node == NULL) {
 
 // Enrolled in a course, but viewing a course node that isn\'t the currently enrolled course
 if (($current_node->type == \'course\') && 
-  ($current_course_id != (int) $current_node->nid))
+  ($current_course_id != $current_node->nid))
 {
   return FALSE;
-}',
+}
+
+return TRUE;',
       ),
     ),
   );
@@ -110,6 +112,44 @@ if (($current_node->type == \'course\') &&
   );
   $context->condition_mode = 0;
   $export['frontpage'] = $context;
+
+  $context = new stdClass();
+  $context->disabled = FALSE; /* Edit this to true to make a default context disabled initially */
+  $context->api_version = 3;
+  $context->name = 'institutional_context';
+  $context->description = '';
+  $context->tag = '';
+  $context->conditions = array(
+    'context' => array(
+      'values' => array(
+        '~course_context' => '~course_context',
+      ),
+    ),
+    'path' => array(
+      'values' => array(
+        '<front>' => '<front>',
+      ),
+    ),
+    'user' => array(
+      'values' => array(
+        'anonymous user' => 'anonymous user',
+      ),
+    ),
+  );
+  $context->reactions = array(
+    'block' => array(
+      'blocks' => array(
+        'superfish-2' => array(
+          'module' => 'superfish',
+          'delta' => '2',
+          'region' => 'header',
+          'weight' => '-10',
+        ),
+      ),
+    ),
+  );
+  $context->condition_mode = 0;
+  $export['institutional_context'] = $context;
 
   return $export;
 }
