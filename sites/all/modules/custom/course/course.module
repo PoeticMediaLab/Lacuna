@@ -223,7 +223,7 @@ function course_admin_form() {
 // Can user switch to given course?
 function course_switch_access($gid) {
   // Note: og_is_member returns TRUE only for Active members, not pending or blocked
-  return user_access('administer content') || og_is_member('node', $gid);
+  return user_access('administer nodes') || og_is_member('node', $gid);
 }
 
 // Switch course context when a new course viewed, if allowed
@@ -540,11 +540,23 @@ function course_sewing_kit_shared_with($data) {
 // Used extensively, so be careful if you refactor
 function course_get_selected_course() {
   global $user;
+
+  // Content managers and admins may not be in any courses or may be in another context
+  // but need to switch to the currently viewed course, so just switch
+  if (user_access('administer nodes')) {
+    $node = menu_get_object();
+    if (!empty($node) && $node->type == 'course') {
+      course_set_selected_course($node->nid);
+      return $node->nid;
+    }
+  }
+
 	$result = db_query('SELECT c.gid FROM {' . COURSE_CURRENT_TABLE . '} c WHERE c.uid = :uid', array(':uid' => (int) $user->uid));
 	foreach ($result as $record) {
 		return($record->gid);
 	}
   // Uh-oh. We don't have a course set yet. Should we?
+
   // Note: this only happens the first time we check for a selected course
   // which affects only the call to this function in the main menu context
   $groups = og_get_groups_by_user($user, 'node');
@@ -552,7 +564,7 @@ function course_get_selected_course() {
   if ($groups) {
     $gid = array_shift($groups);
     $group = node_load($gid);
-    if (($group->type == 'course') && course_switch_access($gid)) {
+    if ($group->type == 'course') {
       course_set_selected_course($gid);
       return $gid;
     }
@@ -1026,6 +1038,13 @@ function course_push_unfinished_doc_queue($nid) {
  * Implements hook_node_access(). Prevent users from adding materials when they haven't selected a course context yet.
  */
 function course_node_access($node, $op, $account) {
+  if (user_access('administer nodes')) {
+    // Avoid an infinite node access check!
+    // Happens because course_get_selected_course() below may call
+    // menu_get_object(), which called hook_node_access()
+    return NODE_ACCESS_ALLOW;
+  }
+
   if ($op == 'create' || $op == 'update' || $op == 'delete') {
     if (course_get_selected_course() == FALSE) {
       return NODE_ACCESS_DENY;
