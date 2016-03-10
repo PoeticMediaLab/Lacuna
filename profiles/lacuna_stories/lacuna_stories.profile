@@ -25,7 +25,7 @@ function lacuna_stories_install_tasks($install_state) {
 //      'display_name' => st('Create static pages')
     ),
     'lacuna_stories_set_basic_pages_permissions' => array(
-//      'display_name' => st('Set page permissions')
+      'display_name' => st('Set page permissions')
     ),
     // hide main_menu(it belongs to superfish) and secondary_menu
     'lacuna_stories_manage_theme_settings' => array(
@@ -263,6 +263,11 @@ function lacuna_stories_create_default_content() {
  */
 function lacuna_stories_set_basic_pages_permissions()
 {
+  if (!function_exists('content_access_set_settings')) {
+    // this module should already be enabled
+    // but sometimes it isn't. why?
+    module_enable(array('content_access'));
+  }
   content_access_set_settings(array("per_node" => 1), "page");    // turn per_node content_access 1, for basic pages
   $instructor = user_role_load_by_name("Instructor")->rid;
 
