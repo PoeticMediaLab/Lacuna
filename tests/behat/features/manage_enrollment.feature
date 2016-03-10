@@ -13,6 +13,8 @@
       And my currently selected course is "Course Alpha"
       And a "Student" user named "Student A" exists
       And "Student A" is pending enrollment in the "Course Alpha" course
-      When I am on "/manage-enrollment"
+      When I am on "/manage-students"
       Then I should see "Status: Pending" in the "View Content"
       And I should see "Student A" in the "View Content"
+      And I should see the "Approve" button
+      And I should see the "Block" button
