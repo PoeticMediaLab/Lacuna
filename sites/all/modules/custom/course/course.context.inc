@@ -30,9 +30,14 @@ function course_context_default_contexts() {
         'phpcode' => '$current_node = menu_get_object();
 $current_course_id = course_get_selected_course();
 
+// Not approved for any course yet
+if ($current_course_id == FALSE) {
+  return FALSE;
+}
+
 // Enrolled in a course, but on a view
 // Return here to avoid warnings about trying to get properties from a NULL value
-if (($current_node == NULL) && ($current_course_id != FALSE)) {
+if ($current_node == NULL) {
   return TRUE;
 }
 
