@@ -223,7 +223,7 @@ function course_admin_form() {
 // Can user switch to given course?
 function course_switch_access($gid) {
   // Note: og_is_member returns TRUE only for Active members, not pending or blocked
-  return user_access('administer group') || og_is_member('node', $gid);
+  return user_access('administer content') || og_is_member('node', $gid);
 }
 
 // Switch course context when a new course viewed, if allowed
@@ -843,6 +843,13 @@ function course_create_blank_document($biblio) {
 }
 
 function course_add_biblio_form_submit($form, &$form_state) {
+  if (course_get_selected_course() == FALSE) {
+    // Tried to add a biblio item, but no course selected.
+    drupal_set_message(t('Sorry, but you need to be listed as an instructor of a course to add new materials.'), 'error');
+    drupal_access_denied();
+    drupal_exit();
+  }
+
   $biblio = new stdClass();
   $biblio->type = BIBLIO_NODE_TYPE;
   foreach($form_state['values'] as $k => $v) {
