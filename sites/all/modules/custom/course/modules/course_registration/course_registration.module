@@ -62,8 +62,11 @@ function course_registration_action_info() {
     'vbo_configurable' => FALSE,
     'aggregate' => TRUE,
     'behavior' => array('changes_property'),
-    // Probably wrong; OG implements its own permissions
-    'permissions' => array('approve and deny subscription'),
+    // If user can create courses, then can be course admin
+    // OG implements its own permissions that we can't access from VBO
+    // We could use actions_permissions module to configure this
+    // But then need to set up permissions for all the other VBOs we use
+    'permissions' => array('create course content'),
   );
 
   $actions = array(
@@ -95,9 +98,6 @@ function course_registration_approve(&$users, $context) {
   foreach ($users as $user) {
     $membership = og_get_membership('node', $gid, 'user', $user->uid);
     $membership->state = OG_STATE_ACTIVE;
-    ddl(OG_STATE_PENDING, 'pending');
-    ddl(OG_STATE_ACTIVE, 'active');
-    ddl($membership);
     og_membership_save($membership);
   }
 }
