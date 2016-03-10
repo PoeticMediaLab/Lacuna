@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the Site Administrator feature.
+ */
+
+include_once 'lacuna_site_administrator.features.inc';
