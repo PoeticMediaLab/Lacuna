@@ -611,7 +611,7 @@ function lacuna_stories_course_management_views_default_views() {
   $handler->display->display_options['header']['area']['id'] = 'area';
   $handler->display->display_options['header']['area']['table'] = 'views';
   $handler->display->display_options['header']['area']['field'] = 'area';
-  $handler->display->display_options['header']['area']['content'] = 'Select students to approve or block their enrollment in your course, then click the appropriate button.';
+  $handler->display->display_options['header']['area']['content'] = 'Select students and click "Approve" to enroll them in your course. Click "Block" to remove students from your course. If you mistakenly block a student, select their name and click "Approve."';
   $handler->display->display_options['header']['area']['format'] = 'filtered_html';
   /* Relationship: OG membership: OG membership from User */
   $handler->display->display_options['relationships']['og_membership_rel']['id'] = 'og_membership_rel';
