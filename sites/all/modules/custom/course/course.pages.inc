@@ -77,6 +77,35 @@ function course_create() {
   return drupal_render($form);
 }
 
+/**
+ * @return string
+ *
+ * A custom form so that instructors can easily add annotation tags to their course
+ */
+function course_annotation_tags_add() {
+  $gid = course_get_selected_course();
+  if ($gid == FALSE) {
+    drupal_set_message(t('You are not associated with a course. Therefore, you cannot add tags for annotations.'), 'error');
+    drupal_exit();
+  }
+  drupal_set_title('Add Tags for Annotations');
+  $form = array(
+    'term' => array(
+      '#type' => 'textfield',
+      '#title' => t('Tag name'),
+      '#description' => t('Enter the tag for annotations as you would like it to appear to students. You may use spaces.'),
+      '#size' => 36,
+      '#required' => TRUE
+    ),
+    'submit' => array(
+      '#type' => 'submit',
+      '#value' => t('Submit'),
+    )
+  );
+
+	return $form;
+}
+
 /*
  * Pre-populate Units, Genre - Materials, and Genre - Responses
  * for a new course with some defaults

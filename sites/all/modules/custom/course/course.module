@@ -93,6 +93,16 @@ function course_menu() {
     'type' => MENU_CALLBACK,
     'file' => 'course.pages.inc'
   );
+  // Custom form to add terms to course-related tags for annotations
+  // If they can create a course, they can add terms
+  $items['annotation_tags/add'] = array(
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('course_annotation_tags_add'),
+    'access arguments' => array('create course content'),
+    'type' => MENU_NORMAL_ITEM,
+    'file' => 'course.pages.inc',
+  );
+
   return $items;
 }
 
@@ -625,6 +635,28 @@ function course_node_update($node) {
 
 }
 
+
+/**
+ * Associate the annotation tag submitted with the appropriate course
+ */
+function course_annotation_tags_add_submit($form, &$form_state) {
+  $gid = course_get_selected_course();
+  if (!$gid) {
+    drupal_set_message(t('You are not associated with any course. Therefore, we cannot create any tags for annotations.'), 'error');
+    drupal_exit();
+  }
+  $vocab = taxonomy_vocabulary_machine_name_load('annotation_tags');
+  $term = $form_state['values']['term'];
+  course_create_taxonomy_term($vocab, $term);
+  drupal_set_message(t('"' . $term . '" has been added to the list of tags for annotations.'));
+}
+
+/**
+ * @param $form
+ * @param $form_state
+ * @param $form_id
+ * Implements hook_form_FORM_ID_alter() for document nodes.
+ */
 function course_form_document_node_form_alter(&$form, &$form_state, $form_id) {
   $document = node_load($form['nid']['#value']);
 	$unit_options = course_get_terms_for_current_course('units');
