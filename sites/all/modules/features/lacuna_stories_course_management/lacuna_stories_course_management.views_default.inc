@@ -458,9 +458,10 @@ function lacuna_stories_course_management_views_default_views() {
   $handler->display->display_options['header']['area']['id'] = 'area';
   $handler->display->display_options['header']['area']['table'] = 'views';
   $handler->display->display_options['header']['area']['field'] = 'area';
+  $handler->display->display_options['header']['area']['empty'] = TRUE;
   $handler->display->display_options['header']['area']['content'] = 'As a site administrator or instructor, you can designate certain tags as “curated.” They will then appear at the top of the list of suggested tags on the annotator window. Adding your own curated tags, or adding popular user-generated tags to a “curated” status, can facilitate a shared vocabulary for your users. The tag cloud to the left indicates each tag’s usage frequency on your course or project site.
 
-<a href="/admin/structure/taxonomy/annotation_tags/add" class="lacuna-button">Add a New Tag</a>';
+<a href="/annotation_tags/add" class="lacuna-button">Add a New Tag</a>';
   $handler->display->display_options['header']['area']['format'] = 'full_html';
   /* No results behavior: Global: Text area */
   $handler->display->display_options['empty']['area']['id'] = 'area';
