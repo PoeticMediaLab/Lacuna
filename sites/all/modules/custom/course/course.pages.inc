@@ -106,6 +106,21 @@ function course_annotation_tags_add() {
 	return $form;
 }
 
+/**
+ * Associate the annotation tag submitted with the appropriate course
+ */
+function course_annotation_tags_add_submit($form, &$form_state) {
+  $gid = course_get_selected_course();
+  if (!$gid) {
+    drupal_set_message(t('You are not associated with any course. Therefore, we cannot create any tags for annotations.'), 'error');
+    drupal_exit();
+  }
+  $vocab = taxonomy_vocabulary_machine_name_load('annotation_tags');
+  $term = $form_state['values']['term'];
+  course_create_taxonomy_term($vocab, $term);
+  drupal_set_message(t('"' . $term . '" has been added to the list of tags for annotations.'));
+}
+
 /*
  * Pre-populate Units, Genre - Materials, and Genre - Responses
  * for a new course with some defaults
