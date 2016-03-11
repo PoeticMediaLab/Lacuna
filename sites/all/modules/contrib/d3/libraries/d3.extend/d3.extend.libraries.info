@@ -2,11 +2,11 @@ name = D3 extensions
 description = Common functionality for example libraries
 files[js][] = d3.extend.js
 version = 0.1
-dependencies[] = d3.drupal
+dependencies[] = d3
 
-; Information added by Drupal.org packaging script on 2015-12-27
-version = "7.x-1.0-alpha2"
+; Information added by Drupal.org packaging script on 2015-02-21
+version = "7.x-1.x-dev"
 core = "7.x"
 project = "d3"
-datestamp = "1451186943"
+datestamp = "1424552583"
 

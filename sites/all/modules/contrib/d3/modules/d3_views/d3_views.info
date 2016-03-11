@@ -4,14 +4,12 @@ core = 7.x
 package = Visualization
 dependencies[] = views
 dependencies[] = d3
-files[] = views/plugins/d3_views_plugin_style_d3.inc
-files[] = includes/D3ViewsLibraryInfoProcessor.inc
-files[] = includes/D3ViewsLibraryInfoController.inc
-files[] = includes/D3ViewsDataMapping.inc
 
-; Information added by Drupal.org packaging script on 2015-12-27
-version = "7.x-1.0-alpha2"
+files[] = views/plugins/d3_views_plugin_style_d3.inc
+
+; Information added by Drupal.org packaging script on 2015-02-21
+version = "7.x-1.x-dev"
 core = "7.x"
 project = "d3"
-datestamp = "1451186943"
+datestamp = "1424552583"
 

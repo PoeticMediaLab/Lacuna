@@ -14,6 +14,7 @@
 (function($) {
 
   Drupal.d3.piechart = function (select, settings) {
+
     var wedges = settings.rows,
       // Each wedge has a label and a value
       key = wedges.map(function(d) { return String(d[0]); }),
