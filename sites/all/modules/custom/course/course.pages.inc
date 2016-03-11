@@ -241,49 +241,30 @@ function course_organize_form_submit($form, &$form_state) {
  * Routines for per-course taxonomies
  */
 
-// Returns results for query on course-based term in given vocabulary
-function course_get_taxonomy_term_in_current_course($vocab_name, $term) {
-	if (empty($vocab_name)) {
-		return FALSE;
-	}
-	$gid = course_get_selected_course();
-	if ($gid) {
-		$query = new EntityFieldQuery();
-		$result = $query->entityCondition('entity_type', 'taxonomy_term')
-			->entityCondition('bundle', $vocab_name)
-			->fieldCondition('field_term_course', 'target_id', $gid, '=')
-			->propertyCondition('name', $term)
-			->execute();
-		if (isset($result['taxonomy_term'])) {
-			return $result['taxonomy_term'];
-		}
-	}
-	return FALSE;
-}
-
-function course_create_taxonomy_term($vocab, $tag, $weight = 0) {
-	// first, check for existing term in per-course taxonomy
-	$tag = trim($tag);
-	if (course_get_taxonomy_term_in_current_course($vocab->machine_name, $tag) == FALSE) {
-		// none found, create a new one
-		$term = new stdClass();
-		$term->name = $tag;
-		$term->vid = $vocab->vid;
-		$term->weight = $weight;
-		$term->field_term_course[LANGUAGE_NONE][0]['target_id'] = course_get_selected_course();
-		taxonomy_term_save($term);
-	}
-}
 
 function course_ajax_add_term($vocab_name) {
 	$terms = check_plain($_POST['terms']);
 	$vocab = taxonomy_vocabulary_machine_name_load($vocab_name);
-  // TODO: Load existing terms
-  // TODO: Determine highest weight
-  // TODO: Increment by one
-  // TODO: Pass weight to course_create_taxonomy_term()
+  $gid = course_get_selected_course();
+  $weight = 0;
+  $query = new EntityFieldQuery();
+  // Order the terms so they're sorted as expected
+  // But on a per-course basis, to avoid sending weights spiralling up
+  $result = $query->entityCondition('entity_type', 'taxonomy_term')
+    ->entityCondition('bundle', $vocab_name)
+    ->fieldCondition('field_term_course', 'target_id', $gid, '=')
+    ->execute();
+  if (isset($result['taxonomy_term'])) {
+    foreach (array_keys($result['taxonomy_term']) as $tid) {
+      $term = taxonomy_term_load($tid);
+      if ($term->weight >= $weight) {
+        $weight = $term->weight + 1;
+      }
+    }
+  }
+
 	foreach(explode(',', $terms) as $term) {
-		course_create_taxonomy_term($vocab, $term);
+		course_create_taxonomy_term($vocab, $term, $weight);
 	}
 	ajax_deliver(NULL);
 }
@@ -342,11 +323,13 @@ function course_about_course() {
 // Autocomplete tags, but only for current course
 // TODO: Add curated tags distinction
 // TODO: Add comma-separated values for multiples
-function course_tags_autocomplete($name, $match) {
+function course_tags_autocomplete($vocab_name, $match) {
 	$matches = array();
-	foreach (course_get_terms_for_current_course($name) as $tid => $term) {
+  $tags_typed = drupal_explode_tags($match);
+  $tag_last = drupal_strtolower(array_pop($tags_typed));
+	foreach (course_get_terms_for_current_course($vocab_name) as $tid => $term) {
 		if (preg_match('/' . $match . '/i', $term)) {
-			$matches[$term] = $term;
+			$matches[$term] = check_plain($term);
 		}
 	}
 	drupal_json_output($matches);
