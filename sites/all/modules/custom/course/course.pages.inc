@@ -325,11 +325,10 @@ function course_about_course() {
 // TODO: Add comma-separated values for multiples
 function course_tags_autocomplete($vocab_name, $match) {
 	$matches = array();
-  $tags_typed = drupal_explode_tags($match);
-  $tag_last = drupal_strtolower(array_pop($tags_typed));
-	foreach (course_get_terms_for_current_course($vocab_name) as $tid => $term) {
+  $match = trim($match);
+  foreach (course_get_terms_for_current_course($vocab_name) as $tid => $term) {
 		if (preg_match('/' . $match . '/i', $term)) {
-			$matches[$term] = check_plain($term);
+      $matches[$term] = check_plain($term);
 		}
 	}
 	drupal_json_output($matches);

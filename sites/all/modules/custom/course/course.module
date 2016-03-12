@@ -81,15 +81,13 @@ function course_menu() {
   $items['about-course'] = array(
     'title' => 'About This Course',
     'page callback' => 'course_about_course',
-    // Everyone can view "about this course"; no need to have an access callback
-//    'access callback' => 'course_get_selected_course',
+    'access arguments' => array('access content'),
     'type' => MENU_NORMAL_ITEM,
     'file' => 'course.pages.inc',
   );
   $items['course-tags/autocomplete/%/%'] = array(
     'page callback' => 'course_tags_autocomplete',
     'page arguments' => array(2, 3),
-    'access callback' => 'course_get_selected_course',
     'type' => MENU_CALLBACK,
     'file' => 'course.pages.inc'
   );
@@ -551,6 +549,11 @@ function course_sewing_kit_shared_with($data) {
 function course_get_selected_course() {
   global $user;
 
+	$result = db_query('SELECT c.gid FROM {' . COURSE_CURRENT_TABLE . '} c WHERE c.uid = :uid', array(':uid' => (int) $user->uid));
+	foreach ($result as $record) {
+		return($record->gid);
+	}
+  // Uh-oh. We don't have a course set yet. Should we?
   // Content managers and admins may not be in any courses or may be in another context
   // but need to switch to the currently viewed course, so just switch
   if (user_access('administer nodes')) {
@@ -560,12 +563,6 @@ function course_get_selected_course() {
       return $node->nid;
     }
   }
-
-	$result = db_query('SELECT c.gid FROM {' . COURSE_CURRENT_TABLE . '} c WHERE c.uid = :uid', array(':uid' => (int) $user->uid));
-	foreach ($result as $record) {
-		return($record->gid);
-	}
-  // Uh-oh. We don't have a course set yet. Should we?
 
   // Note: this only happens the first time we check for a selected course
   // which affects only the call to this function in the main menu context
@@ -724,15 +721,14 @@ function course_form_response_node_form_alter(&$form, &$form_state, $form_id) {
 		'#default_value' => $default_genre,
 		'#options' => $genre_options,
 		'#required' => TRUE,
+    '#weight' => -10,
 	);
 	$form['#group_children']['genre_response'] = 'group_genre_about';
 	$form['field_response_genre']['#access'] = FALSE;	// hide this field
 
-  // Customize the autocomplete to filter by course tags
-  // Note: hard-coded taxonomy name
-  // would be better to load this dynamically based on the existing field's taxonomy reference
-  $lang = $form['language']['#value'];
-  $form['field_tags'][$lang]['#autocomplete_path'] = 'course-tags/autocomplete/annotation_tags';
+  // Also filter the tags per course; we share the annotation tags
+  $form['field_tags'][LANGUAGE_NONE]['#options'] = course_get_terms_for_current_course('annotation_tags');
+  $form['field_tags']['#weight'] = -9;
 
   $form['og_group_ref']['#access'] = FALSE;	// We'll set the course automatically
   $form['group_content_access']['#access'] = FALSE; // hide confusing option; always private
@@ -748,10 +744,10 @@ function course_add_response_form_submit($form, &$form_state) {
 
 	// Update node with our filtered values
   $wrapper = entity_metadata_wrapper('node', $node);
-  $wrapper->field_response_genre[] = $form_state['values']['genre_response'];
+  // Genre can only have one option, so replace any existing values
+  $wrapper->field_response_genre = array($form_state['values']['genre_response']);
   $wrapper->group_content_access->set(OG_CONTENT_ACCESS_PRIVATE);
   $wrapper->save();
-  node_save($node);
 
   // Automatically assign to current course
   $gid = course_get_selected_course();
@@ -873,6 +869,59 @@ function course_create_blank_document($biblio) {
   } else {
     drupal_set_message("There was an error adding your material. Please try again or contact the Lacuna Stories team.", 'error');
   }
+}
+
+/**
+ * @param $vocab_name
+ * @param $term
+ * @return bool
+ *
+ * Returns results for query on course-based term in given vocabulary
+ */
+function course_get_taxonomy_term_in_current_course($vocab_name, $term) {
+  if (empty($vocab_name)) {
+    return FALSE;
+  }
+  $gid = course_get_selected_course();
+  if ($gid) {
+    $query = new EntityFieldQuery();
+    $result = $query->entityCondition('entity_type', 'taxonomy_term')
+      ->entityCondition('bundle', $vocab_name)
+      ->fieldCondition('field_term_course', 'target_id', $gid, '=')
+      ->propertyCondition('name', $term)
+      ->execute();
+    if (isset($result['taxonomy_term'])) {
+      return $result['taxonomy_term'];
+    }
+  }
+  return FALSE;
+}
+
+/**
+ * @param $vocab
+ * @param $tag
+ * @param int $weight
+ * Create new taxonomy terms that are linked to the current course
+ */
+function course_create_taxonomy_term($vocab, $tag, $weight = 0) {
+  // first, check for existing term in per-course taxonomy
+  $tag = trim($tag);
+  $tags = explode(',', $tag);
+  $gid = course_get_selected_course();
+  $results = array();
+  foreach ($tags as $tag) {
+    if (course_get_taxonomy_term_in_current_course($vocab->machine_name, $tag) == FALSE) {
+      // none found, create a new one
+      $term = new stdClass();
+      $term->name = $tag;
+      $term->vid = $vocab->vid;
+      $term->weight = $weight;
+      $term->field_term_course[LANGUAGE_NONE][0]['target_id'] = $gid;
+      taxonomy_term_save($term);
+      $results[] = $term;
+    }
+  }
+  return $results;
 }
 
 function course_add_biblio_form_submit($form, &$form_state) {

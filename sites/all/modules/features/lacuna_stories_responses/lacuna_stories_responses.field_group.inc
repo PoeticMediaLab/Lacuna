@@ -51,10 +51,10 @@ function lacuna_stories_responses_field_group_info() {
     'label' => 'About',
     'weight' => '4',
     'children' => array(
-      0 => 'field_response_genre',
-      1 => 'field_tags',
-      2 => 'og_group_ref',
-      3 => 'field_bibliographic_item',
+      0 => 'field_bibliographic_item',
+      1 => 'field_response_genre',
+      2 => 'field_tags',
+      3 => 'og_group_ref',
     ),
     'format_type' => 'fieldset',
     'format_settings' => array(
