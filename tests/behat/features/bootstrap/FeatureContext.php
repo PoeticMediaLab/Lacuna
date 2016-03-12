@@ -255,5 +255,69 @@ class FeatureContext extends DrupalContext implements SnippetAcceptingContext {
       node_save($annotation);
     }
   }
+
+  /**
+   * @param \Behat\Gherkin\Node\TableNode $tagsTable
+   * @throws \Exception
+   * @Given tag <tag> for course <course>:
+   */
+  public function createTags(TableNode $tagsTable) {
+    foreach ($tagsTable->getHash() as $data) {
+      if (!isset($data['tag']) or !isset($data['course'])) {
+        throw new Exception('Missing information to create tags. Need tag and course.');
+      }
+      $vocab = taxonomy_vocabulary_machine_name_load('annotation_tags');
+      $course = $this->findNodeByTitle('course', $data['course']);
+      $term = new stdClass();
+      $term->name = $data['tag'];
+      $term->vid = $vocab->vid;
+      $term->field_term_course[LANGUAGE_NONE][0]['target_id'] = $course->nid;
+
+      if (!taxonomy_term_save($term)) {
+        throw new Exception(sprintf('Could not create term %s'), $data['tag']);
+      }
+    }
+  }
+
+  private function getFieldOptions($tid, $field) {
+    $page          = $this->getSession()->getPage();
+    $fieldElement = $page->findField($field);
+    return $fieldElement->setValue($tid);
+  }
+
+  private function getTermIDByName($option) {
+    return taxonomy_get_term_by_name($option, 'annotation_tags');
+  }
+
+  /**
+   * @param $option
+   * @param $field
+   * @throws \Exception
+   *
+   * @Then I should be able to select :option in the :field field
+   */
+  public function iShouldBeAbleToSelect($option, $field) {
+    $terms = $this->getTermIDByName($option);
+    foreach ($terms as $term) {
+      if (!$this->getFieldOptions($term->tid, $field)) {
+        throw new \PendingException(sprintf("Could not select '%s' in '%s'", $option, $field));
+      }
+    }
+
+  }
+
+  /**
+   * @param $option
+   * @param $field
+   * @throws \Exception
+   *
+   * @Then I should not be able to select :option in the :field field
+   */
+  public function iShouldNotBeAbleToSelect($option, $field) {
+    $options = $this->getFieldOptions($field);
+    if ($options) {
+      throw new \Exception(sprintf("Was able to select '%s' in '%s'", $option, $field));
+    }
+  }
 }
 
