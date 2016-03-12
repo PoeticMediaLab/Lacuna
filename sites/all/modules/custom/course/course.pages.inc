@@ -327,7 +327,7 @@ function course_tags_autocomplete($vocab_name, $match) {
 	$matches = array();
   $match = trim($match);
   foreach (course_get_terms_for_current_course($vocab_name) as $tid => $term) {
-		if (preg_match('/' . $match . '/i', $term)) {
+		if (strpos($match, $term) !== FALSE) {
       $matches[$term] = check_plain($term);
 		}
 	}
