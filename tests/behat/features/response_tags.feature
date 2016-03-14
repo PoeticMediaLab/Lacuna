@@ -18,5 +18,5 @@
       Given I am logged in as a user with the "Student" role
       And I am enrolled in the "Course Alpha" course
       When I visit "/node/add/response"
-      Then I should be able to select "Thing One" in the "edit-field-tags-und" field
+      Then I should be able to select "Thing One" in the "#edit-field-tags-und" field
       And I should not be able to select "Thing Two" in the "#edit-field-tags-und" field

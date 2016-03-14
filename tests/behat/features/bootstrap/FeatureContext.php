@@ -279,16 +279,6 @@ class FeatureContext extends DrupalContext implements SnippetAcceptingContext {
     }
   }
 
-  private function getFieldOptions($tid, $field) {
-    $page          = $this->getSession()->getPage();
-    $fieldElement = $page->findField($field);
-    return $fieldElement->setValue($tid);
-  }
-
-  private function getTermIDByName($option) {
-    return taxonomy_get_term_by_name($option, 'annotation_tags');
-  }
-
   /**
    * @param $option
    * @param $field
@@ -297,13 +287,10 @@ class FeatureContext extends DrupalContext implements SnippetAcceptingContext {
    * @Then I should be able to select :option in the :field field
    */
   public function iShouldBeAbleToSelect($option, $field) {
-    $terms = $this->getTermIDByName($option);
-    foreach ($terms as $term) {
-      if (!$this->getFieldOptions($term->tid, $field)) {
-        throw new \PendingException(sprintf("Could not select '%s' in '%s'", $option, $field));
-      }
+    $select = $this->getSession()->getPage()->find('css', $field);
+    if (!$select->find('named', array('option', $option))) {
+      throw new \Exception(sprintf("Could not select '%s' in '%s'", $option, $field));
     }
-
   }
 
   /**
@@ -314,10 +301,20 @@ class FeatureContext extends DrupalContext implements SnippetAcceptingContext {
    * @Then I should not be able to select :option in the :field field
    */
   public function iShouldNotBeAbleToSelect($option, $field) {
-    $options = $this->getFieldOptions($field);
-    if ($options) {
+    $select = $this->getSession()->getPage()->find('css', $field);
+    if ($select->find('named', array('option', $option))) {
       throw new \Exception(sprintf("Was able to select '%s' in '%s'", $option, $field));
     }
+  }
+
+  /**
+   * @AfterScenario
+   *
+   * Clean up the tags we added
+   */
+  public function cleanUpTags() {
+//    $vocab = taxonomy_vocabulary_machine_name_load('annotation_tags');
+//    $tree = taxonomy_get_tree($vocab->vid);
   }
 }
 
