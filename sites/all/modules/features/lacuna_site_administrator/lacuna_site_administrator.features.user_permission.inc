@@ -221,6 +221,7 @@ function lacuna_site_administrator_user_default_permissions() {
   $permissions['administer group'] = array(
     'name' => 'administer group',
     'roles' => array(
+      'Content Manager' => 'Content Manager',
       'Site Administrator' => 'Site Administrator',
     ),
     'module' => 'og',
