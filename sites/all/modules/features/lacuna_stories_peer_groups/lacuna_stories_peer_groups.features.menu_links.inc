@@ -10,7 +10,7 @@
 function lacuna_stories_peer_groups_menu_default_menu_links() {
   $menu_links = array();
 
-  // Exported menu link: main-menu_peer-groups:peer-groups
+  // Exported menu link: main-menu_peer-groups:peer-groups.
   $menu_links['main-menu_peer-groups:peer-groups'] = array(
     'menu_name' => 'main-menu',
     'link_path' => 'peer-groups',
