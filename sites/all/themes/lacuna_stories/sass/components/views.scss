@@ -44,6 +44,21 @@ select#edit-thread-add {
   }
 }
 
+/* Remove from thread view block */
+div#block-views-stitchings-block-1 {
+  .fieldset-wrapper {
+    text-align: center;
+  }
+  fieldset#edit-select {
+    border: none;
+    input[id^='edit-actionsewing-kit-remove'] {
+      width: auto;
+      height: 50px;
+      font-size: 14pt;
+    }
+  }
+}
+
 
 /* Center the "Select all" options */
 .vbo-fieldset-select-all {
