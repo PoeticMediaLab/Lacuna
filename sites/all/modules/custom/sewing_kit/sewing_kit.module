@@ -27,6 +27,14 @@ function sewing_kit_action_info() {
       // @see https://www.drupal.org/node/2542120
       'behavior' => array('views_property'), // just check for viewing permissions
     ),
+    'sewing_kit_remove' => array(
+      'type' => node,
+      'label' => t('Remove from Thread'),
+      'configurable' => FALSE,
+      'vbo_configurable' => FALSE,
+      'behavior' => array('changes_property'),
+      'aggregate' => TRUE,
+    )
   );
 }
 
@@ -152,6 +160,25 @@ function sewing_kit_stitch_submit($form, $form_state) {
     unset($return['thread_description']);
   }
   return $return;
+}
+
+/**
+ * @param $node
+ * @param $context
+ *
+ * Callback for removing stitchings from a thread
+ */
+function sewing_kit_remove(&$node, $context) {
+  $anno_ids = array_keys($node);
+  // nid provided as a contextual filter to the view block
+  $node_wrapper = entity_metadata_wrapper('node', $context['view_info']['arguments'][0]);
+  foreach ($node_wrapper->thread_reference as $delta => $annotation) {
+    if (in_array($annotation->nid->value(), $anno_ids)) {
+      // Found one; kill it!
+      $node_wrapper->thread_reference[$delta] = NULL;
+    }
+  }
+  $node_wrapper->save();
 }
 
 /**
