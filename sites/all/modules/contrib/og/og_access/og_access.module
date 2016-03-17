@@ -131,7 +131,7 @@ function og_access_node_access_records($node) {
   }
 
   foreach ($gids as $group_type => $values) {
-    foreach ($values as $gid) {
+    foreach (array_unique($values) as $gid) {
       $grants[] = array (
         'realm' => OG_ACCESS_REALM . ':' . $group_type,
         'gid' => $gid,
