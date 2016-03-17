@@ -19,6 +19,7 @@ features[field_base][] = thread_description
 features[field_base][] = thread_reference
 features[field_instance][] = node-thread-field_image
 features[field_instance][] = node-thread-field_tags
+features[field_instance][] = node-thread-group_content_access
 features[field_instance][] = node-thread-og_group_ref
 features[field_instance][] = node-thread-thread_description
 features[field_instance][] = node-thread-thread_reference

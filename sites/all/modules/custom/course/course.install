@@ -88,3 +88,22 @@ function course_update_7103() {
     }
   }
 }
+
+/**
+ * Update all threads to have correct group content privacy settings
+ */
+function course_update_7104() {
+	$query = new EntityFieldQuery();
+	$query->entityCondition('entity_type', 'node')
+		->entityCondition('bundle', 'thread');
+	$result = $query->execute();
+	if (isset($result['node'])) {
+		$nodes = entity_load('node', array_keys($result['node']));
+		foreach ($nodes as $node) {
+			$wrapper = entity_metadata_wrapper('node', $node);
+			$wrapper->group_content_access->set(OG_CONTENT_ACCESS_PRIVATE);
+			$wrapper->save();
+		}
+	}
+	node_access_rebuild();
+}
