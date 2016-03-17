@@ -98,6 +98,7 @@ features[field_instance][] = og_membership-og_membership_type_default-og_members
 features[field_instance][] = user-user-og_user_node
 features[field_instance][] = user-user-og_user_node1
 features[image][] = course_views_style
+features[menu_links][] = main-menu_about-this-course:about-course
 features[menu_links][] = main-menu_courses:<front>
 features[menu_links][] = menu-institutional-menu_courses:<front>
 features[node][] = course
