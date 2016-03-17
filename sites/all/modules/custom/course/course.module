@@ -766,6 +766,18 @@ function course_add_response_form_submit($form, &$form_state) {
   }
 }
 
+/**
+ * @param $form
+ * @param $form_state
+ * @param $form_id
+ *
+ * Implements hook_form_FORM_ID_form_alter(). Alter the Thread edit form
+ */
+function course_form_thread_node_form_alter(&$form, &$form_state, $form_id) {
+  $form['group_content_access']['#access'] = FALSE; // hide confusing option; always private
+}
+
+
 function course_form_biblio_node_form_alter(&$form, &$form_state, $form_id) {
   $form['copyright_status'] = array(
     '#type' => 'hidden',
