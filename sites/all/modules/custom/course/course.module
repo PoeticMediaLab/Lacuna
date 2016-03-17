@@ -248,7 +248,7 @@ function course_node_view($node, $view_mode, $langcode) {
  */
 function course_views_query_alter(&$view, &$query) {
   // List of the views to alter
-  $where_node_views = array('responses', 'documents', 'threads', 'all_content', 'my_writing', 'sewing_kit', 'user_s_responses', 'user_s_comments', 'my_annotations_view');
+  $where_node_views = array('responses', 'documents', 'threads', 'all_content', 'my_writing', 'sewing_kit', 'user_s_responses', 'user_s_comments', 'my_annotations_view', 'peer_groups');
   $where_user_views = array('people', 'all_emails');
 	$gid = course_get_selected_course();
 
@@ -549,10 +549,6 @@ function course_sewing_kit_shared_with($data) {
 function course_get_selected_course() {
   global $user;
 
-	$result = db_query('SELECT c.gid FROM {' . COURSE_CURRENT_TABLE . '} c WHERE c.uid = :uid', array(':uid' => (int) $user->uid));
-	foreach ($result as $record) {
-		return($record->gid);
-	}
   // Uh-oh. We don't have a course set yet. Should we?
   // Content managers and admins may not be in any courses or may be in another context
   // but need to switch to the currently viewed course, so just switch
@@ -563,6 +559,11 @@ function course_get_selected_course() {
       return $node->nid;
     }
   }
+
+	$result = db_query('SELECT c.gid FROM {' . COURSE_CURRENT_TABLE . '} c WHERE c.uid = :uid', array(':uid' => (int) $user->uid));
+	foreach ($result as $record) {
+		return($record->gid);
+	}
 
   // Note: this only happens the first time we check for a selected course
   // which affects only the call to this function in the main menu context
@@ -777,6 +778,47 @@ function course_form_thread_node_form_alter(&$form, &$form_state, $form_id) {
   $form['group_content_access']['#access'] = FALSE; // hide confusing option; always private
 }
 
+/**
+ * @param $form
+ * @param $form_state
+ * @param $form_id
+ *
+ * Implements hook_form_FORM_ID_form_alter(). Modifies Peer Groups for course context.
+ */
+function course_form_peer_group_node_form_alter(&$form, &$form_state, $form_id) {
+  $form['og_group_ref']['#access'] = FALSE;	// We'll set the course automatically
+  $form['actions']['submit']['#submit'] = array('course_add_peer_group_form_submit');
+}
+
+/**
+ * @param $form
+ * @param $form_state
+ *
+ * Callback for peer-group node form submission.
+ */
+function course_add_peer_group_form_submit($form, &$form_state) {
+  $node = node_form_submit_build_node($form, $form_state);
+  $node->status = NODE_PUBLISHED;
+
+  $wrapper = entity_metadata_wrapper('node', $node);
+  $wrapper->save();
+
+  // Automatically assign to current course
+  $gid = course_get_selected_course();
+  if ($gid && $node->nid) {
+    og_group('node', $gid,
+      array(
+        'entity_type' => 'node',
+        'entity' => $node,
+        'field_name' => 'og_group_ref',
+        'state' => OG_STATE_ACTIVE
+      )
+    );
+    drupal_goto(drupal_get_path_alias('node/' . $node->nid));
+  } else {
+    drupal_set_message('There was a problem saving your Peer Group', 'warning');
+  }
+}
 
 function course_form_biblio_node_form_alter(&$form, &$form_state, $form_id) {
   $form['copyright_status'] = array(
