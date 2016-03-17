@@ -125,9 +125,7 @@ function course_og_features_default_permissions() {
 
   // Exported og permission: 'node:course:manage permissions'
   $permissions['node:course:manage permissions'] = array(
-    'roles' => array(
-      'administrator member' => 'administrator member',
-    ),
+    'roles' => array(),
   );
 
   // Exported og permission: 'node:course:manage roles'
@@ -329,6 +327,7 @@ function course_og_features_default_permissions() {
   $permissions['node:course:update own thread content'] = array(
     'roles' => array(
       'administrator member' => 'administrator member',
+      'member' => 'member',
     ),
   );
 
