@@ -28,7 +28,7 @@ function sewing_kit_action_info() {
       'behavior' => array('views_property'), // just check for viewing permissions
     ),
     'sewing_kit_remove' => array(
-      'type' => node,
+      'type' => 'node',
       'label' => t('Remove from Thread'),
       'configurable' => FALSE,
       'vbo_configurable' => FALSE,
