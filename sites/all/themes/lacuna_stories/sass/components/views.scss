@@ -45,9 +45,24 @@ select#edit-thread-add {
 }
 
 /* Remove from thread view block */
-div#block-views-stitchings-block-1 {
+h2#stitchings {
+  text-align: center;
+}
+div#block-views-stitchings-block-1,
+div.view-stitchings {
+  margin-left: 5%;
+  margin-right: 5%;
   .fieldset-wrapper {
     text-align: center;
+  }
+  th.views-field-views-bulk-operations {
+    div.form-type-checkbox {
+      margin-left: 0em !important;
+      margin-right: 0em !important;
+    }
+  }
+  div.tabledrag-toggle-weight-wrapper {
+    display: none;
   }
   fieldset#edit-select {
     border: none;
