@@ -58,6 +58,7 @@ function sewing_kit_stitch(&$node, $context) {
     $sewing_kit_thread->thread_description[LANGUAGE_NONE][0]['value'] = $context['thread_description']['value'];
     $sewing_kit_thread->thread_description[LANGUAGE_NONE][0]['format'] = 'filtered_html';
     $sewing_kit_thread->thread_reference[LANGUAGE_NONE] = array();
+    $sewing_kit_thread->group_content_access[LANGUAGE_NONE][0]['value'] = OG_CONTENT_ACCESS_PRIVATE;
   }
 
   // Add references to annotation nodes
@@ -81,7 +82,6 @@ function sewing_kit_stitch(&$node, $context) {
     'entity_type' => 'node',
     'entity' => $sewing_kit_thread,
     'field_name' => 'og_group_ref',
-    'state' => OG_STATE_ACTIVE
   ));
 
   drupal_set_message('Your thread ' . l($sewing_kit_thread->title, drupal_get_path_alias('node/' . $sewing_kit_thread->nid)) . ' has been saved.');
