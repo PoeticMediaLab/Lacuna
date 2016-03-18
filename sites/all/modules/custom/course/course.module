@@ -244,7 +244,7 @@ function course_node_view($node, $view_mode, $langcode) {
 
 /**
  * Implements hook_views_query_alter().
- * Updates existing views to that their results are limited to the current course
+ * Updates existing views so that their results are limited to the current course
  */
 function course_views_query_alter(&$view, &$query) {
   // List of the views to alter
@@ -1201,4 +1201,16 @@ function course_user_delete($account) {
   db_delete(COURSE_CURRENT_TABLE)
     ->condition('uid', $account->uid)
     ->execute();
+}
+
+/**
+ * Implements hook_og_membership_delete(). Remove user's access to a course entirely.
+ */
+function course_og_membership_delete(OgMembership $og_membership) {
+  if ($og_membership->entity_type == 'user') {
+    db_delete(COURSE_CURRENT_TABLE)
+      ->condition('uid', $og_membership->etid)
+      ->condition('gid', $og_membership->gid)
+      ->execute();
+  }
 }
