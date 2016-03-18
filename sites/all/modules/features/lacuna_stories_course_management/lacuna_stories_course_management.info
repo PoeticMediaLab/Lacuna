@@ -4,6 +4,7 @@ core = 7.x
 package = Lacuna Stories
 version = 7.x-2.0
 dependencies[] = course
+dependencies[] = course_registration
 dependencies[] = lacuna_stories_annotations
 dependencies[] = lacuna_stories_menus
 dependencies[] = menu
