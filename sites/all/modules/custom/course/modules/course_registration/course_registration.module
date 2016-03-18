@@ -126,3 +126,17 @@ function course_registration_block(&$users, $context) {
 function course_registration_form_og_ui_confirm_subscribe_alter(&$form, &$form_state) {
   $form['description']['#markup'] = t("<h4>Enrollment for this course is confined to registered students at this site's university or institution. It is not open and available to the general public. If you are a student enrolled in this course, please proceed by clicking 'Join.'</h4>");
 }
+
+/**
+ * @param $view
+ * @param $query
+ *
+ * Implements hook_views_query_alter().
+ * Modify "Manage Students" view to show users in current course only.
+ */
+function course_registration_views_query_alter(&$view, &$query) {
+  if ($view->name == 'manage_enrollment') {
+    $gid = course_get_selected_course();
+    $query->add_where_expression(2, "users.uid IN (SELECT etid FROM og_membership WHERE gid = " . $gid . " AND og_membership.entity_type = 'user')");
+  }
+}
