@@ -335,7 +335,8 @@ function lacuna_stories_set_annotator_settings() {
     'Privacy' => 'Privacy',
 		'Histogram' => 'Histogram',
 		'Author' => 'Author',
-    'Controls' => 'Controls'
+    'Controls' => 'Controls',
+    'Loading' => 'Loading',
   ));
 }
 
