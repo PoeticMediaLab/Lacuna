@@ -6,45 +6,6 @@
  * Mike Widner <mikewidner@stanford.edu>
  **/
 
-/**
- * Implements hook_install()
- **/
-function page_turner_install() {
-  // Create a checkbox for user profiles that controls
-  // if they use the Page Turner or not
-//  $t = get_t();
-//  $field = array(
-//    'field_name' => 'field_page_turner_active',
-//    'type' => 'list_boolean',
-//    'title' => $t('Page Turner'),
-//    'cardinality' => 1,
-//    'settings' => array(
-//      'allowed_values' => array(
-//        '0' => 'Do not use Page Turner',
-//        '1' => 'Use Page Turner to read long text',
-//      )
-//    )
-//  );
-//  $instance = array(
-//    'field_name' => 'field_page_turner_active',
-//    'entity_type' => 'user',
-//    'bundle' => 'user',
-//    'label' => $t('Page Turner'),
-//    'description' => t('Page Turner will change the display of long text so that, rather than an infinite scroll, you will see single pages at a time'),
-//    'default_value' => array(0 => array('value' => '1')),
-//    'widget' => array(
-//      'active' => TRUE,
-//      'module' => 'options',
-//      'settings' => array(),
-//      'type' => 'options_onoff',
-//    ),
-//    'settings' => array(
-//      'user_register_form' => TRUE,
-//    ),
-//  );
-//  field_create_field($field);
-//  field_create_instance($instance);
-}
 
 /**
  * Implements hook_uninstall()
