@@ -47,3 +47,9 @@
       When I visit "/sewing-kit"
       # Refactor to have a "Then the view should be empty" step
       Then I should see a "div.vbo-views-form-empty" element
+
+    Scenario: Join confirmation dialog
+      Given I am logged in as a user with the "Student" role
+      When I go to the "course" node named "Course Alpha"
+      And I follow "Enroll in this course" in the "Content" region
+      Then I should see "Enrollment for this course is confined to registered students"

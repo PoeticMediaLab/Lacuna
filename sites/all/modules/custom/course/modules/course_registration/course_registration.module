@@ -116,3 +116,13 @@ function course_registration_block(&$users, $context) {
     og_membership_save($membership);
   }
 }
+
+/**
+ * @param $form
+ * @param $form_state
+ *
+ * Implements hook_form_FORM_ID_alter(). Modify text in the OG join confirm form.
+ */
+function course_registration_form_og_ui_confirm_subscribe_alter(&$form, &$form_state) {
+  $form['description']['#markup'] = t("<h4>Enrollment for this course is confined to registered students at this site's university or institution. It is not open and available to the general public. If you are a student enrolled in this course, please proceed by clicking 'Join.'</h4>");
+}
