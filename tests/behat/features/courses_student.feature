@@ -35,6 +35,7 @@ Feature: courses_student
     Examples:
     | link    |
     | Explore |
+    | "About This Course" |
     | Create  |
     | Connect |
     | Reflect |
