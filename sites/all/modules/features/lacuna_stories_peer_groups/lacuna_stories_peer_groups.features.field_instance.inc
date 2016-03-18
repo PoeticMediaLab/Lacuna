@@ -10,7 +10,7 @@
 function lacuna_stories_peer_groups_field_default_field_instances() {
   $field_instances = array();
 
-  // Exported field_instance: 'node-peer_group-group_access'
+  // Exported field_instance: 'node-peer_group-group_access'.
   $field_instances['node-peer_group-group_access'] = array(
     'bundle' => 'peer_group',
     'default_value' => array(
@@ -66,7 +66,7 @@ This setting can be changed at any time.',
     'widget_type' => 'options_select',
   );
 
-  // Exported field_instance: 'node-peer_group-group_group'
+  // Exported field_instance: 'node-peer_group-group_group'.
   $field_instances['node-peer_group-group_group'] = array(
     'bundle' => 'peer_group',
     'default_value' => array(
