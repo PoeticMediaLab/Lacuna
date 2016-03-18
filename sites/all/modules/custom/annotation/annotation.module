@@ -321,6 +321,7 @@ function annotation_copy_field_values_to_drupal_standard_fields () {
 // Peer groups are marked as not selected (the default for new annotations).
 function annotation_build_peer_groups() {
   $groups = array();
+  $gid = course_get_selected_course();
   // TODO: Take $user_groups as a variable; call only once
   if ($user_groups = og_get_groups_by_user()) {
     $user_groups = array_keys($user_groups['node']);
@@ -329,7 +330,8 @@ function annotation_build_peer_groups() {
     $peer_groups = array();
     foreach ($user_groups as $user_group) {
       $group = node_load($user_group);
-      if ($group->type == 'peer_group') {
+      if (($group->type == 'peer_group') &&
+        ($group->og_group_ref[LANGUAGE_NONE][0]['target_id'] == $gid)) {
         $peer_groups[$user_group] = array(
           $group->title,
           'selected' => 0
