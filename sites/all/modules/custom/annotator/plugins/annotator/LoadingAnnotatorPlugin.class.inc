@@ -6,11 +6,7 @@
 
 class LoadingAnnotatorPlugin extends AnnotatorPlugin {
 
-  public function setup($settings) {
-
-    // Sends the settings data to a global variable where JavaScript can access it.
-    // In JS console, type: Drupal.settings.annotator_loading
-    drupal_add_js(array('annotator_loading' => (array) $settings), 'setting');
+  public function setup() {
 
     drupal_add_css('//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css', $type='external');
 
