@@ -16,6 +16,7 @@ dependencies[] = og
 dependencies[] = options
 dependencies[] = publishcontent
 dependencies[] = strongarm
+dependencies[] = text
 dependencies[] = views
 dependencies[] = views_php
 features[ctools][] = ds:ds:1

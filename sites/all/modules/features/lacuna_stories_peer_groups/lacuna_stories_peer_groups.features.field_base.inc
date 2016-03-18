@@ -52,7 +52,7 @@ function lacuna_stories_peer_groups_field_default_field_bases() {
     'no_ui' => TRUE,
     'settings' => array(
       'allowed_values' => array(
-        0 => 'Public: visible to all site users',
+        0 => 'Public: visible to all course users',
         1 => 'Private: visible only to group members',
       ),
       'allowed_values_function' => '',
