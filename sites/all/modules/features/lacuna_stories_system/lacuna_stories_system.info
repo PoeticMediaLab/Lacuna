@@ -21,6 +21,7 @@ dependencies[] = fpa
 dependencies[] = honeypot
 dependencies[] = htmlpurifier
 dependencies[] = jquery_update
+dependencies[] = lacuna_updates
 dependencies[] = libraries
 dependencies[] = link
 dependencies[] = media_wysiwyg

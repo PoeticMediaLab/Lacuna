@@ -1,0 +1,35 @@
+<?php
+
+function lacuna_updates_install() {
+  // Enable Lacuna Site Administrator feature if not already
+  if (!module_exists('lacuna_site_administrator')) {
+    module_enable(array('lacuna_site_administrator'));
+  }
+  lacuna_updates_fix_content_access();
+}
+
+/**
+ * Modify thread and response content_access permissions
+ * to capture deselected options that don't get saved in Features.
+ */
+function lacuna_updates_fix_content_access() {
+  // Verify that Content Access doesn't allow any users to view, update, or delete all
+  $perms = array('view', 'update', 'delete');
+  $types = array('thread', 'response');
+  foreach ($types as $content_type) {
+    $ca_settings = content_access_get_settings('all', $content_type);
+    foreach ($ca_settings as $perm => $roles) {
+      if (in_array($perm, $perms) &&
+        (in_array(DRUPAL_ANONYMOUS_RID, $ca_settings[$perm]) ||
+          in_array(DRUPAL_AUTHENTICATED_RID, $ca_settings[$perm])))
+      {
+        foreach ($ca_settings[$perm] as $delta => $value) {
+          if (($value == DRUPAL_ANONYMOUS_RID) || ($value == DRUPAL_AUTHENTICATED_RID)) {
+            unset($ca_settings[$perm][$delta]);
+          }
+        }
+      }
+    }
+    content_access_set_settings($ca_settings, $content_type);
+  }
+}
