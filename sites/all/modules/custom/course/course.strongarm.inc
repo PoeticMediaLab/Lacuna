@@ -294,21 +294,13 @@ function course_strongarm() {
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
-  $strongarm->name = 'locale_custom_disabled_strings_en';
-  $strongarm->value = array();
-  $export['locale_custom_disabled_strings_en'] = $strongarm;
-
-  $strongarm = new stdClass();
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
   $strongarm->name = 'locale_custom_strings_en';
   $strongarm->value = array(
     '' => array(
-      'Are you sure you want to join the group' => 'Enrollment is only open to students of',
       'Request group membership' => 'Enroll in this course',
       'Subscribe to group' => 'Enroll in this course',
-      'You are the group manager' => 'You are enrolled in this course',
       'Unsubscribe from group' => 'Unenroll from this course',
+      'You are the group manager' => 'You are enrolled in this course',
     ),
   );
   $export['locale_custom_strings_en'] = $strongarm;

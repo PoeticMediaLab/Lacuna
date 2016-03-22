@@ -612,8 +612,8 @@ function lacuna_stories_course_management_views_default_views() {
   $handler->display->display_options['header']['area']['table'] = 'views';
   $handler->display->display_options['header']['area']['field'] = 'area';
   $handler->display->display_options['header']['area']['empty'] = TRUE;
-  $handler->display->display_options['header']['area']['content'] = 'When students sign up for your course, they are marked as "Pending" until you approve them. Select the student(s) to "Approve" (enroll) or "Block" (unenroll), then click the appropriate button. Students will not have access to course materials until they’ve been approved.';
-  $handler->display->display_options['header']['area']['format'] = 'filtered_html';
+  $handler->display->display_options['header']['area']['content'] = 'When students sign up for your course, they are marked as "Pending" until you enroll them. Select the student(s) to <b>enroll</b> or <b>unenroll</b>, then click the appropriate button. <b>Students will not have access to course materials until they’ve been enrolled.</b> Enrolled students will be listed in the "Status: Active" group; un-enrolled students will be listed in the "Status: Blocked" group.';
+  $handler->display->display_options['header']['area']['format'] = 'full_html';
   /* Field: OG membership: State */
   $handler->display->display_options['fields']['state']['id'] = 'state';
   $handler->display->display_options['fields']['state']['table'] = 'og_membership';
@@ -637,14 +637,14 @@ function lacuna_stories_course_management_views_default_views() {
     'action::course_registration_approve' => array(
       'selected' => 1,
       'skip_confirmation' => 1,
-      'override_label' => 0,
-      'label' => '',
+      'override_label' => 1,
+      'label' => 'Enroll',
     ),
     'action::course_registration_block' => array(
       'selected' => 1,
       'skip_confirmation' => 1,
-      'override_label' => 0,
-      'label' => '',
+      'override_label' => 1,
+      'label' => 'Unenroll',
     ),
   );
   /* Field: User: Name */
