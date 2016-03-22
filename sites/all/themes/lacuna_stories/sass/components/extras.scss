@@ -402,7 +402,8 @@ span.group.manager {
 }
 
 a.group.subscribe,
-a.group.unsubscribe {
+a.group.unsubscribe,
+body.not-logged-in div.field-name-group-group {
   margin-left: 30px;
   font-size: 1.5em;
   width: auto;
@@ -421,6 +422,11 @@ a.group.unsubscribe {
 
 .toboggan-unified a.lt-active  {
   border: none !important;
+}
+
+body.not-logged-in div.field-name-group-group a {
+  color: #ffffff;
+  padding: 5px;
 }
 
 
