@@ -49,6 +49,7 @@ class FeatureContext extends DrupalContext implements SnippetAcceptingContext {
    * @param $node_type
    * @param $node_title
    *
+   * @throws \Exception
    * Find a node by its title. If duplicate node titles, will return the first.
    * @return bool|mixed
    */
@@ -73,6 +74,8 @@ class FeatureContext extends DrupalContext implements SnippetAcceptingContext {
 
       if (!empty($result['node'])) {
         $found_node = array_pop($result['node']);
+      } else {
+        throw new \Exception(sprintf('Could not find node %s of type %s!', $node_title, $node_type));
       }
     }
     return $found_node;
