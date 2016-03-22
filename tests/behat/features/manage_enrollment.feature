@@ -34,3 +34,8 @@
       And I should see "Status: Active" in the "View Content"
       And I should not see "Student A" in the "View Content"
       And I should see "Student B" in the "View Content"
+
+    Scenario: Manage students help text
+      Given I am logged in as "Instructor A"
+      When I am on "/manage-students"
+      Then I should see "When students sign up for your course"

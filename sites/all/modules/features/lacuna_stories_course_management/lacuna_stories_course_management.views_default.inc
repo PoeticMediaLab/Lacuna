@@ -611,7 +611,8 @@ function lacuna_stories_course_management_views_default_views() {
   $handler->display->display_options['header']['area']['id'] = 'area';
   $handler->display->display_options['header']['area']['table'] = 'views';
   $handler->display->display_options['header']['area']['field'] = 'area';
-  $handler->display->display_options['header']['area']['content'] = 'Select students to approve or block their enrollment in your course, then click the appropriate button.';
+  $handler->display->display_options['header']['area']['empty'] = TRUE;
+  $handler->display->display_options['header']['area']['content'] = 'When students sign up for your course, they are marked as "Pending" until you approve them. Select the student(s) to "Approve" (enroll) or "Block" (unenroll), then click the appropriate button. Students will not have access to course materials until they’ve been approved.';
   $handler->display->display_options['header']['area']['format'] = 'filtered_html';
   /* Field: OG membership: State */
   $handler->display->display_options['fields']['state']['id'] = 'state';
