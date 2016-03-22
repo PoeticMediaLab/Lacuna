@@ -41,17 +41,22 @@ if ($current_node == NULL) {
   return TRUE;
 }
 
-// Enrolled in a course, but viewing a course node that isn\'t the currently enrolled course
+// Enrolled in a course, but viewing a course node that isn\'t the currently selected course
 if ($current_node->type == \'course\') {
-   if ($admin) { 
-      // admins need to switch quickly, but context fires before hook_node_view()
-      return TRUE;
-  } 
-  if  ($current_course_id != $current_node->nid) {
-      return FALSE;
+  // See if we can set it
+  course_set_selected_course($current_node->nid);
+  if (course_get_selected_course() === $current_node->nid) {
+    return TRUE;
   }
 }
-return TRUE;',
+
+// Course content; try to switch context
+$new_course = $current_node->og_group_ref[LANGUAGE_NONE][0][\'target_id\'];
+course_set_selected_course($new_course);
+if (course_get_selected_course()== $new_course) {
+  return TRUE;
+}
+return FALSE;',
       ),
     ),
   );
@@ -86,9 +91,9 @@ return TRUE;',
   $context->reactions = array(
     'block' => array(
       'blocks' => array(
-        'lacuna_stories-front_page_banner' => array(
-          'module' => 'lacuna_stories',
-          'delta' => 'front_page_banner',
+        'block-1' => array(
+          'module' => 'block',
+          'delta' => '1',
           'region' => 'highlighted',
           'weight' => '-10',
         ),
