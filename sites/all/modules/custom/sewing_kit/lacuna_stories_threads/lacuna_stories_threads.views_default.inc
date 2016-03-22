@@ -926,8 +926,14 @@ if (module_exists(\'course\')) {
   $handler->display->display_options['title'] = 'Threads';
   $handler->display->display_options['use_more_always'] = FALSE;
   $handler->display->display_options['group_by'] = TRUE;
-  $handler->display->display_options['access']['type'] = 'perm';
-  $handler->display->display_options['access']['perm'] = 'create thread content';
+  $handler->display->display_options['access']['type'] = 'role';
+  $handler->display->display_options['access']['role'] = array(
+    3 => '3',
+    4 => '4',
+    8 => '8',
+    5 => '5',
+    6 => '6',
+  );
   $handler->display->display_options['cache']['type'] = 'none';
   $handler->display->display_options['query']['type'] = 'views_query';
   $handler->display->display_options['exposed_form']['type'] = 'basic';
@@ -1018,6 +1024,7 @@ if (module_exists(\'course\')) {
   $handler->display->display_options['fields']['nid']['group_type'] = 'count_distinct';
   $handler->display->display_options['fields']['nid']['label'] = 'Stitchings';
   $handler->display->display_options['fields']['nid']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['nid']['hide_alter_empty'] = FALSE;
   /* Field: Content: Description */
   $handler->display->display_options['fields']['thread_description']['id'] = 'thread_description';
   $handler->display->display_options['fields']['thread_description']['table'] = 'field_data_thread_description';
@@ -1026,6 +1033,7 @@ if (module_exists(\'course\')) {
   $handler->display->display_options['fields']['thread_description']['alter']['text'] = '[thread_description] ([nid] stitchings)';
   $handler->display->display_options['fields']['thread_description']['alter']['max_length'] = '300';
   $handler->display->display_options['fields']['thread_description']['alter']['trim'] = TRUE;
+  $handler->display->display_options['fields']['thread_description']['hide_alter_empty'] = FALSE;
   $handler->display->display_options['fields']['thread_description']['type'] = 'text_plain';
   /* Field: Content: Post date */
   $handler->display->display_options['fields']['created']['id'] = 'created';

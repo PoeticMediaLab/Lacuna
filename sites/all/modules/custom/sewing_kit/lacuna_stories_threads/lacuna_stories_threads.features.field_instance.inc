@@ -120,7 +120,11 @@ function lacuna_stories_threads_field_default_field_instances() {
   // Exported field_instance: 'node-thread-group_content_access'.
   $field_instances['node-thread-group_content_access'] = array(
     'bundle' => 'thread',
-    'default_value' => NULL,
+    'default_value' => array(
+      0 => array(
+        'value' => 2,
+      ),
+    ),
     'deleted' => 0,
     'description' => '',
     'display' => array(
