@@ -475,4 +475,32 @@ li.annotator-checkbox[style] {
   z-index: 10000 !important;
 }
 
+/* ----------------------------------------------------------------
+* Loading styles
+*/
 
+#annotations-loading {
+
+  float: right;
+  margin-right: 20px;
+  padding: 5px;
+  position: relative;
+  height: 20px;
+  top: -15px;
+  background-color: #ffa;
+
+  i {
+    position: relative;
+    top: -4px;
+    left: 3px;
+  }
+
+  span {
+    position: relative;
+    top: -4px;
+    left: 6px;
+    font-family: sans-serif;
+    font-weight: bold;
+  }
+
+}

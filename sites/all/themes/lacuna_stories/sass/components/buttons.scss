@@ -18,8 +18,15 @@ input[type="submit"] {
 .form-submit,
 .page-turner-bookmark-button,
 .af-button-large,
+a.group.subscribe,
+a.group.unsubscribe,
+div.toboggan-unified #login-links a,
+input#edit-actioncourse-registration-approve,
+input#edit-actioncourse-registration-block,
 input[id^='edit-actionsewing-kit-stitch'],
-input[id^='edit-actionviews-data-export-action-csv-export']{
+input[id^='edit-actionviews-data-export-action-csv-export'],
+input[id^='edit-actionsewing-kit-remove']
+{
   background-color: #c4df2c;
   background-image: linear-gradient(to bottom, #c4df2c, #88b551);
   background-repeat: repeat-x;
@@ -59,10 +66,17 @@ input[id^='edit-actionviews-data-export-action-csv-export']{
 .form-submit:focus,
 .af-button-large:hover,
 .af-button-large:focus,
+a.group.subscribe:hover,
+a.group.unsubscribe:hover,
+input#edit-actioncourse-registration-approve:hover,
+input#edit-actioncourse-registration-block:hover,
 input[id^='edit-actionsewing-kit-stitch']:hover,
 input[id^='edit-actionsewing-kit-stitch']:focus,
 input[id^='edit-actionviews-data-export-action-csv-export']:hover,
-input[id^='edit-actionviews-data-export-action-csv-export']:focus {
+input[id^='edit-actionviews-data-export-action-csv-export']:focus,
+input[id^='edit-actionsewing-kit-remove']:hover,
+input[id^='edit-actionsewing-kit-remove']:focus
+{
   background-color: #88b551;
   color: #FFFFFF;
   background-position: 0 -15px;

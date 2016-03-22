@@ -132,8 +132,9 @@ dependencies[] = workflowfield
 ; Lacuna Stories
 dependencies[] = features
 dependencies[] = lacuna_stories_system
-dependencies[] = lacuna_stories_menus
 dependencies[] = course
+dependencies[] = lacuna_site_administrator
+dependencies[] = lacuna_stories_menus
 dependencies[] = views_lacuna_stories
 dependencies[] = lacuna_stories_annotations
 dependencies[] = lacuna_stories_biblio

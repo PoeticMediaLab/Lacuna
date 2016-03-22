@@ -634,12 +634,10 @@ function lacuna_visualizations_annotation_dashboard() {
     'type' => 'annotations_dashboard',
   );
   drupal_add_js($settings, 'setting');
-  // Dashboard uses Crossfilter and DataTables
-  drupal_add_css('//cdn.datatables.net/1.10.2/css/jquery.dataTables.css', 'external');
+  // Dashboard uses Crossfilter
   drupal_add_library('lacuna_visualizations', 'crossfilter', FALSE);
   // We don't need the Graph API for this part, so go straight to d3
   return d3_draw($settings);
-  // return theme('graphapi_dispatch', array('graph' => null, 'config' => $settings));
 }
 
 

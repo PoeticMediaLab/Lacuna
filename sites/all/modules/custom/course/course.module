@@ -21,7 +21,7 @@ function course_menu() {
     'title' => 'Create a New Course',
     'description' => 'course creation.',
     'page callback' => 'course_create_authorize',
-    'access callback' => 'course_access',
+    'access callback' => 'course_setup_access',
     'type' => MENU_NORMAL_ITEM,
     'file' => 'course.pages.inc',
   );
@@ -29,7 +29,7 @@ function course_menu() {
     'title' => 'Creating a New Course',
     'description' => 'course creation.',
     'page callback' => 'course_create',
-    'access callback' => 'course_access',
+    'access callback' => 'course_setup_access',
     'type' => MENU_NORMAL_ITEM,
     'file' => 'course.pages.inc',
   );
@@ -37,7 +37,7 @@ function course_menu() {
     'title' => 'Organize Materials',
     'description' => 'Organize course.',
     'page callback' => 'course_organize',
-    'access callback' => 'course_access',
+    'access callback' => 'course_setup_access',
     'type' => MENU_NORMAL_ITEM,
     'file' => 'course.pages.inc',
   );
@@ -45,21 +45,21 @@ function course_menu() {
     'title' => 'Add Material',
     'description' => 'Add course material.',
     'page callback' => 'course_add_material',
-    'access callback' => 'course_access',
+    'access callback' => 'course_setup_access',
     'type' => MENU_NORMAL_ITEM,
     'file' => 'course.pages.inc',
   );
   $items['ajax/add-term/%'] = array(
     'page callback' => 'course_ajax_add_term',
     'page arguments' => array(2),
-    'access callback' => 'course_access',
+    'access callback' => 'course_setup_access',
     'type' => MENU_CALLBACK,
     'file' => 'course.pages.inc',
   );
   $items['ajax/delete-term/%/%'] = array(
     'page callback' => 'course_ajax_delete_term',
     'page arguments' => array(2,3),
-    'access callback' => 'course_access',
+    'access callback' => 'course_setup_access',
     'type' => MENU_CALLBACK,
     'file' => 'course.pages.inc',
   );
@@ -81,24 +81,33 @@ function course_menu() {
   $items['about-course'] = array(
     'title' => 'About This Course',
     'page callback' => 'course_about_course',
-    'access callback' => 'course_get_selected_course',
+    'access arguments' => array('access content'),
     'type' => MENU_NORMAL_ITEM,
     'file' => 'course.pages.inc',
   );
   $items['course-tags/autocomplete/%/%'] = array(
     'page callback' => 'course_tags_autocomplete',
     'page arguments' => array(2, 3),
-    'access callback' => 'course_get_selected_course',
     'type' => MENU_CALLBACK,
     'file' => 'course.pages.inc'
   );
+  // Custom form to add terms to course-related tags for annotations
+  // If they can create a course, they can add terms
+  $items['annotation_tags/add'] = array(
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('course_annotation_tags_add'),
+    'access arguments' => array('create course content'),
+    'type' => MENU_NORMAL_ITEM,
+    'file' => 'course.pages.inc',
+  );
+
   return $items;
 }
 
 /**
  * check permissions and token to create a course
  */
-function course_access() {
+function course_setup_access() {
   global $user;
   $key = "Course_Auth_Code_User_" . $user->uid;
   $canCreate = user_access('create course content');
@@ -148,7 +157,13 @@ function course_is_protected_page() {
 }
 
 function course_admin_form() {
+
+  global $base_url;
   $form = array();
+
+  $form['info'] = array(
+    '#markup' => 'To set up a new course, visit <a href="/course-setup">' . $base_url . '/course-setup</a>'
+  );
   $form['authorization'] = array(
     '#type' => 'fieldset',
     '#title' => t('Authorization'),
@@ -215,53 +230,59 @@ function course_admin_form() {
 
 // Can user switch to given course?
 function course_switch_access($gid) {
-  return user_access('administer group') || og_is_member('node', $gid);
+  // Note: og_is_member returns TRUE only for Active members, not pending or blocked
+  return user_access('administer nodes') || og_is_member('node', $gid);
 }
 
 // Switch course context when a new course viewed, if allowed
+// course_set_selected_course does our permissions check
 function course_node_view($node, $view_mode, $langcode) {
-  if (($node->type == 'course') && course_switch_access($node->nid)) {
-    _course_set_selected_course($node->nid);
+  if ($view_mode == 'full' && $node->type == 'course') {
+    course_set_selected_course($node->nid);
   }
 }
 
 /**
  * Implements hook_views_query_alter().
- * Updates existing views to that their results are limited to the current course
+ * Updates existing views so that their results are limited to the current course
  */
 function course_views_query_alter(&$view, &$query) {
+  // List of the views to alter
+  $where_node_views = array('responses', 'documents', 'threads', 'all_content', 'my_content', 'sewing-kit', 'user_s_responses', 'user_s_comments', 'my_annotations_view', 'peer_groups');
+  $where_user_views = array('people', 'all_emails');
 	$gid = course_get_selected_course();
-	if ($gid) {
-		// Filter node content by course
-		$where_node_views = array('responses', 'documents', 'threads', 'all_content', 'my_writing', 'sewing-kit', 'user_s_responses', 'user_s_comments', 'my_annotations_view');
-		if (in_array($view->name, $where_node_views)) {
-			$query->add_where_expression(0, "node.nid IN (SELECT etid FROM og_membership WHERE gid = " . $gid . " AND og_membership.entity_type = 'node')");
-		}
 
-		// Filter users by course
-		$where_user_views = array('people', 'all_emails');
-		if (in_array($view->name, $where_user_views)) {
-			$query->add_where_expression(2, "users.uid IN (SELECT etid FROM og_membership WHERE gid = " . $gid . " AND og_membership.entity_type = 'user')");
-		}
+  if (empty($gid)) {
+    $gid = -1;  // No active group, prevent access to all course content
+  }
 
-		// Filter annotation tags by course
-		if ($view->name == 'curate_tags') {
-      $taxonomy = course_get_terms_for_current_course('annotation_tags');
-			$query->add_where(0, 'tid', array_keys($taxonomy), 'IN');
-		}
+  // Filter node content by course
+  if (in_array($view->name, $where_node_views)) {
+    $query->add_where_expression(0, "node.nid IN (SELECT etid FROM og_membership WHERE gid = " . $gid . " AND og_membership.entity_type = 'node')");
+  }
 
-    // Autocomplete Bibliography field in Responses with only relevant bibliographic entries
-		if ($view->name == 'bibliography_entity_reference_autocomplete') {
-      $result = db_query('SELECT b.field_bibliographic_entry_target_id
-        FROM field_data_field_bibliographic_entry b
-        LEFT JOIN node n ON n.nid = b.entity_id
-        LEFT JOIN og_membership ogm ON n.nid = ogm.etid
-        WHERE ogm.entity_type = :entity_type
-        AND ogm.gid = :gid', array(':entity_type' => 'node', ':gid' => $gid));
-      $biblio_ids = array_keys($result->fetchAllKeyed());
-			$query->add_where(2, 'node.nid', $biblio_ids, 'IN');
-		}
-	}
+  // Filter users by course
+  if (in_array($view->name, $where_user_views)) {
+    $query->add_where_expression(2, "users.uid IN (SELECT etid FROM og_membership WHERE gid = " . $gid . " AND og_membership.entity_type = 'user')");
+  }
+
+  // Filter annotation tags by course
+  if ($view->name == 'curate_tags') {
+    $taxonomy = course_get_terms_for_current_course('annotation_tags');
+    $query->add_where(0, 'tid', array_keys($taxonomy), 'IN');
+  }
+
+  // Autocomplete Bibliography field in Responses with only relevant bibliographic entries
+  if ($view->name == 'bibliography_entity_reference_autocomplete') {
+    $result = db_query('SELECT b.field_bibliographic_entry_target_id
+      FROM field_data_field_bibliographic_entry b
+      LEFT JOIN node n ON n.nid = b.entity_id
+      LEFT JOIN og_membership ogm ON n.nid = ogm.etid
+      WHERE ogm.entity_type = :entity_type
+      AND ogm.gid = :gid', array(':entity_type' => 'node', ':gid' => $gid));
+    $biblio_ids = array_keys($result->fetchAllKeyed());
+    $query->add_where(2, 'node.nid', $biblio_ids, 'IN');
+  }
 
 	// Filter courses views for enrolled and not enrolled
 	if ($view->name == 'courses') {
@@ -269,11 +290,11 @@ function course_views_query_alter(&$view, &$query) {
 			case 'not_enrolled':
 				// This cannot be done in the view. It needs to be done in a query alter.
 				// @see https://www.drupal.org/node/596860#comment-10030507
-				$query->add_where_expression(2, 'node.nid NOT IN (SELECT gid FROM og_membership WHERE etid = ***CURRENT_USER***)');
+				$query->add_where_expression(2, "node.nid NOT IN (SELECT gid FROM og_membership WHERE entity_type = 'user' AND etid = ***CURRENT_USER***)");
 				break;
 			case 'enrolled':
 				// This could be done in the view. Doing here for simplicity and organization.
-				$query->add_where_expression(2, 'node.nid IN (SELECT gid FROM og_membership WHERE etid = ***CURRENT_USER***)');
+				$query->add_where_expression(2, "node.nid IN (SELECT gid FROM og_membership WHERE entity_type = 'user' AND etid = ***CURRENT_USER***)");
 				break;
 		}
 	}
@@ -346,8 +367,10 @@ function course_get_terms_for_current_course($taxonomy_name) {
 }
 
 // Returns list of documents in Ready to Annotate status for current course
-function course_get_documents_for_current_course() {
-	$gid = course_get_selected_course();
+function course_get_documents_for_current_course($gid = NULL) {
+	if (empty($gid)) {
+    $gid = course_get_selected_course();
+  }
 	$query = new EntityFieldQuery();
 	$result = $query->entityCondition('entity_type', 'node')
 		->entityCondition('bundle', 'document')
@@ -435,67 +458,20 @@ function course_form_views_exposed_form_alter(&$form, &$form_state) {
   // Filter Taxonomy terms
   if (isset($form['field_tags_tid'])) {
     course_limit_exposed_filter_tags($form, 'field_tags_tid', course_get_terms_for_current_course('annotation_tags'));
-//    $form['field_tags_tid']['#options'] = course_get_terms_for_current_course('annotation_tags');
   }
-
   if ($form['#id'] == 'views-exposed-form-sewing-kit-page') {
     // Restrict the tag filter options to tags on annotations on documents in courses in which the user is a member. Otherwise we will have inapplicable tags here even with no filters set. Plus tags may be considered private content.
-    /* NOTE: To make Sewing Kit work *across* courses for users, uncomment this section
-
-// Restrict the group filter options to (a) courses, (b) that the user is a member of
-    $group_options = array('All' => '- Any -');
-    $groups = og_get_groups_by_user();
-    foreach ($groups['node'] as $gid) {
-      $group = node_load($gid);
-      if ($group->type == 'course') {
-        $group_options[$gid] = $group->title;
-      }
-    }
-    $form['og_group_ref_target_id']['#options'] = $group_options;
-
-
-    $group_tag_options = array();
-    $user_groups = array_keys(og_get_groups_by_user(NULL, 'node'));
-    $course_groups = array();
-    foreach ($user_groups as $user_group) {
-      $group = node_load($user_group);
-      if ($group->type == 'course') {
-        $course_groups[] = $user_group;
-      }
-    }
-    $query = new EntityFieldQuery();
-    $query->entityCondition('entity_type', 'taxonomy_term');
-    $query->entityCondition('bundle', 'annotation_tags');
-    // For trans-course Sewing Kit
-    $query->fieldCondition('field_term_course', 'target_id', $course_groups, 'IN');
-    $records = $query->execute();
-    if (count($records)) {
-      $group_tag_options = array_keys($records['taxonomy_term']);
-    }
-    foreach ($form['field_annotation_tags_tid']['#options'] as $existing_tag_option_tid => $existing_tag_option_name) {
-      if (!in_array($existing_tag_option_tid, $group_tag_options)) {
-        unset ($form['field_annotation_tags_tid']['#options'][$existing_tag_option_tid]);
-      }
-    }*/
-
-    // For trans-course Sewing Kit, comment out the next line
     course_limit_exposed_filter_tags($form, 'field_annotation_tags_tid', course_get_terms_for_current_course('annotation_tags'));
 
     // Restrict exposed filter list of annotated content to current course
     $gid = course_get_selected_course();
-    $query = new EntityFieldQuery();
-    $result = $query->entityCondition('entity_type', 'node')
-      ->entityCondition('bundle', array('document', 'response'), 'IN')
-      ->fieldCondition('og_group_ref', 'target_id', $gid)
-      ->execute();
-    if (isset($result['node'])) {
-      $nids = array_keys($result['node']);
+    $documents = course_get_documents_for_current_course($gid);
+    if (isset($documents)) {
+      $nids = array_keys($documents);
     }
-    foreach ($form['document']['#options'] as $type => $values) {
-      foreach ($form['document']['#options'][$type] as $nid => $title) {
-        if (!in_array($nid, $nids)) {
-          unset($form['document']['#options'][$type][$nid]);
-        }
+    foreach ($form['document']['#options'] as $nid => $title) {
+      if (empty($nids) || !in_array($nid, $nids)) {
+        unset($form['document']['#options'][$nid]);
       }
     }
   }
@@ -527,31 +503,49 @@ function course_sewing_kit_shared_with($data) {
 // Used extensively, so be careful if you refactor
 function course_get_selected_course() {
   global $user;
-	$result = db_query('SELECT c.gid FROM {' . COURSE_CURRENT_TABLE . '} c WHERE c.uid = :uid', array(':uid' => (int) $user->uid));
+
+  $result = db_query('SELECT c.gid FROM {' . COURSE_CURRENT_TABLE . '} c WHERE c.uid = :uid', array(':uid' => (int) $user->uid));
 	foreach ($result as $record) {
 		return($record->gid);
 	}
+
+  // Note: this only happens the first time we check for a selected course
+  // which affects only the call to this function in the main menu context
+  $groups = og_get_groups_by_user($user, 'node');
+  // Just set it to the first course node result
+  if ($groups) {
+    $gid = array_shift($groups);
+    $group = node_load($gid);
+    if ($group->type == 'course') {
+      course_set_selected_course($gid);
+      return $gid;
+    }
+  }
+  return FALSE;
 }
 
-function _course_set_selected_course($gid) {
-  // NB: do your own error handling and permissions checking if you use this setter directly
-  global $user;
-  // Global user does not contain OG memberships, so saving that will lose them for the user. Load the user first and use that
-  // see: https://www.drupal.org/node/1502916#comment-6444954.
-	if (empty($gid)) {
-		return;
+function course_set_selected_course($gid, $uid = NULL, $access_check = TRUE) {
+  // Check for access to switch course
+  // Behat tests need to be able to bypass this, though, hence $access_check
+	if (empty($gid) || ($access_check && !course_switch_access($gid))) {
+		return FALSE;
 	}
 	try {
+    if (!isset($uid)) {
+      global $user;
+      $uid = $user->uid;
+    }
 		db_merge(COURSE_CURRENT_TABLE)
-			->key(array('uid' => (int) $user->uid))
+			->key(array('uid' => (int) $uid))
 			->fields(array('gid' => $gid))
 			->execute();
 	}
 	catch (Exception $e) {
-		watchdog_exception('_course_set_selected_course', $e, NULL, NULL, WATCHDOG_ERROR);
+		watchdog_exception('course_set_selected_course', $e, NULL, NULL, WATCHDOG_ERROR);
 		drupal_set_message('Sorry, but an error occurred. Please notify a site administrator.', 'error');
 		drupal_goto(drupal_get_destination());
 	}
+  return TRUE;
 }
 
 /*
@@ -583,6 +577,15 @@ function course_node_update($node) {
 
 }
 
+
+
+
+/**
+ * @param $form
+ * @param $form_state
+ * @param $form_id
+ * Implements hook_form_FORM_ID_alter() for document nodes.
+ */
 function course_form_document_node_form_alter(&$form, &$form_state, $form_id) {
   $document = node_load($form['nid']['#value']);
 	$unit_options = course_get_terms_for_current_course('units');
@@ -663,15 +666,14 @@ function course_form_response_node_form_alter(&$form, &$form_state, $form_id) {
 		'#default_value' => $default_genre,
 		'#options' => $genre_options,
 		'#required' => TRUE,
+    '#weight' => -10,
 	);
 	$form['#group_children']['genre_response'] = 'group_genre_about';
 	$form['field_response_genre']['#access'] = FALSE;	// hide this field
 
-  // Customize the autocomplete to filter by course tags
-  // Note: hard-coded taxonomy name
-  // would be better to load this dynamically based on the existing field's taxonomy reference
-  $lang = $form['language']['#value'];
-  $form['field_tags'][$lang]['#autocomplete_path'] = 'course-tags/autocomplete/annotation_tags';
+  // Also filter the tags per course; we share the annotation tags
+  $form['field_tags'][LANGUAGE_NONE]['#options'] = course_get_terms_for_current_course('annotation_tags');
+  $form['field_tags']['#weight'] = -9;
 
   $form['og_group_ref']['#access'] = FALSE;	// We'll set the course automatically
   $form['group_content_access']['#access'] = FALSE; // hide confusing option; always private
@@ -687,10 +689,10 @@ function course_add_response_form_submit($form, &$form_state) {
 
 	// Update node with our filtered values
   $wrapper = entity_metadata_wrapper('node', $node);
-  $wrapper->field_response_genre[] = $form_state['values']['genre_response'];
+  // Genre can only have one option, so replace any existing values
+  $wrapper->field_response_genre = array($form_state['values']['genre_response']);
   $wrapper->group_content_access->set(OG_CONTENT_ACCESS_PRIVATE);
   $wrapper->save();
-  node_save($node);
 
   // Automatically assign to current course
   $gid = course_get_selected_course();
@@ -706,6 +708,48 @@ function course_add_response_form_submit($form, &$form_state) {
     drupal_goto(drupal_get_path_alias('node/' . $node->nid));
   } else {
     drupal_set_message('There was a problem saving your response', 'warning');
+  }
+}
+
+/**
+ * @param $form
+ * @param $form_state
+ * @param $form_id
+ *
+ * Implements hook_form_FORM_ID_form_alter(). Modifies Peer Groups for course context.
+ */
+function course_form_peer_group_node_form_alter(&$form, &$form_state, $form_id) {
+  $form['og_group_ref']['#access'] = FALSE;	// We'll set the course automatically
+  $form['actions']['submit']['#submit'] = array('course_add_peer_group_form_submit');
+}
+
+/**
+ * @param $form
+ * @param $form_state
+ *
+ * Callback for peer-group node form submission.
+ */
+function course_add_peer_group_form_submit($form, &$form_state) {
+  $node = node_form_submit_build_node($form, $form_state);
+  $node->status = NODE_PUBLISHED;
+
+  $wrapper = entity_metadata_wrapper('node', $node);
+  $wrapper->save();
+
+  // Automatically assign to current course
+  $gid = course_get_selected_course();
+  if ($gid && $node->nid) {
+    og_group('node', $gid,
+      array(
+        'entity_type' => 'node',
+        'entity' => $node,
+        'field_name' => 'og_group_ref',
+        'state' => OG_STATE_ACTIVE
+      )
+    );
+    drupal_goto(drupal_get_path_alias('node/' . $node->nid));
+  } else {
+    drupal_set_message('There was a problem saving your Peer Group', 'warning');
   }
 }
 
@@ -746,6 +790,7 @@ function course_create_form_submit($form, &$form_state) {
 			'status' => NODE_PUBLISHED,
 			'comment' => 0,
 			'promote' => 0,
+      'path' => array('pathauto' => TRUE),
 		);
 		$course = entity_create('node', array_merge($form_state['values'], $values));
 		$course_wrapper = entity_metadata_wrapper('node', $course);
@@ -753,7 +798,7 @@ function course_create_form_submit($form, &$form_state) {
 			$course_wrapper->save();
 			$nid = $course_wrapper->nid->value();
 			if (!empty($nid)) {
-				_course_set_selected_course($nid);
+				course_set_selected_course($nid);
 				drupal_goto("course-setup/organize");
 			}
 		}
@@ -811,6 +856,59 @@ function course_create_blank_document($biblio) {
   } else {
     drupal_set_message("There was an error adding your material. Please try again or contact the Lacuna Stories team.", 'error');
   }
+}
+
+/**
+ * @param $vocab_name
+ * @param $term
+ * @return bool
+ *
+ * Returns results for query on course-based term in given vocabulary
+ */
+function course_get_taxonomy_term_in_current_course($vocab_name, $term) {
+  if (empty($vocab_name)) {
+    return FALSE;
+  }
+  $gid = course_get_selected_course();
+  if ($gid) {
+    $query = new EntityFieldQuery();
+    $result = $query->entityCondition('entity_type', 'taxonomy_term')
+      ->entityCondition('bundle', $vocab_name)
+      ->fieldCondition('field_term_course', 'target_id', $gid, '=')
+      ->propertyCondition('name', $term)
+      ->execute();
+    if (isset($result['taxonomy_term'])) {
+      return $result['taxonomy_term'];
+    }
+  }
+  return FALSE;
+}
+
+/**
+ * @param $vocab
+ * @param $tag
+ * @param int $weight
+ * Create new taxonomy terms that are linked to the current course
+ */
+function course_create_taxonomy_term($vocab, $tag, $weight = 0) {
+  // first, check for existing term in per-course taxonomy
+  $tag = trim($tag);
+  $tags = explode(',', $tag);
+  $gid = course_get_selected_course();
+  $results = array();
+  foreach ($tags as $tag) {
+    if (course_get_taxonomy_term_in_current_course($vocab->machine_name, $tag) == FALSE) {
+      // none found, create a new one
+      $term = new stdClass();
+      $term->name = $tag;
+      $term->vid = $vocab->vid;
+      $term->weight = $weight;
+      $term->field_term_course[LANGUAGE_NONE][0]['target_id'] = $gid;
+      taxonomy_term_save($term);
+      $results[] = $term;
+    }
+  }
+  return $results;
 }
 
 function course_add_biblio_form_submit($form, &$form_state) {
@@ -991,6 +1089,23 @@ function course_push_unfinished_doc_queue($nid) {
   user_cookie_save(array($key => $cookie_queue));
 }
 
+/**
+ * Implements hook_node_access(). Prevent users from adding materials when they haven't selected a course context yet.
+ */
+function course_node_access($node, $op, $account) {
+  if (user_access('administer nodes')) {
+    // Avoid an infinite node access check!
+    // Happens because course_get_selected_course() below may call
+    // menu_get_object(), which called hook_node_access()
+    return NODE_ACCESS_ALLOW;
+  }
+
+  if ($op == 'create' || $op == 'update' || $op == 'delete') {
+    if (course_get_selected_course() == FALSE) {
+      return NODE_ACCESS_DENY;
+    }
+  }
+}
 
 /**
  * Implements hook_node_delete(). Delete related taxonomy terms when course deleted.
@@ -1009,4 +1124,26 @@ function course_node_delete($node) {
 			}
 		}
 	}
+}
+
+/**
+ * @param $account
+ * Implements hook_user_delete(). Delete entries from course_current table.
+ */
+function course_user_delete($account) {
+  db_delete(COURSE_CURRENT_TABLE)
+    ->condition('uid', $account->uid)
+    ->execute();
+}
+
+/**
+ * Implements hook_og_membership_delete(). Remove user's access to a course entirely.
+ */
+function course_og_membership_delete(OgMembership $og_membership) {
+  if ($og_membership->entity_type == 'user') {
+    db_delete(COURSE_CURRENT_TABLE)
+      ->condition('uid', $og_membership->etid)
+      ->condition('gid', $og_membership->gid)
+      ->execute();
+  }
 }

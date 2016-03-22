@@ -14,9 +14,9 @@ files[] = handlers/workflow_views_handler_field_node_link_workflow.inc
 files[] = handlers/workflow_views_handler_field_comment_link_edit.inc
 files[] = handlers/workflow_views_handler_argument_state.inc
 
-; Information added by Drupal.org packaging script on 2015-11-09
-version = "7.x-2.6"
+; Information added by Drupal.org packaging script on 2015-12-31
+version = "7.x-2.8"
 core = "7.x"
 project = "workflow"
-datestamp = "1447077041"
+datestamp = "1451565855"
 

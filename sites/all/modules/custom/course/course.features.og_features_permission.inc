@@ -24,11 +24,6 @@ function course_og_features_default_permissions() {
     ),
   );
 
-  // Exported og permission: 'node:course:administer taxonomy'
-  $permissions['node:course:administer taxonomy'] = array(
-    'roles' => array(),
-  );
-
   // Exported og permission: 'node:course:approve and deny subscription'
   $permissions['node:course:approve and deny subscription'] = array(
     'roles' => array(
@@ -121,16 +116,6 @@ function course_og_features_default_permissions() {
     ),
   );
 
-  // Exported og permission: 'node:course:delete terms'
-  $permissions['node:course:delete terms'] = array(
-    'roles' => array(),
-  );
-
-  // Exported og permission: 'node:course:edit terms'
-  $permissions['node:course:edit terms'] = array(
-    'roles' => array(),
-  );
-
   // Exported og permission: 'node:course:manage members'
   $permissions['node:course:manage members'] = array(
     'roles' => array(
@@ -140,16 +125,12 @@ function course_og_features_default_permissions() {
 
   // Exported og permission: 'node:course:manage permissions'
   $permissions['node:course:manage permissions'] = array(
-    'roles' => array(
-      'administrator member' => 'administrator member',
-    ),
+    'roles' => array(),
   );
 
   // Exported og permission: 'node:course:manage roles'
   $permissions['node:course:manage roles'] = array(
-    'roles' => array(
-      'administrator member' => 'administrator member',
-    ),
+    'roles' => array(),
   );
 
   // Exported og permission: 'node:course:publish any annotation content'
@@ -161,13 +142,6 @@ function course_og_features_default_permissions() {
 
   // Exported og permission: 'node:course:publish any content'
   $permissions['node:course:publish any content'] = array(
-    'roles' => array(
-      'administrator member' => 'administrator member',
-    ),
-  );
-
-  // Exported og permission: 'node:course:publish any response content'
-  $permissions['node:course:publish any response content'] = array(
     'roles' => array(
       'administrator member' => 'administrator member',
     ),
@@ -195,13 +169,6 @@ function course_og_features_default_permissions() {
     ),
   );
 
-  // Exported og permission: 'node:course:publish editable response content'
-  $permissions['node:course:publish editable response content'] = array(
-    'roles' => array(
-      'administrator member' => 'administrator member',
-    ),
-  );
-
   // Exported og permission: 'node:course:publish editable thread content'
   $permissions['node:course:publish editable thread content'] = array(
     'roles' => array(
@@ -211,14 +178,6 @@ function course_og_features_default_permissions() {
 
   // Exported og permission: 'node:course:publish own annotation content'
   $permissions['node:course:publish own annotation content'] = array(
-    'roles' => array(
-      'administrator member' => 'administrator member',
-      'member' => 'member',
-    ),
-  );
-
-  // Exported og permission: 'node:course:publish own response content'
-  $permissions['node:course:publish own response content'] = array(
     'roles' => array(
       'administrator member' => 'administrator member',
       'member' => 'member',
@@ -259,13 +218,6 @@ function course_og_features_default_permissions() {
     ),
   );
 
-  // Exported og permission: 'node:course:unpublish any response content'
-  $permissions['node:course:unpublish any response content'] = array(
-    'roles' => array(
-      'administrator member' => 'administrator member',
-    ),
-  );
-
   // Exported og permission: 'node:course:unpublish any thread content'
   $permissions['node:course:unpublish any thread content'] = array(
     'roles' => array(
@@ -288,13 +240,6 @@ function course_og_features_default_permissions() {
     ),
   );
 
-  // Exported og permission: 'node:course:unpublish editable response content'
-  $permissions['node:course:unpublish editable response content'] = array(
-    'roles' => array(
-      'administrator member' => 'administrator member',
-    ),
-  );
-
   // Exported og permission: 'node:course:unpublish editable thread content'
   $permissions['node:course:unpublish editable thread content'] = array(
     'roles' => array(
@@ -304,14 +249,6 @@ function course_og_features_default_permissions() {
 
   // Exported og permission: 'node:course:unpublish own annotation content'
   $permissions['node:course:unpublish own annotation content'] = array(
-    'roles' => array(
-      'administrator member' => 'administrator member',
-      'member' => 'member',
-    ),
-  );
-
-  // Exported og permission: 'node:course:unpublish own response content'
-  $permissions['node:course:unpublish own response content'] = array(
     'roles' => array(
       'administrator member' => 'administrator member',
       'member' => 'member',
@@ -390,6 +327,7 @@ function course_og_features_default_permissions() {
   $permissions['node:course:update own thread content'] = array(
     'roles' => array(
       'administrator member' => 'administrator member',
+      'member' => 'member',
     ),
   );
 

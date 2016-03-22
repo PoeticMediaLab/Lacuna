@@ -118,7 +118,7 @@ function lacuna_stories_peer_groups_strongarm() {
           'weight' => '0',
         ),
         'path' => array(
-          'weight' => '3',
+          'weight' => '4',
         ),
       ),
       'display' => array(),

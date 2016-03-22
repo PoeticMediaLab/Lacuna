@@ -48,7 +48,6 @@ logout. So while the PHP/Drupal-core generated $_SESSION gets destroyed, Session
 API will return to the programmer an equivalent sid that is valid for both the
 logged-in and logged-out situations.
 Neat.
-
 However Session API has limited scope (as it should) and does not itself
 implement any storage against this "unified" sid. You have to do that yourself.
 That's where the Session Cache API module comes in.
@@ -83,7 +82,7 @@ The storage mechanisms available are:
  o cookie, i.e. store session on the user's computer
  o database, i.e. store session on the server, in a cache table
  o $_SESSION, i.e. store in server RAM, backed by core's {sessions} table
- o file, i.e. store on the server, one tiny file per session -- enable the
+ o file, i.e. one tiny file on the server per session -- enable the
    session_cache_file submodule for this option
 
 Administrators may switch the storage mechanism on the module's configuration
@@ -102,7 +101,8 @@ With cookies being configured for use as session ids, the database mechanism,
 if selected, stills work when cookies are disabled on the client, except there
 will be a discontinuity of the session data across login and logout.
 
-Cookies have a size limitation of about 4k.
+Cookies have a size limitation of about 4k. The global cookie domain may be set
+in settings.php, e.g., for multi-site installations.
 
 Varnish or similar engine
 -------------------------
@@ -114,13 +114,15 @@ place for some pages, thus allowing for cookies to exist.
 By default, all mechanisms require anonymous users to have cookies enabled in
 their browser, unless the IP address is chosen as the session identifier in the
 database or file storage approaches -- something to consider when using Varnish.
-In the cookie mechanism the session data itself is stored in a cookie, while in
-the database and $_SESSION mechanisms a smaller cookie is used just to hold the
-key to the session data, unless the IP address is used as a session identifier.
+In the cookie mechanism the session data itself is stored in the cookie, while
+in the $_SESSION, database, file and mechanisms a smaller cookie is used just to
+hold the key to the session data. However database and file allow you to bypass
+cookies completely by selecting the IP address as the session identifier.
 
-NOTE: visitors who have cookies switched off will not be able to login, so are
-doomed to remain anonymous AND will not have their session states remembered,
-unless their IP address is used as the source to identify their sessions.
+NOTE: visitors who have cookies switched off in their browsers will not be able
+to login, so are doomed to remain anonymous AND will not have their session
+states remembered, unless their IP address was picked as the source to identify
+sessions.
 
 The API to read and write user session data is the same in all cases and
 comprises these two functions:

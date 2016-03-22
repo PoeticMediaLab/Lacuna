@@ -72,7 +72,7 @@ function lacuna_stories_irb_form_default_rules_configuration() {
           }
         }
       ],
-      "DO" : [ { "redirect" : { "url" : "digital-research-consent-form" } } ]
+      "DO" : [ { "redirect" : { "url" : "webform\\/digital-research-consent-form" } } ]
     }
   }');
   return $items;

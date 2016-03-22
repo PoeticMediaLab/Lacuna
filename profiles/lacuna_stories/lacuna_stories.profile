@@ -263,6 +263,11 @@ function lacuna_stories_create_default_content() {
  */
 function lacuna_stories_set_basic_pages_permissions()
 {
+  if (!function_exists('content_access_set_settings')) {
+    // this module should already be enabled
+    // but sometimes it isn't. why?
+    module_enable(array('content_access'));
+  }
   content_access_set_settings(array("per_node" => 1), "page");    // turn per_node content_access 1, for basic pages
   $instructor = user_role_load_by_name("Instructor")->rid;
 
@@ -330,7 +335,8 @@ function lacuna_stories_set_annotator_settings() {
     'Privacy' => 'Privacy',
 		'Histogram' => 'Histogram',
 		'Author' => 'Author',
-    'Controls' => 'Controls'
+    'Controls' => 'Controls',
+    'Loading' => 'Loading',
   ));
 }
 

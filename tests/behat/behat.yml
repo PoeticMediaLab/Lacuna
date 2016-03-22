@@ -1,0 +1,43 @@
+default:
+  suites:
+    default:
+      contexts:
+        - FeatureContext
+        - Drupal\DrupalExtension\Context\MinkContext
+        - Drupal\DrupalExtension\Context\MessageContext
+        - Drupal\DrupalExtension\Context\DrushContext
+  extensions:
+    Behat\MinkExtension:
+      goutte: ~
+      selenium2:
+        wd_host: http://lacunastories.dev:4444/wd/hub
+        capabilities: {"browser": "firefox", "version": "21"}
+      base_url: http://lacunastories.dev
+    Drupal\DrupalExtension:
+      blackbox: ~
+      api_driver: "drupal"
+      drush:
+        alias: "local"
+        root: /var/www/lacunastories
+      drupal:
+        drupal_root: "/var/www/lacunastories"
+      text:
+        log_out: "Log Out"
+        log_in: "Log in"
+      selectors:
+        success_message_selector: "div.messages.status"
+      region_map:
+        header: "#header"
+        Course Selected: "#subtitle"
+        main: "#main"
+        Main Menu: "div.region-header"
+        Content: "#content"
+        View Content: "div.view-content"
+        View Table: "table.views-table tbody"
+        VBO: "div.vbo-views-form"
+        Page Title: "#page-title"
+        page_turner: "#page-turner-nav"
+        text: "article.node"
+        annotation_filters: "#annotation-filters-wrapper"
+        Admin Menu: "#admin-menu"
+

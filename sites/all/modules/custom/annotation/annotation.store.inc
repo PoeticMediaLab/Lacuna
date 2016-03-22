@@ -204,7 +204,6 @@ function annotation_drupal_format($entity, $update = FALSE) {
         break;
 
       case 'privacy_options':
-
         // Save these privacy options as the default for this user for new annotations on this document
         $privacy_defaults = array();
         if (isset ($user->data['annotation_privacy_defaults'])) {
@@ -253,9 +252,12 @@ function annotation_drupal_format($entity, $update = FALSE) {
           $annotation->field_annotation_audience[$annotation->language][]['value'] = 'peer-groups'; // set (or add on to, if "instructor" was also chosen) the audience field
 
           // Set the peer groups
+          // Note: Peer groups are course group content, so only get
+          // peer groups that are part of the current course
           $query = new EntityFieldQuery();
           $result = $query->entityCondition('entity_type', 'node')
             ->entityCondition('bundle', 'peer_group')
+            ->fieldCondition('og_group_ref', 'target_id', course_get_selected_course())
             ->execute();
           $all_peer_groups = array_keys($result['node']);
           $users_groups = og_get_groups_by_user();
@@ -302,7 +304,6 @@ function annotation_drupal_format($entity, $update = FALSE) {
       $annotation->field_annotation_category[$annotation->language][0]['tid'] = $category_terms[0]->tid;
     }
   }
-
   return($annotation);
 }
 

@@ -134,10 +134,10 @@ function workflow_menu_alter(&$items) {
           $entity_position = substr_count($entity_info['admin ui']['path'], '/') + 2;
           $wildcard = (isset($entity_info['admin ui']['menu wildcard']) ? $entity_info['admin ui']['menu wildcard'] : '%entity_object');
           $items[$entity_info['admin ui']['path'] . '/manage/' . $wildcard . '/workflow'] = $menu_item + array(
-            'page arguments' => array($type, $entity_position),
-            'access arguments' => array($type, $entity_position),
-            'load arguments' => array($type),
-          );
+              'page arguments' => array($type, $entity_position),
+              'access arguments' => array($type, $entity_position),
+              'load arguments' => array($type),
+            );
         }
 
         // We can only continue if the entity relies on a ENTITY_TYPE_load() load hook.
@@ -152,6 +152,13 @@ function workflow_menu_alter(&$items) {
 
               // Create a dummy entity and get the URI.
               $entity = @entity_create($type, $values);
+              if (!$entity) {
+                // Some entities (entity_example.module, ECK) are not complete.
+                $entity = new stdClass($values);
+                foreach ($values as $key => $value) {
+                  $entity->{$key} = $value;
+                }
+              }
               $uri = entity_uri($type, $entity);
               if (isset($uri['path'])) {
                 $uri = $uri['path'];
@@ -162,9 +169,9 @@ function workflow_menu_alter(&$items) {
 
                   if ($entity_position) {
                     $items[$uri . '/workflow'] = $menu_item + array(
-                      'page arguments' => array($type, $entity_position),
-                      'access arguments' => array($type, $entity_position),
-                    );
+                        'page arguments' => array($type, $entity_position),
+                        'access arguments' => array($type, $entity_position),
+                      );
                   }
                 }
               }
@@ -172,6 +179,7 @@ function workflow_menu_alter(&$items) {
           }
           catch (Exception $ex) {
             // The $type entity could not be created or the URI building failed.
+            // workflow_debug( __FILE__, __FUNCTION__, __LINE__, $ex->getMessage(), '');
           }
         }
       }
@@ -689,15 +697,18 @@ function workflow_node_current_state($entity, $entity_type = 'node', &$field_nam
     $sid = isset($entity->workflow) ? $entity->workflow : FALSE;
   }
   elseif ($field_name) {
-    $wrapper = entity_metadata_wrapper($entity_type, $entity);
     // Get State ID for existing nodes (A new node has no sid - will be fetched later.)
     // and normal node, on Node view page / Workflow history tab.
+    $wrapper = entity_metadata_wrapper($entity_type, $entity);
     $sid = $wrapper->{$field_name}->value();
   }
+  else {
+    // Not possible. All options are covered.
+  }
 
-  // No current state. Use creation state.
-  if (!$sid) {
-    $sid = _workflow_get_workflow_creation_sid($entity_type, $entity, $field_name);
+  // Entity is new or in preview or there is no current state. Use previous state.
+  if ( !$sid || !empty($entity->is_new) || !empty($entity->in_preview) ) {
+    $sid = workflow_node_previous_state($entity, $entity_type, $field_name);
   }
 
   return $sid;
@@ -728,7 +739,7 @@ function workflow_node_previous_state($entity, $entity_type, $field_name) {
     $sid = isset($entity->workflow) ? $entity->workflow : FALSE;
   }
   elseif ($field_name) {
-    // At this point, we may have redetermined and altered the field_name.
+    // Workflow Field API.
     if (isset($entity->original)) {
       // A changed node.
 
@@ -738,6 +749,9 @@ function workflow_node_previous_state($entity, $entity_type, $field_name) {
       // Get language. Multi-language is not supported for Workflow Node.
       $langcode = _workflow_metadata_workflow_get_properties($entity->original, array(), 'langcode', $entity_type, $field_name);
     }
+  }
+  else {
+    // Not possible. All options are covered.
   }
 
   if (!$sid) {
@@ -973,42 +987,41 @@ function _workflow_get_workflow_creation_sid($entity_type, $entity, $field_name)
  * @return string
  */
 function workflow_get_field_name($entity, $entity_type, $field_name = NULL, $entity_id = NULL) {
+
   if (!$entity) {
     // $entity may be empty on Entity Add page.
     return NULL;
   }
 
-  if ($field_name || $field_name === '') {
-    // $field_name may already be known.
+  if (!is_null($field_name)) {
+    // $field_name is already known.
     return $field_name;
   }
 
   // If $field_name is not known, yet, determine it.
-  if ($field_name === NULL) {
-    if (!$entity_id) {
-      list($entity_id, , ) = entity_extract_ids($entity_type, $entity);
-    }
+  if (!$entity_id) {
+    list($entity_id, , ) = entity_extract_ids($entity_type, $entity);
+  }
 
-    $field_names = &drupal_static(__FUNCTION__);
-    if (isset($field_names[$entity_type][$entity_id])) {
-      $field_name = $field_names[$entity_type][$entity_id]['field_name'];
+  $field_names = &drupal_static(__FUNCTION__);
+  if (isset($field_names[$entity_type][$entity_id])) {
+    $field_name = $field_names[$entity_type][$entity_id]['field_name'];
+  }
+  else {
+    $fields = _workflow_info_fields($entity, $entity_type);
+    if (count($fields)) {
+      // Get the first field.
+      // Workflow Field API: return a field name.
+      // Workflow Node API: return ''.
+      $field = reset($fields);
+      $field_name = $field['field_name'];
+      $field_names[$entity_type][$entity_id]['field_name'] = $field_name;
     }
     else {
-      $fields = _workflow_info_fields($entity, $entity_type);
-      if (count($fields)) {
-        // Get the first field.
-        // Workflow Field API: return a field name.
-        // Workflow Node API: return ''.
-        $field = reset($fields);
-        $field_name = $field['field_name'];
-        $field_names[$entity_type][$entity_id]['field_name'] = $field_name;
-      }
-      else {
-        // No workflow at all on this entity.
-        $field_name = NULL;
-        // Use special sub-array, or it won't work for NULL.
-        $field_names[$entity_type][$entity_id]['field_name'] = $field_name;
-      }
+      // No workflow at all on this entity.
+      $field_name = NULL;
+      // Use special sub-array, or it won't work for NULL.
+      $field_names[$entity_type][$entity_id]['field_name'] = $field_name;
     }
   }
 
@@ -1066,8 +1079,8 @@ function _workflow_info_fields($entity = NULL, $entity_type = '', $entity_bundle
     }
     foreach ($field_list as $field_name => $data) {
       if (($data['type'] == 'workflow')
-          && (!$entity_type || array_key_exists($entity_type, $data['bundles']))
-          && (!$entity_bundle || in_array($entity_bundle, $data['bundles'][$entity_type]))) {
+        && (!$entity_type || array_key_exists($entity_type, $data['bundles']))
+        && (!$entity_bundle || in_array($entity_bundle, $data['bundles'][$entity_type]))) {
         $field_info[$field_name] = $field_map_available ? field_info_field($field_name) : $data;
       }
     }

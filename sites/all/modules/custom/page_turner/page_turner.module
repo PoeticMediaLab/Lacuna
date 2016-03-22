@@ -37,10 +37,6 @@ function page_turner_permission() {
       'title' => t('Administer Page Turner'),
       'description' => t('May manage settings for Page Turner module.'),
     ),
-//    'use page_turner' => array(
-//      'title' => t('Use Page Turner'),
-//      'description' => t('May use Page Turner for viewing nodes.'),
-//    ),
   );
 }
 

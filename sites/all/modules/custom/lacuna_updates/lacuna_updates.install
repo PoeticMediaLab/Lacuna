@@ -1,0 +1,58 @@
+<?php
+
+// Initial round of updates have to be done in hook_install()
+function lacuna_updates_install() {
+  // Outdated field that features will try to re-add
+  db_drop_table('field_data_field_group_description');
+  db_drop_table('field_revision_field_group_description');
+  // Enable Lacuna Site Administrator feature if not already
+  if (!module_exists('lacuna_site_administrator')) {
+    module_enable(array('lacuna_site_administrator'));
+  }
+  lacuna_updates_fix_content_access();
+  lacuna_updates_webform_alias();
+}
+
+/**
+ * Modify thread and response content_access permissions
+ * to capture deselected options that don't get saved in Features.
+ */
+function lacuna_updates_fix_content_access() {
+  // Verify that Content Access doesn't allow any users to view, update, or delete all
+  $perms = array('view', 'update', 'delete');
+  $types = array('thread', 'response');
+  foreach ($types as $content_type) {
+    $ca_settings = content_access_get_settings('all', $content_type);
+    foreach ($ca_settings as $perm => $roles) {
+      if (in_array($perm, $perms) &&
+        (in_array(DRUPAL_ANONYMOUS_RID, $ca_settings[$perm]) ||
+          in_array(DRUPAL_AUTHENTICATED_RID, $ca_settings[$perm])))
+      {
+        foreach ($ca_settings[$perm] as $delta => $value) {
+          if (($value == DRUPAL_ANONYMOUS_RID) || ($value == DRUPAL_AUTHENTICATED_RID)) {
+            unset($ca_settings[$perm][$delta]);
+          }
+        }
+      }
+    }
+    content_access_set_settings($ca_settings, $content_type);
+  }
+}
+
+// Verify that webforms have the correct paths
+function lacuna_updates_webform_alias() {
+  $query = new EntityFieldQuery();
+  $query->entityCondition('entity_type', 'node')
+    ->entityCondition('bundle', 'webform');
+  $results = $query->execute();
+  if (isset($results['node'])) {
+    foreach (array_keys($results['node']) as $nid) {
+      path_delete(array('source' => 'node/' . $nid));
+      $wrapper = entity_metadata_wrapper('node', $nid);
+      $node = $wrapper->value();
+      // EMW doesn't access pathauto settings for some reason
+      $node->path['pathauto'] = TRUE;
+      $wrapper->save();
+    }
+  }
+}

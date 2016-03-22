@@ -288,7 +288,7 @@ class WorkflowTransitionForm { // extends FormBase {
       $element['workflow']['workflow_sid']['#options'] = $options; // In case action buttons need them.
 
       $form += $element;
-      return $form;  // <---- exit.
+      return $form;  // <-- exit.
     }
     else {
       // Prepare a UI wrapper. This might be a fieldset or a container.
@@ -443,7 +443,8 @@ class WorkflowTransitionForm { // extends FormBase {
       $element['workflow']['workflow_sid']['#access'] = FALSE;
     }
 
-    if ($form_state['build_info']['base_form_id'] == 'workflow_transition_form') {
+    // Some forms (Term) do not have 'base_form_id' set.
+    if (isset($form_state['build_info']['base_form_id']) && $form_state['build_info']['base_form_id'] == 'workflow_transition_form') {
       // Add action buttons on WorkflowTransitionForm (history tab, formatter)
       // but not on Entity form, and not if action_buttons is selected.
 
@@ -549,6 +550,7 @@ class WorkflowTransitionForm { // extends FormBase {
       // Also test for 'is_new'. When Migrating content, the 'changed' property may be set externally.
       // Caveat: Some entities do not have 'changed' property set.
       if ((!empty($entity->is_new)) || (isset($entity->changed) && $entity->changed == REQUEST_TIME)) {
+        // N.B. ONLY for Nodes!
         // We are in add/edit mode. No need to save the entity explicitly.
 
 //        // Add the $form_state to the $items, so we can do a getTransition() later on.
@@ -565,16 +567,21 @@ class WorkflowTransitionForm { // extends FormBase {
         // workflow_entity_field_save($entity_type, $entity, $field_name, $langcode, FALSE);
         entity_save($entity_type, $entity);
 
-        return; // <---- exit!
+        return; // <-- exit!
       }
-      else {
+      elseif ($entity_type == 'node') {
+        // N.B. ONLY for Nodes!
         // We are saving a node from a comment.
         $entity->{$field_name}[$langcode] = $items;
         // @todo & totest: Save ony the field, not the complete entity.
         // workflow_entity_field_save($entity_type, $entity, $field_name, $langcode, FALSE);
         entity_save($entity_type, $entity);
 
-        return; // <---- exit!
+        return; // <-- exit!
+      }
+      else {
+        // We are saving a non-node from an entity form.
+        $entity->{$field_name}[$langcode] = $items;
       }
     }
     else {

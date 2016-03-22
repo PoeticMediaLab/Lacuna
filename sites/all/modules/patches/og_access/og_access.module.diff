@@ -1,0 +1,14 @@
+diff --git a/og_access/og_access.module b/og_access/og_access.module
+index ab8f10e..2d6ab41 100644
+--- a/og_access/og_access.module
++++ b/og_access/og_access.module
+@@ -126,7 +126,7 @@ function og_access_node_access_records($node) {
+   }
+ 
+   foreach ($gids as $group_type => $values) {
+-    foreach ($values as $gid) {
++    foreach (array_unique($values) as $gid) {
+       $grants[] = array (
+         'realm' => OG_ACCESS_REALM . ':' . $group_type,
+         'gid' => $gid,
+

@@ -73,10 +73,12 @@ function workflow_notify_hook_info() {
 function workflow_notify_workflow_operations($op, $workflow = NULL) {
   switch ($op) {
     case 'workflow':
+      $wid = $workflow->getWorkflowId();
+
       $actions = array(
         'workflow_notify_settings' => array(
           'title' => t('Notifications'),
-          'href' => "admin/config/workflow/workflow/notify/$workflow->wid",
+          'href' => "admin/config/workflow/workflow/notify/$wid",
           'attributes' => array('alt' => t('Notify users about state changes.')),
           ),
         );
@@ -103,7 +105,7 @@ function workflow_notify_workflow_operations($op, $workflow = NULL) {
  *   The caller indicated that the transition should be forced. (bool).
  *   This is only available on the "pre" and "post" calls.
  */
-function workflow_notify_workflow($op, $old_state, $new_state, $node, $force = FALSE, $entity_type, $field_name, $transition) {
+function workflow_notify_workflow($op, $old_state, $new_state, $entity, $force, $entity_type = '', $field_name = '', $transition = NULL, $user = NULL) {
   global $user;
   switch ($op) {
     // React to a transition after it's done.
@@ -119,12 +121,16 @@ function workflow_notify_workflow($op, $old_state, $new_state, $node, $force = F
         $changer = format_username($user);
         $changer_mail = $user->mail;
 
+        list($entity_id, , $entity_bundle) = entity_extract_ids($entity_type, $entity);
+
         // Okay, we are notifying someone of this change.
         // So let's get the workflow object.
-        $workflow = workflow_get_workflows_by_type($node->type, 'node');
+        /* @var $workflow Workflow */
+        $workflow = workflow_get_workflows_by_type($entity_bundle, $entity_type);
+        $wid = $workflow->getWorkflowId();
 
         // And all the states.
-        $states = $workflow->states;
+        $states = $workflow->getStates(TRUE);
 
         // Get the specific roles to notify.
         $notify = $notify[$new_state];
@@ -148,8 +154,9 @@ function workflow_notify_workflow($op, $old_state, $new_state, $node, $force = F
           $users = array();
         }
 
-        if ($notify_author) {
-          $users[] = $node->uid;
+        // Some entities (like Term) have no Author.
+        if ($notify_author && isset($entity->uid)) {
+          $users[] = $entity->uid;
         }
 
         // Load all the user entities, making sure there are no duplicates.
@@ -158,7 +165,9 @@ function workflow_notify_workflow($op, $old_state, $new_state, $node, $force = F
         // Call all modules that want to limit the list.
         $args = array(
           'users' => $accounts,
-          'node' => $node,
+          'node' => $entity,
+          'entity' => $entity, // Preparing for entities, keeping backward compatibility.
+          'entity_type' => $entity_type,
           'state' => $new_state,
           'roles' => $notify,
           'workflow' => $workflow,
@@ -175,7 +184,7 @@ function workflow_notify_workflow($op, $old_state, $new_state, $node, $force = F
         // Just quit if there are no users.
         if (empty($accounts)) {
           watchdog('workflow_notify', 'No recipients - email skipped.', array(),
-            WATCHDOG_DEBUG, l(t('view'), 'node/' . $node->nid));
+            WATCHDOG_DEBUG, l(t('view'), 'node/' . $entity_id)); // @todo: other entity types.
           return;
         }
 
@@ -187,10 +196,12 @@ function workflow_notify_workflow($op, $old_state, $new_state, $node, $force = F
           'clear' => TRUE,
           'sanitize' => FALSE,
           'data' => array(
-            'node' => $node,
+            'node' => $entity,
+            'entity' => $entity, // Preparing for entities, keeping backward compatibility.
+            'entity_type' => $entity_type,
             'user' => $user,
             ),
-          'filter' => variable_get('workflow_notify_filter_format_' . $workflow->wid, 'filtered_html'),
+          'filter' => variable_get('workflow_notify_filter_format_' . $wid, 'filtered_html'),
           );
 
         // Build the subject and body of the mail.
@@ -202,7 +213,7 @@ function workflow_notify_workflow($op, $old_state, $new_state, $node, $force = F
         $params['context']['body'] = variable_get("workflow_notify_body_$new_state",
           '<a href="[node:url:absolute]">[node:title]</a> is now "@state".');
 
-        switch (variable_get('workflow_notify_from_address_' . $workflow->wid, 'site')) {
+        switch (variable_get('workflow_notify_from_address_' . $wid, 'site')) {
           case 'site':
             $from = variable_get('site_mail', ini_get('sendmail_from'));
             break;

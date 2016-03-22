@@ -33,7 +33,7 @@ function course_authcode_form_submit($form, &$form_state) {
   $authcode = variable_get('course_authcode');
   if ($authcode == $form['authcode']['#value']) {
     // save a token for a week to ensure the Auth Code was entered on subsequent pages
-    // see course_access()
+    // see course_setup_access()
     global $user;
     $key = "Course_Auth_Code_User_" . $user->uid;
     $token = md5(uniqid(rand(), true));
@@ -75,6 +75,50 @@ function course_create() {
   $form['#attached']['js'] = array("$path/course.js");
 
   return drupal_render($form);
+}
+
+/**
+ * @return string
+ *
+ * A custom form so that instructors can easily add annotation tags to their course
+ */
+function course_annotation_tags_add() {
+  $gid = course_get_selected_course();
+  if ($gid == FALSE) {
+    drupal_set_message(t('You are not associated with a course. Therefore, you cannot add tags for annotations.'), 'error');
+    drupal_exit();
+  }
+  drupal_set_title('Add Tags for Annotations');
+  $form = array(
+    'term' => array(
+      '#type' => 'textfield',
+      '#title' => t('Tag name'),
+      '#description' => t('Enter the tag for annotations as you would like it to appear to students. You may use spaces.'),
+      '#size' => 36,
+      '#required' => TRUE
+    ),
+    'submit' => array(
+      '#type' => 'submit',
+      '#value' => t('Submit'),
+    )
+  );
+
+	return $form;
+}
+
+/**
+ * Associate the annotation tag submitted with the appropriate course
+ */
+function course_annotation_tags_add_submit($form, &$form_state) {
+  $gid = course_get_selected_course();
+  if (!$gid) {
+    drupal_set_message(t('You are not associated with any course. Therefore, we cannot create any tags for annotations.'), 'error');
+    drupal_exit();
+  }
+  $vocab = taxonomy_vocabulary_machine_name_load('annotation_tags');
+  $term = $form_state['values']['term'];
+  course_create_taxonomy_term($vocab, $term);
+  drupal_set_message(t('"' . $term . '" has been added to the list of tags for annotations.'));
 }
 
 /*
@@ -197,49 +241,30 @@ function course_organize_form_submit($form, &$form_state) {
  * Routines for per-course taxonomies
  */
 
-// Returns results for query on course-based term in given vocabulary
-function course_get_taxonomy_term_in_current_course($vocab_name, $term) {
-	if (empty($vocab_name)) {
-		return FALSE;
-	}
-	$gid = course_get_selected_course();
-	if ($gid) {
-		$query = new EntityFieldQuery();
-		$result = $query->entityCondition('entity_type', 'taxonomy_term')
-			->entityCondition('bundle', $vocab_name)
-			->fieldCondition('field_term_course', 'target_id', $gid, '=')
-			->propertyCondition('name', $term)
-			->execute();
-		if (isset($result['taxonomy_term'])) {
-			return $result['taxonomy_term'];
-		}
-	}
-	return FALSE;
-}
-
-function course_create_taxonomy_term($vocab, $tag, $weight = 0) {
-	// first, check for existing term in per-course taxonomy
-	$tag = trim($tag);
-	if (course_get_taxonomy_term_in_current_course($vocab->machine_name, $tag) == FALSE) {
-		// none found, create a new one
-		$term = new stdClass();
-		$term->name = $tag;
-		$term->vid = $vocab->vid;
-		$term->weight = $weight;
-		$term->field_term_course[LANGUAGE_NONE][0]['target_id'] = course_get_selected_course();
-		taxonomy_term_save($term);
-	}
-}
 
 function course_ajax_add_term($vocab_name) {
 	$terms = check_plain($_POST['terms']);
 	$vocab = taxonomy_vocabulary_machine_name_load($vocab_name);
-  // TODO: Load existing terms
-  // TODO: Determine highest weight
-  // TODO: Increment by one
-  // TODO: Pass weight to course_create_taxonomy_term()
+  $gid = course_get_selected_course();
+  $weight = 0;
+  $query = new EntityFieldQuery();
+  // Order the terms so they're sorted as expected
+  // But on a per-course basis, to avoid sending weights spiralling up
+  $result = $query->entityCondition('entity_type', 'taxonomy_term')
+    ->entityCondition('bundle', $vocab_name)
+    ->fieldCondition('field_term_course', 'target_id', $gid, '=')
+    ->execute();
+  if (isset($result['taxonomy_term'])) {
+    foreach (array_keys($result['taxonomy_term']) as $tid) {
+      $term = taxonomy_term_load($tid);
+      if ($term->weight >= $weight) {
+        $weight = $term->weight + 1;
+      }
+    }
+  }
+
 	foreach(explode(',', $terms) as $term) {
-		course_create_taxonomy_term($vocab, $term);
+		course_create_taxonomy_term($vocab, $term, $weight);
 	}
 	ajax_deliver(NULL);
 }
@@ -298,11 +323,12 @@ function course_about_course() {
 // Autocomplete tags, but only for current course
 // TODO: Add curated tags distinction
 // TODO: Add comma-separated values for multiples
-function course_tags_autocomplete($name, $match) {
+function course_tags_autocomplete($vocab_name, $match) {
 	$matches = array();
-	foreach (course_get_terms_for_current_course($name) as $tid => $term) {
-		if (preg_match('/' . $match . '/i', $term)) {
-			$matches[$term] = $term;
+  $match = trim($match);
+  foreach (course_get_terms_for_current_course($vocab_name) as $tid => $term) {
+		if (strpos($match, $term) !== FALSE) {
+      $matches[$term] = check_plain($term);
 		}
 	}
 	drupal_json_output($matches);

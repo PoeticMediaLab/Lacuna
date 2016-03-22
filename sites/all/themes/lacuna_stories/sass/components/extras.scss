@@ -28,7 +28,7 @@ li.views-fluid-grid-inline.views-fluid-grid-item.views-row:hover {
 
 .view-courses {
   .views-field {
-    padding-left: 10px;
+    padding: 5px;
     font-family: "Source sans pro", sans-serif;
   }
   .views-field-title {
@@ -60,9 +60,9 @@ li.views-fluid-grid-inline.views-fluid-grid-item.views-row:hover {
     height: 400px;
     /*width: 100%;*/
     background-color: #8FA3B6;
-    background-image: linear-gradient(to right, #8FA3B6, #FCFCFC 50%);
-    width: 300%;
-    margin-left: -36.5%;
+    background-image: linear-gradient(to right, #8FA3B6, #FCFCFC 40%);
+    width: 600%;
+    margin-left: -85.5%;
 
 }
 
@@ -111,8 +111,8 @@ li.views-fluid-grid-inline.views-fluid-grid-item.views-row:hover {
     background-position: center;
     position: relative;
     right: 0;
-    transform: translatex(-501%);
-    -webkit-transform: translatex(-501%);
+    transform: translatex(-1230%);
+    -webkit-transform: translatex(-1230%);
     box-shadow: 3px 0px 5px 0 #666464;
 }
 body {
@@ -393,3 +393,34 @@ body {
     width: auto;
     font-family: "Source Sans Pro", sans-serif;
 }
+
+span.group.manager {
+    font-family: "Source Sans Pro", sans-serif;
+    color: #1588ba;
+    font-size: 1.5em;
+    margin-left: 30px;
+}
+
+a.group.subscribe,
+a.group.unsubscribe {
+  margin-left: 30px;
+  font-size: 1.5em;
+  width: auto;
+}
+
+.toboggan-unified #login-message {
+  font-family: "Source Sans Pro", sans-serif;
+  color: #1588ba;
+  font-size: 2em;
+  letter-spacing: -.03em;
+}
+
+.toboggan-unified #register-link {
+  width: auto !important;
+}
+
+.toboggan-unified a.lt-active  {
+  border: none !important;
+}
+
+

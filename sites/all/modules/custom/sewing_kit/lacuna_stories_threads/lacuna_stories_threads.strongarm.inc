@@ -66,7 +66,7 @@ function lacuna_stories_threads_strongarm() {
   $strongarm->value = array(
     'view_modes' => array(
       'teaser' => array(
-        'custom_settings' => TRUE,
+        'custom_settings' => FALSE,
       ),
       'full' => array(
         'custom_settings' => FALSE,
@@ -84,6 +84,12 @@ function lacuna_stories_threads_strongarm() {
         'custom_settings' => FALSE,
       ),
       'workflow_tab' => array(
+        'custom_settings' => FALSE,
+      ),
+      'diff_standard' => array(
+        'custom_settings' => FALSE,
+      ),
+      'revision' => array(
         'custom_settings' => FALSE,
       ),
     ),

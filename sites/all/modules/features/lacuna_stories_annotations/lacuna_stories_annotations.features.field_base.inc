@@ -10,7 +10,7 @@
 function lacuna_stories_annotations_field_default_field_bases() {
   $field_bases = array();
 
-  // Exported field_base: 'field_annotation_audience'
+  // Exported field_base: 'field_annotation_audience'.
   $field_bases['field_annotation_audience'] = array(
     'active' => 1,
     'cardinality' => -1,
@@ -40,7 +40,7 @@ function lacuna_stories_annotations_field_default_field_bases() {
     'type' => 'list_text',
   );
 
-  // Exported field_base: 'field_annotation_category'
+  // Exported field_base: 'field_annotation_category'.
   $field_bases['field_annotation_category'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -66,7 +66,7 @@ function lacuna_stories_annotations_field_default_field_bases() {
     'type' => 'taxonomy_term_reference',
   );
 
-  // Exported field_base: 'field_annotation_ins_viewable_co'
+  // Exported field_base: 'field_annotation_ins_viewable_co'.
   $field_bases['field_annotation_ins_viewable_co'] = array(
     'active' => 1,
     'cardinality' => -1,
@@ -104,7 +104,7 @@ function lacuna_stories_annotations_field_default_field_bases() {
     'type' => 'entityreference',
   );
 
-  // Exported field_base: 'field_annotation_quote'
+  // Exported field_base: 'field_annotation_quote'.
   $field_bases['field_annotation_quote'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -125,7 +125,7 @@ function lacuna_stories_annotations_field_default_field_bases() {
     'type' => 'text_long',
   );
 
-  // Exported field_base: 'field_annotation_ranges'
+  // Exported field_base: 'field_annotation_ranges'.
   $field_bases['field_annotation_ranges'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -147,7 +147,7 @@ function lacuna_stories_annotations_field_default_field_bases() {
     'type' => 'text_long',
   );
 
-  // Exported field_base: 'field_annotation_reference'
+  // Exported field_base: 'field_annotation_reference'.
   $field_bases['field_annotation_reference'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -183,7 +183,7 @@ function lacuna_stories_annotations_field_default_field_bases() {
     'type' => 'entityreference',
   );
 
-  // Exported field_base: 'field_annotation_text'
+  // Exported field_base: 'field_annotation_text'.
   $field_bases['field_annotation_text'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -202,7 +202,7 @@ function lacuna_stories_annotations_field_default_field_bases() {
     'type' => 'text_long',
   );
 
-  // Exported field_base: 'field_annotation_uri'
+  // Exported field_base: 'field_annotation_uri'.
   $field_bases['field_annotation_uri'] = array(
     'active' => 1,
     'cardinality' => 1,

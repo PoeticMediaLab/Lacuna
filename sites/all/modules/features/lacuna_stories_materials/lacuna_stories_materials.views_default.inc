@@ -31,6 +31,7 @@ function lacuna_stories_materials_views_default_views() {
     4 => '4',
     5 => '5',
     6 => '6',
+    7 => '7',
   );
   $handler->display->display_options['cache']['type'] = 'none';
   $handler->display->display_options['query']['type'] = 'views_query';

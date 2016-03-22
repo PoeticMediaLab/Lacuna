@@ -13,7 +13,9 @@ function course_user_default_permissions() {
   // Exported permission: 'administer exclude node title'.
   $permissions['administer exclude node title'] = array(
     'name' => 'administer exclude node title',
-    'roles' => array(),
+    'roles' => array(
+      'Site Administrator' => 'Site Administrator',
+    ),
     'module' => 'exclude_node_title',
   );
 
@@ -107,14 +109,18 @@ function course_user_default_permissions() {
   // Exported permission: 'exclude any node title'.
   $permissions['exclude any node title'] = array(
     'name' => 'exclude any node title',
-    'roles' => array(),
+    'roles' => array(
+      'Site Administrator' => 'Site Administrator',
+    ),
     'module' => 'exclude_node_title',
   );
 
   // Exported permission: 'exclude own node title'.
   $permissions['exclude own node title'] = array(
     'name' => 'exclude own node title',
-    'roles' => array(),
+    'roles' => array(
+      'Site Administrator' => 'Site Administrator',
+    ),
     'module' => 'exclude_node_title',
   );
 

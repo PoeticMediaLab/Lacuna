@@ -82,6 +82,7 @@ function lacuna_stories_threads_user_default_permissions() {
     'name' => 'publish any thread content',
     'roles' => array(
       'Site Administrator' => 'Site Administrator',
+      'authenticated user' => 'authenticated user',
     ),
     'module' => 'publishcontent',
   );
@@ -90,6 +91,7 @@ function lacuna_stories_threads_user_default_permissions() {
   $permissions['publish editable thread content'] = array(
     'name' => 'publish editable thread content',
     'roles' => array(
+      'Content Manager' => 'Content Manager',
       'Site Administrator' => 'Site Administrator',
     ),
     'module' => 'publishcontent',
@@ -111,6 +113,7 @@ function lacuna_stories_threads_user_default_permissions() {
   $permissions['unpublish any thread content'] = array(
     'name' => 'unpublish any thread content',
     'roles' => array(
+      'Content Manager' => 'Content Manager',
       'Site Administrator' => 'Site Administrator',
     ),
     'module' => 'publishcontent',
@@ -120,6 +123,7 @@ function lacuna_stories_threads_user_default_permissions() {
   $permissions['unpublish editable thread content'] = array(
     'name' => 'unpublish editable thread content',
     'roles' => array(
+      'Content Manager' => 'Content Manager',
       'Site Administrator' => 'Site Administrator',
     ),
     'module' => 'publishcontent',

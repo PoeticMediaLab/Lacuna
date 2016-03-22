@@ -18,7 +18,7 @@ define('NEW_THREAD', -1);
 function sewing_kit_action_info() {
   return array(
     'sewing_kit_stitch' => array(
-      'type' => 'entity',
+      'type' => 'node',
       'label' => t('Add to Thread'),
       'configurable' => TRUE,
       'vbo_configurable' => FALSE,
@@ -27,6 +27,14 @@ function sewing_kit_action_info() {
       // @see https://www.drupal.org/node/2542120
       'behavior' => array('views_property'), // just check for viewing permissions
     ),
+    'sewing_kit_remove' => array(
+      'type' => 'node',
+      'label' => t('Remove from Thread'),
+      'configurable' => FALSE,
+      'vbo_configurable' => FALSE,
+      'behavior' => array('changes_property'),
+      'aggregate' => TRUE,
+    )
   );
 }
 
@@ -50,6 +58,7 @@ function sewing_kit_stitch(&$node, $context) {
     $sewing_kit_thread->thread_description[LANGUAGE_NONE][0]['value'] = $context['thread_description']['value'];
     $sewing_kit_thread->thread_description[LANGUAGE_NONE][0]['format'] = 'filtered_html';
     $sewing_kit_thread->thread_reference[LANGUAGE_NONE] = array();
+    $sewing_kit_thread->group_content_access[LANGUAGE_NONE][0]['value'] = OG_CONTENT_ACCESS_PRIVATE;
   }
 
   // Add references to annotation nodes
@@ -73,7 +82,6 @@ function sewing_kit_stitch(&$node, $context) {
     'entity_type' => 'node',
     'entity' => $sewing_kit_thread,
     'field_name' => 'og_group_ref',
-    'state' => OG_STATE_ACTIVE
   ));
 
   drupal_set_message('Your thread ' . l($sewing_kit_thread->title, drupal_get_path_alias('node/' . $sewing_kit_thread->nid)) . ' has been saved.');
@@ -155,10 +163,34 @@ function sewing_kit_stitch_submit($form, $form_state) {
 }
 
 /**
+ * @param $node
+ * @param $context
+ *
+ * Callback for removing stitchings from a thread
+ */
+function sewing_kit_remove(&$node, $context) {
+  $anno_ids = array_keys($node);
+  // nid provided as a contextual filter to the view block
+  $node_wrapper = entity_metadata_wrapper('node', $context['view_info']['arguments'][0]);
+  foreach ($node_wrapper->thread_reference as $delta => $annotation) {
+    if (in_array($annotation->nid->value(), $anno_ids)) {
+      // Found one; kill it!
+      $node_wrapper->thread_reference[$delta] = NULL;
+    }
+  }
+  $node_wrapper->save();
+}
+
+/**
+ * @param $form
+ * @param $form_state
+ * @param $form_id
+ *
  * Implements hook_form_FORM_ID_alter().
  * Hide some fields from users that they don't need.
  */
 function sewing_kit_form_thread_node_form_alter(&$form, &$form_state, $form_id) {
   $form['og_group_ref']['#access'] = FALSE;
   $form['thread_reference']['#access'] = FALSE;
+  $form['group_content_access']['#access'] = FALSE; // hide confusing option; always private
 }

@@ -180,7 +180,8 @@ class Annotator.Plugin.Histogram extends Annotator.Plugin
   calculateDimensions: (node) =>
     @layout.length = node.textContent.length;
     if @layout.horizontal
-      @layout.width = document.getElementById(@layout.container).offsetWidth
+      # Firefox returns 'undefined' if we try offsetWidth here
+      @layout.width = document.getElementById(@layout.container).getBoundingClientRect().width
       @layout.height = document.getElementById(@selector.pageTurner).offsetHeight   # assume page turner
     else
       @layout.height = document.getElementsByClassName(@selector.annotatorWrapper)[0].clientHeight # keep in viewport
