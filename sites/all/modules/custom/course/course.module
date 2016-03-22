@@ -490,6 +490,7 @@ function course_form_views_exposed_form_alter(&$form, &$form_state) {
     }
     foreach ($form['document']['#options'] as $type => $options) {
       foreach ($form['document']['#options'][$type] as $nid => $title) {
+        $nids = array();
         if (strtolower($type) == 'document') {
           $nids = $doc_ids;
         }
