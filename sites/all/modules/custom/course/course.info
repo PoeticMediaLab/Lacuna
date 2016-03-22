@@ -184,7 +184,6 @@ features[variable][] = field_bundle_settings_node__course
 features[variable][] = global_filter_legacy_parameters_set
 features[variable][] = global_filters
 features[variable][] = htmlpurifier_version_current
-features[variable][] = locale_custom_disabled_strings_en
 features[variable][] = locale_custom_strings_en
 features[variable][] = menu_options_course
 features[variable][] = menu_parent_course
