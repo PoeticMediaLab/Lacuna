@@ -182,10 +182,15 @@ function sewing_kit_remove(&$node, $context) {
 }
 
 /**
+ * @param $form
+ * @param $form_state
+ * @param $form_id
+ *
  * Implements hook_form_FORM_ID_alter().
  * Hide some fields from users that they don't need.
  */
 function sewing_kit_form_thread_node_form_alter(&$form, &$form_state, $form_id) {
-  $form['og_group_ref']['#access'] = FALSE;
-  $form['thread_reference']['#access'] = FALSE;
+//  $form['og_group_ref']['#access'] = FALSE;
+//  $form['thread_reference']['#access'] = FALSE;
+//  $form['group_content_access']['#access'] = FALSE; // hide confusing option; always private
 }
