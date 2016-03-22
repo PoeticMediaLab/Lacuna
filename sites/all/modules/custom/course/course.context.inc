@@ -42,12 +42,15 @@ if ($current_node == NULL) {
 }
 
 // Enrolled in a course, but viewing a course node that isn\'t the currently enrolled course
-if (($current_node->type == \'course\') && 
-  ($current_course_id != $current_node->nid))
-{
-  return FALSE;
+if ($current_node->type == \'course\') {
+   if (user_access(\'administer nodes\')) { 
+      // admins need to switch quickly, but context fires before hook_node_view()
+      return TRUE;
+  } 
+  if  ($current_course_id != $current_node->nid) {
+      return FALSE;
+  }
 }
-
 return TRUE;',
       ),
     ),

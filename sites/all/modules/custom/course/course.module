@@ -549,18 +549,7 @@ function course_sewing_kit_shared_with($data) {
 function course_get_selected_course() {
   global $user;
 
-  // Uh-oh. We don't have a course set yet. Should we?
-  // Content managers and admins may not be in any courses or may be in another context
-  // but need to switch to the currently viewed course, so just switch
-  if (user_access('administer nodes')) {
-    $node = menu_get_object();
-    if (!empty($node) && $node->type == 'course') {
-      course_set_selected_course($node->nid);
-      return $node->nid;
-    }
-  }
-
-	$result = db_query('SELECT c.gid FROM {' . COURSE_CURRENT_TABLE . '} c WHERE c.uid = :uid', array(':uid' => (int) $user->uid));
+  $result = db_query('SELECT c.gid FROM {' . COURSE_CURRENT_TABLE . '} c WHERE c.uid = :uid', array(':uid' => (int) $user->uid));
 	foreach ($result as $record) {
 		return($record->gid);
 	}
