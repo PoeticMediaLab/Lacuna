@@ -33,6 +33,7 @@ default:
         Main Menu: "div.region-header"
         Content: "#content"
         View Content: "div.view-content"
+        View Table: "table.views-table tbody"
         VBO: "div.vbo-views-form"
         Page Title: "#page-title"
         page_turner: "#page-turner-nav"
