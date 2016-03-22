@@ -382,6 +382,21 @@ function course_get_documents_for_current_course($gid = NULL) {
 	}
 }
 
+function course_get_responses_for_current_course($gid = NULL) {
+  if (empty($gid)) {
+    $gid = course_get_selected_course();
+  }
+  $query = new EntityFieldQuery();
+  $result = $query->entityCondition('entity_type', 'node')
+    ->entityCondition('bundle', 'response')
+    ->fieldCondition('og_group_ref', 'target_id', $gid)
+    ->propertyCondition('status', NODE_PUBLISHED)
+    ->execute();
+  if (isset($result['node'])) {
+    return $result['node'];
+  }
+}
+
 /*
  * Filter the bibliography nodes to those used in current course
  */
@@ -467,11 +482,23 @@ function course_form_views_exposed_form_alter(&$form, &$form_state) {
     $gid = course_get_selected_course();
     $documents = course_get_documents_for_current_course($gid);
     if (isset($documents)) {
-      $nids = array_keys($documents);
+      $doc_ids = array_keys($documents);
     }
-    foreach ($form['document']['#options'] as $nid => $title) {
-      if (empty($nids) || !in_array($nid, $nids)) {
-        unset($form['document']['#options'][$nid]);
+    $responses = course_get_responses_for_current_course($gid);
+    if (isset($responses)) {
+      $resp_ids = array_keys($responses);
+    }
+    foreach ($form['document']['#options'] as $type => $options) {
+      foreach ($form['document']['#options'][$type] as $nid => $title) {
+        if (strtolower($type) == 'document') {
+          $nids = $doc_ids;
+        }
+        if (strtolower($type) == 'response') {
+          $nids = $resp_ids;
+        }
+        if (empty($nids) || !in_array($nid, $nids)) {
+          unset($form['document']['#options'][$type][$nid]);
+        }
       }
     }
   }
