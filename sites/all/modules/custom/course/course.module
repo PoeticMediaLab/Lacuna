@@ -248,7 +248,7 @@ function course_node_view($node, $view_mode, $langcode) {
  */
 function course_views_query_alter(&$view, &$query) {
   // List of the views to alter
-  $where_node_views = array('responses', 'documents', 'threads', 'all_content', 'my_writing', 'sewing_kit', 'user_s_responses', 'user_s_comments', 'my_annotations_view', 'peer_groups');
+  $where_node_views = array('responses', 'documents', 'threads', 'all_content', 'my_content', 'sewing-kit', 'user_s_responses', 'user_s_comments', 'my_annotations_view', 'peer_groups');
   $where_user_views = array('people', 'all_emails');
 	$gid = course_get_selected_course();
 
@@ -290,11 +290,11 @@ function course_views_query_alter(&$view, &$query) {
 			case 'not_enrolled':
 				// This cannot be done in the view. It needs to be done in a query alter.
 				// @see https://www.drupal.org/node/596860#comment-10030507
-				$query->add_where_expression(2, 'node.nid NOT IN (SELECT gid FROM og_membership WHERE etid = ***CURRENT_USER***)');
+				$query->add_where_expression(2, "node.nid NOT IN (SELECT gid FROM og_membership WHERE entity_type = 'user' AND etid = ***CURRENT_USER***)");
 				break;
 			case 'enrolled':
 				// This could be done in the view. Doing here for simplicity and organization.
-				$query->add_where_expression(2, 'node.nid IN (SELECT gid FROM og_membership WHERE etid = ***CURRENT_USER***)');
+				$query->add_where_expression(2, "node.nid IN (SELECT gid FROM og_membership WHERE entity_type = 'user' AND etid = ***CURRENT_USER***)");
 				break;
 		}
 	}
@@ -367,8 +367,10 @@ function course_get_terms_for_current_course($taxonomy_name) {
 }
 
 // Returns list of documents in Ready to Annotate status for current course
-function course_get_documents_for_current_course() {
-	$gid = course_get_selected_course();
+function course_get_documents_for_current_course($gid = NULL) {
+	if (empty($gid)) {
+    $gid = course_get_selected_course();
+  }
 	$query = new EntityFieldQuery();
 	$result = $query->entityCondition('entity_type', 'node')
 		->entityCondition('bundle', 'document')
@@ -456,67 +458,20 @@ function course_form_views_exposed_form_alter(&$form, &$form_state) {
   // Filter Taxonomy terms
   if (isset($form['field_tags_tid'])) {
     course_limit_exposed_filter_tags($form, 'field_tags_tid', course_get_terms_for_current_course('annotation_tags'));
-//    $form['field_tags_tid']['#options'] = course_get_terms_for_current_course('annotation_tags');
   }
-
   if ($form['#id'] == 'views-exposed-form-sewing-kit-page') {
     // Restrict the tag filter options to tags on annotations on documents in courses in which the user is a member. Otherwise we will have inapplicable tags here even with no filters set. Plus tags may be considered private content.
-    /* NOTE: To make Sewing Kit work *across* courses for users, uncomment this section
-
-// Restrict the group filter options to (a) courses, (b) that the user is a member of
-    $group_options = array('All' => '- Any -');
-    $groups = og_get_groups_by_user();
-    foreach ($groups['node'] as $gid) {
-      $group = node_load($gid);
-      if ($group->type == 'course') {
-        $group_options[$gid] = $group->title;
-      }
-    }
-    $form['og_group_ref_target_id']['#options'] = $group_options;
-
-
-    $group_tag_options = array();
-    $user_groups = array_keys(og_get_groups_by_user(NULL, 'node'));
-    $course_groups = array();
-    foreach ($user_groups as $user_group) {
-      $group = node_load($user_group);
-      if ($group->type == 'course') {
-        $course_groups[] = $user_group;
-      }
-    }
-    $query = new EntityFieldQuery();
-    $query->entityCondition('entity_type', 'taxonomy_term');
-    $query->entityCondition('bundle', 'annotation_tags');
-    // For trans-course Sewing Kit
-    $query->fieldCondition('field_term_course', 'target_id', $course_groups, 'IN');
-    $records = $query->execute();
-    if (count($records)) {
-      $group_tag_options = array_keys($records['taxonomy_term']);
-    }
-    foreach ($form['field_annotation_tags_tid']['#options'] as $existing_tag_option_tid => $existing_tag_option_name) {
-      if (!in_array($existing_tag_option_tid, $group_tag_options)) {
-        unset ($form['field_annotation_tags_tid']['#options'][$existing_tag_option_tid]);
-      }
-    }*/
-
-    // For trans-course Sewing Kit, comment out the next line
     course_limit_exposed_filter_tags($form, 'field_annotation_tags_tid', course_get_terms_for_current_course('annotation_tags'));
 
     // Restrict exposed filter list of annotated content to current course
     $gid = course_get_selected_course();
-    $query = new EntityFieldQuery();
-    $result = $query->entityCondition('entity_type', 'node')
-      ->entityCondition('bundle', array('document', 'response'), 'IN')
-      ->fieldCondition('og_group_ref', 'target_id', $gid)
-      ->execute();
-    if (isset($result['node'])) {
-      $nids = array_keys($result['node']);
+    $documents = course_get_documents_for_current_course($gid);
+    if (isset($documents)) {
+      $nids = array_keys($documents);
     }
-    foreach ($form['document']['#options'] as $type => $values) {
-      foreach ($form['document']['#options'][$type] as $nid => $title) {
-        if (!in_array($nid, $nids)) {
-          unset($form['document']['#options'][$type][$nid]);
-        }
+    foreach ($form['document']['#options'] as $nid => $title) {
+      if (empty($nids) || !in_array($nid, $nids)) {
+        unset($form['document']['#options'][$nid]);
       }
     }
   }
@@ -754,17 +709,6 @@ function course_add_response_form_submit($form, &$form_state) {
   } else {
     drupal_set_message('There was a problem saving your response', 'warning');
   }
-}
-
-/**
- * @param $form
- * @param $form_state
- * @param $form_id
- *
- * Implements hook_form_FORM_ID_form_alter(). Alter the Thread edit form
- */
-function course_form_thread_node_form_alter(&$form, &$form_state, $form_id) {
-  $form['group_content_access']['#access'] = FALSE; // hide confusing option; always private
 }
 
 /**
