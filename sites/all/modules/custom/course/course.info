@@ -19,7 +19,6 @@ dependencies[] = field_permissions
 dependencies[] = file
 dependencies[] = global_filter
 dependencies[] = image
-dependencies[] = lacuna_stories
 dependencies[] = lacuna_stories_menus
 dependencies[] = lacuna_stories_peer_groups
 dependencies[] = lacuna_stories_people
