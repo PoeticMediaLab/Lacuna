@@ -53,7 +53,6 @@ features[field_instance][] = user-user-field_year_in_program
 features[menu_links][] = main-menu_logout:user/logout
 features[menu_links][] = main-menu_my-profile:user
 features[menu_links][] = main-menu_people:people
-features[rules_config][] = rules_automatically_assign_student_role
 features[user_permission][] = access notify
 features[user_permission][] = access site-wide contact form
 features[user_permission][] = access user contact forms
