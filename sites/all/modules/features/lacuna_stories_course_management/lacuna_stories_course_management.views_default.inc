@@ -613,22 +613,6 @@ function lacuna_stories_course_management_views_default_views() {
   $handler->display->display_options['header']['area']['field'] = 'area';
   $handler->display->display_options['header']['area']['content'] = 'Select students to approve or block their enrollment in your course, then click the appropriate button.';
   $handler->display->display_options['header']['area']['format'] = 'filtered_html';
-  /* Relationship: OG membership: OG membership from User */
-  $handler->display->display_options['relationships']['og_membership_rel']['id'] = 'og_membership_rel';
-  $handler->display->display_options['relationships']['og_membership_rel']['table'] = 'users';
-  $handler->display->display_options['relationships']['og_membership_rel']['field'] = 'og_membership_rel';
-  /* Relationship: OG membership: Group Node from OG membership */
-  $handler->display->display_options['relationships']['og_membership_related_node_group']['id'] = 'og_membership_related_node_group';
-  $handler->display->display_options['relationships']['og_membership_related_node_group']['table'] = 'og_membership';
-  $handler->display->display_options['relationships']['og_membership_related_node_group']['field'] = 'og_membership_related_node_group';
-  /* Field: Content: Title */
-  $handler->display->display_options['fields']['title']['id'] = 'title';
-  $handler->display->display_options['fields']['title']['table'] = 'node';
-  $handler->display->display_options['fields']['title']['field'] = 'title';
-  $handler->display->display_options['fields']['title']['relationship'] = 'og_membership_related_node_group';
-  $handler->display->display_options['fields']['title']['label'] = 'Course';
-  $handler->display->display_options['fields']['title']['exclude'] = TRUE;
-  $handler->display->display_options['fields']['title']['element_label_type'] = 'h2';
   /* Field: OG membership: State */
   $handler->display->display_options['fields']['state']['id'] = 'state';
   $handler->display->display_options['fields']['state']['table'] = 'og_membership';
@@ -674,12 +658,6 @@ function lacuna_stories_course_management_views_default_views() {
   $handler->display->display_options['fields']['mail']['field'] = 'mail';
   $handler->display->display_options['fields']['mail']['alter']['alter_text'] = TRUE;
   $handler->display->display_options['fields']['mail']['alter']['text'] = '<[mail]>';
-  /* Sort criterion: Content: Post date */
-  $handler->display->display_options['sorts']['created']['id'] = 'created';
-  $handler->display->display_options['sorts']['created']['table'] = 'node';
-  $handler->display->display_options['sorts']['created']['field'] = 'created';
-  $handler->display->display_options['sorts']['created']['relationship'] = 'og_membership_related_node_group';
-  $handler->display->display_options['sorts']['created']['order'] = 'DESC';
   /* Sort criterion: OG membership: State */
   $handler->display->display_options['sorts']['state']['id'] = 'state';
   $handler->display->display_options['sorts']['state']['table'] = 'og_membership';
@@ -689,15 +667,6 @@ function lacuna_stories_course_management_views_default_views() {
   $handler->display->display_options['sorts']['name']['id'] = 'name';
   $handler->display->display_options['sorts']['name']['table'] = 'users';
   $handler->display->display_options['sorts']['name']['field'] = 'name';
-  /* Contextual filter: OG membership: Group ID */
-  $handler->display->display_options['arguments']['gid']['id'] = 'gid';
-  $handler->display->display_options['arguments']['gid']['table'] = 'og_membership';
-  $handler->display->display_options['arguments']['gid']['field'] = 'gid';
-  $handler->display->display_options['arguments']['gid']['default_action'] = 'default';
-  $handler->display->display_options['arguments']['gid']['default_argument_type'] = 'og_user_groups';
-  $handler->display->display_options['arguments']['gid']['summary']['number_of_records'] = '0';
-  $handler->display->display_options['arguments']['gid']['summary']['format'] = 'default_summary';
-  $handler->display->display_options['arguments']['gid']['summary_options']['items_per_page'] = '25';
   /* Filter criterion: User: Active */
   $handler->display->display_options['filters']['status']['id'] = 'status';
   $handler->display->display_options['filters']['status']['table'] = 'users';
