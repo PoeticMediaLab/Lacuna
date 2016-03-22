@@ -29,9 +29,9 @@ function course_context_default_contexts() {
       'options' => array(
         'phpcode' => '$current_node = menu_get_object();
 $current_course_id = course_get_selected_course();
-
+$admin = user_access(\'administer nodes\');
 // Not approved for any course yet
-if ($current_course_id == FALSE) {
+if (($current_course_id === FALSE) && !$admin) {
   return FALSE;
 }
 
@@ -43,7 +43,7 @@ if ($current_node == NULL) {
 
 // Enrolled in a course, but viewing a course node that isn\'t the currently enrolled course
 if ($current_node->type == \'course\') {
-   if (user_access(\'administer nodes\')) { 
+   if ($admin) { 
       // admins need to switch quickly, but context fires before hook_node_view()
       return TRUE;
   } 

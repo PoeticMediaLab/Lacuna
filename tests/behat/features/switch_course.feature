@@ -17,7 +17,7 @@
 
     Scenario Outline:
       Given I am logged in as "Instructor A"
-      When I go to the "course" node named "Course Alpha"
+      When I visit "course/course-alpha"
       Then I should see <link> in the "Main Menu" region
 
       Examples:
@@ -31,7 +31,7 @@
 
     Scenario Outline:
       Given I am logged in as "Instructor A"
-      When I go to the "course" node named "Course Beta"
+      When I visit "course/course-beta"
       Then I should not see <link> in the "Main Menu" region
 
       Examples:
@@ -45,7 +45,7 @@
 
     Scenario Outline:
       Given I am logged in as a user with the "Content Manager" role
-      When I go to the "course" node named "Course Alpha"
+      When I visit "course/course-alpha"
       Then I should see <link> in the "Main Menu" region
 
       Examples:
