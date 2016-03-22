@@ -2,6 +2,9 @@
 
 // Initial round of updates have to be done in hook_install()
 function lacuna_updates_install() {
+  // Outdated field that features will try to re-add
+  db_drop_table('field_data_field_group_description');
+  db_drop_table('field_revision_field_group_description');
   // Enable Lacuna Site Administrator feature if not already
   if (!module_exists('lacuna_site_administrator')) {
     module_enable(array('lacuna_site_administrator'));
@@ -44,6 +47,7 @@ function lacuna_updates_webform_alias() {
   $results = $query->execute();
   if (isset($results['node'])) {
     foreach (array_keys($results['node']) as $nid) {
+      path_delete(array('source' => 'node/' . $nid));
       $wrapper = entity_metadata_wrapper('node', $nid);
       $node = $wrapper->value();
       // EMW doesn't access pathauto settings for some reason
