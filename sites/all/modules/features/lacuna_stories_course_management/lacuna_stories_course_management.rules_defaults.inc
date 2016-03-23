@@ -27,14 +27,9 @@ function lacuna_stories_course_management_default_rules_configuration() {
         },
         { "mail" : {
             "to" : [ "account:mail" ],
-            "subject" : "Your membership request was approved for \\u0027[group:title]\\u0027\\r\\n",
-            "message" : "[account:name],\\r\\n\\r\\nYou are now a member in the group \\u0027[group:title]\\u0027 located at [group:url]"
-          }
-        },
-        { "mail" : {
-            "to" : [ "group:author:mail" ],
-            "subject" : "[account:name] joined [group:title]",
-            "message" : "[group:author:name],\\r\\n\\r\\n[account:name] joined [group:title] in [group:url]"
+            "subject" : "Your enrollment request was approved for \\u0027[group:title]\\u0027\\r\\n",
+            "message" : "Dear [account:name],\\r\\n\\r\\nYou are now enrolled in \\u0022[group:title]\\u0022 located at [group:url]\\r\\n\\r\\nSincerely,\\r\\n\\r\\nThe Lacuna Team",
+            "language" : [ "" ]
           }
         }
       ]
@@ -44,7 +39,7 @@ function lacuna_stories_course_management_default_rules_configuration() {
       "LABEL" : "Notification of Pending Enrollment",
       "PLUGIN" : "reaction rule",
       "OWNER" : "rules",
-      "REQUIRES" : [ "rules", "og" ],
+      "REQUIRES" : [ "rules", "course_registration", "og" ],
       "ON" : { "og_user_insert" : [] },
       "IF" : [
         { "data_is" : { "data" : [ "og-membership:state" ], "value" : "2" } },
@@ -63,11 +58,27 @@ function lacuna_stories_course_management_default_rules_configuration() {
             "language" : [ "" ]
           }
         },
-        { "mail" : {
-            "to" : [ "group:author:mail" ],
-            "subject" : "[account:name] enrollment request [group:title]",
-            "message" : "Dear [group:author:name],\\r\\n\\r\\n[account:name] requests enrollment in your course \\u0027[group:title]\\u0027 in [group:url]. You can add students to your course by accessing \\u0022Manage Students\\u0022 under the \\u0022Manage\\u0022 menu.\\r\\n\\r\\n[og_membership:og-membership-request]\\r\\n\\r\\n\\r\\n\\r\\nSincerely,\\r\\nThe Lacuna Team",
-            "language" : [ "" ]
+        { "og_get_members_from_group" : {
+            "USING" : {
+              "group" : [ "group" ],
+              "states" : { "value" : [] },
+              "roles" : { "value" : { "administrator member" : "administrator member" } }
+            },
+            "PROVIDE" : { "group_members" : { "group_admins" : "List of group admins" } }
+          }
+        },
+        { "LOOP" : {
+            "USING" : { "list" : [ "group-admins" ] },
+            "ITEM" : { "group_admin" : "Current group admin" },
+            "DO" : [
+              { "mail" : {
+                  "to" : [ "group-admin:mail" ],
+                  "subject" : "[account:name] requests enrollment in \\u0022[group:title]\\u0022",
+                  "message" : "Dear [group-admin:name],\\r\\n\\r\\n[account:name] has requested enrollment in your course \\u0022[group:title]\\u0022 ([group:url]). To approve this request, please visit the \\u0022Manage Students\\u0022 page on Lacuna at: [site:url]\\/manage-students\\r\\n\\r\\nSincerely,\\r\\n\\r\\nThe Lacuna Team",
+                  "language" : [ "" ]
+                }
+              }
+            ]
           }
         }
       ]

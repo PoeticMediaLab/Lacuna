@@ -3,4 +3,5 @@ description = Course registration functionality.
 core = 7.x
 package = Lacuna Stories
 version = 7.x-2.0
+files[] = course_registration.rules.inc
 dependencies[] = course
