@@ -347,6 +347,31 @@ function course_strongarm() {
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
+  $strongarm->name = 'og_group_manager_default_rids_node_course';
+  $strongarm->value = array(
+    1 => '1',
+  );
+  $export['og_group_manager_default_rids_node_course'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'og_group_manager_default_rids_node_peer_group';
+  $strongarm->value = array(
+    6 => '6',
+  );
+  $export['og_group_manager_default_rids_node_peer_group'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'og_group_manager_full_access';
+  $strongarm->value = 1;
+  $export['og_group_manager_full_access'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
   $strongarm->name = 'pathauto_node_course_pattern';
   $strongarm->value = 'course/[node:title]';
   $export['pathauto_node_course_pattern'] = $strongarm;
