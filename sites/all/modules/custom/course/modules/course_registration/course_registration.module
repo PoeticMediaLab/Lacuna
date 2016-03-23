@@ -36,17 +36,13 @@ function course_menu_alter(&$items) {
  * Deny access if a user is a member of a course group,
  * but not yet approved
  */
-function course_registration_content_access($arguments) {
+function course_registration_content_access() {
   $access = FALSE;
   $gid = course_get_selected_course();
 
   if (user_access('administer nodes')) {
     $access = TRUE;
-  }
-  // If no current course, means cannot switch to it (i.e., still pending)
-  // So, deny access; See course_switch_access() in course.module
-  // Otherwise, check the default permissions
-  if (!empty($gid) && og_is_member('node', $gid) == TRUE) { // Only returns true if member is active
+  } elseif (!empty($gid) && og_is_member('node', $gid) == TRUE) { // Only returns true if member is active
     $access = TRUE;
   }
 
