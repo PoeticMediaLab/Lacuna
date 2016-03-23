@@ -114,6 +114,5 @@ function course_registration_rules_get_members($group, $states = NULL, $not_stat
   $members = array_merge($members, $current_members);
   // Remove duplicate items.
   $members = array_keys(array_flip($members));
-  ddl($members, 'members');
   return array('group_members' => $members);
 }
