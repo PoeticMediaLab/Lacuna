@@ -651,10 +651,16 @@ function get_uid($annotation) {
 }
 
 function lacuna_visualizations_annotation_dashboard_data() {
+  global $user;
+  $course_id = course_get_selected_course();
+  // Check for cached data first
+  if ($cached = cache_get("lacuna_visualization_dashboard_data:$user->uid:$course_id")) {
+    drupal_json_output($cached->data);
+    drupal_exit();
+  }
   // Prepare the data for the dashboard, output as JSON
-	$course_id = course_get_selected_course();	// get current course ID
 	// Get all annotations that are on a document or response in the current course
-	$query = db_query('
+  $query = db_query('
     SELECT entity_id
     FROM {field_data_field_annotation_reference} AS ar
     LEFT JOIN {og_membership} AS og
@@ -669,7 +675,7 @@ function lacuna_visualizations_annotation_dashboard_data() {
   // created, uid, annotation_reference, text, quote, private, annotation_tags, category
   $annotations = node_load_multiple($annotation_ids);
 
-	// Load all document and users at once to speed up query time
+  // Load all document and users at once to speed up query time
 	$documents = node_load_multiple(array_map("get_doc_id", $annotations));
 	$annotators = user_load_multiple(array_map("get_uid", $annotations));
   foreach ($annotators as $annotator) {
@@ -700,7 +706,9 @@ function lacuna_visualizations_annotation_dashboard_data() {
     }
 
 		// Sharing options; we just need the overall option (Private, Everyone, etc.), not details
-		$data->audience = ucfirst($annotation->field_annotation_audience[$annotation->language][0]['value']);
+    if (isset($annotation->field_annotation_audience[$annotation->language])) {
+      $data->audience = ucfirst($annotation->field_annotation_audience[$annotation->language][0]['value']);
+    }
 
 		// Taxonomies: tags and categories
     // Note: removed tags for now; not shown, so no need to load them
@@ -733,7 +741,8 @@ function lacuna_visualizations_annotation_dashboard_data() {
     $data->username = $userNames[$annotation->uid];
     array_push($results, $data);
   }
-
+  // Cache this data for 24 hours
+  cache_set("lacuna_visualization_dashboard_data:$user->uid:$course_id", $results, 'cache', time() + 24 * 60 * 60);
   drupal_json_output($results);
   drupal_exit();
 }

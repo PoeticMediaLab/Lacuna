@@ -40,32 +40,35 @@ function Annotations(data) {
     this.data.push(data);
     this.all = data;
     this.timeFilter = null;	// because time filters are unique
+}
 
-    this.addFilter = function (data) {
-        this.data.push(data);
-    };
+Annotations.prototype = {
 
-    this.current = function (ignore_time_filter) {
-        if (!ignore_time_filter && this.timeFilter != null) {
-            return this.timeFilter;
-        }
-        return this.data[this.data.length - 1];
-    };
+	addFilter: function (data) {
+		this.data.push(data);
+	},
 
-    // The first entry should be *all* annotations
-    this.unfiltered = function () {
-        return this.all;
-    }
+	current: function (ignore_time_filter) {
+		if (!ignore_time_filter && this.timeFilter != null) {
+			return this.timeFilter;
+		}
+		return this.data[this.data.length - 1];
+	},
 
-    this.removeFilter = function () {
+	// The first entry should be *all* annotations
+	unfiltered: function () {
+		return this.all;
+	},
+
+	removeFilter: function () {
 		return this.data.pop();
-	};
+	},
 
-	this.removeAllFilters = function () {
+	removeAllFilters: function () {
 		this.data = new Array();
 		this.data.push(this.all);
 		this.timeFilter = null;
-	}
+	},
 }
 
 /****************
@@ -966,6 +969,11 @@ function main(data) {
             sortedDates,
             query = [];
         href = href.split('?')[0];   // drop query string
+        if (current.length == annotations.all.length) {
+            // Avoid calculating all this when there's no filter
+            sewing_kit.attr('href', href);
+            return;
+        }
         // Get unique doc ids in current annotations
         doc_ids = current.map(function (value, index) { return value['doc_id']})
                     .filter(function (value, index, self) { return self.indexOf(value) === index;});
