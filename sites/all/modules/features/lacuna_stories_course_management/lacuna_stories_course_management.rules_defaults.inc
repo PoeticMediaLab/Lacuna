@@ -74,7 +74,7 @@ function lacuna_stories_course_management_default_rules_configuration() {
               { "mail" : {
                   "to" : [ "group-admin:mail" ],
                   "subject" : "[account:name] requests enrollment in \\u0022[group:title]\\u0022",
-                  "message" : "Dear [group-admin:name],\\r\\n\\r\\n[account:name] has requested enrollment in your course \\u0022[group:title]\\u0022 ([group:url]). To approve this request, please visit the \\u0022Manage Students\\u0022 page on Lacuna at: [site:url]\\/manage-students\\r\\n\\r\\nSincerely,\\r\\n\\r\\nThe Lacuna Team",
+                  "message" : "Dear [group-admin:name],\\r\\n\\r\\n[account:name] has requested enrollment in your course \\u0022[group:title]\\u0022 ([group:url]). To approve this request, please visit the \\u0022Manage Students\\u0022 page on Lacuna at: [site:url]manage-students\\r\\n\\r\\nSincerely,\\r\\n\\r\\nThe Lacuna Team",
                   "language" : [ "" ]
                 }
               }
