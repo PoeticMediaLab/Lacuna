@@ -26,7 +26,8 @@ input#edit-actioncourse-registration-approve,
 input#edit-actioncourse-registration-block,
 input[id^='edit-actionsewing-kit-stitch'],
 input[id^='edit-actionviews-data-export-action-csv-export'],
-input[id^='edit-actionsewing-kit-remove']
+input[id^='edit-actionsewing-kit-remove'],
+.toboggan-unified div#login-links a.lt-active
 {
   background-color: #c4df2c;
   background-image: linear-gradient(to bottom, #c4df2c, #88b551);
@@ -77,7 +78,9 @@ input[id^='edit-actionsewing-kit-stitch']:focus,
 input[id^='edit-actionviews-data-export-action-csv-export']:hover,
 input[id^='edit-actionviews-data-export-action-csv-export']:focus,
 input[id^='edit-actionsewing-kit-remove']:hover,
-input[id^='edit-actionsewing-kit-remove']:focus
+input[id^='edit-actionsewing-kit-remove']:focus,
+.toboggan-unified div#login-links a.lt-active:hover,
+.toboggan-unified div#login-links a.lt-active:focus
 {
   background-color: #88b551;
   color: #FFFFFF;
@@ -86,7 +89,8 @@ input[id^='edit-actionsewing-kit-remove']:focus
   transition: background-position 0.1s linear 0s;
 }
 .lacuna-button.lacuna-button-blue,
-.page-turner-bookmark-add
+.page-turner-bookmark-add,
+.toboggan-unified div#login-links a:not(.lt-active)
  {
   background-color: #78cefd;
   background-image: linear-gradient(to bottom, #78cefd, #1588ba);
@@ -94,15 +98,17 @@ input[id^='edit-actionsewing-kit-remove']:focus
 .lacuna-button.lacuna-button-blue:hover,
 .lacuna-button.lacuna-button-blue:focus,
 .page-turner-bookmark-add:hover,
-.page-turner-bookmark-add:focus {
+.page-turner-bookmark-add:focus,
+.toboggan-unified a:hover:not(.lt-active),
+.toboggan-unified a:focus:not(.lt-active)
+{
   background-color: #1588ba;
 }
 
-.toboggan-unified a#register-link.login-link.lt-active,
-.toboggan-unified a#login-link.login-link.lt-active
-{
-  background-color: #78cefd !important;
-  background-image: linear-gradient(to bottom, #78cefd, #1588ba) !important;
+.toboggan-unified div#login-links a.lt-active {
+  font-size: large;
+  width: auto;
+  padding: 10px;
 }
 
 .lacuna-button a {
