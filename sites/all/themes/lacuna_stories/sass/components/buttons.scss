@@ -21,6 +21,7 @@ input[type="submit"] {
 a.group.subscribe,
 a.group.unsubscribe,
 div.toboggan-unified #login-links a,
+body.not-logged-in div.field-name-group-group,
 input#edit-actioncourse-registration-approve,
 input#edit-actioncourse-registration-block,
 input[id^='edit-actionsewing-kit-stitch'],
@@ -68,6 +69,7 @@ input[id^='edit-actionsewing-kit-remove']
 .af-button-large:focus,
 a.group.subscribe:hover,
 a.group.unsubscribe:hover,
+body.not-logged-in div.field-name-group-group:hover,
 input#edit-actioncourse-registration-approve:hover,
 input#edit-actioncourse-registration-block:hover,
 input[id^='edit-actionsewing-kit-stitch']:hover,
@@ -84,7 +86,8 @@ input[id^='edit-actionsewing-kit-remove']:focus
   transition: background-position 0.1s linear 0s;
 }
 .lacuna-button.lacuna-button-blue,
-.page-turner-bookmark-add {
+.page-turner-bookmark-add
+ {
   background-color: #78cefd;
   background-image: linear-gradient(to bottom, #78cefd, #1588ba);
 }
@@ -93,6 +96,13 @@ input[id^='edit-actionsewing-kit-remove']:focus
 .page-turner-bookmark-add:hover,
 .page-turner-bookmark-add:focus {
   background-color: #1588ba;
+}
+
+.toboggan-unified a#register-link.login-link.lt-active,
+.toboggan-unified a#login-link.login-link.lt-active
+{
+  background-color: #78cefd !important;
+  background-image: linear-gradient(to bottom, #78cefd, #1588ba) !important;
 }
 
 .lacuna-button a {
