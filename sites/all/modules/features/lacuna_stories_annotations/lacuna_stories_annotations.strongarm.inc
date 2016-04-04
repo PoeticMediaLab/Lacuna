@@ -65,14 +65,14 @@ function lacuna_stories_annotations_strongarm() {
   $strongarm->name = 'content_access_annotation';
   $strongarm->value = array(
     'view_own' => array(
-      0 => 1,
-      1 => 2,
-      2 => 6,
+      0 => 2,
+      1 => 6,
+      2 => 5,
       3 => 3,
     ),
     'view' => array(
-      0 => 6,
-      1 => 3,
+      1 => 5,
+      2 => 3,
     ),
   );
   $export['content_access_annotation'] = $strongarm;

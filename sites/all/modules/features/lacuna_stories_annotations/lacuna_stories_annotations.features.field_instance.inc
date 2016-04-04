@@ -342,7 +342,11 @@ function lacuna_stories_annotations_field_default_field_instances() {
   // Exported field_instance: 'node-annotation-group_content_access'.
   $field_instances['node-annotation-group_content_access'] = array(
     'bundle' => 'annotation',
-    'default_value' => NULL,
+    'default_value' => array(
+      0 => array(
+        'value' => 2,
+      ),
+    ),
     'deleted' => 0,
     'description' => '',
     'display' => array(
