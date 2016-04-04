@@ -60,7 +60,7 @@ function course_registration_action_info() {
     'configurable' => FALSE,
     'vbo_configurable' => FALSE,
     'aggregate' => TRUE,
-    'behavior' => array('changes_property'),
+    'behavior' => array('views_property'),
     // If user can create courses, then can be course admin
     // OG implements its own permissions that we can't access from VBO
     // We could use actions_permissions module to configure this
@@ -134,8 +134,8 @@ function course_registration_form_og_ui_confirm_subscribe_alter(&$form, &$form_s
  * Modify "Manage Students" view to show users in current course only.
  */
 function course_registration_views_query_alter(&$view, &$query) {
-  if ($view->name == 'manage_enrollment') {
-    $gid = course_get_selected_course();
-    $query->add_where_expression(2, "users.uid IN (SELECT etid FROM og_membership WHERE gid = " . $gid . " AND og_membership.entity_type = 'user')");
-  }
+//  if ($view->name == 'manage_enrollment') {
+//    $gid = course_get_selected_course();
+//    $query->add_where_expression(2, "users.uid IN (SELECT etid FROM og_membership WHERE gid = " . $gid . " AND og_membership.entity_type = 'user')");
+//  }
 }
