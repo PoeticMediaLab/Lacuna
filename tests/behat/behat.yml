@@ -26,6 +26,7 @@ default:
         log_in: "Log in"
       selectors:
         success_message_selector: "div.messages.status"
+        message_selector: "div.messages"
       region_map:
         header: "#header"
         Course Selected: "#subtitle"

@@ -22,9 +22,17 @@
       When I am on "/manage-students"
       Then I should see "Status: Pending" in the "View Content"
       And I should see "Student A" in the "View Content"
-      And I should see the "Approve" button
-      And I should see the "Block" button
+      And I should see the "Enroll" button
+      And I should see the "Unenroll" button
       And I should not see "Student B" in the "View Content"
+
+    Scenario: Successfully Enroll student
+      Given I am logged in as "Instructor A"
+      When I am on "/manage-students"
+      And I check the box "edit-views-bulk-operations-0"
+      And I press the "Enroll" button
+      Then I should not see the message "insufficient permissions"
+      And I should see the success message "Performed Enroll"
 
     Scenario: Manage students only in current course
       Given I am logged in as "Instructor A"
