@@ -2,9 +2,6 @@
 
 // Initial round of updates have to be done in hook_install()
 function lacuna_updates_install() {
-  // Outdated field that features will try to re-add
-  db_drop_table('field_data_field_group_description');
-  db_drop_table('field_revision_field_group_description');
   // Enable Lacuna Site Administrator feature if not already
   if (!module_exists('lacuna_site_administrator')) {
     module_enable(array('lacuna_site_administrator'));
@@ -54,5 +51,28 @@ function lacuna_updates_webform_alias() {
       $node->path['pathauto'] = TRUE;
       $wrapper->save();
     }
+  }
+}
+
+/**
+ * Verify that students can't view all annotations, regardless of sharing option
+ */
+function lacuna_updates_update_7101() {
+  $perms = array('view', 'update', 'delete');
+  $types = array('annotation');
+  $student_role = user_role_load_by_name('Student');
+  foreach ($types as $content_type) {
+    $ca_settings = content_access_get_settings('all', $content_type);
+    foreach ($ca_settings as $perm => $roles) {
+      if (in_array($perm, $perms) &&
+        in_array($student_role->rid, $ca_settings[$perm])) {
+        foreach ($ca_settings[$perm] as $delta => $value) {
+          if ($value == $student_role->rid) {
+            unset($ca_settings[$perm][$delta]);
+          }
+        }
+      }
+    }
+    content_access_set_settings($ca_settings, $content_type);
   }
 }
