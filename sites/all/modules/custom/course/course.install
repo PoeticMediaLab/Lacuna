@@ -107,3 +107,12 @@ function course_update_7104() {
 	}
 	node_access_rebuild();
 }
+
+/**
+ * Remove custom group access field from Course
+ */
+function course_update_7105() {
+  if ($instance = field_info_instance('node', OG_DEFAULT_ACCESS_FIELD, 'course')) {
+    field_delete_instance($instance);
+  }
+}
