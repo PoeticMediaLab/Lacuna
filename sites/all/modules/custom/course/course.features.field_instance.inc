@@ -957,60 +957,6 @@ function course_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-course-og_roles_permissions'.
-  $field_instances['node-course-og_roles_permissions'] = array(
-    'bundle' => 'course',
-    'default_value' => array(
-      0 => array(
-        'value' => 0,
-      ),
-    ),
-    'deleted' => 0,
-    'description' => 'You can safely leave this set to the default. You would know if you needed to customize this part.',
-    'display' => array(
-      'default' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 31,
-      ),
-      'teaser' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
-      ),
-    ),
-    'entity_type' => 'node',
-    'field_name' => 'og_roles_permissions',
-    'label' => 'Course access permissions',
-    'required' => 1,
-    'settings' => array(
-      'user_register_form' => FALSE,
-    ),
-    'view modes' => array(
-      'full' => array(
-        'custom settings' => FALSE,
-        'label' => 'Full',
-        'type' => 'list_default',
-      ),
-      'teaser' => array(
-        'custom settings' => FALSE,
-        'label' => 'Teaser',
-        'type' => 'list_default',
-      ),
-    ),
-    'widget' => array(
-      'active' => 1,
-      'module' => 'options',
-      'settings' => array(
-        'apply_chosen' => '',
-      ),
-      'type' => 'options_select',
-      'weight' => 3,
-    ),
-  );
-
   // Exported field_instance:
   // 'og_membership-og_membership_type_default-og_membership_request'.
   $field_instances['og_membership-og_membership_type_default-og_membership_request'] = array(
@@ -1115,7 +1061,6 @@ function course_field_default_field_instances() {
   t('Course Image');
   t('Course Title');
   t('Course Visibility');
-  t('Course access permissions');
   t('Course(s) Enrolled');
   t('Cross-listed as:');
   t('Department');
@@ -1147,7 +1092,6 @@ function course_field_default_field_instances() {
   t('What password would you like to create for students to register in your class?');
   t('Would you like your current draft course to be visible to students, or to continue in "Instructor-Only" mode?');
   t('Year');
-  t('You can safely leave this set to the default. You would know if you needed to customize this part.');
 
   return $field_instances;
 }
