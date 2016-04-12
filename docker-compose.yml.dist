@@ -13,7 +13,7 @@ web:
     #- 192.168.10.10:443:443
   volumes:
     # Project root folder mapping
-    - &project_root ".:/var/www"
+    - &project_root "./:/var/www"
   links:
     - cli
   environment:
