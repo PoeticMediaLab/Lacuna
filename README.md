@@ -65,6 +65,8 @@ Proceed with the installation process. Lacuna Stories will be automatically conf
 
 We highly recommend that you install [Drush](http://www.drush.org/en/master/) to help you manage updates to the site. We will assume Drush is available later in this document.
 
+NOTE: [Clean URLs](https://www.drupal.org/getting-started/clean-urls) are *required* for annotations to work.
+
 ## Post-Installation Tasks
 
 After installing, there are a few steps you will want to take to improve the user experience.
