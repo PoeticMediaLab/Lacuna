@@ -147,6 +147,7 @@ features[variable][] = user_picture_style
 features[variable][] = user_pictures
 features[variable][] = user_register
 features[variable][] = user_signatures
+features[views_view][] = annotations_by_user
 features[views_view][] = people
 features_exclude[menu_custom][main-menu] = main-menu
 project path = sites/all/modules/custom/lacuna_user_account

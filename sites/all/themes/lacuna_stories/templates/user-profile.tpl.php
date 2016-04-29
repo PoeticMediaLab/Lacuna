@@ -61,15 +61,16 @@ function customPrintViewsBlock($blockName)
 <section id="user-profile-main">
 	<div class="column left-part">
 		<div id="user-avatar-space" class="profile-section">
-            <?php
-            $basePath = base_path();
-            if($profile_user->uid === $user->uid):?>
+            <?php $basePath = base_path();?>
                 <div id="user-command-buttons">
-                    <a href="<?php print $basePath."user/".$user->uid."/edit"?>"><i class="fa fa-cog fa-2x"></i></a>
-                    <a href="<?php print $basePath."user/".$user->uid."/notify"?>"><i class="fa fa-bell-o fa-2x"></i></a>
-                    <a href="<?php print $basePath."user/".$user->uid."/contact"?>"><i class="fa fa-comment-o fa-2x"></i></a>
+                    <?php if ($profile_user->uid === $user->uid):?>
+                        <a href="<?php print $basePath."user/".$user->uid."/edit"?>"><i class="fa fa-cog fa-2x"></i></a>
+                        <a href="<?php print $basePath."user/".$user->uid."/notify"?>"><i class="fa fa-bell-o fa-2x"></i></a>
+                    <?php endif; ?>
+                    <?php if (user_access('access user contact forms')): ?>
+                        <a href="<?php print $basePath."user/".$user->uid."/contact"?>"><i class="fa fa-comment-o fa-2x"></i></a>
+                    <?php endif; ?>
                 </div>
-            <?php endif; ?>
 			<?php print $user_profile["user_picture"]["#markup"]; ?>
 		</div>
 		<div id="how-I-Learn-space" class="profile-section">
@@ -111,7 +112,7 @@ function customPrintViewsBlock($blockName)
 			</div>
 			<div class="field-wrapper">
                 <p class="title">Annotations</p>
-                <?php $annotationsIsEmpty = !customPrintViewsBlock("my_annotations_view-block");
+                <?php $annotationsIsEmpty = !customPrintViewsBlock("annotations_by_user-block");
                     if($annotationsIsEmpty)
                     {
                         print "<p class='no-results'>{$username} has not made any annotations</p>";

@@ -248,7 +248,7 @@ function course_node_view($node, $view_mode, $langcode) {
  */
 function course_views_query_alter(&$view, &$query) {
   // List of the views to alter
-  $where_node_views = array('responses', 'documents', 'threads', 'all_content', 'my_content', 'sewing-kit', 'user_s_responses', 'user_s_comments', 'my_annotations_view', 'peer_groups');
+  $where_node_views = array('responses', 'documents', 'threads', 'all_content', 'my_content', 'sewing-kit', 'user_s_responses', 'user_s_comments', 'annotations_by_user', 'peer_groups');
   $where_user_views = array('people', 'all_emails');
 	$gid = course_get_selected_course();
 
