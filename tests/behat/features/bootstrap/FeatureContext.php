@@ -177,6 +177,8 @@ class FeatureContext extends DrupalContext implements SnippetAcceptingContext {
         'state' => OG_STATE_ACTIVE
       )
     );
+    $node->og_group_ref[LANGUAGE_NONE][0]['target_id'] = $course->nid;
+    node_save($node);
     if (!$membership) {
       throw new \Exception(sprintf("Could not add %s '%s' to course '%s'"), $node_type, $node_title, $course_title);
     }

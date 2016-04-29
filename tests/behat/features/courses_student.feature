@@ -64,6 +64,12 @@ Feature: courses_student
       Then I should see "Responses" in the "Page Title"
       And I should see "Response A" in the "View Content" region
 
+    Scenario: Instructor A reads responses
+      Given I am logged in as "Instructor A"
+      When I am on "/responses"
+      Then I should see "Responses" in the "Page Title"
+      And I should see "Response A" in the "View Content" region
+
     Scenario:
       Given I am logged in as "Student B"
       When I go to the "response" node titled "Response A"
