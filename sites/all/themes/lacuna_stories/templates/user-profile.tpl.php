@@ -81,6 +81,7 @@ function customPrintViewsBlock($blockName)
                 ?>
 			</div>
 		</div>
+		
 	</div>
 
 	<div class="column right-part">
