@@ -61,25 +61,24 @@ function customPrintViewsBlock($blockName)
 <section id="user-profile-main">
 	<div class="column left-part">
 		<div id="user-avatar-space" class="profile-section">
-            <?php
-            $basePath = base_path();
-            if($profile_user->uid === $user->uid):?>
-                <div id="user-command-buttons">
-                    <a href="<?php print $basePath."user/".$user->uid."/edit"?>"><i class="fa fa-cog fa-2x"></i></a>
-                    <a href="<?php print $basePath."user/".$user->uid."/notify"?>"><i class="fa fa-bell-o fa-2x"></i></a>
-                    <a href="<?php print $basePath."user/".$user->uid."/contact"?>"><i class="fa fa-comment-o fa-2x"></i></a>
-                </div>
-            <?php endif; ?>
+            
 			<?php print $user_profile["user_picture"]["#markup"]; ?>
+            <?php print "<p class='profileUsername'>$username</p>"; ?>
+            <div id="user-command-buttons">
+            <?php $basePath = base_path();            
+            if($profile_user->uid === $user->uid):?>
+                
+                    <div><a href="<?php print $basePath."user/".$user->uid."/edit"?>"><i class="fa fa-cog fa-2x"></i><span>Profile settings</span></a></div>
+                    <div><a href="<?php print $basePath."user/".$user->uid."/notify"?>"><i class="fa fa-bell-o fa-2x"></i><span>Notification settings</span></a></div>
+                    <?php endif; ?>
+                    
+                    <?php if (user_access('access user contact forms')): ?>
+                   <div><a href="<?php print $basePath."user/".$profile_user->uid."/contact"?>"><i class="fa fa-comment-o fa-2x"></i><span class="contact">Contact</span></a></div>
+                   <?php endif; ?>
+                </div>
+            
 		</div>
-		<div id="how-I-Learn-space" class="profile-section">
-			<span class="caption">How I Learn</span>
-			<div class="field-wrapper">
-                <?php   if(isset($field_how_i_learn)) print "<p>{$field_how_i_learn[0]["value"]} </p>";
-                        else print "<p>Empty</p>"
-                ?>
-			</div>
-		</div>
+		
 	</div>
 
 	<div class="column right-part">
