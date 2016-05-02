@@ -8,6 +8,9 @@ $profile-height: 220px;
 	div.column {
 		display: inline-block;
 	}
+	aside {
+		display: inline-block;
+	}
 
 	.profile-section {
 		margin-bottom: 20px;
@@ -172,6 +175,10 @@ $profile-height: 220px;
 		display: inline-block;
 	}
 
+	aside {
+		display: inline-block;
+	}
+
 	.profile-section {
 		margin-bottom: 20px;
 		padding-top: 15px;
@@ -186,7 +193,7 @@ $profile-height: 220px;
 
 	div.right-part {
 		vertical-align: top;
-		width: 75%;
+		width: 65%;
 		min-height: 820px;
 	}
 
@@ -227,6 +234,173 @@ $profile-height: 220px;
 		height: auto;
 		vertical-align: bottom;
 		text-align: left;
+
+	}
+
+	#user-command-buttons {
+		margin-bottom: 10px;
+		div {
+			margin-bottom: 10px;
+		}
+		a, a:visited, a:active {
+			color: inherit;
+			.fa {
+				color: #506038;
+				vertical-align: sub; /*brings into alignment with spans*/
+			}
+			.fa:hover {
+				color: #BDD09E;
+				transition: 100ms background-color ease;
+				-webkit-transition: 100ms background-color ease;
+			}
+			span {
+				color: #465F73;
+				padding: 3px;
+				font-family: "Source Sans Pro", sans-serif;
+				letter-spacing: -.06em;
+				font-size: 1.3em;
+				text-transform: uppercase;
+				margin-left: 10px;
+			}
+			/*lines first child up with following*/
+			.fa-cog:before {
+				margin-right: 5px;
+			}
+			span:hover {
+				color: #8495A0;
+				transition: 100ms background-color ease;
+				-webkit-transition: 100ms background-color ease;
+			}
+
+		}
+		a:not(:first-child) {
+			margin-left: 20px;
+		}
+	}
+
+	#how-I-Learn-space div.field-wrapper p {
+		max-height: 460px;
+		height: 460px;
+	}
+
+	#user-contributions-space {
+		div.field-wrapper {
+			height: 100px;
+			padding-right: 0;
+			padding-bottom: 0;
+			.block {
+				overflow-y: scroll;
+				height: 75px;
+			}
+		}
+		div.field-wrapper:nth-child(n+1) {
+			// border-top: none;
+			margin-top: -1px;
+		}
+	}
+	#user-bio-space div.field-wrapper {
+		height: 30px
+	}
+	#user-learning-goals-space div.field-wrapper {
+		height: 120px;
+		white-space: nowrap;
+	}
+
+	#user-learning {
+		table {
+			width: 100%;
+			margin: 0;
+			td {
+				text-align: center;
+				p {
+					font-style: italic;
+				}
+				img {
+					border: 1px solid;
+					border-color: $border-color;
+					border-radius: 8px;
+					width: 120px;
+					height: 120px;
+				}
+			}
+		}
+		div.user-link-item.is-empty {
+			opacity: 0.4;
+			a {
+				cursor: default;
+				pointer-events: none;
+			}
+		}
+	}
+}
+}
+
+@media screen and (max-width: 780px) {
+	#user-profile-main {
+	width: 100%;
+	div.column {
+		display: inline-block;
+	}
+
+	aside {
+		display: block;
+	}
+
+	.profile-section {
+		margin-bottom: 20px;
+		padding-top: 15px;
+	}
+
+	div.left-part {
+		margin-right: 10px;
+		vertical-align: top;
+		width: 22%;
+		float: left;
+	}
+
+	div.right-part {
+		vertical-align: top;
+		width: 100%;
+		min-height: 820px;
+	}
+
+	span.caption, p.profileUsername {
+		font-size: 24px;
+		font-weight: bold;
+		font-family: "Source Sans Pro", sans-serif;
+		letter-spacing: -.03em;
+		color: #465F73;
+	}
+
+	p.profileUsername {
+		margin-bottom: 25px;
+		font-size: 2.5em;
+	}
+
+	div.field-wrapper {
+		border: 1px solid;
+		border-color: $border-color;
+		border-radius: 5px;
+		padding: 10px;
+		p {
+			margin: 0;
+			font-size: 16px;
+			text-overflow: ellipsis;
+			overflow: hidden;
+		}
+		p.title {
+			font-style: italic;
+			font-size: 20px;
+		}
+		p.no-results {
+			margin-top: 10px;
+		}
+	}
+
+	#user-avatar-space {
+		height: auto;
+		vertical-align: bottom;
+		text-align: center;
 
 	}
 

@@ -59,30 +59,23 @@ function customPrintViewsBlock($blockName)
 ?>
 
 <section id="user-profile-main">
-	<div class="column left-part">
+	<aside class="column left-part">
 		<div id="user-avatar-space" class="profile-section">
             <?php $basePath = base_path();?>
+            <?php print $user_profile["user_picture"]["#markup"]; ?>
+            <?php print "<p class='profileUsername'>$username</p>"; ?>
                 <div id="user-command-buttons">
                     <?php if (($profile_user->uid === $user->uid) || user_access('administer users')):?>
-                        <a href="<?php print $basePath . "user/" . $profile_user->uid . "/edit"?>"><i class="fa fa-cog fa-2x"></i></a>
-                        <a href="<?php print $basePath . "user/" . $profile_user->uid. "/notify"?>"><i class="fa fa-bell-o fa-2x"></i></a>
+                        <div><a href="<?php print $basePath . "user/" . $profile_user->uid . "/edit"?>"><i class="fa fa-cog fa-2x"></i><span>Profile settings</span></a></div>
+                        <div><a href="<?php print $basePath . "user/" . $profile_user->uid. "/notify"?>"><i class="fa fa-bell-o fa-2x"></i><span>Notification settings</span></a></div>
                     <?php endif; ?>
                     <?php if (user_access('access user contact forms')): ?>
-                        <a href="<?php print $basePath . "user/" . $profile_user->uid . "/contact"?>"><i class="fa fa-comment-o fa-2x"></i></a>
+                        <div><a href="<?php print $basePath . "user/" . $profile_user->uid . "/contact"?>"><i class="fa fa-comment-o fa-2x"></i><span>Contact</span></a></div>
                     <?php endif; ?>
                 </div>
-			<?php print $user_profile["user_picture"]["#markup"]; ?>
-		</div>
-		<div id="how-I-Learn-space" class="profile-section">
-			<span class="caption">How I Learn</span>
-			<div class="field-wrapper">
-                <?php   if(isset($field_how_i_learn)) print "<p>{$field_how_i_learn[0]["value"]} </p>";
-                        else print "<p>Empty</p>"
-                ?>
-			</div>
-		</div>
-		
-	</div>
+			
+		</div>	
+	</aside>
 
 	<div class="column right-part">
 		<div id="user-about-space" class="profile-section">
