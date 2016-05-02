@@ -76,7 +76,6 @@ function customPrintViewsBlock($blockName)
 			
 		</div>	
 	</aside>
-
 	<div class="column right-part">
 		<div id="user-about-space" class="profile-section">
 			<span class="caption">About</span>
