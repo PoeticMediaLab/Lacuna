@@ -54,7 +54,7 @@ Instructions were not tested with other shells on Windows.
 8. Point your browser to
 
     ```
-    http://hello-world.drude
+    http://drupal7.drude
     ```
 
 
