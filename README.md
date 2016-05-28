@@ -11,7 +11,7 @@ Instructions were not tested with other shells on Windows.
 1. Install `dsh` (Drude Shell)
 
     ```
-    sudo curl -L https://raw.githubusercontent.com/blinkreaction/drude/master/bin/dsh  -o /usr/local/bin/dsh
+    sudo curl -L https://raw.githubusercontent.com/blinkreaction/drude/master/bin/dsh -o /usr/local/bin/dsh
     sudo chmod +x /usr/local/bin/dsh
     ```
 
@@ -55,8 +55,8 @@ Instructions were not tested with other shells on Windows.
 
 ## More automation with 'dsh init'
 
-Site provisioning can be automated using `dsh init`, which calls the shell script in [.drude/scripts/drude-init.sh](.drude/scripts/drude-init.sh).  
-This script is meant to be modified per project. The one in this repo will give you a good starting point.
+Site provisioning can be automated using `dsh init`, which calls the shell script in [.drude/commands/init](.drude/commands/init).  
+This script is meant to be modified per project. The one in this repo will give you a good example of advanced init script.
 
 Some common tasks that can be handled by the init script:
 
@@ -89,12 +89,16 @@ To install them
 
 1. Uncomment the following block in [.drude/commands/init](.drude/commands/init):
 
-```
-# Uncomment line below to install site 1
-db_create 'site1' && site_install 'drupal7-site1.drude'
-# Uncomment line below to install site 2
-db_create 'site2' && site_install 'drupal7-site2.drude'
-```
+    ```
+    # Uncomment line below to install site 1
+    db_create 'site1' && site_install 'drupal7-site1.drude'
+    # Uncomment line below to install site 2
+    db_create 'site2' && site_install 'drupal7-site2.drude'
+    ```
 
 2. Run `dsh init` again
-3. **On Windows** add both domains to your hosts file `192.168.10.10  drupal7-site1.drude drupal7-site2.drude`.
+3. **On Windows** add both domains to your hosts file 
+
+```
+192.168.10.10	drupal7-site1.drude drupal7-site2.drude
+```
