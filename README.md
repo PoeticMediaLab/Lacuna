@@ -1,7 +1,7 @@
-# Drude Testing
+# Drude powered Drupal 7 Installation
 
-This is a sample vanila Drupal 7 installation preconfigured for use with Drude.  
-Sample Behat tests also included.
+This is a sample vanilla Drupal 7 installation preconfigured for use with Drude.  
+Includes Sample Behat tests.
 
 ## Instructions (Mac and Windows)
 
@@ -32,8 +32,8 @@ Instructions were not tested with other shells on Windows.
 4. Clone this repo into the Projects directory
 
     ```
-    git clone https://github.com/blinkreaction/drude-testing.git
-    cd drude-testing
+    git clone https://github.com/blinkreaction/drude-d7-testing.git
+    cd drude-d7-testing
     ```
 
 5. Set up `settings.local.php` in `sites/default`
@@ -49,7 +49,7 @@ Instructions were not tested with other shells on Windows.
     dsh drush si -y
     ```
 
-7. Add `192.168.10.10  drupal7.drude` to your hosts file
+7. **On Windows** add `192.168.10.10  drupal7.drude` to your hosts file
 
 8. Point your browser to
 
@@ -74,18 +74,19 @@ Some common tasks that can be handled by the init script:
 
 Try it:
 
-    ```
-    dsh init
-    ```
+```
+dsh init
+```
 
 
 ## Behat test examples
 
-Behat tests are stored in [tests/behat](tests/behat). To launcht then run: 
+Behat tests are stored in [tests/behat](tests/behat). 
+Run Behat tests: 
 
-    ```
-    dsh behat
-    ```
+```
+dsh behat
+```
 
 
 ## Drupal multisite example
@@ -95,13 +96,13 @@ There are two additional sites configured in this project:
  - drupal7-site1.drude
  - drupal7-site2.drude
 
-To install them uncomment the following block in [.drude/scripts/drude-init.sh](.drude/scripts/drude-init.sh):
+To install them uncomment the following block in [.drude/commands/init](.drude/commands/init):
 
-   ```
-    # Uncomment line below to install site 1
-    db_create 'site1' && site_install 'drupal7-site1.drude'
-    # Uncomment line below to install site 2
-    db_create 'site2' && site_install 'drupal7-site2.drude'
-   ```
+```
+# Uncomment line below to install site 1
+db_create 'site1' && site_install 'drupal7-site1.drude'
+# Uncomment line below to install site 2
+db_create 'site2' && site_install 'drupal7-site2.drude'
+```
 
 Run `dsh init`. You may have to add both domains to your hosts file.
