@@ -39,6 +39,7 @@ echo -e "Preparing to download Drupal 7 project to ${yellow}$(pwd)/drude-d7-test
 _confirm "Continue with this folder?"
 echo -e "${green_bg} INIT ${NC}${green} Cloning repository...${NC}"
 
-git clone -b master https://github.com/blinkreaction/drude-d8-testing.git && \
-	cd drude-d8-testing && \
+git clone -b develop https://github.com/achekulaev/drude-d7-testing.git && \
+#git clone -b master https://github.com/blinkreaction/drude-d7-testing.git && \
+	cd drude-d7-testing && \
 	dsh init
