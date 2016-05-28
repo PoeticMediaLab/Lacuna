@@ -192,7 +192,7 @@ echo -e "${green_bg} Step 1 ${NC}${green} Initializing local project configurati
 init_settings
 
 echo -e "${green_bg} Step 2 ${NC}${green} Recreating services...${NC}"
-dsh reset
+dsh reset -f
 sleep 5
 
 echo -e "${green_bg} Step 3 ${NC}${green} Installing site...${NC}"
