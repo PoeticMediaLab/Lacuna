@@ -13,15 +13,14 @@ SITE_DOMAIN='drupal7.drude'
 # Console colors
 red='\033[0;31m'
 green='\033[0;32m'
+green_bg='\033[42m'
 yellow='\033[1;33m'
 NC='\033[0m'
 
-# Get project root directory
-GIT_ROOT=$(git rev-parse --show-toplevel)
-if [[ -z $GIT_ROOT  ]]; then exit -1; fi
-
-# Set repo root as working directory.
-cd $GIT_ROOT
+echo-red () { echo -e "${red}$1${NC}"; }
+echo-green () { echo -e "${green}$1${NC}"; }
+echo-green-bg () { echo -e "${green_bg}$1${NC}"; }
+echo-yellow () { echo -e "${yellow}$1${NC}"; }
 
 # Check whether shell is interactive (otherwise we are running in a non-interactive script environment)
 is_tty ()
@@ -59,19 +58,19 @@ _copy_settings_file()
   local dest=${2}
 
   if [[ ! -f $dest ]]; then
-    echo -e "${green}Copying ${dest}...${NC}"
-    cp $source $dest
+    echo "Copying ${dest}..."
+    cp "$source" "$dest"
   else
-    echo -e "${yellow}${dest} already in place${NC}"
+    echo-yellow "${dest} already in place"
   fi
 }
 
 # Copy settings files
 init_settings ()
 {
-  cd $GIT_ROOT
+  cd "$GIT_ROOT"
 
-  _copy_settings_file 'docker-compose.yml.dist' 'docker-compose.yml'
+  _copy_settings_file "docker-compose.yml.dist" "docker-compose.yml"
   #_copy_settings_file "docroot/sites/example.sites.local.php" "docroot/sites/sites.local.php"
   _copy_settings_file "docroot/sites/${SITE_DIRECTORY}/example.settings.local.php" "docroot/sites/${SITE_DIRECTORY}/settings.local.php"
   _copy_settings_file "docroot/sites/site1/example.settings.local.php" "docroot/sites/site1/settings.local.php"
@@ -82,10 +81,9 @@ init_settings ()
 # @param $1 site-name (domain)
 site_install ()
 {
-  cd $GIT_ROOT
-  cd docroot
+  cd "$GIT_ROOT/docroot"
 
-  echo -e "${yellow}Installing site ${1}...${NC}"
+  echo-yellow "Installing site ${1}..."
 
   local site_name=''
   if [[ $1 != '' ]]; then
@@ -100,7 +98,7 @@ site_install ()
 # @param $1 DB name
 db_create ()
 {
-  echo -e "${yellow}Creating DB ${1}...${NC}"
+  echo-yellow "Creating DB ${1}..."
 
   local database=${1}
   local mysql_exec='mysql -h $DB_1_PORT_3306_TCP_ADDR --user=root --password=$DB_1_ENV_MYSQL_ROOT_PASSWORD -e ';
@@ -109,23 +107,20 @@ db_create ()
   dsh exec "${mysql_exec} \"${query}\""
 }
 
-
 # Import database from the source site alias
 db_import ()
 {
   #_confirm "Do you want to import DB from ${SOURCE_ALIAS}?"
 
-  cd $GIT_ROOT
-  cd docroot
-  dsh drush -l ${SITE_DOMAIN} sql-sync ${SOURCE_ALIAS} @self -y
+  cd "$GIT_ROOT/docroot"
+  dsh drush -l "$SITE_DOMAIN" sql-sync "$SOURCE_ALIAS" @self -y
 }
 
 # Misc drush commands to bring DB up-to-date
 db_updates ()
 {
-  cd $GIT_ROOT
-  echo -e "${yellow}Applying DB updates...${NC}"
-  cd docroot
+  cd "$GIT_ROOT/docroot"
+  echo-yellow "Applying DB updates..."
   set -x
 
   dsh drush -l ${SITE_DOMAIN} status
@@ -140,8 +135,8 @@ db_updates ()
 # Local adjustments
 local_settings ()
 {
-  cd $GIT_ROOT
-  echo -e "${yellow}Applying local settings...${NC}"
+  cd "$GIT_ROOT"
+  echo-yellow "Applying local settings..."
   cd docroot
   set -x
 
@@ -153,8 +148,8 @@ local_settings ()
 # Compile Sass
 compass_compile ()
 {
-  cd $GIT_ROOT
-  echo -e "${yellow}Compiling Sass...${NC}"
+  cd "$GIT_ROOT"
+  echo-yellow "Compiling Sass..."
   set -x
 
   #cd docroot/sites/all/themes/<themename>
@@ -167,7 +162,7 @@ compass_compile ()
 # Initialize local Behat settings
 init_behat ()
 {
-  cd $GIT_ROOT
+  cd "$GIT_ROOT"
 
   _copy_settings_file 'tests/behat/behat.yml.dist' 'tests/behat/behat.yml'
 }
@@ -175,18 +170,32 @@ init_behat ()
 # Run basic Behat validation tests
 run_behat ()
 {
-  cd $GIT_ROOT
+  cd "$GIT_ROOT"
 
   echo -e "${yellow}Launching Behat validation tests...${NC}"
   cd tests/behat
   dsh behat --format=pretty --out=std --format=junit --out=junit features/drush-si-validation.feature
 }
 
+#-------------------------- Execution --------------------------------
+
+# Set repo root as working directory.
+GIT_ROOT=$(git rev-parse --show-toplevel)
+if [[ -z "$GIT_ROOT" ]]; then
+	echo-red "Git repository was not found"
+	exit 1;
+fi
+cd "$GIT_ROOT"
+
 # Project initialization steps
+echo -e "${green_bg} Step 1 ${NC}${green} Initializing local project configuration...${NC}"
 init_settings
+
+echo -e "${green_bg} Step 2 ${NC}${green} Recreating services...${NC}"
 dsh reset
-# Give MySQL some time to start before importing the DB
 sleep 5
+
+echo -e "${green_bg} Step 3 ${NC}${green} Installing site...${NC}"
 site_install
 
 # Uncomment line below to install site 1
@@ -201,7 +210,13 @@ site_install
 init_behat
 #run_behat
 
-echo -e "${green}All done!${NC}"
-echo -e "${green}Add ${SITE_DOMAIN} to your hosts file (/etc/hosts), e.g.:${NC}"
-echo -e "192.168.10.10  ${SITE_DOMAIN}"
-echo -e "${green}Open http://${SITE_DOMAIN} in your browser to verify the setup.${NC}"
+if is_windows; then
+	echo-green "Add ${SITE_DOMAIN} to your hosts file (/etc/hosts), e.g.:"
+	echo-green "192.168.10.10  ${SITE_DOMAIN}"
+	echo-green "Alternatively configure wildcard DNS resolution and never edit the hosts file again! Instructions:"
+	echo-green "https://github.com/blinkreaction/boot2docker-vagrant/blob/develop/docs/networking.md#dns-resolution"
+	echo
+fi
+
+echo -en "${green_bg} DONE! ${NC} "
+echo -e "Open ${yellow}http://${SITE_DOMAIN}${NC} in your browser to verify the setup."
