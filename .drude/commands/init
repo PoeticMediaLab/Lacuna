@@ -28,6 +28,16 @@ is_tty ()
 	[[ "$(/usr/bin/tty || true)" != "not a tty" ]]
 }
 
+is_windows ()
+{
+	local res=$(uname | grep 'CYGWIN_NT')
+	if [[ "$res" != "" ]]; then
+		return 0
+	else
+		return 1
+	fi
+}
+
 # Yes/no confirmation dialog with an optional message
 # @param $1 confirmation message
 _confirm ()
@@ -83,12 +93,10 @@ site_install ()
 {
   cd "$GIT_ROOT/docroot"
 
-  echo-yellow "Installing site ${1}..."
-
   local site_name=''
   if [[ $1 != '' ]]; then
     # Append site name to the argements list if provided
-    site_name="-l $1 --site-name=$1"
+    site_name="--site-name='$1'"
   fi
   # We disable email sending here so site-install does not return an error
   dsh exec "PHP_OPTIONS="'"-d sendmail_path=`which true`"'" drush site-install -y ${site_name}"
@@ -196,7 +204,7 @@ dsh reset -f
 sleep 5
 
 echo -e "${green_bg} Step 3 ${NC}${green} Installing site...${NC}"
-site_install
+site_install "My Drupal 7 Site"
 
 # Uncomment line below to install site 1
 #db_create 'site1' && site_install 'drupal7-site1.drude'
