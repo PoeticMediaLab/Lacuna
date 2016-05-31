@@ -13,7 +13,7 @@ web:
     #- 192.168.10.10:443:443
   volumes:
     # Project root folder mapping
-    - &project_root ".:/var/www"
+    - &project_root "./:/var/www"
   links:
     - cli
   environment:
@@ -88,10 +88,10 @@ cli:
 
 # selenium2 node
 # Uncomment the service definition section below and the link in the web service above to start using selenium2 driver for Behat tests requiring JS support.
-browser:
-  hostname: browser
-  image: selenium/standalone-chrome
-  ports:
-    - "4444"
-  environment:
-    - DOMAIN_NAME=drude-d7-testing.browser.docker
+#browser:
+#  hostname: browser
+#  image: selenium/standalone-chrome
+#  ports:
+#    - "4444"
+#  environment:
+#    - DOMAIN_NAME=drude-d7-testing.browser.docker
