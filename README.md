@@ -70,8 +70,31 @@ Some common tasks that can be handled by the init script:
 
 ## Behat test examples
 
-Behat tests are stored in [tests/behat](tests/behat). 
-Run Behat tests: 
+Behat tests are stored in [tests/behat](tests/behat).  
+Uncomment selenium service in `docker-compose.yml` and it's link in `web` service. 
+
+```yml
+# Web node
+web:
+  ...
+  links:
+    - cli
+    - browser
+...
+# selenium2 node
+# Uncomment the service definition section below and the link in the web service above to start using selenium2 driver for Behat tests requiring JS support.
+browser:
+  hostname: browser
+  image: selenium/standalone-chrome
+  ports:
+    - "4444"
+  environment:
+    - DOMAIN_NAME=drude-d7-testing.browser.docker
+```
+
+Run `dsh up` to have `browser` service up and running.
+
+Then run Behat tests: 
 
 ```
 dsh behat
