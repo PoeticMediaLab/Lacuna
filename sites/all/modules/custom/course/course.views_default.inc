@@ -253,7 +253,7 @@ function course_views_default_views() {
   $handler->display->display_options['fields']['field_course_id']['field'] = 'field_course_id';
   $handler->display->display_options['fields']['field_course_id']['label'] = '';
   $handler->display->display_options['fields']['field_course_id']['element_label_colon'] = FALSE;
-  /* Field: Content: Instructor: */
+  /* Field: Content: Instructor Name: */
   $handler->display->display_options['fields']['field_name']['id'] = 'field_name';
   $handler->display->display_options['fields']['field_name']['table'] = 'field_data_field_name';
   $handler->display->display_options['fields']['field_name']['field'] = 'field_name';

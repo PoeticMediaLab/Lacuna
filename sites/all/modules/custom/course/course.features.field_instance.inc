@@ -57,7 +57,7 @@ function course_field_default_field_instances() {
         'summary_rows' => 5,
       ),
       'type' => 'text_textarea_with_summary',
-      'weight' => 1,
+      'weight' => 3,
     ),
   );
 
@@ -167,7 +167,7 @@ function course_field_default_field_instances() {
         'progress_indicator' => 'throbber',
       ),
       'type' => 'image_image',
-      'weight' => 5,
+      'weight' => 7,
     ),
   );
 
@@ -182,7 +182,7 @@ function course_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 28,
+        'weight' => 26,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -244,48 +244,6 @@ function course_field_default_field_instances() {
       'settings' => array(),
       'type' => 'options_buttons',
       'weight' => 14,
-    ),
-  );
-
-  // Exported field_instance: 'node-course-field_course_title'.
-  $field_instances['node-course-field_course_title'] = array(
-    'bundle' => 'course',
-    'default_value' => NULL,
-    'deleted' => 0,
-    'description' => 'What is the full name of your course?',
-    'display' => array(
-      'default' => array(
-        'label' => 'hidden',
-        'module' => 'text',
-        'settings' => array(),
-        'type' => 'text_default',
-        'weight' => 1,
-      ),
-      'teaser' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
-      ),
-    ),
-    'entity_type' => 'node',
-    'field_name' => 'field_course_title',
-    'label' => 'Course Title',
-    'required' => 1,
-    'settings' => array(
-      'text_processing' => 0,
-      'user_register_form' => FALSE,
-    ),
-    'widget' => array(
-      'active' => 1,
-      'module' => 'text',
-      'settings' => array(
-        'maxlength_js' => 0,
-        'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
-        'size' => 60,
-      ),
-      'type' => 'text_textfield',
-      'weight' => 9,
     ),
   );
 
@@ -370,7 +328,7 @@ function course_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 8,
+      'weight' => 1,
     ),
   );
 
@@ -385,7 +343,7 @@ function course_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 29,
+        'weight' => 27,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -422,7 +380,7 @@ function course_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 24,
+        'weight' => 22,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -449,7 +407,7 @@ function course_field_default_field_instances() {
         'progress_indicator' => 'throbber',
       ),
       'type' => 'file_generic',
-      'weight' => 2,
+      'weight' => 4,
     ),
   );
 
@@ -518,7 +476,7 @@ function course_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 25,
+        'weight' => 23,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -570,8 +528,8 @@ function course_field_default_field_instances() {
     ),
     'entity_type' => 'node',
     'field_name' => 'field_name',
-    'label' => 'Instructor:',
-    'required' => 0,
+    'label' => 'Instructor Name:',
+    'required' => 1,
     'settings' => array(
       'text_processing' => 0,
       'user_register_form' => FALSE,
@@ -585,7 +543,7 @@ function course_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 7,
+      'weight' => 0,
     ),
   );
 
@@ -604,7 +562,7 @@ function course_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 26,
+        'weight' => 24,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -642,7 +600,7 @@ function course_field_default_field_instances() {
         'label' => 'inline',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 21,
+        'weight' => 20,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -736,7 +694,7 @@ function course_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 30,
+        'weight' => 28,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -778,7 +736,7 @@ function course_field_default_field_instances() {
         'label' => 'inline',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 22,
+        'weight' => 21,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -819,7 +777,7 @@ function course_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 27,
+        'weight' => 25,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -953,7 +911,61 @@ function course_field_default_field_instances() {
         'og_hide' => TRUE,
       ),
       'type' => 'options_onoff',
-      'weight' => 4,
+      'weight' => 6,
+    ),
+  );
+
+  // Exported field_instance: 'node-course-og_roles_permissions'.
+  $field_instances['node-course-og_roles_permissions'] = array(
+    'bundle' => 'course',
+    'default_value' => array(
+      0 => array(
+        'value' => 0,
+      ),
+    ),
+    'deleted' => 0,
+    'description' => 'You can safely leave this set to the default. You would know if you needed to customize this part.',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 29,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'og_roles_permissions',
+    'label' => 'Course access permissions',
+    'required' => 1,
+    'settings' => array(
+      'user_register_form' => FALSE,
+    ),
+    'view modes' => array(
+      'full' => array(
+        'custom settings' => FALSE,
+        'label' => 'Full',
+        'type' => 'list_default',
+      ),
+      'teaser' => array(
+        'custom settings' => FALSE,
+        'label' => 'Teaser',
+        'type' => 'list_default',
+      ),
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'options',
+      'settings' => array(
+        'apply_chosen' => '',
+      ),
+      'type' => 'options_select',
+      'weight' => 5,
     ),
   );
 
@@ -1059,8 +1071,8 @@ function course_field_default_field_instances() {
   t('Course Description');
   t('Course ID');
   t('Course Image');
-  t('Course Title');
   t('Course Visibility');
+  t('Course access permissions');
   t('Course(s) Enrolled');
   t('Cross-listed as:');
   t('Department');
@@ -1070,7 +1082,7 @@ function course_field_default_field_instances() {
   t('Group');
   t('How many students will have library and e-reserve access that differs from your own?');
   t('If you have a syllabus for your course, please upload it now. You can update your syllabus at any time.');
-  t('Instructor:');
+  t('Instructor Name:');
   t('Online registration with this password will close after the university add/drop deadline for your course.');
   t('Optional - If applicable, what is the secondary cross-listed course ID (with no spaces)?');
   t('Optional - If applicable, what is the third cross-listed course ID (with no spaces)?');
@@ -1083,7 +1095,6 @@ function course_field_default_field_instances() {
   t('What course are you enrolled in?');
   t('What is the end date for the course? Students will have access to restricted materials 30 days after the end of class, or after 180 days of the beginning of the course, whichever arrives first.');
   t('What is the expected enrollment for your course?');
-  t('What is the full name of your course?');
   t('What is the primary course ID (with no spaces)? (ex. COMPLIT221)');
   t('What is the start date for the course?  Students will have access to materials 7 days before the first day of class');
   t('What is the subject/discipline?');
@@ -1092,6 +1103,7 @@ function course_field_default_field_instances() {
   t('What password would you like to create for students to register in your class?');
   t('Would you like your current draft course to be visible to students, or to continue in "Instructor-Only" mode?');
   t('Year');
+  t('You can safely leave this set to the default. You would know if you needed to customize this part.');
 
   return $field_instances;
 }
