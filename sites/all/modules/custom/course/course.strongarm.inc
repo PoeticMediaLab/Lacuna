@@ -215,7 +215,7 @@ function course_strongarm() {
           'weight' => '2',
         ),
         'path' => array(
-          'weight' => '8',
+          'weight' => '17',
         ),
       ),
       'display' => array(),
