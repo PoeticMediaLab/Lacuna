@@ -411,8 +411,8 @@ function course_field_default_field_bases() {
     'no_ui' => TRUE,
     'settings' => array(
       'allowed_values' => array(
-        1 => 'Public - accessible to all site users',
-        2 => 'Private - accessible only to course members',
+        1 => 'Open - students can find the course and enroll. I will authenticate their access.',
+        2 => 'Closed - This course will not be visible, but will be saved as a draft. I will click Edit and set it to open later.',
       ),
       'allowed_values_function' => '',
     ),
