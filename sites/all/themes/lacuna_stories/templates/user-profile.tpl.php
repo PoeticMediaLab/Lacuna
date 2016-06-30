@@ -63,12 +63,12 @@ function customPrintViewsBlock($blockName)
 		<div id="user-avatar-space" class="profile-section">
             <?php $basePath = base_path();?>
                 <div id="user-command-buttons">
-                    <?php if ($profile_user->uid === $user->uid):?>
-                        <a href="<?php print $basePath."user/".$user->uid."/edit"?>"><i class="fa fa-cog fa-2x"></i></a>
-                        <a href="<?php print $basePath."user/".$user->uid."/notify"?>"><i class="fa fa-bell-o fa-2x"></i></a>
+                    <?php if (($profile_user->uid === $user->uid) || user_access('administer users')):?>
+                        <a href="<?php print $basePath . "user/" . $profile_user->uid . "/edit"?>"><i class="fa fa-cog fa-2x"></i></a>
+                        <a href="<?php print $basePath . "user/" . $profile_user->uid. "/notify"?>"><i class="fa fa-bell-o fa-2x"></i></a>
                     <?php endif; ?>
                     <?php if (user_access('access user contact forms')): ?>
-                        <a href="<?php print $basePath."user/".$user->uid."/contact"?>"><i class="fa fa-comment-o fa-2x"></i></a>
+                        <a href="<?php print $basePath . "user/" . $profile_user->uid . "/contact"?>"><i class="fa fa-comment-o fa-2x"></i></a>
                     <?php endif; ?>
                 </div>
 			<?php print $user_profile["user_picture"]["#markup"]; ?>
@@ -96,7 +96,7 @@ function customPrintViewsBlock($blockName)
 			<span class="caption">Recent Contributions</span>
 			<div class="field-wrapper">
 				<p class="title">Responses</p>
-                <?php $responsesIsEmpty = !customPrintViewsBlock("user_s_responses-block");
+                <?php $responsesIsEmpty = !customPrintViewsBlock("responses_by_user-block");
                     if($responsesIsEmpty)
                     {
                         print "<p class='no-results'>{$username} has not written any responses</p>";
@@ -104,7 +104,7 @@ function customPrintViewsBlock($blockName)
 			</div>
 			<div class="field-wrapper">
                 <p class="title">Comments</p>
-                <?php $commentsIsEmpty = !customPrintViewsBlock("user_s_comments-block");
+                <?php $commentsIsEmpty = !customPrintViewsBlock("comments_by_user-block");
                     if($commentsIsEmpty)
                     {
                         print "<p class='no-results'>{$username} has not made any comments</p>";

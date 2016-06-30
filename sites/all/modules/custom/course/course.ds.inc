@@ -23,7 +23,7 @@ function course_ds_layout_settings_info() {
         0 => 'field_course_image',
       ),
       'left' => array(
-        1 => 'field_course_title',
+        1 => 'title',
         2 => 'field_name',
         3 => 'field_department',
         4 => 'body',
@@ -41,7 +41,7 @@ function course_ds_layout_settings_info() {
     ),
     'fields' => array(
       'field_course_image' => 'header',
-      'field_course_title' => 'left',
+      'title' => 'left',
       'field_name' => 'left',
       'field_department' => 'left',
       'body' => 'left',
