@@ -80,11 +80,17 @@ init_settings ()
 {
   cd "$GIT_ROOT"
 
+  # docker-compose
   _copy_settings_file ".drude/drude-local-minimal.yml" "docker-compose.yml"
+  
+  # Drupal
   #_copy_settings_file "docroot/sites/example.sites.local.php" "docroot/sites/sites.local.php"
   _copy_settings_file "docroot/sites/${SITE_DIRECTORY}/example.settings.local.php" "docroot/sites/${SITE_DIRECTORY}/settings.local.php"
   _copy_settings_file "docroot/sites/site1/example.settings.local.php" "docroot/sites/site1/settings.local.php"
   _copy_settings_file "docroot/sites/site2/example.settings.local.php" "docroot/sites/site2/settings.local.php"
+  
+  # Behat
+  _copy_settings_file 'tests/behat/behat.yml.dist' 'tests/behat/behat.yml'
 }
 
 # Install the site
@@ -167,14 +173,6 @@ compass_compile ()
   set +x
 }
 
-# Initialize local Behat settings
-init_behat ()
-{
-  cd "$GIT_ROOT"
-
-  _copy_settings_file 'tests/behat/behat.yml.dist' 'tests/behat/behat.yml'
-}
-
 # Run basic Behat validation tests
 run_behat ()
 {
@@ -218,11 +216,11 @@ site_install "My Drupal 7 Site"
 # Uncomment line below to install site 2
 #db_create 'site2' && site_install 'drupal7-site2.drude'
 
+# Examples of other things that can be done.
 #db_import
 #db_updates
 #local_settings
 #compass_compile
-init_behat
 #run_behat
 
 if is_windows; then

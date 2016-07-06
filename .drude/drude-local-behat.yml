@@ -1,0 +1,31 @@
+# Docker and Docker Compose based environment for Drupal.
+# See https://github.com/blinkreaction/drude for more information and documentation.
+
+version: "2"
+
+services:
+  # Web node
+  web:
+    extends:
+      file: .drude/drude-services.yml
+      service: web
+    environment:
+      - VIRTUAL_HOST=drupal7.drude,drupal7-site1.drude,drupal7-site2.drude
+
+  # CLI node
+  cli:
+    extends:
+      file: .drude/drude-services.yml
+      service: cli
+
+  # DB node
+  db:
+    extends:
+      file: .drude/drude-services.yml
+      service: db
+
+  # Selenium node
+  browser:
+    extends:
+      file: .drude/drude-services.yml
+      service: browser
