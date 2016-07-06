@@ -1,7 +1,6 @@
 {
   "require": {
-    "behat/behat": "3.0.*@dev",
-    "drupal/drupal-extension": "3.0.*@dev"
+    "drupal/drupal-extension": "~3.0"
   },
   "config": {
     "bin-dir": "bin/"
