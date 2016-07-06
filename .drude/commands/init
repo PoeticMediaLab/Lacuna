@@ -80,7 +80,7 @@ init_settings ()
 {
   cd "$GIT_ROOT"
 
-  _copy_settings_file "docker-compose.yml.dist" "docker-compose.yml"
+  _copy_settings_file ".drude/drude-local-minimal.yml" "docker-compose.yml"
   #_copy_settings_file "docroot/sites/example.sites.local.php" "docroot/sites/sites.local.php"
   _copy_settings_file "docroot/sites/${SITE_DIRECTORY}/example.settings.local.php" "docroot/sites/${SITE_DIRECTORY}/settings.local.php"
   _copy_settings_file "docroot/sites/site1/example.settings.local.php" "docroot/sites/site1/settings.local.php"
