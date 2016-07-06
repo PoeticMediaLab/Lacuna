@@ -5,4 +5,4 @@ Feature: Basic validation
 
   Scenario: Open home page and find text
     Given I am on the homepage
-    Then I should see the heading "Welcome to Site-Install"
+    Then I should see the heading "Welcome to My Drupal 7 Site"
