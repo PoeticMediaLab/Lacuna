@@ -199,9 +199,16 @@ cd "$GIT_ROOT"
 echo -e "${green_bg} Step 1 ${NC}${green} Initializing local project configuration...${NC}"
 init_settings
 
-echo -e "${green_bg} Step 2 ${NC}${green} Recreating services...${NC}"
-dsh reset -f
-sleep 5
+if [[ $DOCKER_RUNNING == "true" ]]; then
+  echo -e "${green_bg} Step 2 ${NC}${green} Recreating services...${NC}"
+  dsh reset -f
+else
+  echo -e "${green_bg} Step 2 ${NC}${green} Creating services...${NC}"
+  dsh up
+fi
+
+echo "Waiting 10s for MySQL to initialize...";
+sleep 10
 
 echo -e "${green_bg} Step 3 ${NC}${green} Installing site...${NC}"
 site_install "My Drupal 7 Site"
