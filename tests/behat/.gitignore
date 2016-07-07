@@ -4,6 +4,7 @@ vendor/*
 
 # Local config
 behat.yml
+composer.lock
 
 # Screenshots
 screenshots/*

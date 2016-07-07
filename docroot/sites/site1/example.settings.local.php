@@ -3,9 +3,9 @@
 # Docker DB connection settings.
 $databases['default']['default'] = array (
   'database' => 'site1',
-  'username' => getenv('DB_1_ENV_MYSQL_USER'),
-  'password' => getenv('DB_1_ENV_MYSQL_PASSWORD'),
-  'host' => getenv('DB_1_PORT_3306_TCP_ADDR'),
+  'username' => 'drupal',
+  'password' => '123',
+  'host' => 'db',
   'driver' => 'mysql',
 );
 
