@@ -1,42 +1,32 @@
 # Drude powered Drupal 7 Installation
 
-This is a sample vanilla Drupal 7 installation preconfigured for use with Drude.  
-Includes Sample Behat tests.
+This is a sample vanilla Drupal 7 installation pre-configured for use with Drude.  
 
-## Instructions (Mac and Windows)
+Features:
 
-**On Windows** you will need a Linux-type shell. Install [Babun](http://babun.github.io/) before proceeding and run all commands in it.  
-Instructions were not tested with other shells on Windows.
+- Vannila Drupal 7
+- `dsh init` example
+- Drupal multisite example
+- Behat setup example and sample tests
 
-1. Install `dsh` (Drude Shell)
+## Setup instructions
 
-    ```
-    sudo curl -L https://raw.githubusercontent.com/blinkreaction/drude/master/bin/dsh -o /usr/local/bin/dsh
-    sudo chmod +x /usr/local/bin/dsh
-    ```
+### Step #1: Drude environment setup
 
-2. Create the `<Projects>` directory
-    
-    ```
-    mkdir Projects
-    cd Projects
-    ```
+**This is a one time setup - skip this if you already have a working Drude environment.**  
 
-3. Install Drude's prerequisites (vagrant, virtualbox, boot2docker-vagrant)
-
-    ```
-    dsh install prerequisites
-    dsh install boot2docker
-    ```
+Follow [Drude environment setup instructions](https://github.com/blinkreaction/drude/blob/master/docs/drude-env-setup.md)
    
-4. Clone this repo into the Projects directory
+### Step #2: Project setup
+
+1. Clone this repo into your Projects directory
 
     ```
     git clone https://github.com/blinkreaction/drude-d7-testing.git
     cd drude-d7-testing
     ```
 
-5. Initialize the site
+2. Initialize the site
 
     This will initialize local settings and install the site via drush
 
@@ -44,9 +34,9 @@ Instructions were not tested with other shells on Windows.
     dsh init
     ```
 
-6. **On Windows** add `192.168.10.10  drupal7.drude` to your hosts file
+3. **On Windows** add `192.168.10.10  drupal7.drude` to your hosts file
 
-7. Point your browser to
+4. Point your browser to
 
     ```
     http://drupal7.drude
