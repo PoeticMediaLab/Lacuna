@@ -43,10 +43,12 @@ docker:
     Behat\MinkExtension:
       # URL of the site when accessed inside Drude.
       base_url: http://web
-      selenium2:
-        wd_host: http://browser:4444/wd/hub
+      # Configure browser to be used. Browser must be available on wd_host.
       # Stick with chrome by default. It's 2x faster than firefox or phantomjs (your results may vary).
       browser_name: chrome
+      selenium2:
+        wd_host: http://browser:4444/wd/hub
+        capabilities: { "browser": "chrome", "version": "*" }
     Drupal\DrupalExtension:
       drupal:
         # Site docroot inside Drude.
