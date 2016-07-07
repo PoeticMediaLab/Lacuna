@@ -9,6 +9,7 @@ Features:
 - Drupal multisite example
 - Behat setup example and sample tests
 
+
 ## Setup instructions
 
 ### Step #1: Drude environment setup
@@ -16,7 +17,7 @@ Features:
 **This is a one time setup - skip this if you already have a working Drude environment.**  
 
 Follow [Drude environment setup instructions](https://github.com/blinkreaction/drude/blob/master/docs/drude-env-setup.md)
-   
+
 ### Step #2: Project setup
 
 1. Clone this repo into your Projects directory
@@ -61,11 +62,14 @@ Some common tasks that can be handled by the init script:
 ## Behat test examples
 
 Behat tests are stored in [tests/behat](tests/behat). 
-Run Behat tests: 
+
+To initialize Behat and run tests: 
 
 ```
 dsh behat
 ```
+
+For more details and advanced use cases see [Drude's Behat docs](https://github.com/blinkreaction/drude/blob/master/docs/behat.md)
 
 
 ## Drupal multisite example
