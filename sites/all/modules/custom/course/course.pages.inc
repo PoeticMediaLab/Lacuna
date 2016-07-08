@@ -69,7 +69,7 @@ function course_create() {
 
   unset($form['actions']['preview']);
   $form['field_unregistered_students'][LANGUAGE_NONE][0]['value']['#value'] = 0;
-  $form['actions']['submit']['#prefix'] = '<div>Send my information to the Lacuna Stories team to begin setting up my course!</div>';
+  $form['actions']['submit'];
   $path = drupal_get_path('module', 'course');
   $form['#attached']['css'] = array("$path/course.css");
   $form['#attached']['js'] = array("$path/course.js");

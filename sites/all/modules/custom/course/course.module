@@ -26,7 +26,7 @@ function course_menu() {
     'file' => 'course.pages.inc',
   );
   $items['course-setup/add-course'] = array(
-    'title' => 'Creating a New Course',
+    'title' => 'Create Your New Course',
     'description' => 'course creation.',
     'page callback' => 'course_create',
     'access callback' => 'course_setup_access',
