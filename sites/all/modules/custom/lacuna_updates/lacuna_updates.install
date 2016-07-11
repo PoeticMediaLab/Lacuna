@@ -76,3 +76,30 @@ function lacuna_updates_update_7101() {
     content_access_set_settings($ca_settings, $content_type);
   }
 }
+
+/**
+ * Add default copyright status terms, if needed
+ */
+function lacuna_updates_update_7102() {
+  $vocab = taxonomy_vocabulary_machine_name_load('copyright_status');
+  $taxonomy = taxonomy_get_tree($vocab->vid);
+  if (count($taxonomy) == 0) {
+    // Don't add terms if there are already some there
+    $names = array(
+      'I hold the copyright',
+      'I have obtained permission to use the material',
+      'The material is in the public domain',
+      'The material is subject to fair use exception',
+      'The material is licensed under Creative Commons'
+    );
+    $weight = 0;
+    foreach ($names as $name) {
+      $term = new stdClass();
+      $term->name = $name;
+      $term->vid = $vocab->vid;
+      $term->weight = $weight;
+      taxonomy_term_save($term);
+      ++$weight;
+    }
+  }
+}
