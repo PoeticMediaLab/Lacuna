@@ -46,7 +46,7 @@ function lacuna_stories_materials_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'entityreference_autocomplete',
-      'weight' => 5,
+      'weight' => 18,
     ),
   );
 
@@ -165,7 +165,7 @@ function lacuna_stories_materials_field_default_field_instances() {
         'apply_chosen' => '',
       ),
       'type' => 'options_select',
-      'weight' => 6,
+      'weight' => 19,
     ),
   );
 
@@ -362,7 +362,7 @@ function lacuna_stories_materials_field_default_field_instances() {
       'module' => 'options',
       'settings' => array(),
       'type' => 'options_buttons',
-      'weight' => 7,
+      'weight' => 20,
     ),
   );
 
@@ -434,7 +434,7 @@ function lacuna_stories_materials_field_default_field_instances() {
       'module' => 'options',
       'settings' => array(),
       'type' => 'options_buttons',
-      'weight' => 4,
+      'weight' => 17,
     ),
   );
 
@@ -473,7 +473,7 @@ function lacuna_stories_materials_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'taxonomy_autocomplete',
-      'weight' => 8,
+      'weight' => 21,
     ),
   );
 
@@ -563,7 +563,7 @@ function lacuna_stories_materials_field_default_field_instances() {
         'apply_chosen' => '',
       ),
       'type' => 'options_select',
-      'weight' => 9,
+      'weight' => 22,
     ),
     'widget_type' => 'options_select',
   );

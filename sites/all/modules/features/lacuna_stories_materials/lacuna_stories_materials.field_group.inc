@@ -59,9 +59,10 @@ function lacuna_stories_materials_field_group_info() {
       0 => 'field_bibliographic_entry',
       1 => 'field_doc_genre',
       2 => 'field_medium',
-      3 => 'field_status',
+      3 => 'field_tags',
       4 => 'group_content_access',
-      5 => 'field_tags',
+      5 => 'field_status',
+      6 => 'field_copyright',
     ),
     'format_type' => 'fieldset',
     'format_settings' => array(
@@ -90,8 +91,8 @@ function lacuna_stories_materials_field_group_info() {
     'children' => array(
       0 => 'field_doc_attachment',
       1 => 'field_doc_text',
-      2 => 'field_media',
-      3 => 'field_image',
+      2 => 'field_image',
+      3 => 'field_media',
       4 => 'title',
     ),
     'format_type' => 'fieldset',
@@ -144,10 +145,9 @@ function lacuna_stories_materials_field_group_info() {
     'label' => 'Syllabus',
     'weight' => '2',
     'children' => array(
-      0 => 'field_copyright',
-      1 => 'field_priority',
+      0 => 'field_priority',
+      1 => 'og_group_ref',
       2 => 'field_unit',
-      3 => 'og_group_ref',
     ),
     'format_type' => 'fieldset',
     'format_settings' => array(
