@@ -659,13 +659,14 @@ function course_form_document_node_form_alter(&$form, &$form_state, $form_id) {
   $form['#group_children']['genre_doc'] = 'group_about';
 
 	// Hide several default fields from user input - we're overriding them above
-//  $form['field_copyright']['#access'] = FALSE;
   $form['field_tags']['#access'] = FALSE;
   $form['field_unit']['#access'] = FALSE;
 	$form['field_doc_genre']['#access'] = FALSE;
   $form['additional_settings']['#access'] = FALSE;
   $form['og_group_ref']['#access'] = FALSE;
   $form['field_bibliographic_entry']['#access'] = FALSE;
+  // we always want the default settings here and don't want to confuse people
+  $form['group_content_access']['#access'] = FALSE;
 
 	// Finish up form
   $form['title']['#title'] = 'Title to Be Displayed to Students';
