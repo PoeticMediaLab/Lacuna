@@ -123,6 +123,7 @@ function course_update_7105() {
 function course_update_7106() {
 	$fields_to_delete = array('field_course_title', 'field_doc_attachment', 'field_third_course_id', 'field_enrollment', 'field_unregistered_students', 'field_course_password', 'field_registered_students');
 	foreach ($fields_to_delete as $field) {
-
+		field_delete_field($field);
 	}
+	field_purge_batch(100);	// actually delete the fields now
 }
