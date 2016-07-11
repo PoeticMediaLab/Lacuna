@@ -360,6 +360,13 @@ function lacuna_stories_default_tax_terms () {
       'Analyze',
       'Compare'
     ),
+    'copyright_status' => array(
+      'I hold the copyright',
+      'I have obtained permission to use the material',
+      'The material is in the public domain',
+      'The material is subject to fair use exception',
+      'The material is licensed under Creative Commons',
+    ),
   );
   foreach ($taxonomy as $vocabulary_name => $terms) {
     // Add a default term to each vocabulary.
