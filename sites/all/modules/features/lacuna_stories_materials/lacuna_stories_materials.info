@@ -46,7 +46,6 @@ features[field_group][] = group_course|node|document|default
 features[field_group][] = group_syllabus|node|document|form
 features[field_instance][] = node-document-field_bibliographic_entry
 features[field_instance][] = node-document-field_copyright
-features[field_instance][] = node-document-field_doc_attachment
 features[field_instance][] = node-document-field_doc_genre
 features[field_instance][] = node-document-field_doc_text
 features[field_instance][] = node-document-field_image
