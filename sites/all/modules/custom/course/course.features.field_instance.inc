@@ -547,46 +547,6 @@ function course_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-course-field_unregistered_students'.
-  $field_instances['node-course-field_unregistered_students'] = array(
-    'bundle' => 'course',
-    'default_value' => NULL,
-    'deleted' => 0,
-    'description' => '',
-    'display' => array(
-      'default' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 25,
-      ),
-      'teaser' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
-      ),
-    ),
-    'entity_type' => 'node',
-    'field_name' => 'field_unregistered_students',
-    'label' => 'How many students will have library and e-reserve access that differs from your own?',
-    'required' => 0,
-    'settings' => array(
-      'max' => '',
-      'min' => 0,
-      'prefix' => '',
-      'suffix' => '',
-      'user_register_form' => FALSE,
-    ),
-    'widget' => array(
-      'active' => 0,
-      'module' => 'number',
-      'settings' => array(),
-      'type' => 'number',
-      'weight' => 14,
-    ),
-  );
-
   // Exported field_instance: 'node-course-group_access'.
   $field_instances['node-course-group_access'] = array(
     'bundle' => 'course',
@@ -859,7 +819,6 @@ function course_field_default_field_instances() {
   t('End Date');
   t('For courses that span terms, select multiple terms. Note, selecting multiple terms does not create separate courses.');
   t('Group');
-  t('How many students will have library and e-reserve access that differs from your own?');
   t('If you have a syllabus for your course, please upload it now. <strong>You can update your syllabus at any time, and it will be visible on the Course Information page to enrolled students only.</strong>');
   t('Instructor Name:');
   t('Optional - If applicable, what is the secondary cross-listed course ID (with no spaces)?');

@@ -209,32 +209,6 @@ function course_field_default_field_bases() {
     'type' => 'list_text',
   );
 
-  // Exported field_base: 'field_doc_attachment'.
-  $field_bases['field_doc_attachment'] = array(
-    'active' => 1,
-    'cardinality' => 1,
-    'deleted' => 0,
-    'entity_types' => array(),
-    'field_name' => 'field_doc_attachment',
-    'field_permissions' => array(
-      'type' => 0,
-    ),
-    'indexes' => array(
-      'fid' => array(
-        0 => 'fid',
-      ),
-    ),
-    'locked' => 0,
-    'module' => 'file',
-    'settings' => array(
-      'display_default' => 0,
-      'display_field' => 0,
-      'uri_scheme' => 'public',
-    ),
-    'translatable' => 0,
-    'type' => 'file',
-  );
-
   // Exported field_base: 'field_end_date'.
   $field_bases['field_end_date'] = array(
     'active' => 1,
@@ -373,24 +347,6 @@ function course_field_default_field_bases() {
     'type' => 'file',
   );
 
-  // Exported field_base: 'field_unregistered_students'.
-  $field_bases['field_unregistered_students'] = array(
-    'active' => 1,
-    'cardinality' => 1,
-    'deleted' => 0,
-    'entity_types' => array(),
-    'field_name' => 'field_unregistered_students',
-    'field_permissions' => array(
-      'type' => 0,
-    ),
-    'indexes' => array(),
-    'locked' => 0,
-    'module' => 'number',
-    'settings' => array(),
-    'translatable' => 0,
-    'type' => 'number_integer',
-  );
-
   // Exported field_base: 'group_access'.
   $field_bases['group_access'] = array(
     'active' => 1,
@@ -411,8 +367,8 @@ function course_field_default_field_bases() {
     'no_ui' => TRUE,
     'settings' => array(
       'allowed_values' => array(
-        0 => 'Open - students can find the course and enroll. I will authenticate their access.',
-        1 => 'Closed - This course will not be visible, but will be saved as a draft. I will click Edit and publish it later.',
+        0 => 'Open: Students can find it and join. I will authenticate their access.',
+        1 => 'Closed: Not visible to students. I will edit it later to make it visible.',
       ),
       'allowed_values_function' => '',
     ),
