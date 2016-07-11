@@ -12,4 +12,5 @@ Feature: user_profile
     Examples:
     | field           |
     | "Display Name"  |
+    | "I agree to the Terms of Use" |
 
