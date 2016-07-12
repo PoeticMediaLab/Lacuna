@@ -140,7 +140,7 @@ function course_setup_access() {
     drupal_set_message("Please contact the Lacuna Stories Team. Your account does not have access to create a course.", 'error', FALSE);
     return FALSE;
   }
-  elseif (($cache = cache_get($key)) && $_COOKIE['Drupal_visitor_' . $key] == $cache->data) {
+  elseif (($cache = cache_get($key)) && $_COOKIE['Lacuna_Course_Setup' . $key] == $cache->data) {
     // VALID
     return TRUE;
   }
@@ -599,19 +599,6 @@ function course_node_validate($node, $form, &$form_state) {
   }
 }
 
-function course_node_update($node) {
-  global $user;
-  $key = "Course_Clone_Material_Docs_" . $user->uid;
-  // If any the material was cloned, we needed the user to finish all the course-specific bits, check if they are saving
-  // one of those nodes and remove that node from the to finish queue cookie
-  if (DOCUMENT_NODE_TYPE == $node->type && isset($_COOKIE['Drupal_visitor_' . $key]) && $docs = $_COOKIE['Drupal_visitor_' . $key]) {
-    course_pop_unfinished_doc_queue($node->nid);
-  }
-
-}
-
-
-
 
 /**
  * @param $form
@@ -874,8 +861,6 @@ function course_create_blank_document($biblio) {
   }
   node_save($document);
 
-  course_push_unfinished_doc_queue($document->nid);
-
   // Add to course group
   og_group('node', $gid, array(
     'entity_type' => 'node',
@@ -958,8 +943,7 @@ function course_add_biblio_form_submit($form, &$form_state) {
   $isUpdate = isset($biblio->nid) || isset($biblio->is_new);
   node_save($biblio);
   // If this is an update to an existing biblio node,
-  // Then do not add to unfinished queue
-  // And do not create a new blank document
+  // Do not create a new blank document
   if (!$isUpdate) {
     course_create_blank_document($biblio);
   }
@@ -977,7 +961,7 @@ function course_add_document_form_submit($form, &$form_state) {
 	$node->field_doc_genre[LANGUAGE_NONE][0]['tid'] = $form_state['values']['genre_doc'];
   node_save($node);
 
-	$message = "You have successfully added material to your course. To make the item available for annotation, remember to change the status to 'Ready for Annotation'. You can access all your course materials under <a href=\"" . $base_url . "/all-content\">Manage->All Content</a>";
+	$message = "You have successfully added material to your course. To make the item available for annotation, remember to change the status to 'Ready for Annotation'. You can access all your course materials under <a href=\"" . $base_url . "/course-setup/add-materials\">Manage->Add Materials</a>";
 
   if ("Save (Finished Adding Material)" == $form_state['values']['op']) {
     drupal_set_message($message);
@@ -1014,7 +998,6 @@ function course_bulk_clone_material($biblios, $context = array()) {
     if (!$doc) {
       drupal_set_message(t('Error adding material for @biblio', array('@biblio' => $biblio->title)), 'warning');
     }
-    course_push_unfinished_doc_queue($doc->nid);
   }
 
 }
@@ -1081,47 +1064,15 @@ function course_block_view($delta = '') {
 
 function course_finish_material_block_content() {
   global $user;
-  $key = "Course_Clone_Material_Docs_" . $user->uid;
-  $content = '';
-  if (isset($_COOKIE['Drupal_visitor_' . $key]) && $docs = $_COOKIE['Drupal_visitor_' . $key]) {
-    drupal_add_css(drupal_get_path('module', 'course') . '/course.css');
+  $key = "Lacuna_Course_Document_Creation_" . $user->uid;
+  if (isset($_COOKIE['Lacuna_Course_Setup' . $key]) && $docs = $_COOKIE['Lacuna_Course_Setup' . $key]) {
     $docs = explode(',', $docs);
     foreach($docs as $doc) {
-      $url = l("node/$doc/edit","node/$doc/edit");
-      $content .= "<div>Please finish adding this Course Material, $url</div>";
+      $node = node_load($doc);
+      drupal_set_message(t('You did not finish adding a document. The partially-completed information has been deleted.'), 'warning');
+      ddl($node);
     }
   }
-  return "<div class='course-finish-adding-material'>" . $content . "</div>";
-}
-
-function course_pop_unfinished_doc_queue($nid) {
-  global $user;
-  $cookie_queue = &drupal_static('course_doc_queue');
-  $key = "Course_Clone_Material_Docs_" . $user->uid;
-  if (!isset($cookie_queue)) {
-    $cookie_queue = $_COOKIE['Drupal_visitor_' . $key];
-  }
-  $docs = explode(',', $cookie_queue);
-  $docs = array_diff($docs, array($nid));
-  $cookie_queue = implode(',', $docs);
-  user_cookie_save(array($key => $cookie_queue));
-}
-
-function course_push_unfinished_doc_queue($nid) {
-  global $user;
-  $cookie_queue = &drupal_static('course_doc_queue');
-
-  $key = "Course_Clone_Material_Docs_" . $user->uid;
-  if (!isset($cookie_queue) && isset($_COOKIE['Drupal_visitor_' . $key])) {
-    $cookie_queue = $_COOKIE['Drupal_visitor_' . $key];
-  }
-  if (!empty($cookie_queue)) {
-    $docs = explode(',', $cookie_queue);
-  }
-  $docs[] = $nid;
-  $docs = array_unique($docs);
-  $cookie_queue = implode(',', $docs);
-  user_cookie_save(array($key => $cookie_queue));
 }
 
 /**

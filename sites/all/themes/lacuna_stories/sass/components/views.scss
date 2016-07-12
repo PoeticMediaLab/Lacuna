@@ -330,3 +330,24 @@ div#block-views-cite-as-block {
     font-weight: bold;
   }
 }
+
+// For the "Add Material" view
+body.page-course-setup-add-materials {
+  span.block-title {
+    font-size: x-large;
+    font-weight: bold;
+    display: inline-block;
+    padding-top: 20px;
+    width: 100%;
+  }
+  div.view-display-id-course_materials_draft_block {
+    div.view-content {
+      div.views-row {
+        height: 50px;
+      }
+    }
+  }
+  div.view-display-id-course_block {
+    float: left;
+  }
+}

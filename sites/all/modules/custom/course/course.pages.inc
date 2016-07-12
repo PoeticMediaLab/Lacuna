@@ -304,6 +304,9 @@ function course_add_material() {
   $form = drupal_get_form(BIBLIO_NODE_TYPE . '_node_form', $biblio);
 
   $output .= "<div class='biblio-form'>" . drupal_render($form) . "</div>";
+  $output .= '<span class="block-title">Draft Materials</span>';
+  $output .= views_embed_view('documents', 'course_materials_draft_block');
+  $output .= '<span class="block-title">Published Materials</span>';
   $output .= views_embed_view('documents', 'course_block');
   return $output;
 }
