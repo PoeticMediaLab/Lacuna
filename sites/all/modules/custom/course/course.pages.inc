@@ -302,11 +302,19 @@ function course_add_material() {
     'language' => LANGUAGE_NONE,
   );
   $form = drupal_get_form(BIBLIO_NODE_TYPE . '_node_form', $biblio);
-
   $output .= "<div class='biblio-form'>" . drupal_render($form) . "</div>";
-  $output .= '<span class="block-title">Draft Materials</span>';
+
+  // Count the number of items in the draft materials view block
+  $view = views_get_view('documents');
+  $view->execute('course_materials_draft_block');
+  $output .= '<span class="block-title">Draft Materials (' . count($view->result) . ')</span>';
   $output .= views_embed_view('documents', 'course_materials_draft_block');
-  $output .= '<span class="block-title">Published Materials</span>';
+
+  // Do the same for published materials
+  // Probably a better way to do this, but the Views API documentation is really poor
+  $view = views_get_view('documents');
+  $view->execute('course_block');
+  $output .= '<span class="block-title">Published Materials (' . count($view->result) . ')</span>';
   $output .= views_embed_view('documents', 'course_block');
   return $output;
 }
