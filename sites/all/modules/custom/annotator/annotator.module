@@ -162,8 +162,7 @@ function annotator_annotation_alter($entity, $op) {
  * Check if we are currently on an annotatable node
  * If so, return the node.
  */
-function annotator_check_annotatable_node () {
-
+function annotator_check_annotatable_node() {
   if (arg(0) == 'node' && is_numeric (arg(1))) {
     $current_node = node_load(arg(1));
     $anno_ref_field = field_info_field('field_annotation_reference');
@@ -171,15 +170,7 @@ function annotator_check_annotatable_node () {
     $workflow_state = workflow_node_current_state($current_node);
     // Account for nodes that don't have a workflow status
     if (in_array($current_node->type, $annotatable_types) && (empty($workflow_state) || $workflow_state == WORKFLOW_READY_STATE)) {
-      $current_course = course_get_selected_course();
-      foreach ($current_node->og_group_ref[$current_node->language] as $current_node_parent_group) {
-        if ($current_node_parent_group['target_id'] == $current_course) {
-          return $current_node; // User is on an annotatable, and the node corresponds to their current context
-        }
-      }
-    }
-    if (in_array($current_node->type, $annotatable_types) && node_access('view', $current_node)) {
-      drupal_set_message('Annotations on this content are disabled. This document is either not within your current course or not yet ready to annotate. You may ' . l('return to the front page', '<front>') . ' to change courses.', 'warning', FALSE); // This can happen if a user is already logged in with a course context set, and they access the node directly from browser (non-referred) or they've clicked to this node from the Sewing Kit (as of writing, the only way content is linked to other courses), or if it's an admin user coming from admin/content, etc.
+      return $current_node; // User is on an annotatable
     }
   }
 	return FALSE;

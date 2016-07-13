@@ -168,7 +168,6 @@ function course_strongarm() {
     'rss' => 0,
     'search_index' => 0,
     'search_result' => 0,
-    'diff_standard' => 0,
     'token' => 0,
     'workflow_tab' => 0,
     'revision' => 0,
@@ -213,10 +212,10 @@ function course_strongarm() {
     'extra_fields' => array(
       'form' => array(
         'title' => array(
-          'weight' => '0',
+          'weight' => '2',
         ),
         'path' => array(
-          'weight' => '6',
+          'weight' => '17',
         ),
       ),
       'display' => array(),
@@ -288,7 +287,7 @@ function course_strongarm() {
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'htmlpurifier_version_current';
-  $strongarm->value = '4.6.0';
+  $strongarm->value = '4.7.0';
   $export['htmlpurifier_version_current'] = $strongarm;
 
   $strongarm = new stdClass();

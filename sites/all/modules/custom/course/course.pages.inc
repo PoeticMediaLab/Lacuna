@@ -69,7 +69,7 @@ function course_create() {
 
   unset($form['actions']['preview']);
   $form['field_unregistered_students'][LANGUAGE_NONE][0]['value']['#value'] = 0;
-  $form['actions']['submit']['#prefix'] = '<div>Send my information to the Lacuna Stories team to begin setting up my course!</div>';
+  $form['actions']['submit'];
   $path = drupal_get_path('module', 'course');
   $form['#attached']['css'] = array("$path/course.css");
   $form['#attached']['js'] = array("$path/course.js");
@@ -302,8 +302,19 @@ function course_add_material() {
     'language' => LANGUAGE_NONE,
   );
   $form = drupal_get_form(BIBLIO_NODE_TYPE . '_node_form', $biblio);
-
   $output .= "<div class='biblio-form'>" . drupal_render($form) . "</div>";
+
+  // Count the number of items in the draft materials view block
+  $view = views_get_view('documents');
+  $view->execute('course_materials_draft_block');
+  $output .= '<span class="block-title">Draft Materials (' . count($view->result) . ')</span>';
+  $output .= views_embed_view('documents', 'course_materials_draft_block');
+
+  // Do the same for published materials
+  // Probably a better way to do this, but the Views API documentation is really poor
+  $view = views_get_view('documents');
+  $view->execute('course_block');
+  $output .= '<span class="block-title">Published Materials (' . count($view->result) . ')</span>';
   $output .= views_embed_view('documents', 'course_block');
   return $output;
 }

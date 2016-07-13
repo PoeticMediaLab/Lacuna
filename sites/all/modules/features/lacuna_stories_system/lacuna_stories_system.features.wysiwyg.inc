@@ -89,6 +89,7 @@ function lacuna_stories_system_wysiwyg_default_profiles() {
           'Link' => 1,
           'Unlink' => 1,
           'Anchor' => 1,
+          'Image' => 1,
           'Superscript' => 1,
           'Subscript' => 1,
           'Blockquote' => 1,
@@ -105,9 +106,15 @@ function lacuna_stories_system_wysiwyg_default_profiles() {
       'toolbarLocation' => 'top',
       'resize_enabled' => 1,
       'default_toolbar_grouping' => 0,
-      'simple_source_formatting' => 0,
-      'acf_mode' => 1,
-      'acf_allowed_content' => '',
+      'simple_source_formatting' => 1,
+      'acf_mode' => 2,
+      'acf_allowed_content' => 'img[title,alt,src,data-cke-saved-src](wysiwyg-break,drupal-content);
+video[width,height,controls,src](*);
+source[src,type];
+audio[controls,src](*);
+img[*](media-element,file-default);
+a[type,length,href];
+h1 h2 h3 p blockquote strong em u s i text-align block sub sup center;',
       'css_setting' => 'theme',
       'css_path' => '',
       'stylesSet' => '',
