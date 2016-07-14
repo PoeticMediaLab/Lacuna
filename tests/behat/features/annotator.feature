@@ -16,18 +16,27 @@
       # Note: the assignment of content to a course has to come after it's been created
       And document "Document A" is content for course "Course Alpha"
       And a "Student" user named "Student A" exists
+      And "Student A" is enrolled in the "Course Alpha" course
       And annotations on "Document A":
         | audience     | text                          | author     |
         | Private      | This is a private annotation  | Student A  |
         | Instructor   | This is for teacher           | Student A  |
         | Everyone     | This is for everyone          | Student A  |
 
-    Scenario:
+    Scenario: Other student in the course
       Given I am logged in as a user with the "Student" role
       And I am enrolled in the "Course Alpha" course
       And my currently selected course is "Course Alpha"
       And I am on "/sewing-kit"
-      Then I should see "This is a private annotation" in the "View Content" region
-      And I should see "This is for teacher" in the "View Content" region
+      Then I should not see "This is a private annotation" in the "View Content" region
+      And I should not see "This is for teacher" in the "View Content" region
       And I should see "This is for everyone" in the "View Content" region
+
+    Scenario: Student A views sewing kit
+      Given I am logged in as "Student A"
+      And my currently selected course is "Course Alpha"
+      And I am on "/sewing-kit"
+      Then I should see "This is for everyone" in the "View Content" region
+      And I should see "This is a private annotation" in the "View Content" region
+      And I should see "This is for teacher" in the "View Content" region
 
