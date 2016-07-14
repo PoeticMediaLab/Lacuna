@@ -159,7 +159,10 @@ function annotation_drupal_format($entity, $update = FALSE) {
     // Get real Drupal URL of the annotated content, plus our base path
     $result = annotation_sanitize_uri($entity->uri);
     $uri = $result['root'] . $result['path'];
-    $node = menu_get_object($type = 'node', $position = 1, $result['path']);
+    // We were using menu_get_object before, but extracting the nid works better with behat tests
+    // Not sure why! -MLW
+    $nid = explode('/', $result['path'])[1];
+    $node = node_load($nid);
     $annotation->field_annotation_uri = array();
     $annotation->field_annotation_uri[$annotation->language][0]['url'] = $uri;  // formatted for Link field
     $annotation->field_annotation_uri[$annotation->language][0]['title'] = $node->title;

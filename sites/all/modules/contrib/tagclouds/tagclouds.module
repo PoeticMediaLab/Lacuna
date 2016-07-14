@@ -87,6 +87,12 @@ function tagclouds_settings() {
    '#default_value' => variable_get('tagclouds_display_node_link', true),
    '#description' => t('When there is only one content tagged with a certain term, link that term to this node instead of the term list page.'),
   );
+  $form['tagclouds_display_more_link'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Display "more" link in the bottom of Tagcloud blocks'),
+    '#default_value' => variable_get('tagclouds_display_more_link', TRUE),
+    '#description' => t('Display "more" link, if number of existing tags bigger than the number of tags to show.'),
+  );
   $form['tagclouds_page_amount'] = array(
     '#type' => 'textfield',
     '#size' => 5,
@@ -272,6 +278,9 @@ function tagclouds_get_tags($vids, $steps = 6, $size = 60, $display = NULL) {
     $query->groupBy('td.description HAVING COUNT(*) > 0');
     $query->orderBy('COUNT(*)', 'DESC');
     if ($size > 0) $query->range(0, $size);
+
+    drupal_alter('tagclouds_get_tags_query', $query);
+
     $result = $query->execute();
 
     foreach ($result as $tag) {
@@ -529,7 +538,7 @@ function tagclouds_block_view($delta = '') {
     $tags = tagclouds_sort_tags($tags);
 
     $blocks['content'] = theme('tagclouds_weighted', array('terms' => $tags)); //return a chunk of 12 tags
-    if (count($tags) >= variable_get('tagclouds_block_tags_' . $delta, 12) && variable_get('tagclouds_block_tags_' . $delta, 12) > 0) {
+    if (variable_get('tagclouds_display_more_link_' . $delta, variable_get('tagclouds_display_more_link', TRUE)) && count($tags) >= variable_get('tagclouds_block_tags_' . $delta, 12) && variable_get('tagclouds_block_tags_' . $delta, 12) > 0) {
       $blocks['content'] .= theme('more_link', array('title' => t('more tags'), 'url' => "tagclouds/chunk/{$voc->vid}"));
     }
   }
@@ -549,6 +558,12 @@ function tagclouds_block_configure($delta = '') {
     '#maxlength' => 3,
     '#description' => t("The number of tags to show in this block. Enter '0' to display all tags."),
   );
+  $form['more_link'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Display "more" link in the bottom of this block'),
+    '#default_value' => variable_get('tagclouds_display_more_link_' . $delta, variable_get('tagclouds_display_more_link', TRUE)),
+    '#description' => t('Display "more" link, if number of existing tags bigger than the number of tags to show.'),
+  );
   return $form;
 }
 
@@ -557,6 +572,7 @@ function tagclouds_block_configure($delta = '') {
  */
 function tagclouds_block_save($delta = '', $edit = array()) {
   variable_set('tagclouds_block_tags_' . $delta, $edit['tags']);
+  variable_set('tagclouds_display_more_link_' . $delta, $edit['more_link']);
 }
 
 /**
@@ -570,7 +586,7 @@ function tagclouds_theme() {
 }
 
 /**
- * Implements hook_load()
+ * Implements hook_load().
  */
 function tagclouds_vocs_load($ids){
   return explode(',',$ids);
