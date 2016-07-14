@@ -327,29 +327,6 @@ function course_views_pre_render(&$view) {
   }
 }
 
-/*
- * Implements hook_views_pre_build().
- */
-function course_views_pre_build(&$view) {
-  switch($view->name) {
-
-    case 'sewing-kit':
-
-      // Set some default values on the exposed filters for Course and Annotator
-      // There is a bug that prevents clearing default values (ie. searching for all) when the exposed filter is multivalued (see: https://www.drupal.org/node/2452729), so for now I have set these two filters to single value.
-//      $current_course = course_get_selected_course();
-//      $view->display_handler->handlers['filter']['og_group_ref_target_id']->value = array($current_course=>$current_course);
-//      global $user;
-//			if (isset($view->display_handler->handlers['filter']['author_select'])) {
-//				$view->display_handler->handlers['filter']['author_select']->value = array($user->uid => $user->uid);
-//			}
-
-
-      break;
-
-  }
-}
-
 // Filter taxonomy terms to return only those relevant for current course
 function course_get_terms_for_current_course($taxonomy_name) {
 	$gid = course_get_selected_course();
