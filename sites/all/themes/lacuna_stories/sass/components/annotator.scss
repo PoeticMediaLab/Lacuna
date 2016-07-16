@@ -1,4 +1,5 @@
 /*	Annotator CSS styles – migrated from annotator/css  */
+@import "init";
 
 .annotator-viewer div {
     border: none;
@@ -102,7 +103,7 @@ $category-selected: rgba(22,147,165, .8);
     border-radius: 5px;
     padding: 2px;
     width: 15em;
-    background-color: #eee;
+    background-color: #ff0000;
     box-shadow: 2px 2px 5px gray;
     top: 200px;
     z-index: 1;
@@ -219,6 +220,7 @@ section.region-sidebar-second input[type="checkbox"] {
 .af-wrapper {
     white-space: nowrap;
     width: 100%;
+    background-color: #eee;
 }
 
 label.af-autocomplete-label {
@@ -285,6 +287,10 @@ $privacy-selected: rgba(19, 149, 25, 0.74);
     display: inline-block;
     text-align: center;
     width: 33%;
+    font-family: $base-font-family;                                  // as with the author widget, this sets the font-family of the text to sans-serif (ih, 07/12)
+    &::before {
+      font: normal normal normal 10px/1 FontAwesome;          // and then overrides the font for the icon by referencing directly the element prior to the annotator privacy type font (ih, 07/12)
+    }
   }
   .annotator-privacy-types {
     margin-left: 0px;
@@ -373,6 +379,10 @@ label.annotator-privacy-group {
   min-width: 300px;
 }
 
+.annotator-widget.annotator-listing{
+  padding: 1px;                                   // this adds 1px of padding to the annotator-widget child under annotator-listing for better readability (ih, 07/12)
+}
+
 /* Fix to show icons */
 .annotator-editor a:after {
   content: none;
@@ -399,12 +409,18 @@ label.annotator-privacy-group {
 
 .annotator-editor .annotator-widget .annotator-listing .annotator-item {
   line-height: 2.5em;
+  color: #1588ba;
 }
 
 .annotator-notice,
 .annotator-filter *,
 .annotator-widget * {
   /*font-family: inherit !important;*/
+  font-style: normal;
+  a {
+    text-decoration: underline;
+    color: $category-selected;
+  }
 }
 
 /***
@@ -468,6 +484,11 @@ li.annotator-checkbox[style] {
 /* For Author plugin */
 .annotator-author {
   display: block;
+  font-family: $base-font-family;              // this changes the annotator author font to the standard sans-serif font family (ih, 07/12)
+  font-size: smaller;
+  &::before {                           // this directly references the icon prior to the annotator author, overrides the annotator-author font settings and sets the font to FontAwesome; otherwise, the entire line is changed to sans-serif font (ih, 07/12)
+      font: normal normal normal 12px/1 FontAwesome;   // copied from inspect element; is there a variable name for the icon font settings?
+  }
 }
 
 /* For CKEditor plugin */
