@@ -321,6 +321,9 @@ function annotation_copy_field_values_to_drupal_standard_fields () {
 // Peer groups are marked as not selected (the default for new annotations).
 function annotation_build_peer_groups() {
   $groups = array();
+  // Design note: it would be highly preferable to remove the dependency on Course.
+  // Instead, Annotation should implement hooks and allow the Course module to alter
+  // saves of nodes to have the right course group.
   $gid = course_get_selected_course();
   // TODO: Take $user_groups as a variable; call only once
   if ($user_groups = og_get_groups_by_user()) {
@@ -558,4 +561,17 @@ function annotation_bulk_update_instructions () {
       'collapsed' => TRUE
     )
   );
+}
+
+/**
+ * @param $view
+ * @param $query
+ * Implements hook_views_query_alter().
+ * Restrict the Sewing Kit view to show only annotations of documents in the current course.
+ */
+function annotation_views_query_alter(&$view, &$query) {
+  $gid = course_get_selected_course();
+  if ($view->name == 'sewing-kit') {
+    $query->add_where_expression(0, "field_data_field_annotation_reference.field_annotation_reference_target_id IN (SELECT etid FROM og_membership WHERE gid = " . $gid . " AND og_membership.entity_type = 'node')");
+  }
 }

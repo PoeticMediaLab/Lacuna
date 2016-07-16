@@ -248,7 +248,11 @@ function course_node_view($node, $view_mode, $langcode) {
  */
 function course_views_query_alter(&$view, &$query) {
   // List of the views to alter
-  $where_node_views = array('responses', 'documents', 'threads', 'all_content', 'my_content', 'sewing-kit', 'responses_by_user', 'annotations_by_user', 'peer_groups');
+  // Design note: the Course module here demonstrates knowledge about all the other Lacuna modules
+  // Not an ideal situation. It would be better if the Course module had an API by which other modules
+  // could register their views as needing course-level restrictions, then Course iterated through
+  // that list to alter the queries in a more abstract way.
+  $where_node_views = array('responses', 'documents', 'threads', 'all_content', 'my_content', 'responses_by_user', 'annotations_by_user', 'peer_groups');
   $where_user_views = array('people', 'all_emails');
 	$gid = course_get_selected_course();
 
