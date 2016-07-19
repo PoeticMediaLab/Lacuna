@@ -547,3 +547,8 @@ $profile-height: 220px;
   	vertical-align: top;
   }
 }
+
+/*excludes node title from user pages*/
+body.page-user #page-title {
+	display: none;
+}
