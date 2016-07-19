@@ -132,12 +132,12 @@ function course_setup_access() {
 
   // ANON
   if (user_is_anonymous()) {
-    drupal_set_message("You must be logged in to create a Lacuna Stories course.", 'status', FALSE);
+    drupal_set_message("You must be logged in to create a Lacuna course.", 'status', FALSE);
     drupal_goto('user/login', array('query' => array('destination' => 'course-setup')));
   }
   // NO PERMS
   elseif (!$canCreate) {
-    drupal_set_message("Please contact the Lacuna Stories Team. Your account does not have access to create a course.", 'error', FALSE);
+    drupal_set_message("Please contact your institution's Lacuna administrator. Your account does not have access to create a course.", 'error', FALSE);
     return FALSE;
   }
   elseif (($cache = cache_get($key)) && $_COOKIE['Lacuna_Course_Setup' . $key] == $cache->data) {
@@ -146,7 +146,7 @@ function course_setup_access() {
   }
   // NO/MISMATCHED AUTHCODE
   else {
-    drupal_set_message("Please type in the Authorization Code before creating a Lacuna Stories Course", 'warning', FALSE);
+    drupal_set_message("Please type in the Authorization Code before creating a Lacuna course.", 'warning', FALSE);
     drupal_goto('course-setup');
   }
 }
@@ -183,7 +183,7 @@ function course_admin_form() {
   $form['authorization']['course_authcode'] = array(
     '#type' => 'textfield',
     '#title' => t('Authorization Code'),
-    '#description' => t('Set the authorization code needed to create a Lacuna Stories Course.'),
+    '#description' => t('Set the authorization code needed to create a Lacuna course.'),
     '#default_value' => variable_get('course_authcode', 'ChangeMe!'),
     '#required' => FALSE,
     '#states' => array(
@@ -807,7 +807,7 @@ function course_create_form_submit($form, &$form_state) {
 		}
 		catch (Exception $e) {
 			watchdog_exception('course_create_form_submit', $e, NULL, NULL, WATCHDOG_ERROR);
-			drupal_set_message("There was an error creating your course.  Please try again and/or contact the Lacuna Stories team for assistance, <a href='info@lacunastories.com'>info@lacunastories.com</a>.", 'error');
+			drupal_set_message("There was an error creating your course.  Please try again and/or contact your institution's Lacuna administrator for assistance.", 'error');
 			drupal_goto("course-setup/add-course");
 		}
 	}
@@ -855,7 +855,7 @@ function course_create_blank_document($biblio) {
     drupal_set_message("The document's bibliographic information has been saved. Now provide the document's text and course-specific information.");
     drupal_goto("node/" . $document->nid . "/edit");
   } else {
-    drupal_set_message("There was an error adding your material. Please try again or contact the Lacuna Stories team.", 'error');
+    drupal_set_message("There was an error adding your material. Please try again or contact your institution's Lacuna administrator.", 'error');
   }
 }
 
