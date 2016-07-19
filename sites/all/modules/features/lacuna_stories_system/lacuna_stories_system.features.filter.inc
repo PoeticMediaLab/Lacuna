@@ -188,6 +188,11 @@ sup,sub',
           ),
         ),
       ),
+      'emptyparagraphkiller' => array(
+        'weight' => 0,
+        'status' => 1,
+        'settings' => array(),
+      ),
       'media_filter' => array(
         'weight' => 2,
         'status' => 1,
@@ -233,6 +238,11 @@ sup,sub',
       ),
       'filter_htmlcorrector' => array(
         'weight' => -45,
+        'status' => 1,
+        'settings' => array(),
+      ),
+      'emptyparagraphkiller' => array(
+        'weight' => 0,
         'status' => 1,
         'settings' => array(),
       ),
