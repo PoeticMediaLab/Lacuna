@@ -21,7 +21,7 @@ function lacuna_stories_people_field_group_info() {
   $field_group->parent_name = '';
   $field_group->data = array(
     'label' => 'Biographical',
-    'weight' => '2',
+    'weight' => '3',
     'children' => array(
       0 => 'field_about_me',
       1 => 'field_date_of_birth',
@@ -83,7 +83,7 @@ function lacuna_stories_people_field_group_info() {
   $field_group->parent_name = '';
   $field_group->data = array(
     'label' => 'Learning',
-    'weight' => '3',
+    'weight' => '4',
     'children' => array(
       0 => 'field_how_i_learn',
       1 => 'field_learning_goals',

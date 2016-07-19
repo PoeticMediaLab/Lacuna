@@ -40,6 +40,7 @@ features[field_instance][] = node-annotation-field_annotation_uri
 features[field_instance][] = node-annotation-group_content_access
 features[field_instance][] = node-annotation-og_group_ref
 features[node][] = annotation
+features[rules_config][] = rules_notification_about_new_annotation
 features[taxonomy][] = annotation_categories
 features[user_permission][] = administer annotations
 features[user_permission][] = create annotation content

@@ -46,7 +46,7 @@ function lacuna_stories_materials_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'entityreference_autocomplete',
-      'weight' => 5,
+      'weight' => 18,
     ),
   );
 
@@ -73,7 +73,7 @@ function lacuna_stories_materials_field_default_field_instances() {
     'entity_type' => 'node',
     'field_name' => 'field_copyright',
     'label' => 'Copyright',
-    'required' => 0,
+    'required' => 1,
     'settings' => array(
       'user_register_form' => FALSE,
     ),
@@ -83,51 +83,6 @@ function lacuna_stories_materials_field_default_field_instances() {
       'settings' => array(),
       'type' => 'options_buttons',
       'weight' => 16,
-    ),
-  );
-
-  // Exported field_instance: 'node-document-field_doc_attachment'.
-  $field_instances['node-document-field_doc_attachment'] = array(
-    'bundle' => 'document',
-    'deleted' => 0,
-    'description' => 'If there is a PDF or other file version of this document, attach it here.',
-    'display' => array(
-      'default' => array(
-        'label' => 'above',
-        'module' => 'file_entity',
-        'settings' => array(
-          'file_view_mode' => 'default',
-        ),
-        'type' => 'file_rendered',
-        'weight' => 2,
-      ),
-      'teaser' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
-      ),
-    ),
-    'entity_type' => 'node',
-    'field_name' => 'field_doc_attachment',
-    'label' => 'Attachments',
-    'required' => 0,
-    'settings' => array(
-      'description_field' => 0,
-      'file_directory' => 'documents',
-      'file_extensions' => 'txt pdf docx doc odt rtf',
-      'max_filesize' => '',
-      'media_library_include_in_library' => FALSE,
-      'user_register_form' => FALSE,
-    ),
-    'widget' => array(
-      'active' => 1,
-      'module' => 'file',
-      'settings' => array(
-        'progress_indicator' => 'throbber',
-      ),
-      'type' => 'file_generic',
-      'weight' => 7,
     ),
   );
 
@@ -165,7 +120,7 @@ function lacuna_stories_materials_field_default_field_instances() {
         'apply_chosen' => '',
       ),
       'type' => 'options_select',
-      'weight' => 6,
+      'weight' => 19,
     ),
   );
 
@@ -362,7 +317,7 @@ function lacuna_stories_materials_field_default_field_instances() {
       'module' => 'options',
       'settings' => array(),
       'type' => 'options_buttons',
-      'weight' => 7,
+      'weight' => 20,
     ),
   );
 
@@ -434,7 +389,7 @@ function lacuna_stories_materials_field_default_field_instances() {
       'module' => 'options',
       'settings' => array(),
       'type' => 'options_buttons',
-      'weight' => 4,
+      'weight' => 17,
     ),
   );
 
@@ -473,7 +428,7 @@ function lacuna_stories_materials_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'taxonomy_autocomplete',
-      'weight' => 8,
+      'weight' => 21,
     ),
   );
 
@@ -563,7 +518,7 @@ function lacuna_stories_materials_field_default_field_instances() {
         'apply_chosen' => '',
       ),
       'type' => 'options_select',
-      'weight' => 9,
+      'weight' => 22,
     ),
     'widget_type' => 'options_select',
   );
@@ -694,13 +649,11 @@ function lacuna_stories_materials_field_default_field_instances() {
   // Included for use with string extractors like potx.
   t('A unit might be "Week One", "January 1st", "Section Two: Why Monkeys Like Bananas", or another method of chronologically ordering your syllabus.');
   t('Any non-text media.');
-  t('Attachments');
   t('Bibliographic Entry');
   t('Copyright');
   t('Course');
   t('Cover Image');
   t('Genre');
-  t('If there is a PDF or other file version of this document, attach it here.');
   t('Media');
   t('Medium');
   t('Priority');

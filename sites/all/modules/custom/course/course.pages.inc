@@ -7,7 +7,7 @@ function course_create_authorize() {
   if (!variable_get('course_require_auth')) {
     drupal_goto('course-setup/add-course');
   }
-  $output = "Thanks for your interest in setting up a Lacuna Stories course. Currently, courses are only being created after instructors have had a consultation with the Lacuna Stories team. To arrange a consultation, email <a href='info@lacunastories.com'>info@lacunastories.com</a>. If you have already been approved to create a course, please enter the Course Setup Code given to you by a Lacuna Stories team member.";
+  $output = "Thanks for your interest in setting up a Lacuna course. Currently, your institution requires a code to do so.If you have already been approved to create a course, please enter the Course Setup Code given to you. Contact your institution's Lacuna administrator if you need a code.";
 
   $authcode_form = drupal_get_form('course_authcode_form');
   return $output . " " . drupal_render($authcode_form);
@@ -41,11 +41,11 @@ function course_authcode_form_submit($form, &$form_state) {
     $expiration = time() + (7 * 24 * 60 * 60); // seven days from now
     cache_set($key, $token, 'cache', $expiration); // our copy
 
-    drupal_set_message("Your Course Setup Code was recognized. Please contact a Lacuna Stories team member if you have any issues creating your course.");
+    drupal_set_message("Your Course Setup Code was recognized. Please contact your institution's Lacuna administrator if you have any issues creating your course.");
     drupal_goto('course-setup/add-course');
   }
   else {
-    drupal_set_message("Unfortunately, we do not recognize your Course Setup Code. Please try again or contact a Lacuna Stories team member.", 'warning');
+    drupal_set_message("Unfortunately, we do not recognize your Course Setup Code. Please try again or contact your institution's Lacuna adminstrator.", 'warning');
     drupal_goto('course-setup');
   }
 }
@@ -69,7 +69,7 @@ function course_create() {
 
   unset($form['actions']['preview']);
   $form['field_unregistered_students'][LANGUAGE_NONE][0]['value']['#value'] = 0;
-  $form['actions']['submit']['#prefix'] = '<div>Send my information to the Lacuna Stories team to begin setting up my course!</div>';
+  $form['actions']['submit'];
   $path = drupal_get_path('module', 'course');
   $form['#attached']['css'] = array("$path/course.css");
   $form['#attached']['js'] = array("$path/course.js");
@@ -149,7 +149,7 @@ function course_organize() {
 			'current_course' => course_get_selected_course()
 		)), 'setting');
 	course_add_default_terms();
-  $output = "Thank you for submitting your course information to the Lacuna Stories team. You can now continue by naming the units and genres by which you would like to organize course materials. A few defaults have been chosen for you already. You may remove these by clicking on the trash icon (<span class='fa fa-trash-o'></span>). To continue, click \"Continue\"<br />";
+  $output = "You can now continue by naming the units and genres by which you would like to organize course materials. A few defaults have been chosen for you already. You may remove these by clicking on the trash icon (<span class='fa fa-trash-o'></span>). To continue, click \"Continue\"<br />";
   $output .= "<br />";
 	$form = drupal_get_form('course_organize_form');
   $output .= drupal_render($form);
@@ -283,13 +283,13 @@ function course_ajax_delete_term($vocab_name, $term) {
 function course_add_material() {
   global $base_url;
 
-  $output = "<p>You, as the instructor, are responsible for determining if the online or e-access materials you are assigning your students are available at your home institution. If you have any questions at any time, please email " .l('info@lacunastories.com', 'mailto:info@lacunastories.com', array('absolute' => TRUE)) . " and someone from our team will assist you.</p><br /><div class='add-materials'>";
+  $output = "<p>You, as the instructor, are responsible for determining if the online or e-access materials you are assigning your students are available at your home institution. If you have any questions at any time, please contact your institution's Lacuna administrator, copyright librarian, or the person responsible for issues of copyright at your institution.</p><br /><div class='add-materials'>";
 
-//  $output .= "<div id='archived-materials' class='explanation'><div>Add Lacuna Stories Archived Materials. These materials may be free or available for a fee for your students. In either case, these are already digitized and using these materials will save you or the Lacuna Stories team time.</div><button class='form-submit'><a href='" . $base_url . "/archived-materials'>Search Lacuna Stories</a></button></div>";
+//  $output .= "<div id='archived-materials' class='explanation'><div>Add Lacuna Archived Materials. These materials may be free or available for a fee for your students. In either case, these are already digitized and using these materials will save you or the Lacuna team time.</div><button class='form-submit'><a href='" . $base_url . "/archived-materials'>Search Lacuna</a></button></div>";
 
-//  $output .= "<div id='e-access'><div>Add E-Access Material from my Institution. If your students have digital access to materials through your institution’s library, they may have free access to those same materials on Lacuna Stories. Save your students money!</div><button class='form-submit'>Confirm E-Access Material</button></div>";
+//  $output .= "<div id='e-access'><div>Add E-Access Material from my Institution. If your students have digital access to materials through your institution’s library, they may have free access to those same materials on Lacuna. Save your students money!</div><button class='form-submit'>Confirm E-Access Material</button></div>";
 
-//  $output .= "<div id='studynet'><div>Request Copyright Permission. The Lacuna Stories team, in partnership with Study.Net, will obtain permission, directly from the publisher or an intermediary service, to use the material you identify.</div><button class='form-submit'>Request Copyright Permission</button></div></div>";
+//  $output .= "<div id='studynet'><div>Request Copyright Permission. The Lacuna team, in partnership with Study.Net, will obtain permission, directly from the publisher or an intermediary service, to use the material you identify.</div><button class='form-submit'>Request Copyright Permission</button></div></div>";
 
 	  $output .= "<div id='add-documents' class='explanation'><div>Add materials to your course. Note: You are responsible for ensuring that you have permission to publish these materials for your course.</div><button class='form-submit'>Add Materials</button></div></div>";
 
@@ -302,8 +302,19 @@ function course_add_material() {
     'language' => LANGUAGE_NONE,
   );
   $form = drupal_get_form(BIBLIO_NODE_TYPE . '_node_form', $biblio);
-
   $output .= "<div class='biblio-form'>" . drupal_render($form) . "</div>";
+
+  // Count the number of items in the draft materials view block
+  $view = views_get_view('documents');
+  $view->execute('course_materials_draft_block');
+  $output .= '<span class="block-title">Draft Materials (' . count($view->result) . ')</span>';
+  $output .= views_embed_view('documents', 'course_materials_draft_block');
+
+  // Do the same for published materials
+  // Probably a better way to do this, but the Views API documentation is really poor
+  $view = views_get_view('documents');
+  $view->execute('course_block');
+  $output .= '<span class="block-title">Published Materials (' . count($view->result) . ')</span>';
   $output .= views_embed_view('documents', 'course_block');
   return $output;
 }
