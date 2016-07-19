@@ -158,7 +158,6 @@ features[variable][] = chosen_no_results_text
 features[variable][] = chosen_placeholder_text_multiple
 features[variable][] = chosen_placeholder_text_single
 features[variable][] = chosen_search_contains
-features[variable][] = chosen_use_theme
 features[variable][] = comment_anonymous_course
 features[variable][] = comment_course
 features[variable][] = comment_default_mode_course
