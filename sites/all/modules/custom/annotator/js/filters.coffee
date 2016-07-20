@@ -228,7 +228,7 @@ class Model
     if @state.total then @state.index = 1
     for annotation in annotations
       @state.ids.all.push(annotation.id)
-      if annotation.category.toLowerCase() == 'highlight'
+      if annotation.category? and annotation.category.toLowerCase() == 'highlight'
         @state.ids.highlights.push(annotation.id)
       for filter of @state.filters
         # Store the values available for filters

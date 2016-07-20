@@ -17,3 +17,4 @@ class Annotator.Plugin.Controls extends Annotator.Plugin
         controls.hideEdit()
       if (!annotation.permissions.del)
         controls.hideDelete()
+    jQuery(field).remove()  # because an empty div gets added

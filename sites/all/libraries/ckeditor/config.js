@@ -10,4 +10,6 @@ CKEDITOR.editorConfig = function( config ) {
 	config.fillEmptyBlocks = false;
 	config.enterMode = CKEDITOR.ENTER_BR;
     config.ignoreEmptyParagraph = true;
+    config.pasteFromWordRemoveFontStyles = false;
+    config.pasteFromWordRemoveStyles = false;
 };
