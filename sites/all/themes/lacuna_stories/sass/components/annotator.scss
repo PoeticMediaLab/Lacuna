@@ -278,8 +278,20 @@ $privacy-selected: rgba(19, 149, 25, 0.74);
 }
 
 .annotator-editor {
-  .annotator-category:hover {
+  .annotator-category:hover,
+  .annotator-privacy:hover {
     cursor: pointer;
+  }
+  .annotator-controls {
+    a {
+      text-decoration: none;
+      text-align: center;
+      padding: 0px 10px 0px 10px;
+      color: black;
+    }
+    a.annotator-focus, a:hover {
+      color: white;
+    }
   }
 }
 
