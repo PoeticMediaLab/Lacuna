@@ -512,6 +512,22 @@ function annotation_api_from_stdin() {
 }
 
 /**
+ * Load comments on an annotation node
+ */
+function annotation_load_comments($nid) {
+  $query = new EntityFieldQuery();
+  $query->entityCondition('entity_type', 'comment')
+    ->propertyCondition('status', COMMENT_PUBLISHED)
+    ->propertyCondition('nid', $nid);
+  $result = $query->execute();
+  $comments = array();
+  if (isset($result['comment'])) {
+    $comments = comment_load_multiple(array_keys($result['comment']));
+  }
+  return $comments;
+}
+
+/**
  * Prepare entity for api usage
  */
 function annotation_api_entity_prepare($annotation, $op) {
@@ -564,6 +580,9 @@ function annotation_api_entity_prepare($annotation, $op) {
             array_push($entity->tags, $term->name);
         }
       }
+
+      // Comments
+      $entity->comments = annotation_load_comments($annotation->nid);
 
 			/*
 			 * Privacy options
