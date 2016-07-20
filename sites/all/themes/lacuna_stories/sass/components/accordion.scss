@@ -1,0 +1,35 @@
+.ui-state-default {
+  background: none !important;
+  border: none !important;
+  border-bottom: 1px solid #d3d3d3 !important;
+
+}
+
+.ui-corner-all {
+  border-bottom-left-radius: 0px !important;
+  border-bottom-right-radius: 0px !important;
+}
+
+.ui-accordion-header a {
+  font-family: "Noto Sans",Verdana,Tahoma,"DejaVu Sans",sans-serif !important;
+  font-weight: bold;
+}
+
+.ui-accordion-header a:link {
+  color: #1588ba !important;
+}
+
+.ui-accordion-header a:hover {
+  color: #094762 !important;
+}
+
+.jquery-ui-filter p {
+  font-family: "Baskerville Libre",Georgia,"Times New Roman","DejaVu Serif",serif;
+  font-size: 18px;
+  line-height: 1.5em;
+}
+
+.ui-widget-content {
+  border: none !important;
+  height: auto !important;
+}
