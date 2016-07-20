@@ -38,10 +38,6 @@ $category-selected: rgba(22,147,165, .8);
   border-top: solid 1px #eee;
 }
 
-  .annotator-category:hover {
-    cursor: pointer;
-  }
-
   .annotator-categories h4{
     font-size: 13px;
     display: block;
@@ -281,6 +277,12 @@ $privacy-selected: rgba(19, 149, 25, 0.74);
   margin-left: 4px;
 }
 
+.annotator-editor {
+  .annotator-category:hover {
+    cursor: pointer;
+  }
+}
+
 .annotator-viewer {
   .annotator-privacy-type {
     padding: 6px;
@@ -314,8 +316,11 @@ $privacy-selected: rgba(19, 149, 25, 0.74);
     background-color: $privacy-default;
   }
   .annotator-comment {
-    a {
-      text-decoration: none;
+    span {
+      cursor: pointer;
+    }
+    span:hover {
+      color: black;
     }
   }
 }
