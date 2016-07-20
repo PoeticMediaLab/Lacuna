@@ -31,6 +31,7 @@
  *
  ******/
 
+(function ($) {
 /**
  * Page Turner Model
  * Handles turning HTML into pages
@@ -619,55 +620,54 @@ PTController.prototype = {
     }
 }; // END: PTController
 
-(function ($) {
-    "use strict";
-    Drupal.behaviors.page_turner = {
-        attach: function (context, settings) {
-            // We assume here the body text is always the first field
-            var content = context.getElementsByTagName('article')[0].getElementsByClassName('field')[0];
-            var model = new PTModel(content, settings),
-            // Our selectors and ids; should probably make more consistent
-                view = new PTView(model, {
-                    'content': 'article',
-                    'pages': {
-                        'loc': 'content',
-                        'container': 'page-turner-pages-container',
-                        'id': 'page-turner-pages',
-                        'numbers': 'page-turner-pages-numbers',
-                        'total': 'page-turner-pages-total'
+"use strict";
+Drupal.behaviors.page_turner = {
+    attach: function (context, settings) {
+        // We assume here the body text is always the first field
+        var content = context.getElementsByTagName('article')[0].getElementsByClassName('field')[0];
+        var model = new PTModel(content, settings),
+        // Our selectors and ids; should probably make more consistent
+            view = new PTView(model, {
+                'content': 'article',
+                'pages': {
+                    'loc': 'content',
+                    'container': 'page-turner-pages-container',
+                    'id': 'page-turner-pages',
+                    'numbers': 'page-turner-pages-numbers',
+                    'total': 'page-turner-pages-total'
+                },
+                'page_num': 'page-turner-number',
+                'navbar_parent': 'page-turner-nav-parent',
+                'navbar': 'page-turner-nav',
+                'pager': {
+                    'next': {
+                        'id': 'page-turner-next',
+                        'classes': ['page-turner-pager', 'fa', 'fa-arrow-right']
                     },
-                    'page_num': 'page-turner-number',
-                    'navbar_parent': 'page-turner-nav-parent',
-                    'navbar': 'page-turner-nav',
-                    'pager': {
-                        'next': {
-                            'id': 'page-turner-next',
-                            'classes': ['page-turner-pager', 'fa', 'fa-arrow-right']
-                        },
-                        'prev': {
-                            'id': 'page-turner-prev',
-                            'classes': ['page-turner-pager', 'fa', 'fa-arrow-left']
-                        },
+                    'prev': {
+                        'id': 'page-turner-prev',
+                        'classes': ['page-turner-pager', 'fa', 'fa-arrow-left']
                     },
-                    'brush': 'page-turner-brush',
-                    'hidden': 'page-turner-hidden'
-                }),
-                controller = new PTController(model, view);
+                },
+                'brush': 'page-turner-brush',
+                'hidden': 'page-turner-hidden'
+            }),
+            controller = new PTController(model, view);
 
-            // Initial page hiding
-            var cur_page = controller.get_current_page();
-            if (cur_page > 0) {
-                model.current_page(cur_page);
+        // Initial page hiding
+        var cur_page = controller.get_current_page();
+        if (cur_page > 0) {
+            model.current_page(cur_page);
+        }
+        var i, l;
+        for (i = 0, l = model.page_total(); i < l; i++) {
+            if (i != cur_page) {
+                view.hide_page(i);
             }
-            var i, l;
-            for (i = 0, l = model.page_total(); i < l; i++) {
-                if (i != cur_page) {
-                    view.hide_page(i);
-                }
-            }
-            var range = model.page_range();
-            view.draw_brush(cur_page, range.end - range.start);
-            view.update_page_numbers(range);
-        } // END: attach
-    }; // END: Drupal.behaviors.page_turner
+        }
+        var range = model.page_range();
+        view.draw_brush(cur_page, range.end - range.start);
+        view.update_page_numbers(range);
+    } // END: attach
+}; // END: Drupal.behaviors.page_turner
 })(jQuery);

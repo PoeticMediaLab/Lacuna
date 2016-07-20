@@ -7,4 +7,4 @@ sites/*/private
 sites/all/modules/contrib/examples
 sites/all/modules/contrib/devel
 sites/all/modules/contrib/devel_debug_log
-
+sites/all/themes/lacuna_stories/.sass-cache
