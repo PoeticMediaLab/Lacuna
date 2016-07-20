@@ -1,0 +1,61 @@
+<?php
+/**
+ * @file
+ * Installation information for the 'jQuery UI filter' module.
+ */
+
+/**
+ * Implements hook_uninstall().
+ */
+function jquery_ui_filter_uninstall() {
+  db_delete('variable')
+    ->condition('name', 'jquery_ui_filter_%', 'LIKE')
+    ->execute();
+  cache_clear_all('variables', 'cache_bootstrap');
+}
+
+/**
+ * Allow Accordion and Tabs to use different header tags.
+ */
+function jquery_ui_filter_update_7000() {
+  $header_tag = variable_get('jquery_ui_filter_header_tag', 'h3');
+  variable_del('jquery_ui_filter_header_tag');
+  if ($header_tag != 'h3') {
+    variable_set('jquery_ui_filter_accordion_header_tag', $header_tag);
+    variable_set('jquery_ui_filter_tabs_header_tag', $header_tag);
+  }
+}
+
+/**
+ * Split default input filter into 3 widget specific filters (accordion, dialog, & tabs)
+ */
+function jquery_ui_filter_update_7001() {
+  $result = db_query("SELECT * FROM {filter} WHERE module='jquery_ui_filter' AND name='jquery_ui_filter'");
+  while ($record = $result->fetchAssoc()) {
+    // Add new filter formats
+    foreach (jquery_ui_filter_filter_info() as $name => $info) {
+      $record['name'] = $name;
+      db_insert('filter')
+        ->fields($record)
+        ->execute();
+    }
+    // Delete old filter format
+    db_delete('filter')
+      ->condition('module', 'jquery_ui_filter')
+      ->condition('name=', 'jquery_ui_filter')
+      ->execute();
+  }
+}
+
+/**
+ * Split jQuery UI widgets into widget specific modules (accordion, dialog, & tabs)
+ */
+function jquery_ui_filter_update_7002() {
+  // Enable modules
+  module_enable( array('jquery_ui_filter_accordion', 'jquery_ui_filter_dialog', 'jquery_ui_filter_tabs') );
+
+  // Update filters
+  db_query("UPDATE {filter} SET module='jquery_ui_filter_accordion', name='accordion' WHERE module='jquery_ui_filter' AND name='accordion'");
+  db_query("UPDATE {filter} SET module='jquery_ui_filter_dialog', name='dialog'  WHERE module='jquery_ui_filter' AND name='dialog'");
+  db_query("UPDATE {filter} SET module='jquery_ui_filter_tabs', name='tabs'  WHERE module='jquery_ui_filter' AND name='tabs'");
+}

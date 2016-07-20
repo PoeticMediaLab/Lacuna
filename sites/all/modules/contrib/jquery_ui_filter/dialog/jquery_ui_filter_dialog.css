@@ -1,0 +1,41 @@
+/**
+ * @file
+ * jQuery UI filter styling
+ */
+
+#jquery-ui-filter-dialog {
+  display:none;
+  overflow: hidden;
+  padding: 2px !important;
+}
+
+#jquery-ui-filter-dialog-container {
+  border: 1px solid #ccc;
+  width: 100%;
+  height: 100%;
+}
+
+/*
+ * Bartik.
+ */
+body.bartik.jquery-ui-filter-dialog #header div.section,
+body.bartik.jquery-ui-filter-dialog #featured div.section,
+body.bartik.jquery-ui-filter-dialog #messages div.section,
+body.bartik.jquery-ui-filter-dialog #page-wrapper,
+body.bartik.jquery-ui-filter-dialog #main,
+body.bartik.jquery-ui-filter-dialog #triptych,
+body.bartik.jquery-ui-filter-dialog #footer-columns,
+body.bartik.jquery-ui-filter-dialog #footer /* clear widths */ {
+  min-width: inherit;
+  min-height: inherit;
+  width: inherit;
+}
+
+body.bartik.jquery-ui-filter-dialog  #main /* Remove margins */ {
+  margin-bottom: 0;
+  margin-top: 0;
+}
+
+body.bartik.jquery-ui-filter-dialog-no-regions #footer-wrapper /* hide regions */ {
+  display: none;
+}

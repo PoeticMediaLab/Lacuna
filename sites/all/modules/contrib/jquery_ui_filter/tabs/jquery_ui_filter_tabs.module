@@ -1,0 +1,147 @@
+<?php
+/**
+ * @file
+ * Converts static HTML to a jQuery UI accordian or tabs widget.
+ */
+
+/**
+ * Implements hook_init().
+ */
+function jquery_ui_filter_tabs_init() {
+  $tabs_options = jquery_ui_filter_tabs_get_options();
+
+  // Add tabs
+  drupal_add_library('system', 'ui.tabs');
+
+  // Tabs: Add ui.button for paging.
+  if ($tabs_options['paging']) {
+    drupal_add_library('system', 'ui.button');
+  }
+
+  // Tabs: Add jquery.cookie using jquery_plugin.module.
+  if (!empty($tabs_options['cookie']) && function_exists('jquery_plugin_add')) {
+    jquery_plugin_add('cookie');
+  }
+  else {
+    unset($tabs_options['cookie']); // Remove cookie option if jquery plugin does not exist.
+  }
+
+
+  // Add script and settings.
+  drupal_add_js( drupal_get_path('module', 'jquery_ui_filter_tabs') . '/jquery_ui_filter_tabs.js', array('type' => 'file'));
+  $settings = array(
+    'jQueryUiFilter' => array(
+      'tabsOptions' => $tabs_options ,
+      'tabsHeaderTag' => variable_get('jquery_ui_filter_tabs_header_tag', 'h3'),
+    ),
+  );
+  drupal_add_js($settings, 'setting');
+
+  // Apply global options
+  if (variable_get("jquery_ui_filter_tabs_options_global", 0)) {
+    drupal_add_js("Drupal.jQueryUiFilter.globalOptions('tabs');", array('type' => 'inline', 'scope' => 'footer'));
+  }
+}
+
+/**
+ * Implementation of hook_menu().
+ */
+function jquery_ui_filter_tabs_menu() {
+  $items = array();
+
+  // Tabs
+  $items['admin/config/content/jquery_ui_filter/tabs'] = array(
+    'title' => 'Tabs',
+    'description' => 'Configure tabs settings for the jQuery UI filter.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('jquery_ui_filter_tabs_settings'),
+    'access arguments' => array('administer site configuration'),
+    'file' => 'jquery_ui_filter_tabs.admin.inc',
+    'type' => MENU_LOCAL_TASK,
+    'weight' => 0,
+  );
+
+  return $items;
+}
+
+/**
+ * Implements hook_filter_info().
+ */
+function jquery_ui_filter_tabs_filter_info() {
+  $filters = array();
+
+  $filters['tabs'] = array(
+    'title' => t('jQuery UI tabs'),
+    'description' => t('Converts static HTML to a jQuery UI Tabs widget.'),
+    'default settings' => array(),
+    'settings callback' => '_jquery_ui_filter_tabs_settings_callback',
+    'process callback' => '_jquery_ui_filter_tabs_process_callback',
+    'tips callback' => '_jquery_ui_filter_tabs_tips_callback',
+  );
+
+  return $filters;
+}
+
+/**
+ * Implementation of hook_filter_tips().
+ */
+function _jquery_ui_filter_tabs_tips_callback($delta = NULL, $format = NULL, $long = FALSE) {
+  $t_args = array(
+    '@tabs_header_tag' => '<' . variable_get('jquery_ui_filter_header_tag', 'h3') . '>',
+    '@tabs_href' => 'http://jqueryui.com/demos/tabs/'
+  );
+  return t('Use [tabs] and [/tabs] with @tabs_header_tag header tags to create a jQuery UI <a href="@tabs_href">Tabs</a> widget.', $t_args);
+}
+
+/**
+ * Jquery UI filter tabs settings.
+ */
+function _jquery_ui_filter_tabs_settings_callback() {
+  return _jquery_ui_filter_settings_callback('tabs');
+}
+
+/**
+ * Jquery UI filter tabs process callback.
+ */
+function _jquery_ui_filter_tabs_process_callback($text) {
+  $text = preg_replace('#<(p|h\d)[^>]*>\s*(\[\/?(tabs)[^\]]*\])\s*</\1>#', '\2', $text);
+  $text = preg_replace_callback('#\[tabs?\](.*?)\[/tabs\]#is', '_jquery_ui_filter_tabs_process_replacer', $text);
+  return $text;
+}
+
+/**
+ * Jquery UI filter tabs process replacer.
+ */
+function _jquery_ui_filter_tabs_process_replacer($matches) {
+  return _jquery_ui_filter_process_replacer('tabs', $matches[1]);
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+// Options
+////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Get jQuery UI tabs options.
+ */
+function jquery_ui_filter_tabs_get_options() {
+  return _jquery_ui_filter_array_merge(
+    array(
+      'collapsible' => 'false',
+      'cookie' => array(
+        'expires' => 7,
+        'secure' => 'false',
+      ),
+      'event' => 'click',
+      'fx' => 0,
+      'paging' => array(
+        'back' => '&laquo; Previous',
+        'next' => 'Next &raquo;',
+      ),
+      'selected' => '',
+      'scrollTo' => 0,
+      'history' => 'false',
+    ),
+    variable_get('jquery_ui_filter_tabs_options', array())
+  );
+}

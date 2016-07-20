@@ -1,0 +1,13 @@
+name = jQuery UI filter
+description = Converts static HTML to a JQuery UI Accordian or Tabs widget.
+core = 7.x
+package = Input filters
+files[] = jquery_ui_filter.admin.inc
+configure = admin/config/content/jquery_ui_filter
+
+; Information added by Drupal.org packaging script on 2015-12-11
+version = "7.x-1.0"
+core = "7.x"
+project = "jquery_ui_filter"
+datestamp = "1449797644"
+

@@ -107,6 +107,29 @@ function lacuna_stories_materials_strongarm() {
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
+  $strongarm->name = 'jquery_ui_filter_accordion_header_tag';
+  $strongarm->value = 'h3';
+  $export['jquery_ui_filter_accordion_header_tag'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'jquery_ui_filter_accordion_options';
+  $strongarm->value = array(
+    'active' => 'false',
+    'animated' => 'bounceslide',
+    'autoHeight' => 'false',
+    'clearStyle' => 'false',
+    'collapsible' => 'true',
+    'event' => 'click',
+    'scrollTo' => 0,
+    'history' => 'false',
+  );
+  $export['jquery_ui_filter_accordion_options'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
   $strongarm->name = 'menu_options_document';
   $strongarm->value = array(
     0 => 'main-menu',

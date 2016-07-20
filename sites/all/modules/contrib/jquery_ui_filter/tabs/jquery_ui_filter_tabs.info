@@ -1,0 +1,13 @@
+name = jQuery UI filter tabs
+description = Converts static HTML to a JQuery UI tabs widget.
+core = 7.x
+package = Input filters
+dependencies[] = jquery_ui_filter
+configure = admin/config/content/jquery_ui_filter_tabs
+
+; Information added by Drupal.org packaging script on 2015-12-11
+version = "7.x-1.0"
+core = "7.x"
+project = "jquery_ui_filter"
+datestamp = "1449797644"
+
