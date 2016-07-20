@@ -13,6 +13,20 @@ function lacuna_stories_people_strongarm() {
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
+  $strongarm->name = 'avatar_selection_imagecache_preset';
+  $strongarm->value = 'thumbnail';
+  $export['avatar_selection_imagecache_preset'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'avatar_selection_set_random_default';
+  $strongarm->value = 1;
+  $export['avatar_selection_set_random_default'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
   $strongarm->name = 'logintoboggan_confirm_email_at_registration';
   $strongarm->value = '1';
   $export['logintoboggan_confirm_email_at_registration'] = $strongarm;
