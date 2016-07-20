@@ -246,6 +246,11 @@ sup,sub',
         'status' => 1,
         'settings' => array(),
       ),
+      'accordion' => array(
+        'weight' => 0,
+        'status' => 1,
+        'settings' => array(),
+      ),
     ),
   );
 

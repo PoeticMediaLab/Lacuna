@@ -21,6 +21,7 @@ dependencies[] = filter
 dependencies[] = fpa
 dependencies[] = honeypot
 dependencies[] = htmlpurifier
+dependencies[] = jquery_ui_filter_accordion
 dependencies[] = jquery_update
 dependencies[] = lacuna_updates
 dependencies[] = libraries
