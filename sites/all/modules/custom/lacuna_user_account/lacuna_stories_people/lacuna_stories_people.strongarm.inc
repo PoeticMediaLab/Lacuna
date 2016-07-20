@@ -21,7 +21,7 @@ function lacuna_stories_people_strongarm() {
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'avatar_selection_disable_user_upload';
-  $strongarm->value = 1;
+  $strongarm->value = 0;
   $export['avatar_selection_disable_user_upload'] = $strongarm;
 
   $strongarm = new stdClass();
@@ -35,7 +35,7 @@ function lacuna_stories_people_strongarm() {
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'avatar_selection_force_user_avatar';
-  $strongarm->value = 0;
+  $strongarm->value = 1;
   $export['avatar_selection_force_user_avatar'] = $strongarm;
 
   $strongarm = new stdClass();
