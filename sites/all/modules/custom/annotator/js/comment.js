@@ -2,20 +2,29 @@
 (function() {
   var bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
     extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-    hasProp = {}.hasOwnProperty;
+    hasProp = {}.hasOwnProperty,
+    indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
 
   Annotator.Plugin.Comment = (function(superClass) {
     extend(Comment, superClass);
 
     function Comment() {
       this.addComment = bind(this.addComment, this);
+      this.cancelComment = bind(this.cancelComment, this);
       this.saveComment = bind(this.saveComment, this);
       this.showComments = bind(this.showComments, this);
       this.updateViewer = bind(this.updateViewer, this);
+      this.toggleVisibility = bind(this.toggleVisibility, this);
+      this.hide = bind(this.hide, this);
+      this.show = bind(this.show, this);
+      this.addReplyArea = bind(this.addReplyArea, this);
       return Comment.__super__.constructor.apply(this, arguments);
     }
 
-    Comment.prototype.commentClass = "annotator-comment fa fa-reply";
+    Comment.prototype.commentClasses = {
+      "hidden": "annotator-comment-hidden",
+      "reply": "annotator-comment fa fa-reply"
+    };
 
     Comment.prototype.pluginInit = function() {
       if (!Annotator.supported()) {
@@ -26,8 +35,61 @@
       });
     };
 
+    Comment.prototype.addReplyArea = function(field, annotation) {
+      var buttons, cancel, form, save, textarea;
+      form = document.createElement("form");
+      form.id = "annotator-comment-form";
+      textarea = document.createElement("textarea");
+      textarea.classList.add("annotator-comment");
+      buttons = document.createElement("div");
+      buttons.classList.add("annotator-comment-controls");
+      save = document.createElement("a");
+      save.classList.add("annotator-comment-save");
+      save.innerHTML = "Save";
+      save.addEventListener("click", (function(_this) {
+        return function(event) {
+          return _this.saveComment(event, annotation, textarea);
+        };
+      })(this));
+      cancel = document.createElement("a");
+      cancel.classList.add("annotator-comment-cancel");
+      cancel.innerHTML = "Cancel";
+      cancel.addEventListener("click", (function(_this) {
+        return function() {
+          return _this.cancelComment(textarea);
+        };
+      })(this));
+      buttons.appendChild(cancel);
+      buttons.appendChild(save);
+      form.appendChild(textarea);
+      form.appendChild(buttons);
+      form.addEventListener("click", (function(_this) {
+        return function(event) {
+          return _this.addComment(event, annotation);
+        };
+      })(this));
+      return field.appendChild(form);
+    };
+
+    Comment.prototype.show = function(field) {
+      return field.classList.remove(this.commentClasses.hidden);
+    };
+
+    Comment.prototype.hide = function(field) {
+      return field.classList.add(this.commentClasses.hidden);
+    };
+
+    Comment.prototype.toggleVisibility = function(field) {
+      var ref;
+      if (ref = this.commentClasses.hidden, indexOf.call(field.classList, ref) >= 0) {
+        return this.show(field);
+      } else {
+        return this.hide(field);
+      }
+    };
+
     Comment.prototype.updateViewer = function(field, annotation) {
-      var className, i, len, n_comments, ref, replies;
+      var className, i, len, n_comments, ref, replies, replyArea, span;
       n_comments = 0;
       replies = "Replies";
       if (Object.keys(annotation.comments).length > 0) {
@@ -36,25 +98,30 @@
           replies = "Reply";
         }
       }
-      ref = this.commentClass.split(" ");
+      ref = this.commentClasses.reply.split(" ");
       for (i = 0, len = ref.length; i < len; i++) {
         className = ref[i];
         field.classList.add(className);
       }
+      span = document.createElement("span");
       if (n_comments > 0) {
-        field.innerHTML = "<span>" + n_comments + " " + replies + "</span>";
-        return field.addEventListener("click", (function(_this) {
+        span.innerHTML = n_comments + " " + replies;
+        span.addEventListener("click", (function(_this) {
           return function(event) {
             return _this.showComments(event, annotation);
           };
         })(this));
+        return field.appendChild(span);
       } else {
-        field.innerHTML = "<span>Reply</span>";
-        return field.addEventListener("click", (function(_this) {
-          return function(event) {
-            return _this.addComment(event, annotation);
+        span.innerHTML = "Reply";
+        span.addEventListener("click", (function(_this) {
+          return function() {
+            return _this.toggleVisibility(replyArea);
           };
         })(this));
+        field.appendChild(span);
+        replyArea = this.addReplyArea(field, annotation);
+        return this.hide(replyArea);
       }
     };
 
@@ -62,32 +129,23 @@
       return console.log(annotation.comments);
     };
 
-    Comment.prototype.saveComment = function(event, textarea) {
-      return console.log(textarea.value);
+    Comment.prototype.saveComment = function(event, annotation, textarea) {
+      annotation.new_comment = {};
+      annotation.new_comment.pid = 0;
+      annotation.new_comment.text = textarea.value;
+      annotation.new_comment.uid = Drupal.settings.annotator_comment.current_uid;
+      this.annotator.updateAnnotatation(annotation);
+      return this.hide(event.target.parentNode);
+    };
+
+    Comment.prototype.cancelComment = function(textarea) {
+      textarea.value = "";
+      return this.hide(textarea.parentNode);
     };
 
     Comment.prototype.addComment = function(event, annotation) {
-      var buttons, cancel, form, save, target, textarea;
-      target = event.target.parentNode || event.srcElement.parentNode;
-      console.log(target);
-      target.removeEventListener("click", this.addComment);
-      form = document.createElement("form");
-      form.id = "annotator-comment-form";
-      target.appendChild(form);
-      textarea = document.createElement("textarea");
-      textarea.classList.add("annotator-comment");
-      buttons = document.createElement("div");
-      buttons.classList.add("annotator-comment-controls");
-      save = document.createElement("a");
-      save.classList.add("annotator-comment-save");
-      save.innerHTML = "Save";
-      cancel = document.createElement("a");
-      cancel.classList.add("annotator-comment-cancel");
-      cancel.innerHTML = "Cancel";
-      buttons.appendChild(cancel);
-      buttons.appendChild(save);
-      form.appendChild(textarea);
-      return form.appendChild(buttons);
+      var target;
+      return target = event.target.parentNode || event.srcElement.parentNode;
     };
 
     return Comment;
