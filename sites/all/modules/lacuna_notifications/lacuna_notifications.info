@@ -1,0 +1,17 @@
+name = Lacuna Notifications
+description = Features related to Recent Content and Notifications
+core = 7.x
+package = Lacuna Stories
+dependencies[] = ctools
+dependencies[] = entity
+dependencies[] = entityreference
+dependencies[] = features
+dependencies[] = message
+dependencies[] = options
+dependencies[] = strongarm
+features[ctools][] = strongarm:strongarm:1
+features[features_api][] = api:2
+features[field_base][] = field_message_content
+features[field_instance][] = message-log_new_content-field_message_content
+features[message_type][] = log_new_content
+features[variable][] = field_bundle_settings_message__log_new_content
