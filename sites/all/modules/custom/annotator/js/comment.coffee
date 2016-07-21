@@ -1,8 +1,8 @@
 #
-# Allow users to view comments and add new threaded comments to annotations
+# Allow users to view and create threaded replies to annotations
 #
-$ = jQuery
-
+# Mike Widner <mikewidner@stanford.edu>
+#
 class Annotator.Plugin.Comment extends Annotator.Plugin
 
   commentClass: "annotator-comment fa fa-reply"
@@ -14,16 +14,46 @@ class Annotator.Plugin.Comment extends Annotator.Plugin
     })
 
   updateViewer: (field, annotation) =>
-    field = $(field)
     n_comments = 0
     replies = "Replies"
     if Object.keys(annotation.comments).length > 0
       n_comments = Object.keys(annotation.comments).length
       if n_comments == 1
         replies = "Reply"
-    if annotation.links?
-      link = Drupal.settings.annotator_comment.base_root + annotation.links[0].href
-      field.html("<a href=\"#{link}#comments\" target=\"_blank\">#{n_comments} #{replies}</a>").addClass(@commentClass)
+    for className in @commentClass.split(" ")
+      field.classList.add(className)
+    if n_comments > 0
+      field.innerHTML = "<span>#{n_comments} #{replies}</span>"
+      field.addEventListener("click", (event) => @showComments(event, annotation))
     else
-      field.remove()
+      field.innerHTML = "<span>Reply</span>"
+      field.addEventListener("click", (event) => @addComment(event, annotation))
 
+  showComments: (event, annotation) =>
+    console.log(annotation.comments)
+
+  saveComment: (event, textarea) =>
+    console.log(textarea.value)
+
+  addComment: (event, annotation) =>
+    target = event.target.parentNode || event.srcElement.parentNode
+    console.log(target)
+    target.firstChild.removeEventListener("click", @addComment)  # so multiple textareas don't get created
+    form = document.createElement("form")
+    form.id = "annotator-comment-form"
+    target.appendChild(form)
+    textarea = document.createElement("textarea")
+    textarea.classList.add("annotator-comment")
+    buttons = document.createElement("div")
+    buttons.classList.add("annotator-comment-controls")
+    save = document.createElement("a")
+    save.classList.add("annotator-comment-save")
+    save.innerHTML = "Save"
+    cancel = document.createElement("a")
+    cancel.classList.add("annotator-comment-cancel")
+    cancel.innerHTML = "Cancel"
+    buttons.appendChild(cancel)
+    buttons.appendChild(save)
+    form.appendChild(textarea)
+    form.appendChild(buttons)
+#    textarea.addEventListener("input", (event) => @saveComment(event, textarea))
