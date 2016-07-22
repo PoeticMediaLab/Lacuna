@@ -11,8 +11,8 @@
     function Replies() {
       this.cancelReply = bind(this.cancelReply, this);
       this.saveReply = bind(this.saveReply, this);
-      this.showReplies = bind(this.showReplies, this);
-      this.updateViewer = bind(this.updateViewer, this);
+      this.drawReplies = bind(this.drawReplies, this);
+      this.initReplies = bind(this.initReplies, this);
       this.addReplyLink = bind(this.addReplyLink, this);
       this.hideReplyArea = bind(this.hideReplyArea, this);
       this.addReplyArea = bind(this.addReplyArea, this);
@@ -32,13 +32,15 @@
         return;
       }
       return this.annotator.viewer.addField({
-        load: this.updateViewer
+        load: this.initReplies
       });
     };
 
     Replies.prototype.show = function(field) {
+      var textarea;
       field.classList.remove(this.replyClasses.hidden);
-      return field.focus();
+      textarea = field.getElementsByTagName('textarea');
+      return textarea[0].focus();
     };
 
     Replies.prototype.hide = function(field) {
@@ -106,8 +108,8 @@
       return this.hide(replyArea);
     };
 
-    Replies.prototype.updateViewer = function(field, annotation) {
-      var className, i, len, n_replies, ref, replies_text, span;
+    Replies.prototype.initReplies = function(field, annotation) {
+      var className, i, len, n_replies, ref, replies, replies_text, span;
       n_replies = Object.keys(annotation.comments).length;
       replies_text = "Replies";
       if (n_replies === 1) {
@@ -121,12 +123,14 @@
       if (n_replies > 0) {
         span = document.createElement("span");
         span.innerHTML = n_replies + " " + replies_text;
+        field.appendChild(span);
+        replies = this.drawReplies(field, annotation);
         span.addEventListener("click", (function(_this) {
           return function(event) {
-            return _this.showReplies(event, annotation);
+            return _this.toggleVisibility(replies);
           };
         })(this));
-        return field.appendChild(span);
+        return this.hide(replies);
       } else {
         return this.addReplyLink(field, annotation);
       }
@@ -205,20 +209,19 @@
       return li;
     };
 
-    Replies.prototype.showReplies = function(event, annotation) {
-      var depth, el, i, len, li, list, replies, reply, results;
+    Replies.prototype.drawReplies = function(element, annotation) {
+      var depth, el, i, len, li, list, replies, reply;
       replies = this.convertRepliesData(annotation.comments);
       replies = this.sortReplies(replies);
-      list = this.initList(event.target);
-      results = [];
+      list = this.initList(element);
       for (i = 0, len = replies.length; i < len; i++) {
         reply = replies[i];
         depth = this.replyDepth(reply['thread']);
         el = this.getListAtDepth(list, depth);
         li = this.drawReply(el, reply);
-        results.push(this.addReplyLink(li, reply['id']));
+        this.addReplyLink(li, annotation, reply['id']);
       }
-      return results;
+      return list;
     };
 
     Replies.prototype.saveReply = function(event, annotation, textarea, pid) {

@@ -13,12 +13,13 @@ class Annotator.Plugin.Replies extends Annotator.Plugin
   pluginInit: ->
     return unless Annotator.supported()
     @annotator.viewer.addField({
-      load: @updateViewer
+      load: @initReplies
     })
 
   show: (field) =>
     field.classList.remove(@replyClasses.hidden)
-    field.focus()
+    textarea = field.getElementsByTagName('textarea')
+    textarea[0].focus()
 
   hide: (field) =>
     field.classList.add(@replyClasses.hidden)
@@ -49,7 +50,6 @@ class Annotator.Plugin.Replies extends Annotator.Plugin
     buttons.appendChild(save)
     form.appendChild(textarea)
     form.appendChild(buttons)
-    console.log(field)
     field.appendChild(form)
 
   hideReplyArea: (textarea) =>
@@ -64,7 +64,7 @@ class Annotator.Plugin.Replies extends Annotator.Plugin
     replyArea = @addReplyArea(field, annotation, pid)
     @hide(replyArea)
 
-  updateViewer: (field, annotation) =>
+  initReplies: (field, annotation) =>
     n_replies = Object.keys(annotation.comments).length
     replies_text = "Replies"
     if n_replies == 1
@@ -74,8 +74,10 @@ class Annotator.Plugin.Replies extends Annotator.Plugin
     if n_replies > 0
       span = document.createElement("span")
       span.innerHTML = "#{n_replies} #{replies_text}"
-      span.addEventListener("click", (event) => @showReplies(event, annotation))
       field.appendChild(span)
+      replies = @drawReplies(field, annotation)
+      span.addEventListener("click", (event) => @toggleVisibility(replies))
+      @hide(replies)
     else
       @addReplyLink(field, annotation)
 
@@ -141,15 +143,16 @@ class Annotator.Plugin.Replies extends Annotator.Plugin
     element.appendChild(li)
     return li
 
-  showReplies: (event, annotation) =>
+  drawReplies: (element, annotation) =>
     replies = @convertRepliesData(annotation.comments)
     replies = @sortReplies(replies)
-    list = @initList(event.target)
+    list = @initList(element)
     for reply in replies
       depth = @replyDepth(reply['thread'])
       el = @getListAtDepth(list, depth)
       li = @drawReply(el, reply)
-      @addReplyLink(li, reply['id'])
+      @addReplyLink(li, annotation, reply['id'])
+    return list
 
   saveReply: (event, annotation, textarea, pid) =>
     annotation.reply = {}
