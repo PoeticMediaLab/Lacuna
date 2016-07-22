@@ -206,6 +206,12 @@ function annotation_drupal_format($entity, $update = FALSE) {
         }
         break;
 
+      case 'reply':
+        // Added by the Replies plugin
+        annotation_save_comment($entity);
+        $annotation->comments = annotation_load_comments($entity->id);
+        break;
+
       case 'privacy_options':
         // Save these privacy options as the default for this user for new annotations on this document
         $privacy_defaults = array();
@@ -214,8 +220,8 @@ function annotation_drupal_format($entity, $update = FALSE) {
         }
 
         $privacy_defaults['annotation_privacy_defaults'][$document_nid] = $val;
-        $user = user_load ($user->uid); // Global user does not contain OG memberships, so saving that will lose them for the user. Load the user first and use that (see: https://www.drupal.org/node/1502916#comment-6444954).
-        user_save ($user, array ('data' => $privacy_defaults));
+        $user = user_load($user->uid); // Global user does not contain OG memberships, so saving that will lose them for the user. Load the user first and use that (see: https://www.drupal.org/node/1502916#comment-6444954).
+        user_save($user, array ('data' => $privacy_defaults));
 
 
         // Set the audience field to empty, to be set below
@@ -525,6 +531,27 @@ function annotation_load_comments($nid) {
     $comments = comment_load_multiple(array_keys($result['comment']));
   }
   return $comments;
+}
+
+/**
+ * Saves new comments on an annotation node
+ */
+function annotation_save_comment($entity) {
+  $comment = new StdClass();
+  $comment->cid = 0;
+  $comment->nid = (int) $entity->id;
+  $comment->pid = (int) $entity->reply['pid'];
+  $comment->uid = (int) $entity->reply['uid'];
+  $comment->name = format_username(user_load($comment->uid));
+  $comment->created = time();
+  $comment->status = COMMENT_PUBLISHED;
+  $comment->subject = '';
+  $comment->is_anonymous = FALSE;
+  $comment->language = LANGUAGE_NONE;
+  $comment->comment_body[$comment->language][0]['value'] = $entity->reply['text'];
+  $comment->comment_body[$comment->language][0]['format'] = 'plain_text'; // For now
+  comment_submit($comment);
+  comment_save($comment);
 }
 
 /**

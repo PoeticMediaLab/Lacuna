@@ -6,7 +6,8 @@
 class RepliesAnnotatorPlugin extends AnnotatorPlugin {
 
 	public function settings($defaults = array()) {
-		$defaults = array('base_root' => $GLOBALS['base_root']);
+		global $user;
+		$defaults = array('current_uid' => $user->uid);
 		return parent::settings($defaults);
 	}
 

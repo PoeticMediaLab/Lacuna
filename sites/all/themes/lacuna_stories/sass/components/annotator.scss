@@ -79,7 +79,7 @@ $category-selected: rgba(22,147,165, .8);
   *	from annotator/css/comment.css
   */
 
-  .annotator-comment {
+  .annotator-reply {
     display: block !important;
     width: 100%;
   }
@@ -327,12 +327,15 @@ $privacy-selected: rgba(19, 149, 25, 0.74);
   .annotator-privacy-group.course-groups.checked {
     background-color: $privacy-default;
   }
-  .annotator-comment {
+  .annotator-reply {
     span {
       cursor: pointer;
     }
     span:hover {
       color: black;
+    }
+    .annotator-reply-hidden {
+      display: none;
     }
   }
 }

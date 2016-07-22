@@ -5,28 +5,29 @@
     hasProp = {}.hasOwnProperty,
     indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
 
-  Annotator.Plugin.Comment = (function(superClass) {
-    extend(Comment, superClass);
+  Annotator.Plugin.Replies = (function(superClass) {
+    extend(Replies, superClass);
 
-    function Comment() {
-      this.addComment = bind(this.addComment, this);
-      this.cancelComment = bind(this.cancelComment, this);
-      this.saveComment = bind(this.saveComment, this);
-      this.showComments = bind(this.showComments, this);
+    function Replies() {
+      this.cancelReply = bind(this.cancelReply, this);
+      this.saveReply = bind(this.saveReply, this);
+      this.showReplies = bind(this.showReplies, this);
       this.updateViewer = bind(this.updateViewer, this);
+      this.addReplyLink = bind(this.addReplyLink, this);
+      this.hideReplyArea = bind(this.hideReplyArea, this);
+      this.addReplyArea = bind(this.addReplyArea, this);
       this.toggleVisibility = bind(this.toggleVisibility, this);
       this.hide = bind(this.hide, this);
       this.show = bind(this.show, this);
-      this.addReplyArea = bind(this.addReplyArea, this);
-      return Comment.__super__.constructor.apply(this, arguments);
+      return Replies.__super__.constructor.apply(this, arguments);
     }
 
-    Comment.prototype.commentClasses = {
-      "hidden": "annotator-comment-hidden",
-      "reply": "annotator-comment fa fa-reply"
+    Replies.prototype.replyClasses = {
+      "hidden": "annotator-reply-hidden",
+      "reply": "annotator-reply fa fa-reply"
     };
 
-    Comment.prototype.pluginInit = function() {
+    Replies.prototype.pluginInit = function() {
       if (!Annotator.supported()) {
         return;
       }
@@ -35,120 +36,206 @@
       });
     };
 
-    Comment.prototype.addReplyArea = function(field, annotation) {
-      var buttons, cancel, form, save, textarea;
-      form = document.createElement("form");
-      form.id = "annotator-comment-form";
-      textarea = document.createElement("textarea");
-      textarea.classList.add("annotator-comment");
-      buttons = document.createElement("div");
-      buttons.classList.add("annotator-comment-controls");
-      save = document.createElement("a");
-      save.classList.add("annotator-comment-save");
-      save.innerHTML = "Save";
-      save.addEventListener("click", (function(_this) {
-        return function(event) {
-          return _this.saveComment(event, annotation, textarea);
-        };
-      })(this));
-      cancel = document.createElement("a");
-      cancel.classList.add("annotator-comment-cancel");
-      cancel.innerHTML = "Cancel";
-      cancel.addEventListener("click", (function(_this) {
-        return function() {
-          return _this.cancelComment(textarea);
-        };
-      })(this));
-      buttons.appendChild(cancel);
-      buttons.appendChild(save);
-      form.appendChild(textarea);
-      form.appendChild(buttons);
-      form.addEventListener("click", (function(_this) {
-        return function(event) {
-          return _this.addComment(event, annotation);
-        };
-      })(this));
-      return field.appendChild(form);
+    Replies.prototype.show = function(field) {
+      field.classList.remove(this.replyClasses.hidden);
+      return field.focus();
     };
 
-    Comment.prototype.show = function(field) {
-      return field.classList.remove(this.commentClasses.hidden);
+    Replies.prototype.hide = function(field) {
+      return field.classList.add(this.replyClasses.hidden);
     };
 
-    Comment.prototype.hide = function(field) {
-      return field.classList.add(this.commentClasses.hidden);
-    };
-
-    Comment.prototype.toggleVisibility = function(field) {
+    Replies.prototype.toggleVisibility = function(field) {
       var ref;
-      if (ref = this.commentClasses.hidden, indexOf.call(field.classList, ref) >= 0) {
+      if (ref = this.replyClasses.hidden, indexOf.call(field.classList, ref) >= 0) {
         return this.show(field);
       } else {
         return this.hide(field);
       }
     };
 
-    Comment.prototype.updateViewer = function(field, annotation) {
-      var className, i, len, n_comments, ref, replies, replyArea, span;
-      n_comments = 0;
-      replies = "Replies";
-      if (Object.keys(annotation.comments).length > 0) {
-        n_comments = Object.keys(annotation.comments).length;
-        if (n_comments === 1) {
-          replies = "Reply";
-        }
+    Replies.prototype.addReplyArea = function(field, annotation, pid) {
+      var buttons, cancel, form, save, textarea;
+      form = document.createElement("form");
+      form.id = "annotator-reply-form";
+      textarea = document.createElement("textarea");
+      textarea.classList.add("annotator-reply");
+      buttons = document.createElement("div");
+      buttons.classList.add("annotator-reply-controls");
+      save = document.createElement("a");
+      save.classList.add("annotator-reply-save");
+      save.innerHTML = "Save";
+      save.addEventListener("click", (function(_this) {
+        return function(event) {
+          return _this.saveReply(event, annotation, textarea, pid);
+        };
+      })(this));
+      cancel = document.createElement("a");
+      cancel.classList.add("annotator-reply-cancel");
+      cancel.innerHTML = "Cancel";
+      cancel.addEventListener("click", (function(_this) {
+        return function() {
+          return _this.cancelReply(textarea);
+        };
+      })(this));
+      buttons.appendChild(cancel);
+      buttons.appendChild(save);
+      form.appendChild(textarea);
+      form.appendChild(buttons);
+      return field.appendChild(form);
+    };
+
+    Replies.prototype.hideReplyArea = function(textarea) {
+      return this.hide(textarea.parentNode);
+    };
+
+    Replies.prototype.addReplyLink = function(field, annotation, pid) {
+      var replyArea, span;
+      if (pid == null) {
+        pid = 0;
       }
-      ref = this.commentClasses.reply.split(" ");
+      span = document.createElement("span");
+      span.innerHTML = "Reply";
+      span.addEventListener("click", (function(_this) {
+        return function() {
+          return _this.toggleVisibility(replyArea);
+        };
+      })(this));
+      field.appendChild(span);
+      replyArea = this.addReplyArea(field, annotation, pid);
+      return this.hide(replyArea);
+    };
+
+    Replies.prototype.updateViewer = function(field, annotation) {
+      var className, i, len, n_replies, ref, replies_text, span;
+      n_replies = Object.keys(annotation.comments).length;
+      replies_text = "Replies";
+      if (n_replies === 1) {
+        replies_text = "Reply";
+      }
+      ref = this.replyClasses.reply.split(" ");
       for (i = 0, len = ref.length; i < len; i++) {
         className = ref[i];
         field.classList.add(className);
       }
-      span = document.createElement("span");
-      if (n_comments > 0) {
-        span.innerHTML = n_comments + " " + replies;
+      if (n_replies > 0) {
+        span = document.createElement("span");
+        span.innerHTML = n_replies + " " + replies_text;
         span.addEventListener("click", (function(_this) {
           return function(event) {
-            return _this.showComments(event, annotation);
+            return _this.showReplies(event, annotation);
           };
         })(this));
         return field.appendChild(span);
       } else {
-        span.innerHTML = "Reply";
-        span.addEventListener("click", (function(_this) {
-          return function() {
-            return _this.toggleVisibility(replyArea);
-          };
-        })(this));
-        field.appendChild(span);
-        replyArea = this.addReplyArea(field, annotation);
-        return this.hide(replyArea);
+        return this.addReplyLink(field, annotation);
       }
     };
 
-    Comment.prototype.showComments = function(event, annotation) {
-      return console.log(annotation.comments);
+    Replies.prototype.convertRepliesData = function(replies) {
+      var data, date, date_string, id, repliesList, reply;
+      repliesList = [];
+      for (id in replies) {
+        data = replies[id];
+        date = new Date(data['created'] * 1000);
+        date_string = date.getFullYear() + '-' + date.getMonth() + '-' + date.getDate() + ' ' + date.getHours() + ':' + date.getMinutes();
+        reply = {
+          'id': id,
+          'pid': data['pid'],
+          'text': data['comment_body']['und'][0]['safe_value'],
+          'author': data['name'],
+          'date': date_string,
+          'thread': data['thread']
+        };
+        repliesList.push(reply);
+      }
+      return repliesList;
     };
 
-    Comment.prototype.saveComment = function(event, annotation, textarea) {
-      annotation.new_comment = {};
-      annotation.new_comment.pid = 0;
-      annotation.new_comment.text = textarea.value;
-      annotation.new_comment.uid = Drupal.settings.annotator_comment.current_uid;
-      this.annotator.updateAnnotatation(annotation);
-      return this.hide(event.target.parentNode);
+    Replies.prototype.sortReplies = function(replies) {
+      return replies.sort(function(a, b) {
+        var thread_a, thread_b;
+        thread_a = a['thread'].substring(0, -1);
+        thread_b = b['thread'].substring(0, -1);
+        if (thread_a < thread_b) {
+          return -1;
+        } else if (thread_a > thread_b) {
+          return 1;
+        } else {
+          return 0;
+        }
+      });
     };
 
-    Comment.prototype.cancelComment = function(textarea) {
+    Replies.prototype.replyDepth = function(thread) {
+      return (thread.match(/\./g) || []).length;
+    };
+
+    Replies.prototype.initList = function(element) {
+      var l;
+      l = element.getElementsByTagName('ol');
+      if (l.length === 0) {
+        l = document.createElement('ol');
+        element.appendChild(l);
+      } else {
+        l = l[0];
+      }
+      return l;
+    };
+
+    Replies.prototype.getListAtDepth = function(element, depth) {
+      var parent;
+      parent = element;
+      while (depth--) {
+        parent = this.getListAtDepth(this.initList(parent), depth);
+      }
+      return parent;
+    };
+
+    Replies.prototype.drawReply = function(element, reply) {
+      var li, text;
+      li = document.createElement("li");
+      li.innerHTML = reply['author'] + ' on ' + reply['date'];
+      li.classList.add('annotator-reply-id-' + reply['id']);
+      text = document.createElement("span");
+      text.innerHTML = reply['text'];
+      text.classList.add('annotator-reply-text');
+      li.appendChild(text);
+      element.appendChild(li);
+      return li;
+    };
+
+    Replies.prototype.showReplies = function(event, annotation) {
+      var depth, el, i, len, li, list, replies, reply, results;
+      replies = this.convertRepliesData(annotation.comments);
+      replies = this.sortReplies(replies);
+      list = this.initList(event.target);
+      results = [];
+      for (i = 0, len = replies.length; i < len; i++) {
+        reply = replies[i];
+        depth = this.replyDepth(reply['thread']);
+        el = this.getListAtDepth(list, depth);
+        li = this.drawReply(el, reply);
+        results.push(this.addReplyLink(li, reply['id']));
+      }
+      return results;
+    };
+
+    Replies.prototype.saveReply = function(event, annotation, textarea, pid) {
+      annotation.reply = {};
+      annotation.reply.pid = pid;
+      annotation.reply.text = textarea.value;
+      annotation.reply.uid = Drupal.settings.annotator_replies.current_uid;
+      this.annotator.publish('annotationUpdated', [annotation]);
+      return this.hideReplyArea(textarea);
+    };
+
+    Replies.prototype.cancelReply = function(textarea) {
       textarea.value = "";
       return this.hide(textarea.parentNode);
     };
 
-    Comment.prototype.addComment = function(event, annotation) {
-      var target;
-      return target = event.target.parentNode || event.srcElement.parentNode;
-    };
-
-    return Comment;
+    return Replies;
 
   })(Annotator.Plugin);
 
