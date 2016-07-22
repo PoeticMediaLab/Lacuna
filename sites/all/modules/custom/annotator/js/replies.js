@@ -23,8 +23,9 @@
     }
 
     Replies.prototype.replyClasses = {
+      "base": "annotator-reply",
       "hidden": "annotator-reply-hidden",
-      "reply": "annotator-reply fa fa-reply"
+      "reply": "fa fa-reply"
     };
 
     Replies.prototype.pluginInit = function() {
@@ -59,13 +60,13 @@
     Replies.prototype.addReplyArea = function(field, annotation, pid) {
       var buttons, cancel, form, save, textarea;
       form = document.createElement("form");
-      form.id = "annotator-reply-form";
+      form.id = this.replyClasses.base + "-form";
       textarea = document.createElement("textarea");
-      textarea.classList.add("annotator-reply");
+      textarea.classList.add(this.replyClasses.base);
       buttons = document.createElement("div");
-      buttons.classList.add("annotator-reply-controls");
+      buttons.classList.add(this.replyClasses.base + "-controls");
       save = document.createElement("a");
-      save.classList.add("annotator-reply-save");
+      save.classList.add(this.replyClasses.base + "-save");
       save.innerHTML = "Save";
       save.addEventListener("click", (function(_this) {
         return function(event) {
@@ -73,7 +74,7 @@
         };
       })(this));
       cancel = document.createElement("a");
-      cancel.classList.add("annotator-reply-cancel");
+      cancel.classList.add(this.replyClasses.base + "-cancel");
       cancel.innerHTML = "Cancel";
       cancel.addEventListener("click", (function(_this) {
         return function() {
@@ -92,12 +93,17 @@
     };
 
     Replies.prototype.addReplyLink = function(field, annotation, pid) {
-      var replyArea, span;
+      var className, i, len, ref, replyArea, span;
       if (pid == null) {
         pid = 0;
       }
       span = document.createElement("span");
       span.innerHTML = "Reply";
+      ref = this.replyClasses.reply.split(" ");
+      for (i = 0, len = ref.length; i < len; i++) {
+        className = ref[i];
+        span.classList.add(className);
+      }
       span.addEventListener("click", (function(_this) {
         return function() {
           return _this.toggleVisibility(replyArea);
@@ -109,16 +115,12 @@
     };
 
     Replies.prototype.initReplies = function(field, annotation) {
-      var className, i, len, n_replies, ref, replies, replies_text, span;
+      var n_replies, replies, replies_text, span;
       n_replies = Object.keys(annotation.comments).length;
+      field.classList.add(this.replyClasses.base);
       replies_text = "Replies";
       if (n_replies === 1) {
         replies_text = "Reply";
-      }
-      ref = this.replyClasses.reply.split(" ");
-      for (i = 0, len = ref.length; i < len; i++) {
-        className = ref[i];
-        field.classList.add(className);
       }
       if (n_replies > 0) {
         span = document.createElement("span");
@@ -130,10 +132,9 @@
             return _this.toggleVisibility(replies);
           };
         })(this));
-        return this.hide(replies);
-      } else {
-        return this.addReplyLink(field, annotation);
+        this.hide(replies);
       }
+      return this.addReplyLink(field, annotation);
     };
 
     Replies.prototype.convertRepliesData = function(replies) {

@@ -6,8 +6,9 @@
 class Annotator.Plugin.Replies extends Annotator.Plugin
 
   replyClasses: {
+    "base": "annotator-reply"
     "hidden": "annotator-reply-hidden"
-    "reply": "annotator-reply fa fa-reply"
+    "reply": "fa fa-reply"
   }
 
   pluginInit: ->
@@ -33,17 +34,17 @@ class Annotator.Plugin.Replies extends Annotator.Plugin
   addReplyArea: (field, annotation, pid) =>
     # Add a textarea for replies; NOTE: hideReplyArea relies on this structure
     form = document.createElement("form")
-    form.id = "annotator-reply-form"
+    form.id = "#{@replyClasses.base}-form"
     textarea = document.createElement("textarea")
-    textarea.classList.add("annotator-reply")
+    textarea.classList.add(@replyClasses.base)
     buttons = document.createElement("div")
-    buttons.classList.add("annotator-reply-controls")
+    buttons.classList.add("#{@replyClasses.base}-controls")
     save = document.createElement("a")
-    save.classList.add("annotator-reply-save")
+    save.classList.add("#{@replyClasses.base}-save")
     save.innerHTML = "Save"
     save.addEventListener("click", (event) => @saveReply(event, annotation, textarea, pid))
     cancel = document.createElement("a")
-    cancel.classList.add("annotator-reply-cancel")
+    cancel.classList.add("#{@replyClasses.base}-cancel")
     cancel.innerHTML = "Cancel"
     cancel.addEventListener("click", () => @cancelReply(textarea))
     buttons.appendChild(cancel)
@@ -59,6 +60,8 @@ class Annotator.Plugin.Replies extends Annotator.Plugin
   addReplyLink: (field, annotation, pid = 0) =>
     span = document.createElement("span")
     span.innerHTML = "Reply"
+    for className in @replyClasses.reply.split(" ")
+      span.classList.add(className)
     span.addEventListener("click", () => @toggleVisibility(replyArea))
     field.appendChild(span)
     replyArea = @addReplyArea(field, annotation, pid)
@@ -66,11 +69,10 @@ class Annotator.Plugin.Replies extends Annotator.Plugin
 
   initReplies: (field, annotation) =>
     n_replies = Object.keys(annotation.comments).length
+    field.classList.add(@replyClasses.base)
     replies_text = "Replies"
     if n_replies == 1
       replies_text = "Reply"  # because English
-    for className in @replyClasses.reply.split(" ")
-      field.classList.add(className)
     if n_replies > 0
       span = document.createElement("span")
       span.innerHTML = "#{n_replies} #{replies_text}"
@@ -78,8 +80,7 @@ class Annotator.Plugin.Replies extends Annotator.Plugin
       replies = @drawReplies(field, annotation)
       span.addEventListener("click", (event) => @toggleVisibility(replies))
       @hide(replies)
-    else
-      @addReplyLink(field, annotation)
+    @addReplyLink(field, annotation)
 
   convertRepliesData: (replies) ->
     repliesList = []
