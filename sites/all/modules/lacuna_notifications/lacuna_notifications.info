@@ -24,3 +24,4 @@ features[rules_config][] = rules_log_new_group_content
 features[variable][] = field_bundle_settings_message__log_new_comment
 features[variable][] = field_bundle_settings_message__log_new_content
 features[views_view][] = annotations_on_responses_view
+features[views_view][] = comments_on_responses_view
