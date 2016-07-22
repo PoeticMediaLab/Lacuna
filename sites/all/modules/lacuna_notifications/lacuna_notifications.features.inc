@@ -14,6 +14,13 @@ function lacuna_notifications_ctools_plugin_api($module = NULL, $api = NULL) {
 }
 
 /**
+ * Implements hook_views_api().
+ */
+function lacuna_notifications_views_api($module = NULL, $api = NULL) {
+  return array("api" => "3.0");
+}
+
+/**
  * Implements hook_default_message_type().
  */
 function lacuna_notifications_default_message_type() {
@@ -54,9 +61,9 @@ function lacuna_notifications_default_message_type() {
     "arguments" : null,
     "message_text" : { "und" : [
         {
-          "value" : "\\u003Cp\\u003E{message:field-message-content:title] has been added by [message:user:name]\\u003C\\/p\\u003E",
+          "value" : "\\u003Cp\\u003E[message:field-message-content:title] has been added by [message:user:name]\\u003C\\/p\\u003E",
           "format" : "filtered_html",
-          "safe_value" : "\\u003Cp\\u003E{message:field-message-content:title] has been added by [message:user:name]\\u003C\\/p\\u003E\\n"
+          "safe_value" : "\\u003Cp\\u003E[message:field-message-content:title] has been added by [message:user:name]\\u003C\\/p\\u003E\\n"
         }
       ]
     },
