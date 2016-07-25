@@ -529,6 +529,9 @@ function annotation_load_comments($nid) {
   $comments = array();
   if (isset($result['comment'])) {
     $comments = comment_load_multiple(array_keys($result['comment']));
+    foreach ($comments as $comment) {
+      $comment->name = format_username(user_load($comment->uid));
+    }
   }
   return $comments;
 }
@@ -541,7 +544,7 @@ function annotation_save_comment($entity) {
   $comment->cid = 0;
   $comment->nid = (int) $entity->id;
   $comment->pid = (int) $entity->reply['pid'];
-  $comment->uid = (int) $entity->reply['uid'];
+  $comment->uid = (int) $entity->reply['uid'];;
   $comment->name = format_username(user_load($comment->uid));
   $comment->created = time();
   $comment->status = COMMENT_PUBLISHED;
@@ -549,7 +552,7 @@ function annotation_save_comment($entity) {
   $comment->is_anonymous = FALSE;
   $comment->language = LANGUAGE_NONE;
   $comment->comment_body[$comment->language][0]['value'] = $entity->reply['text'];
-  $comment->comment_body[$comment->language][0]['format'] = 'plain_text'; // For now
+  $comment->comment_body[$comment->language][0]['format'] = 'filtered_html'; // For now
   comment_submit($comment);
   comment_save($comment);
 }
