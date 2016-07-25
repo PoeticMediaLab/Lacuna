@@ -5,10 +5,18 @@
 #
 class Annotator.Plugin.Replies extends Annotator.Plugin
 
+  # CSS classes to apply to different fields
   replyClasses: {
     "base": "annotator-reply"
     "hidden": "annotator-reply-hidden"
     "reply": "fa fa-reply"
+    "textarea": "annotator-reply-text"
+    "button": "annotator-reply-button"
+  }
+
+  # Select areas to put content
+  replySelectors: {
+    "replyarea": "div#content"
   }
 
   pluginInit: ->
@@ -19,11 +27,14 @@ class Annotator.Plugin.Replies extends Annotator.Plugin
 
   show: (field) =>
     field.classList.remove(@replyClasses.hidden)
+    field.style.display = "block";
     textarea = field.getElementsByTagName('textarea')
-    textarea[0].focus()
+    if textarea.length > 0
+      textarea[0].focus()
 
   hide: (field) =>
     field.classList.add(@replyClasses.hidden)
+    field.style.display = "none";
 
   toggleVisibility: (field) =>
     if @replyClasses.hidden in field.classList
@@ -31,19 +42,28 @@ class Annotator.Plugin.Replies extends Annotator.Plugin
     else
       @hide(field)
 
-  addReplyArea: (field, annotation, pid) =>
+  addReplyArea: (annotation, pid) =>
     # Add a textarea for replies; NOTE: hideReplyArea relies on this structure
+    formid = "#{@replyClasses.base}-form-#{annotation.id}-#{pid}"
+    form = document.getElementById(formid)
+    if form?
+      return form
     form = document.createElement("form")
-    form.id = "#{@replyClasses.base}-form"
+    form.id = formid
+    form.classList.add("#{@replyClasses.base}-form")
     textarea = document.createElement("textarea")
-    textarea.classList.add(@replyClasses.base)
+    textid = "#{@replyClasses.base}-textarea-#{annotation.id}-#{pid}"
+    textarea.id = textid
+    textarea.classList.add(@replyClasses.textarea)
     buttons = document.createElement("div")
     buttons.classList.add("#{@replyClasses.base}-controls")
     save = document.createElement("a")
+    save.classList.add(@replyClasses.button)
     save.classList.add("#{@replyClasses.base}-save")
     save.innerHTML = "Save"
     save.addEventListener("click", (event) => @saveReply(event, annotation, textarea, pid))
     cancel = document.createElement("a")
+    cancel.classList.add(@replyClasses.button)
     cancel.classList.add("#{@replyClasses.base}-cancel")
     cancel.innerHTML = "Cancel"
     cancel.addEventListener("click", () => @cancelReply(textarea))
@@ -51,7 +71,11 @@ class Annotator.Plugin.Replies extends Annotator.Plugin
     buttons.appendChild(save)
     form.appendChild(textarea)
     form.appendChild(buttons)
+    field = document.querySelector(@replySelectors.replyarea)
     field.appendChild(form)
+    if Annotator.Plugin.RichText?
+      CKEDITOR.replace(textid)
+    return form
 
   hideReplyArea: (textarea) =>
     # requires knowing about the form structure created in addReplyArea
@@ -62,14 +86,13 @@ class Annotator.Plugin.Replies extends Annotator.Plugin
     span.innerHTML = "Reply"
     for className in @replyClasses.reply.split(" ")
       span.classList.add(className)
+    replyArea = @addReplyArea(annotation, pid)
+    @hide(replyArea)
     span.addEventListener("click", () => @toggleVisibility(replyArea))
     field.appendChild(span)
-    replyArea = @addReplyArea(field, annotation, pid)
-    @hide(replyArea)
 
   initReplies: (field, annotation) =>
     n_replies = Object.keys(annotation.comments).length
-    field.classList.add(@replyClasses.base)
     replies_text = "Replies"
     if n_replies == 1
       replies_text = "Reply"  # because English
@@ -78,8 +101,9 @@ class Annotator.Plugin.Replies extends Annotator.Plugin
       span.innerHTML = "#{n_replies} #{replies_text}"
       field.appendChild(span)
       replies = @drawReplies(field, annotation)
-      span.addEventListener("click", (event) => @toggleVisibility(replies))
+      span.addEventListener("click", () => @toggleVisibility(replies))
       @hide(replies)
+    field.classList.add(@replyClasses.base)
     @addReplyLink(field, annotation)
 
   convertRepliesData: (replies) ->
@@ -158,12 +182,16 @@ class Annotator.Plugin.Replies extends Annotator.Plugin
   saveReply: (event, annotation, textarea, pid) =>
     annotation.reply = {}
     annotation.reply.pid = pid # should be the parent id or 0
-    annotation.reply.text = textarea.value
+    console.log(CKEDITOR.instances)
+    if Annotator.Plugin.RichText?
+      annotation.reply.text = annotation.text = CKEDITOR.instances[textarea.id].getData()
+    else
+      annotation.reply.text = textarea.value
     annotation.reply.uid = Drupal.settings.annotator_replies.current_uid # current user ID
     @annotator.publish('annotationUpdated', [annotation])
     @hideReplyArea(textarea)
 
   cancelReply: (textarea) =>
     textarea.value = ""
-    @hide(textarea.parentNode)
+    @hideReplyArea(textarea)
 

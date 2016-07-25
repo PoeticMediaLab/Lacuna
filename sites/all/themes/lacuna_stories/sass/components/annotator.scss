@@ -133,7 +133,7 @@ section.region-sidebar-second input[type="checkbox"] {
     font-weight: bold;
 }
 
-.af-button {
+.af-button, .annotator-reply-button  {
     cursor: pointer;
     display: inline-block;
     color: black;
@@ -177,7 +177,8 @@ section.region-sidebar-second input[type="checkbox"] {
     transition: background-position 0.1s linear 0s;
 }
 
-.af-button-active {
+.af-button-active,
+.annotator-reply-save {
     background-color: #c4df2c;
     background-image: linear-gradient(to bottom, #c4df2c, #88b551);
 }
@@ -334,9 +335,28 @@ $privacy-selected: rgba(19, 149, 25, 0.74);
     span:hover {
       color: black;
     }
-    .annotator-reply-hidden {
-      display: none;
-    }
+  }
+}
+
+.annotator-reply-form {
+  position: fixed;
+  display: block;
+  background: rgba(250,250,250, .9);
+  width: 50%;
+  left: 25%;
+  top: 20%;
+  overflow: auto;
+  z-index: 100;
+  padding: 10px;
+  border: 1px solid black;
+  display: none;
+  .annotator-reply-text {
+    width: 90%;
+    height: 200px;
+  }
+  .annotator-reply-button {
+    color: white;
+    text-decoration: none;
   }
 }
 

@@ -25,7 +25,13 @@
     Replies.prototype.replyClasses = {
       "base": "annotator-reply",
       "hidden": "annotator-reply-hidden",
-      "reply": "fa fa-reply"
+      "reply": "fa fa-reply",
+      "textarea": "annotator-reply-text",
+      "button": "annotator-reply-button"
+    };
+
+    Replies.prototype.replySelectors = {
+      "replyarea": "div#content"
     };
 
     Replies.prototype.pluginInit = function() {
@@ -40,12 +46,16 @@
     Replies.prototype.show = function(field) {
       var textarea;
       field.classList.remove(this.replyClasses.hidden);
+      field.style.display = "block";
       textarea = field.getElementsByTagName('textarea');
-      return textarea[0].focus();
+      if (textarea.length > 0) {
+        return textarea[0].focus();
+      }
     };
 
     Replies.prototype.hide = function(field) {
-      return field.classList.add(this.replyClasses.hidden);
+      field.classList.add(this.replyClasses.hidden);
+      return field.style.display = "none";
     };
 
     Replies.prototype.toggleVisibility = function(field) {
@@ -57,15 +67,24 @@
       }
     };
 
-    Replies.prototype.addReplyArea = function(field, annotation, pid) {
-      var buttons, cancel, form, save, textarea;
+    Replies.prototype.addReplyArea = function(annotation, pid) {
+      var buttons, cancel, field, form, formid, save, textarea, textid;
+      formid = this.replyClasses.base + "-form-" + annotation.id + "-" + pid;
+      form = document.getElementById(formid);
+      if (form != null) {
+        return form;
+      }
       form = document.createElement("form");
-      form.id = this.replyClasses.base + "-form";
+      form.id = formid;
+      form.classList.add(this.replyClasses.base + "-form");
       textarea = document.createElement("textarea");
-      textarea.classList.add(this.replyClasses.base);
+      textid = this.replyClasses.base + "-textarea-" + annotation.id + "-" + pid;
+      textarea.id = textid;
+      textarea.classList.add(this.replyClasses.textarea);
       buttons = document.createElement("div");
       buttons.classList.add(this.replyClasses.base + "-controls");
       save = document.createElement("a");
+      save.classList.add(this.replyClasses.button);
       save.classList.add(this.replyClasses.base + "-save");
       save.innerHTML = "Save";
       save.addEventListener("click", (function(_this) {
@@ -74,6 +93,7 @@
         };
       })(this));
       cancel = document.createElement("a");
+      cancel.classList.add(this.replyClasses.button);
       cancel.classList.add(this.replyClasses.base + "-cancel");
       cancel.innerHTML = "Cancel";
       cancel.addEventListener("click", (function(_this) {
@@ -85,7 +105,12 @@
       buttons.appendChild(save);
       form.appendChild(textarea);
       form.appendChild(buttons);
-      return field.appendChild(form);
+      field = document.querySelector(this.replySelectors.replyarea);
+      field.appendChild(form);
+      if (Annotator.Plugin.RichText != null) {
+        CKEDITOR.replace(textid);
+      }
+      return form;
     };
 
     Replies.prototype.hideReplyArea = function(textarea) {
@@ -104,20 +129,19 @@
         className = ref[i];
         span.classList.add(className);
       }
+      replyArea = this.addReplyArea(annotation, pid);
+      this.hide(replyArea);
       span.addEventListener("click", (function(_this) {
         return function() {
           return _this.toggleVisibility(replyArea);
         };
       })(this));
-      field.appendChild(span);
-      replyArea = this.addReplyArea(field, annotation, pid);
-      return this.hide(replyArea);
+      return field.appendChild(span);
     };
 
     Replies.prototype.initReplies = function(field, annotation) {
       var n_replies, replies, replies_text, span;
       n_replies = Object.keys(annotation.comments).length;
-      field.classList.add(this.replyClasses.base);
       replies_text = "Replies";
       if (n_replies === 1) {
         replies_text = "Reply";
@@ -128,12 +152,13 @@
         field.appendChild(span);
         replies = this.drawReplies(field, annotation);
         span.addEventListener("click", (function(_this) {
-          return function(event) {
+          return function() {
             return _this.toggleVisibility(replies);
           };
         })(this));
         this.hide(replies);
       }
+      field.classList.add(this.replyClasses.base);
       return this.addReplyLink(field, annotation);
     };
 
@@ -228,7 +253,12 @@
     Replies.prototype.saveReply = function(event, annotation, textarea, pid) {
       annotation.reply = {};
       annotation.reply.pid = pid;
-      annotation.reply.text = textarea.value;
+      console.log(CKEDITOR.instances);
+      if (Annotator.Plugin.RichText != null) {
+        annotation.reply.text = annotation.text = CKEDITOR.instances[textarea.id].getData();
+      } else {
+        annotation.reply.text = textarea.value;
+      }
       annotation.reply.uid = Drupal.settings.annotator_replies.current_uid;
       this.annotator.publish('annotationUpdated', [annotation]);
       return this.hideReplyArea(textarea);
@@ -236,7 +266,7 @@
 
     Replies.prototype.cancelReply = function(textarea) {
       textarea.value = "";
-      return this.hide(textarea.parentNode);
+      return this.hideReplyArea(textarea);
     };
 
     return Replies;
