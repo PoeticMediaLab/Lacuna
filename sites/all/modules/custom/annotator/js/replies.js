@@ -25,9 +25,11 @@
     Replies.prototype.replyClasses = {
       "base": "annotator-reply",
       "hidden": "annotator-reply-hidden",
-      "reply": "fa fa-reply",
+      "replyicon": "fa fa-reply",
+      "reply": "annotator-reply-reply",
       "textarea": "annotator-reply-text",
-      "button": "annotator-reply-button"
+      "button": "annotator-reply-button",
+      "list": "annotator-reply-list"
     };
 
     Replies.prototype.replySelectors = {
@@ -124,7 +126,7 @@
       }
       span = document.createElement("span");
       span.innerHTML = "Reply";
-      ref = this.replyClasses.reply.split(" ");
+      ref = this.replyClasses.replyicon.split(" ");
       for (i = 0, len = ref.length; i < len; i++) {
         className = ref[i];
         span.classList.add(className);
@@ -206,6 +208,7 @@
       l = element.getElementsByTagName('ol');
       if (l.length === 0) {
         l = document.createElement('ol');
+        l.classList.add(this.replyClasses.list);
         element.appendChild(l);
       } else {
         l = l[0];
@@ -227,6 +230,7 @@
       li = document.createElement("li");
       li.innerHTML = reply['author'] + ' on ' + reply['date'];
       li.classList.add('annotator-reply-id-' + reply['id']);
+      li.classList.add(this.replyClasses.reply);
       text = document.createElement("span");
       text.innerHTML = reply['text'];
       text.classList.add('annotator-reply-text');

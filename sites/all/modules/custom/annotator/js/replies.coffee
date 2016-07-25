@@ -9,9 +9,11 @@ class Annotator.Plugin.Replies extends Annotator.Plugin
   replyClasses: {
     "base": "annotator-reply"
     "hidden": "annotator-reply-hidden"
-    "reply": "fa fa-reply"
+    "replyicon": "fa fa-reply"
+    "reply": "annotator-reply-reply"
     "textarea": "annotator-reply-text"
     "button": "annotator-reply-button"
+    "list": "annotator-reply-list"
   }
 
   # Select areas to put content
@@ -84,7 +86,7 @@ class Annotator.Plugin.Replies extends Annotator.Plugin
   addReplyLink: (field, annotation, pid = 0) =>
     span = document.createElement("span")
     span.innerHTML = "Reply"
-    for className in @replyClasses.reply.split(" ")
+    for className in @replyClasses.replyicon.split(" ")
       span.classList.add(className)
     replyArea = @addReplyArea(annotation, pid)
     @hide(replyArea)
@@ -143,6 +145,7 @@ class Annotator.Plugin.Replies extends Annotator.Plugin
     l = element.getElementsByTagName('ol')
     if l.length == 0
       l = document.createElement('ol')
+      l.classList.add(@replyClasses.list)
       element.appendChild(l)
     else
       # It's a list of elements
@@ -161,6 +164,7 @@ class Annotator.Plugin.Replies extends Annotator.Plugin
     li = document.createElement("li")
     li.innerHTML = reply['author'] + ' on ' + reply['date']
     li.classList.add('annotator-reply-id-' + reply['id'])
+    li.classList.add(@replyClasses.reply)
     text = document.createElement("span")
     text.innerHTML = reply['text']
     text.classList.add('annotator-reply-text')
