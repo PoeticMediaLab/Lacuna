@@ -335,6 +335,21 @@ $privacy-selected: rgba(19, 149, 25, 0.74);
     span:hover {
       color: black;
     }
+    ol.annotator-reply-list {
+      padding: 0 0 0 2px;
+    }
+    li.annotator-reply-reply {
+      list-style: none;
+      //background: rgba(175, 175, 175, .5);
+      //color: white;
+      padding-left: 2px;
+      //padding-right: -15px;
+      width: 90%;
+      .annotator-reply-text p {
+        //color: white;
+        padding: 3px;
+      }
+    }
   }
 }
 
