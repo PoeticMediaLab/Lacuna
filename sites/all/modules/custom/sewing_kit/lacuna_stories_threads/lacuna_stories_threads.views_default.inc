@@ -52,6 +52,7 @@ function lacuna_stories_threads_views_default_views() {
     'path' => 'path',
     'nid' => 'nid',
     'nothing' => 'nothing',
+    'comment_count' => 'comment_count',
   );
   $handler->display->display_options['style_options']['default'] = 'field_display_name';
   $handler->display->display_options['style_options']['info'] = array(
@@ -128,6 +129,13 @@ function lacuna_stories_threads_views_default_views() {
       'empty_column' => 0,
     ),
     'nothing' => array(
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'comment_count' => array(
+      'sortable' => 1,
+      'default_sort_order' => 'desc',
       'align' => '',
       'separator' => '',
       'empty_column' => 0,
@@ -257,6 +265,11 @@ if (module_exists(\'course\')) {
   $handler->display->display_options['fields']['nothing']['alter']['absolute'] = TRUE;
   $handler->display->display_options['fields']['nothing']['alter']['target'] = '_blank';
   $handler->display->display_options['fields']['nothing']['element_label_colon'] = FALSE;
+  /* Field: Content: Comment count */
+  $handler->display->display_options['fields']['comment_count']['id'] = 'comment_count';
+  $handler->display->display_options['fields']['comment_count']['table'] = 'node_comment_statistics';
+  $handler->display->display_options['fields']['comment_count']['field'] = 'comment_count';
+  $handler->display->display_options['fields']['comment_count']['label'] = 'Replies';
   /* Sort criterion: Content: Post date */
   $handler->display->display_options['sorts']['created']['id'] = 'created';
   $handler->display->display_options['sorts']['created']['table'] = 'node';
