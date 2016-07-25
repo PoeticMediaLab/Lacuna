@@ -253,7 +253,6 @@
     Replies.prototype.saveReply = function(event, annotation, textarea, pid) {
       annotation.reply = {};
       annotation.reply.pid = pid;
-      console.log(CKEDITOR.instances);
       if (Annotator.Plugin.RichText != null) {
         annotation.reply.text = annotation.text = CKEDITOR.instances[textarea.id].getData();
       } else {

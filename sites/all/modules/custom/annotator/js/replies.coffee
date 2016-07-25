@@ -182,7 +182,6 @@ class Annotator.Plugin.Replies extends Annotator.Plugin
   saveReply: (event, annotation, textarea, pid) =>
     annotation.reply = {}
     annotation.reply.pid = pid # should be the parent id or 0
-    console.log(CKEDITOR.instances)
     if Annotator.Plugin.RichText?
       annotation.reply.text = annotation.text = CKEDITOR.instances[textarea.id].getData()
     else
