@@ -109,7 +109,7 @@
       form.appendChild(buttons);
       field = document.querySelector(this.replySelectors.replyarea);
       field.appendChild(form);
-      if (Annotator.Plugin.RichText != null) {
+      if ((Annotator.Plugin.RichText != null) && (textid != null)) {
         CKEDITOR.replace(textid);
       }
       return form;
@@ -257,8 +257,8 @@
     Replies.prototype.saveReply = function(event, annotation, textarea, pid) {
       annotation.reply = {};
       annotation.reply.pid = pid;
-      if (Annotator.Plugin.RichText != null) {
-        annotation.reply.text = annotation.text = CKEDITOR.instances[textarea.id].getData();
+      if ((Annotator.Plugin.RichText != null) && (textarea.id != null)) {
+        annotation.reply.text = CKEDITOR.instances[textarea.id].getData();
       } else {
         annotation.reply.text = textarea.value;
       }

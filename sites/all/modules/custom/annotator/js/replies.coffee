@@ -75,7 +75,7 @@ class Annotator.Plugin.Replies extends Annotator.Plugin
     form.appendChild(buttons)
     field = document.querySelector(@replySelectors.replyarea)
     field.appendChild(form)
-    if Annotator.Plugin.RichText?
+    if Annotator.Plugin.RichText? and textid?
       CKEDITOR.replace(textid)
     return form
 
@@ -186,8 +186,8 @@ class Annotator.Plugin.Replies extends Annotator.Plugin
   saveReply: (event, annotation, textarea, pid) =>
     annotation.reply = {}
     annotation.reply.pid = pid # should be the parent id or 0
-    if Annotator.Plugin.RichText?
-      annotation.reply.text = annotation.text = CKEDITOR.instances[textarea.id].getData()
+    if Annotator.Plugin.RichText? and textarea.id?
+      annotation.reply.text = CKEDITOR.instances[textarea.id].getData()
     else
       annotation.reply.text = textarea.value
     annotation.reply.uid = Drupal.settings.annotator_replies.current_uid # current user ID
