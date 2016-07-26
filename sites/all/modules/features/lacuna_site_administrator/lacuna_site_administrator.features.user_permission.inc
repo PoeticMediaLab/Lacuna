@@ -109,15 +109,6 @@ function lacuna_site_administrator_user_default_permissions() {
     'module' => 'system',
   );
 
-  // Exported permission: 'access statistics'.
-  $permissions['access statistics'] = array(
-    'name' => 'access statistics',
-    'roles' => array(
-      'Site Administrator' => 'Site Administrator',
-    ),
-    'module' => 'statistics',
-  );
-
   // Exported permission: 'admin_display_suite'.
   $permissions['admin_display_suite'] = array(
     'name' => 'admin_display_suite',
@@ -324,15 +315,6 @@ function lacuna_site_administrator_user_default_permissions() {
       'Site Administrator' => 'Site Administrator',
     ),
     'module' => 'system',
-  );
-
-  // Exported permission: 'administer statistics'.
-  $permissions['administer statistics'] = array(
-    'name' => 'administer statistics',
-    'roles' => array(
-      'Site Administrator' => 'Site Administrator',
-    ),
-    'module' => 'statistics',
   );
 
   // Exported permission: 'administer string overrides'.
@@ -657,15 +639,6 @@ function lacuna_site_administrator_user_default_permissions() {
       'Site Administrator' => 'Site Administrator',
     ),
     'module' => 'advanced_help',
-  );
-
-  // Exported permission: 'view post access counter'.
-  $permissions['view post access counter'] = array(
-    'name' => 'view post access counter',
-    'roles' => array(
-      'Site Administrator' => 'Site Administrator',
-    ),
-    'module' => 'statistics',
   );
 
   // Exported permission: 'view the administration theme'.
