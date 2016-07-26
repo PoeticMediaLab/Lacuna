@@ -192,6 +192,8 @@ class Annotator.Plugin.Replies extends Annotator.Plugin
       annotation.reply.text = textarea.value
     annotation.reply.uid = Drupal.settings.annotator_replies.current_uid # current user ID
     @annotator.publish('annotationUpdated', [annotation])
+    # So we don't duplicate replies, delete this temporary data now that it's saved
+    delete annotation.reply
     @hideReplyArea(textarea)
 
   cancelReply: (textarea) =>

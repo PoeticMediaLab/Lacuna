@@ -264,6 +264,7 @@
       }
       annotation.reply.uid = Drupal.settings.annotator_replies.current_uid;
       this.annotator.publish('annotationUpdated', [annotation]);
+      delete annotation.reply;
       return this.hideReplyArea(textarea);
     };
 
