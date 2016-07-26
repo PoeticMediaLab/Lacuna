@@ -276,6 +276,7 @@ function lacuna_visualizations_menu() {
       'access arguments' => array('create annotations'),
       'page callback' => 'lacuna_visualizations_annotation_dashboard',
       'type' => MENU_NORMAL_ITEM,
+      'file' => 'lacuna_visualizations.dashboard.inc',
     ),
     'visualization/dashboard/data.json' => array(
       'title' => 'Data for Annotations Dashboard',
@@ -283,6 +284,7 @@ function lacuna_visualizations_menu() {
       'access arguments' => array('create annotations'),
       'page callback' => 'lacuna_visualizations_annotation_dashboard_data',
       'type' => MENU_CALLBACK,
+      'file' => 'lacuna_visualizations.dashboard.inc',
     ),
     'admin/config/system/visualizations' => array(
       'title' => 'Dashboard Cache',
