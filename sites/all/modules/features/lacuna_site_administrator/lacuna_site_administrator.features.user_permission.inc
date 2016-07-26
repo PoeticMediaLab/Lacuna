@@ -272,15 +272,6 @@ function lacuna_site_administrator_user_default_permissions() {
     'module' => 'system',
   );
 
-  // Exported permission: 'administer page_turner'.
-  $permissions['administer page_turner'] = array(
-    'name' => 'administer page_turner',
-    'roles' => array(
-      'Site Administrator' => 'Site Administrator',
-    ),
-    'module' => 'page_turner',
-  );
-
   // Exported permission: 'administer pathauto'.
   $permissions['administer pathauto'] = array(
     'name' => 'administer pathauto',
@@ -288,15 +279,6 @@ function lacuna_site_administrator_user_default_permissions() {
       'Site Administrator' => 'Site Administrator',
     ),
     'module' => 'pathauto',
-  );
-
-  // Exported permission: 'administer popup elements'.
-  $permissions['administer popup elements'] = array(
-    'name' => 'administer popup elements',
-    'roles' => array(
-      'Site Administrator' => 'Site Administrator',
-    ),
-    'module' => 'popup',
   );
 
   // Exported permission: 'administer rules'.
