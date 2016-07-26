@@ -139,7 +139,6 @@ function annotator_execute_plugins($annotation = NULL, $op = NULL) {
       if (class_exists($class)) {
         $instance = new $class($plugin);
         $instance->setup();
-        // ddl('instance', $instance);
         if ($annotation && $op) {
           $instance->alter($annotation, $op);
         }
