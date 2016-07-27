@@ -106,6 +106,8 @@
 		xPos = d.x;
 		yPos = d.y;
 
+		console.log(d.data.title + " by " + d.data.author);
+
 		d3.select("#maps-tooltip")
 		.style("left", xPos + 30 + "px")
 		.style("top", yPos + 70 + "px")
@@ -705,7 +707,8 @@
 				  .attr("class", function(d) { return d.data.itemType; })
 				  .attr("fill", function(d) {
 					for(var i = 0; i < userNamesColors.length; i++){
-						if(userNamesColors[i][0] == d.data.author){
+						if(userNamesColors[i][2] == d.data.u_id){					// ih: this compares the user id, rather than the usernames
+						// if(userNamesColors[i][0] == d.data.author){
 							return userNamesColors[i][1];
 						}
 					} // didn't find it
