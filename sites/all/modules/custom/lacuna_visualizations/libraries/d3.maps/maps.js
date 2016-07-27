@@ -69,7 +69,8 @@
 						nodes[i].data.author = safeName;
 					}
 					if (nodes[i].data.author === safeName) {
-						userNamesColors.push([safeName, color(colorsCounter % 20), nodes[i].data.u_id]);
+						userNamesColors.push([safeName, color(colorsCounter % 22), nodes[i].data.u_id]);
+						console.log(colorsCounter + " " + colorsCounter%22 + " " + userNamesColors[userNamesColors.length - 1][0] + " " + userNamesColors[userNamesColors.length - 1][1] + " " + userNamesColors[userNamesColors.length - 1][2]);
 						// for debugging purposes.
 						colorsCounter++;
 						selectedUsers.push(nodes[i].data.u_id);
@@ -106,7 +107,7 @@
 		xPos = d.x;
 		yPos = d.y;
 
-		console.log(d.data.title + " by " + d.data.author);
+		// console.log(d.data.title + " by " + d.data.author);
 
 		d3.select("#maps-tooltip")
 		.style("left", xPos + 30 + "px")
@@ -119,7 +120,15 @@
 			;
 		d3.select("#maps-tooltip")
 			.select("#author")
-			.text(d.data.author)
+			.text(function() {
+				for(var i = 0; i < userNamesColors.length; i++) {			// ih: retrieves the user's display name from userNamesColors
+					if(userNamesColors[i][2] == d.data.u_id) {
+						return userNamesColors[i][0]
+					}
+				}
+				return d.data.author;
+			})
+			// .text(d.data.author)
 			;
 		d3.select("#maps-tooltip")
 		.select("#image")
@@ -702,6 +711,7 @@
 							;
 
 				// append a g element, put a circle in it.
+
 				node.enter().append("g")
 				.append("circle")
 				  .attr("class", function(d) { return d.data.itemType; })
