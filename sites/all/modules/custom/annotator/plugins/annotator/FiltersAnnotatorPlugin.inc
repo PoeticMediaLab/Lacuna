@@ -7,4 +7,5 @@ $plugin = array(
   'handler' => array(
     'class' => 'FiltersAnnotatorPlugin',
   ),
+  'weight' => 100,
 );

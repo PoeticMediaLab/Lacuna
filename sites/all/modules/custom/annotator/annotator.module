@@ -132,16 +132,30 @@ function annotator_ctools_plugin_type() {
 function annotator_execute_plugins($annotation = NULL, $op = NULL) {
   ctools_include('plugins');
   $annotator_plugins = variable_get('annotator_plugins', array());
+  // Plugins can define a "weight" that controls when they're executed
+  $plugin_weights = array();
+  $plugins = array();
   foreach ($annotator_plugins as $name => $enabled) {
     if ((boolean) $enabled) {
       $plugin = ctools_get_plugins('annotator', 'annotator', $name . 'AnnotatorPlugin');
-      $class = ctools_plugin_get_class($plugin, 'handler');
-      if (class_exists($class)) {
-        $instance = new $class($plugin);
-        $instance->setup();
-        if ($annotation && $op) {
-          $instance->alter($annotation, $op);
-        }
+      $plugins[$name] = $plugin;
+      if (array_key_exists('weight', $plugin)) {
+        $plugin_weights[$name] = $plugin['weight'];
+      }
+      else {
+        $plugin_weights[$name] = 0;
+      }
+    }
+  }
+  asort($plugin_weights);
+  foreach ($plugin_weights as $name => $weight) {
+    $plugin = $plugins[$name];
+    $class = ctools_plugin_get_class($plugin, 'handler');
+    if (class_exists($class)) {
+      $instance = new $class($plugin);
+      $instance->setup();
+      if ($annotation && $op) {
+        $instance->alter($annotation, $op);
       }
     }
   }
