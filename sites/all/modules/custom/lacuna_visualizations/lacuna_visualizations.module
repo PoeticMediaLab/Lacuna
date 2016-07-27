@@ -313,7 +313,7 @@ function lacuna_visualizations_library() {
 function lacuna_visualizations_cron() {
   // Rebuild the Annotations Dashboard cached data for every course
   if (variable_get('lacuna_visualizations_cron', TRUE)) {
-    module_load_include('lacuna_visualizations.dashboard.inc', 'lacuna_visualizations');
+    module_load_include('inc', 'lacuna_visualizations', 'lacuna_visualizations.dashboard');
     // Load every course
     $query = new EntityFieldQuery();
     $query->entityCondition('entity_type', 'node')
