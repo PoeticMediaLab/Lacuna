@@ -41,6 +41,13 @@ function lacuna_performance_strongarm() {
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
+  $strongarm->name = 'cron_safe_threshold';
+  $strongarm->value = '0';
+  $export['cron_safe_threshold'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
   $strongarm->name = 'global_filter_visible_filters_only';
   $strongarm->value = 1;
   $export['global_filter_visible_filters_only'] = $strongarm;

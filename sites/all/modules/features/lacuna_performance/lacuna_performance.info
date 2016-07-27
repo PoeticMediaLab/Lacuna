@@ -10,6 +10,7 @@ features[variable][] = block_cache
 features[variable][] = cache
 features[variable][] = cache_class_cache_ctools_css
 features[variable][] = cache_lifetime
+features[variable][] = cron_safe_threshold
 features[variable][] = global_filter_visible_filters_only
 features[variable][] = page_cache_maximum_age
 features[variable][] = page_compression
