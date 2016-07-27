@@ -262,20 +262,15 @@ function lacuna_visualizations_menu() {
   	  'access arguments' => array('create response content'),
   	  'page callback' => 'lacuna_visualizations_responses',
   	  'type' => MENU_NORMAL_ITEM,
-  	  ),
-    'visualization/journey' => array(
-  	  'title' => 'Journey view',
-  	  'description' => 'Visualization showing student movement through the site',
-  	  'access arguments' => array('create response content'),
-  	  'page callback' => 'lacuna_visualizations_journeyview',
-  	  'type' => MENU_NORMAL_ITEM,
-  	),
+      'file' => 'lacuna_visualizations.responses.inc',
+    ),
     'visualization/dashboard' => array(
       'title' => 'Annotations Dashboard',
       'description' => 'Visualization showing all annotations',
       'access arguments' => array('create annotations'),
       'page callback' => 'lacuna_visualizations_annotation_dashboard',
       'type' => MENU_NORMAL_ITEM,
+      'file' => 'lacuna_visualizations.dashboard.inc',
     ),
     'visualization/dashboard/data.json' => array(
       'title' => 'Data for Annotations Dashboard',
@@ -283,6 +278,7 @@ function lacuna_visualizations_menu() {
       'access arguments' => array('create annotations'),
       'page callback' => 'lacuna_visualizations_annotation_dashboard_data',
       'type' => MENU_CALLBACK,
+      'file' => 'lacuna_visualizations.dashboard.inc',
     ),
     'admin/config/system/visualizations' => array(
       'title' => 'Dashboard Cache',
@@ -291,343 +287,10 @@ function lacuna_visualizations_menu() {
       'page arguments' => array('lacuna_visualizations_admin_form'),
       'access arguments' => array('administer site configuration'),
       'type' => MENU_NORMAL_ITEM,
+      'file' => 'lacuna_visualizations.admin.inc',
     ),
   );
 }
-
-function lacuna_visualizations_admin_form() {
-  $form = array();
-
-  $form['lacuna_visualizations_cache_threshold'] = array(
-    '#type' => 'textfield',
-    '#title' => t('Cache threshold'),
-    '#description' => t('Set the minimum number of annotations in a course before the dashboard is cached.'),
-    '#default_value' => variable_get('lacuna_visualizations_cache_threshold', 1000),
-    '#required' => TRUE,
-  );
-
-  $form['lacuna_visualizations_cache_ttl'] = array(
-    '#type' => 'textfield',
-    '#title' => t('Cache duration'),
-    '#description' => t('Set the time in hours after which the cache should expire.'),
-    '#default_value' => variable_get('lacuna_visualizations_cache_ttl', 24),
-    '#required' => TRUE,
-  );
-
-  return system_settings_form($form);
-}
-
-/**
- * Visualization showing links between student responses and primary
- * sources. (version I'm currently working on).
- */
-function lacuna_visualizations_journeyview() {
-
-  // BJA uses EntityFieldQuery to pull all the 'response' and 'document' nodes
-  // BJA in the future, this should read from a view(?) rather than being
-  // BJA hard-coded here.
-  $responseQuery = new EntityFieldQuery();
-    $responseQuery
-        ->entityCondition('entity_type', 'node')
-        ->entityCondition('bundle', array('biblio', 'response'));
-  $result = $responseQuery->execute();
-  $nids = array_keys($result['node']);
-  $nodes = node_load_multiple($nids);
-
-  $graph = graphapi_new_graph();
-  foreach ($nodes as $item) {
-  	$usersQuery = new EntityFieldQuery();
-  	$usersQuery->entityCondition('entity_type', 'user');
-  	$usersResult = $usersQuery->execute();
-  	$uids = array_keys($usersResult['user']);
-  	$users = user_load_multiple($uids);
-
-  	 // this array will eventually contain all relevant info about responses and document: author, timestamp, etc.
-  	 // added to nodes before graphapi passes off to d3.
-    $dataArray = array(
-      'itemType' => $item->type,
-  		// author set below -- $item->name for responses, but
-  		// more complicated for biblio entries.
-  		'author'	=> ' ',
-      'title'     => $item->title,
-      'linksTitles'     => array(),
-      'thisURL'   => $GLOBALS['base_url'] . "/node/" . $item->nid,
-      'linksURL' => array(),
-  		'biblio' => array(),
-  		'document_abstract' => '',
-  		'date' => $item->created,
-    );
-
-  		// added to all links before graphapi passes off to d3.
-  		// Currently only contains a date (the time that the source
-  		// node was created; currently assuming that all links are
-  		// created at the same time as the response they're
-  		// associated with.
-    if (!$dataArray['author']) {
-      $dataArray['author'] = "None";
-    }
-
-    $title = $item->title;
-
-  		/* pull out data needed for biblio nodes and add it to
-  		 * $dataArray */
-  	if ($item->type == "biblio") {
-  		$document_abstract = strip_tags($item->field_biblio_hover_abstract);
-  		$dataArray['document_abstract'] = $document_abstract;
-  		$author = ' ';
-  		if (isset($item->biblio_contributors[0])) {
-  			$count = count($item->biblio_contributors);
-  			for ($i = 0; $i < $count; $i++) {
-  				$author = $item->biblio_contributors[0]['name'];
-  				$dataArray['author'] .= $author . "\r\n";
-  			}
-  		}
-  	}
-    if ($item->type == "response") {
-
-  		$dataArray['author'] = $users[$item->uid]->field_display_name->und[0].safe_value;
-
-  		// draw links based off of node's field_bibliographic_entry.
-      if ($item->field_bibliographic_entry) {
-        $linkArray = $item->field_bibliographic_entry;
-        for ($i = 0; $i < count($linkArray[LANGUAGE_NONE]); $i++) {
-          $linkedNid = $linkArray[LANGUAGE_NONE][$i]['target_id'];
-          if (array_key_exists($linkedNid, $nodes)) {
-            graphapi_add_link($graph, $title, $nodes[$linkedNid]->title);
-            array_push($dataArray['linksTitles'], $nodes[$linkedNid]->title);
-            array_push($dataArray['linksURL'], $GLOBALS['base_url'] . '/node/' . $linkedNid);
-  //			graphapi_set_link_data($graph, $title,	$nodes[$linkedNid]['title'], $item->created);
-          }
-        }
-      } // end if($item->field_bibliographic_entry)
-
-/*			if($item->field_bibliographic_entry){
-				print_r($item->field_bibliographic_entry);
-			//	echo "<br />";
-              for($i = 0; $i < count($item->field_bibliographic_entry[LANGUAGE_NONE]); $i++) {
-
-				  // so this is the nid of the bibliographic reference.
-				  // print_r($item->field_bibliographic_entry[LANGUAGE_NONE][$i]['target_id']);
-				  $bibnid = $item->field_bibliographic_entry[LANGUAGE_NONE][$i]['target_id'];
-				  // echo "<br />";
-				  // print_r($bibnid);
-				  if(array_key_exists($bibnid, $nodes))
-					  // RESTART HERE
-					  // This is the title of the bibliographic
-					  // reference, which (should be) the same as the
-					  // title of the node that we're actually linking
-					  // to.
-
-					  // wait.
-					  // we should link to the bibliographic reference
-					  // rather than to the actual document. duh.
-					  print_r($nodes[$bibnid]);
-					  echo "<br />";
-				  }
-			  } */
-        }	// end if($item->type == "response")
-        graphapi_set_node_data($graph, $title, $dataArray);
-    }
-
-	// settings.config
-  $options = array(
-    'width' => 600,
-    'height' => 500,
-    'item-width' => 45,
-    'engine' => 'd3',
-  	'library' => 'journeys',
-  	'testString' => "TEST STRING",
-  	'userList' => $users,
-  	'drawDocumentCircle' => true,
-  );
-  return theme('graphapi_dispatch', array('graph' => $graph, 'config' => $options));
-}  // end function lacuna_visualizations_journeyview()
-
-//function get_document_id_for_biblio($nid) {
-//  //Find appropriate material for that biblio entry.
-//  $docQuery = new EntityFieldQuery();
-//  $docQuery
-//    ->entityCondition('entity_type', 'node')
-//    ->entityCondition('bundle', 'document')
-//    ->fieldCondition('field_bibliographic_entry', 'target_id', $nid, '=');
-//  $docResult = $docQuery->execute();
-//  if (count($docResult['node'])>0){
-//    $results = array_keys($docResult['node']);
-//    // PHP 5.3 won't dereference arrays from functions directly
-//    return $results[0];
-//  }
-//  else {
-//    return null;
-//  }
-//}
-
-function get_link_url($docId, $nid) {
-	global $base_url;
-	$url = $base_url . '/';
-  if (!empty($docId)){
-    return $url . drupal_get_path_alias('node/' . $docId);
-  }
-  else {
-    return $url . drupal_get_path_alias('node/' . $nid);
-  }
-}
-
-function get_image($item, $docId) {
-  if ($item->type == "biblio") {
-    if ($docId != null) {
-      $node = node_load($docId);
-      // var_dump($node->field_image);
-      return '<center>'.theme('image_style', array('style_name' => 'thumbnails_for_browsing', 'path' => $node->field_image[LANGUAGE_NONE][0]['uri'])).'</center>';
-    }
-  }
-  else if ($item->type == "response") {
-    return '<center>'.theme('image_style', array('style_name' => 'thumbnails_for_browsing', 'path' => $item->field_image[LANGUAGE_NONE][0]['uri'])).'</center>';
-  }
-  return "";
-}
-
-/**
- * Visualization showing links between student responses and primary
- * sources.
- */
-function lacuna_visualizations_responses() {
-
-	$nids = array();
-  $graph = graphapi_new_graph();
-	$gid = course_get_selected_course();
-
-	// Because OG has no API for getting all group content per group ಠ_ಠ
-	$sql = "SELECT nid FROM node n
-               INNER JOIN og_membership ogm ON n.nid = ogm.etid
-               WHERE ogm.gid = '" . $gid . "'
-               AND ogm.entity_type = 'node'
-               AND n.type IN ('document', 'response')
-               AND n.status = '" . NODE_PUBLISHED . "'";
-	$result = db_query($sql)->fetchAll();
-	$nids = array();
-	foreach ($result as $row) {
-		$nids[] = $row->nid;
-	}
-
-	// All documents and responses for current course
-  $nodes = node_load_multiple($nids);
-
-	$biblio_ids = array();
-	foreach ($nodes as $node) {
-		if ($node->type == 'document') {
-			$biblio_ids[] = $node->field_bibliographic_entry[$node->language][0]['target_id'];
-		}
-	}
-
-	// Load all relevant bibliography references
-	$biblios = node_load_multiple($biblio_ids);
-	$nodes = array_merge($nodes, $biblios);
-
-	// Generate document->bibliography mappings
-	foreach ($nodes as $node) {
-		if ($node->type == 'document') {
-			$doc_ids[$node->field_bibliographic_entry[$node->language][0]['target_id']] = $node->nid;
-		}
-	}
-
-  foreach ($nodes as $item) {
-	 // this array will eventually contain all relevant info about responses and document: author, timestamp, etc.
-	 // added to nodes before graphapi passes off to d3.
-		if ($item->type == 'response') {
-      // Note the different field name for biblio refs in Responses
-			$docId = $doc_ids[$item->field_bibliographic_item[$item->language][0]['target_id']];
-		}
-		if ($item->type == 'biblio') {
-			$docId = $doc_ids[$item->nid];
-		}
-		if ($item->type == 'document') {
-			continue; // we just load those for ease of setup
-		}
-    $dataArray = array(
-      'itemType' => $item->type,
-      // author set below -- $item->name for responses, but
-      // more complicated for biblio entries.
-      'author'=> null,
-      'u_id' => $item->uid,
-      'title' => $item->title,
-      'linksTitles' => array(),
-      'thisURL' => get_link_url($docId, $item->nid),
-      'image' => get_image($item, $docId),
-      'linksURL' => array(),
-      'biblio' => array(),
-      'document_abstract' => null,
-      'date' => $item->created,
-    );
-
-		// added to all links before graphapi passes off to d3.
-		// Currently only contains a date (the time that the source
-		// node was created; currently assuming that all links are
-		// created at the same time as the response they're
-		// associated with.
-    $title = $item->title;
-		/* pull out data needed for biblio nodes and add it to
-		 * $dataArray */
-		if ($item->type == "biblio") {
-			$document_abstract = strip_tags($item->biblio_abst_e);
-			$dataArray['document_abstract'] = $document_abstract;
-			if (isset($item->biblio_contributors[0])) {
-				$count = count($item->biblio_contributors);
-				for ($i = 0; $i < $count; $i++) {
-					$author = $item->biblio_contributors[$i]['name'];
-					$dataArray['author'] .= $author;
-          if ($i != $count-1) {
-             $dataArray['author'] .= "; ";
-          }
-          else {
-            $dataArray['author'] .= " (" . $item->biblio_year . ")";
-          }
-				}
-			}
-			else {
-     				$dataArray['author'] = "None";
-			}
-		}
-
-    if ($item->type == "response") {
-			$dataArray['author'] = $item->name;
-
-			// draw links based off of node's field_bibliographic_entry.
-      if (isset($item->field_bibliographic_entry)) {
-        $linkArray = $item->field_bibliographic_entry;
-        for ($i = 0; $i < count($linkArray[LANGUAGE_NONE]); $i++) {
-          $linkedNid = $linkArray[LANGUAGE_NONE][$i]['target_id'];
-          if (array_key_exists($linkedNid, $nodes)) {
-            graphapi_add_link($graph, $title, $nodes[$linkedNid]->title);
-            array_push($dataArray['linksTitles'], $nodes[$linkedNid]->title);
-            array_push($dataArray['linksURL'], $GLOBALS['base_url'] . '/node/' . $linkedNid);
-          	graphapi_set_link_data($graph, $title,	$nodes[$linkedNid]->title, $item->created);
-          }
-        }
-      } // end if($item->field_bibliographic_item)
-    }	// end if($item->type == "response")
-    graphapi_set_node_data($graph, $title, $dataArray);
-  }
-
-  $usersQuery = new EntityFieldQuery();
-  $usersQuery->entityCondition('entity_type', 'user');
-  $usersResult = $usersQuery->execute();
-  $uids = array_keys($usersResult['user']);
-  $users = array();
-  if (!empty($uids)) {
-    $users = user_load_multiple($uids);
-  }
-	// settings.config
-  $options = array(
-    'width' => 800,
-    'height' => 600,
-    'item-width' => 45,
-    'engine' => 'd3',
-  	'library' => 'maps',
-  	'userList' => $users,
-  	'drawDocumentCircle' => true,
-  );
-  return theme('graphapi_dispatch', array('graph' => $graph, 'config' => $options));
-}  // end function lacuna_visualizations_responses()
 
 // Implements hook_library()
 // To load our vis-specific libraries
@@ -639,157 +302,9 @@ function lacuna_visualizations_library() {
       'version' => '1.3.10',
       'js' => array(
         drupal_get_path('module', 'lacuna_visualizations') . '/libraries/crossfilter/crossfilter.min.js' => array(),
-        '//cdn.datatables.net/1.10.2/js/jquery.dataTables.min.js' => array(
-          'type' => 'external'),
       )
     )
   );
-}
-
-function lacuna_visualizations_annotation_dashboard() {
-  // Load the dashboard visualization
-  global $base_url;
-    // settings.config
-  $settings = array(
-    'config' => array(
-      'size' => array(
-        'graph' => array(
-          'width' => 800,
-          'height' => 5000,
-        ),
-      ),
-      'data_url' => $base_url . '/visualization/dashboard/data.json',
-    ),
-    'id' => 'annotations_dashboard',
-    'type' => 'annotations_dashboard',
-  );
-  drupal_add_js($settings, 'setting');
-  // Dashboard uses Crossfilter
-  drupal_add_library('lacuna_visualizations', 'crossfilter', FALSE);
-  // We don't need the Graph API for this part, so go straight to d3
-  return d3_draw($settings);
-}
-
-
-// an array map function to return the document id
-function get_doc_id($annotation) {
-	return $annotation->field_annotation_reference[$annotation->language][0]['target_id'];
-}
-
-function get_uid($annotation) {
-	return $annotation->uid;
-}
-
-function lacuna_visualizations_annotation_dashboard_build_data($course_id) {
-  // Prepare the data for the dashboard
-  // Get all annotations that are on a document or response in the current course
-  $query = db_query('
-    SELECT entity_id
-    FROM {field_data_field_annotation_reference} AS ar
-    LEFT JOIN {og_membership} AS og
-    ON ar.field_annotation_reference_target_id = og.etid
-    WHERE og.gid = :gid
-    AND og.entity_type = :node', array(':gid' => $course_id, ':node' => 'node'));
-  $annotation_ids = array_keys($query->fetchAllAssoc('entity_id'));
-
-  $userNames = array();   // only load users once
-  $results = array();
-  // Fields need for db query:
-  // created, uid, annotation_reference, text, quote, private, annotation_tags, category
-  $annotations = node_load_multiple($annotation_ids); // Most costly function in entire routine
-
-  // Load all document and users at once to speed up query time
-  $documents = node_load_multiple(array_map("get_doc_id", $annotations));
-  $annotators = user_load_multiple(array_map("get_uid", $annotations));
-  foreach ($annotators as $annotator) {
-    $userNames[$annotator->uid] = format_username($annotator);
-  }
-  $terms = array();
-  $field_prefix = 'field_annotation_';	// to convert from Drupal field names to viz
-  // Convert from Drupal format to a simpler data format for viz
-  foreach ($annotations as $annotation) {
-    // Create a new data object, populate only with necessary data
-    // Make it harder to leak unintended data
-    $data = new StdClass();
-    $data->id = $annotation->nid;
-    $data->created = $annotation->created * 1000; // convert to milliseconds for d3
-    $data->updated = $annotation->changed * 1000;
-    $data->uid = $annotation->uid;
-
-    $target_id = $annotation->field_annotation_reference[$annotation->language][0]['target_id'];
-    $data->doc_id = $target_id;
-    $data->documentTitle = $documents[$target_id]->title;
-
-    // Text content
-    $fields = array('text', 'quote');
-    foreach ($fields as $field) {
-      if (isset($annotation->{$field_prefix . $field}[$annotation->language][0]['value'])) {
-        $data->{$field} = $annotation->{$field_prefix . $field}[$annotation->language][0]['value'];
-      }
-    }
-
-    // Sharing options; we just need the overall option (Private, Everyone, etc.), not details
-    if (isset($annotation->field_annotation_audience[$annotation->language])) {
-      $data->audience = ucfirst($annotation->field_annotation_audience[$annotation->language][0]['value']);
-    }
-
-    // Taxonomies: tags and categories
-    // Note: removed tags for now; not shown, so no need to load them
-    $fields = array('category');
-    foreach ($fields as $field) {
-      $data->{$field} = array();
-      if (isset($annotation->{$field_prefix . $field}[$annotation->language][0]['tid'])) {
-        foreach ($annotation->{$field_prefix . $field}[$annotation->language] as $tag) {
-          if (!isset($terms[$tag['tid']])) {
-            $term = taxonomy_term_load($tag['tid']);
-            $terms[$tag['tid']] = $term;
-          } else {
-            $term = $terms[$tag['tid']];
-          }
-          array_push($data->{$field}, $term->name);
-        }
-      }
-    }
-    if ($data->category) {
-      $data->category = $data->category[0];	// set default to first category
-    }
-
-    // Remove or sanitize data we don't want to expose: annotations, usernames, etc.
-    if (!empty($data->text)) {
-      $data->text = str_repeat("x", strlen($data->text)); // provide length w/o exposing data
-    }
-    unset($data->quote);
-    unset($data->tags);
-
-    $data->username = $userNames[$annotation->uid];
-    array_push($results, $data);
-  }
-  return $results;
-}
-
-function lacuna_visualizations_annotation_dashboard_cache_get($course_id) {
-  return cache_get("lacuna_visualization_dashboard_data:$course_id");
-}
-
-function lacuna_visualizations_annotation_dashboard_cache_set($course_id, $data) {
-  if (count($data) >= variable_get('lacuna_visualizations_cache_threshold', 1000)) {
-    $cache_hours = (int) variable_get('lacuna_visualizations_cache_ttl');
-    cache_set("lacuna_visualization_dashboard_data:$course_id", $data, 'cache', time() + $cache_hours * 60 * 60);
-  }
-}
-
-function lacuna_visualizations_annotation_dashboard_data() {
-  $course_id = course_get_selected_course();
-  // Check for cached data first
-  if ($cached = lacuna_visualizations_annotation_dashboard_cache_get($course_id)) {
-    drupal_json_output($cached->data);
-    drupal_exit();
-  }
-  $results = lacuna_visualizations_annotation_dashboard_build_data($course_id);
-
-  lacuna_visualizations_annotation_dashboard_cache_set($course_id, $results);
-  drupal_json_output($results);
-  drupal_exit();
 }
 
 /**
@@ -797,16 +312,21 @@ function lacuna_visualizations_annotation_dashboard_data() {
  */
 function lacuna_visualizations_cron() {
   // Rebuild the Annotations Dashboard cached data for every course
-  $query = new EntityFieldQuery();
-  $query->entityCondition('entity_type', 'node')
-    ->entityCondition('bundle', 'course')
-    ->propertyCondition('status', NODE_PUBLISHED);
-  $result = $query->execute();
-  if (isset($result['node'])) {
-    foreach (array_keys($result['node']) as $nid) {
-      $data = lacuna_visualizations_annotation_dashboard_build_data($nid);
-      lacuna_visualizations_annotation_dashboard_cache_set($nid, $data);
+  if (variable_get('lacuna_visualizations_cron', TRUE)) {
+    module_load_include('inc', 'lacuna_visualizations', 'lacuna_visualizations.dashboard');
+    // Load every course
+    $query = new EntityFieldQuery();
+    $query->entityCondition('entity_type', 'node')
+      ->entityCondition('bundle', 'course')
+      ->propertyCondition('status', NODE_PUBLISHED);
+    $result = $query->execute();
+
+    if (isset($result['node'])) {
+      foreach (array_keys($result['node']) as $nid) {
+        $data = lacuna_visualizations_annotation_dashboard_build_data($nid);
+        lacuna_visualizations_annotation_dashboard_cache_set($nid, $data);
+      }
     }
+    watchdog('lacuna_visualizations', 'Rebuilt all dashboard data', array(), WATCHDOG_NOTICE);
   }
-  watchdog('lacuna_visualizations', 'Rebuilt all dashboard data', array(), WATCHDOG_NOTICE);
 }
