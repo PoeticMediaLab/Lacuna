@@ -1,8 +1,41 @@
 <?php
 /**
  * Routines for loading and caching dashboard data
- * 
+ *
  */
+
+// an array map function to return the document id
+function get_doc_id($annotation) {
+  return $annotation->field_annotation_reference[$annotation->language][0]['target_id'];
+}
+
+function get_uid($annotation) {
+  return $annotation->uid;
+}
+
+function lacuna_visualizations_annotation_dashboard() {
+  // Load the dashboard visualization
+  global $base_url;
+  // settings.config
+  $settings = array(
+    'config' => array(
+      'size' => array(
+        'graph' => array(
+          'width' => 800,
+          'height' => 5000,
+        ),
+      ),
+      'data_url' => $base_url . '/visualization/dashboard/data.json',
+    ),
+    'id' => 'annotations_dashboard',
+    'type' => 'annotations_dashboard',
+  );
+  drupal_add_js($settings, 'setting');
+  // Dashboard uses Crossfilter
+  drupal_add_library('lacuna_visualizations', 'crossfilter', FALSE);
+  // We don't need the Graph API for this part, so go straight to d3
+  return d3_draw($settings);
+}
 
 function lacuna_visualizations_annotation_dashboard_build_data($course_id) {
   // Prepare the data for the dashboard
