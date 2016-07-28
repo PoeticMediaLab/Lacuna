@@ -11,6 +11,7 @@
     function Replies() {
       this.cancelReply = bind(this.cancelReply, this);
       this.saveReply = bind(this.saveReply, this);
+      this.deleteReply = bind(this.deleteReply, this);
       this.drawReplies = bind(this.drawReplies, this);
       this.initReplies = bind(this.initReplies, this);
       this.addReplyLink = bind(this.addReplyLink, this);
@@ -106,9 +107,16 @@
       }
     };
 
-    Replies.prototype.addReplyArea = function(annotation, pid) {
-      var buttons, cancel, field, form, formid, save, textarea, textid;
-      formid = this.replyClasses.base + "-form-" + annotation.id + "-" + pid;
+    Replies.prototype.addReplyArea = function(annotation, id, pid, default_text) {
+      var baseid, buttons, cancel, field, form, formid, save, textarea, textid;
+      if (default_text == null) {
+        default_text = '';
+      }
+      baseid = this.replyClasses.base + "-" + annotation.id + "-" + id + "-" + pid;
+      if (default_text != null) {
+        baseid += '-update';
+      }
+      formid = baseid + '-form';
       form = document.getElementById(formid);
       if (form != null) {
         return form;
@@ -117,8 +125,9 @@
       form.id = formid;
       this.addClasses(form, 'form');
       textarea = document.createElement("textarea");
-      textid = this.replyClasses.base + "-textarea-" + annotation.id + "-" + pid;
+      textid = baseid + '-text';
       textarea.id = textid;
+      textarea.textContent = default_text;
       this.addClasses(textarea, 'text');
       buttons = document.createElement("div");
       save = document.createElement("a");
@@ -126,8 +135,8 @@
       this.addClasses(save, 'save');
       save.innerHTML = "Save";
       save.addEventListener("click", (function(_this) {
-        return function(event) {
-          return _this.saveReply(event, annotation, textarea, pid);
+        return function() {
+          return _this.saveReply(annotation, textarea, id, pid);
         };
       })(this));
       cancel = document.createElement("a");
@@ -150,6 +159,13 @@
       return form;
     };
 
+    Replies.prototype.clearReplyArea = function(textarea) {
+      textarea.textContent = '';
+      if (Annotator.Plugin.RichText != null) {
+        return CKEDITOR.instances[textarea.id].setData('');
+      }
+    };
+
     Replies.prototype.hideReplyArea = function(textarea) {
       return this.hide(textarea.parentNode);
     };
@@ -162,7 +178,7 @@
       span = document.createElement("span");
       span.innerHTML = "Reply";
       this.addClasses(span, 'reply');
-      replyArea = this.addReplyArea(annotation, pid);
+      replyArea = this.addReplyArea(annotation, 0, pid);
       this.hide(replyArea);
       span.addEventListener("click", (function(_this) {
         return function() {
@@ -257,30 +273,39 @@
       return parent;
     };
 
-    Replies.prototype.addControls = function(element, reply) {
-      var controls, del, edit, replyLink;
+    Replies.prototype.addControls = function(element, reply, annotation) {
+      var controls, edit, editArea, replyArea, replyLink;
       controls = document.createElement('div');
       this.addClasses(controls, 'controls');
       element.appendChild(controls);
       replyLink = document.createElement('span');
       this.addClasses(replyLink, 'reply');
       controls.appendChild(replyLink);
+      replyArea = this.addReplyArea(annotation, 0, reply.pid, '');
+      this.hide(replyArea);
+      replyLink.addEventListener("click", (function(_this) {
+        return function() {
+          return _this.toggleVisibility(replyArea);
+        };
+      })(this));
       if (reply.permissions == null) {
         return;
       }
       if (reply.permissions.edit) {
         edit = document.createElement('span');
         this.addClasses(edit, 'edit');
-        controls.appendChild(edit);
-      }
-      if (reply.permissions.del) {
-        del = document.createElement('span');
-        this.addClasses(del, 'del');
-        return controls.appendChild(del);
+        editArea = this.addReplyArea(annotation, reply.id, reply.pid, reply.text);
+        this.hide(editArea);
+        edit.addEventListener("click", (function(_this) {
+          return function() {
+            return _this.toggleVisibility(editArea);
+          };
+        })(this));
+        return controls.appendChild(edit);
       }
     };
 
-    Replies.prototype.drawReply = function(element, reply) {
+    Replies.prototype.drawReply = function(element, reply, annotation) {
       var li, text;
       li = document.createElement("li");
       li.innerHTML = reply['author'] + ' on ' + reply['date'];
@@ -290,13 +315,12 @@
       text.innerHTML = reply['text'];
       this.addClasses(text, 'text');
       li.appendChild(text);
-      this.addControls(li, reply);
-      element.appendChild(li);
-      return li;
+      this.addControls(li, reply, annotation);
+      return element.appendChild(li);
     };
 
     Replies.prototype.drawReplies = function(element, annotation) {
-      var depth, el, i, len, li, list, replies, reply;
+      var depth, el, i, len, list, replies, reply;
       replies = this.convertRepliesData(annotation.comments);
       replies = this.sortReplies(replies);
       list = this.initList(element);
@@ -304,14 +328,26 @@
         reply = replies[i];
         depth = this.replyDepth(reply['thread']);
         el = this.getListAtDepth(list, depth);
-        li = this.drawReply(el, reply);
+        this.drawReply(el, reply, annotation);
       }
       return list;
     };
 
-    Replies.prototype.saveReply = function(event, annotation, textarea, pid) {
+    Replies.prototype.deleteReply = function(annotation, reply) {
+      reply.type = 'delete';
+      annotation.reply = reply;
+      this.annotator.publish('annotationUpdated', [annotation]);
+      return delete annotation.reply;
+    };
+
+    Replies.prototype.saveReply = function(annotation, textarea, id, pid) {
       annotation.reply = {};
       annotation.reply.pid = pid;
+      annotation.reply.type = 'new';
+      if (id !== 0) {
+        annotation.reply.id = id;
+        annotation.reply.type = 'update';
+      }
       if ((Annotator.Plugin.RichText != null) && (textarea.id != null)) {
         annotation.reply.text = CKEDITOR.instances[textarea.id].getData();
       } else {
@@ -320,6 +356,7 @@
       annotation.reply.uid = Drupal.settings.annotator_replies.current_uid;
       this.annotator.publish('annotationUpdated', [annotation]);
       delete annotation.reply;
+      this.clearReplyArea(textarea);
       return this.hideReplyArea(textarea);
     };
 

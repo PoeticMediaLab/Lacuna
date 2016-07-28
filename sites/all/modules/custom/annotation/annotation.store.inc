@@ -208,7 +208,14 @@ function annotation_drupal_format($entity, $update = FALSE) {
 
       case 'reply':
         // Added by the Replies plugin
-        annotation_save_comment($entity);
+        ddl($entity, 'entity');
+        if ($entity->reply['type'] == 'new') {
+          annotation_save_comment($entity);
+        } elseif ($entity->reply['type'] == 'update') {
+           annotation_update_comment($entity);
+        } elseif ($entity->reply['type'] == 'delete') {
+          annotation_delete_comment($entity);
+        }
         $annotation->comments = annotation_load_comments($entity->id);
         break;
 
@@ -538,6 +545,12 @@ function annotation_load_comments($nid) {
   return $comments;
 }
 
+/********
+ * Comment-handling routines; Note: it would make more sense to name them
+ * with the annotation_comment_ACTION() pattern, but Drupal would recognize
+ * those as hook_comment_update() and hook_comment_delete()
+ ******/
+
 /**
  * Saves new comments on an annotation node
  */
@@ -557,6 +570,31 @@ function annotation_save_comment($entity) {
   $comment->comment_body[$comment->language][0]['format'] = 'filtered_html'; // For now
   comment_submit($comment);
   comment_save($comment);
+  ddl($comment, 'save');
+}
+
+/**
+ * @param $entity
+ * @throws \Exception
+ * Updates the text and updated time of a comment
+ */
+function annotation_update_comment($entity) {
+  $comment = comment_load($entity->reply['id']);
+  $comment->updated = time();
+  $comment->comment_body[$comment->language][0]['value'] = $entity->reply['text'];
+  comment_save($comment);
+  ddl($entity, 'update');
+}
+
+/**
+ * "Delete" a comment; We don't really delete it because comment_delete()
+ * also deletes any subsequent replies, which we don't want to do.
+ * So, instead, we just replace the text.
+ */
+function annotation_delete_comment($entity) {
+  ddl($entity, 'deleting');
+  $entity->reply['text'] = '-- reply deleted --';
+  annotation_update_comment($entity);
 }
 
 /*

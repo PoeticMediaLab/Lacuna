@@ -63,9 +63,12 @@ class Annotator.Plugin.Replies extends Annotator.Plugin
     else
       @hide(field)
 
-  addReplyArea: (annotation, pid) =>
+  addReplyArea: (annotation, id, pid, default_text = '') =>
     # Add a textarea for replies; NOTE: hideReplyArea relies on this structure
-    formid = "#{@replyClasses.base}-form-#{annotation.id}-#{pid}"
+    baseid = "#{@replyClasses.base}-#{annotation.id}-#{id}-#{pid}"
+    if default_text?
+      baseid += '-update' # because we need two forms; one for replies, one to update a reply
+    formid = baseid + '-form'
     form = document.getElementById(formid)
     if form?
       return form
@@ -73,15 +76,16 @@ class Annotator.Plugin.Replies extends Annotator.Plugin
     form.id = formid
     @addClasses(form, 'form')
     textarea = document.createElement("textarea")
-    textid = "#{@replyClasses.base}-textarea-#{annotation.id}-#{pid}"
+    textid = baseid + '-text'
     textarea.id = textid
+    textarea.textContent = default_text
     @addClasses(textarea, 'text')
     buttons = document.createElement("div")
     save = document.createElement("a")
     @addClasses(save, 'button')
     @addClasses(save, 'save')
     save.innerHTML = "Save"
-    save.addEventListener("click", (event) => @saveReply(event, annotation, textarea, pid))
+    save.addEventListener("click", () => @saveReply(annotation, textarea, id, pid))
     cancel = document.createElement("a")
     @addClasses(cancel, 'button')
     cancel.innerHTML = "Cancel"
@@ -96,6 +100,13 @@ class Annotator.Plugin.Replies extends Annotator.Plugin
       CKEDITOR.replace(textid)
     return form
 
+  clearReplyArea: (textarea) ->
+    # Remove the text from a textarea
+    # Necessary because CKEditor will persist with it's default value
+    textarea.textContent = ''
+    if Annotator.Plugin.RichText?
+      CKEDITOR.instances[textarea.id].setData('')
+
   hideReplyArea: (textarea) =>
     # requires knowing about the form structure created in addReplyArea
     @hide(textarea.parentNode)
@@ -104,7 +115,7 @@ class Annotator.Plugin.Replies extends Annotator.Plugin
     span = document.createElement("span")
     span.innerHTML = "Reply"
     @addClasses(span, 'reply')
-    replyArea = @addReplyArea(annotation, pid)
+    replyArea = @addReplyArea(annotation, 0, pid)
     @hide(replyArea)
     span.addEventListener("click", () => @toggleVisibility(replyArea))
     field.appendChild(span)
@@ -177,7 +188,7 @@ class Annotator.Plugin.Replies extends Annotator.Plugin
       parent = @getListAtDepth(@initList(parent), depth)
     return parent
 
-  addControls: (element, reply) ->
+  addControls: (element, reply, annotation) ->
     # Add edit/delete controls to a reply
     controls = document.createElement('div')
     @addClasses(controls, 'controls')
@@ -186,6 +197,10 @@ class Annotator.Plugin.Replies extends Annotator.Plugin
     replyLink = document.createElement('span')
     @addClasses(replyLink, 'reply')
     controls.appendChild(replyLink)
+    # reply.id == 0 indicates a new reply
+    replyArea = @addReplyArea(annotation, 0, reply.pid, '')
+    @hide(replyArea)
+    replyLink.addEventListener("click", () => @toggleVisibility(replyArea))
 
     if !reply.permissions?
       return
@@ -193,14 +208,20 @@ class Annotator.Plugin.Replies extends Annotator.Plugin
     if reply.permissions.edit
       edit = document.createElement('span')
       @addClasses(edit, 'edit')
+      editArea = @addReplyArea(annotation, reply.id, reply.pid, reply.text)
+      @hide(editArea)
+      edit.addEventListener("click", () => @toggleVisibility(editArea))
       controls.appendChild(edit)
 
-    if reply.permissions.del
-      del = document.createElement('span')
-      @addClasses(del, 'del')
-      controls.appendChild(del)
+#     Leaving comment deletion unavailable (it works)
+#     Because the best we can do with Drupal is change the text to "reply deleted"
+#    if reply.permissions.del
+#      del = document.createElement('span')
+#      @addClasses(del, 'del')
+#      del.addEventListener("click", () => @deleteReply(annotation, reply))
+#      controls.appendChild(del)
 
-  drawReply: (element, reply) ->
+  drawReply: (element, reply, annotation) ->
     li = document.createElement("li")
     li.innerHTML = reply['author'] + ' on ' + reply['date']
     li.classList.add('annotator-reply-id-' + reply['id'])
@@ -209,9 +230,8 @@ class Annotator.Plugin.Replies extends Annotator.Plugin
     text.innerHTML = reply['text']
     @addClasses(text, 'text')
     li.appendChild(text)
-    @addControls(li, reply)
+    @addControls(li, reply, annotation)
     element.appendChild(li)
-    return li
 
   drawReplies: (element, annotation) =>
     replies = @convertRepliesData(annotation.comments)
@@ -220,13 +240,24 @@ class Annotator.Plugin.Replies extends Annotator.Plugin
     for reply in replies
       depth = @replyDepth(reply['thread'])
       el = @getListAtDepth(list, depth)
-      li = @drawReply(el, reply)
-#      @addReplyLink(li, annotation, reply['id'])
+      @drawReply(el, reply, annotation)
     return list
 
-  saveReply: (event, annotation, textarea, pid) =>
+  deleteReply: (annotation, reply) =>
+    # Add a annotation.reply.type = 'delete'
+    # Then publish annotationUpdated, let the store handle deleting it
+    reply.type = 'delete'
+    annotation.reply = reply
+    @annotator.publish('annotationUpdated', [annotation])
+    delete annotation.reply
+
+  saveReply: (annotation, textarea, id, pid) =>
     annotation.reply = {}
     annotation.reply.pid = pid # should be the parent id or 0
+    annotation.reply.type = 'new'
+    if id != 0
+      annotation.reply.id = id
+      annotation.reply.type = 'update'
     if Annotator.Plugin.RichText? and textarea.id?
       annotation.reply.text = CKEDITOR.instances[textarea.id].getData()
     else
@@ -235,6 +266,7 @@ class Annotator.Plugin.Replies extends Annotator.Plugin
     @annotator.publish('annotationUpdated', [annotation])
     # So we don't duplicate replies, delete this temporary data now that it's saved
     delete annotation.reply
+    @clearReplyArea(textarea)
     @hideReplyArea(textarea)
 
   cancelReply: (textarea) =>
