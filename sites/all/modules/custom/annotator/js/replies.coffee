@@ -66,7 +66,7 @@ class Annotator.Plugin.Replies extends Annotator.Plugin
   addReplyArea: (annotation, id, pid, default_text = '') =>
     # Add a textarea for replies; NOTE: hideReplyArea relies on this structure
     baseid = "#{@replyClasses.base}-#{annotation.id}-#{id}-#{pid}"
-    if default_text?
+    if default_text.length
       baseid += '-update' # because we need two forms; one for replies, one to update a reply
     formid = baseid + '-form'
     form = document.getElementById(formid)

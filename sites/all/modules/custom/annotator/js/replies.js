@@ -113,7 +113,7 @@
         default_text = '';
       }
       baseid = this.replyClasses.base + "-" + annotation.id + "-" + id + "-" + pid;
-      if (default_text != null) {
+      if (default_text.length) {
         baseid += '-update';
       }
       formid = baseid + '-form';
