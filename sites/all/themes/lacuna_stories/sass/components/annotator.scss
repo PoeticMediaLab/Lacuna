@@ -342,7 +342,7 @@ $privacy-selected: rgba(19, 149, 25, 0.74);
     }
     li.annotator-reply-replyarea {
       list-style: none;
-      //background: rgba(175, 175, 175, .5);
+      background: rgba(175, 175, 175, .5);
       //color: white;
       padding-left: 2px;
       //padding-right: -15px;
@@ -351,6 +351,10 @@ $privacy-selected: rgba(19, 149, 25, 0.74);
         //color: white;
         padding: 3px;
       }
+    }
+    div.annotator-reply-controls {
+      //float: right;
+      padding-bottom: 1px;
     }
   }
 }
