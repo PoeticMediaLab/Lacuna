@@ -351,3 +351,27 @@ body.page-course-setup-add-materials {
     float: left;
   }
 }
+
+/*for the Recent Interactions page, which consists of the Annotations on Responses, Comments on Responses, and Comments on Threads view blocks -- Daniel*/
+$lacunafont: "Source Sans Pro", sans-serif, arial;
+$lacunablue: #465F73;
+$lacunagreen: #506038;
+
+.page-recent-interactions h1#page-title {
+  color: rgb(70, 95, 115);
+  font-family: $lacunafont;
+  letter-spacing: -.01em;
+  font-size: 2em;
+}
+
+.view-comments-on-responses-view {
+  .annotations-view-title, .comments-view-title, .comments-threads-view-title {
+      font-family: $lacunafont;
+      text-transform: uppercase;
+      color: $lacunagreen;
+  }
+  .view-content {
+      border-left: 1px solid #cfcfcf;
+      padding-left: 25px;
+  }
+}
