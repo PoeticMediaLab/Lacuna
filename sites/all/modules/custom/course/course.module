@@ -448,6 +448,7 @@ function course_form_views_exposed_form_alter(&$form, &$form_state) {
 	if (isset($form['author_select'])) {
 		$gid = course_get_selected_course();
     $uids = array_keys($form['author_select']['#options']);
+    $form['author_select']['#options'] = array();
     if ($cached = cache_get("course_author_select:$gid")) {
       $form['author_select']['#options'] = $cached->data;
     };
