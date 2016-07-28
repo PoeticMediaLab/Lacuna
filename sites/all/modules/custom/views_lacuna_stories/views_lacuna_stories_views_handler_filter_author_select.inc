@@ -12,7 +12,14 @@ class views_lacuna_stories_views_handler_filter_author_select extends views_hand
 	 *   Return the stored values in $this->value_options if someone expects it.
 	 */
 	function get_value_options() {
-		$users_list = entity_load('user');
+    $cid = 'views_lacuna_stories_users_list';
+    if ($cached = cache_get($cid)) {
+      $users_list = $cached->data;
+    }
+    if (empty($users_list)) {
+      $users_list = entity_load('user');
+      cache_set($cid, $users_list, 'cache', time() + 24 * 60 * 60);
+    }
 
     $users = array();
 		foreach ($users_list as $user) {
