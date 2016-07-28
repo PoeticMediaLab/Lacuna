@@ -208,7 +208,6 @@ function annotation_drupal_format($entity, $update = FALSE) {
 
       case 'reply':
         // Added by the Replies plugin
-        ddl($entity, 'entity');
         if ($entity->reply['type'] == 'new') {
           annotation_save_comment($entity);
         } elseif ($entity->reply['type'] == 'update') {
@@ -570,7 +569,6 @@ function annotation_save_comment($entity) {
   $comment->comment_body[$comment->language][0]['format'] = 'filtered_html'; // For now
   comment_submit($comment);
   comment_save($comment);
-  ddl($comment, 'save');
 }
 
 /**
@@ -583,7 +581,6 @@ function annotation_update_comment($entity) {
   $comment->updated = time();
   $comment->comment_body[$comment->language][0]['value'] = $entity->reply['text'];
   comment_save($comment);
-  ddl($entity, 'update');
 }
 
 /**
@@ -592,7 +589,6 @@ function annotation_update_comment($entity) {
  * So, instead, we just replace the text.
  */
 function annotation_delete_comment($entity) {
-  ddl($entity, 'deleting');
   $entity->reply['text'] = '-- reply deleted --';
   annotation_update_comment($entity);
 }
