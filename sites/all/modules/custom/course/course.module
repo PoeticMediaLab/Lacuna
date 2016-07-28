@@ -332,8 +332,10 @@ function course_views_pre_render(&$view) {
 }
 
 // Filter taxonomy terms to return only those relevant for current course
-function course_get_terms_for_current_course($taxonomy_name) {
-	$gid = course_get_selected_course();
+function course_get_terms_for_current_course($taxonomy_name, $gid = NULL) {
+  if (empty($gid)) {
+    $gid = course_get_selected_course();
+  }
 	$taxonomy = array();
 	if ($gid) {
 		$query = new EntityFieldQuery();
@@ -444,28 +446,37 @@ function course_form_views_exposed_form_alter(&$form, &$form_state) {
 	// Use display name via Realname module, not user account name for author exposed form
 	// Filter authors to only those in current course
 	if (isset($form['author_select'])) {
-		$uids = array_keys($form['author_select']['#options']);
-		$form['author_select']['#options'] = array();	// wipe options
 		$gid = course_get_selected_course();
-		foreach ($uids as $uid) {
-			$account = user_load($uid);
-			$groups = og_get_groups_by_user($account, 'node');
-			if (!empty($groups) && in_array($gid, $groups)) {
-				$form['author_select']['#options'][$uid] = format_username($account);
-			}
-		}
-	}
+    $uids = array_keys($form['author_select']['#options']);
+    if ($cached = cache_get("course_author_select:$gid")) {
+      $form['author_select']['#options'] = $cached->data;
+    };
+    if (empty($form['author_select']['#options']) and !empty($uids)) {
+      // No cached data for this filter; let's calculate it, then store it
+      $form['author_select']['#options'] = array();	// wipe options
+      foreach ($uids as $uid) {
+        $account = user_load($uid);
+        $groups = og_get_groups_by_user($account, 'node');
+        if (!empty($groups) && in_array($gid, $groups)) {
+          $form['author_select']['#options'][$uid] = format_username($account);
+        }
+      }
+    cache_set("course_author_select:$gid", $form['author_select']['#options'], 'cache', time() + 24 * 60 * 60);
+    }
+  }
 
   // Filter Taxonomy terms
   if (isset($form['field_tags_tid'])) {
     course_limit_exposed_filter_tags($form, 'field_tags_tid', course_get_terms_for_current_course('annotation_tags'));
   }
+
+
   if ($form['#id'] == 'views-exposed-form-sewing-kit-page') {
+    $gid = course_get_selected_course();
     // Restrict the tag filter options to tags on annotations on documents in courses in which the user is a member. Otherwise we will have inapplicable tags here even with no filters set. Plus tags may be considered private content.
-    course_limit_exposed_filter_tags($form, 'field_annotation_tags_tid', course_get_terms_for_current_course('annotation_tags'));
+    course_limit_exposed_filter_tags($form, 'field_annotation_tags_tid', course_get_terms_for_current_course('annotation_tags', $gid));
 
     // Restrict exposed filter list of annotated content to current course
-    $gid = course_get_selected_course();
     $documents = course_get_documents_for_current_course($gid);
     if (isset($documents)) {
       $doc_ids = array_keys($documents);
