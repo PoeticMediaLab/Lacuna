@@ -479,10 +479,12 @@ function course_form_views_exposed_form_alter(&$form, &$form_state) {
 
     // Restrict exposed filter list of annotated content to current course
     $documents = course_get_documents_for_current_course($gid);
+    $doc_ids = array();
     if (isset($documents)) {
       $doc_ids = array_keys($documents);
     }
     $responses = course_get_responses_for_current_course($gid);
+    $resp_ids = array();
     if (isset($responses)) {
       $resp_ids = array_keys($responses);
     }
