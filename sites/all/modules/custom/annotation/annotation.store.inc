@@ -521,6 +521,7 @@ function annotation_api_from_stdin() {
  * Load comments on an annotation node
  */
 function annotation_load_comments($nid) {
+  global $user;
   $query = new EntityFieldQuery();
   $query->entityCondition('entity_type', 'comment')
     ->propertyCondition('status', COMMENT_PUBLISHED)
@@ -531,6 +532,7 @@ function annotation_load_comments($nid) {
     $comments = comment_load_multiple(array_keys($result['comment']));
     foreach ($comments as $comment) {
       $comment->name = format_username(user_load($comment->uid));
+      $comment->permissions = annotation_entity_permissions($comment, $user);
     }
   }
   return $comments;
@@ -555,6 +557,24 @@ function annotation_save_comment($entity) {
   $comment->comment_body[$comment->language][0]['format'] = 'filtered_html'; // For now
   comment_submit($comment);
   comment_save($comment);
+}
+
+/*
+ * Set permissions for annotations or comments
+ */
+function annotation_entity_permissions($entity, $user) {
+  // Set permissions for edit and delete controls
+  // Note: permissions aren't *exactly* right
+  // For example, if we grant a role permission to administer comments, but not
+  // to administer annotations, then they won't be able to edit comments from the
+  // annotator viewer, even though they could from the node page
+  $canEdit = $entity->uid == $user->uid || user_access('edit any annotations');
+  $canDelete = $entity->uid == $user->uid || user_access('administer annotations');
+  $permissions = array(
+    'edit' => $canEdit,
+    'del' => $canDelete
+  );
+  return $permissions;
 }
 
 /**
@@ -657,12 +677,7 @@ function annotation_api_entity_prepare($annotation, $op) {
       );
 
       // Set permissions for edit and delete controls
-      $canEdit = $annotation->uid == $user->uid || user_access('edit any annotation content');
-      $canDelete = $annotation->uid == $user->uid || user_access('delete any annotation content');
-      $entity->permissions = array(
-        'edit' => $canEdit,
-        'del' => $canDelete
-      );
+      $entity->permissions = annotation_entity_permissions($annotation, $user);
 
       // Links
       // href = link to annotation in node via scrollTo in Filters plugin
