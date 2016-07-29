@@ -13,29 +13,30 @@ class views_lacuna_stories_views_handler_filter_author_select extends views_hand
 	 */
 	function get_value_options() {
     $cid = 'views_lacuna_stories_users_list';
-    if ($cached = cache_get($cid)) {
-      $users_list = $cached->data;
-    }
-    if (empty($users_list)) {
-      $users_list = entity_load('user');
-      cache_set($cid, $users_list, 'cache', time() + 24 * 60 * 60);
-    }
-
     $users = array();
-		foreach ($users_list as $user) {
-			$users[$user->uid] = $user->name;
-		}
+    if ($cached = cache_get($cid)) {
+      $users = $cached->data;
+    }
 
-		// We don't need Guest user here, so remove it.
-		unset($users[0]);
-    // Also remove super user
-    unset($users[1]);
+    if (empty($users)) {
+      $users_list = entity_load('user');
 
-		// Sort by username.
-		natsort($users);
+      foreach ($users_list as $user) {
+        $users[$user->uid] = $user->name;
+      }
 
-		$this->value_options = $users;
+      // We don't need Guest user here, so remove it.
+      unset($users[0]);
+      // Also remove super user
+      unset($users[1]);
 
-		return $users;
+      // Sort by username.
+      natsort($users);
+
+      $this->value_options = $users;
+      cache_set($cid, $users, 'cache', time() + 24 * 60 * 60);
+    }
+
+    return $users;
 	}
 }
