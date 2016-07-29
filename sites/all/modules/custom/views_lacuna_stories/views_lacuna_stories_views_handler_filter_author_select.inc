@@ -33,10 +33,9 @@ class views_lacuna_stories_views_handler_filter_author_select extends views_hand
       // Sort by username.
       natsort($users);
 
-      $this->value_options = $users;
       cache_set($cid, $users, 'cache', time() + 24 * 60 * 60);
     }
-
+    $this->value_options = $users;
     return $users;
 	}
 }
