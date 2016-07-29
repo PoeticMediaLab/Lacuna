@@ -388,8 +388,8 @@ function course_get_responses_for_current_course($gid = NULL) {
 /*
  * Filter the bibliography nodes to those used in current course
  */
-function course_get_bibliography_for_current_course() {
-	$documents = course_get_documents_for_current_course();
+function course_get_bibliography_for_current_course($gid) {
+	$documents = course_get_documents_for_current_course($gid);
 	$biblios = array();
 	if (!empty($documents)) {
 		$docs = node_load_multiple(array_keys($documents));
@@ -404,9 +404,9 @@ function course_get_bibliography_for_current_course() {
 /*
  * Get a list of relevant authors for exposed filter
  */
-function course_get_authors_for_current_course() {
+function course_get_authors_for_current_course($gid) {
 	$authors = array();
-	$biblios = course_get_bibliography_for_current_course();
+	$biblios = course_get_bibliography_for_current_course($gid);
 	foreach ($biblios as $biblio) {
 		foreach ($biblio->biblio_contributors as $author) {
 				$authors[$author['lastname']] = $author['name'];
@@ -424,12 +424,11 @@ function course_limit_exposed_filter_tags(&$form, $field, $terms) {
   }
 }
 
-// Limit Views exposed filter list of people by course membership
-function course_limit_exposed_user_list(&$form, $field_name) {
-  $gid = course_get_selected_course();
+// Limit a list of users to only those in the current user's current course
+function course_limit_user_list(&$form, $field_name, $gid) {
   $uids = array_keys($form[$field_name]['#options']);
   $form[$field_name]['#options'] = array();
-  if ($cached = cache_get("course_$field_name:$gid")) {
+  if ($cached = cache_get("course_users:$gid")) {
     $form[$field_name]['#options'] = $cached->data;
   };
   if (empty($form[$field_name]['#options']) and !empty($uids)) {
@@ -442,7 +441,7 @@ function course_limit_exposed_user_list(&$form, $field_name) {
         $form[$field_name]['#options'][$uid] = format_username($account);
       }
     }
-    cache_set("course_$field_name:$gid", $form[$field_name]['#options'], 'cache', time() + 24 * 60 * 60);
+    cache_set("course_users:$gid", $form[$field_name]['#options'], 'cache', time() + 24 * 60 * 60);
   }
 }
 
@@ -450,34 +449,40 @@ function course_limit_exposed_user_list(&$form, $field_name) {
  * Implements hook_form_FORM_ID_alter().
  */
 function course_form_views_exposed_form_alter(&$form, &$form_state) {
+  $gid = course_get_selected_course();
+
   if ('views-exposed-form-documents-materials' == $form['#id']) {
     // Set exposed filter 'Limit by Unit' for current course
-		$form['field_unit_tid']['#options'] = course_get_terms_for_current_course('units');
+		$form['field_unit_tid']['#options'] = course_get_terms_for_current_course('units', $gid);
 		// Field name got reversed in Document field. Oops!
 		// TODO: Fix the name
-		$form['field_doc_genre_tid']['#options'] = course_get_terms_for_current_course('genre_doc');
-		$form['lastname']['#options'] = course_get_authors_for_current_course();
+		$form['field_doc_genre_tid']['#options'] = course_get_terms_for_current_course('genre_doc', $gid);
+		$form['lastname']['#options'] = course_get_authors_for_current_course($gid);
 	}
 
   if ('views-exposed-form-responses-page' == $form['#id']) {
     // Limit response genre per course
     // TODO: Fix response_genre -> genre_response order swap
-    $form['field_response_genre_tid']['#options'] = course_get_terms_for_current_course('genre_response');
+    $form['field_response_genre_tid']['#options'] = course_get_terms_for_current_course('genre_response', $gid);
   }
 
-	// Use display name via Realname module, not user account name for author exposed form
+  // Use display name via Realname module, not user account name for author exposed form
 	// Filter authors to only those in current course
 	if (isset($form['author_select'])) {
-    course_limit_exposed_user_list($form, 'author_select');
+    course_limit_user_list($form, 'author_select', $gid);
+  }
+
+  // For commenters on annotations
+  if (isset($form['commenter_select'])) {
+    course_limit_user_list($form, 'commenter_select', $gid);
   }
 
   // Filter Taxonomy terms
   if (isset($form['field_tags_tid'])) {
-    course_limit_exposed_filter_tags($form, 'field_tags_tid', course_get_terms_for_current_course('annotation_tags'));
+    course_limit_exposed_filter_tags($form, 'field_tags_tid', course_get_terms_for_current_course('annotation_tags', $gid));
   }
 
   if ($form['#id'] == 'views-exposed-form-sewing-kit-page') {
-    $gid = course_get_selected_course();
     // Restrict the tag filter options to tags on annotations on documents in courses in which the user is a member. Otherwise we will have inapplicable tags here even with no filters set. Plus tags may be considered private content.
     course_limit_exposed_filter_tags($form, 'field_annotation_tags_tid', course_get_terms_for_current_course('annotation_tags', $gid));
 
