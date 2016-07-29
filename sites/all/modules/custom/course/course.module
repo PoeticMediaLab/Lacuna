@@ -424,6 +424,28 @@ function course_limit_exposed_filter_tags(&$form, $field, $terms) {
   }
 }
 
+// Limit Views exposed filter list of people by course membership
+function course_limit_exposed_user_list(&$form, $field_name) {
+  $gid = course_get_selected_course();
+  $uids = array_keys($form[$field_name]['#options']);
+  $form[$field_name]['#options'] = array();
+  if ($cached = cache_get("course_$field_name:$gid")) {
+    $form[$field_name]['#options'] = $cached->data;
+  };
+  if (empty($form[$field_name]['#options']) and !empty($uids)) {
+    // No cached data for this filter; let's calculate it, then store it
+    $form[$field_name]['#options'] = array();	// wipe options
+    foreach ($uids as $uid) {
+      $account = user_load($uid);
+      $groups = og_get_groups_by_user($account, 'node');  // very expensive call to make
+      if (!empty($groups) && in_array($gid, $groups)) {
+        $form[$field_name]['#options'][$uid] = format_username($account);
+      }
+    }
+    cache_set("course_$field_name:$gid", $form[$field_name]['#options'], 'cache', time() + 24 * 60 * 60);
+  }
+}
+
 /**
  * Implements hook_form_FORM_ID_alter().
  */
@@ -446,31 +468,13 @@ function course_form_views_exposed_form_alter(&$form, &$form_state) {
 	// Use display name via Realname module, not user account name for author exposed form
 	// Filter authors to only those in current course
 	if (isset($form['author_select'])) {
-		$gid = course_get_selected_course();
-    $uids = array_keys($form['author_select']['#options']);
-    $form['author_select']['#options'] = array();
-    if ($cached = cache_get("course_author_select:$gid")) {
-      $form['author_select']['#options'] = $cached->data;
-    };
-    if (empty($form['author_select']['#options']) and !empty($uids)) {
-      // No cached data for this filter; let's calculate it, then store it
-      $form['author_select']['#options'] = array();	// wipe options
-      foreach ($uids as $uid) {
-        $account = user_load($uid);
-        $groups = og_get_groups_by_user($account, 'node');
-        if (!empty($groups) && in_array($gid, $groups)) {
-          $form['author_select']['#options'][$uid] = format_username($account);
-        }
-      }
-    cache_set("course_author_select:$gid", $form['author_select']['#options'], 'cache', time() + 24 * 60 * 60);
-    }
+    course_limit_exposed_user_list($form, 'author_select');
   }
 
   // Filter Taxonomy terms
   if (isset($form['field_tags_tid'])) {
     course_limit_exposed_filter_tags($form, 'field_tags_tid', course_get_terms_for_current_course('annotation_tags'));
   }
-
 
   if ($form['#id'] == 'views-exposed-form-sewing-kit-page') {
     $gid = course_get_selected_course();
