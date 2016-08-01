@@ -51,6 +51,7 @@ select = {
             'checkbox':
               'default':    'af-checkbox'
               'highlights': 'af-checkbox-highlights'
+              'replies': 'af-checkbox-replies'
           }
 
 class Annotator.Plugin.Filters extends Annotator.Plugin
@@ -152,6 +153,8 @@ class Annotator.Plugin.Filters extends Annotator.Plugin
       @View.eraseAllFilters()
       @View.checkboxCheck('highlights')
       @View.checkboxEnable('highlights')
+      @View.checkboxUncheck('replies')
+      @View.checkboxDisable('replies')
       @Model.filterAnnotations 'user', @Model.get('currentUser')
       @View.drawFilter 'user', @Model.get('currentUser')
       type = select.button.mine
@@ -160,9 +163,12 @@ class Annotator.Plugin.Filters extends Annotator.Plugin
     return null
 
   checkboxToggle: (event) =>
-    if event.target.name == 'highlights'
+    name = event.target.name
+    if name == 'highlights'
       @Model.toggleHighlights()
-      @View.drawAnnotations()
+    if name == 'replies'
+      @Model.toggleReplies()
+    @View.drawAnnotations()
     return
 
   removeFilterClick: (event) =>
@@ -199,9 +205,11 @@ class Annotator.Plugin.Filters extends Annotator.Plugin
 class Model
   state:
     showHighlights: true
+    showOnlyWithReplies: false
     ids:                # just IDs for quick hide/show
       all: []
       highlights: []
+      hasNoReply: []
       hidden: []
       shown: []
     annotations: []     # the full data
@@ -230,6 +238,8 @@ class Model
       @state.ids.all.push(annotation.id)
       if annotation.category? and annotation.category.toLowerCase() == 'highlight'
         @state.ids.highlights.push(annotation.id)
+      if Object.keys(annotation.comments).length == 0
+        @state.ids.hasNoReply.push(annotation.id)
       for filter of @state.filters
         # Store the values available for filters
         if annotation[filter]?
@@ -280,6 +290,18 @@ class Model
         @addToFilter('highlights', 'highlights', id)
     @computeFilters()
     return @state.showHighlights
+
+  toggleReplies: () ->
+    # Toggle annotations with replies
+    @state.showOnlyWithReplies = !@state.showOnlyWithReplies
+    if !@state.showOnlyWithReplies
+      @removeFilter('replies', 'replies')
+    else
+      @activateFilter('replies', 'replies')
+      for id in @state.ids.hasNoReply
+        @addToFilter('replies', 'replies', id)
+    @computeFilters()
+    return @state.showOnlyWithReplies
 
   addFilterValue: (filter, value) ->
     if value not in @state.filters[filter].values
@@ -441,6 +463,8 @@ class View
     @drawButton(select.button.default, 'mine', 'user')
     @drawButton(select.button.default, 'all', 'user')
     @drawCheckbox('highlights', 'Show Highlights')
+    @checkboxCheck('highlights')
+    @drawCheckbox('replies', 'Has Reply')
     for filter, values of @Model.getFilterValues()
       @drawAutocomplete(filter, values)
     @i.append("<div id='#{select.button.reset}'></div>")
@@ -482,8 +506,7 @@ class View
 
   drawCheckbox: (id, value) ->
     classes = [select.checkbox.default, select.checkbox[id]].join(' ')
-    $('#' + select.interface.wrapper).append($("<input type='checkbox' name='#{id}' checked>",
-      {name: id})
+    $('#' + select.interface.wrapper).append($("<input type='checkbox' name='#{id}'>", {name: id})
       .on("click", @Controller.checkboxToggle)
     ).append("<span id='#{id}' class='#{classes}'>#{value}</span>")
 

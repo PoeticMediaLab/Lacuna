@@ -48,7 +48,8 @@
     },
     'checkbox': {
       'default': 'af-checkbox',
-      'highlights': 'af-checkbox-highlights'
+      'highlights': 'af-checkbox-highlights',
+      'replies': 'af-checkbox-replies'
     }
   };
 
@@ -168,6 +169,8 @@
         this.View.eraseAllFilters();
         this.View.checkboxCheck('highlights');
         this.View.checkboxEnable('highlights');
+        this.View.checkboxUncheck('replies');
+        this.View.checkboxDisable('replies');
         this.Model.filterAnnotations('user', this.Model.get('currentUser'));
         this.View.drawFilter('user', this.Model.get('currentUser'));
         type = select.button.mine;
@@ -178,10 +181,15 @@
     };
 
     Filters.prototype.checkboxToggle = function(event) {
-      if (event.target.name === 'highlights') {
+      var name;
+      name = event.target.name;
+      if (name === 'highlights') {
         this.Model.toggleHighlights();
-        this.View.drawAnnotations();
       }
+      if (name === 'replies') {
+        this.Model.toggleReplies();
+      }
+      this.View.drawAnnotations();
     };
 
     Filters.prototype.removeFilterClick = function(event) {
@@ -234,9 +242,11 @@
 
     Model.prototype.state = {
       showHighlights: true,
+      showOnlyWithReplies: false,
       ids: {
         all: [],
         highlights: [],
+        hasNoReply: [],
         hidden: [],
         shown: []
       },
@@ -272,6 +282,9 @@
         this.state.ids.all.push(annotation.id);
         if ((annotation.category != null) && annotation.category.toLowerCase() === 'highlight') {
           this.state.ids.highlights.push(annotation.id);
+        }
+        if (Object.keys(annotation.comments).length === 0) {
+          this.state.ids.hasNoReply.push(annotation.id);
         }
         results.push((function() {
           var results1;
@@ -359,6 +372,23 @@
       }
       this.computeFilters();
       return this.state.showHighlights;
+    };
+
+    Model.prototype.toggleReplies = function() {
+      var i, id, len, ref;
+      this.state.showOnlyWithReplies = !this.state.showOnlyWithReplies;
+      if (!this.state.showOnlyWithReplies) {
+        this.removeFilter('replies', 'replies');
+      } else {
+        this.activateFilter('replies', 'replies');
+        ref = this.state.ids.hasNoReply;
+        for (i = 0, len = ref.length; i < len; i++) {
+          id = ref[i];
+          this.addToFilter('replies', 'replies', id);
+        }
+      }
+      this.computeFilters();
+      return this.state.showOnlyWithReplies;
     };
 
     Model.prototype.addFilterValue = function(filter, value) {
@@ -596,6 +626,8 @@
       this.drawButton(select.button["default"], 'mine', 'user');
       this.drawButton(select.button["default"], 'all', 'user');
       this.drawCheckbox('highlights', 'Show Highlights');
+      this.checkboxCheck('highlights');
+      this.drawCheckbox('replies', 'Has Reply');
       ref = this.Model.getFilterValues();
       for (filter in ref) {
         values = ref[filter];
@@ -645,7 +677,7 @@
     View.prototype.drawCheckbox = function(id, value) {
       var classes;
       classes = [select.checkbox["default"], select.checkbox[id]].join(' ');
-      return $('#' + select["interface"].wrapper).append($("<input type='checkbox' name='" + id + "' checked>", {
+      return $('#' + select["interface"].wrapper).append($("<input type='checkbox' name='" + id + "'>", {
         name: id
       }).on("click", this.Controller.checkboxToggle)).append("<span id='" + id + "' class='" + classes + "'>" + value + "</span>");
     };
