@@ -19,14 +19,14 @@ function course_ds_layout_settings_info() {
   $ds_layout->layout = 'ds_2col_stacked_fluid';
   $ds_layout->settings = array(
     'regions' => array(
-      'header' => array(
-        0 => 'field_course_image',
-      ),
       'left' => array(
-        1 => 'title',
+        0 => 'title',
         2 => 'field_name',
         3 => 'field_department',
         4 => 'body',
+      ),
+      'header' => array(
+        1 => 'field_course_image',
       ),
       'right' => array(
         5 => 'field_course_term',
@@ -40,8 +40,8 @@ function course_ds_layout_settings_info() {
       ),
     ),
     'fields' => array(
-      'field_course_image' => 'header',
       'title' => 'left',
+      'field_course_image' => 'header',
       'field_name' => 'left',
       'field_department' => 'left',
       'body' => 'left',
