@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the Performance feature.
+ */
+
+include_once 'lacuna_performance.features.inc';

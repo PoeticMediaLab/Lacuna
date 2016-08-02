@@ -38,10 +38,6 @@ $category-selected: rgba(22,147,165, .8);
   border-top: solid 1px #eee;
 }
 
-  .annotator-category:hover {
-    cursor: pointer;
-  }
-
   .annotator-categories h4{
     font-size: 13px;
     display: block;
@@ -83,7 +79,7 @@ $category-selected: rgba(22,147,165, .8);
   *	from annotator/css/comment.css
   */
 
-  .annotator-comment {
+  .annotator-reply {
     display: block !important;
     width: 100%;
   }
@@ -120,7 +116,7 @@ section.region-sidebar-second h2 {
 }
 
 section.region-sidebar-second input[type="checkbox"] {
-    margin: 10% 5% 10% 20%;
+    margin: 0% 5% 0% 20%;
 }
 
 #af-active {
@@ -137,7 +133,7 @@ section.region-sidebar-second input[type="checkbox"] {
     font-weight: bold;
 }
 
-.af-button {
+.af-button, .annotator-reply-button  {
     cursor: pointer;
     display: inline-block;
     color: black;
@@ -181,7 +177,8 @@ section.region-sidebar-second input[type="checkbox"] {
     transition: background-position 0.1s linear 0s;
 }
 
-.af-button-active {
+.af-button-active,
+.annotator-reply-save {
     background-color: #c4df2c;
     background-image: linear-gradient(to bottom, #c4df2c, #88b551);
 }
@@ -281,6 +278,24 @@ $privacy-selected: rgba(19, 149, 25, 0.74);
   margin-left: 4px;
 }
 
+.annotator-editor {
+  .annotator-category:hover,
+  .annotator-privacy:hover {
+    cursor: pointer;
+  }
+  .annotator-controls {
+    a {
+      text-decoration: none;
+      text-align: center;
+      padding: 0px 10px 0px 10px;
+      color: black;
+    }
+    a.annotator-focus, a:hover {
+      color: white;
+    }
+  }
+}
+
 .annotator-viewer {
   .annotator-privacy-type {
     padding: 6px;
@@ -313,10 +328,56 @@ $privacy-selected: rgba(19, 149, 25, 0.74);
   .annotator-privacy-group.course-groups.checked {
     background-color: $privacy-default;
   }
-  .annotator-comment {
-    a {
-      text-decoration: none;
+  .annotator-reply {
+    span {
+      cursor: pointer;
     }
+    max-height: 200px;
+    overflow: auto;
+    span:hover {
+      color: black;
+    }
+    ol.annotator-reply-list {
+      padding: 0 0 0 2px;
+    }
+    li.annotator-reply-replyarea {
+      list-style: none;
+      background: rgba(175, 175, 175, .5);
+      //color: white;
+      padding-left: 2px;
+      //padding-right: -15px;
+      width: 90%;
+      .annotator-reply-text p {
+        //color: white;
+        padding: 3px;
+      }
+    }
+    div.annotator-reply-controls {
+      //float: right;
+      padding-bottom: 1px;
+    }
+  }
+}
+
+.annotator-reply-form {
+  position: fixed;
+  display: block;
+  background: rgba(250,250,250, .9);
+  width: 25%;
+  left: 25%;
+  top: 20%;
+  overflow: auto;
+  z-index: 100;
+  padding: 10px;
+  border: 1px solid black;
+  display: none;
+  .annotator-reply-text {
+    width: 30%;
+    height: 50px;
+  }
+  .annotator-reply-button {
+    color: white;
+    text-decoration: none;
   }
 }
 

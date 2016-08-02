@@ -206,6 +206,18 @@ function annotation_drupal_format($entity, $update = FALSE) {
         }
         break;
 
+      case 'reply':
+        // Added by the Replies plugin
+        if ($entity->reply['type'] == 'new') {
+          annotation_save_comment($entity);
+        } elseif ($entity->reply['type'] == 'update') {
+           annotation_update_comment($entity);
+        } elseif ($entity->reply['type'] == 'delete') {
+          annotation_delete_comment($entity);
+        }
+        $annotation->comments = annotation_load_comments($entity->id);
+        break;
+
       case 'privacy_options':
         // Save these privacy options as the default for this user for new annotations on this document
         $privacy_defaults = array();
@@ -214,8 +226,8 @@ function annotation_drupal_format($entity, $update = FALSE) {
         }
 
         $privacy_defaults['annotation_privacy_defaults'][$document_nid] = $val;
-        $user = user_load ($user->uid); // Global user does not contain OG memberships, so saving that will lose them for the user. Load the user first and use that (see: https://www.drupal.org/node/1502916#comment-6444954).
-        user_save ($user, array ('data' => $privacy_defaults));
+        $user = user_load($user->uid); // Global user does not contain OG memberships, so saving that will lose them for the user. Load the user first and use that (see: https://www.drupal.org/node/1502916#comment-6444954).
+        user_save($user, array ('data' => $privacy_defaults));
 
 
         // Set the audience field to empty, to be set below
@@ -515,6 +527,7 @@ function annotation_api_from_stdin() {
  * Load comments on an annotation node
  */
 function annotation_load_comments($nid) {
+  global $user;
   $query = new EntityFieldQuery();
   $query->entityCondition('entity_type', 'comment')
     ->propertyCondition('status', COMMENT_PUBLISHED)
@@ -523,8 +536,79 @@ function annotation_load_comments($nid) {
   $comments = array();
   if (isset($result['comment'])) {
     $comments = comment_load_multiple(array_keys($result['comment']));
+    foreach ($comments as $comment) {
+      $comment->name = format_username(user_load($comment->uid));
+      $comment->permissions = annotation_entity_permissions($comment, $user);
+    }
   }
   return $comments;
+}
+
+/********
+ * Comment-handling routines; Note: it would make more sense to name them
+ * with the annotation_comment_ACTION() pattern, but Drupal would recognize
+ * those as hook_comment_update() and hook_comment_delete()
+ ******/
+
+/**
+ * Saves new comments on an annotation node
+ */
+function annotation_save_comment($entity) {
+  $comment = new StdClass();
+  $comment->cid = 0;
+  $comment->nid = (int) $entity->id;
+  $comment->pid = (int) $entity->reply['pid'];
+  $comment->uid = (int) $entity->reply['uid'];;
+  $comment->name = format_username(user_load($comment->uid));
+  $comment->created = time();
+  $comment->status = COMMENT_PUBLISHED;
+  $comment->subject = '';
+  $comment->is_anonymous = FALSE;
+  $comment->language = LANGUAGE_NONE;
+  $comment->comment_body[$comment->language][0]['value'] = $entity->reply['text'];
+  $comment->comment_body[$comment->language][0]['format'] = 'filtered_html'; // For now
+  comment_submit($comment);
+  comment_save($comment);
+}
+
+/**
+ * @param $entity
+ * @throws \Exception
+ * Updates the text and updated time of a comment
+ */
+function annotation_update_comment($entity) {
+  $comment = comment_load($entity->reply['id']);
+  $comment->updated = time();
+  $comment->comment_body[$comment->language][0]['value'] = $entity->reply['text'];
+  comment_save($comment);
+}
+
+/**
+ * "Delete" a comment; We don't really delete it because comment_delete()
+ * also deletes any subsequent replies, which we don't want to do.
+ * So, instead, we just replace the text.
+ */
+function annotation_delete_comment($entity) {
+  $entity->reply['text'] = '-- reply deleted --';
+  annotation_update_comment($entity);
+}
+
+/*
+ * Set permissions for annotations or comments
+ */
+function annotation_entity_permissions($entity, $user) {
+  // Set permissions for edit and delete controls
+  // Note: permissions aren't *exactly* right
+  // For example, if we grant a role permission to administer comments, but not
+  // to administer annotations, then they won't be able to edit comments from the
+  // annotator viewer, even though they could from the node page
+  $canEdit = $entity->uid == $user->uid || user_access('edit any annotations');
+  $canDelete = $entity->uid == $user->uid || user_access('administer annotations');
+  $permissions = array(
+    'edit' => $canEdit,
+    'del' => $canDelete
+  );
+  return $permissions;
 }
 
 /**
@@ -627,12 +711,7 @@ function annotation_api_entity_prepare($annotation, $op) {
       );
 
       // Set permissions for edit and delete controls
-      $canEdit = $annotation->uid == $user->uid || user_access('edit any annotation content');
-      $canDelete = $annotation->uid == $user->uid || user_access('delete any annotation content');
-      $entity->permissions = array(
-        'edit' => $canEdit,
-        'del' => $canDelete
-      );
+      $entity->permissions = annotation_entity_permissions($annotation, $user);
 
       // Links
       // href = link to annotation in node via scrollTo in Filters plugin

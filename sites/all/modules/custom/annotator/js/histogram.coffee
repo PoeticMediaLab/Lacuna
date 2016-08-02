@@ -239,7 +239,7 @@ class Annotator.Plugin.Histogram extends Annotator.Plugin
       @updateVerticalChart(histogram)
 
   # Update the histogram
-  update: (annotations) =>
+  update: () =>
     return unless d3?
     @bars = []  # reset
     @calculateDimensions(@documentNode)
