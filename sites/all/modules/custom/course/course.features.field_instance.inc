@@ -111,12 +111,24 @@ function course_field_default_field_instances() {
     'display' => array(
       'default' => array(
         'label' => 'hidden',
-        'module' => 'image',
+        'module' => 'bg_image_formatter',
         'settings' => array(
-          'image_link' => '',
+          'css_settings' => array(
+            'bg_image_attachment' => 'scroll',
+            'bg_image_background_size' => 'cover',
+            'bg_image_background_size_ie8' => 0,
+            'bg_image_color' => '#FFFFFF',
+            'bg_image_important' => 1,
+            'bg_image_media_query' => 'all',
+            'bg_image_repeat' => 'no-repeat',
+            'bg_image_selector' => '.group-header',
+            'bg_image_x' => 'center',
+            'bg_image_y' => 'top',
+          ),
           'image_style' => '',
+          'multiple' => 0,
         ),
-        'type' => 'image',
+        'type' => 'bg_image_formatter',
         'weight' => 0,
       ),
       'teaser' => array(

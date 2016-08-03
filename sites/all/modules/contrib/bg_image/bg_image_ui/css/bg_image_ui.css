@@ -1,0 +1,17 @@
+/**
+ * @file
+ *
+ * css for the background image ui module
+ */
+
+#bg-image-paths-table td {
+  vertical-align: top;
+}
+
+/*
+  This is actually just a fix for rubik, which makes the path 100% width. This
+  doesn't leave enough space for the draggable table handle.
+ */
+#bg-image-paths-table .form-type-textfield input.fluid {
+  width: 85%;
+}

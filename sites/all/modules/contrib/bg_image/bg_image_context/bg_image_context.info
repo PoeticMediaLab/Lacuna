@@ -1,0 +1,14 @@
+name = Background Image Context
+description = Defines a new Context reaction for adding css backround images to the page.
+version = "7.x-1.x-dev"
+core = "7.x"
+project = "bg_image_context"
+dependencies[] = "bg_image"
+dependencies[] = "context"
+
+; Information added by Drupal.org packaging script on 2014-08-26
+version = "7.x-1.4"
+core = "7.x"
+project = "bg_image"
+datestamp = "1409075303"
+

@@ -3,6 +3,7 @@ description = Course related functionality.
 core = 7.x
 package = Lacuna Stories
 version = 7.x-2.0
+dependencies[] = bg_image_formatter
 dependencies[] = block
 dependencies[] = chosen
 dependencies[] = context

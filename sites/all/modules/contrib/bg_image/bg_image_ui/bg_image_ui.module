@@ -1,0 +1,333 @@
+<?php
+
+
+/***********************************************************************
+ * DRUPAL HOOKS
+ ***********************************************************************/
+
+/**
+ * Implements hook_menu().
+ */
+function bg_image_ui_menu() {
+
+  $items['admin/content/background-images'] = array(
+    'title' => 'Background Images',
+    'description' => t("Manage your site's background images"),
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('bg_image_ui_paths_form'),
+    'access arguments' => array('manage background images'),
+    'file' => NULL,
+    'type' => MENU_LOCAL_TASK | MENU_NORMAL_ITEM,
+  );
+
+  $items['admin/content/background-images/path/remove/%'] = array(
+    'title' => 'Remove Background Image Path',
+    'description' => t("Remove a path from the background image paths list"),
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('bg_image_ui_remove_path_form', 5),
+    'access arguments' => array('manage background images'),
+    'type' => MENU_CALLBACK,
+  );
+
+
+
+  return $items;
+}
+
+/**
+ * Implements hook_permission().
+ */
+function bg_image_ui_permission() {
+  return array(
+    'manage background images' => array(
+      'title' => t('Access the Background Image Administration Page'),
+    ),
+  );
+}
+
+/**
+ * Implements hook_theme()
+ */
+function bg_image_ui_theme() {
+  return array(
+    'bg_image_ui_paths_table' => array(
+      'render element' => 'form',
+    ),
+  );
+}
+
+/**
+ * Implements hook_init()
+ */
+function bg_image_ui_init() {
+  $nid = bg_image_ui_page_has_bg_image();
+  // Apply the background image if the nid is not FALSE
+  if ($nid !== FALSE) {
+    bg_image_add_background_image_from_node($nid);
+  }
+}
+
+
+/***********************************************************************
+ * BG IMAGE ADMIN PAGE
+ ***********************************************************************/
+
+function bg_image_ui_paths_form($form, &$form_state) {
+
+  // Link to settings page
+  $settings_page_link = l('settings page', 'admin/config/content/background_image');
+
+  // If a node type and field has not been configured
+  if (!variable_get('bg_image_node_type', '') || !variable_get('bg_image_node_field', '')) {
+    $form['settings_first_msg'] = array(
+      '#markup' => "You must specify a content type and field on the $settings_page_link before you can set background images. Once configured you will be able to reference specific nodes here, whose image field will be used to set the background image.",
+    );
+    return $form;
+  }
+
+  $form = array(
+    '#tree' => TRUE,
+    '#theme' => 'bg_image_ui_paths_table',
+  );
+
+  $form['description'] = array(
+    '#markup' => t('<p class="bg-image-paths-description">Apply a background image on a particular path. The background image will be applied using css. The default bg image css settings configured on the ' . $settings_page_link . ' will be used.</p><p>Only one background image will be applied to a page. Items appearing at the top of the list will take precedence over items lower in the list. So, a background image set to the path "node/1" at the top of the list would be applied before an image set to "node/*" at the bottom of the list.</p>'),
+  );
+
+  $paths = bg_image_ui_get_paths();
+
+  if (variable_get('bg_image_node_type', '') && variable_get('bg_image_node_field', '')) {
+    $node_options = bg_image_node_options();
+    if (!$node_options) {
+      $node_options = array('' => 'no nodes available');
+    }
+
+    foreach ($paths as $pid => $item) {
+      $form['items'][$pid]['path'] = array(
+        '#type' => 'textfield',
+        '#default_value' => $item->path,
+      );
+      $form['items'][$pid]['nid'] = array(
+        '#type' => 'select',
+        '#options' => $node_options,
+        '#default_value' => $item->nid,
+      );
+      $form['items'][$pid]['remove'] = array(
+        '#markup' => l(t('remove'), "admin/content/background-images/path/remove/$pid")
+      );
+      // The weight (this is for the tabledrag we'll add in the theme function
+      $form['items'][$pid]['weight'] = array(
+        '#type' => 'textfield',
+        '#delta' => 50,
+        '#default_value' => $item->weight,
+        '#size' => 2,
+      );
+    }
+
+    // Add a blank line for new bg images
+    $form['items'][0]['path'] = array(
+      '#type' => 'textfield',
+      '#description' => t('Enter a path that the background image will be active on.<br/> Paths will be relative to the domain root.<br/> Do not include a preceeding "/".<br/> Use &lt;front&gt; for the front page.<br/> Wildcards can be used by specifying "*". e.g. node/*'),
+      '#default_value' => isset($_GET['bg_image_path']) ? $_GET['bg_image_path'] : '',
+    );
+    $form['items'][0]['nid'] = array(
+      '#type' => 'select',
+      // '#title' => t('Select A Node'),
+      '#description' => t('Select a node which contains the image to be used for the background.'),
+      '#options' => array('' => ' - Select - ') + $node_options,
+      '#default_value' => '',
+    );
+    $form['items'][0]['remove'] = array(
+      '#value' => '',
+    );
+    // The weight (this is for the tabledrag we'll add in the theme function
+    $form['items'][0]['weight'] = array(
+      '#type' => 'textfield',
+      '#delta' => 50,
+      '#default_value' => 50,
+      '#size' => 2,
+    );
+
+    $form['submit'] = array(
+      '#type' => 'submit',
+      '#value' => 'Save Changes',
+    );
+
+  }
+
+  return $form;
+}
+
+/**
+ * Submit handler for bg_image_ui_paths_form()
+ */
+function bg_image_ui_paths_form_submit($form, &$form_state) {
+  if (count($form_state['values']['items']) > 0) {
+    // If we're adding a new item to the list
+    if ($form_state['values']['items'][0]['path'] && $form_state['values']['items'][0]['nid'] !== '') {
+      drupal_write_record('bg_image_paths', $form_state['values']['items'][0]);
+    }
+    // Unset the add item form
+    unset($form_state['values']['items'][0]);
+    // Process the rest
+    foreach ($form_state['values']['items'] as $pid => $item) {
+      // // If anything has changed...
+      if ($form['items'][$pid]['weight']['#default_value'] != $item['weight'] ||
+          $form['items'][$pid]['path']['#default_value'] != $item['path'] ||
+          $form['items'][$pid]['nid']['#default_value'] != $item['nid']) {
+        $item['pid'] = $pid;
+        if ($pid == 0) {
+          drupal_write_record('bg_image_paths', $item);
+        }
+        else {
+          drupal_write_record('bg_image_paths', $item, array('pid'));
+        }
+      }
+    }
+  }
+}
+
+/**
+ * Theme the background image paths form into a table
+ */
+function theme_bg_image_ui_paths_table($args) {
+  //dpm($args);
+  drupal_add_css(drupal_get_path('module', 'bg_image_ui') . '/css/bg_image_ui.css');
+  $form = $args['form'];
+  $rows = array();
+  $header = array('Path', 'Background Image Node', 'Preview', 'Remove', 'Weight');
+  $output = drupal_render($form['description']);
+  foreach (element_children($form['items']) as $key) {
+    $form['items'][$key]['weight']['#attributes']['class'] = array('bg-image-path-weight');
+    // Get the image for preview
+    $image_path = bg_image_get_image_path_from_node($form['items'][$key]['nid']['#default_value'], FALSE);
+    $preview = '';
+    if ($image_path) {
+      // Setup the args for theme_image_style
+      $args = array(
+        'style_name' => 'thumbnail',
+        'path' => $image_path,
+        'alt' => basename($image_path),
+        'title' => basename($image_path),
+      );
+      $preview = theme('image_style', $args);
+    }
+    $row = array();
+    $row[] = drupal_render($form['items'][$key]['path']);
+    $row[] = drupal_render($form['items'][$key]['nid']);
+    $row[] = $preview;
+    $row[] = drupal_render($form['items'][$key]['remove']);
+    $row[] = drupal_render($form['items'][$key]['weight']);
+    $rows[] = array('data' => $row, 'class' => array('bg-image-path', 'draggable'));
+  }
+  $args = array(
+    'header' => $header,
+    'rows' => $rows,
+    'attributes' => array('id' => 'bg-image-paths-table'),
+  );
+  $output .= theme('table', $args);
+  $output .= drupal_render_children($form);
+  drupal_add_tabledrag('bg-image-paths-table', 'order', 'sibling', 'bg-image-path-weight');
+  return $output;
+}
+
+/**
+ * Confirm the removal of bg image path
+ */
+function bg_image_ui_remove_path_form($form, &$form_state, $pid) {
+  $form = array();
+  $form['pid'] = array(
+    '#type' => 'value',
+    '#value' => $pid,
+  );
+  $item = bg_image_ui_get_path_item($pid);
+  if ($item) {
+    $question = t('Remove Background Image Item?');
+    $description = t('The Background Image will be removed from the page: @path<br/>This Action cannot be undone.', array('@path' => $item->path));
+    $path = 'admin/content/background-images';
+    return confirm_form($form, $question, $path, $description);
+  }
+  else {
+    $form['message'] = array(
+      '#markup' => '<p>Invalid background image path ID</p>',
+    );
+    $form['back'] = array(
+      '#markup' => l(t('<< Back to background images admin page'), 'admin/content/background-images'),
+    );
+    return $form;
+  }
+}
+
+/**
+ * Submit handler for bg_image_ui_remove_path_form()
+ */
+function bg_image_ui_remove_path_form_submit($form, &$form_state) {
+  bg_image_ui_remove_path_item($form_state['values']['pid']);
+  $form_state['redirect'] = 'admin/content/background-images';
+  drupal_set_message('Background image path removed.');
+}
+
+/***********************************************************************
+ * API FUNCTIONS
+ ***********************************************************************/
+
+/**
+ * Returns an array of paths that have background images,
+ * keyed by the nid of the node that contains the background
+ * image.
+ */
+function bg_image_ui_get_paths() {
+  $paths = array();
+  $result = db_query("SELECT * FROM {bg_image_paths} ORDER BY weight ASC");
+  foreach ($result as $record) {
+    $paths[$record->pid] = $record;
+  }
+  return $paths;
+}
+
+/**
+ * Returns a bg image path item
+ *
+ * @param $pid
+ *  The id of the item to return
+ */
+function bg_image_ui_get_path_item($pid) {
+  if ($pid) {
+    $item = db_query("SELECT * FROM {bg_image_paths} WHERE pid = :pid", array(':pid' => $pid))->fetchObject();
+    if ($item) {
+      return $item;
+    }
+    else {
+      return FALSE;
+    }
+  }
+}
+
+/**
+ * Removes a bg image path item
+ *
+ * @param $pid
+ *  The id of the item to return
+ */
+function bg_image_ui_remove_path_item($pid) {
+  $result = db_delete('bg_image_paths')
+    ->condition('pid', $pid)
+    ->execute();
+  return $result;
+}
+
+/**
+ * Checks if the current path has a background image.
+ * If it does, we return the nid of the matching path
+ * or pattern. Othewise return false.
+ */
+function bg_image_ui_page_has_bg_image() {
+  $current_path_alias = drupal_get_path_alias($_GET['q']);
+  $current_path = $_GET['q'];
+  foreach (bg_image_ui_get_paths() as $pid => $item) {
+    if (drupal_match_path($current_path, $item->path) || drupal_match_path($current_path_alias, $item->path)) {
+      return $item->nid;
+    }
+  }
+  return FALSE;
+}
