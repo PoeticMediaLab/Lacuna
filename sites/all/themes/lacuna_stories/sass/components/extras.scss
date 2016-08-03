@@ -17,13 +17,20 @@ li.views-fluid-grid-inline.views-fluid-grid-item.views-row:hover {
 }
 
 
-.course-views-image {
-	img {
-		width: 100%;
+.views-field-field-course-image {
+		height: 175px;
 		border: 1px solid #e1e1e1;
 		border-bottom: 2px solid rgba(16,15,15,0.49);
+    overflow:hidden;
+    padding: 0 !important;
+    .course-views-image {
+      img {
+        height:180px;
+        width: auto;
+      }
+    }
 	}
-}
+
 
 
 .view-courses {
@@ -296,12 +303,12 @@ body {
     .field-name-field-course-image img {
         width: 100%;
         height: auto;
-        transform: translateY(-50%);
-        -webkit-transform: translateY(-50%);
+        transform: translateY(-25%);
+        -webkit-transform: translateY(-25%);
     }
     .field-name-title {
         font-family: "Source Sans Pro", serif;
-        font-size: 3em;
+        font-size: 1.5em;
         padding-top: 25px;
         padding-bottom: 10px;
         text-align: left;
