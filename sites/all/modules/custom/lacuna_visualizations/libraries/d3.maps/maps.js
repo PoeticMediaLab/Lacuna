@@ -33,6 +33,10 @@
         color  = d3.scale.category20(),
 		drawDocumentCircle = settings.config.drawDocumentCircle;
 
+		console.log(settings);
+		console.log(links)
+		console.log(settings.nids);
+
 	var linkedNodesOnly = !drawDocumentCircle;
 	//console.log(links);
 
@@ -63,17 +67,19 @@
 				// names. If it doesn't, don't. (this keeps admin
 				// accounts, etc. out of the user list).
 				for(var i = 0; i < nodes.length; i++){
-					if (nodes[i].data.author == username) {
+					// DELETE (ih) : links.push([nodes[i].data.title, nodes[i].edges.)
+					if (nodes[i].data1.author == username) {
 						// Change "username" to "Display Name" as needed
 						// Allows students to control how their work appears to others
-						nodes[i].data.author = safeName;
+						nodes[i].data1.author = safeName;
 					}
-					if (nodes[i].data.author === safeName) {
-						userNamesColors.push([safeName, color(colorsCounter % 22), nodes[i].data.u_id]);
-						console.log(colorsCounter + " " + colorsCounter%22 + " " + userNamesColors[userNamesColors.length - 1][0] + " " + userNamesColors[userNamesColors.length - 1][1] + " " + userNamesColors[userNamesColors.length - 1][2]);
+					if (nodes[i].data1.author === safeName) {
+						console.log(nodes[i].data1.document_abstract);
+						userNamesColors.push([safeName, color(colorsCounter % 20), nodes[i].data1.u_id]);
+						console.log(colorsCounter + " " + colorsCounter%20 + " " + userNamesColors[userNamesColors.length - 1][0] + " " + userNamesColors[userNamesColors.length - 1][1] + " " + userNamesColors[userNamesColors.length - 1][2]);
 						// for debugging purposes.
 						colorsCounter++;
-						selectedUsers.push(nodes[i].data.u_id);
+						selectedUsers.push(nodes[i].data1.u_id);
 						break;
 					}
 				}
