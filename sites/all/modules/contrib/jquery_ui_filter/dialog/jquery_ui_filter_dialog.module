@@ -1,0 +1,406 @@
+<?php
+/**
+ * @file
+ * Opens links inside a jQuery UI dialog widget.
+ */
+
+
+/**
+ * Implements hook_init().
+ */
+function jquery_ui_filter_dialog_init() {
+  $dialog_options = jquery_ui_filter_dialog_get_options();
+
+  // Add css
+  drupal_add_css( drupal_get_path('module', 'jquery_ui_filter_dialog') . '/jquery_ui_filter_dialog.css');
+
+  // Add dialog
+  drupal_add_library('system', 'ui.dialog');
+  if (isset($dialog_options['resizable']) && $dialog_options['resizable'] == 'true') {
+    drupal_add_library('system', 'ui.resizable');
+  }
+  if (isset($dialog_options['draggable']) && $dialog_options['draggable'] == 'true') {
+    drupal_add_library('system', 'ui.draggable');
+  }
+
+  // Add script and settings.
+  drupal_add_js( drupal_get_path('module', 'jquery_ui_filter_dialog') . '/jquery_ui_filter_dialog.js', array('type' => 'file'));
+  $settings = array(
+    'jQueryUiFilter' => array(
+      'dialogWhitelist' => variable_get('jquery_ui_filter_dialog_whitelist', ''),
+      'dialogOptions' => $dialog_options,
+    ),
+  );
+  drupal_add_js($settings, 'setting');
+
+  // Apply global options
+  if (variable_get("jquery_ui_filter_dialog_options_global", 0)) {
+    drupal_add_js("Drupal.jQueryUiFilter.globalOptions('dialog');", array('type' => 'inline', 'scope' => 'footer'));
+  }
+
+  // Remove admin_menu.module, environment_indicator.module, etc...
+  if (jquery_ui_filter_dialog_enabled()) {
+    module_invoke_all('suppress');
+  }
+}
+
+/**
+ * Implementation of hook_menu().
+ */
+function jquery_ui_filter_dialog_menu() {
+  $items = array();
+
+  // Close dialog
+  $items['jquery_ui_filter_dialog/close'] = array(
+    'page callback' => 'jquery_ui_filter_dialog_close',
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+  );
+
+  // Dialog
+  $items['admin/config/content/jquery_ui_filter/dialog'] = array(
+    'title' => 'Dialog',
+    'description' => 'Configure dialog settings for the jQuery UI filter.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('jquery_ui_filter_dialog_settings'),
+    'access arguments' => array('administer site configuration'),
+    'file' => 'jquery_ui_filter_dialog.admin.inc',
+    'type' => MENU_LOCAL_TASK,
+    'weight' => 0,
+  );
+
+  return $items;
+}
+
+/**
+ * Implements hook_filter_info().
+ */
+function jquery_ui_filter_filter_info() {
+  $filters = array();
+
+  $filters['dialog'] = array(
+    'title' => t('jQuery UI dialog'),
+    'description' => t('Opens links inside a jQuery UI dialog.'),
+    'default settings' => array(),
+    'settings callback' => '_jquery_ui_filter_dialog_settings_callback',
+    'prepare callback' => '_jquery_ui_filter_dialog_prepare_callback',
+    'process callback' => '_jquery_ui_filter_dialog_process_callback',
+    'tips callback' => '_jquery_ui_filter_dialog_tips_callback',
+  );
+
+  return $filters;
+}
+
+/**
+ * Implementation of hook_filter_tips().
+ */
+function _jquery_ui_filter_dialog_tips_callback($delta = NULL, $format = NULL, $long = FALSE) {
+  $t_args = array(
+    '@dialog_href' => 'http://jqueryui.com/demos/dialog/',
+  );
+  return t('To open a link inside a jQuery UI <a href="@dialog_href">Dialog</a> set the link\'s the target attribute to [dialog] with optional JSON data, with single or double quotes, included in the \'rel\' attribute.', $t_args);
+}
+
+/**
+ * Jquery UI filter dialog settings.
+ */
+function _jquery_ui_filter_dialog_settings_callback() {
+  return _jquery_ui_filter_settings_callback('dialog');
+}
+
+/**
+ * Jquery UI filter dialog prepare callback.
+ */
+function _jquery_ui_filter_dialog_prepare_callback($text) {
+  return  preg_replace_callback('#<a[^>]+target="\[dialog\]"[^>]*>#is', '_jquery_ui_filter_dialog_prepare_replacer', $text);
+}
+
+/**
+ * Jquery UI filter dialog prepare replacer.
+ */
+function _jquery_ui_filter_dialog_prepare_replacer($matches) {
+  $attributes = _jquery_ui_filter_parse_tag_attributes($matches[0]);
+
+  // Look for json in rel attribute.
+  if (empty($attributes['rel'])) {
+    return $matches[0];
+  }
+
+  // Parse the JSON insures that no one can inject JavaScript into the site.
+  $json = json_decode(str_replace("'", '"', $attributes['rel']));
+  if (!$json) {
+    return $matches[0];
+  }
+
+  // Since filter_xss() removes {} (ie Netscape 4 JS entities) we are going to
+  // escape (urlencode) the json string.
+  // - Once HTML 5 is support we can use the data attribute.
+  //   http://ejohn.org/blog/html-5-data-attributes/
+  // - Allow filter_xss_admin() to accept HTML5 tags
+  //   http://drupal.org/node/732992
+  $attributes['rel'] = urlencode(json_encode($json));
+
+  return '<a' . drupal_attributes($attributes) . '>';
+}
+
+/**
+ * Jquery UI filter dialog process callback.
+ */
+function _jquery_ui_filter_dialog_process_callback($text) {
+  return preg_replace_callback('#<a[^>]+target="\[dialog\]"[^>]*>#is', '_jquery_ui_filter_dialog_process_replacer', $text);
+}
+
+/**
+ * Jquery UI filter dialog process replacer: Add jQuery UI dialog class to links.
+ */
+function _jquery_ui_filter_dialog_process_replacer($matches) {
+  $attributes = _jquery_ui_filter_parse_tag_attributes($matches[0]);
+  unset($attributes['target']); // Remove [dialog] from target
+  $attributes['class'] .= 'jquery-ui-filter-dialog';
+  return '<a' . drupal_attributes($attributes) . '>';
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+// Options
+////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Get jQuery UI dialog options.
+ */
+function jquery_ui_filter_dialog_get_options() {
+  return _jquery_ui_filter_array_merge(
+    array(
+      'closeOnEscape' => 'true',
+      'closeText' => 'Close',
+      'closeButton' => 'false',
+      'dialogClass' => '',
+      'draggable' => 'true',
+      'height' => 'auto',
+      'hide' => '',
+      'show' => '',
+      'width' => 'auto',
+      'maxHeight' => 'false',
+      'maxWidth' => 'false',
+      'minHeight' => '150',
+      'minWidth' => '150',
+      'modal' => 'false',
+      'position' => 'center',
+      'resizable' => 'true',
+      'stack' => 'true',
+      'title' => '',
+      'dialogFeatures' => jquery_ui_filter_dialog_get_default_features(),
+    ),
+    variable_get('jquery_ui_filter_dialog_options', array())
+  );
+}
+
+/**
+ * Get jQuery UI dialog default features.
+ */
+function jquery_ui_filter_dialog_get_default_features() {
+  return array(
+    // Form (FAPI)
+    'form-onsubmit_close' => 1,
+    // Site identity
+    'page-logo' => 0,
+    'page-site_name' => 0,
+    'page-site_slogan' => 0,
+    'page-mission' => 0,
+    // Navigation
+    'page-main_menu' => 0,
+    'page-secondary_menu' => 0,
+    // Page content
+    'page-title' => 1,
+    'page-title_prefix' => 0,
+    'page-title_suffix' => 0,
+    'page-tabs' => 1,
+    'page-breadcrumb' => 0,
+    'page-action_links' => 0,
+    // Footer
+    'page-feed_icons' => 0,
+    'page-footer_message' => 0,
+    // Regions
+    'page-regions' => 0,
+  );
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+// Helper functions
+////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Is page in a jQuery UI dialog.
+ */
+function jquery_ui_filter_dialog_enabled() {
+  return (isset($_GET['dialogFeatures'])) ? TRUE : FALSE;
+}
+
+/**
+ * Get jQuery UI dialog features.
+ */
+function jquery_ui_filter_dialog_get_features() {
+  static $features;
+  if (isset($features)) {
+    return $features;
+  }
+
+  $options = jquery_ui_filter_dialog_get_options();
+  if (empty($_GET['dialogFeatures']) || $_GET['dialogFeatures'] == '1') {
+    $features = $options['dialogFeatures'];
+  }
+  else {
+    $features = _jquery_ui_filter_array_merge(
+      $options['dialogFeatures'],
+      jquery_ui_filter_dialog_parse_features($_GET['dialogFeatures'])
+    );
+  }
+  return $features;
+}
+
+/**
+ * Parse jQuery UI dialog features.
+ */
+function jquery_ui_filter_dialog_parse_features($dialogFeatures) {
+  $features = explode(',', $dialogFeatures);
+  $params = array();
+  foreach ($features as $feature) {
+    if (strpos($feature, '=') !== FALSE) {
+      list($key, $value) = explode('=', $feature);
+    }
+    else {
+      $key = $feature;
+      $value = 1;
+    }
+    $params[$key] = $value;
+  }
+  return $params;
+}
+
+/**
+ * Implementation of hook_form_alter().
+ */
+function jquery_ui_filter_dialog_form_alter(&$form, &$form_state, $form_id) {
+  if (jquery_ui_filter_dialog_enabled()) {
+    $params = jquery_ui_filter_dialog_get_features();
+    if (!empty($params['form-onsubmit_close'])) {
+      $form['#submit'][] = 'jquery_ui_filter_dialog_close';
+    }
+  }
+}
+
+/**
+ * Menu callback; Close jQuery UI dialog
+ */
+function jquery_ui_filter_dialog_close() {
+  global $base_url;
+
+  $features = jquery_ui_filter_dialog_get_features();
+
+  // Switch to parent window's protocol to avoid...
+  // "Same origin policy for JavaScript"
+  // https://developer.mozilla.org/en/Same_origin_policy_for_JavaScript
+
+  // Check protocol
+  if (!empty($features['protocol'])) {
+    // Remove destinations
+    unset($_REQUEST['destination']);
+    unset($_REQUEST['edit']['destination']);
+
+    // From http:// to https://
+    if (strpos($base_url, 'https:') !== 0 && $features['protocol'] == 'https') {
+      $base_url = str_replace('http://', 'https://', $base_url);
+      drupal_goto( url('jquery_ui_filter_dialog/close', array('absolute' => TRUE)));
+    }
+
+    // From https:// to http://
+    if (strpos($base_url, 'http:') !== 0 && $features['protocol'] == 'http') {
+      $base_url = str_replace('https://', 'http://', $base_url);
+      drupal_goto( url('jquery_ui_filter_dialog/close', array('absolute' => TRUE)));
+    }
+  }
+
+  module_invoke_all('exit');
+  session_write_close();
+  print '<script type="text/javascript">if (top.Drupal && top.Drupal.jQueryUiFilter) { top.Drupal.jQueryUiFilter.dialogReloadPage(); }</script>';
+  exit;
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+// Theme functions
+////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Implements hook_preprocess_page().
+ *
+ * The below code is hiding page features and regions based on the selected
+ * dialogFeatures. This allows dailogs to optionally have working tabs and
+ * even navigation.
+ *
+ * There is also an options page-dialog.tpl.php suggestion that can be used
+ * to remove additional page.tpl.php features.
+ */
+function jquery_ui_filter_preprocess_page(&$variables) {
+  if (jquery_ui_filter_dialog_enabled()) {
+    global $theme;
+    $features = jquery_ui_filter_dialog_get_features();
+
+    // Remove certain variables and/or regions based on predefined settings.
+    foreach ($features as $key => $value) {
+      if (empty($value) && strpos($key, 'page-') !== FALSE) {
+        $name = str_replace('page-', '', $key);
+        switch ($name) {
+          case 'tabs':
+            $variables[$name] = array('#secondary' => array());
+            break;
+          default:
+            $variables[$name] = (isset($variables[$name]) && is_array($variables[$name])) ? array() : '';
+            break;
+        }
+      }
+    }
+
+    // Remove regions
+    if (empty($features['page-regions'])) {
+      $theme_data = list_themes();
+      $regions = $theme_data[$theme]->info['regions'];
+      foreach (array_keys($regions) as $region) {
+        if ($region != 'content') {
+          $variables['page'][$region] = array();
+        }
+      }
+    }
+
+    // Add theme suggestion
+    $variables['theme_hook_suggestions'][] = 'page__dialog';
+  }
+}
+
+/**
+ * Implements hook_preprocess_html().
+ */
+function jquery_ui_filter_preprocess_html(&$variables) {
+  if (jquery_ui_filter_dialog_enabled()) {
+    global $theme;
+    $features = jquery_ui_filter_dialog_get_features();
+
+    // Add dialog classes
+    $variables['classes_array'][] = $theme;
+    $variables['classes_array'][] = 'jquery-ui-filter-dialog';
+    if (empty($features['page-regions'])) {
+      $variables['classes_array'][] = 'jquery-ui-filter-dialog-no-regions';
+    }
+
+    // Remove sidebar classes
+    if (empty($features['page-regions'])) {
+      foreach ($variables['classes_array'] as $key => $value) {
+        if (strpos($value, 'sidebar') !== FALSE) {
+          unset($variables['classes_array'][$key]);
+        }
+      }
+    }
+    $variables['classes_array'] = array_values($variables['classes_array']);
+  }
+}

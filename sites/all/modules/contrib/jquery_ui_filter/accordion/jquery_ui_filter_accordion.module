@@ -1,0 +1,132 @@
+<?php
+/**
+ * @file
+ * Converts static HTML to a jQuery UI accordian or tabs widget.
+ */
+
+
+/**
+ * Implements hook_init().
+ */
+function jquery_ui_filter_accordion_init() {
+  $accordion_options = jquery_ui_filter_accordion_get_options();
+
+  // Add accordion
+  drupal_add_library('system', 'ui.accordion');
+  if (isset($accordion_options['animated']) && $accordion_options['animated'] == 'bounceslide') {
+    drupal_add_library('system', 'effects.bounce');
+  }
+
+  // Add script and settings.
+  drupal_add_js( drupal_get_path('module', 'jquery_ui_filter_accordion') . '/jquery_ui_filter_accordion.js', array('type' => 'file'));
+  $settings = array(
+    'jQueryUiFilter' => array(
+      'accordionHeaderTag' => variable_get('jquery_ui_filter_accordion_header_tag', 'h3'),
+      'accordionOptions' => $accordion_options,
+    ),
+  );
+  drupal_add_js($settings, 'setting');
+
+  // Apply global options
+  if (variable_get("jquery_ui_filter_accordion_options_global", 0)) {
+    drupal_add_js("Drupal.jQueryUiFilter.globalOptions('accordion');", array('type' => 'inline', 'scope' => 'footer'));
+  }
+}
+
+/**
+ * Implementation of hook_menu().
+ */
+function jquery_ui_filter_accordion_menu() {
+  $items = array();
+
+  // Accordion
+  $items['admin/config/content/jquery_ui_filter/accordion'] = array(
+    'title' => 'Accordion',
+    'description' => 'Configure accordion settings for the jQuery UI filter.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('jquery_ui_filter_accordion_settings'),
+    'access arguments' => array('administer site configuration'),
+    'file' => 'jquery_ui_filter_accordion.admin.inc',
+    'type' => MENU_LOCAL_TASK,
+    'weight' => 0,
+  );
+
+  return $items;
+}
+
+/**
+ * Implements hook_filter_info().
+ */
+function jquery_ui_filter_accordion_filter_info() {
+  $filters = array();
+
+  $filters['accordion'] = array(
+    'title' => t('jQuery UI accordion'),
+    'description' => t('Converts static HTML to a jQuery UI Accordian widget.'),
+    'default settings' => array(),
+    'settings callback' => '_jquery_ui_filter_accordion_settings_callback',
+    'process callback' => '_jquery_ui_filter_accordion_process_callback',
+    'tips callback' => '_jquery_ui_filter_accordion_tips_callback',
+  );
+
+  return $filters;
+}
+
+/**
+ * Jquery UI filter accordion tips callback.
+ */
+function _jquery_ui_filter_accordion_tips_callback($delta = NULL, $format = NULL, $long = FALSE) {
+  $t_args = array(
+    '@accordion_header_tag' => '<' . variable_get('jquery_ui_filter_accordion_header_tag', 'h3') . '>',
+    '@accordion_href' => 'http://jqueryui.com/demos/accordion/',
+  );
+  return t('Use [accordion] and [/accordion] with @accordion_header_tag header tags to create a jQuery UI <a href="@accordion_href">Accordian</a> widget. Using [accordion collapsed] will start with the accordion closed.', $t_args);
+}
+
+/**
+ * Jquery UI filter accordion settings.
+ */
+function _jquery_ui_filter_accordion_settings_callback() {
+  return _jquery_ui_filter_settings_callback('accordion');
+}
+
+/**
+ * Jquery UI filter accordion process callback.
+ */
+function _jquery_ui_filter_accordion_process_callback($text) {
+  $text = preg_replace('#<(p|h\d)[^>]*>\s*(\[\/?(accordion)[^\]]*\])\s*</\1>#', '\2', $text);
+  $text = preg_replace_callback('#\[accordion(\s+collapsed)?\](.*?)\[/accordion\]#is', '_jquery_ui_filter_accordion_process_replacer', $text);
+  return $text;
+}
+
+/**
+ * Jquery UI filter accordion process replacer.
+ */
+function _jquery_ui_filter_accordion_process_replacer($matches) {
+  $collapsed = (empty($matches[1])) ? FALSE : TRUE;
+  return _jquery_ui_filter_process_replacer('accordion', $matches[2], $collapsed);
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+// Options
+////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Get jQuery UI accordion options.
+ */
+function jquery_ui_filter_accordion_get_options() {
+  return _jquery_ui_filter_array_merge(
+    array(
+      'active' => 0,
+      'animated' => 'slide',
+      'autoHeight' => 'true',
+      'clearStyle' => 'false',
+      'collapsible' => 'false',
+      'event' => 'click',
+      'scrollTo' => 0,
+      'history' => 'false',
+    ),
+    variable_get('jquery_ui_filter_accordion_options', array())
+  );
+}

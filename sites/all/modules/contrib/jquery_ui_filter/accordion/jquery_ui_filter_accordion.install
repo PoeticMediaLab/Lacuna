@@ -1,0 +1,28 @@
+<?php
+/**
+ * @file
+ * Installation information for the 'jQuery UI filter accordion' module.
+ */
+
+/**
+ * Implementation of hook_install().
+ */
+function jquery_ui_filter_accordion_install() {
+   // Must be loaded afer jquery_ui_filter.module.
+  db_update('system')
+    ->fields(array(
+      'weight' => 1,
+    ))
+    ->condition('name', 'jquery_ui_filter_accordion')
+    ->execute();
+}
+
+/**
+ * Implementation of hook_uninstall().
+ */
+function jquery_ui_filter_accordion_uninstall() {
+  db_delete('variable')
+    ->condition('name', 'jquery_ui_filter_accordion_%', 'LIKE')
+    ->execute();
+  cache_clear_all('variables', 'cache_bootstrap');
+}

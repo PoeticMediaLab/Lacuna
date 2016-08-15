@@ -1,0 +1,158 @@
+<?php
+/**
+ * @file
+ * Converts static HTML to a jQuery UI accordian or tabs widget.
+ */
+
+
+/**
+ * Implements hook_init().
+ */
+function jquery_ui_filter_init() {
+  drupal_add_library('system', 'ui.widget');
+
+  // Add jQuery UI filter script and settings.
+  // NOTE: Still including jQuery UI filter javascript even if it is disabled
+  //       so that it be correctly aggregrated for every page on the site.
+  drupal_add_js( drupal_get_path('module', 'jquery_ui_filter') . '/jquery_ui_filter.js', array('type' => 'file', 'every_page' => TRUE));
+  $settings = array(
+    'jQueryUiFilter' => array(
+      'disabled' => ( drupal_match_path($_GET['q'], variable_get('jquery_ui_filter_disabled_pages', 'print*')) ) ? 1 : 0,
+    ),
+  );
+  drupal_add_js($settings, 'setting');
+}
+
+/**
+ * Implements hook_menu().
+ */
+function jquery_ui_filter_menu() {
+  $items = array();
+
+  // Settings
+  $items['admin/config/content/jquery_ui_filter'] = array(
+    'title' => 'jQuery UI filter',
+    'description' => 'Configure global settings for the jQuery UI filter.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('jquery_ui_filter_general_settings'),
+    'access arguments' => array('administer site configuration'),
+    'file' => 'jquery_ui_filter.admin.inc',
+    'type' => MENU_NORMAL_ITEM,
+  );
+
+  // General
+  $items['admin/config/content/jquery_ui_filter/settings'] = array(
+    'title' => 'General',
+    'description' => 'Configure general settings for the jQuery UI filter.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('jquery_ui_filter_general_settings'),
+    'access arguments' => array('administer site configuration'),
+    'file' => 'jquery_ui_filter.admin.inc',
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+    'weight' => -1,
+  );
+
+  // Demo
+  $items['admin/config/content/jquery_ui_filter/demo'] = array(
+    'title' => 'Demo',
+    'description' => 'Demo accordion, dialog, and tabs settings for the jQuery UI filter.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('jquery_ui_filter_demo_settings'),
+    'access arguments' => array('administer site configuration'),
+    'file' => 'jquery_ui_filter.admin.inc',
+    'type' => MENU_LOCAL_TASK,
+    'weight' => 1,
+  );
+
+  return $items;
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+// Shared functions
+////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Jquery UI filter settings callback.
+ */
+function _jquery_ui_filter_settings_callback($name) {
+  $t_args = array(
+    '@href' => url('admin/config/content/jquery_ui_filter/' . $name),
+    '@name' => $name
+  );
+  $form = array();
+  $form['jquery_ui_filter_' . $name] = array(
+    '#type' => 'fieldset',
+    '#title' => t('jQuery UI @name', $t_args),
+    '#description' => t('To configure this filter, please goto the global jQuery UI <a href="@href">@name</a> configuration form.', $t_args),
+    '#collapsible' => TRUE,
+    '#collapsed' => FALSE,
+  );
+  return $form;
+}
+
+/**
+ * Jquery UI filter process replacer: Inserts jQuery UI widget classes into text.
+ */
+function _jquery_ui_filter_process_replacer($type, $html, $collapsed = FALSE) {
+  // Add jquery ui filter classes and wrap content in a container <div>.
+  $header_tag = variable_get("jquery_ui_filter_${type}_header_tag", 'h3');
+  if (preg_match_all("#(<{$header_tag}[^>]*>)(.*?)(</{$header_tag}>)(.*?)(?=<{$header_tag}|$)#s", $html, $matches)) {
+    foreach ($matches[0] as $index => $match) {
+      $header_open_tag = $matches[1][$index];
+      $header_attributes = _jquery_ui_filter_parse_tag_attributes($header_open_tag);
+      $header_text = $matches[2][$index];
+      $header_close_tag = $matches[3][$index];
+      $content = $matches[4][$index];
+
+      $header_attributes['class'] .= "jquery-ui-filter-header jquery-ui-filter-$type-header";
+
+      $replace_with = '<' . $header_tag . drupal_attributes($header_attributes) . '>' .
+        $header_text .
+        $header_close_tag .
+        '<div class="jquery-ui-filter-container jquery-ui-filter-' . $type . '-container">' .
+        $content .
+        '</div>';
+
+      $html = str_replace($matches[0][$index], $replace_with, $html);
+    }
+  }
+
+  // Build jquery ui filter widget wrapper.
+  $classes = array('jquery-ui-filter', 'jquery-ui-filter-' . $type);
+  if ($collapsed) {
+    $classes[] = 'jquery-ui-filter-' . $type . '-collapsed';
+  }
+  $attributes = array(
+    'id' => drupal_html_id('jquery-ui-filter'),
+    'class' => implode(' ', $classes),
+  );
+  return '<div' . drupal_attributes($attributes) . '>' . $html . '</div>';
+}
+
+/**
+ * Parses a tag's attributes into an associated array.
+ */
+function _jquery_ui_filter_parse_tag_attributes($tag) {
+  preg_match_all('/(\w+)\s*=\s*"([^"]+)"/', $tag, $matches);
+  $attributes = array('class' => ''); // Always include class attribute.
+  for ($i=0, $len=count($matches[1]); $i < $len; $i++) {
+    $attributes[ $matches[1][$i] ] = htmlspecialchars_decode($matches[2][$i], ENT_QUOTES);
+  }
+  return $attributes;
+}
+
+/**
+ * Custom array merge function that merge multidimensional arrays.
+ */
+function _jquery_ui_filter_array_merge($destination, $source) {
+  foreach ($source as $key => $value) {
+    if ((isset($destination[$key]) && is_array($destination[$key])) && is_array($source[$key]) ) {
+      $destination[$key] = _jquery_ui_filter_array_merge($destination[$key], $source[$key]);
+    }
+    else {
+      $destination[$key] = $source[$key];
+    }
+  }
+  return $destination;
+}
