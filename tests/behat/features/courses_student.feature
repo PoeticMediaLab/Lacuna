@@ -28,8 +28,7 @@ Feature: courses_student
   Scenario Outline:
     Given I am logged in as "Student A"
     When I go to the "course" node named "Course Alpha"
-    Then I should see "Course Alpha" in the "Page Title" region
-    And I should see "Course Alpha" in the "Course Selected" region
+    Then I should see "Course Alpha" in the "Course Selected" region
     And I should see <link> in the "Main Menu" region
 
     Examples:
@@ -45,7 +44,8 @@ Feature: courses_student
    Scenario Outline:
      Given I am logged in as "Student A"
      When I go to the "course" node named "Course Beta"
-     Then I should see "Course Beta" in the "Page Title"
+     Then I should not see "Course Beta" in the "Course Selected" region
+     And I should see "Course Alpha" in the "Course Selected" region
      And I should not see <link> in the "Main Menu" region
      And I should see "About" in the "Main Menu"
 

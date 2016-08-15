@@ -534,7 +534,6 @@ function annotation_form_views_exposed_form_alter(&$form, &$form_state) {
     $titled_courses = _annotation_add_dates_to_course_titles ($courses);
     $titled_courses = array('All' => '- Any -') + $titled_courses;
     $form['og_group_ref_target_id']['#options'] = $titled_courses;
-
   }
 }
 
