@@ -11,6 +11,7 @@
     function Replies() {
       this.cancelReply = bind(this.cancelReply, this);
       this.saveReply = bind(this.saveReply, this);
+      this.deleteReply = bind(this.deleteReply, this);
       this.drawReplies = bind(this.drawReplies, this);
       this.initReplies = bind(this.initReplies, this);
       this.addReplyLink = bind(this.addReplyLink, this);
@@ -19,17 +20,18 @@
       this.toggleVisibility = bind(this.toggleVisibility, this);
       this.hide = bind(this.hide, this);
       this.show = bind(this.show, this);
+      this.removeClasses = bind(this.removeClasses, this);
+      this.addClasses = bind(this.addClasses, this);
+      this.defaultClass = bind(this.defaultClass, this);
       return Replies.__super__.constructor.apply(this, arguments);
     }
 
     Replies.prototype.replyClasses = {
       "base": "annotator-reply",
       "hidden": "annotator-reply-hidden",
-      "replyicon": "fa fa-reply",
-      "reply": "annotator-reply-reply",
-      "textarea": "annotator-reply-text",
-      "button": "annotator-reply-button",
-      "list": "annotator-reply-list"
+      "reply": "fa fa-reply",
+      "edit": "fa fa-edit",
+      "del": "fa fa-trash"
     };
 
     Replies.prototype.replySelectors = {
@@ -45,9 +47,45 @@
       });
     };
 
+    Replies.prototype.defaultClass = function(key) {
+      return this.replyClasses.base + '-' + key;
+    };
+
+    Replies.prototype.addClasses = function(element, key) {
+      var className, classNames, i, len, ref, results;
+      if (!(key in this.replyClasses)) {
+        classNames = this.defaultClass(key);
+      } else {
+        classNames = this.replyClasses[key];
+      }
+      ref = classNames.split(" ");
+      results = [];
+      for (i = 0, len = ref.length; i < len; i++) {
+        className = ref[i];
+        results.push(element.classList.add(className));
+      }
+      return results;
+    };
+
+    Replies.prototype.removeClasses = function(element, key) {
+      var className, classNames, i, len, ref, results;
+      if (!(key in this.replyClasses)) {
+        classNames = this.defaultClass(key);
+      } else {
+        classNames = this.replyClasses[key];
+      }
+      ref = classNames.split(" ");
+      results = [];
+      for (i = 0, len = ref.length; i < len; i++) {
+        className = ref[i];
+        results.push(element.classList.remove(className));
+      }
+      return results;
+    };
+
     Replies.prototype.show = function(field) {
       var textarea;
-      field.classList.remove(this.replyClasses.hidden);
+      this.removeClasses(field, 'hidden');
       field.style.display = "block";
       textarea = field.getElementsByTagName('textarea');
       if (textarea.length > 0) {
@@ -56,7 +94,7 @@
     };
 
     Replies.prototype.hide = function(field) {
-      field.classList.add(this.replyClasses.hidden);
+      this.addClasses(field, 'hidden');
       return field.style.display = "none";
     };
 
@@ -69,34 +107,40 @@
       }
     };
 
-    Replies.prototype.addReplyArea = function(annotation, pid) {
-      var buttons, cancel, field, form, formid, save, textarea, textid;
-      formid = this.replyClasses.base + "-form-" + annotation.id + "-" + pid;
+    Replies.prototype.addReplyArea = function(annotation, id, pid, default_text) {
+      var baseid, buttons, cancel, field, form, formid, save, textarea, textid;
+      if (default_text == null) {
+        default_text = '';
+      }
+      baseid = this.replyClasses.base + "-" + annotation.id + "-" + id + "-" + pid;
+      if (default_text.length) {
+        baseid += '-update';
+      }
+      formid = baseid + '-form';
       form = document.getElementById(formid);
       if (form != null) {
         return form;
       }
       form = document.createElement("form");
       form.id = formid;
-      form.classList.add(this.replyClasses.base + "-form");
+      this.addClasses(form, 'form');
       textarea = document.createElement("textarea");
-      textid = this.replyClasses.base + "-textarea-" + annotation.id + "-" + pid;
+      textid = baseid + '-text';
       textarea.id = textid;
-      textarea.classList.add(this.replyClasses.textarea);
+      textarea.textContent = default_text;
+      this.addClasses(textarea, 'text');
       buttons = document.createElement("div");
-      buttons.classList.add(this.replyClasses.base + "-controls");
       save = document.createElement("a");
-      save.classList.add(this.replyClasses.button);
-      save.classList.add(this.replyClasses.base + "-save");
+      this.addClasses(save, 'button');
+      this.addClasses(save, 'save');
       save.innerHTML = "Save";
       save.addEventListener("click", (function(_this) {
-        return function(event) {
-          return _this.saveReply(event, annotation, textarea, pid);
+        return function() {
+          return _this.saveReply(annotation, textarea, id, pid);
         };
       })(this));
       cancel = document.createElement("a");
-      cancel.classList.add(this.replyClasses.button);
-      cancel.classList.add(this.replyClasses.base + "-cancel");
+      this.addClasses(cancel, 'button');
       cancel.innerHTML = "Cancel";
       cancel.addEventListener("click", (function(_this) {
         return function() {
@@ -115,23 +159,26 @@
       return form;
     };
 
+    Replies.prototype.clearReplyArea = function(textarea) {
+      textarea.textContent = '';
+      if (Annotator.Plugin.RichText != null) {
+        return CKEDITOR.instances[textarea.id].setData('');
+      }
+    };
+
     Replies.prototype.hideReplyArea = function(textarea) {
       return this.hide(textarea.parentNode);
     };
 
     Replies.prototype.addReplyLink = function(field, annotation, pid) {
-      var className, i, len, ref, replyArea, span;
+      var replyArea, span;
       if (pid == null) {
         pid = 0;
       }
       span = document.createElement("span");
       span.innerHTML = "Reply";
-      ref = this.replyClasses.replyicon.split(" ");
-      for (i = 0, len = ref.length; i < len; i++) {
-        className = ref[i];
-        span.classList.add(className);
-      }
-      replyArea = this.addReplyArea(annotation, pid);
+      this.addClasses(span, 'reply');
+      replyArea = this.addReplyArea(annotation, 0, pid);
       this.hide(replyArea);
       span.addEventListener("click", (function(_this) {
         return function() {
@@ -160,7 +207,7 @@
         })(this));
         this.hide(replies);
       }
-      field.classList.add(this.replyClasses.base);
+      this.addClasses(field, 'base');
       return this.addReplyLink(field, annotation);
     };
 
@@ -177,7 +224,8 @@
           'text': data['comment_body']['und'][0]['safe_value'],
           'author': data['name'],
           'date': date_string,
-          'thread': data['thread']
+          'thread': data['thread'],
+          'permissions': data['permissions']
         };
         repliesList.push(reply);
       }
@@ -208,7 +256,7 @@
       l = element.getElementsByTagName('ol');
       if (l.length === 0) {
         l = document.createElement('ol');
-        l.classList.add(this.replyClasses.list);
+        this.addClasses(l, 'list');
         element.appendChild(l);
       } else {
         l = l[0];
@@ -225,22 +273,54 @@
       return parent;
     };
 
-    Replies.prototype.drawReply = function(element, reply) {
+    Replies.prototype.addControls = function(element, reply, annotation) {
+      var controls, edit, editArea, replyArea, replyLink;
+      controls = document.createElement('div');
+      this.addClasses(controls, 'controls');
+      element.appendChild(controls);
+      replyLink = document.createElement('span');
+      this.addClasses(replyLink, 'reply');
+      controls.appendChild(replyLink);
+      replyArea = this.addReplyArea(annotation, 0, reply.pid, '');
+      this.hide(replyArea);
+      replyLink.addEventListener("click", (function(_this) {
+        return function() {
+          return _this.toggleVisibility(replyArea);
+        };
+      })(this));
+      if (reply.permissions == null) {
+        return;
+      }
+      if (reply.permissions.edit) {
+        edit = document.createElement('span');
+        this.addClasses(edit, 'edit');
+        editArea = this.addReplyArea(annotation, reply.id, reply.pid, reply.text);
+        this.hide(editArea);
+        edit.addEventListener("click", (function(_this) {
+          return function() {
+            return _this.toggleVisibility(editArea);
+          };
+        })(this));
+        return controls.appendChild(edit);
+      }
+    };
+
+    Replies.prototype.drawReply = function(element, reply, annotation) {
       var li, text;
       li = document.createElement("li");
       li.innerHTML = reply['author'] + ' on ' + reply['date'];
       li.classList.add('annotator-reply-id-' + reply['id']);
-      li.classList.add(this.replyClasses.reply);
+      this.addClasses(li, 'replyarea');
       text = document.createElement("span");
       text.innerHTML = reply['text'];
-      text.classList.add('annotator-reply-text');
+      this.addClasses(text, 'text');
       li.appendChild(text);
-      element.appendChild(li);
-      return li;
+      this.addControls(li, reply, annotation);
+      return element.appendChild(li);
     };
 
     Replies.prototype.drawReplies = function(element, annotation) {
-      var depth, el, i, len, li, list, replies, reply;
+      var depth, el, i, len, list, replies, reply;
       replies = this.convertRepliesData(annotation.comments);
       replies = this.sortReplies(replies);
       list = this.initList(element);
@@ -248,15 +328,26 @@
         reply = replies[i];
         depth = this.replyDepth(reply['thread']);
         el = this.getListAtDepth(list, depth);
-        li = this.drawReply(el, reply);
-        this.addReplyLink(li, annotation, reply['id']);
+        this.drawReply(el, reply, annotation);
       }
       return list;
     };
 
-    Replies.prototype.saveReply = function(event, annotation, textarea, pid) {
+    Replies.prototype.deleteReply = function(annotation, reply) {
+      reply.type = 'delete';
+      annotation.reply = reply;
+      this.annotator.publish('annotationUpdated', [annotation]);
+      return delete annotation.reply;
+    };
+
+    Replies.prototype.saveReply = function(annotation, textarea, id, pid) {
       annotation.reply = {};
       annotation.reply.pid = pid;
+      annotation.reply.type = 'new';
+      if (id !== 0) {
+        annotation.reply.id = id;
+        annotation.reply.type = 'update';
+      }
       if ((Annotator.Plugin.RichText != null) && (textarea.id != null)) {
         annotation.reply.text = CKEDITOR.instances[textarea.id].getData();
       } else {
@@ -265,6 +356,7 @@
       annotation.reply.uid = Drupal.settings.annotator_replies.current_uid;
       this.annotator.publish('annotationUpdated', [annotation]);
       delete annotation.reply;
+      this.clearReplyArea(textarea);
       return this.hideReplyArea(textarea);
     };
 

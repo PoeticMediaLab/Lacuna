@@ -332,15 +332,17 @@ $privacy-selected: rgba(19, 149, 25, 0.74);
     span {
       cursor: pointer;
     }
+    max-height: 200px;
+    overflow: auto;
     span:hover {
       color: black;
     }
     ol.annotator-reply-list {
       padding: 0 0 0 2px;
     }
-    li.annotator-reply-reply {
+    li.annotator-reply-replyarea {
       list-style: none;
-      //background: rgba(175, 175, 175, .5);
+      background: rgba(175, 175, 175, .5);
       //color: white;
       padding-left: 2px;
       //padding-right: -15px;
@@ -350,6 +352,10 @@ $privacy-selected: rgba(19, 149, 25, 0.74);
         padding: 3px;
       }
     }
+    div.annotator-reply-controls {
+      //float: right;
+      padding-bottom: 1px;
+    }
   }
 }
 
@@ -357,7 +363,7 @@ $privacy-selected: rgba(19, 149, 25, 0.74);
   position: fixed;
   display: block;
   background: rgba(250,250,250, .9);
-  width: 50%;
+  width: 25%;
   left: 25%;
   top: 20%;
   overflow: auto;
@@ -366,8 +372,8 @@ $privacy-selected: rgba(19, 149, 25, 0.74);
   border: 1px solid black;
   display: none;
   .annotator-reply-text {
-    width: 90%;
-    height: 200px;
+    width: 30%;
+    height: 50px;
   }
   .annotator-reply-button {
     color: white;
