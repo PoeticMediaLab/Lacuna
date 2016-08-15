@@ -24,6 +24,7 @@ features[message_type][] = log_new_content
 features[rules_config][] = rules_log_new_comment_on_response
 features[rules_config][] = rules_log_new_comment_on_thread
 features[rules_config][] = rules_log_new_group_content
+features[rules_config][] = rules_notification_of_annotation_on_response
 features[variable][] = field_bundle_settings_message__log_new_comment
 features[variable][] = field_bundle_settings_message__log_new_content
 features[views_view][] = annotations_on_responses_view

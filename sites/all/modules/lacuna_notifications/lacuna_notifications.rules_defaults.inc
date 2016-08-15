@@ -94,5 +94,37 @@ function lacuna_notifications_default_rules_configuration() {
       ]
     }
   }');
+  $items['rules_notification_of_annotation_on_response'] = entity_import('rules_config', '{ "rules_notification_of_annotation_on_response" : {
+      "LABEL" : "Notification of Annotation on Response",
+      "PLUGIN" : "reaction rule",
+      "OWNER" : "rules",
+      "REQUIRES" : [ "rules" ],
+      "ON" : { "node_insert--annotation" : { "bundle" : "annotation" } },
+      "IF" : [
+        { "data_is" : {
+            "data" : [ "node:field-annotation-reference:type" ],
+            "value" : "response"
+          }
+        },
+        { "AND" : [] },
+        { "NOT data_is" : {
+            "data" : [ "node:author" ],
+            "value" : [ "node:field-annotation-reference:author" ]
+          }
+        },
+        { "AND" : [] },
+        { "list_contains" : { "list" : [ "node:field-annotation-audience" ], "item" : "everyone" } }
+      ],
+      "DO" : [
+        { "mail" : {
+            "to" : [ "node:field-annotation-reference:author:mail" ],
+            "subject" : "New Annotation on Your Response",
+            "message" : "[node:author:field-display-name] made an annotation on your Response [node:field-annotation-reference:title]",
+            "language" : [ "" ]
+          }
+        }
+      ]
+    }
+  }');
   return $items;
 }
