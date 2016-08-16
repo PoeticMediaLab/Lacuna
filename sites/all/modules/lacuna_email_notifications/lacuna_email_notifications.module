@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the Lacuna Email Notifications feature.
+ */
+
+include_once 'lacuna_email_notifications.features.inc';
