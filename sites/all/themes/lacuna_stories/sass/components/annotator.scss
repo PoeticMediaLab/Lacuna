@@ -193,7 +193,7 @@ section.region-sidebar-second input[type="checkbox"] {
 }
 
 .af-button-active:hover {
-    background-color: #88b551;
+    background-color: #a4bb25; // #88b551;
     color: #FFFFFF;
     background-position: 0 15px;
     text-decoration: none;
@@ -203,8 +203,8 @@ section.region-sidebar-second input[type="checkbox"] {
 .af-button-active {
     // background-color: #c4df2c;
     // background-image: linear-gradient(to bottom, #c4df2c, #88b551);
-    background-color: #98ca5b;
-    background-image: linear-gradient(to top, #98ca5b, #88b551);
+    background-color: #b9d22a; // #98ca5b;
+    background-image: linear-gradient(to top, #b9d22a, #a4bb25);// #98ca5b, #88b551);
 }
 
 .af-button-reset:hover {
