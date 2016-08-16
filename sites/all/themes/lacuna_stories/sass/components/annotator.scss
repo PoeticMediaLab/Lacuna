@@ -163,7 +163,7 @@ section.region-sidebar-second input[type="checkbox"] {
     // border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
     // background-color: #92a6c4;
     // background-image: linear-gradient(to bottom, #92a6c4, #39404a);
-    background-image: linear-gradient(to top, #a0aab9, #afbbcc); 
+    background-image: linear-gradient(to top, #939dab, #afbbcc); 
     color: #FFFFFF;
     // text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
     -moz-border-bottom-colors: none;
@@ -182,14 +182,14 @@ section.region-sidebar-second input[type="checkbox"] {
     font-weight: normal;
     font-size: 13px;
     margin-right: 5px;
-    letter-spacing: .4px;
+    letter-spacing: .5px;
 }
 
 .af-button:hover {
     // background-color: #39404a;
-    background-color: #a0aab9;
+    background-color: #939dab;
     background-position: 0 -15px;
-    transition: background-color linear 0s;
+    transition: background-color ease-in 0s;
 }
 
 .af-button-active:hover {
@@ -203,8 +203,8 @@ section.region-sidebar-second input[type="checkbox"] {
 .af-button-active {
     // background-color: #c4df2c;
     // background-image: linear-gradient(to bottom, #c4df2c, #88b551);
-    background-color: #b9d22a; // #98ca5b;
-    background-image: linear-gradient(to top, #b9d22a, #a4bb25);// #98ca5b, #88b551);
+    background-color: #b3cc29; // #98ca5b;
+    background-image: linear-gradient(to top, #b3cc29, #a4bb25);// #98ca5b, #88b551);
 }
 
 .af-button-reset:hover {
