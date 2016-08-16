@@ -3,6 +3,7 @@
 
 .annotator-viewer div {
     border: none;
+    padding: 0px 0px 6px;                       // ih (8/16): take out all padding except bottom padding
 }
 
 // Spacing for our icons: Categories and Privacy
@@ -36,6 +37,7 @@ $category-selected: rgba(22,147,165, .8);
 
 .annotator-categories {
   border-top: solid 1px #eee;
+  margin-bottom: 2px;           // ih (8/16) 
 }
 
   .annotator-category:hover {
@@ -50,7 +52,10 @@ $category-selected: rgba(22,147,165, .8);
 
   .annotator-viewer ul li .annotator-category {
     text-align: center;
-    width: 33%;
+    // width: 33%;
+    font-size:10px;
+    width: 70px;
+    padding: 4px 15px;
   }
 
 .annotator-category {
@@ -283,13 +288,18 @@ $privacy-selected: rgba(19, 149, 25, 0.74);
 
 .annotator-viewer {
   .annotator-privacy-type {
-    padding: 6px;
+    // padding: 6px;
+    font-size: 10px;
+    padding: 4px 15px;
+    margin-bottom:2px;
+    width:70px;
     display: inline-block;
     text-align: center;
-    width: 33%;
-    font-family: $base-font-family;                                  // as with the author widget, this sets the font-family of the text to sans-serif (ih, 07/12)
+    // width: 33%;
+    font-family: $helvetica; // $base-font-family;                // as with the author widget, this sets the font-family of the text to sans-serif (ih, 07/12)
     &::before {
-      font: normal normal normal 10px/1 FontAwesome;          // and then overrides the font for the icon by referencing directly the element prior to the annotator privacy type font (ih, 07/12)
+      font: normal normal normal 9px/1 FontAwesome;          // and then overrides the font for the icon by referencing directly the element prior to the annotator privacy type font (ih, 07/12)
+      padding-left: 0px;
     }
   }
   .annotator-privacy-types {
@@ -324,7 +334,7 @@ $privacy-selected: rgba(19, 149, 25, 0.74);
 }
 
 .annotator-privacy-type.annotator-privacy-peer-groups {
-  width: 45%;
+  width: 28%;                 // 45%;                 // ih(8/16)
 }
 
 .annotator-privacy-everyone {
@@ -365,6 +375,12 @@ label.annotator-privacy-group {
   padding-top: 22px;
 }
 
+// ih (8/16): my add, which overrides whatever is causing padding top & bottom to be 12px (can't find where it is in here...)
+.annotator-viewer div:first-of-type {
+  padding-top: 0px;
+  padding-bottom: 6px;
+}
+
 /* Fix in the tinymce */
 .annotator-viewer div:first-of-type.richText-annotation strong{
   font-weight: bold;
@@ -379,8 +395,12 @@ label.annotator-privacy-group {
   min-width: 300px;
 }
 
+.annotator-widget .annotator-listing{
+  padding: 1px;
+}
+
 .annotator-widget.annotator-listing{
-  padding: 1px;                                   // this adds 1px of padding to the annotator-widget child under annotator-listing for better readability (ih, 07/12)
+  padding: 12px;                                   // this adds 12px of padding to the .annotator-widget.annotator-listing box in .annotator-outer.annotator-viewer for better readability (ih, 08/15)
 }
 
 /* Fix to show icons */
@@ -417,6 +437,9 @@ label.annotator-privacy-group {
 .annotator-widget * {
   /*font-family: inherit !important;*/
   font-style: normal;
+  color: #3c3c3c;                                     // slightly lighter than black (ih 08/15)
+  font-size: 13px;                                    // unified font size (ih 08/15)
+
   a {
     text-decoration: underline;
     color: $category-selected;
@@ -484,10 +507,12 @@ li.annotator-checkbox[style] {
 /* For Author plugin */
 .annotator-author {
   display: block;
-  font-family: $base-font-family;              // this changes the annotator author font to the standard sans-serif font family (ih, 07/12)
-  font-size: smaller;
+  font-family: $helvetica; // this changes the annotator author font from $base-font-family to the same font-family as all other text elements (ih, 07/12)
+  font-size: 12px;                             // slightly decreases author font-size
   &::before {                           // this directly references the icon prior to the annotator author, overrides the annotator-author font settings and sets the font to FontAwesome; otherwise, the entire line is changed to sans-serif font (ih, 07/12)
-      font: normal normal normal 12px/1 FontAwesome;   // copied from inspect element; is there a variable name for the icon font settings?
+      font: normal normal normal 10px/1 FontAwesome;   // copied from inspect element; is there a variable name for the icon font settings?
+      padding-right: 4px;
+      padding-left: 0px;
   }
 }
 
