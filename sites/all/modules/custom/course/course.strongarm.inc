@@ -83,13 +83,6 @@ function course_strongarm() {
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
-  $strongarm->name = 'chosen_use_theme';
-  $strongarm->value = 1;
-  $export['chosen_use_theme'] = $strongarm;
-
-  $strongarm = new stdClass();
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
   $strongarm->name = 'comment_anonymous_course';
   $strongarm->value = 0;
   $export['comment_anonymous_course'] = $strongarm;
@@ -174,6 +167,13 @@ function course_strongarm() {
     'nodeform' => 0,
   );
   $export['exclude_node_title_content_type_modes_course'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'exclude_node_title_content_type_value_course';
+  $strongarm->value = 'all';
+  $export['exclude_node_title_content_type_value_course'] = $strongarm;
 
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
@@ -287,7 +287,7 @@ function course_strongarm() {
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'htmlpurifier_version_current';
-  $strongarm->value = '4.7.0';
+  $strongarm->value = '4.8.0';
   $export['htmlpurifier_version_current'] = $strongarm;
 
   $strongarm = new stdClass();

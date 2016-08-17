@@ -1,0 +1,16 @@
+name = Avatar Selection
+description = "Manages configuration of a default list of avatar icons that a user can use instead of uploading a picture."
+core = 7.x
+
+files[] = avatar_selection.admin.inc
+files[] = avatar_selection.install
+files[] = avatar_selection.module
+
+configure = admin/config/people/avatar_selection
+
+; Information added by Drupal.org packaging script on 2014-01-13
+version = "7.x-1.1"
+core = "7.x"
+project = "avatar_selection"
+datestamp = "1389626309"
+

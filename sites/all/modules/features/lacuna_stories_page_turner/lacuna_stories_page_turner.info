@@ -9,6 +9,7 @@ dependencies[] = page_turner
 dependencies[] = page_turner_bookmarks
 features[features_api][] = api:2
 features[flag][] = page_turner_bookmark
+features[user_permission][] = administer page_turner
 features[user_permission][] = flag page_turner_bookmark
 features[user_permission][] = unflag page_turner_bookmark
 project path = sites/all/modules/features

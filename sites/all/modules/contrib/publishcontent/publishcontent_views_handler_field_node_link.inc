@@ -73,7 +73,7 @@ class publishcontent_views_handler_field_node_link extends views_handler_field_n
       $this->options['alter']['make_link'] = TRUE;
       $this->options['alter']['path'] = "node/$node->nid/$op/" . drupal_get_token();
       $this->options['alter']['query'] = drupal_get_destination();
-      $this->options['alter']['link_class'] = 'publishcontent-link publishcontent-' . $op;
+      $this->options['alter']['link_class'] = $this->options['alter']['link_class'] . ' publishcontent-link publishcontent-' . $op;
 
       return empty($this->options[$op]) ? t($op) : $this->options[$op];
     }

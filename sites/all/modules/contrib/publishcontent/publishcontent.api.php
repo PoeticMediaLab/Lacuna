@@ -18,7 +18,7 @@
  *
  * @return bool|NULL
  *   PUBLISHCONTENT_ACCESS_ALLOW - if the account can publish the node
- *   PUBLISHCONTENT_ACCESS_DENY - if the user definetley can not publish
+ *   PUBLISHCONTENT_ACCESS_DENY - if the user definitely can not publish
  *   PUBLISHCONTENT_ACCESS_IGNORE - This module wan't change the outcome.
  *   It is typically better to return IGNORE than DENY. If no module returns
  *   ALLOW then the account will be denied publish access. If one module
