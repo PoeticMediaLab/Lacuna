@@ -132,12 +132,12 @@ function course_setup_access() {
 
   // ANON
   if (user_is_anonymous()) {
-    drupal_set_message("You must be logged in to create a Lacuna Stories course.", 'status', FALSE);
+    drupal_set_message("You must be logged in to create a Lacuna course.", 'status', FALSE);
     drupal_goto('user/login', array('query' => array('destination' => 'course-setup')));
   }
   // NO PERMS
   elseif (!$canCreate) {
-    drupal_set_message("Please contact the Lacuna Stories Team. Your account does not have access to create a course.", 'error', FALSE);
+    drupal_set_message("Please contact your institution's Lacuna administrator. Your account does not have access to create a course.", 'error', FALSE);
     return FALSE;
   }
   elseif (($cache = cache_get($key)) && $_COOKIE['Lacuna_Course_Setup' . $key] == $cache->data) {
@@ -146,7 +146,7 @@ function course_setup_access() {
   }
   // NO/MISMATCHED AUTHCODE
   else {
-    drupal_set_message("Please type in the Authorization Code before creating a Lacuna Stories Course", 'warning', FALSE);
+    drupal_set_message("Please type in the Authorization Code before creating a Lacuna course.", 'warning', FALSE);
     drupal_goto('course-setup');
   }
 }
@@ -183,7 +183,7 @@ function course_admin_form() {
   $form['authorization']['course_authcode'] = array(
     '#type' => 'textfield',
     '#title' => t('Authorization Code'),
-    '#description' => t('Set the authorization code needed to create a Lacuna Stories Course.'),
+    '#description' => t('Set the authorization code needed to create a Lacuna course.'),
     '#default_value' => variable_get('course_authcode', 'ChangeMe!'),
     '#required' => FALSE,
     '#states' => array(
@@ -248,7 +248,11 @@ function course_node_view($node, $view_mode, $langcode) {
  */
 function course_views_query_alter(&$view, &$query) {
   // List of the views to alter
-  $where_node_views = array('responses', 'documents', 'threads', 'all_content', 'my_content', 'sewing-kit', 'responses_by_user', 'annotations_by_user', 'peer_groups');
+  // Design note: the Course module here demonstrates knowledge about all the other Lacuna modules
+  // Not an ideal situation. It would be better if the Course module had an API by which other modules
+  // could register their views as needing course-level restrictions, then Course iterated through
+  // that list to alter the queries in a more abstract way.
+  $where_node_views = array('responses', 'documents', 'threads', 'all_content', 'my_content', 'responses_by_user', 'annotations_by_user', 'peer_groups');
   $where_user_views = array('people', 'all_emails');
 	$gid = course_get_selected_course();
 
@@ -327,32 +331,11 @@ function course_views_pre_render(&$view) {
   }
 }
 
-/*
- * Implements hook_views_pre_build().
- */
-function course_views_pre_build(&$view) {
-  switch($view->name) {
-
-    case 'sewing-kit':
-
-      // Set some default values on the exposed filters for Course and Annotator
-      // There is a bug that prevents clearing default values (ie. searching for all) when the exposed filter is multivalued (see: https://www.drupal.org/node/2452729), so for now I have set these two filters to single value.
-//      $current_course = course_get_selected_course();
-//      $view->display_handler->handlers['filter']['og_group_ref_target_id']->value = array($current_course=>$current_course);
-//      global $user;
-//			if (isset($view->display_handler->handlers['filter']['author_select'])) {
-//				$view->display_handler->handlers['filter']['author_select']->value = array($user->uid => $user->uid);
-//			}
-
-
-      break;
-
-  }
-}
-
 // Filter taxonomy terms to return only those relevant for current course
-function course_get_terms_for_current_course($taxonomy_name) {
-	$gid = course_get_selected_course();
+function course_get_terms_for_current_course($taxonomy_name, $gid = NULL) {
+  if (empty($gid)) {
+    $gid = course_get_selected_course();
+  }
 	$taxonomy = array();
 	if ($gid) {
 		$query = new EntityFieldQuery();
@@ -405,8 +388,8 @@ function course_get_responses_for_current_course($gid = NULL) {
 /*
  * Filter the bibliography nodes to those used in current course
  */
-function course_get_bibliography_for_current_course() {
-	$documents = course_get_documents_for_current_course();
+function course_get_bibliography_for_current_course($gid) {
+	$documents = course_get_documents_for_current_course($gid);
 	$biblios = array();
 	if (!empty($documents)) {
 		$docs = node_load_multiple(array_keys($documents));
@@ -421,9 +404,9 @@ function course_get_bibliography_for_current_course() {
 /*
  * Get a list of relevant authors for exposed filter
  */
-function course_get_authors_for_current_course() {
+function course_get_authors_for_current_course($gid) {
 	$authors = array();
-	$biblios = course_get_bibliography_for_current_course();
+	$biblios = course_get_bibliography_for_current_course($gid);
 	foreach ($biblios as $biblio) {
 		foreach ($biblio->biblio_contributors as $author) {
 				$authors[$author['lastname']] = $author['name'];
@@ -441,69 +424,92 @@ function course_limit_exposed_filter_tags(&$form, $field, $terms) {
   }
 }
 
+// Limit a list of users to only those in the current user's current course
+function course_limit_user_list(&$form, $field_name, $gid) {
+  $uids = array_keys($form[$field_name]['#options']);
+  $form[$field_name]['#options'] = array();
+  if ($cached = cache_get("course_users:$gid")) {
+    $form[$field_name]['#options'] = $cached->data;
+  };
+  if (empty($form[$field_name]['#options']) and !empty($uids)) {
+    // No cached data for this filter; let's calculate it, then store it
+    $form[$field_name]['#options'] = array();	// wipe options
+    foreach ($uids as $uid) {
+      $account = user_load($uid);
+      $groups = og_get_groups_by_user($account, 'node');  // very expensive call to make
+      if (!empty($groups) && in_array($gid, $groups)) {
+        $form[$field_name]['#options'][$uid] = format_username($account);
+      }
+    }
+    cache_set("course_users:$gid", $form[$field_name]['#options'], 'cache', time() + 24 * 60 * 60);
+  }
+}
+
 /**
  * Implements hook_form_FORM_ID_alter().
  */
 function course_form_views_exposed_form_alter(&$form, &$form_state) {
+  $gid = course_get_selected_course();
+
   if ('views-exposed-form-documents-materials' == $form['#id']) {
     // Set exposed filter 'Limit by Unit' for current course
-		$form['field_unit_tid']['#options'] = course_get_terms_for_current_course('units');
+		$form['field_unit_tid']['#options'] = course_get_terms_for_current_course('units', $gid);
 		// Field name got reversed in Document field. Oops!
 		// TODO: Fix the name
-		$form['field_doc_genre_tid']['#options'] = course_get_terms_for_current_course('genre_doc');
-		$form['lastname']['#options'] = course_get_authors_for_current_course();
+		$form['field_doc_genre_tid']['#options'] = course_get_terms_for_current_course('genre_doc', $gid);
+		$form['lastname']['#options'] = course_get_authors_for_current_course($gid);
 	}
 
   if ('views-exposed-form-responses-page' == $form['#id']) {
     // Limit response genre per course
     // TODO: Fix response_genre -> genre_response order swap
-    $form['field_response_genre_tid']['#options'] = course_get_terms_for_current_course('genre_response');
+    $form['field_response_genre_tid']['#options'] = course_get_terms_for_current_course('genre_response', $gid);
   }
 
-	// Use display name via Realname module, not user account name for author exposed form
+  // Use display name via Realname module, not user account name for author exposed form
 	// Filter authors to only those in current course
 	if (isset($form['author_select'])) {
-		$uids = array_keys($form['author_select']['#options']);
-		$form['author_select']['#options'] = array();	// wipe options
-		$gid = course_get_selected_course();
-		foreach ($uids as $uid) {
-			$account = user_load($uid);
-			$groups = og_get_groups_by_user($account, 'node');
-			if (!empty($groups) && in_array($gid, $groups)) {
-				$form['author_select']['#options'][$uid] = format_username($account);
-			}
-		}
-	}
+    course_limit_user_list($form, 'author_select', $gid);
+  }
+
+  // For commenters on annotations
+  if (isset($form['commenter_select'])) {
+    course_limit_user_list($form, 'commenter_select', $gid);
+  }
 
   // Filter Taxonomy terms
   if (isset($form['field_tags_tid'])) {
-    course_limit_exposed_filter_tags($form, 'field_tags_tid', course_get_terms_for_current_course('annotation_tags'));
+    course_limit_exposed_filter_tags($form, 'field_tags_tid', course_get_terms_for_current_course('annotation_tags', $gid));
   }
+
   if ($form['#id'] == 'views-exposed-form-sewing-kit-page') {
     // Restrict the tag filter options to tags on annotations on documents in courses in which the user is a member. Otherwise we will have inapplicable tags here even with no filters set. Plus tags may be considered private content.
-    course_limit_exposed_filter_tags($form, 'field_annotation_tags_tid', course_get_terms_for_current_course('annotation_tags'));
+    course_limit_exposed_filter_tags($form, 'field_annotation_tags_tid', course_get_terms_for_current_course('annotation_tags', $gid));
 
     // Restrict exposed filter list of annotated content to current course
-    $gid = course_get_selected_course();
     $documents = course_get_documents_for_current_course($gid);
+    $doc_ids = array();
     if (isset($documents)) {
       $doc_ids = array_keys($documents);
     }
     $responses = course_get_responses_for_current_course($gid);
+    $resp_ids = array();
     if (isset($responses)) {
       $resp_ids = array_keys($responses);
     }
     foreach ($form['document']['#options'] as $type => $options) {
-      foreach ($form['document']['#options'][$type] as $nid => $title) {
-        $nids = array();
-        if (strtolower($type) == 'document') {
-          $nids = $doc_ids;
-        }
-        if (strtolower($type) == 'response') {
-          $nids = $resp_ids;
-        }
-        if (empty($nids) || !in_array($nid, $nids)) {
-          unset($form['document']['#options'][$type][$nid]);
+      if (is_array($form['document']['#options'][$type])) {
+        foreach ($form['document']['#options'][$type] as $nid => $title) {
+          $nids = array();
+          if (strtolower($type) == 'document') {
+            $nids = $doc_ids;
+          }
+          if (strtolower($type) == 'response') {
+            $nids = $resp_ids;
+          }
+          if (empty($nids) || !in_array($nid, $nids)) {
+            unset($form['document']['#options'][$type][$nid]);
+          }
         }
       }
     }
@@ -826,7 +832,7 @@ function course_create_form_submit($form, &$form_state) {
 		}
 		catch (Exception $e) {
 			watchdog_exception('course_create_form_submit', $e, NULL, NULL, WATCHDOG_ERROR);
-			drupal_set_message("There was an error creating your course.  Please try again and/or contact the Lacuna Stories team for assistance, <a href='info@lacunastories.com'>info@lacunastories.com</a>.", 'error');
+			drupal_set_message("There was an error creating your course.  Please try again and/or contact your institution's Lacuna administrator for assistance.", 'error');
 			drupal_goto("course-setup/add-course");
 		}
 	}
@@ -874,7 +880,7 @@ function course_create_blank_document($biblio) {
     drupal_set_message("The document's bibliographic information has been saved. Now provide the document's text and course-specific information.");
     drupal_goto("node/" . $document->nid . "/edit");
   } else {
-    drupal_set_message("There was an error adding your material. Please try again or contact the Lacuna Stories team.", 'error');
+    drupal_set_message("There was an error adding your material. Please try again or contact your institution's Lacuna administrator.", 'error');
   }
 }
 

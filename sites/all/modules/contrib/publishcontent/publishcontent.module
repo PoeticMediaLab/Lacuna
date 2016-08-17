@@ -36,8 +36,8 @@ function publishcontent_menu() {
 
   $items['node/%publishcontent_tab/publish/%publishcontent_security_token'] = array(
     'title' => 'Publish',
-    'page callback' => 'publishcontent_toggle_status',
-    'page arguments' => array(1),
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('publishcontent_toggle_status_form', 1, 2),
     'access callback' => '_publishcontent_publish_access',
     'access arguments' => array(1, 3),
     'weight' => 5,
@@ -48,8 +48,8 @@ function publishcontent_menu() {
 
   $items['node/%publishcontent_tab/unpublish/%publishcontent_security_token'] = array(
     'title' => 'Unpublish',
-    'page callback' => 'publishcontent_toggle_status',
-    'page arguments' => array(1),
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('publishcontent_toggle_status_form', 1, 2),
     'access callback' => '_publishcontent_unpublish_access',
     'access arguments' => array(1, 3),
     'weight' => 5,
@@ -271,6 +271,48 @@ function _publishcontent_get_message($nid, $title, $status) {
 }
 
 /**
+ * Form to get confirmation for publish/unpublish content
+ *
+ * @param array $form
+ * @param array $form_state
+ * @param $node
+ * @param string $toggle_title
+ *   Title of the button e.g. Publish or Unpublish
+ *
+ * @return array
+ */
+function publishcontent_toggle_status_form($form, &$form_state, $node, $toggle_title) {
+  $form['id'] = array(
+    '#type' => 'value',
+    '#value' => $node->nid,
+  );
+
+  // Set confirm form question.
+  if ($toggle_title) {
+    $question = t('Are you sure you want to %publish_state this content?', array('%publish_state' => ucfirst($toggle_title)));
+  }
+  else {
+    $question = t('Are you sure?');
+  }
+
+  $description = t('Click confirm if you want to continue.');
+
+  // Set return path if clicked on Cancel button.
+  $path = 'node/' . $node->nid;
+
+  return confirm_form($form, $question, $path, $description);
+}
+
+/**
+ * Submit handler for Publish/Unpublish confirmation form
+ */
+function publishcontent_toggle_status_form_submit($form, &$form_state) {
+  // load node using node id
+  $node = node_load($form_state['values']['id']);
+  publishcontent_toggle_status($node);
+}
+
+/**
  * Menu callback for publish / unpublish content actions.
  *
  * @param node $node
@@ -305,7 +347,7 @@ function publishcontent_toggle_status($node) {
   // Clear the page and block caches.
   cache_clear_all();
 
-  drupal_goto($_SERVER['HTTP_REFERER']);
+  drupal_goto('node/' . $node->nid);
 }
 
 /**

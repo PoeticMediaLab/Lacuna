@@ -1,0 +1,421 @@
+<?php
+
+/**
+ * @file
+ * The Avatar Selection module install file.
+ */
+
+/**
+ * Implements hook_schema().
+ *
+ * Generate the 'avatar_selection' sql table structure.
+ *
+ * @return $schema
+ *   The sql table structure.
+ */
+function avatar_selection_schema() {
+  $schema['avatar_selection'] = array(
+    'description' => 'List of available avatars and their names.',
+    'fields' => array(
+      'aid' => array(
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'description' => 'Avatar identifier.',
+      ),
+      'fid' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'description' => 'File identifier.',
+      ),
+      'avatar' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'description' => 'Avatar image filename.',
+      ),
+      'name' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'description' => 'Avatar name.',
+      ),
+      'weight' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'Avatar weight.',
+      ),
+    ),
+    'primary key' => array('aid'),
+    'unique keys' => array('avatar' => array('avatar'), 'fid' => array('fid')),
+  );
+  $schema['avatar_selection_roles'] = array(
+    'fields' => array(
+      'aid' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'description' => 'Avatar identifier.',
+      ),
+      'rid' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'description' => 'Role identifier.',
+      ),
+    ),
+  );
+  $schema['avatar_selection_og'] = array(
+    'fields' => array(
+      'aid' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'description' => 'Avatar identifier.',
+      ),
+      'ogid' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'description' => 'Organic group identifier.',
+      ),
+    ),
+  );
+  $schema['avatar_selection_usage'] = array(
+    'fields' => array(
+      'fid' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'description' => 'Avatar identifier.',
+      ),
+      'uid' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'description' => 'Role identifier.',
+      ),
+    ),
+    'primary key' => array('uid'),
+  );
+
+  return $schema;
+}
+
+/**
+ * Implements hook_install().
+ *
+ * Write table structure to the SQL database.
+ * If the 'user_picture' option is set to off, a warning will be printed.
+ */
+function avatar_selection_install() {
+  $t = get_t();
+  if (!variable_get('user_pictures', 0)) {
+    drupal_set_message($t('User Pictures option is disabled.  You will need to enable this option before you can use the Avatar Selection module.  You may configure this setting at the <a href="@url">User settings</a> page.', array('@url' => url('admin/config/people/accounts'))));
+  }
+}
+
+/**
+ * Implements hook_enable().
+ *
+ * Increase module weight so it comes after reg_with_pic.
+ */
+function avatar_selection_enable() {
+  db_query("UPDATE {system} SET weight = 1 WHERE name = 'avatar_selection'");
+}
+
+/**
+ * Implements hook_uninstall().
+ *
+ * Remove all the variables, files and sql tables used by the module.
+ */
+function avatar_selection_uninstall() {
+  // Delete the variables we created.
+  variable_del('avatar_selection_disable_user_upload');
+  variable_del('avatar_selection_force_user_avatar_reg');
+  variable_del('avatar_selection_force_user_avatar');
+  variable_del('avatar_selection_avatar_per_page');
+  variable_del('avatar_selection_set_random_default');
+  variable_del('avatar_selection_distinctive_avatars');
+  variable_del('avatar_selection_imagecache_preset');
+
+  // Delete the images.
+  $query = db_select('avatar_selection', 'avs')
+    ->fields('avs', array('avatar', 'fid', 'name', 'weight'))
+    ->distinct();
+  $alias = $query->join('file_managed', 'f', 'f.fid = avs.fid');
+  $query->addField('f', 'uri');
+  $query->addField('f', 'filename');
+  $query->addField('f', 'filemime');
+  $query->addField('f', 'filesize');
+  $query->addField('f', 'status');
+  $query->addField('f', 'timestamp');
+  $result = $query->execute();
+  foreach ($result as $avatar) {
+    file_delete($avatar);
+  }
+
+  // Clear the cache tables.
+  cache_clear_all(null, 'cache');
+  cache_clear_all(null, 'cache_filter');
+  cache_clear_all(null, 'cache_menu');
+  cache_clear_all(null, 'cache_page');
+}
+
+/**
+ * Adds to the current table structure another two columns, 'weight' and 'name'.
+ *
+ * Should have been created with avatar_selection_update_600x() naming
+ * convention, but too late now.
+ */
+function avatar_selection_update_1() {
+  db_add_field('avatar_selection', 'weight', array('type' => 'int', 'not null' => TRUE, 'default' => 0));
+  db_add_field('avatar_selection', 'name', array('type' => 'varchar', 'length' => 255));
+  return t('Added "weight" and "name" columns to the avatar_selection table.');
+}
+
+/**
+ * Updates the avatar entry so it's just a filename, rather than a path +
+ * filename.
+ */
+function avatar_selection_update_6002() {
+  $result = db_query("SELECT avatar FROM {avatar_selection}");
+  while ($avatar_info = db_fetch_object($result)) {
+    $avatar = $avatar_info->avatar;
+    $path_info = pathinfo($avatar);
+    db_update('avatar_selection')
+      ->fields(array(
+          'avatar' => $path_info['basename'],
+        ))
+      ->condition('avatar', $avatar)
+      ->execute();
+  }
+
+  return t("Updated avatar entry so it's just a filename with no path.");
+}
+
+/**
+ * Create "avatar_selection_roles" and "avatar_selection_og" tables, and add
+ * "aid" column to avatar_selection table.
+ */
+function avatar_selection_update_6003() {
+  $ret = array();
+
+  $schema['avatar_selection_roles'] = array(
+    'fields' => array(
+      'aid' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'description' => 'Avatar identifier.',
+      ),
+      'rid' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'description' => 'Role identifier.',
+      ),
+    ),
+  );
+  $schema['avatar_selection_og'] = array(
+    'fields' => array(
+      'aid' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'description' => 'Avatar identifier.',
+      ),
+      'ogid' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'description' => 'Organic group identifier.',
+      ),
+    ),
+  );
+
+  db_create_table('avatar_selection_roles', $schema['avatar_selection_roles']);
+  db_create_table('avatar_selection_og', $schema['avatar_selection_og']);
+
+  db_drop_primary_key('avatar_selection');
+  db_drop_unique_key('avatar_selection', 'avatar');
+  db_add_field('avatar_selection', 'aid', array('type' => 'serial', 'unsigned' => TRUE, 'not null' => TRUE), array('primary key' => array('aid')));
+  db_add_unique_key('avatar_selection', 'avatar', array('avatar'));
+
+  $result = db_query("SELECT aid, access, og_access FROM {avatar_selection}");
+  while ($avatar = db_fetch_object($result)) {
+    $avs_access = preg_split('/\s*,\s*/', $avatar->access);
+    $og_access = preg_split('/\s*,\s*/', $avatar->og_access);
+
+    if (count($avs_access) > 0) {
+      foreach ($avs_access as $access) {
+        if (!empty($access)) {
+          db_insert('avatar_selection_roles')
+            ->fields(array(
+              'aid' => $avatar->aid,
+              'rid' => $access,
+            ))
+            ->execute();
+        }
+      }
+    }
+
+    if (count($og_access) > 0) {
+      foreach ($og_access as $access) {
+        if (!empty($access)) {
+          db_insert('avatar_selection_og')
+            ->fields(array(
+              'aid' => $avatar->aid,
+              'ogid' => $access,
+            ))
+            ->execute();
+        }
+      }
+    }
+  }
+
+  db_drop_field('avatar_selection', 'access');
+  db_drop_field('avatar_selection', 'og_access');
+
+  return t('Created "avatar_selection_roles" and "avatar_selection_og" tables, and added "aid" column to avatar_selection table.');
+}
+
+/**
+ * Add fid column to avatar_selection table.
+ */
+function avatar_selection_update_7001() {
+  db_add_field('avatar_selection', 'fid', array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'initial' => 0));
+  return t('Add fid column to avatar_selection table.');
+}
+
+/**
+ * Create avatar_selection_usage table.
+ */
+function avatar_selection_update_7002() {
+  $schema['avatar_selection_usage'] = array(
+    'fields' => array(
+      'fid' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'description' => 'Avatar identifier.',
+      ),
+      'uid' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'description' => 'Role identifier.',
+      ),
+    ),
+    'primary key' => array('uid'),
+  );
+  db_create_table('avatar_selection_usage', $schema['avatar_selection_usage']);
+
+  return t('Created avatar_selection_usage table.');
+}
+
+/**
+ * Create a file entry for each existing avatar for users upgrading from D6.
+ */
+function avatar_selection_update_7003() {
+  // Prepare the pictures directory.
+  file_prepare_directory($picture_directory, FILE_CREATE_DIRECTORY);
+  $picture_directory =  file_default_scheme() . '://' . variable_get('user_picture_path', 'pictures');
+
+  // Prepare the avatar_selection directory.
+  $avs_directory = file_build_uri('avatar_selection');
+  file_prepare_directory($avs_directory, FILE_CREATE_DIRECTORY);
+
+  // Get all users using old avatar_selection avatars and create copies in the
+  // "pictures" directory for them.
+  $query = db_select('users', 'u')
+    ->fields('u', array('uid', 'picture'));
+  $query->join('file_managed', 'f', 'u.picture = f.fid');
+  $query->addField('f', 'uri');
+  $result = $query->condition('uri', '%/avatar_selection/%', 'LIKE')
+    ->execute();
+
+  foreach ($result as $account) {
+    // Don't bother copying files that don't exist.
+    if (file_exists($account->uri)) {
+      $info = image_get_info($account->uri);
+      $destination = file_stream_wrapper_uri_normalize($picture_directory . '/picture-' . $account->uid . '-' . REQUEST_TIME . '.' . $info['extension']);
+      $original_file = file_load($account->picture);
+
+      // Create a file object.
+      $file = new stdClass();
+      $file->uri      = $account->uri;
+      $file->filename = drupal_basename($file->uri);
+      $file->filemime = file_get_mimetype($file->uri);
+      $file->uid      = $account->uid;
+      $file->status   = FILE_STATUS_PERMANENT;
+      if ($file = file_copy($file, $destination, FILE_EXISTS_RENAME)) {
+        $file->status = FILE_STATUS_PERMANENT;
+        $file = file_save($file);
+        file_usage_add($file, 'user', 'user', $account->uid);
+        file_usage_delete($original_file, 'user', 'user', $account->uid);
+
+        db_update('users')
+          ->fields(array('picture' => $file->fid))
+          ->condition('uid', $account->uid)
+          ->execute();
+      }
+    }
+  }
+
+  // Create a file object for each old avatar and update avatar_selection table
+  // with the fid.
+  $result = db_select('avatar_selection', 'avs')
+    ->fields('avs', array('aid', 'avatar'))
+    ->condition('fid', 0)
+    ->execute();
+  foreach ($result as $avatar) {
+    $uri = $avs_directory . '/' . $avatar->avatar;
+    $uri = file_stream_wrapper_uri_normalize($uri);
+    $wrapper = file_stream_wrapper_get_instance_by_uri($uri);
+    $fid = db_select('file_managed', 'f')
+      ->fields('f', array('fid'))
+      ->condition('uri', $uri)
+      ->execute()
+      ->fetchField();
+    if (empty($fid)) {
+      $file = new stdClass;
+      $file->uid = 1;
+      $file->filename = basename($uri);
+      $file->uri = $uri;
+      $file->filemime = file_get_mimetype($uri);
+      // This is gagged because some uris will not support it.
+      $file->filesize = @filesize($uri);
+      $file->timestamp = REQUEST_TIME;
+      $file->status = FILE_STATUS_PERMANENT;
+      $file->is_new = TRUE;
+      $file = file_save($file);
+      $fid = $file->fid;
+    }
+
+    db_update('avatar_selection')
+      ->fields(array('fid' => $fid))
+      ->condition('aid', $avatar->aid)
+      ->execute();
+  }
+
+  return t('Created file objects for D6 avatars.');
+}
+
+/**
+ * Change weight of avatar_selection module.
+ */
+function avatar_selection_update_7004() {
+  $weight = db_select('system', 's')
+    ->fields('s', array('weight'))
+    ->condition('name', 'avatar_selection')
+    ->execute()
+    ->fetchField();
+  if ($weight <= 0) {
+    db_query("UPDATE {system} SET weight = 1 WHERE name = 'avatar_selection'");
+  }
+
+  return t('Updated weight of avatar selection module.');
+}
+
