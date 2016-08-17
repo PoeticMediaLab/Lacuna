@@ -462,12 +462,12 @@ label.annotator-privacy-group {
 }
 
 .annotator-widget .annotator-listing{
-  padding: 1px;
+  padding: 12px;
 }
 
-.annotator-widget.annotator-listing{
+/* .annotator-widget.annotator-listing{
   padding: 12px;                                   // this adds 12px of padding to the .annotator-widget.annotator-listing box in .annotator-outer.annotator-viewer for better readability (ih, 08/15)
-}
+} */
 
 /* Fix to show icons */
 .annotator-editor a:after {
