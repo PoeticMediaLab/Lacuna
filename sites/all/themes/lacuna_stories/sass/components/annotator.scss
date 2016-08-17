@@ -164,7 +164,7 @@ section.region-sidebar-second input[type="checkbox"] {
     // border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
     // background-color: #92a6c4;
     // background-image: linear-gradient(to bottom, #92a6c4, #39404a);
-    background-image: linear-gradient(to top, #939dab, #afbbcc); 
+    background-image: linear-gradient(to top, #939dab, #b0b7c1); 
     color: #FFFFFF;
     // text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
     -moz-border-bottom-colors: none;
@@ -194,7 +194,7 @@ section.region-sidebar-second input[type="checkbox"] {
 }
 
 .af-button-active:hover {
-    background-color: #96ba25; // #88b551;
+    background-color: #83a220; // #88b551;
     color: #FFFFFF;
     background-position: 0 15px;
     text-decoration: none;
@@ -205,11 +205,11 @@ section.region-sidebar-second input[type="checkbox"] {
     // background-color: #c4df2c;
     // background-image: linear-gradient(to bottom, #c4df2c, #88b551);
     background-color: #a5cc29; // #98ca5b;
-    background-image: linear-gradient(to top, #a5cc29, #96ba25);// #98ca5b, #88b551);
+    background-image: linear-gradient(to top, #a5cc29, #83a220);// #98ca5b, #88b551);
 }
 
 .af-button-reset:hover {
-    background-color: #5f6677;
+    background-color: #5d6476;
     color: #FFFFFF;
     background-position: 0 -15px;
     display: block;
@@ -226,8 +226,8 @@ section.region-sidebar-second input[type="checkbox"] {
     margin-left: auto;
     margin-right: auto;
     display: block;
-    background-color: #5f6677;
-    background-image: linear-gradient(to bottom, #747c92, #5f6677);
+    background-color: #5d6476;
+    background-image: linear-gradient(to bottom, #747c92, #5d6476);
 }
 
 .af-annotation-hide {
