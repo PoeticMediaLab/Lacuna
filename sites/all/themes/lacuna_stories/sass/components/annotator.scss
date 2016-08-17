@@ -157,6 +157,7 @@ section.region-sidebar-second input[type="checkbox"] {
     margin: 0px 6px 15px 6px;
     text-align: center;
     font-variant: small-caps;
+    // text-transform: uppercase;
     width: 25%;
     background-repeat: repeat-x;
     border-color: rgba(0, 0, 0, 0) rgba(0, 0, 0, 0) rgba(0, 0, 0, 0);
@@ -193,7 +194,7 @@ section.region-sidebar-second input[type="checkbox"] {
 }
 
 .af-button-active:hover {
-    background-color: #a4bb25; // #88b551;
+    background-color: #96ba25; // #88b551;
     color: #FFFFFF;
     background-position: 0 15px;
     text-decoration: none;
@@ -203,8 +204,8 @@ section.region-sidebar-second input[type="checkbox"] {
 .af-button-active {
     // background-color: #c4df2c;
     // background-image: linear-gradient(to bottom, #c4df2c, #88b551);
-    background-color: #b3cc29; // #98ca5b;
-    background-image: linear-gradient(to top, #b3cc29, #a4bb25);// #98ca5b, #88b551);
+    background-color: #a5cc29; // #98ca5b;
+    background-image: linear-gradient(to top, #a5cc29, #96ba25);// #98ca5b, #88b551);
 }
 
 .af-button-reset:hover {
