@@ -199,6 +199,24 @@ td.active {
   font-weight: bold;
 }
 
+
+body.node-type-document {
+ #page-title {
+  font-family: $lacuna-header-font;
+  margin-bottom: 20px;
+  font-weight: 500;
+  text-transform: uppercase;
+  color: #1588ba;
+  letter-spacing: -.03em;
+  font-size: 2em;
+  line-height: 1em;
+  }
+}
+
+body.node-type-response #page-title {
+  display: none;
+}
+
 .breadcrumb {
   display: none;
 }

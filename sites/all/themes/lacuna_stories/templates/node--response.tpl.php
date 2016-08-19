@@ -28,6 +28,7 @@
         <div class="submitted response-user-information">
           <?php print $user_picture; ?>
           <div class="username-and-date">
+            <h2 class="response-title"><?php print $title; ?></h2>
             <?php print $name; ?>
             <br>
             <span class="date-month-day-year">
