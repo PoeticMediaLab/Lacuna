@@ -1,3 +1,5 @@
+@import "init";
+
 .field {
   margin-bottom: 30px;
 }
@@ -47,6 +49,7 @@ fieldset#edit-thread-description-format {
 */
 
 .response-user-information {
+  height: 220px;
 
   .user-picture {
     margin-right: 3em;
@@ -55,18 +58,30 @@ fieldset#edit-thread-description-format {
   }
 
   .username-and-date {
-
-    padding-top: 70px;
-    font-family: "Arial", sans-serif;
+    font-family: $lacuna-header-font;
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
+    -webkit-transform: translateY(-50%);
+    -ms-transform: translateY(-50%);
 
     .username {
 
       font-size: xx-large;
       font-weight: bold;
       text-decoration: none;
-      color: black;
+      color: #000000;
       line-height: 150%;
 
+    }
+
+    .response-title {
+      font-family: $lacuna-header-font;
+      color: #1588BA;
+      text-transform: uppercase;
+      font-size: 2em;
+      line-height: 1.2em;
+      letter-spacing: -.02em;
     }
 
     .date {
@@ -92,6 +107,8 @@ li.statistics_counter {
 #document-authors {
   font-weight: normal;
   font-size: .75em;
+  text-transform: none;
+  color: #000000;
 }
 
 li.comment_forbidden {
