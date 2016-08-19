@@ -25,7 +25,15 @@ function views_lacuna_stories_views_data() {
 				'help' => t('Filter by author, choosing from dropdown list.'),
 				'filter' => array('handler' => 'views_lacuna_stories_views_handler_filter_author_select'),
 				'real field' => 'uid',
-			)
+			),
+      // Filter to expose commenters on a node as a drop-down
+      'commenter_select' => array(
+        'group' => t('Content'),
+        'title' => t('Commenter (select list)'),
+        'help' => t('Filter by commenter, choosing from dropdown list.'),
+        'filter' => array('handler' => 'views_lacuna_stories_views_handler_filter_commenter_select'),
+        'real field' => 'uid',
+      )
 		)
 	);
 }
