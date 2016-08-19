@@ -49,12 +49,17 @@ fieldset#edit-thread-description-format {
 */
 
 .response-user-information {
-  height: 220px;
+  height: 275px;
 
   .user-picture {
     margin-right: 3em;
     margin-bottom: 1em;
     float: left;
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
+    -webkit-transform: translateY(-50%);
+    -ms-transform: translateY(-50%);
   }
 
   .username-and-date {
@@ -72,16 +77,25 @@ fieldset#edit-thread-description-format {
       text-decoration: none;
       color: #000000;
       line-height: 150%;
+      -webkit-transition: color 0.5s ease;
+      -moz-transition: color 0.5s ease;
+      -o-transition: color 0.5s ease;
+      transition: color 0.5s ease;
+    }
 
+    .username:hover {
+      color: #999999;
     }
 
     .response-title {
       font-family: $lacuna-header-font;
       color: #1588BA;
       text-transform: uppercase;
-      font-size: 2em;
+      font-size: 1.8em;
       line-height: 1.2em;
       letter-spacing: -.02em;
+      max-height: 155px;
+      overflow: scroll;
     }
 
     .date {
@@ -92,9 +106,36 @@ fieldset#edit-thread-description-format {
   }
 }
 
+@media only screen and (max-width : 1024px) {
+  .response-user-information {
+    .user-picture {
+    margin-right: 3em;
+    margin-bottom: 1em;
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
+    -webkit-transform: translateX(-50%);
+    -ms-transform: translateX(-50%);
+    top: 0;
+    }
+    .username-and-date {
+      float: left;
+      margin-bottom: 25px;
+      top: 0;
+      transform: translateY(0%);
+      -webkit-transform: translateY(0%);
+      -ms-transform: translateY(0%);
+    }
+    .response-title {
+      max-height: none;
+      overflow: inherit;
+    }
+  }
+}
+
 // Ensure that the response shows up beneath the user information
 .node-response .field-name-body {
-  padding-top: 105px;
+  padding-top: 25px;
 }
 
 // The XX reads statistic
