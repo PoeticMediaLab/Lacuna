@@ -362,7 +362,7 @@ function lacuna_stories_materials_field_default_field_instances() {
     'bundle' => 'document',
     'default_value' => NULL,
     'deleted' => 0,
-    'description' => 'Keep this document in <strong>Draft</strong> state if you want to continue to make changes to it. Once a document is set to <strong>Ready to Annotate</strong>, it will be available to annotate, and <em>further changes to the document will cause all annotations to be erased.</em>',
+    'description' => 'Keep this document in <strong>Draft</strong> state if you want to continue to make changes to it. Once a document is set to <strong>Ready to Annotate</strong>, it will be available to annotate, and <em>further changes to the document are likely to cause existing annotations to display incorrectly, or not at all.</em>',
     'display' => array(
       'default' => array(
         'label' => 'above',
@@ -654,7 +654,7 @@ function lacuna_stories_materials_field_default_field_instances() {
   t('Course');
   t('Cover Image');
   t('Genre');
-  t('Keep this document in <strong>Draft</strong> state if you want to continue to make changes to it. Once a document is set to <strong>Ready to Annotate</strong>, it will be available to annotate, and <em>further changes to the document will cause all annotations to be erased.</em>');
+  t('Keep this document in <strong>Draft</strong> state if you want to continue to make changes to it. Once a document is set to <strong>Ready to Annotate</strong>, it will be available to annotate, and <em>further changes to the document are likely to cause existing annotations to display incorrectly, or not at all.</em>');
   t('Media');
   t('Medium');
   t('Priority');
