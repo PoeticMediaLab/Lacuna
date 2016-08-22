@@ -93,14 +93,21 @@ $category-selected: rgba(22,147,165, .8);
   #annotation-filters-wrapper {
     position: fixed;
     font-size: 12px;
-    border: 1px solid rgb(200, 200, 200);
-    moz-border-radius: 5px;
-    webkit-border-radius: 5px;
-    border-radius: 5px;
-    padding: 2px;
+    // border: 1px solid rgb(200, 200, 200);
+    // moz-border-radius: 5px;
+    // webkit-border-radius: 5px;
+    // border-radius: 5px;
+    // padding: 2px;
+    border: 1px solid #b4b4b4;
+    moz-border-radius: 3px;
+    webkit-border-radius: 3px;
+    border-radius: 3px;
+    padding: 4px;
     width: 15em;
-    background-color: #ff0000;
-    box-shadow: 2px 2px 5px gray;
+    // background-color: #ff0000;
+    // box-shadow: 2px 2px 5px gray;
+    background-color: #eee;
+    box-shadow: 0px 0px 5px #b1b1b1;
     top: 200px;
     z-index: 1;
   }
@@ -110,14 +117,23 @@ $category-selected: rgba(22,147,165, .8);
 }
 
 section.region-sidebar-second h2 {
+    text-transform: lowercase;
+    font-variant: small-caps;
+    font-size: 20px;
+    letter-spacing: .4px;                           // ih (8/16): editing the title of annotation filters
+
     text-align: center;
     margin-top: 5px;
     margin-bottom: 5px;
 }
 
 section.region-sidebar-second input[type="checkbox"] {
-    margin: 0% 5% 0% 20%;
+    // margin: 8% 5% 8% 15%;
+    margin: 15px 6px 0px 50px;
 }
+section.region-sidebar-second input[type="checkbox"]:nth-of-type(2) {
+  margin:0px 6px 15px 50px;
+  }
 
 #af-active {
     text-align: center;
@@ -133,7 +149,7 @@ section.region-sidebar-second input[type="checkbox"] {
     font-weight: bold;
 }
 
-.af-button, .annotator-reply-button  {
+.af-button {                // ih (8/16): changes made to button design
     cursor: pointer;
     display: inline-block;
     color: black;
@@ -141,68 +157,99 @@ section.region-sidebar-second input[type="checkbox"] {
     margin: 0px 6px 15px 6px;
     text-align: center;
     font-variant: small-caps;
+    // text-transform: uppercase;
     width: 25%;
     background-repeat: repeat-x;
-    border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
-    background-color: #92a6c4;
-    background-image: linear-gradient(to bottom, #92a6c4, #39404a);
+    border-color: rgba(0, 0, 0, 0) rgba(0, 0, 0, 0) rgba(0, 0, 0, 0);
+    // border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+    // background-color: #92a6c4;
+    // background-image: linear-gradient(to bottom, #92a6c4, #39404a);
+    background-image: linear-gradient(to top, #939dab, #b0b7c1); 
     color: #FFFFFF;
-    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+    // text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
     -moz-border-bottom-colors: none;
     -moz-border-left-colors: none;
     -moz-border-right-colors: none;
     -moz-border-top-colors: none;
     border-image: none;
-    border-radius: 4px 4px 4px 4px;
-    border-style: solid;
+    // border-radius: 4px 4px 4px 4px;
+    border-radius: 2px;
+    // border-style: solid;
     border-width: 1px;
-    box-shadow: 0 1px 0 rgba(255, 255, 255, 0.2) inset, 0 1px 2px rgba(0, 0, 0, 0.05);
+    // box-shadow: 0 1px 0 rgba(255, 255, 255, 0.2) inset, 0 1px 2px rgba(0, 0, 0, 0.05);
     margin-bottom: 0;
     text-align: center;
     vertical-align: middle;
     font-weight: normal;
-    font-size: 14px;
+    font-size: 13px;
     margin-right: 5px;
+    letter-spacing: .5px;
 }
 
 .af-button:hover {
-    background-color: #39404a;
+    // background-color: #39404a;
+    background-color: #939dab;
+    background-position: 0 -15px;
+    transition: background-color ease-in 0s;
 }
 
 .af-button-active:hover {
-    background-color: #88b551;
+    background-color: #83a220; // #88b551;
+    color: #FFFFFF;
+    background-position: 0 15px;
+    text-decoration: none;
+    transition: background-color ease-in 0s;
+}
+
+.af-button-active {
+    // background-color: #c4df2c;
+    // background-image: linear-gradient(to bottom, #c4df2c, #88b551);
+    background-color: #a5cc29; // #98ca5b;
+    background-image: linear-gradient(to top, #a5cc29, #83a220);// #98ca5b, #88b551);
+}
+
+.af-button-reset:hover {
+    background-color: #5d6476;
     color: #FFFFFF;
     background-position: 0 -15px;
-    text-decoration: none;
-    transition: background-position 0.1s linear 0s;
+    display: block;
+    width: 90%;
+        margin-bottom: 5%;
+    margin-left: auto;
+    margin-right: auto;
+    transition: background-color ease-in 0s;
 }
 
-.af-button-active,
-.annotator-reply-save {
-    background-color: #c4df2c;
-    background-image: linear-gradient(to bottom, #c4df2c, #88b551);
-}
-
-#af-button-reset {
+.af-button-reset {
     width: 90%;
     margin-bottom: 5%;
     margin-left: auto;
     margin-right: auto;
     display: block;
+    background-color: #5d6476;
+    background-image: linear-gradient(to bottom, #747c92, #5d6476);
 }
 
 .af-annotation-hide {
     background-color: transparent !important;
 }
 
-#af-button-user {
+.af-button-user {
+  margin-left: 7.5px;
+  margin-right:7.5px;
 }
 
 // For the "Showing Only" title
 #af-filter-active {
-  font-size: 16px;
+  font-size: 20px;
+  font-variant: small-caps;
+  letter-spacing: .4px;
+  text-transform: lowercase;                // ih (8/16)
+
+  // font-size: 16px;
   font-weight: bold;
   text-align: center;
+  padding-bottom: 8px
 }
 
 // For dynamic active filters
@@ -212,6 +259,13 @@ section.region-sidebar-second input[type="checkbox"] {
     width: 100%;
     padding-left: 10%;
     cursor: pointer;
+    padding-bottom: 10px;                  // ih (8/16)
+    font-family: $base-font-family;
+    font-size: 12px;
+
+    &::before {
+      font: normal normal normal 11px/1 FontAwesome;          // and then overrides the font for the icon by referencing directly the element prior to the annotator privacy type font (ih, 07/12)
+    }
 }
 
 .af-wrapper {
@@ -227,6 +281,7 @@ label.af-autocomplete-label {
     padding-right: 5px;
     font-weight: normal;
     font-size: 9pt;
+    letter-spacing: .2px;
 }
 
 label.af-autocomplete-label:first-letter {
@@ -235,7 +290,8 @@ label.af-autocomplete-label:first-letter {
 
 input.af-autocomplete.ui-autocomplete-input {
     display: inline-block;
-    width: 60%;
+    // width: 60%;
+    width: 55%;
 }
 
 #af-pager-wrapper {
@@ -253,6 +309,7 @@ input.af-autocomplete.ui-autocomplete-input {
 #af-pager-count {
   text-align: center;
   margin-left: 40%;
+  font-size: 11px;
 }
 
 i.af-pager {
@@ -525,10 +582,12 @@ li.annotator-checkbox[style] {
   font-size: smaller;
 }
 
+/* 
 #annotation-filters-wrapper {
   background-color: #eee;
   box-shadow: 2px 2px 5px gray;
 }
+*/
 
 
 /* Annotation histogram styles */
