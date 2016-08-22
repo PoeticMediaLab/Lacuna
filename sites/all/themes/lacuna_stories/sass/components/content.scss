@@ -8,6 +8,12 @@
 }
 
 /*styling comments*/
+/*addresses a bug that causes comments to expand to thousands of pixels tall*/
+#comments article.comment {
+  max-height: 450px;
+}
+
+
 li.comment-add {
   margin-left: 4.5%;
   a {
@@ -39,7 +45,7 @@ fieldset.group-about {
 #comments {
   margin-top: 40px;
   header {
-    height: 110px;
+    height: 100px;
   }
   .user-picture {
     width: 100px;
@@ -69,16 +75,80 @@ fieldset.group-about {
     -webkit-transform: translateY(-50%);
     -ms-transform: translateY(-50%);
     h3.comment-title {
-      font-family: "Source Sans Pro";
+      font-family: $lacuna-header-font;
       font-size: 1.8em;
       font-weight: 700;
       line-height: 1em;
     }
   }
-  div.field-name-comment-body {
+  div.field.field-name-comment-body {
+    padding-top: 25px;
     margin-left: 12.7em;
   }
+  ul.links.inline {
+    font-family: arial;
+    font-size: 0.8em;
+    margin-left: 12.4em;
+  }
 }
+
+
+/*don't squeeze comments into such a small area on smaller screens*/
+@media only screen and (min-width: 777px) and (max-width: 959px) {
+  #comments {
+    div.field.field-name-comment-body {
+      margin-left: 5em;
+      padding-top: 55px;
+    }
+    ul.links.inline {
+      margin-left: 3em;
+    }
+    .comment-wrapper {
+      h3.comment-title {
+        font-size: 1.5em;
+        line-height: 0.8em;
+      }
+      span {
+        font-size: 0.7em;
+      }
+      a.permalink {
+        font-size: 0.7em;
+      }
+    }
+  }
+}
+
+@media only screen and (max-width: 776px) {
+  #comments {
+    header {
+      min-height: 150px;
+      .user-picture {
+        position: relative;
+        left: 50%;
+        transform: translateX(-50%);
+      }
+      .comment-wrapper {
+        float: left;
+        margin-bottom: 15px;
+        h3.comment-title {
+        font-size: 1.3em;
+        }
+        span {
+        font-size: 0.7em;
+        }
+        a.permalink {
+        font-size: 0.7em;
+        }
+      }
+    }
+    div.field.field-name-comment-body {
+      margin-left: 5em;
+      padding-top: 85px;
+    }
+  }
+}
+
+
 #comments h2.title {
   text-transform: uppercase;
   font-family: "Source Sans Pro";
@@ -179,7 +249,7 @@ fieldset#edit-thread-description-format {
   }
 }
 
-@media only screen and (max-width : 1024px) {
+@media only screen and (max-width: 1024px) {
   .response-user-information {
     .user-picture {
     margin-right: 3em;
