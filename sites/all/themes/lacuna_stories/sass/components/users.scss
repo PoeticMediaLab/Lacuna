@@ -8,8 +8,12 @@ $profile-height: 220px;
 	div.column {
 		display: inline-block;
 	}
-	aside {
+	aside.column.left-part {
 		display: inline-block;
+		margin-right: 10px;
+		vertical-align: top;
+		width: 27%;
+		float: left;
 	}
 
 	.profile-section {
@@ -20,13 +24,13 @@ $profile-height: 220px;
 	div.left-part {
 		margin-right: 10px;
 		vertical-align: top;
-		width: 22%;
+		width: 27%;
 		float: left;
 	}
 
 	div.right-part {
 		vertical-align: top;
-		width: 75%;
+		width: 70%;
 		min-height: 820px;
 	}
 
@@ -40,10 +44,11 @@ $profile-height: 220px;
 
 	p.profileUsername {
 		margin-bottom: 25px;
-		font-size: 2.5em;
-		max-width: 220px;
+		font-size: 2.2em;
+		font-size: 2.2vw;
+		/*max-width: 220px;*/
 		line-height:110%;
-		margin-top: auto;
+		margin-top: 20px;
 	}
 
 	div.field-wrapper {
@@ -178,8 +183,12 @@ $profile-height: 220px;
 		display: inline-block;
 	}
 
-	aside {
+	aside.column.left-part {
 		display: inline-block;
+		margin-right: 10px;
+		vertical-align: top;
+		width: 27%;
+		float: left;
 	}
 
 	.profile-section {
@@ -190,7 +199,7 @@ $profile-height: 220px;
 	div.left-part {
 		margin-right: 10px;
 		vertical-align: top;
-		width: 22%;
+		width: 27%;
 		float: left;
 	}
 
@@ -210,10 +219,11 @@ $profile-height: 220px;
 
 	p.profileUsername {
 		margin-bottom: 25px;
-		font-size: 2.5em;
-		max-width: 220px;
+		font-size: 2.2em;
+		font-size: 2.2vw;
+		/*max-width: 220px;*/
 		line-height:110%;
-		margin-top: auto;
+		margin-top: 20px;
 	}
 
 	div.field-wrapper {
@@ -341,15 +351,17 @@ $profile-height: 220px;
 }
 }
 
-@media screen and (max-width: 780px) {
+@media screen and (max-width: 968px) {
 	#user-profile-main {
 	width: 100%;
 	div.column {
 		display: inline-block;
 	}
 
-	aside {
+	aside.column.left-part {
 		display: block;
+		width: 100%;
+		text-align: center;
 	}
 
 	.profile-section {
@@ -357,12 +369,12 @@ $profile-height: 220px;
 		padding-top: 15px;
 	}
 
-	div.left-part {
+	/*div.left-part {
 		margin-right: 10px;
 		vertical-align: top;
 		width: 22%;
 		float: left;
-	}
+	}*/
 
 	div.right-part {
 		vertical-align: top;
@@ -381,9 +393,9 @@ $profile-height: 220px;
 	p.profileUsername {
 		margin-bottom: 25px;
 		font-size: 2.5em;
-		max-width: 220px;
+		/*max-width: 220px;*/
 		line-height:110%;
-		margin: auto;
+		margin: 20px;
 	}
 
 	div.field-wrapper {
