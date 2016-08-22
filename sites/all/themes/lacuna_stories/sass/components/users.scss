@@ -512,7 +512,7 @@ $profile-height: 220px;
 }
 /*
 	We use this CSS in the People view, so separate it from
-  just the user profile ID
+  just the user profile ID // 8/22/16: making changes to .user-picture in responses and comments; changes made in content.scss -- DMB
 */
 .user-picture {
 	width: $profile-width;

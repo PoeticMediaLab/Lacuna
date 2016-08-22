@@ -7,11 +7,84 @@
   margin-bottom: 10px;
 }
 
+/*styling comments*/
+li.comment-add {
+  margin-left: 4.5%;
+  a {
+    padding-left: 10px;
+    font-family: $arial;
+    text-transform: uppercase;
+    color: #bababa;
+    font-weight: 700;
+  }
+  a:hover {
+    color: #6e6e6e;
+  }
+}
+
+/*this is the fieldset "About" that appears above the add new comment link*/
+fieldset.group-about {
+  a.fieldset-title {
+    font-family: $arial;
+    text-transform: uppercase;
+    color: #bababa;
+    font-weight: 700;
+  }
+  a.fieldset-title:hover {
+    color: #6e6e6e;
+  }
+}
+
 
 #comments {
   margin-top: 40px;
+  header {
+    height: 110px;
+  }
+  .user-picture {
+    width: 100px;
+    height: 100px;
+    border: 1px solid rgba(7,7,7,0.2);
+    border-radius: 50%;
+    display: inline-block;
+    overflow: hidden;
+    float: left;
+    margin-right: 2em;
+    img {
+      min-width: 100px;
+      min-height: 100px;
+      width: 100px;
+      height: auto;
+      margin-left: 50px;
+      position: relative;
+      transform: translateX(-50%);
+      -webkit-transform: translateX(-50%);
+      -ms-transform: translateX(-50%);
+    }
+  }
+  .comment-wrapper {
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
+    -webkit-transform: translateY(-50%);
+    -ms-transform: translateY(-50%);
+    h3.comment-title {
+      font-family: "Source Sans Pro";
+      font-size: 1.8em;
+      font-weight: 700;
+      line-height: 1em;
+    }
+  }
+  div.field-name-comment-body {
+    margin-left: 12.7em;
+  }
 }
-#comments .title {
+#comments h2.title {
+  text-transform: uppercase;
+  font-family: "Source Sans Pro";
+  color: rgb(136, 181, 81);
+  letter-spacing: -0.03em;
+  font-size: 2em;
   margin-top: 40px;
 }
 
