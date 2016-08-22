@@ -30,6 +30,8 @@
       When I check the box "edit-views-bulk-operations-0"
       # The second annotation's checkbox
       And I check the box "edit-views-bulk-operations-1"
+      # The third annotation's checkbox
+      And I check the box "edit-views-bulk-operations-2"
       And I press the "Add to Thread" button
       # -1 is the value for "---- Create New Thread ----"
       And I select "-1" from "edit-thread-add"
