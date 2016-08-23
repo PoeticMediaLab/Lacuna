@@ -306,9 +306,16 @@
     };
 
     Replies.prototype.drawReply = function(element, reply, annotation) {
-      var li, text;
+      var author_span, date_span, li, text;
       li = document.createElement("li");
-      li.innerHTML = reply['author'] + ' on ' + reply['date'];
+      author_span = document.createElement('span');
+      author_span.innerHTML = reply['author'];
+      this.addClasses(author_span, 'author');
+      date_span = document.createElement('span');
+      date_span.innerHTML = reply['date'];
+      this.addClasses(date_span, 'date');
+      li.appendChild(author_span);
+      li.appendChild(date_span);
       li.classList.add('annotator-reply-id-' + reply['id']);
       this.addClasses(li, 'replyarea');
       text = document.createElement("span");

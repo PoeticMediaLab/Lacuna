@@ -615,7 +615,7 @@
       this.Controller = Controller;
       this.Model = Model;
       this.i.addClass('hidden');
-      title = $('<h2>Show Annotations</h2>');
+      title = $('<h2>Filter Annotations</h2>');
       title.click((function() {
         return this.i.toggleClass('hidden');
       }).bind(this));
@@ -635,7 +635,7 @@
       }
       this.i.append("<div id='" + select.button.reset + "'></div>");
       this.drawButton(select.button.reset, 'reset', 'reset');
-      this.i.append("<div id='" + select.filters.active + "'>Showing Only</div>");
+      this.i.append("<div id='" + select.filters.active + "'>Active Filters</div>");
     };
 
     View.prototype.update = function() {};

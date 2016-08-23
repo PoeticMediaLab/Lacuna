@@ -8,8 +8,12 @@
 /**
  * Annotation API main endpoint
  */
-define('ANNOTATION_TAXONOMY_NAME', 'annotation_tags'); // needs to match name in annotation.install
-define('ANNOTATION_CATEGORY_TAXONOMY', 'annotation_categories');
+if (!defined('ANNOTATION_TAXONOMY_NAME')) {
+  define('ANNOTATION_TAXONOMY_NAME', 'annotation_tags'); // needs to match name in annotation.install
+}
+if (!defined('ANNOTATION_CATEGORY_TAXONOMY')) {
+  define('ANNOTATION_CATEGORY_TAXONOMY', 'annotation_categories');
+}
 
 function annotation_api_endpoint($id = NULL) {
   $method = $_SERVER['REQUEST_METHOD'];
