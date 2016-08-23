@@ -11,6 +11,7 @@
 /*addresses a bug that causes comments to expand to thousands of pixels tall*/
 #comments article.comment {
   max-height: 450px;
+  overflow: scroll;
 }
 
 
@@ -82,13 +83,13 @@ fieldset.group-about {
     }
   }
   div.field.field-name-comment-body {
-    padding-top: 25px;
+    margin-top: 25px;
     margin-left: 12.7em;
   }
   ul.links.inline {
     font-family: arial;
     font-size: 0.8em;
-    margin-left: 12.4em;
+    margin-left: 15.8em;
   }
 }
 
@@ -98,10 +99,10 @@ fieldset.group-about {
   #comments {
     div.field.field-name-comment-body {
       margin-left: 5em;
-      padding-top: 55px;
+      margin-top: 25px;
     }
     ul.links.inline {
-      margin-left: 3em;
+      margin-left: 6.2em;
     }
     .comment-wrapper {
       h3.comment-title {
@@ -114,6 +115,14 @@ fieldset.group-about {
       a.permalink {
         font-size: 0.7em;
       }
+    }
+  }
+  div.indented {
+    header {
+      margin-left: 9em !important;
+    }
+    div.field.field-name-comment-body {
+      margin-left: 9em !important;
     }
   }
 }
@@ -143,8 +152,16 @@ fieldset.group-about {
     }
     div.field.field-name-comment-body {
       margin-left: 5em;
-      padding-top: 85px;
+      margin-top: 85px;
     }
+    div.indented {
+    header {
+      margin-left: 9em !important;
+    }
+    div.field.field-name-comment-body {
+      margin-left: 9em !important;
+    }
+  }
   }
 }
 
@@ -152,11 +169,30 @@ fieldset.group-about {
 #comments h2.title {
   text-transform: uppercase;
   font-family: "Source Sans Pro";
-  color: rgb(136, 181, 81);
+  color: #94b725;
   letter-spacing: -0.03em;
   font-size: 2em;
   margin-top: 40px;
 }
+
+/*for comments that are replies to other comments, governed by the indented class*/
+section#comments {
+  div.indented {
+  margin-left: 0px !important;
+  article.comment {
+    header {
+      margin-left: 12.5em;
+    }
+}
+}
+}
+
+/*new comments get designated by mark.new, making color consistent here*/
+mark.new, mark.update {
+  color: #94b725 !important;
+}
+
+
 
 .node div.content {
   margin-top: 20px;
@@ -167,6 +203,9 @@ fieldset.group-about {
   background-image: none;
   text-align: center;
 }
+
+
+
 
 /***
  * Styling for jQuery autocomplete drop-downs in Annotator window only
