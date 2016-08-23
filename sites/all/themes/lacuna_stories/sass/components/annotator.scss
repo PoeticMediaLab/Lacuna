@@ -443,22 +443,28 @@ $privacy-selected: rgba(19, 149, 25, 0.74);
   }
   
   .annotator-reply-button:hover {
+    /*
     background-color: #5d6476;
     color: #FFFFFF;
     background-position: 0 -20px;
     // width: 90%;
     transition: background-color ease-in 0s;
+    */
+    color:#FFFFFF;
+    background-color: #939dab;
+    background-position: 0 -20px;
+    transition: background-color ease-in 0s;
   }
-
+/*
   .annotator-reply-button {
     // width: 90%;
     background-color: #5d6476;
     background-image: linear-gradient(to bottom, #747c92, #5d6476);
-  }
+  } */
 
   .annotator-reply-button.annotator-reply-save:hover {
     background-color: #83a220; // #88b551;
-    // color: #FFFFFF;
+    color: #FFFFFF;
     background-position: 0 -20px;
     text-decoration: none;
     transition: background-color ease-in 0s;
