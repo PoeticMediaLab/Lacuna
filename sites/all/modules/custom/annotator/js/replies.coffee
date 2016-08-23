@@ -140,7 +140,21 @@ class Annotator.Plugin.Replies extends Annotator.Plugin
     for id, data of replies
     # Give us a data structure a little easier to work with
       date = new Date(data['created'] * 1000);
-      date_string = date.getFullYear() + '-' + date.getMonth() + '-' + date.getDate() + ' ' + date.getHours() + ':' + date.getMinutes()
+      monthName = switch date.getMonth()
+          when date.getMonth() = 1 then "January"
+          when date.getMonth() = 2 then "February"
+          when date.getMonth() = 3 then "March"
+          when date.getMonth() = 4 then "April"
+          when date.getMonth() = 5 then "May"
+          when date.getMonth() = 6 then "June"
+          when date.getMonth() = 7 then "July"
+          when date.getMonth() = 8 then "August"
+          when date.getMonth() = 9 then "September"
+          when date.getMonth() = 10 then "October"
+          when date.getMonth() = 11 then "November"
+          when date.getMonth() = 12 then "December"
+      
+      date_string = date.getFullYear() + ' ' + monthName + ' ' + date.getDate() + ' ' + date.getHours() + ':' + date.getMinutes()
       reply = {
         'id': id
         'pid': data['pid']

@@ -438,16 +438,29 @@ $privacy-selected: rgba(19, 149, 25, 0.74);
         padding-bottom: 6px;
       }
     }
+
+    .annotator-reply-author {
+      text-transform: lowercase;
+      font-variant: small-caps;
+      font-size: 15px;
+      font-weight: 500;
+    }
+
+    .annotator-reply-date {
+      font-size: 9px;
+      color: #a5a5a5;
+    }
+
     div.annotator-reply-controls {
       /* //float: right;
       padding-bottom: 1px;
       */
       padding: 0px 0px 0px 10px !important;
       border-left: 1px solid black;
-      margin: -14px 0px 4px 2px;
+      margin: -2px 0px 4px 2px;
     }
 
-    div:nth-child(2)::before{
+    div:nth-child(2)::before{                               // accesses reply icon
       font: normal normal normal 9px/1 FontAwesome;
     }
 

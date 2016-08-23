@@ -212,12 +212,40 @@
     };
 
     Replies.prototype.convertRepliesData = function(replies) {
-      var data, date, date_string, id, repliesList, reply;
+      var data, date, date_string, id, repliesList, reply, monthName;
       repliesList = [];
       for (id in replies) {
         data = replies[id];
         date = new Date(data['created'] * 1000);
-        date_string = date.getFullYear() + '-' + date.getMonth() + '-' + date.getDate() + ' ' + date.getHours() + ':' + date.getMinutes();
+        monthName = (function() {
+          switch(true) {
+            case (date.getMonth() == '1'):
+              return 'January';
+            case (date.getMonth() == '2'):
+              return 'February';
+            case (date.getMonth() == '3'):
+              return 'March';
+            case (date.getMonth() == '4'):
+              return 'April';
+            case (date.getMonth() == '5'):
+              return 'May';
+            case (date.getMonth() == '6'):
+              return 'June';
+            case (date.getMonth() == '7'):
+              return 'July';
+            case (date.getMonth() == '8'):
+              return 'August';
+            case (date.getMonth() == '9'):
+              return 'September';
+            case (date.getMonth() == '10'):
+              return 'October';
+            case (date.getMonth() == '11'):
+              return 'November';
+            case (date.getMonth() == '12'):
+              return 'December';
+          }
+        })();
+        date_string = date.getFullYear() + ' ' + monthName + ' ' + date.getDate() + ' ' + date.getHours() + ':' + date.getMinutes();
         reply = {
           'id': id,
           'pid': data['pid'],
