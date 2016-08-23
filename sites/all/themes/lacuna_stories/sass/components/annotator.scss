@@ -149,7 +149,7 @@ section.region-sidebar-second input[type="checkbox"]:nth-of-type(2) {
     font-weight: bold;
 }
 
-.af-button {                // ih (8/16): changes made to button design
+.af-button, .annotator-reply-button {                // ih (8/16): changes made to button design
     cursor: pointer;
     display: inline-block;
     color: black;
@@ -432,10 +432,50 @@ $privacy-selected: rgba(19, 149, 25, 0.74);
     width: 30%;
     height: 50px;
   }
+
+  .annotator-reply-button, .annotator-reply-button:hover, .annotator-reply-button.annotator-reply-save, .annotator-reply-button.annotator-reply-save:hover {
+    margin: 5px 5px 0px 5px;
+    float: right;
+    font-size: 14px;
+    // font-variant: none;
+    text-transform: lowercase;
+    // display: block;
+  }
+  
+  .annotator-reply-button:hover {
+    background-color: #5d6476;
+    color: #FFFFFF;
+    background-position: 0 -20px;
+    // width: 90%;
+    transition: background-color ease-in 0s;
+  }
+
+  .annotator-reply-button {
+    // width: 90%;
+    background-color: #5d6476;
+    background-image: linear-gradient(to bottom, #747c92, #5d6476);
+  }
+
+  .annotator-reply-button.annotator-reply-save:hover {
+    background-color: #83a220; // #88b551;
+    // color: #FFFFFF;
+    background-position: 0 -20px;
+    text-decoration: none;
+    transition: background-color ease-in 0s;
+  }
+
+  .annotator-reply-button.annotator-reply-save {
+    // background-color: #c4df2c;
+    // background-image: linear-gradient(to bottom, #c4df2c, #88b551);
+    background-color: #83a220; // #98ca5b;
+    background-image: linear-gradient(to bottom, #a5cc29, #83a220);// #98ca5b, #88b551);
+  }
+  /*
   .annotator-reply-button {
     color: white;
     text-decoration: none;
   }
+  */
 }
 
 .annotator-privacy-types .annotator-privacy-type {
