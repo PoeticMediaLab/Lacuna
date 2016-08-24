@@ -1,0 +1,8 @@
+name = LTI Tool Provider OG
+description = An LTI Tool Provider add-on module which maps LTI context to organic groups
+core = 7.x
+package = "Learning Tools Interoperability"
+dependencies[] = lti_tool_provider
+dependencies[] = entity
+dependencies[] = og (2.x)
+configure = admin/config/lti-tool-provider/group-mapping
