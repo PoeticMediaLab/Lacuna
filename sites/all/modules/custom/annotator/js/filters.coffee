@@ -453,7 +453,7 @@ class View
     # Toggle a class on title click to show or hide the filters
     # for small screens.
     @i.addClass('hidden')
-    title = $('<h2>Show Annotations</h2>')
+    title = $('<h2>Filter Annotations</h2>')
     title.click((-> @i.toggleClass('hidden')).bind(this))
     @i.append(title)
 
@@ -469,7 +469,7 @@ class View
       @drawAutocomplete(filter, values)
     @i.append("<div id='#{select.button.reset}'></div>")
     @drawButton(select.button.reset, 'reset', 'reset')
-    @i.append("<div id='#{select.filters.active}'>Showing Only</div>")
+    @i.append("<div id='#{select.filters.active}'>Active Filters</div>")
     return
 
   update: () ->

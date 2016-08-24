@@ -49,6 +49,20 @@ ul.sf-menu {
     list-style-image: none;
     //padding: 10px 15px 10px 15px;
     margin: 0px;
+
+    text-transform: lowercase;
+    font-variant: small-caps;
+    font-size: 19px;
+    letter-spacing: .6px;
+    color: #4e4e4e;
+
+    :hover {
+      border-radius: 2px;
+      // background-color: #FFFFFF;
+      background-image: linear-gradient(to top, #ededed,#e0e0e0) !important;
+    }
+
+
     span {
       border: none !important;
       a {

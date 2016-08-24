@@ -31,7 +31,6 @@ dependencies[] = og
 dependencies[] = og_ui
 dependencies[] = options
 dependencies[] = publishcontent
-dependencies[] = session_cache
 dependencies[] = stringoverrides
 dependencies[] = strongarm
 dependencies[] = superfish
