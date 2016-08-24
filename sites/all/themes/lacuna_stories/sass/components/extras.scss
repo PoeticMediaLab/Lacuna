@@ -1,3 +1,5 @@
+@import "init";
+
 /*moving course title to top of page*/
 .course-name {
     position: relative;
@@ -9,6 +11,9 @@
 	background-color: #fafafa !important;
 	border: 1px solid #e1e1e1 !important;
 	-webkit-transition: all 1s ease;
+  -moz-transition: all 1s ease;
+  -o-transition: all 1s ease;
+  transition: all 1s ease;
 	padding-bottom: 20px !important;
 }
 
@@ -292,7 +297,7 @@ body {
 
 
 /*styling for "about this course" page*/
-.node-course {
+div.node-course.view-mode-full {
     .group-header {
         width: 100%;
         height: 35vh;
@@ -307,8 +312,8 @@ body {
         -webkit-transform: translateY(-25%);
     }
     .field-name-title {
-        font-family: "Source Sans Pro", serif;
-        font-size: 1.5em;
+        font-family: "Source Sans Pro", $arial;
+        font-size: 3em;
         padding-top: 25px;
         padding-bottom: 10px;
         text-align: left;
