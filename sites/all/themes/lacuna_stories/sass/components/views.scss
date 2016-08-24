@@ -184,6 +184,15 @@ $views-link-hover-color: #1588BA;
   }
 }
 
+.views-field-realname {
+  a {
+    color: #94b725; 
+  }
+  a:hover {
+    color: #a5cc29;
+  }
+}
+
 .view-documents #edit-reset.form-submit,
 .view-responses #edit-reset.form-submit{
   margin-top: 0px;
