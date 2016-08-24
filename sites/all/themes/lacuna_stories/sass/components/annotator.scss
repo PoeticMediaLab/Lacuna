@@ -208,7 +208,8 @@ section.region-sidebar-second input[type="checkbox"]:nth-of-type(2) {
     background-image: linear-gradient(to top, #a5cc29, #83a220);// #98ca5b, #88b551);
 }
 
-.af-button-reset:hover {
+.af-button-reset:hover,
+.af-button-reset:focus {
     background-color: #5d6476;
     color: #FFFFFF;
     background-position: 0 -15px;
@@ -217,6 +218,19 @@ section.region-sidebar-second input[type="checkbox"]:nth-of-type(2) {
         margin-bottom: 5%;
     margin-left: auto;
     margin-right: auto;
+    transition: background-color ease-in 0s;
+}
+
+.af-button-reset:active {
+    background-color: #525868;
+    // color: #FFFFFF;
+    background-position: 0 -20px;
+    /*
+    display: block;
+    width: 90%;
+        margin-bottom: 5%;
+    margin-left: auto;
+    margin-right: auto; */
     transition: background-color ease-in 0s;
 }
 
