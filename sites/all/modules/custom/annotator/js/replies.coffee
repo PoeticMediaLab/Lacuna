@@ -229,7 +229,6 @@ class Annotator.Plugin.Replies extends Annotator.Plugin
     date_span = document.createElement('span')
     date_span.innerHTML = reply['date']
     @addClasses(date_span, 'date')
-#    li.innerHTML = reply['author'] + ' on ' + reply['date']
     li.appendChild(author_span)
     li.appendChild(date_span)
     li.classList.add('annotator-reply-id-' + reply['id'])
