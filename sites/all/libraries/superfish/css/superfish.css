@@ -12,7 +12,9 @@
   left: 0;
   position: absolute;
   top: -99999em;
-  width: 12em;
+  /* width: 12em; */
+  width: 200px !important; 
+  box-shadow: 0px 3px 5px #d2d2d2;
 }
 .sf-menu ul li {
   width: 100%;
