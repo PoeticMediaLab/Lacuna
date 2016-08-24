@@ -545,6 +545,8 @@ function lacuna_visualizations_responses() {
 		if ($item->type == 'response') {
       // Note the different field name for biblio refs in Responses
 			$docId = $doc_ids[$item->field_bibliographic_item[$item->language][0]['target_id']]; // right now this only saves ONE biblio reference id#; but the biblio references are stored in this index ^^^
+      /* 
+      DEBUGGING: 
       print_r($item->title);
       print_r('(');
       print_r($item->nid);
@@ -552,14 +554,14 @@ function lacuna_visualizations_responses() {
       print_r($docId);
       print_r('&');
       print_r($item->field_bibliographic_item[$item->language][0]['target_id']);
-      print_r(')');
+      print_r(')'); */
 		}
 		if ($item->type == 'biblio') {
 			$docId = $doc_ids[$item->nid];
-      print_r('b');
+      // print_r('b');
 		}
 		if ($item->type == 'document') {
-      print_r('d');
+      // print_r('d');
 			continue; // we just load those for ease of setup
 		}
     $dataArray = array(
@@ -617,8 +619,11 @@ function lacuna_visualizations_responses() {
       // this is a rewrite of the below outcommented code
       // which essentialy changes references to $field_bibliographic_entry to $docId
       // (NOTE: THIS DOES NOT WORK FOR RESPONSES THAT HAVE MULTIPLE BIBLIO LINKS):
+      /*
+      DEBUGGING: 
       print_r(isset($item->field_bibliographic_item[$item->language][0]['target_id']));
       print_r('-');
+      */
       if (isset($item->field_bibliographic_item)) {// !empty($docId)) {   //OKAY NEVER MIND: FIELD_BIBLIOGRAPHIC_ITEM, NOT FIELD_BIBLIOGRAPHIC_ENTRY
         $linkArray = $item->field_bibliographic_item;// $docId;
         
@@ -626,10 +631,11 @@ function lacuna_visualizations_responses() {
         for ($i = 0; $i < count($linkArray[LANGUAGE_NONE]); $i++) {// count($linkArray[LANGUAGE_NONE]); $i++) {                       // i think linkArray is supposed to store multiple $docIds, or at least an array of docIds...need to check how many $field_bibliographic_entry's there are
           // $linkedNid = $linkArray[LANGUAGE_NONE][$i]['target_id'];
           $linkedNid = $linkArray[LANGUAGE_NONE][$i]['target_id'];
+          /* DEBUGGING:
           print_r($linkedNid);
           print_r('/');
           print_r($item->nid);
-          print_r('//');
+          print_r('//'); */
           if (array_key_exists($linkedNid, $nodes)) {
             // graphapi_add_link($graph, $title, $nodes[$linkedNid]->title);
             graphapi_add_link($graph, $item->nid, $linkedNid);                                // added this
