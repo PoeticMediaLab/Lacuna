@@ -212,12 +212,12 @@
     };
 
     Replies.prototype.convertRepliesData = function(replies) {
-      var data, date, date_string, id, repliesList, reply;
+      var data, date, date_string, id, repliesList, reply, monthName;
       repliesList = [];
       for (id in replies) {
         data = replies[id];
         date = new Date(data['created'] * 1000);
-        date_string = date.getFullYear() + '-' + date.getMonth() + '-' + date.getDate() + ' ' + date.getHours() + ':' + date.getMinutes();
+        date_string = date.toLocaleString(navigator.language, {year: 'numeric', month:'long', day: 'numeric', hour: 'numeric', minute: 'numeric', hour12: false}); // date.getFullYear() + ' ' + date.getMonth() + ' ' + date.getDate() + ' ' + date.getHours() + ':' + date.getMinutes();
         reply = {
           'id': id,
           'pid': data['pid'],
