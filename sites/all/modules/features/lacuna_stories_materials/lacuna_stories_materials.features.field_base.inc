@@ -253,20 +253,27 @@ function lacuna_stories_materials_field_default_field_bases() {
     'module' => 'workflowfield',
     'settings' => array(
       'allowed_values_function' => 'workflowfield_allowed_values',
-      'allowed_values_string' => '',
+      'allowed_values_string' => '1 | (creation)
+2 | Draft
+3 | Ready for Annotation',
       'history' => array(
         'history_tab_show' => 1,
         'roles' => array(
           -1 => 0,
+          1 => 0,
+          2 => 0,
           3 => 3,
           4 => 4,
           5 => 0,
+          6 => 0,
+          7 => 0,
         ),
       ),
       'watchdog_log' => 1,
       'wid' => 1,
       'widget' => array(
         'comment' => 1,
+        'fieldset' => 0,
         'hide' => 0,
         'name_as_title' => 1,
         'options' => 'select',
