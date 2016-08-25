@@ -43,6 +43,12 @@ ul.sf-menu {
     padding: 10px 15px 10px 15px;
     margin: 0px;
   }
+
+  :hover span {
+    border-radius: 2px;
+    background-image: linear-gradient(to top, #ededed, #e0e0e0) !important;
+  }
+
   li {
     background-color: $menu-color !important;
     list-style-type: none;
