@@ -1,0 +1,9 @@
+<?php
+
+/**
+ * Implements hook_enable()
+ */
+function bg_image_context_enable() {
+  // Clear the cache so that the reaction appears in the reaction list
+  cache_clear_all();
+}

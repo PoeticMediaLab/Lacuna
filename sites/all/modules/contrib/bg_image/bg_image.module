@@ -1,0 +1,632 @@
+<?php
+/**
+ * @file
+ *
+ * Allows for customizable background images per page
+ */
+
+/*****************************************************************************
+* DRUPAL HOOKS
+*****************************************************************************/
+
+/**
+ * Implements hook_menu().
+ */
+function bg_image_menu() {
+
+  $items['admin/config/content/background-image'] = array(
+    'title' => 'Background Image',
+    'description' => t('Settings for how to apply the background image to the page'),
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('bg_image_settings_form'),
+    'access arguments' => array('administer background image'),
+    'file' => NULL, // Work around for http://drupal.org/node/812636
+  );
+
+  return $items;
+}
+
+/**
+ * Implements hook_permission().
+ */
+function bg_image_permission() {
+  return array(
+    'administer background image' => array(
+      'title' => t('Administer Background Image'),
+    ),
+    'view all background images' => array(
+      'title' => t('View All Background Images'),
+      'description' => t('View all background images regardless of node access permissions'),
+    ),
+  );
+}
+
+/**
+ * Defines the settings for for bg_image
+ */
+function bg_image_settings_form($form, &$form_state) {
+  // Init some variables
+  $form = array();// '#validate' => array('bg_image_settings_form_validate'));
+  $node_types = array('' => 'choose...');
+  $node_fields = array('' => 'Choose a node type first...');
+  // Options for repeating the image
+  $repeat_options = bg_image_css_repeat_options();
+  // Make an option list of node types
+  foreach (node_type_get_types() as $id => $node_type) {
+    $node_types[$id] = $node_type->name;
+  }
+  // If this is a page rebuild for AJAX callback we need
+  // create the field list for the specified node type
+  // Only fields of the type 'media' and 'image' will be accepted
+  if (isset($form_state['values']['bg_image_node_type']) && $form_state['values']['bg_image_node_type']) {
+    $node_fields = bg_image_get_fields_for_node_type($form_state['values']['bg_image_node_type']);
+  }
+  elseif (variable_get('bg_image_node_type', '')) {
+    $node_fields = bg_image_get_fields_for_node_type(variable_get('bg_image_node_type', ''));
+  }
+
+  // The fieldset for node settings
+  $form['node'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Node Settings'),
+    '#description' => t('The background images can be added using nodes as the interface to upload and manage the images. In order to use this feature you need to specify the node type and field name here. Some modules may require this to be done before they will work.'),
+  );
+
+  // Select a node type
+  // AJAX will replace the field list once selected
+  $form['node']['bg_image_node_type'] = array(
+    '#type' => 'select',
+    '#title' => t('Node Type'),
+    '#description' => t('The node type that holds the image for use with background image.'),
+    '#options' => $node_types,
+    '#default_value' => variable_get('bg_image_node_type', ''),
+    '#ajax' => array(
+      'callback' => 'bg_image_node_type_ajax_callback',
+      'wrapper' => 'bg-image-node-field',
+    ),
+  );
+
+  // The actual field to use as the bg image
+  $form['node']['bg_image_node_field'] = array(
+    '#type' => 'select',
+    '#title' => t('Node field'),
+    '#description' => t('The field within the node type specified above to use as the image'),
+    '#options' => $node_fields,
+    '#default_value' => variable_get('bg_image_node_field', ''),
+    '#prefix' => '<div id="bg-image-node-field">',
+    '#suffix' => '</div>',
+  );
+
+
+  // The fieldset for exlusions
+  $form['exclusions'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Global Exclusions'),
+    '#description' => t('Choose specific pages/sections to exclude the background image from appearing on. This will apply to all background images'),
+  );
+
+  $form['exclusions']['bg_image_exclude_admin'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Exclude from Admin Pages'),
+    '#description' => t('Background Images will be ignored on admin pages.'),
+    '#default_value' => variable_get('bg_image_exclude_admin', 0),
+  );
+
+  $form['exclusions']['bg_image_exclude_paths'] = array(
+    '#type' => 'textarea',
+    '#title' => t('Exclude paths'),
+    '#description' => t('Specify paths that Background Images will not be applied on. One path per line. Paths will be relative to the domain root. Do not include a preceeding "/". Use &lt;front&gt; for the front page. Wildcards can be used by specifying "*". e.g. node/*'),
+    '#default_value' => variable_get('bg_image_exclude_paths', ''),
+  );
+
+
+  // Apply an image style?
+  $form['image_style'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Image Manipulation'),
+    '#description' => t('Manipulate the image before outputting as a background image'),
+  );
+
+  $form['image_style']['bg_image_style'] = array(
+    '#type' => 'select',
+    '#title' => t('Image Style'),
+    '#description' => t('Apply an image style to the image'),
+    '#options' => image_style_options(),
+    '#default_value' => variable_get('bg_image_style', ''),
+  );
+
+
+  // Fieldset for css settings
+  $form['css_settings'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Default CSS Settings'),
+    '#description' => t('Default CSS settings for outputting the background property. These settings will be concatenated to form a complete css statement that uses the "background" property. For more information on the css background property see http://www.w3schools.com/css/css_background.asp"'),
+  );
+  // The selector for the background property
+  $form['css_settings']['bg_image_selector'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Selector'),
+    '#description' => t('A valid CSS selector that will be used to apply the background image.'),
+    '#default_value' => variable_get('bg_image_selector', ''),
+  );
+  // The selector for the background property
+  $form['css_settings']['bg_image_color'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Color'),
+    '#description' => t('The background color formatted as any valid css color format (e.g. hex, rgb, text, hsl) [<a href="http://www.w3schools.com/css/pr_background-color.asp">css property: background-color</a>]'),
+    '#default_value' => variable_get('bg_image_color', '#FFFFFF'),
+  );
+  // The selector for the background property
+  $form['css_settings']['bg_image_x'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Horizontal Alignment'),
+    '#description' => t('The horizontal alignment of the background image formatted as any valid css alignment. [<a href="http://www.w3schools.com/css/pr_background-position.asp">css property: background-position</a>]'),
+    '#default_value' => variable_get('bg_image_x', 'left'),
+  );
+  // The selector for the background property
+  $form['css_settings']['bg_image_y'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Vertical Alignment'),
+    '#description' => t('The vertical alignment of the background image formatted as any valid css alignment. [<a href="http://www.w3schools.com/css/pr_background-position.asp">css property: background-position</a>]'),
+    '#default_value' => variable_get('bg_image_y', 'top'),
+  );
+  // The selector for the background property
+  $form['css_settings']['bg_image_attachment'] = array(
+    '#type' => 'radios',
+    '#title' => t('Background Attachment'),
+    '#description' => t('The attachment setting for the background image. [<a href="http://www.w3schools.com/css/pr_background-attachment.asp">css property: background-attachment</a>]'),
+    '#options' => array('scroll' => 'Scroll', 'fixed' => 'Fixed'),
+    '#default_value' => variable_get('bg_image_attachment', 'scroll'),
+  );
+  // The background-repeat property
+  $form['css_settings']['bg_image_repeat'] = array(
+    '#type' => 'radios',
+    '#title' => t('Background Repeat'),
+    '#description' => t('Define the repeat settings for the background image. [<a href="http://www.w3schools.com/css/pr_background-repeat.asp">css property: background-repeat</a>]'),
+    '#options' => $repeat_options,
+    '#default_value' => variable_get('bg_image_repeat', 'no-repeat'),
+  );
+  // The background-size property
+  $form['css_settings']['bg_image_background_size'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Background Size'),
+    '#description' => t('The size of the background (NOTE: CSS3 only. Useful for responsive designs) [<a href="http://www.w3schools.com/cssref/css3_pr_background-size.asp">css property: background-size</a>]'),
+    '#default_value' => variable_get('bg_image_background_size', ''),
+  );
+  // background-size:cover suppor for IE8
+  $form['css_settings']['bg_image_background_size_ie8'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Add background-size:cover support for ie8'),
+    '#description' => t('The background-size css property is only supported on browsers that support CSS3. However, there is a workaround for IE using Internet Explorer\'s built-in filters (http://msdn.microsoft.com/en-us/library/ms532969%28v=vs.85%29.aspx). Check this box to add the filters to the css. Sometimes it works well, sometimes it doesn\'t. Use at your own risk'),
+    '#default_value' => variable_get('bg_image_background_size_ie8', 0),
+  );
+  // The media query specifics
+  $form['css_settings']['bg_image_media_query'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Media Query'),
+    '#description' => t('Apply this background image css using a media query. CSS3 Only. Useful for responsive designs. example: only screen and (min-width:481px) and (max-width:768px) [<a href="http://www.w3.org/TR/css3-mediaqueries/">Read about media queries</a>]'),
+    '#default_value' => variable_get('bg_image_media_query', 'all'),
+  );
+  $form['css_settings']['bg_image_important'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Add "!important" to the background property.'),
+    '#description' => t('This can be helpful to override any existing background image or color properties added by the theme.'),
+    '#default_value' => variable_get('bg_image_important', 1),
+  );
+
+  return system_settings_form($form);
+}
+
+/**
+ * AJAX Callback after Node Type has been chosen.
+ */
+function bg_image_node_type_ajax_callback($form, $form_state) {
+  return $form['node']['bg_image_node_field'];
+}
+
+/**
+ * Returns the fields for a given node type
+ * Only fields of the type 'media' and 'image' will be accepted
+ */
+function bg_image_get_fields_for_node_type($node_type) {
+  // Array to hold our fields
+  $fields = array();
+  // Get all the fields. We'll use this to determine the field type
+  $all_fields = field_info_fields();
+  // Loop through the fields of the node type
+  foreach (field_info_instances('node', $node_type) as $field_name => $field) {
+    // Check that it's a media field or an image field
+    if ($all_fields[$field_name]['type'] == 'image' || $all_fields[$field_name]['type'] == 'media' || $all_fields[$field_name]['type'] == 'atom_reference') {
+      // Add the item to our option list
+      $fields[$field_name] = $field['label'];
+    }
+  }
+  // If there were not fields, we return a message
+  if (!$fields) {
+    $fields[''] = 'No media or image fields attached to this node type';
+  }
+  return $fields;
+}
+
+
+/*****************************************************************************
+* API FUNCTIONS
+*****************************************************************************/
+
+/**
+* Adds a background image to the page using the
+* css 'background' property.
+*
+* @param $image_path
+*    The path of the image to use. This can be either
+*      - A relative path e.g. sites/default/files/image.png
+*      - A uri: e.g. public://image.png
+*
+* @param $css_settings
+*    An array of css settings to use. Possible values are:
+*      - bg_image_selector: The css selector to use
+*      - bg_image_color: The background color
+*      - bg_image_x: The x offset
+*      - bg_image_y: The y offset
+*      - bg_image_attachment: The attachment property (scroll or fixed)
+*      - bg_image_repeat: The repeat settings
+*      - bg_image_background_size: The background size property if necessary
+*    Default settings will be used for any values not provided.
+*
+* @param $image_style
+*   Optionally add an image style to the image before applying it to the
+*   background
+*
+* @return
+*   Returns TRUE if successful or FALSE otherwise
+*/
+function bg_image_add_background_image($image_path, $css_settings = array(), $image_style = NULL) {
+
+  // Skip this if we're on an excluded page.
+  if (bg_image_is_excluded()) {
+    return FALSE;
+  }
+
+  // Check if path is a stream wrapper
+  $image_uri = file_uri_scheme($image_path) ? $image_path : _bg_image_path_to_uri($image_path);
+  $image_path = file_uri_scheme($image_path) ? file_create_url($image_path) : $image_path;
+
+  // Pull the default css setting if not provided.
+  $selector = isset($css_settings['bg_image_selector']) ? $css_settings['bg_image_selector'] : variable_get('bg_image_selector', '');
+  $bg_color = isset($css_settings['bg_image_color']) ? $css_settings['bg_image_color'] : variable_get('bg_image_color', '#FFFFFF');
+  $bg_x = isset($css_settings['bg_image_x']) ? $css_settings['bg_image_x'] : variable_get('bg_image_x', 'left');
+  $bg_y = isset($css_settings['bg_image_y']) ? $css_settings['bg_image_y'] : variable_get('bg_image_y', 'top');
+  $attachment = isset($css_settings['bg_image_attachment']) ? $css_settings['bg_image_attachment'] : variable_get('bg_image_attachment', 'scroll');
+  $repeat = isset($css_settings['bg_image_repeat']) ? $css_settings['bg_image_repeat'] : variable_get('bg_image_repeat', 'no-repeat');
+  $important = isset($css_settings['bg_image_important']) ? $css_settings['bg_image_important'] : variable_get('bg_image_important', 1);
+  $background_size = isset($css_settings['bg_image_background_size']) ? $css_settings['bg_image_background_size'] : variable_get('bg_image_background_size', '');
+  $background_size_ie8 = isset($css_settings['bg_image_background_size_ie8']) ? $css_settings['bg_image_background_size_ie8'] : variable_get('bg_image_background_size_ie8', 0);
+  $media_query = isset($css_settings['bg_image_media_query']) ? $css_settings['bg_image_media_query'] : variable_get('bg_image_media_query', 'all');
+
+  // Apply an Image Style?
+  $image_style = $image_style ? $image_style : variable_get('bg_image_style', '');
+
+  // If important is true, we turn it into a string for css output
+  if ($important) {
+    $important = '!important';
+  }
+  else {
+    $important = '';
+  }
+
+  // Handle the background size property
+  $bg_size = '';
+  $ie_bg_size = '';
+  if ($background_size) {
+    // CSS3
+    $bg_size = "background-size: $background_size $important;";
+    // Let's cover ourselves for other browsers as well...
+    $bg_size .= "-webkit-background-size: $background_size $important;";
+    $bg_size .= "-moz-background-size: $background_size $important;";
+    $bg_size .= "-o-background-size: $background_size $important;";
+    // IE filters to apply the cover effect
+    if ($background_size == 'cover' && $background_size_ie8)  {
+      $ie_bg_size = 'filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src=\'.' . $image_path . '\', sizingMethod=\'scale\');
+      -ms-filter: "progid:DXImageTransform.Microsoft.AlphaImageLoader(src=\'' .$image_path . '\', sizingMethod=\'scale\')";';
+    }
+  }
+
+  // Check if we need to run this through an image style
+  if ($image_style) {
+    $image_path = image_style_url($image_style, $image_uri);
+  }
+
+  // Add the css if we have everything we need.
+  if ($selector && $image_path) {
+    $style = "$selector {";
+    $style .= "background-color: $bg_color $important;";
+    $style .= "background-image: url('$image_path') $important;";
+    $style .= "background-repeat: $repeat $important;";
+    $style .= "background-attachment: $attachment $important;";
+    $style .= "background-position: $bg_x $bg_y $important;";
+    $style .= $bg_size;
+    $style .= $background_size_ie8 ? $ie_bg_size : '';
+    $style .= "}";
+    drupal_add_css($style, array('type' => 'inline', 'media' => $media_query, 'group' => CSS_THEME));
+    return TRUE;
+  }
+  else {
+    return FALSE;
+  }
+}
+
+/**
+ * Determines the path of an image on the configured image
+ * field on a node and returns it.
+ *
+ * @param $nid
+ *   The nid of the node to check for an image
+ *
+ * @param $build_url
+ *   Optional parameter to return the full URL
+ *   of the image rather than just the uri
+ *
+ * @return
+ *   The path of the image if the node has it, or FALSE.
+ */
+function bg_image_get_image_path_from_node($nid, $build_url = TRUE) {
+  $fields = field_info_fields();
+  $field_name = variable_get('bg_image_node_field', '');
+  $node = node_load($nid);
+  $image_path = FALSE;
+  if ($node && $field_name) {
+    if (isset($fields[$field_name]) && $fields[$field_name]['type'] == 'media') {
+      if ($node->{$field_name}) {
+        $items = field_get_items('node', $node, $field_name);
+        $file = file_load($items[0]['fid']);
+        if ($file && $file->type == 'image') {
+          $image_path = $file->uri;
+        }
+      }
+    }
+    elseif (isset($fields[$field_name]) && $fields[$field_name]['type'] == 'image') {
+      if ($node->{$field_name}) {
+        $items = field_get_items('node', $node, $field_name);
+        if (isset($items[0]['uri'])) {
+          $image_path = $items[0]['uri'];
+        }
+      }
+    }
+    elseif (isset($fields[$field_name]) && $fields[$field_name]['type'] == 'atom_reference') {
+      if ($node->{$field_name}) {
+        $items = field_get_items('node', $node, $field_name);
+        if (isset($items[0]['sid'])) {
+          $atom = scald_atom_load($items[0]['sid']);
+          if ($atom->type == 'image') {
+            $image_path = $atom->file_source;
+          }
+        }
+      }
+    }
+  }
+  if ($image_path && $build_url) {
+    $image_path = file_create_url($image_path);
+  }
+  return $image_path;
+}
+
+/**
+* Adds a background image to the page using an image from
+* a node. The node must have an image (or media) field and
+* the field must be configured on the bg_image configuration
+* page for this to work.
+*
+* @param $nid
+*    The nid of the node that has the image to use for the
+*    background. Use 0 to generate a random image from the
+*    configured node type.
+*
+* @param $css_settings
+*    An array of css settings to use. See bg_image_add_background_image()
+*    for more detailed description of possible values.
+*
+* @param $image_style
+*    Optionally add an image style to the image before applying it to the
+*    background
+*/
+function bg_image_add_background_image_from_node($nid, $css_settings = array(), $image_style = NULL) {
+
+  // We need to generate a random nid if 0 is passed in
+  if ($nid == 0) {
+    $type = variable_get('bg_image_node_type', '');
+    if ($type) {
+      // Generate a random nid of the configured node type
+      $query = db_select('node');
+      // Add the node_access tag if user doesn't have permission to view all
+      // background images
+      if (!user_access('view all background images')) {
+        $query->addTag('node_access');
+      }
+      $nid = $query->fields('node', array('nid'))
+        ->condition('node.type', $type)
+        ->orderRandom()
+        ->execute()
+        ->fetchField();
+    }
+    else {
+      return FALSE;
+    }
+  }
+
+  if (is_numeric($nid)) {
+    // Load the node so we can check it's status
+    $node = node_load($nid);
+    // Check node access permissions
+    if (user_access('view all background images') || node_access('view', $node)) {
+      // Get the path of the image on the node
+      $image_uri = bg_image_get_image_path_from_node($nid, FALSE);
+      // Add the background image
+      return bg_image_add_background_image($image_uri, $css_settings);
+    }
+  }
+
+  // If all else fails
+  return FALSE;
+
+}
+
+/**
+ * Check if a node has an image set on the configured field
+ *
+ * @param $nid
+ *    The nid of the node to check
+ *
+ * @return
+ *    If the node has an image set for the field
+ *    returns TRUE, otherwise returns FALSE
+ */
+function bg_image_field_has_image($nid) {
+  $node = node_load($nid);
+  $field_name = variable_get('bg_image_node_field', '');
+  if ($node && $node->{$field_name}) {
+    return TRUE;
+  }
+  else {
+    return FALSE;
+  }
+}
+
+/**
+ * Returns an array of nids to node titles for the
+ * configured node type. Useful for select lists.
+ *
+ * @param $include_nid
+ *    Include the nid as text after the title. TRUE
+ *    or FALSE. e.g.: array(1 => 'node title [nid: 1]')
+ */
+function bg_image_node_options($include_nid = TRUE, $include_random = TRUE) {
+  $node_type = variable_get('bg_image_node_type', '');
+  // Our query
+  $sql = "SELECT nid, title FROM {node} WHERE type = :node_type";
+  $result = db_query($sql, array(':node_type' => $node_type));
+  $node_options = array();
+  foreach ($result as $record) {
+    if ($include_nid) {
+      $node_options[$record->nid] = $record->title . ' [nid:' . $record->nid. ']';
+    }
+    else {
+      $node_options[$record->nid] = $record->title;
+    }
+  }
+  if (!$node_options) {
+    $node_type_path = base_path() . 'node/add/' . str_replace('_', '-', $node_type);
+    drupal_set_message("You don't have any $node_type nodes created yet. You must <a href=\"$node_type_path\">create at least one $node_type node</a> before you can assign background images to pages.",'warning');
+    return FALSE;
+  }
+  else {
+    if ($include_random) {
+      return array(0 => '- Random -') + $node_options;;
+    }
+    else {
+      return $node_options;
+    }
+  }
+}
+
+/**
+ * Checks if a path should be excluded from background images
+ *
+ * @param  string $path
+ *         The path to check against exclusions. Will default to current path
+ *         if not provided
+ *
+ * @return boolean
+ *         TRUE if the path should be excluded or FALSE
+ */
+function bg_image_is_excluded($path = NULL) {
+
+  // Get Current Path if not provided
+  if (!$path) {
+    $path = current_path();
+  }
+
+  // Set to <front> if necessary
+  if ($path === '') {
+    $path = '<front>';
+  }
+
+  // Create an array of paths
+  $paths = array($path);
+
+  // Add alias to paths array if exists
+  if ($path != drupal_get_path_alias($path)) {
+    $paths[] = drupal_get_path_alias($path);
+  }
+
+  // Check for admin paths first
+  if (variable_get('bg_image_exclude_admin', 0) && path_is_admin($_GET['q'])) {
+    return TRUE;
+  }
+
+  // Check custom exclusions
+  if ($exclusions = variable_get('bg_image_exclude_paths', '')) {
+    foreach ($paths as $path) {
+      if (drupal_match_path($path, $exclusions)) {
+        return TRUE;
+      }
+    }
+  }
+
+  return FALSE;
+}
+
+/**
+ * Checks if a node (and field) is configured.
+ */
+function bg_image_node_is_configured() {
+  if (variable_get('bg_image_node_type', '') && variable_get('bg_image_node_field', '')) {
+    return TRUE;
+  }
+  else {
+    return FALSE;
+  }
+}
+
+/**
+ * Returns an options list of css repeat options
+ */
+function bg_image_css_repeat_options() {
+  return array(
+    'no-repeat' => t('No Repeat'),
+    'repeat' => t('Tiled (repeat)'),
+    'repeat-x' => t('Repeat Horizontally (repeat-x)'),
+    'repeat-y' => t('Repeat Vertically (repeat-y)'),
+  );
+}
+
+/***********************************************************************
+ * HELPER FUNCTIONS - Private
+ ***********************************************************************/
+
+/**
+ * Converts a path to a uri relative to the public files directory
+ *
+ * @param $path
+ *    The path to convert. Can be an absolute or relative path. If the path
+ *    contains the public files directory in it, it will be stripped before
+ *    building the uri, since we're building a public:// uri
+ *
+ * @return
+ *    The path to the file as a uri.
+ */
+function _bg_image_path_to_uri($path) {
+  // Strip off the protocol and domain
+  $relative_path = parse_url($path, PHP_URL_PATH);
+  // The public files directory (as configured)
+  $file_public_path = '/' . variable_get('file_public_path', 'sites/default/files');
+  // Remove the public path if the path starts with it
+  if (strpos($relative_path, $file_public_path) === 0) {
+    $relative_path = str_replace($file_public_path, '', $relative_path);
+    return file_build_uri($relative_path);
+  }
+  else {
+    // If the public files directory isn't in the path, just return it as a uri
+    return file_build_uri($relative_path);
+  }
+}
+
