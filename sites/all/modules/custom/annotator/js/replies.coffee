@@ -199,7 +199,7 @@ class Annotator.Plugin.Replies extends Annotator.Plugin
     @addClasses(replyLink, 'reply')
     controls.appendChild(replyLink)
     # reply.id == 0 indicates a new reply
-    replyArea = @addReplyArea(annotation, 0, reply.pid, '')
+    replyArea = @addReplyArea(annotation, 0, reply.id, '')
     @hide(replyArea)
     replyLink.addEventListener("click", () => @toggleVisibility(replyArea))
 
