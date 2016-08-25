@@ -140,7 +140,8 @@ class Annotator.Plugin.Replies extends Annotator.Plugin
     for id, data of replies
     # Give us a data structure a little easier to work with
       date = new Date(data['created'] * 1000);
-      date_string = date.getFullYear() + '-' + date.getMonth() + '-' + date.getDate() + ' ' + date.getHours() + ':' + date.getMinutes()
+      
+      date_string = date.toLocaleString(navigator.language, {month:'long', day: 'numeric', hour: 'numeric', minute: 'numeric', hour12: false})
       reply = {
         'id': id
         'pid': data['pid']
