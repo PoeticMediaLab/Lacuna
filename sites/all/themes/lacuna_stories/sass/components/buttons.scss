@@ -70,7 +70,7 @@ input[id^='edit-actionsewing-kit-remove'],
 .page-turner-bookmark-button
 {
   background-color: #1485b7; // #78cefd;
-  background-image: linear-gradient(to top, #19a7e5, #1485b7);
+  background-image: linear-gradient(to top, #1485b7, #1174a0);
 
   //background-color: #FFFFFF;
   // background-image: none;
@@ -81,13 +81,19 @@ input[id^='edit-actionsewing-kit-remove'],
   // box-shadow:inset 0px 0px 0px 1.5px #1485b7;
 }
 
-.page-turner-bookmark-button:hover,
-.page-turner-bookmark-button:focus 
+.page-turner-bookmark-button:focus,
+.page-turner-bookmark-button:hover 
 {
-  background-color: #1485b7;
+  background-color: #1174a0;
   background-position: 0 20px;
   transition: background-color ease-in 0s;
   // color: #FFFFFF;
+}
+
+.page-turner-bookmark-button:active {
+  background-color: #0f6389;
+  background-position: 0 30px;
+  transition: background-color ease-in 0s;
 }
 
 .lacuna-button:hover,
@@ -142,6 +148,12 @@ input[id^='edit-actionsewing-kit-remove']:focus,
 {
   background-color: #1485b7;
   background-position: 0 -20px;
+  transition: background-color ease-in 0s;
+}
+
+.page-turner-bookmark-add:active {
+  background-color: #1274a0;
+  background-position: 0 -30px;
   transition: background-color ease-in 0s;
 }
 
