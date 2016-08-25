@@ -140,7 +140,8 @@ class Annotator.Plugin.Replies extends Annotator.Plugin
     for id, data of replies
     # Give us a data structure a little easier to work with
       date = new Date(data['created'] * 1000);
-      date_string = date.getFullYear() + '-' + date.getMonth() + '-' + date.getDate() + ' ' + date.getHours() + ':' + date.getMinutes()
+      
+      date_string = date.toLocaleString(navigator.language, {month:'long', day: 'numeric', hour: 'numeric', minute: 'numeric', hour12: false})
       reply = {
         'id': id
         'pid': data['pid']
@@ -198,7 +199,7 @@ class Annotator.Plugin.Replies extends Annotator.Plugin
     @addClasses(replyLink, 'reply')
     controls.appendChild(replyLink)
     # reply.id == 0 indicates a new reply
-    replyArea = @addReplyArea(annotation, 0, reply.pid, '')
+    replyArea = @addReplyArea(annotation, 0, reply.id, '')
     @hide(replyArea)
     replyLink.addEventListener("click", () => @toggleVisibility(replyArea))
 
@@ -229,7 +230,6 @@ class Annotator.Plugin.Replies extends Annotator.Plugin
     date_span = document.createElement('span')
     date_span.innerHTML = reply['date']
     @addClasses(date_span, 'date')
-#    li.innerHTML = reply['author'] + ' on ' + reply['date']
     li.appendChild(author_span)
     li.appendChild(date_span)
     li.classList.add('annotator-reply-id-' + reply['id'])
