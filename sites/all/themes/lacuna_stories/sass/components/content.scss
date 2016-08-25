@@ -1,3 +1,5 @@
+@import "init";
+
 .field {
   margin-bottom: 30px;
 }
@@ -5,13 +7,192 @@
   margin-bottom: 10px;
 }
 
+/*styling comments*/
+/*addresses a bug that causes comments to expand to thousands of pixels tall*/
+#comments article.comment {
+  max-height: 450px;
+  overflow: scroll;
+}
+
+
+li.comment-add {
+  margin-left: 4.5%;
+  a {
+    padding-left: 10px;
+    font-family: $arial;
+    text-transform: uppercase;
+    color: #bababa;
+    font-weight: 700;
+  }
+  a:hover {
+    color: #6e6e6e;
+  }
+}
+
+/*this is the fieldset "About" that appears above the add new comment link*/
+fieldset.group-about {
+  a.fieldset-title {
+    font-family: $arial;
+    text-transform: uppercase;
+    color: #bababa;
+    font-weight: 700;
+  }
+  a.fieldset-title:hover {
+    color: #6e6e6e;
+  }
+}
+
 
 #comments {
   margin-top: 40px;
+  header {
+    height: 100px;
+  }
+  .user-picture {
+    width: 100px;
+    height: 100px;
+    border: 1px solid rgba(7,7,7,0.2);
+    border-radius: 50%;
+    display: inline-block;
+    overflow: hidden;
+    float: left;
+    margin-right: 2em;
+    img {
+      min-width: 100px;
+      min-height: 100px;
+      width: 100px;
+      height: auto;
+      margin-left: 50px;
+      position: relative;
+      transform: translateX(-50%);
+      -webkit-transform: translateX(-50%);
+      -ms-transform: translateX(-50%);
+    }
+  }
+  .comment-wrapper {
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
+    -webkit-transform: translateY(-50%);
+    -ms-transform: translateY(-50%);
+    h3.comment-title {
+      font-family: $lacuna-header-font;
+      font-size: 1.8em;
+      font-weight: 700;
+      line-height: 1em;
+    }
+  }
+  div.field.field-name-comment-body {
+    margin-top: 25px;
+    margin-left: 12.7em;
+  }
+  ul.links.inline {
+    font-family: arial;
+    font-size: 0.8em;
+    margin-left: 15.8em;
+  }
 }
-#comments .title {
+
+
+/*don't squeeze comments into such a small area on smaller screens*/
+@media only screen and (min-width: 777px) and (max-width: 959px) {
+  #comments {
+    div.field.field-name-comment-body {
+      margin-left: 5em;
+      margin-top: 25px;
+    }
+    ul.links.inline {
+      margin-left: 6.2em;
+    }
+    .comment-wrapper {
+      h3.comment-title {
+        font-size: 1.5em;
+        line-height: 0.8em;
+      }
+      span {
+        font-size: 0.7em;
+      }
+      a.permalink {
+        font-size: 0.7em;
+      }
+    }
+  }
+  div.indented {
+    header {
+      margin-left: 9em !important;
+    }
+    div.field.field-name-comment-body {
+      margin-left: 9em !important;
+    }
+  }
+}
+
+@media only screen and (max-width: 776px) {
+  #comments {
+    header {
+      min-height: 150px;
+      .user-picture {
+        position: relative;
+        left: 50%;
+        transform: translateX(-50%);
+      }
+      .comment-wrapper {
+        float: left;
+        margin-bottom: 15px;
+        h3.comment-title {
+        font-size: 1.3em;
+        }
+        span {
+        font-size: 0.7em;
+        }
+        a.permalink {
+        font-size: 0.7em;
+        }
+      }
+    }
+    div.field.field-name-comment-body {
+      margin-left: 5em;
+      margin-top: 85px;
+    }
+    div.indented {
+    header {
+      margin-left: 9em !important;
+    }
+    div.field.field-name-comment-body {
+      margin-left: 9em !important;
+    }
+  }
+  }
+}
+
+
+#comments h2.title {
+  text-transform: uppercase;
+  font-family: "Source Sans Pro";
+  color: #94b725;
+  letter-spacing: -0.03em;
+  font-size: 2em;
   margin-top: 40px;
 }
+
+/*for comments that are replies to other comments, governed by the indented class*/
+section#comments {
+  div.indented {
+  margin-left: 0px !important;
+  article.comment {
+    header {
+      margin-left: 12.5em;
+    }
+}
+}
+}
+
+/*new comments get designated by mark.new, making color consistent here*/
+mark.new, mark.update {
+  color: #94b725 !important;
+}
+
+
 
 .node div.content {
   margin-top: 20px;
@@ -22,6 +203,9 @@
   background-image: none;
   text-align: center;
 }
+
+
+
 
 /***
  * Styling for jQuery autocomplete drop-downs in Annotator window only
@@ -47,26 +231,53 @@ fieldset#edit-thread-description-format {
 */
 
 .response-user-information {
+  height: 275px;
 
   .user-picture {
     margin-right: 3em;
     margin-bottom: 1em;
     float: left;
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
+    -webkit-transform: translateY(-50%);
+    -ms-transform: translateY(-50%);
   }
 
   .username-and-date {
-
-    padding-top: 70px;
-    font-family: "Arial", sans-serif;
+    font-family: $lacuna-header-font;
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
+    -webkit-transform: translateY(-50%);
+    -ms-transform: translateY(-50%);
 
     .username {
 
       font-size: xx-large;
       font-weight: bold;
       text-decoration: none;
-      color: black;
+      color: #000000;
       line-height: 150%;
+      -webkit-transition: color 0.5s ease;
+      -moz-transition: color 0.5s ease;
+      -o-transition: color 0.5s ease;
+      transition: color 0.5s ease;
+    }
 
+    .username:hover {
+      color: #999999;
+    }
+
+    .response-title {
+      font-family: $lacuna-header-font;
+      color: #1588BA;
+      text-transform: uppercase;
+      font-size: 1.8em;
+      line-height: 1.2em;
+      letter-spacing: -.02em;
+      max-height: 155px;
+      overflow: scroll;
     }
 
     .date {
@@ -77,9 +288,36 @@ fieldset#edit-thread-description-format {
   }
 }
 
+@media only screen and (max-width: 1024px) {
+  .response-user-information {
+    .user-picture {
+    margin-right: 3em;
+    margin-bottom: 1em;
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
+    -webkit-transform: translateX(-50%);
+    -ms-transform: translateX(-50%);
+    top: 0;
+    }
+    .username-and-date {
+      float: left;
+      margin-bottom: 25px;
+      top: 0;
+      transform: translateY(0%);
+      -webkit-transform: translateY(0%);
+      -ms-transform: translateY(0%);
+    }
+    .response-title {
+      max-height: none;
+      overflow: inherit;
+    }
+  }
+}
+
 // Ensure that the response shows up beneath the user information
 .node-response .field-name-body {
-  padding-top: 105px;
+  padding-top: 25px;
 }
 
 // The XX reads statistic
@@ -92,6 +330,8 @@ li.statistics_counter {
 #document-authors {
   font-weight: normal;
   font-size: .75em;
+  text-transform: none;
+  color: #000000;
 }
 
 li.comment_forbidden {

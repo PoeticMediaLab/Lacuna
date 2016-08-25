@@ -114,7 +114,7 @@ $zen-auto-include-item-base: false;
   /**
    * The layout when there is only one sidebar, the right one.
    * For pages that are 'document' types and need the mobile
-   * annotator filters.
+   * annotator filters. *** Altered this to apply to Responses as well -- DMB 8/23/16
    */
   .node-type-document.sidebar-second {
 
@@ -125,6 +125,15 @@ $zen-auto-include-item-base: false;
       @include zen-grid-item(3, 1);
     }
 
+  }
+
+  .node-type-response.sidebar-second {
+     $zen-column-count: 3;
+
+    /* Span 3 columns, starting in 1st column from left. */
+    #content {
+      @include zen-grid-item(3, 1);
+    }
   }
 
   /**

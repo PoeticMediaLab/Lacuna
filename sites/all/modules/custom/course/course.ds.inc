@@ -5,6 +5,36 @@
  */
 
 /**
+ * Implements hook_ds_field_settings_info().
+ */
+function course_ds_field_settings_info() {
+  $export = array();
+
+  $ds_fieldsetting = new stdClass();
+  $ds_fieldsetting->api_version = 1;
+  $ds_fieldsetting->id = 'node|course|default';
+  $ds_fieldsetting->entity_type = 'node';
+  $ds_fieldsetting->bundle = 'course';
+  $ds_fieldsetting->view_mode = 'default';
+  $ds_fieldsetting->settings = array(
+    'title' => array(
+      'weight' => '0',
+      'label' => 'hidden',
+      'format' => 'default',
+      'formatter_settings' => array(
+        'link' => '0',
+        'wrapper' => '',
+        'class' => '',
+        'exclude node title settings' => '0',
+      ),
+    ),
+  );
+  $export['node|course|default'] = $ds_fieldsetting;
+
+  return $export;
+}
+
+/**
  * Implements hook_ds_layout_settings_info().
  */
 function course_ds_layout_settings_info() {
@@ -19,14 +49,14 @@ function course_ds_layout_settings_info() {
   $ds_layout->layout = 'ds_2col_stacked_fluid';
   $ds_layout->settings = array(
     'regions' => array(
-      'header' => array(
-        0 => 'field_course_image',
-      ),
       'left' => array(
-        1 => 'title',
+        0 => 'title',
         2 => 'field_name',
         3 => 'field_department',
         4 => 'body',
+      ),
+      'header' => array(
+        1 => 'field_course_image',
       ),
       'right' => array(
         5 => 'field_course_term',
@@ -40,8 +70,8 @@ function course_ds_layout_settings_info() {
       ),
     ),
     'fields' => array(
-      'field_course_image' => 'header',
       'title' => 'left',
+      'field_course_image' => 'header',
       'field_name' => 'left',
       'field_department' => 'left',
       'body' => 'left',

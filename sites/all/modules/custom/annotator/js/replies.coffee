@@ -223,7 +223,14 @@ class Annotator.Plugin.Replies extends Annotator.Plugin
 
   drawReply: (element, reply, annotation) ->
     li = document.createElement("li")
-    li.innerHTML = reply['author'] + ' on ' + reply['date']
+    author_span = document.createElement('span')
+    author_span.innerHTML = reply['author']
+    @addClasses(author_span, 'author')
+    date_span = document.createElement('span')
+    date_span.innerHTML = reply['date']
+    @addClasses(date_span, 'date')
+    li.appendChild(author_span)
+    li.appendChild(date_span)
     li.classList.add('annotator-reply-id-' + reply['id'])
     @addClasses(li, 'replyarea')
     text = document.createElement("span")
