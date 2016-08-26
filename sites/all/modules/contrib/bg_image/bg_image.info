@@ -1,0 +1,16 @@
+name = Background Image
+description = Provides a settings page and an API for putting background images on the page using CSS. This module doesn't do anything on it's own. It is implemented by other modules such as bg_image_context and bg_image_ui.
+core = "7.x"
+package = Background Images
+dependencies[] = image
+
+version = "7.x-1.x-dev"
+project = "bg_image"
+
+
+; Information added by Drupal.org packaging script on 2014-08-26
+version = "7.x-1.4"
+core = "7.x"
+project = "bg_image"
+datestamp = "1409075303"
+

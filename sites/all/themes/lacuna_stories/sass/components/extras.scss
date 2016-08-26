@@ -1,3 +1,5 @@
+@import "init";
+
 /*moving course title to top of page*/
 .course-name {
     position: relative;
@@ -9,6 +11,9 @@
 	background-color: #fafafa !important;
 	border: 1px solid #e1e1e1 !important;
 	-webkit-transition: all 1s ease;
+  -moz-transition: all 1s ease;
+  -o-transition: all 1s ease;
+  transition: all 1s ease;
 	padding-bottom: 20px !important;
 }
 
@@ -17,13 +22,20 @@ li.views-fluid-grid-inline.views-fluid-grid-item.views-row:hover {
 }
 
 
-.course-views-image {
-	img {
-		width: 100%;
+.views-field-field-course-image {
+		height: 175px;
 		border: 1px solid #e1e1e1;
 		border-bottom: 2px solid rgba(16,15,15,0.49);
+    overflow:hidden;
+    padding: 0 !important;
+    .course-views-image {
+      img {
+        height:180px;
+        width: auto;
+      }
+    }
 	}
-}
+
 
 
 .view-courses {
@@ -285,7 +297,7 @@ body {
 
 
 /*styling for "about this course" page*/
-.node-course {
+div.node-course.view-mode-full {
     .group-header {
         width: 100%;
         height: 35vh;
@@ -296,11 +308,11 @@ body {
     .field-name-field-course-image img {
         width: 100%;
         height: auto;
-        transform: translateY(-50%);
-        -webkit-transform: translateY(-50%);
+        transform: translateY(-25%);
+        -webkit-transform: translateY(-25%);
     }
     .field-name-title {
-        font-family: "Source Sans Pro", serif;
+        font-family: "Source Sans Pro", $arial;
         font-size: 3em;
         padding-top: 25px;
         padding-bottom: 10px;
@@ -428,5 +440,4 @@ body.not-logged-in div.field-name-group-group a {
   color: #ffffff;
   padding: 5px;
 }
-
 
