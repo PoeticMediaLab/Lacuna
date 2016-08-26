@@ -132,17 +132,33 @@ function annotator_ctools_plugin_type() {
 function annotator_execute_plugins($annotation = NULL, $op = NULL) {
   ctools_include('plugins');
   $annotator_plugins = variable_get('annotator_plugins', array());
+  // Plugins can define a "weight" that controls when they're executed
+  $plugin_weights = array();
+  $plugins = array();
+  // Load the plugins and determine what order to execute them
   foreach ($annotator_plugins as $name => $enabled) {
     if ((boolean) $enabled) {
       $plugin = ctools_get_plugins('annotator', 'annotator', $name . 'AnnotatorPlugin');
-      $class = ctools_plugin_get_class($plugin, 'handler');
-      if (class_exists($class)) {
-        $instance = new $class($plugin);
-        $instance->setup();
-        // ddl('instance', $instance);
-        if ($annotation && $op) {
-          $instance->alter($annotation, $op);
-        }
+      $plugins[$name] = $plugin;
+      if (array_key_exists('weight', $plugin)) {
+        $plugin_weights[$name] = $plugin['weight'];
+      }
+      else {
+        $plugin_weights[$name] = 0;
+      }
+    }
+  }
+  // Sort by weight
+  asort($plugin_weights);
+  // Now enable
+  foreach ($plugin_weights as $name => $weight) {
+    $plugin = $plugins[$name];
+    $class = ctools_plugin_get_class($plugin, 'handler');
+    if (class_exists($class)) {
+      $instance = new $class($plugin);
+      $instance->setup();
+      if ($annotation && $op) {
+        $instance->alter($annotation, $op);
       }
     }
   }
@@ -162,8 +178,7 @@ function annotator_annotation_alter($entity, $op) {
  * Check if we are currently on an annotatable node
  * If so, return the node.
  */
-function annotator_check_annotatable_node () {
-
+function annotator_check_annotatable_node() {
   if (arg(0) == 'node' && is_numeric (arg(1))) {
     $current_node = node_load(arg(1));
     $anno_ref_field = field_info_field('field_annotation_reference');
@@ -171,15 +186,7 @@ function annotator_check_annotatable_node () {
     $workflow_state = workflow_node_current_state($current_node);
     // Account for nodes that don't have a workflow status
     if (in_array($current_node->type, $annotatable_types) && (empty($workflow_state) || $workflow_state == WORKFLOW_READY_STATE)) {
-      $current_course = course_get_selected_course();
-      foreach ($current_node->og_group_ref[$current_node->language] as $current_node_parent_group) {
-        if ($current_node_parent_group['target_id'] == $current_course) {
-          return $current_node; // User is on an annotatable, and the node corresponds to their current context
-        }
-      }
-    }
-    if (in_array($current_node->type, $annotatable_types) && node_access('view', $current_node)) {
-      drupal_set_message('Annotations on this content are disabled. This document is either not within your current course or not yet ready to annotate. You may ' . l('return to the front page', '<front>') . ' to change courses.', 'warning', FALSE); // This can happen if a user is already logged in with a course context set, and they access the node directly from browser (non-referred) or they've clicked to this node from the Sewing Kit (as of writing, the only way content is linked to other courses), or if it's an admin user coming from admin/content, etc.
+      return $current_node; // User is on an annotatable
     }
   }
 	return FALSE;

@@ -162,7 +162,11 @@ function course_views_default_views() {
   $handler->display->display_options['access']['role'] = array(
     2 => '2',
   );
-  $handler->display->display_options['cache']['type'] = 'none';
+  $handler->display->display_options['cache']['type'] = 'time';
+  $handler->display->display_options['cache']['results_lifespan'] = '21600';
+  $handler->display->display_options['cache']['results_lifespan_custom'] = '0';
+  $handler->display->display_options['cache']['output_lifespan'] = '21600';
+  $handler->display->display_options['cache']['output_lifespan_custom'] = '0';
   $handler->display->display_options['query']['type'] = 'views_query';
   $handler->display->display_options['exposed_form']['type'] = 'basic';
   $handler->display->display_options['pager']['type'] = 'full';
@@ -214,8 +218,9 @@ function course_views_default_views() {
   $handler->display->display_options['fields']['field_course_image']['field'] = 'field_course_image';
   $handler->display->display_options['fields']['field_course_image']['label'] = '';
   $handler->display->display_options['fields']['field_course_image']['alter']['text'] = '<div class="course-view-image" style="background-image: url([field_course_image]); height: 100px; width: 100px; background-color: black;">test test test</div>';
+  $handler->display->display_options['fields']['field_course_image']['alter']['path'] = '[path]';
   $handler->display->display_options['fields']['field_course_image']['element_type'] = 'div';
-  $handler->display->display_options['fields']['field_course_image']['element_class'] = 'course-views-image';
+  $handler->display->display_options['fields']['field_course_image']['element_class'] = '.course-views-image';
   $handler->display->display_options['fields']['field_course_image']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['field_course_image']['click_sort_column'] = 'fid';
   $handler->display->display_options['fields']['field_course_image']['settings'] = array(
@@ -253,7 +258,7 @@ function course_views_default_views() {
   $handler->display->display_options['fields']['field_course_id']['field'] = 'field_course_id';
   $handler->display->display_options['fields']['field_course_id']['label'] = '';
   $handler->display->display_options['fields']['field_course_id']['element_label_colon'] = FALSE;
-  /* Field: Content: Instructor: */
+  /* Field: Content: Instructor Name: */
   $handler->display->display_options['fields']['field_name']['id'] = 'field_name';
   $handler->display->display_options['fields']['field_name']['table'] = 'field_data_field_name';
   $handler->display->display_options['fields']['field_name']['field'] = 'field_name';

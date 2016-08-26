@@ -1,10 +1,11 @@
 line.page-turner-bookmark {
-    stroke: rgb(136, 181, 81);
+    /* stroke: rgb(136, 181, 81); */
+    stroke: #1485b7;
     stroke-width: 5px;
     stroke-opacity: 1;
     cursor: pointer;
 }
 
 #page-turner-bookmark-button {
-    margin-left: 5px;
+    margin-left: 15px;
 }

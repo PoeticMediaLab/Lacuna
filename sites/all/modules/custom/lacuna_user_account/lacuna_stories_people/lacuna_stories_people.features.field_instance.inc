@@ -357,6 +357,43 @@ function lacuna_stories_people_field_default_field_instances() {
     ),
   );
 
+  // Exported field_instance: 'user-user-field_terms_of_use'.
+  $field_instances['user-user-field_terms_of_use'] = array(
+    'bundle' => 'user',
+    'default_value' => array(
+      0 => array(
+        'value' => 0,
+      ),
+    ),
+    'deleted' => 0,
+    'description' => 'Please read the Lacuna <a href="http://www.lacunastories.com/termsofuse/" target="_blank">Terms of Use</a> before accepting.',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'list',
+        'settings' => array(),
+        'type' => 'list_default',
+        'weight' => 20,
+      ),
+    ),
+    'entity_type' => 'user',
+    'field_name' => 'field_terms_of_use',
+    'label' => 'I agree to the Terms of Use',
+    'required' => 1,
+    'settings' => array(
+      'user_register_form' => 1,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'options',
+      'settings' => array(
+        'display_label' => 1,
+      ),
+      'type' => 'options_onoff',
+      'weight' => 2,
+    ),
+  );
+
   // Exported field_instance: 'user-user-field_year_in_program'.
   $field_instances['user-user-field_year_in_program'] = array(
     'bundle' => 'user',
@@ -407,8 +444,10 @@ function lacuna_stories_people_field_default_field_instances() {
   t('Education');
   t('Gender');
   t('How I Learn');
+  t('I agree to the Terms of Use');
   t('Learning Goals');
   t('Major/Degree');
+  t('Please read the Lacuna <a href="http://www.lacunastories.com/termsofuse/" target="_blank">Terms of Use</a> before accepting.');
   t('The name under which you would like your work to appear.');
   t('Year in Program');
 

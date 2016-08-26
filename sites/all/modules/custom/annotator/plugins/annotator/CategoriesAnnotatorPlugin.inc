@@ -7,4 +7,6 @@ $plugin = array(
   'handler' => array(
     'class' => 'CategoriesAnnotatorPlugin',
   ),
+  // 'weight' => 1,
+  'weight' => 2,
 );

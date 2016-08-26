@@ -67,6 +67,8 @@ rect#page-turner-nav {
 
 #page-turner-next {
   float: right;
+  position: absolute;
+  margin-left: 3px;
 }
 
 .page-turner-number {

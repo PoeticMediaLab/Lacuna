@@ -86,51 +86,6 @@ function lacuna_stories_materials_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-document-field_doc_attachment'.
-  $field_instances['node-document-field_doc_attachment'] = array(
-    'bundle' => 'document',
-    'deleted' => 0,
-    'description' => 'If there is a PDF or other file version of this document, attach it here.',
-    'display' => array(
-      'default' => array(
-        'label' => 'above',
-        'module' => 'file_entity',
-        'settings' => array(
-          'file_view_mode' => 'default',
-        ),
-        'type' => 'file_rendered',
-        'weight' => 2,
-      ),
-      'teaser' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
-      ),
-    ),
-    'entity_type' => 'node',
-    'field_name' => 'field_doc_attachment',
-    'label' => 'Attachments',
-    'required' => 0,
-    'settings' => array(
-      'description_field' => 0,
-      'file_directory' => 'documents',
-      'file_extensions' => 'txt pdf docx doc odt rtf',
-      'max_filesize' => '',
-      'media_library_include_in_library' => FALSE,
-      'user_register_form' => FALSE,
-    ),
-    'widget' => array(
-      'active' => 1,
-      'module' => 'file',
-      'settings' => array(
-        'progress_indicator' => 'throbber',
-      ),
-      'type' => 'file_generic',
-      'weight' => 7,
-    ),
-  );
-
   // Exported field_instance: 'node-document-field_doc_genre'.
   $field_instances['node-document-field_doc_genre'] = array(
     'bundle' => 'document',
@@ -407,7 +362,7 @@ function lacuna_stories_materials_field_default_field_instances() {
     'bundle' => 'document',
     'default_value' => NULL,
     'deleted' => 0,
-    'description' => '',
+    'description' => 'Keep this document in <strong>Draft</strong> state if you want to continue to make changes to it. Once a document is set to <strong>Ready to Annotate</strong>, it will be available to annotate, and <em>further changes to the document are likely to cause existing annotations to display incorrectly, or not at all.</em>',
     'display' => array(
       'default' => array(
         'label' => 'above',
@@ -694,13 +649,12 @@ function lacuna_stories_materials_field_default_field_instances() {
   // Included for use with string extractors like potx.
   t('A unit might be "Week One", "January 1st", "Section Two: Why Monkeys Like Bananas", or another method of chronologically ordering your syllabus.');
   t('Any non-text media.');
-  t('Attachments');
   t('Bibliographic Entry');
   t('Copyright');
   t('Course');
   t('Cover Image');
   t('Genre');
-  t('If there is a PDF or other file version of this document, attach it here.');
+  t('Keep this document in <strong>Draft</strong> state if you want to continue to make changes to it. Once a document is set to <strong>Ready to Annotate</strong>, it will be available to annotate, and <em>further changes to the document are likely to cause existing annotations to display incorrectly, or not at all.</em>');
   t('Media');
   t('Medium');
   t('Priority');

@@ -1,0 +1,43 @@
+div.user-avatar-select div.form-item {
+  text-align: center;
+  float: none;
+  display: inline;
+  width: 85px;
+}
+
+div.user-avatar-select label.option img {
+  /* margin: 3px;*/
+  padding: 5px;
+  /*border: 4px #E1E1E1 solid;*/
+}
+
+div.user-avatar-select label.option img.avatar-hover {
+  border: 4px #51ADE7 solid;
+  padding: 1px;
+  cursor: pointer;
+}
+
+body div.user-avatar-select label.option img.avatar-select {
+  border: 4px #00FF00 solid;
+  padding: 1px;
+}
+
+div.avatar-selection-pager-nav {
+  text-align: center;
+}
+
+div.avatar-selection-pager-nav a {
+  padding: 0 5px 0 5px;
+}
+
+#avatar-selection-loading {
+  display: none;
+  background: url('loading.gif') top left no-repeat;
+  width: 32px;
+  height: 32px;
+  text-align: center;
+  line-height: 0;
+  position: relative;
+  top: 0%;
+  left: 45%;
+}

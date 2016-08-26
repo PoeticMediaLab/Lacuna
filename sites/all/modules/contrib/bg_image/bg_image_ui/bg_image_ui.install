@@ -1,0 +1,50 @@
+<?php
+
+/**
+ * Implements hook_schema().
+ */
+function bg_image_ui_schema() {
+  $schema['bg_image_paths'] = array(
+    'description' => 'Stores the background image information for individual paths',
+    'fields' => array(
+      'pid' => array(
+        'description' => 'The individual id of the item',
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'path' => array(
+        'description' => 'The path to apply the image to',
+        'type' => 'varchar',
+        'length' => 255,
+      ),
+      'nid' => array(
+        'description' => 'The nid of the node that has the image',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'weight' => array(
+        'description' => 'The weight of the item in the list',
+        'type' => 'int',
+      ),
+    ),
+    'primary key' => array('pid'),
+  );
+  return $schema;
+}
+
+/**
+ * Implements hook_install()
+ */
+function bg_image_ui_install() {
+  // Nothing to do...
+}
+
+/**
+ * Implements hook_uninstall()
+ */
+function bg_image_ui_uninstall() {
+  // Nothing here just yet either...
+}

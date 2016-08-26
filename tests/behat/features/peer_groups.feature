@@ -21,9 +21,9 @@
     And "Student X" is enrolled in the "Course Beta" course
     And "peer_group" content:
       | title           | author    | group_access                            |
-      | Group A Private | Student A | Private: visible only to group members  |
-      | Group A Public  | Student A | Public: visible to all course users     |
-      | Group B Public  | Student B | Public: visible to all course users     |
+      | Group A Private | Student A | Closed: Not visible to students. I will edit it later to make it visible. |
+      | Group A Public  | Student A | Open: Students can find it and join. I will authenticate their access. |
+      | Group B Public  | Student B | Open: Students can find it and join. I will authenticate their access. |
     # Note: the assignment of content to a course has to come after it's been created
     And peer_group "Group A Public" is content for course "Course Alpha"
     And peer_group "Group A Private" is content for course "Course Alpha"

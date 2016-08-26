@@ -64,7 +64,8 @@ div#time_brush svg
 
 div#network {
   width: 625px;
-  min-height: 703px;   /* for nicely alliging with left column */
+  min-height: 703px;  /* for nicely alliging with left column */
+  overflow: hidden;   /*prevents titles from spilling over into next column  --DMB */
 }
 
 div#legend {

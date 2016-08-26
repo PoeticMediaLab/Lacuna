@@ -7,4 +7,6 @@ $plugin = array(
   'handler' => array(
     'class' => 'AuthorAnnotatorPlugin',
   ),
+  // 'weight' => 9,
+  'weight' => 1,
 );

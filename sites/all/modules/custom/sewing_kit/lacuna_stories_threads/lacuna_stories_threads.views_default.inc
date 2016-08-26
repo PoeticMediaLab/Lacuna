@@ -52,6 +52,7 @@ function lacuna_stories_threads_views_default_views() {
     'path' => 'path',
     'nid' => 'nid',
     'nothing' => 'nothing',
+    'comment_count' => 'comment_count',
   );
   $handler->display->display_options['style_options']['default'] = 'field_display_name';
   $handler->display->display_options['style_options']['info'] = array(
@@ -128,6 +129,13 @@ function lacuna_stories_threads_views_default_views() {
       'empty_column' => 0,
     ),
     'nothing' => array(
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'comment_count' => array(
+      'sortable' => 1,
+      'default_sort_order' => 'desc',
       'align' => '',
       'separator' => '',
       'empty_column' => 0,
@@ -234,6 +242,13 @@ if (module_exists(\'course\')) {
 ?>';
   $handler->display->display_options['fields']['php']['use_php_click_sortable'] = '0';
   $handler->display->display_options['fields']['php']['php_click_sortable'] = '';
+  /* Field: Content: Comment count */
+  $handler->display->display_options['fields']['comment_count']['id'] = 'comment_count';
+  $handler->display->display_options['fields']['comment_count']['table'] = 'node_comment_statistics';
+  $handler->display->display_options['fields']['comment_count']['field'] = 'comment_count';
+  $handler->display->display_options['fields']['comment_count']['label'] = 'Replies';
+  $handler->display->display_options['fields']['comment_count']['empty'] = 'None';
+  $handler->display->display_options['fields']['comment_count']['empty_zero'] = TRUE;
   /* Field: Content: Path */
   $handler->display->display_options['fields']['path']['id'] = 'path';
   $handler->display->display_options['fields']['path']['table'] = 'node';
@@ -551,7 +566,9 @@ if (module_exists(\'course\')) {
   $handler->display->display_options['cache']['type'] = 'none';
   $handler->display->display_options['query']['type'] = 'views_query';
   $handler->display->display_options['exposed_form']['type'] = 'basic';
-  $handler->display->display_options['pager']['type'] = 'none';
+  $handler->display->display_options['pager']['type'] = 'some';
+  $handler->display->display_options['pager']['options']['items_per_page'] = '10';
+  $handler->display->display_options['pager']['options']['offset'] = '0';
   $handler->display->display_options['style_plugin'] = 'table';
   $handler->display->display_options['style_options']['columns'] = array(
     'draggableviews' => 'draggableviews',
@@ -908,6 +925,208 @@ if (module_exists(\'course\')) {
       'override_label' => 0,
       'label' => '',
     ),
+  );
+
+  /* Display: Doc Data export */
+  $handler = $view->new_display('views_data_export', 'Doc Data export', 'views_data_export_1');
+  $handler->display->display_options['defaults']['group_by'] = FALSE;
+  $handler->display->display_options['pager']['type'] = 'none';
+  $handler->display->display_options['pager']['options']['offset'] = '0';
+  $handler->display->display_options['style_plugin'] = 'views_data_export_doc';
+  $handler->display->display_options['style_options']['provide_file'] = 1;
+  $handler->display->display_options['style_options']['filename'] = '%1-title.doc';
+  $handler->display->display_options['style_options']['parent_sort'] = 0;
+  $handler->display->display_options['defaults']['header'] = FALSE;
+  $handler->display->display_options['defaults']['relationships'] = FALSE;
+  /* Relationship: Thread */
+  $handler->display->display_options['relationships']['reverse_thread_reference_node']['id'] = 'reverse_thread_reference_node';
+  $handler->display->display_options['relationships']['reverse_thread_reference_node']['table'] = 'node';
+  $handler->display->display_options['relationships']['reverse_thread_reference_node']['field'] = 'reverse_thread_reference_node';
+  $handler->display->display_options['relationships']['reverse_thread_reference_node']['ui_name'] = 'Thread';
+  $handler->display->display_options['relationships']['reverse_thread_reference_node']['label'] = 'Thread';
+  /* Relationship: Annotated Content */
+  $handler->display->display_options['relationships']['field_annotation_reference_target_id']['id'] = 'field_annotation_reference_target_id';
+  $handler->display->display_options['relationships']['field_annotation_reference_target_id']['table'] = 'field_data_field_annotation_reference';
+  $handler->display->display_options['relationships']['field_annotation_reference_target_id']['field'] = 'field_annotation_reference_target_id';
+  $handler->display->display_options['relationships']['field_annotation_reference_target_id']['ui_name'] = 'Annotated Content';
+  $handler->display->display_options['relationships']['field_annotation_reference_target_id']['label'] = 'Annotated Content';
+  /* Relationship: Content: Author */
+  $handler->display->display_options['relationships']['uid']['id'] = 'uid';
+  $handler->display->display_options['relationships']['uid']['table'] = 'node';
+  $handler->display->display_options['relationships']['uid']['field'] = 'uid';
+  /* Relationship: Entity Reference: Referenced Entity */
+  $handler->display->display_options['relationships']['field_bibliographic_entry_target_id']['id'] = 'field_bibliographic_entry_target_id';
+  $handler->display->display_options['relationships']['field_bibliographic_entry_target_id']['table'] = 'field_data_field_bibliographic_entry';
+  $handler->display->display_options['relationships']['field_bibliographic_entry_target_id']['field'] = 'field_bibliographic_entry_target_id';
+  $handler->display->display_options['relationships']['field_bibliographic_entry_target_id']['relationship'] = 'field_annotation_reference_target_id';
+  $handler->display->display_options['relationships']['field_bibliographic_entry_target_id']['label'] = 'Bibliography';
+  $handler->display->display_options['defaults']['fields'] = FALSE;
+  /* Field: Biblio: Biblio Citation */
+  $handler->display->display_options['fields']['citation']['id'] = 'citation';
+  $handler->display->display_options['fields']['citation']['table'] = 'biblio';
+  $handler->display->display_options['fields']['citation']['field'] = 'citation';
+  $handler->display->display_options['fields']['citation']['relationship'] = 'field_bibliographic_entry_target_id';
+  $handler->display->display_options['fields']['citation']['label'] = 'Document';
+  $handler->display->display_options['fields']['citation']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['citation']['style_name'] = 'mla';
+  $handler->display->display_options['fields']['citation']['export_links'] = 0;
+  $handler->display->display_options['fields']['citation']['file_attachments'] = 0;
+  $handler->display->display_options['fields']['citation']['open_url_link'] = 0;
+  /* Field: User: Name */
+  $handler->display->display_options['fields']['name']['id'] = 'name';
+  $handler->display->display_options['fields']['name']['table'] = 'users';
+  $handler->display->display_options['fields']['name']['field'] = 'name';
+  $handler->display->display_options['fields']['name']['relationship'] = 'uid';
+  $handler->display->display_options['fields']['name']['label'] = 'Annotator';
+  /* Field: Content: Excerpt */
+  $handler->display->display_options['fields']['field_annotation_quote']['id'] = 'field_annotation_quote';
+  $handler->display->display_options['fields']['field_annotation_quote']['table'] = 'field_data_field_annotation_quote';
+  $handler->display->display_options['fields']['field_annotation_quote']['field'] = 'field_annotation_quote';
+  $handler->display->display_options['fields']['field_annotation_quote']['alter']['max_length'] = '200';
+  $handler->display->display_options['fields']['field_annotation_quote']['alter']['trim'] = TRUE;
+  $handler->display->display_options['fields']['field_annotation_quote']['element_class'] = 'fix-width-15';
+  $handler->display->display_options['fields']['field_annotation_quote']['type'] = 'text_plain';
+  $handler->display->display_options['fields']['field_annotation_quote']['settings'] = array(
+    'trim_length' => '600',
+  );
+  /* Field: Content: Annotation Text */
+  $handler->display->display_options['fields']['field_annotation_text']['id'] = 'field_annotation_text';
+  $handler->display->display_options['fields']['field_annotation_text']['table'] = 'field_data_field_annotation_text';
+  $handler->display->display_options['fields']['field_annotation_text']['field'] = 'field_annotation_text';
+  $handler->display->display_options['fields']['field_annotation_text']['element_class'] = 'fix-width-15';
+  $handler->display->display_options['fields']['field_annotation_text']['type'] = 'text_plain';
+  /* Field: Content: Category */
+  $handler->display->display_options['fields']['field_annotation_category']['id'] = 'field_annotation_category';
+  $handler->display->display_options['fields']['field_annotation_category']['table'] = 'field_data_field_annotation_category';
+  $handler->display->display_options['fields']['field_annotation_category']['field'] = 'field_annotation_category';
+  $handler->display->display_options['fields']['field_annotation_category']['type'] = 'taxonomy_term_reference_plain';
+  /* Field: Content: Tags */
+  $handler->display->display_options['fields']['field_annotation_tags']['id'] = 'field_annotation_tags';
+  $handler->display->display_options['fields']['field_annotation_tags']['table'] = 'field_data_field_annotation_tags';
+  $handler->display->display_options['fields']['field_annotation_tags']['field'] = 'field_annotation_tags';
+  $handler->display->display_options['fields']['field_annotation_tags']['type'] = 'taxonomy_term_reference_plain';
+  $handler->display->display_options['fields']['field_annotation_tags']['delta_offset'] = '0';
+  /* Field: Content: Body */
+  $handler->display->display_options['fields']['body']['id'] = 'body';
+  $handler->display->display_options['fields']['body']['table'] = 'field_data_body';
+  $handler->display->display_options['fields']['body']['field'] = 'body';
+  $handler->display->display_options['fields']['body']['relationship'] = 'reverse_thread_reference_node';
+  $handler->display->display_options['fields']['body']['label'] = '';
+  $handler->display->display_options['fields']['body']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['body']['element_label_colon'] = FALSE;
+  /* Field: Content: Title */
+  $handler->display->display_options['fields']['title']['id'] = 'title';
+  $handler->display->display_options['fields']['title']['table'] = 'node';
+  $handler->display->display_options['fields']['title']['field'] = 'title';
+  $handler->display->display_options['fields']['title']['relationship'] = 'reverse_thread_reference_node';
+  $handler->display->display_options['fields']['title']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['title']['link_to_node'] = FALSE;
+  $handler->display->display_options['path'] = 'thread/%/export-doc';
+  $handler->display->display_options['displays'] = array(
+    'view_block' => 'view_block',
+    'vbo_block' => 'vbo_block',
+    'default' => 0,
+  );
+
+  /* Display: Excel Data export */
+  $handler = $view->new_display('views_data_export', 'Excel Data export', 'views_data_export_2');
+  $handler->display->display_options['defaults']['group_by'] = FALSE;
+  $handler->display->display_options['pager']['type'] = 'none';
+  $handler->display->display_options['pager']['options']['offset'] = '0';
+  $handler->display->display_options['style_plugin'] = 'views_data_export_xls';
+  $handler->display->display_options['style_options']['provide_file'] = 1;
+  $handler->display->display_options['style_options']['filename'] = '%1-title.xls';
+  $handler->display->display_options['style_options']['parent_sort'] = 0;
+  $handler->display->display_options['defaults']['header'] = FALSE;
+  $handler->display->display_options['defaults']['relationships'] = FALSE;
+  /* Relationship: Thread */
+  $handler->display->display_options['relationships']['reverse_thread_reference_node']['id'] = 'reverse_thread_reference_node';
+  $handler->display->display_options['relationships']['reverse_thread_reference_node']['table'] = 'node';
+  $handler->display->display_options['relationships']['reverse_thread_reference_node']['field'] = 'reverse_thread_reference_node';
+  $handler->display->display_options['relationships']['reverse_thread_reference_node']['ui_name'] = 'Thread';
+  $handler->display->display_options['relationships']['reverse_thread_reference_node']['label'] = 'Thread';
+  /* Relationship: Annotated Content */
+  $handler->display->display_options['relationships']['field_annotation_reference_target_id']['id'] = 'field_annotation_reference_target_id';
+  $handler->display->display_options['relationships']['field_annotation_reference_target_id']['table'] = 'field_data_field_annotation_reference';
+  $handler->display->display_options['relationships']['field_annotation_reference_target_id']['field'] = 'field_annotation_reference_target_id';
+  $handler->display->display_options['relationships']['field_annotation_reference_target_id']['ui_name'] = 'Annotated Content';
+  $handler->display->display_options['relationships']['field_annotation_reference_target_id']['label'] = 'Annotated Content';
+  /* Relationship: Content: Author */
+  $handler->display->display_options['relationships']['uid']['id'] = 'uid';
+  $handler->display->display_options['relationships']['uid']['table'] = 'node';
+  $handler->display->display_options['relationships']['uid']['field'] = 'uid';
+  /* Relationship: Entity Reference: Referenced Entity */
+  $handler->display->display_options['relationships']['field_bibliographic_entry_target_id']['id'] = 'field_bibliographic_entry_target_id';
+  $handler->display->display_options['relationships']['field_bibliographic_entry_target_id']['table'] = 'field_data_field_bibliographic_entry';
+  $handler->display->display_options['relationships']['field_bibliographic_entry_target_id']['field'] = 'field_bibliographic_entry_target_id';
+  $handler->display->display_options['relationships']['field_bibliographic_entry_target_id']['relationship'] = 'field_annotation_reference_target_id';
+  $handler->display->display_options['relationships']['field_bibliographic_entry_target_id']['label'] = 'Bibliography';
+  $handler->display->display_options['defaults']['fields'] = FALSE;
+  /* Field: Biblio: Biblio Citation */
+  $handler->display->display_options['fields']['citation']['id'] = 'citation';
+  $handler->display->display_options['fields']['citation']['table'] = 'biblio';
+  $handler->display->display_options['fields']['citation']['field'] = 'citation';
+  $handler->display->display_options['fields']['citation']['relationship'] = 'field_bibliographic_entry_target_id';
+  $handler->display->display_options['fields']['citation']['label'] = 'Document';
+  $handler->display->display_options['fields']['citation']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['citation']['style_name'] = 'mla';
+  $handler->display->display_options['fields']['citation']['export_links'] = 0;
+  $handler->display->display_options['fields']['citation']['file_attachments'] = 0;
+  $handler->display->display_options['fields']['citation']['open_url_link'] = 0;
+  /* Field: User: Name */
+  $handler->display->display_options['fields']['name']['id'] = 'name';
+  $handler->display->display_options['fields']['name']['table'] = 'users';
+  $handler->display->display_options['fields']['name']['field'] = 'name';
+  $handler->display->display_options['fields']['name']['relationship'] = 'uid';
+  $handler->display->display_options['fields']['name']['label'] = 'Annotator';
+  /* Field: Content: Excerpt */
+  $handler->display->display_options['fields']['field_annotation_quote']['id'] = 'field_annotation_quote';
+  $handler->display->display_options['fields']['field_annotation_quote']['table'] = 'field_data_field_annotation_quote';
+  $handler->display->display_options['fields']['field_annotation_quote']['field'] = 'field_annotation_quote';
+  $handler->display->display_options['fields']['field_annotation_quote']['alter']['max_length'] = '200';
+  $handler->display->display_options['fields']['field_annotation_quote']['alter']['trim'] = TRUE;
+  $handler->display->display_options['fields']['field_annotation_quote']['element_class'] = 'fix-width-15';
+  $handler->display->display_options['fields']['field_annotation_quote']['type'] = 'text_plain';
+  $handler->display->display_options['fields']['field_annotation_quote']['settings'] = array(
+    'trim_length' => '600',
+  );
+  /* Field: Content: Annotation Text */
+  $handler->display->display_options['fields']['field_annotation_text']['id'] = 'field_annotation_text';
+  $handler->display->display_options['fields']['field_annotation_text']['table'] = 'field_data_field_annotation_text';
+  $handler->display->display_options['fields']['field_annotation_text']['field'] = 'field_annotation_text';
+  $handler->display->display_options['fields']['field_annotation_text']['element_class'] = 'fix-width-15';
+  $handler->display->display_options['fields']['field_annotation_text']['type'] = 'text_plain';
+  /* Field: Content: Category */
+  $handler->display->display_options['fields']['field_annotation_category']['id'] = 'field_annotation_category';
+  $handler->display->display_options['fields']['field_annotation_category']['table'] = 'field_data_field_annotation_category';
+  $handler->display->display_options['fields']['field_annotation_category']['field'] = 'field_annotation_category';
+  $handler->display->display_options['fields']['field_annotation_category']['type'] = 'taxonomy_term_reference_plain';
+  /* Field: Content: Tags */
+  $handler->display->display_options['fields']['field_annotation_tags']['id'] = 'field_annotation_tags';
+  $handler->display->display_options['fields']['field_annotation_tags']['table'] = 'field_data_field_annotation_tags';
+  $handler->display->display_options['fields']['field_annotation_tags']['field'] = 'field_annotation_tags';
+  $handler->display->display_options['fields']['field_annotation_tags']['type'] = 'taxonomy_term_reference_plain';
+  $handler->display->display_options['fields']['field_annotation_tags']['delta_offset'] = '0';
+  /* Field: Content: Body */
+  $handler->display->display_options['fields']['body']['id'] = 'body';
+  $handler->display->display_options['fields']['body']['table'] = 'field_data_body';
+  $handler->display->display_options['fields']['body']['field'] = 'body';
+  $handler->display->display_options['fields']['body']['relationship'] = 'reverse_thread_reference_node';
+  $handler->display->display_options['fields']['body']['label'] = '';
+  $handler->display->display_options['fields']['body']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['body']['element_label_colon'] = FALSE;
+  /* Field: Content: Title */
+  $handler->display->display_options['fields']['title']['id'] = 'title';
+  $handler->display->display_options['fields']['title']['table'] = 'node';
+  $handler->display->display_options['fields']['title']['field'] = 'title';
+  $handler->display->display_options['fields']['title']['relationship'] = 'reverse_thread_reference_node';
+  $handler->display->display_options['fields']['title']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['title']['link_to_node'] = FALSE;
+  $handler->display->display_options['path'] = 'thread/%/export-xls';
+  $handler->display->display_options['displays'] = array(
+    'view_block' => 'view_block',
+    'vbo_block' => 'vbo_block',
+    'default' => 0,
   );
   $export['stitchings'] = $view;
 

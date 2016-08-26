@@ -184,6 +184,50 @@ $views-link-hover-color: #1588BA;
   }
 }
 
+.view-responses {
+  .views-field-realname {
+  a {
+    color: #94b725; 
+  }
+  a:hover {
+    color: #a5cc29;
+  }
+  }
+  .views-field-created {
+    .field-content {
+      display: block;
+    }
+  }
+  .views-field-field-image {
+    img {
+      opacity: 0.9;
+      -webkit-transition: opacity 0.3s ease;
+      -moz-transition: opacity 0.3s ease;
+      -o-transition: opacity 0.3s ease;
+      transition: opacity 0.3s ease;
+    }
+    img:hover {
+      opacity: 1.0;
+    }
+  }
+}
+
+.view-documents {
+  .views-field-field-image {
+    img {
+      opacity: 0.9;
+      -webkit-transition: opacity 0.3s ease;
+      -moz-transition: opacity 0.3s ease;
+      -o-transition: opacity 0.3s ease;
+      transition: opacity 0.3s ease;
+    }
+    img:hover {
+      opacity: 1.0;
+    }
+  }
+}
+
+
 .view-documents #edit-reset.form-submit,
 .view-responses #edit-reset.form-submit{
   margin-top: 0px;
@@ -294,7 +338,7 @@ div#block-views-cite-as-block {
     width: 200px;
     display: inline-block;
     height: 50px;
-    font-size: 18pt !important;
+    font-size: 16pt !important;
   }
   input#edit-actioncourse-registration-approve {
 
@@ -328,5 +372,26 @@ div#block-views-cite-as-block {
   }
   caption {
     font-weight: bold;
+  }
+}
+
+// For the "Add Material" view
+body.page-course-setup-add-materials {
+  span.block-title {
+    font-size: x-large;
+    font-weight: bold;
+    display: inline-block;
+    padding-top: 20px;
+    width: 100%;
+  }
+  div.view-display-id-course_materials_draft_block {
+    div.view-content {
+      div.views-row {
+        height: 50px;
+      }
+    }
+  }
+  div.view-display-id-course_block {
+    float: left;
   }
 }

@@ -42,7 +42,7 @@ function lacuna_stories_system_filter_default_formats() {
           'valid_elements' => 'a[!href|target<_blank|title],
 div[align<center?justify?left?right],
 p[align<center?justify?left?right],
-br,span,em,strong,cite,code,blockquote,ul,ol,li,dl,dt,dd
+br,span,em,strong,cite,code,blockquote,ul,ol,li,dl,dt,dd,em,u,s,i,b,
 sup,sub',
           'allow_comments' => 0,
           'nofollow_policy' => 'whitelist',
@@ -188,6 +188,11 @@ sup,sub',
           ),
         ),
       ),
+      'emptyparagraphkiller' => array(
+        'weight' => 0,
+        'status' => 1,
+        'settings' => array(),
+      ),
       'media_filter' => array(
         'weight' => 2,
         'status' => 1,
@@ -204,35 +209,40 @@ sup,sub',
     'status' => 1,
     'weight' => 1,
     'filters' => array(
-      'filter_url' => array(
+      'media_filter' => array(
         'weight' => -50,
+        'status' => 1,
+        'settings' => array(),
+      ),
+      'filter_url' => array(
+        'weight' => -49,
         'status' => 1,
         'settings' => array(
           'filter_url_length' => 72,
         ),
       ),
       'biblio_filter_inline_reference' => array(
-        'weight' => -49,
-        'status' => 1,
-        'settings' => array(),
-      ),
-      'biblio_filter_reference' => array(
         'weight' => -48,
         'status' => 1,
         'settings' => array(),
       ),
-      'filter_autop' => array(
+      'biblio_filter_reference' => array(
         'weight' => -47,
         'status' => 1,
         'settings' => array(),
       ),
-      'filter_htmlcorrector' => array(
+      'filter_autop' => array(
         'weight' => -46,
         'status' => 1,
         'settings' => array(),
       ),
-      'media_filter' => array(
-        'weight' => -43,
+      'filter_htmlcorrector' => array(
+        'weight' => -45,
+        'status' => 1,
+        'settings' => array(),
+      ),
+      'emptyparagraphkiller' => array(
+        'weight' => 0,
         'status' => 1,
         'settings' => array(),
       ),
