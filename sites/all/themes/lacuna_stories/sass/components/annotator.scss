@@ -416,7 +416,6 @@ $privacy-selected: rgba(19, 149, 25, 0.74);
   .annotator-reply {
     // margin-top: 12px;
     span:first-of-type {                       // this edits the format of "# Replies"
-        font-weight: 650px !important;
         margin-right: 10px !important;
     }
     span {
@@ -427,11 +426,8 @@ $privacy-selected: rgba(19, 149, 25, 0.74);
     span:hover {
       color: black;
     }
-    //li.annotator-reply-replyarea:first-child {
-    //  padding: 9px 0px 4px 0px;
-    //}
 
-    .annotator-item ol.annotator-reply-list {
+    ol.annotator-reply-list {
       padding: 0;
       margin-left: 15px;
     }
