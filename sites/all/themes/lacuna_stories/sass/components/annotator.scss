@@ -414,24 +414,28 @@ $privacy-selected: rgba(19, 149, 25, 0.74);
     background-color: $privacy-default;
   }
   .annotator-reply {
+    clear: left;
     // margin-top: 12px;
     span:first-of-type {                       // this edits the format of "# Replies"
         margin-right: 10px !important;
+        display: inline-block;
+    }
+    > span {                                   // this edits the format of # Replies
+      padding: 10px 10px 10px 0px;
     }
     span {
       cursor: pointer;
     }
-    max-height: 200px;
-    overflow: auto;
+
     span:hover {
       color: black;
     }
-
     ol.annotator-reply-list {
-      padding: 0;
+      padding: 0px;
+      max-height: 200px;
+      overflow: auto;                           // moving overflow: atuo under ol. annotator-reply-list makes only the replies scrollable
       margin-left: 15px;
     }
-
     li.annotator-reply-replyarea {
       list-style: none;
       font-size: 10px;
@@ -452,7 +456,7 @@ $privacy-selected: rgba(19, 149, 25, 0.74);
     }
 
     .annotator-reply-date {
-      font-size: 9px;
+      font-size: 9.5px;
       color: #a5a5a5;
     }
 
@@ -598,7 +602,7 @@ label.annotator-privacy-group {
 }
 
 .annotator-widget.annotator-listing{
-  padding: 0px 10px 10px;                                   // this adds 10px of padding to the .annotator-widget.annotator-listing box in .annotator-outer.annotator-viewer for better readability (ih, 08/15)
+  padding: 0px 10px 0px;                                   // this adds 10px of padding to the .annotator-widget.annotator-listing box in .annotator-outer.annotator-viewer for better readability (ih, 08/15)
 }
 
 /* Fix to show icons */
