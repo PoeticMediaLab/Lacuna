@@ -13,6 +13,12 @@
     padding-right: 5px;
 }
 
+.annotator-item.fa:before {
+float: left;
+width: 10px;
+padding-left: 2px;
+}
+
 .annotator-category, .annotator-privacy-type {
   padding: 1px 5px 1px 5px;
   // margin: 1px 1px 0px;
@@ -24,6 +30,7 @@
   text-transform: capitalize;
   font-style: normal;
   float:left;
+  margin-right:1px;
 }
 
   /* ----------------------------------------------------------------
