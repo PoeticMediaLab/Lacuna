@@ -43,6 +43,12 @@ ul.sf-menu {
     padding: 10px 15px 10px 15px;
     margin: 0px;
   }
+
+  :hover span {
+    border-radius: 2px;
+    background-image: linear-gradient(to top, #ededed, #e0e0e0) !important;
+  }
+
   li {
     background-color: $menu-color !important;
     list-style-type: none;
@@ -55,12 +61,12 @@ ul.sf-menu {
     font-size: 19px;
     letter-spacing: .6px;
     color: #4e4e4e;
-
+/*
     :hover {
       border-radius: 2px;
       // background-color: #FFFFFF;
       background-image: linear-gradient(to top, #ededed,#e0e0e0) !important;
-    }
+    } */
 
 
     span {
@@ -70,6 +76,8 @@ ul.sf-menu {
       }
     }
     ul {
+      width: 200px !important;
+      box-shadow: 0px 3px 5px #d2d2d2;
       li {
         padding: 0px;
         background-color: white;
@@ -79,9 +87,10 @@ ul.sf-menu {
       li.firstandlast, li.last {
         border-bottom: 1px solid gray;
       }
+      /*
       li.active-trail {
         background-color: $menu-active-color !important;
-      }
+      } */
     }
   }
 
