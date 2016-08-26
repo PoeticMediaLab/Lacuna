@@ -494,7 +494,6 @@ function get_image($item, $docId) {
   return "";
 }
 
-
 // Implements hook_library()
 // To load our vis-specific libraries
 function lacuna_visualizations_library() {
