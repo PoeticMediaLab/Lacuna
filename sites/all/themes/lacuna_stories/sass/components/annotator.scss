@@ -427,25 +427,20 @@ $privacy-selected: rgba(19, 149, 25, 0.74);
     span:hover {
       color: black;
     }
-    ol.annotator-reply-list {
-      // padding: 0 0 0 2px;
-      padding: 9px 0px 4px;
+    //li.annotator-reply-replyarea:first-child {
+    //  padding: 9px 0px 4px 0px;
+    //}
+
+    .annotator-item ol.annotator-reply-list {
+      padding: 0;
+      margin-left: 15px;
     }
+
     li.annotator-reply-replyarea {
       list-style: none;
-      
-      /* background: rgba(175, 175, 175, .5);
-      //color: white;
-      padding-left: 2px;
-      //padding-right: -15px;
-      width: 90%; */
-
       font-size: 10px;
       color: #1a1a1a;
       .annotator-reply-text p {
-        /* //color: white;
-        padding: 3px; */
-
         margin: 4px 2px 0px;
         border-left: 1px solid black;
         padding-left: 6px;
@@ -466,9 +461,6 @@ $privacy-selected: rgba(19, 149, 25, 0.74);
     }
 
     div.annotator-reply-controls {
-      /* //float: right;
-      padding-bottom: 1px;
-      */
       padding: 0px 0px 0px 10px !important;
       border-left: 1px solid black;
       margin: -1px 0px 4px 2px;
@@ -510,30 +502,15 @@ $privacy-selected: rgba(19, 149, 25, 0.74);
     margin: 5px 5px 0px 5px;
     float: right;
     font-size: 14px;
-    // font-variant: none;
     text-transform: lowercase;
-    // display: block;
   }
   
   .annotator-reply-button:hover {
-    /*
-    background-color: #5d6476;
-    color: #FFFFFF;
-    background-position: 0 -20px;
-    // width: 90%;
-    transition: background-color ease-in 0s;
-    */
     color:#FFFFFF;
     background-color: #939dab;
     background-position: 0 -20px;
     transition: background-color ease-in 0s;
   }
-/*
-  .annotator-reply-button {
-    // width: 90%;
-    background-color: #5d6476;
-    background-image: linear-gradient(to bottom, #747c92, #5d6476);
-  } */
 
   .annotator-reply-button.annotator-reply-save:hover {
     background-color: #83a220; // #88b551;
@@ -544,17 +521,9 @@ $privacy-selected: rgba(19, 149, 25, 0.74);
   }
 
   .annotator-reply-button.annotator-reply-save {
-    // background-color: #c4df2c;
-    // background-image: linear-gradient(to bottom, #c4df2c, #88b551);
     background-color: #83a220; // #98ca5b;
     background-image: linear-gradient(to bottom, #a5cc29, #83a220);// #98ca5b, #88b551);
   }
-  /*
-  .annotator-reply-button {
-    color: white;
-    text-decoration: none;
-  }
-  */
 }
 
 .annotator-privacy-types .annotator-privacy-type {

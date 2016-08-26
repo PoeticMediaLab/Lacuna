@@ -270,13 +270,12 @@
       return l;
     };
 
-    Replies.prototype.getListAtDepth = function(element, depth) {
-      var parent;
-      parent = element;
-      while (depth--) {
-        parent = this.getListAtDepth(this.initList(parent), depth);
+    Replies.prototype.getListAtDepth = function(l, depth) {
+      while (depth > 0) {
+        depth -= 1;
+        l = this.initList(l);
       }
-      return parent;
+      return l;
     };
 
     Replies.prototype.addControls = function(element, reply, annotation) {

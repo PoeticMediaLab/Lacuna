@@ -181,13 +181,13 @@ class Annotator.Plugin.Replies extends Annotator.Plugin
       l = l[0]
     return l
 
-  getListAtDepth: (element, depth) ->
+  getListAtDepth: (l, depth) ->
     # Check if a list element of depth exists
     # If not, create it; return the list
-    parent = element
-    while depth--
-      parent = @getListAtDepth(@initList(parent), depth)
-    return parent
+    while depth > 0
+      depth -= 1
+      l = @initList(l)
+    return l
 
   addControls: (element, reply, annotation) ->
     # Add edit/delete controls to a reply
