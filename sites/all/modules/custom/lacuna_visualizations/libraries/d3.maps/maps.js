@@ -34,7 +34,6 @@
 		drawDocumentCircle = settings.config.drawDocumentCircle;
 
 	var linkedNodesOnly = !drawDocumentCircle;
-	//console.log(links);
 
 
 		// TODO: so this probably should be an object or an
@@ -63,12 +62,14 @@
 				// names. If it doesn't, don't. (this keeps admin
 				// accounts, etc. out of the user list).
 				for(var i = 0; i < nodes.length; i++){
+					// DELETE (ih) : links.push([nodes[i].data.title, nodes[i].edges.)
 					if (nodes[i].data.author == username) {
 						// Change "username" to "Display Name" as needed
 						// Allows students to control how their work appears to others
 						nodes[i].data.author = safeName;
 					}
 					if (nodes[i].data.author === safeName) {
+
 						userNamesColors.push([safeName, color(colorsCounter % 20), nodes[i].data.u_id]);
 						// for debugging purposes.
 						colorsCounter++;
@@ -117,7 +118,15 @@
 			;
 		d3.select("#maps-tooltip")
 			.select("#author")
-			.text(d.data.author)
+			.text(function() {
+				for(var i = 0; i < userNamesColors.length; i++) {			// ih: retrieves the user's display name from userNamesColors
+					if(userNamesColors[i][2] == d.data.u_id) {
+						return userNamesColors[i][0]
+					}
+				}
+				return d.data.author;
+			})
+			// .text(d.data.author)
 			;
 		d3.select("#maps-tooltip")
 		.select("#image")
@@ -700,12 +709,14 @@
 							;
 
 				// append a g element, put a circle in it.
+
 				node.enter().append("g")
 				.append("circle")
 				  .attr("class", function(d) { return d.data.itemType; })
 				  .attr("fill", function(d) {
 					for(var i = 0; i < userNamesColors.length; i++){
-						if(userNamesColors[i][0] == d.data.author){
+						if(userNamesColors[i][2] == d.data.u_id){					// ih: this compares the user id, rather than the usernames
+						// if(userNamesColors[i][0] == d.data.author){
 							return userNamesColors[i][1];
 						}
 					} // didn't find it
