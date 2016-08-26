@@ -107,8 +107,6 @@
 		xPos = d.x;
 		yPos = d.y;
 
-		// console.log(d.data.title + " by " + d.data.author);
-
 		d3.select("#maps-tooltip")
 		.style("left", xPos + 30 + "px")
 		.style("top", yPos + 70 + "px")
