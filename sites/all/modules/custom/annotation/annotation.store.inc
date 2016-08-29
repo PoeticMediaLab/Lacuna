@@ -402,7 +402,10 @@ function annotation_api_search() {
   if (user_access('access content')) {
     if (isset($_GET['user'])) {
       $username = $_GET['user'];
-      $account = user_load(array('name' => check_plain($username)));
+      // user_load no longer supports loading arrays, throws php warning
+      // @see http://stackoverflow.com/a/4803629
+      $accounts = user_load_multiple(array(), array('name' => check_plain($username)));
+      $account = reset($accounts);
       $uid = $account->uid;
     }
   }
