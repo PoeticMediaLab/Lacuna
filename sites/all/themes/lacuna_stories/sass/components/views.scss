@@ -265,7 +265,8 @@ table.views-table {
   th {
     width: 2%;
     max-width: 5%;
-    padding: 1em 1em .5em;
+    padding: 1em .75em 0em;
+    font-size: 14px;
   }
   th.views-field-text,
   th.views-field-quote {
@@ -275,6 +276,7 @@ table.views-table {
   th.views-field-views-bulk-operations,
   th.views-field-nothing {
     width: 1% !important;
+    padding-left: 1.5em;
   }
 
   tr.odd, tr.even {
@@ -284,8 +286,15 @@ table.views-table {
     background-color: #f8f8f8 !important;
   }
   td {
-    padding: 1em;
+    padding: 1em .75em 1em;
+    font-size: 14px;
+    line-height: normal;
+
   }
+  td.views-field-views-bulk-operations {
+      padding-left: 1.5em;
+      padding-right: 0em;
+    }
   td.active {
     background-color: rgba(21,136,186,.08) !important;
   }
