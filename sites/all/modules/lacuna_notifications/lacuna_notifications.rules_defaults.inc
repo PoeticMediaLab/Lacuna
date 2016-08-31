@@ -9,12 +9,45 @@
  */
 function lacuna_notifications_default_rules_configuration() {
   $items = array();
+  $items['rules_log_new_annotation_on_response'] = entity_import('rules_config', '{ "rules_log_new_annotation_on_response" : {
+      "LABEL" : "Log New Annotation on Response",
+      "PLUGIN" : "reaction rule",
+      "OWNER" : "rules",
+      "REQUIRES" : [ "rules", "flag" ],
+      "ON" : { "node_insert--annotation" : { "bundle" : "annotation" } },
+      "IF" : [
+        { "data_is" : {
+            "data" : [ "node:field-annotation-reference:type" ],
+            "value" : "response"
+          }
+        },
+        { "list_contains" : { "list" : [ "node:field-annotation-audience" ], "item" : "everyone" } },
+        { "NOT data_is" : {
+            "data" : [ "node:field-annotation-reference:author" ],
+            "value" : [ "node:author" ]
+          }
+        }
+      ],
+      "DO" : [
+        { "flag_flaguser" : {
+            "flag" : "user_notification_flag",
+            "user" : [ "node:field-annotation-reference:author" ],
+            "flagging_user" : [ "node:author" ],
+            "permission_check" : "1"
+          }
+        }
+      ]
+    }
+  }');
   $items['rules_log_new_comment_on_response'] = entity_import('rules_config', '{ "rules_log_new_comment_on_response" : {
       "LABEL" : "Log New Comment on Response",
       "PLUGIN" : "reaction rule",
       "OWNER" : "rules",
-      "REQUIRES" : [ "rules", "comment" ],
+      "REQUIRES" : [ "rules", "flag", "comment" ],
       "ON" : { "comment_insert--comment_node_response" : { "bundle" : "comment_node_response" } },
+      "IF" : [
+        { "NOT data_is" : { "data" : [ "comment:author" ], "value" : [ "comment:node:author" ] } }
+      ],
       "DO" : [
         { "entity_create" : {
             "USING" : {
@@ -28,6 +61,13 @@ function lacuna_notifications_default_rules_configuration() {
         { "data_set" : {
             "data" : [ "entity-created:field-message-comment" ],
             "value" : [ "comment" ]
+          }
+        },
+        { "flag_flaguser" : {
+            "flag" : "user_notification_flag",
+            "user" : [ "comment:node:author" ],
+            "flagging_user" : [ "comment:author" ],
+            "permission_check" : "1"
           }
         }
       ]
@@ -37,8 +77,11 @@ function lacuna_notifications_default_rules_configuration() {
       "LABEL" : "Log New Comment on Thread",
       "PLUGIN" : "reaction rule",
       "OWNER" : "rules",
-      "REQUIRES" : [ "rules", "comment" ],
+      "REQUIRES" : [ "rules", "flag", "comment" ],
       "ON" : { "comment_insert--comment_node_thread" : { "bundle" : "comment_node_thread" } },
+      "IF" : [
+        { "NOT data_is" : { "data" : [ "comment:author" ], "value" : [ "comment:node:author" ] } }
+      ],
       "DO" : [
         { "entity_create" : {
             "USING" : {
@@ -52,6 +95,13 @@ function lacuna_notifications_default_rules_configuration() {
         { "data_set" : {
             "data" : [ "entity-created:field-message-comment" ],
             "value" : [ "comment" ]
+          }
+        },
+        { "flag_flaguser" : {
+            "flag" : "user_notification_flag",
+            "user" : [ "comment:node:author" ],
+            "flagging_user" : [ "comment:author" ],
+            "permission_check" : "1"
           }
         }
       ]
@@ -89,39 +139,6 @@ function lacuna_notifications_default_rules_configuration() {
         { "data_set" : {
             "data" : [ "entity-created:field-message-content" ],
             "value" : [ "node" ]
-          }
-        }
-      ]
-    }
-  }');
-  $items['rules_notification_of_annotation_on_response'] = entity_import('rules_config', '{ "rules_notification_of_annotation_on_response" : {
-      "LABEL" : "Notification of Annotation on Response",
-      "PLUGIN" : "reaction rule",
-      "ACTIVE" : false,
-      "OWNER" : "rules",
-      "REQUIRES" : [ "rules" ],
-      "ON" : { "node_insert--annotation" : { "bundle" : "annotation" } },
-      "IF" : [
-        { "data_is" : {
-            "data" : [ "node:field-annotation-reference:type" ],
-            "value" : "response"
-          }
-        },
-        { "AND" : [] },
-        { "NOT data_is" : {
-            "data" : [ "node:author" ],
-            "value" : [ "node:field-annotation-reference:author" ]
-          }
-        },
-        { "AND" : [] },
-        { "list_contains" : { "list" : [ "node:field-annotation-audience" ], "item" : "everyone" } }
-      ],
-      "DO" : [
-        { "mail" : {
-            "to" : [ "node:field-annotation-reference:author:mail" ],
-            "subject" : "New Annotation on Your Response",
-            "message" : "[node:author:field-display-name] made an annotation on your Response [node:field-annotation-reference:title]",
-            "language" : [ "" ]
           }
         }
       ]
