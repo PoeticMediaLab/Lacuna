@@ -278,6 +278,11 @@ table.views-table {
     width: 1% !important;
     padding-left: 1.5em;
   }
+  th.active {
+    img {
+      margin-left: 8px;
+    }
+  }
 
   tr.odd, tr.even {
     border: none !important;
