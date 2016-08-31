@@ -126,6 +126,27 @@ input[id^='edit-actionsewing-kit-remove']:focus,
   text-decoration: none;
   transition: background-color ease-in 0s; // background-position 0.1s linear 0s;
 }
+
+.media-widget .button:active,
+.lacuna-button:active,
+.form-submit:active,
+.page-turner-bookmark-button:active,
+.af-button-large:active,
+a.group.subscribe:active,
+a.group.unsubscribe:active,
+div.toboggan-unified #login-links a:active,
+body.not-logged-in div.field-name-group-group:active,
+input#edit-actioncourse-registration-approve:active,
+input#edit-actioncourse-registration-block:active,
+input[id^='edit-actionsewing-kit-stitch']:active,
+input[id^='edit-actionviews-data-export-action-csv-export']:active,
+input[id^='edit-actionsewing-kit-remove']:active,
+.toboggan-unified div#login-links a.lt-active:active {
+  background-color: #83a220;
+  background-position: 0 -50px;
+  transition: background-color ease-in 0s;
+}
+
 .lacuna-button.lacuna-button-blue,
 .page-turner-bookmark-add,
 .toboggan-unified div#login-links a:not(.lt-active)
@@ -178,7 +199,10 @@ input[id^='edit-actionsewing-kit-remove']:focus,
 }
 .form-submit:hover,
 .form-submit:focus{
-  background-color: #5f6677 // #39404a;
+  background-color: #5f6677; // #39404a;
+}
+.form-submit:active {
+  background-color: #545a69;
 }
 
 #response-node-form #edit-body-und-0-format,
