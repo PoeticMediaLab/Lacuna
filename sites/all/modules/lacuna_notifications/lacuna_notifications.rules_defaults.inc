@@ -97,6 +97,7 @@ function lacuna_notifications_default_rules_configuration() {
   $items['rules_notification_of_annotation_on_response'] = entity_import('rules_config', '{ "rules_notification_of_annotation_on_response" : {
       "LABEL" : "Notification of Annotation on Response",
       "PLUGIN" : "reaction rule",
+      "ACTIVE" : false,
       "OWNER" : "rules",
       "REQUIRES" : [ "rules" ],
       "ON" : { "node_insert--annotation" : { "bundle" : "annotation" } },
