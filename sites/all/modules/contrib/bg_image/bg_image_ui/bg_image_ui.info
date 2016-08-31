@@ -1,0 +1,13 @@
+name = Background Image UI
+description = Provides an interface to apply background images to specific pages.
+version = "7.x-1.x-dev"
+core = "7.x"
+project = "bg_image_ui"
+dependencies[] = "bg_image"
+
+; Information added by Drupal.org packaging script on 2014-08-26
+version = "7.x-1.4"
+core = "7.x"
+project = "bg_image"
+datestamp = "1409075303"
+

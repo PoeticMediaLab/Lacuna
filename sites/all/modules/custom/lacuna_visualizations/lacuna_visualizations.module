@@ -292,6 +292,208 @@ function lacuna_visualizations_menu() {
   );
 }
 
+
+function lacuna_visualizations_admin_form() {
+  $form = array();
+
+  $form['lacuna_visualizations_cache_threshold'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Cache threshold'),
+    '#description' => t('Set the minimum number of annotations in a course before the dashboard is cached.'),
+    '#default_value' => variable_get('lacuna_visualizations_cache_threshold', 1000),
+    '#required' => TRUE,
+  );
+
+  $form['lacuna_visualizations_cache_ttl'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Cache duration'),
+    '#description' => t('Set the time in hours after which the cache should expire.'),
+    '#default_value' => variable_get('lacuna_visualizations_cache_ttl', 24),
+    '#required' => TRUE,
+  );
+
+  return system_settings_form($form);
+}
+
+/**
+ * Visualization showing links between student responses and primary
+ * sources. (version I'm currently working on).
+ */
+function lacuna_visualizations_journeyview() {
+
+  // BJA uses EntityFieldQuery to pull all the 'response' and 'document' nodes
+  // BJA in the future, this should read from a view(?) rather than being
+  // BJA hard-coded here.
+  $responseQuery = new EntityFieldQuery();
+    $responseQuery
+        ->entityCondition('entity_type', 'node')
+        ->entityCondition('bundle', array('biblio', 'response'));
+  $result = $responseQuery->execute();
+  $nids = array_keys($result['node']);
+  $nodes = node_load_multiple($nids);
+
+  $graph = graphapi_new_graph();
+  foreach ($nodes as $item) {
+  	$usersQuery = new EntityFieldQuery();
+  	$usersQuery->entityCondition('entity_type', 'user');
+  	$usersResult = $usersQuery->execute();
+  	$uids = array_keys($usersResult['user']);
+  	$users = user_load_multiple($uids);
+
+  	 // this array will eventually contain all relevant info about responses and document: author, timestamp, etc.
+  	 // added to nodes before graphapi passes off to d3.
+    $dataArray = array(
+      'itemType' => $item->type,
+  		// author set below -- $item->name for responses, but
+  		// more complicated for biblio entries.
+  		'author'	=> ' ',
+      'title'     => $item->title,
+      'linksTitles'     => array(),
+      'thisURL'   => $GLOBALS['base_url'] . "/node/" . $item->nid,
+      'linksURL' => array(),
+  		'biblio' => array(),
+  		'document_abstract' => '',
+  		'date' => $item->created,
+    );
+
+  		// added to all links before graphapi passes off to d3.
+  		// Currently only contains a date (the time that the source
+  		// node was created; currently assuming that all links are
+  		// created at the same time as the response they're
+  		// associated with.
+    if (!$dataArray['author']) {
+      $dataArray['author'] = "None";
+    }
+
+    $title = $item->title;
+
+  		/* pull out data needed for biblio nodes and add it to
+  		 * $dataArray */
+  	if ($item->type == "biblio") {
+  		$document_abstract = strip_tags($item->field_biblio_hover_abstract);
+  		$dataArray['document_abstract'] = $document_abstract;
+  		$author = ' ';    // inits $author outside loop (ih)
+  		if (isset($item->biblio_contributors[0])) {
+  			$count = count($item->biblio_contributors);
+  			for ($i = 0; $i < $count; $i++) {
+  				$author = $item->biblio_contributors[0]['name'];
+  				$dataArray['author'] .= $author . "\r\n";
+  			}
+  		}
+  	}
+    if ($item->type == "response") {
+
+  		$dataArray['author'] = $users[$item->uid]->field_display_name->und[0].safe_value;
+
+  		// draw links based off of node's field_bibliographic_entry.
+      if ($item->field_bibliographic_entry) {
+        $linkArray = $item->field_bibliographic_entry;
+        for ($i = 0; $i < count($linkArray[LANGUAGE_NONE]); $i++) {
+          $linkedNid = $linkArray[LANGUAGE_NONE][$i]['target_id'];
+          if (array_key_exists($linkedNid, $nodes)) {
+            graphapi_add_link($graph, $title, $nodes[$linkedNid]->title);
+            array_push($dataArray['linksTitles'], $nodes[$linkedNid]->title);
+            array_push($dataArray['linksURL'], $GLOBALS['base_url'] . '/node/' . $linkedNid);
+  //			graphapi_set_link_data($graph, $title,	$nodes[$linkedNid]['title'], $item->created);
+          }
+        }
+      } // end if($item->field_bibliographic_entry)
+
+/*			if($item->field_bibliographic_entry){
+				print_r($item->field_bibliographic_entry);
+			//	echo "<br />";
+              for($i = 0; $i < count($item->field_bibliographic_entry[LANGUAGE_NONE]); $i++) {
+
+				  // so this is the nid of the bibliographic reference.
+				  // print_r($item->field_bibliographic_entry[LANGUAGE_NONE][$i]['target_id']);
+				  $bibnid = $item->field_bibliographic_entry[LANGUAGE_NONE][$i]['target_id'];
+				  // echo "<br />";
+				  // print_r($bibnid);
+				  if(array_key_exists($bibnid, $nodes))
+					  // RESTART HERE
+					  // This is the title of the bibliographic
+					  // reference, which (should be) the same as the
+					  // title of the node that we're actually linking
+					  // to.
+
+					  // wait.
+					  // we should link to the bibliographic reference
+					  // rather than to the actual document. duh.
+					  print_r($nodes[$bibnid]);
+					  echo "<br />";
+				  }
+			  } */
+        }	// end if($item->type == "response")
+        graphapi_set_node_data($graph, $title, $dataArray);
+    }
+
+	// settings.config
+  $options = array(
+    'width' => 600,
+    'height' => 500,
+    'item-width' => 45,
+    'engine' => 'd3',
+  	'library' => 'journeys',
+  	'testString' => "TEST STRING",
+  	'userList' => $users,
+  	'drawDocumentCircle' => true,
+  );
+  return theme('graphapi_dispatch', array('graph' => $graph, 'config' => $options));
+}  // end function lacuna_visualizations_journeyview()
+
+//function get_document_id_for_biblio($nid) {
+//  //Find appropriate material for that biblio entry.
+//  $docQuery = new EntityFieldQuery();
+//  $docQuery
+//    ->entityCondition('entity_type', 'node')
+//    ->entityCondition('bundle', 'document')
+//    ->fieldCondition('field_bibliographic_entry', 'target_id', $nid, '=');
+//  $docResult = $docQuery->execute();
+//  if (count($docResult['node'])>0){
+//    $results = array_keys($docResult['node']);
+//    // PHP 5.3 won't dereference arrays from functions directly
+//    return $results[0];
+//  }
+//  else {
+//    return null;
+//  }
+//}
+
+function get_link_url($docId, $nid, $docType) {
+	global $base_url;
+	$url = $base_url . '/';
+  /* if (!empty($docId)){
+    return $url . drupal_get_path_alias('node/' . $docId);
+  }
+  else {
+    return $url . drupal_get_path_alias('node/' . $nid);
+  }
+  */
+
+  if ($docType == 'response') {                                 // added this so that responses hyperlink to the response url rather than the document url
+    return $url . drupal_get_path_alias('node/' . $nid);
+  } else if (!empty($docId)){                                   // original code:
+    return $url . drupal_get_path_alias('node/' . $docId);
+  }
+  else {
+    return $url . drupal_get_path_alias('node/' . $nid);
+  }
+}
+
+function get_image($item, $docId) {
+  if ($item->type == "biblio") {
+    if ($docId != null) {
+      $node = node_load($docId);
+      // var_dump($node->field_image);
+      return '<center>'.theme('image_style', array('style_name' => 'thumbnails_for_browsing', 'path' => $node->field_image[LANGUAGE_NONE][0]['uri'])).'</center>';
+    }
+  }
+  else if ($item->type == "response") {
+    return '<center>'.theme('image_style', array('style_name' => 'thumbnails_for_browsing', 'path' => $item->field_image[LANGUAGE_NONE][0]['uri'])).'</center>';
+  }
+  return "";
+}
+
 // Implements hook_library()
 // To load our vis-specific libraries
 function lacuna_visualizations_library() {

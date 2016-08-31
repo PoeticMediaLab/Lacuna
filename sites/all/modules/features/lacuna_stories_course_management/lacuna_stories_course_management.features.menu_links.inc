@@ -59,7 +59,7 @@ function lacuna_stories_course_management_menu_default_menu_links() {
       'identifier' => 'main-menu_bulk-update-annotations:bulk-update-annotations',
     ),
     'module' => 'system',
-    'hidden' => 0,
+    'hidden' => 1,
     'external' => 0,
     'has_children' => 0,
     'expanded' => 0,

@@ -217,7 +217,13 @@
       for (id in replies) {
         data = replies[id];
         date = new Date(data['created'] * 1000);
-        date_string = date.getFullYear() + '-' + date.getMonth() + '-' + date.getDate() + ' ' + date.getHours() + ':' + date.getMinutes();
+        date_string = date.toLocaleString(navigator.language, {
+          month: 'long',
+          day: 'numeric',
+          hour: 'numeric',
+          minute: 'numeric',
+          hour12: false
+        });
         reply = {
           'id': id,
           'pid': data['pid'],
@@ -264,13 +270,12 @@
       return l;
     };
 
-    Replies.prototype.getListAtDepth = function(element, depth) {
-      var parent;
-      parent = element;
-      while (depth--) {
-        parent = this.getListAtDepth(this.initList(parent), depth);
+    Replies.prototype.getListAtDepth = function(l, depth) {
+      while (depth > 0) {
+        depth -= 1;
+        l = this.initList(l);
       }
-      return parent;
+      return l;
     };
 
     Replies.prototype.addControls = function(element, reply, annotation) {
@@ -281,7 +286,7 @@
       replyLink = document.createElement('span');
       this.addClasses(replyLink, 'reply');
       controls.appendChild(replyLink);
-      replyArea = this.addReplyArea(annotation, 0, reply.pid, '');
+      replyArea = this.addReplyArea(annotation, 0, reply.id, '');
       this.hide(replyArea);
       replyLink.addEventListener("click", (function(_this) {
         return function() {
@@ -306,9 +311,16 @@
     };
 
     Replies.prototype.drawReply = function(element, reply, annotation) {
-      var li, text;
+      var author_span, date_span, li, text;
       li = document.createElement("li");
-      li.innerHTML = reply['author'] + ' on ' + reply['date'];
+      author_span = document.createElement('span');
+      author_span.innerHTML = reply['author'];
+      this.addClasses(author_span, 'author');
+      date_span = document.createElement('span');
+      date_span.innerHTML = reply['date'];
+      this.addClasses(date_span, 'date');
+      li.appendChild(author_span);
+      li.appendChild(date_span);
       li.classList.add('annotator-reply-id-' + reply['id']);
       this.addClasses(li, 'replyarea');
       text = document.createElement("span");

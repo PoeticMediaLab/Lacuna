@@ -72,7 +72,7 @@ $h6-font-size: 0.67 * $base-font-size;
 
 
 // Our web font stack
-@import url("//fonts.googleapis.com/css?family=Libre+Baskerville|Noto+Sans);");
+@import url("//fonts.googleapis.com/css?family=Source+Sans+Pro|Noto+Sans);");
 
 // Include Font Awesome
 @import url("//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css");
@@ -96,6 +96,7 @@ $base-font-family: 'Noto Sans', $verdana; // The font family set on the html ele
 $font-body:        'Noto Sans', $verdana;
 $font-monospace:   $courier;
 $base-serif-font-family: 'Baskerville Libre', $georgia;
+$lacuna-header-font: 'Source Sans Pro', Arial, Helvetica, sans-serif;
 
 //
 // Colors, etc.

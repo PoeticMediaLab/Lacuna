@@ -1,0 +1,87 @@
+<?php
+
+/**
+ * @file bg_image_context.module
+ * 
+ * Defines a new context reaction that adds background
+ * images to the page
+ */
+
+
+/*****************************************************************************
+* CONTEXT HOOKS
+*****************************************************************************/
+
+/**
+ * Implements hook_ctools_plugin_api().
+ */
+function bg_image_context_ctools_plugin_api($module, $api) {
+  if ($module == 'context' && $api == 'plugins') {
+    return array('version' => 3);
+  }
+}
+
+
+/**
+ * Implements hook_context_plugins
+ * 
+ * Defines the plugin handler for conditions and reactions
+ */
+function bg_image_context_context_plugins() {
+  $plugins = array();
+  $plugins['bg_image_context_reaction_bg_image'] = array(
+    'handler' => array(
+      'path' => drupal_get_path('module', 'bg_image_context') .'/plugins',
+      'file' => 'bg_image_context_reaction_bg_image.inc',
+      'class' => 'bg_image_context_reaction_bg_image',
+      'parent' => 'context_reaction',
+    ),
+  );
+  return $plugins;
+}
+
+/**
+ * Implements hook_context_registry
+ * 
+ * Registers a condition or reaction with Context.
+ * Once registered, it will also appear in the context ui
+ */
+function bg_image_context_context_registry() {
+  $registry = array();
+  $registry['reactions']['bg_image'] = array(
+    'title' => t('Background Image'),
+    'description' => t('Set the background image for the site.'),
+    'plugin' => 'bg_image_context_reaction_bg_image',
+  );
+  return $registry;
+}
+
+/**
+ * Implementation of hook_context_page_reaction().
+ * 
+ * We need to actually call the reaction at some point
+ * or nothing will happen.
+ */
+function bg_image_context_context_page_reaction() {
+  if ($plugin = context_get_plugin('reaction', 'bg_image')) {
+    $plugin->execute();
+  }
+}
+
+/*****************************************************************************
+* API FUNCTIONS
+*****************************************************************************/
+
+/**
+ * Returns all the active contexts with
+ * bg_image reactions
+ */
+function bg_image_context_get_contexts() {
+  $contexts = array();
+  foreach (context_enabled_contexts() as $context) {
+    if (array_key_exists('bg_image', $context->reactions)) {
+      $contexts[] = $context;
+    }
+  }
+  return $contexts;
+}

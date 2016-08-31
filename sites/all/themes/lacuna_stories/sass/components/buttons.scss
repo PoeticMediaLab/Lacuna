@@ -29,24 +29,26 @@ input[id^='edit-actionviews-data-export-action-csv-export'],
 input[id^='edit-actionsewing-kit-remove'],
 .toboggan-unified div#login-links a.lt-active
 {
-  background-color: #c4df2c;
-  background-image: linear-gradient(to bottom, #c4df2c, #88b551);
+  background-color: #a5cc29; // #c4df2c;
+  background-image: linear-gradient(to bottom, #a5cc29, #94b725); // #c4df2c, #88b551);
   background-repeat: repeat-x;
-  border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+  // border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+  border-color: rgba(0, 0, 0, 0) rgba(0, 0, 0, 0) rgba(0, 0, 0, 0);
   color: #FFFFFF;
-  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+  // text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
   -moz-border-bottom-colors: none;
   -moz-border-left-colors: none;
   -moz-border-right-colors: none;
   -moz-border-top-colors: none;
   border-image: none;
-  border-radius: 4px 4px 4px 4px;
-  border-style: solid;
+  // border-radius: 4px 4px 4px 4px;
+  border-radius: 2px;
+  // border-style: solid;
   border-width: 1px;
-  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.2) inset, 0 1px 2px rgba(0, 0, 0, 0.05);
+  // box-shadow: 0 1px 0 rgba(255, 255, 255, 0.2) inset, 0 1px 2px rgba(0, 0, 0, 0.05);
   cursor: pointer;
   display: inline-block;
-  font-size: 12px;
+  // font-size: 12px;
   line-height: 20px;
   margin-bottom: 0;
   padding: 4px 6px;
@@ -55,15 +57,51 @@ input[id^='edit-actionsewing-kit-remove'],
   font-weight: normal;
   width: 135px;
   margin-right: 5px;
+
+  text-transform: uppercase;
+  // font-variant: small-caps;
+  font-size: 11px;
+  letter-spacing: .5px;// .7px;
 }
 .vbo-table-select-all-pages.form-submit {
   width: 200px;
 }
 
+.page-turner-bookmark-button
+{
+  background-color: #1485b7; // #78cefd;
+  background-image: linear-gradient(to top, #1485b7, #1174a0);
+
+  //background-color: #FFFFFF;
+  // background-image: none;
+  // color: #1485b7;
+  // background-color: #FFFFFF;
+  // -webkit-box-shadow:inset 0px 0px 0px 1.5px #1485b7;
+  // -moz-box-shadow:inset 0px 0px 0px 1.5px #1485b7;
+  // box-shadow:inset 0px 0px 0px 1.5px #1485b7;
+}
+
+.page-turner-bookmark-button:focus,
+.page-turner-bookmark-button:hover 
+{
+  background-color: #1174a0;
+  background-position: 0 20px;
+  transition: background-color ease-in 0s;
+  // color: #FFFFFF;
+}
+
+.page-turner-bookmark-button:active {
+  background-color: #0f6389;
+  background-position: 0 30px;
+  transition: background-color ease-in 0s;
+}
+
 .lacuna-button:hover,
 .lacuna-button:focus,
-.page-turner-bookmark-button:hover,
-.page-turner-bookmark-button:focus,
+.media-widget .button:hover,
+.media-widget .button:focus,
+// .page-turner-bookmark-button:hover,
+// .page-turner-bookmark-button:focus,
 .form-submit:hover,
 .form-submit:focus,
 .af-button-large:hover,
@@ -82,18 +120,24 @@ input[id^='edit-actionsewing-kit-remove']:focus,
 .toboggan-unified div#login-links a.lt-active:hover,
 .toboggan-unified div#login-links a.lt-active:focus
 {
-  background-color: #88b551;
+  background-color: #94b725; // #88b551;
   color: #FFFFFF;
-  background-position: 0 -15px;
+  background-position: 0 -20px;
   text-decoration: none;
-  transition: background-position 0.1s linear 0s;
+  transition: background-color ease-in 0s; // background-position 0.1s linear 0s;
 }
 .lacuna-button.lacuna-button-blue,
 .page-turner-bookmark-add,
 .toboggan-unified div#login-links a:not(.lt-active)
  {
-  background-color: #78cefd;
-  background-image: linear-gradient(to bottom, #78cefd, #1588ba);
+  background-color: #19a7e5; // #78cefd;
+  background-image: linear-gradient(to bottom, #19a7e5, #1485b7); // #78cefd, #1485b7);
+  // font-weight: normal;
+  // color: #FFFFFF;
+
+  // -webkit-box-shadow: none;
+  // -moz-box-shadow: none;
+  // box-shadow: none;
 }
 .lacuna-button.lacuna-button-blue:hover,
 .lacuna-button.lacuna-button-blue:focus,
@@ -102,7 +146,15 @@ input[id^='edit-actionsewing-kit-remove']:focus,
 .toboggan-unified a:hover:not(.lt-active),
 .toboggan-unified a:focus:not(.lt-active)
 {
-  background-color: #1588ba;
+  background-color: #1485b7;
+  background-position: 0 -20px;
+  transition: background-color ease-in 0s;
+}
+
+.page-turner-bookmark-add:active {
+  background-color: #1274a0;
+  background-position: 0 -30px;
+  transition: background-color ease-in 0s;
 }
 
 .toboggan-unified div#login-links a.lt-active {
@@ -121,12 +173,12 @@ input[id^='edit-actionsewing-kit-remove']:focus,
 }
 
 .form-submit {
-  background-color: #92a6c4;
-  background-image: linear-gradient(to bottom, #92a6c4, #39404a);
+  background-color: #5f6677; // #92a6c4;
+  background-image: linear-gradient(to bottom, #747c92, #5f6677); // #92a6c4, #39404a);
 }
 .form-submit:hover,
 .form-submit:focus{
-  background-color: #39404a;
+  background-color: #5f6677 // #39404a;
 }
 
 #response-node-form #edit-body-und-0-format,

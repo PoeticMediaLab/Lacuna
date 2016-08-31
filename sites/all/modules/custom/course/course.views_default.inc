@@ -218,8 +218,9 @@ function course_views_default_views() {
   $handler->display->display_options['fields']['field_course_image']['field'] = 'field_course_image';
   $handler->display->display_options['fields']['field_course_image']['label'] = '';
   $handler->display->display_options['fields']['field_course_image']['alter']['text'] = '<div class="course-view-image" style="background-image: url([field_course_image]); height: 100px; width: 100px; background-color: black;">test test test</div>';
+  $handler->display->display_options['fields']['field_course_image']['alter']['path'] = '[path]';
   $handler->display->display_options['fields']['field_course_image']['element_type'] = 'div';
-  $handler->display->display_options['fields']['field_course_image']['element_class'] = 'course-views-image';
+  $handler->display->display_options['fields']['field_course_image']['element_class'] = '.course-views-image';
   $handler->display->display_options['fields']['field_course_image']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['field_course_image']['click_sort_column'] = 'fid';
   $handler->display->display_options['fields']['field_course_image']['settings'] = array(
