@@ -38,6 +38,7 @@ select#edit-thread-add {
   }
   .chosen-container {
     max-width: 60% !important;
+    width: 200px !important;
   }
   .views-exposed-form {
     label {
@@ -135,7 +136,7 @@ div.views-row-last span.views-field-field-image div.topic_image  {
   padding-top:0px;
 }*/
 .views-exposed-form .views-exposed-widget label {
-  min-width: 150px;
+  min-width: 160px;
 }
 
 /* View-specific theming, for Materials, Responses, Threads */
@@ -262,7 +263,7 @@ $views-link-hover-color: #1588BA;
   }
 }
 
-
+/* enables horizontal scrolling for table*/
 .view-content {
   overflow: auto;
 } 
