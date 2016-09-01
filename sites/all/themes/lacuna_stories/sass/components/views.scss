@@ -16,6 +16,7 @@ select#edit-thread-add {
 }
 
 /* The "Add to Thread" button for Sewing Kit */
+
 .view-sewing-kit {
   fieldset.container-inline {
     border: 0;
@@ -24,9 +25,10 @@ select#edit-thread-add {
   .views-widget-filter-created_1 {
     display: none;
   }
+  /*
   .fieldset-wrapper {
     margin-left: 33%;
-  }
+  } */
   input[id^='edit-actionsewing-kit-stitch'],
   input[id^='edit-actionviews-data-export-action-csv-export'] {
     width: 200px;
@@ -43,6 +45,7 @@ select#edit-thread-add {
     }
   }
 }
+
 
 /* Remove from thread view block */
 h2#stitchings {
@@ -74,6 +77,23 @@ div.view-stitchings {
   }
 }
 
+/* Centers the Add to Thread & Remove From Thread buttons*/
+.vbo-views-form {
+  #views-form-sewing-kit-page > div, #views-form-stitchings-vbo-block > div {
+  display: flex;
+  flex-flow: column nowrap;
+  }
+}
+
+.vbo-views-form .container-inline.form-wrapper {
+  display: flex;
+  flex-flow: column nowrap;
+  order: 2;
+
+  .fieldset-wrapper {
+    text-align: center;
+  }
+}
 
 /* Center the "Select all" options */
 .vbo-fieldset-select-all {
