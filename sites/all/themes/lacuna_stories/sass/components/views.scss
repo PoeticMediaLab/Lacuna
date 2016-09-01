@@ -261,9 +261,15 @@ $views-link-hover-color: #1588BA;
     text-align: left;
   }
 }
+
+
+.view-content {
+  overflow: auto;
+} 
+
 table.views-table {
   width: 100%;
-  font-family: $base-font-family
+  font-family: $base-font-family;
 }
 
 .views-table tr {
