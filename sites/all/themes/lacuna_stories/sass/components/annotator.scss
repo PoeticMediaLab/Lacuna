@@ -126,6 +126,9 @@ $category-selected: rgba(22,147,165, .8);
     top: 200px;
     z-index: 1;
   }
+  #annotation-filters-wrapper h2 {
+    width: 9em !important;
+  }
 
 #annotation-filters {
     position: relative;
