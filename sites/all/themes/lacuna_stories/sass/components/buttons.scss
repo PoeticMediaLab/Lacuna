@@ -28,6 +28,7 @@ input#edit-actioncourse-registration-approve,
 input#edit-actioncourse-registration-block,
 input[id^='edit-actionsewing-kit-stitch'],
 input[id^='edit-actionviews-data-export-action-csv-export'],
+input[value='Save'],
 .toboggan-unified div#login-links a.lt-active
 {
   background-color: #a5cc29; // #c4df2c;
@@ -117,6 +118,8 @@ input[id^='edit-actionsewing-kit-stitch']:hover,
 input[id^='edit-actionsewing-kit-stitch']:focus,
 input[id^='edit-actionviews-data-export-action-csv-export']:hover,
 input[id^='edit-actionviews-data-export-action-csv-export']:focus,
+input[value='Save']:hover,
+input[value='Save']:focus,
 .toboggan-unified div#login-links a.lt-active:hover,
 .toboggan-unified div#login-links a.lt-active:focus
 {
@@ -141,6 +144,7 @@ input#edit-actioncourse-registration-approve:active,
 input#edit-actioncourse-registration-block:active,
 input[id^='edit-actionsewing-kit-stitch']:active,
 input[id^='edit-actionviews-data-export-action-csv-export']:active,
+input[value='Save']:active,
 .toboggan-unified div#login-links a.lt-active:active {
   background-color: #83a220;
   background-position: 0 -50px;
