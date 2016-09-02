@@ -7,10 +7,15 @@
 
 
 /**
- * Implements of hook_preprocess_link 
+ * Implements of hook_preprocess_link
  * @param array $variables
  */
 function link_badges_preprocess_link(&$variables) {
+  // Other modules can cause this to run more than once.
+  // Check to see if we've already added a badge here.
+  if (!empty($variables['options']['attributes']['class']) && is_array($variables['options']['attributes']['class']) && in_array('link-badge-wrapper', $variables['options']['attributes']['class'])) {
+    return;
+  }
   if (!empty($variables['options']['link_badge']) ) {
     $badge_value = NULL;
     // First set any static value that is passed to the link.
@@ -18,7 +23,7 @@ function link_badges_preprocess_link(&$variables) {
       $badge_value = $variables['options']['link_badge']['value'];
       $badge_class = '';
     }
-    
+
     // Next check for a callback function, and allow that to override a static value if both exist.
     if (!empty($variables['options']['link_badge']['callback']) && function_exists($variables['options']['link_badge']['callback'])) {
       $args = array('path' => $variables['path']);
