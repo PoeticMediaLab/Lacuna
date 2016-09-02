@@ -1,3 +1,5 @@
+@import "init";
+
 #edit-submit {
   width: auto;
 }
@@ -26,7 +28,7 @@ input#edit-actioncourse-registration-approve,
 input#edit-actioncourse-registration-block,
 input[id^='edit-actionsewing-kit-stitch'],
 input[id^='edit-actionviews-data-export-action-csv-export'],
-input[id^='edit-actionsewing-kit-remove'],
+input[value='Save'],
 .toboggan-unified div#login-links a.lt-active
 {
   background-color: #a5cc29; // #c4df2c;
@@ -62,6 +64,7 @@ input[id^='edit-actionsewing-kit-remove'],
   // font-variant: small-caps;
   font-size: 11px;
   letter-spacing: .5px;// .7px;
+  font-family: $base-font-family;
 }
 .vbo-table-select-all-pages.form-submit {
   width: 200px;
@@ -115,8 +118,8 @@ input[id^='edit-actionsewing-kit-stitch']:hover,
 input[id^='edit-actionsewing-kit-stitch']:focus,
 input[id^='edit-actionviews-data-export-action-csv-export']:hover,
 input[id^='edit-actionviews-data-export-action-csv-export']:focus,
-input[id^='edit-actionsewing-kit-remove']:hover,
-input[id^='edit-actionsewing-kit-remove']:focus,
+input[value='Save']:hover,
+input[value='Save']:focus,
 .toboggan-unified div#login-links a.lt-active:hover,
 .toboggan-unified div#login-links a.lt-active:focus
 {
@@ -125,7 +128,30 @@ input[id^='edit-actionsewing-kit-remove']:focus,
   background-position: 0 -20px;
   text-decoration: none;
   transition: background-color ease-in 0s; // background-position 0.1s linear 0s;
+  outline: none;
 }
+
+.media-widget .button:active,
+.lacuna-button:active,
+.form-submit:active,
+.page-turner-bookmark-button:active,
+.af-button-large:active,
+a.group.subscribe:active,
+a.group.unsubscribe:active,
+div.toboggan-unified #login-links a:active,
+body.not-logged-in div.field-name-group-group:active,
+input#edit-actioncourse-registration-approve:active,
+input#edit-actioncourse-registration-block:active,
+input[id^='edit-actionsewing-kit-stitch']:active,
+input[id^='edit-actionviews-data-export-action-csv-export']:active,
+input[value='Save']:active,
+.toboggan-unified div#login-links a.lt-active:active {
+  background-color: #83a220;
+  background-position: 0 -50px;
+  transition: background-color ease-in 0s;
+  outline: none;
+}
+
 .lacuna-button.lacuna-button-blue,
 .page-turner-bookmark-add,
 .toboggan-unified div#login-links a:not(.lt-active)
@@ -172,13 +198,20 @@ input[id^='edit-actionsewing-kit-remove']:focus,
   font-size: default !important;
 }
 
-.form-submit {
+.form-submit,
+input[id^='edit-actionsewing-kit-remove'] {
   background-color: #5f6677; // #92a6c4;
   background-image: linear-gradient(to bottom, #747c92, #5f6677); // #92a6c4, #39404a);
 }
 .form-submit:hover,
-.form-submit:focus{
-  background-color: #5f6677 // #39404a;
+.form-submit:focus,
+input[id^='edit-actionsewing-kit-remove']:hover,
+input[id^='edit-actionsewing-kit-remove']:focus{
+  background-color: #5f6677; // #39404a;
+}
+.form-submit:active,
+input[id^='edit-actionsewing-kit-remove']:active {
+  background-color: #545a69;
 }
 
 #response-node-form #edit-body-und-0-format,
