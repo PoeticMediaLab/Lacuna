@@ -443,4 +443,31 @@ body.not-logged-in div.field-name-group-group a {
 
 /*styling for menu badges*/
 /*this adds in the FontAwesome bell icon in lieu of the view associated with the menu badge*/
-
+#superfish-1 {
+  span.link-badge-text {
+    background: #ffffff !important;
+    line-height: 1.2em;
+  }
+  span.link-badge-text:hover {
+    background: #e9e9e9 !important;
+  }
+  span.link-badge-text:focus {
+    background: #e9e9e9 !important;
+  }
+  span.link-badge-badge-wrapper {
+    height: 25px;
+    width: 25px;
+    border-radius: 50%;
+    background: rgb(21, 136, 186) none repeat scroll 0% 0% !important;
+    text-align: center;
+    margin-left: 10px;
+    span.link-badge.link-badge-menu_badges_execute_view {
+        background: rgb(21, 136, 186) none repeat scroll 0% 0% !important;
+        border: medium none !important;
+        box-shadow: none !important;
+        font-family: "Source Sans Pro", sans-serif;
+        text-shadow: none;
+        color: rgb(21, 136, 186);
+    }
+  }
+}

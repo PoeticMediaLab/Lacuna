@@ -35,8 +35,7 @@ function lacuna_notifications_default_rules_configuration() {
             "flagging_user" : [ "node:author" ],
             "permission_check" : "1"
           }
-        },
-        { "drupal_message" : { "message" : "hey good job" } }
+        }
       ]
     }
   }');

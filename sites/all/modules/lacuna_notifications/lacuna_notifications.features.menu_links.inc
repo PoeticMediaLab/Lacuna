@@ -18,6 +18,17 @@ function lacuna_notifications_menu_default_menu_links() {
     'link_title' => 'Recent Interactions',
     'options' => array(
       'identifier' => 'main-menu_recent-interactions:node/17',
+      'link_badge' => array(
+        'callback' => 'menu_badges_execute_view',
+        'arguments' => array(
+          'view_name' => 'total_notifications_view',
+          'view_display_id' => 'menu_badge_1',
+        ),
+        'key' => 'views_total_notifications_view_menu_badge_1',
+      ),
+      'attributes' => array(
+        'title' => '',
+      ),
     ),
     'module' => 'menu',
     'hidden' => 0,
@@ -25,7 +36,7 @@ function lacuna_notifications_menu_default_menu_links() {
     'has_children' => 0,
     'expanded' => 0,
     'weight' => 10,
-    'customized' => 0,
+    'customized' => 1,
     'parent_identifier' => 'main-menu_reflect:<nolink>',
   );
 

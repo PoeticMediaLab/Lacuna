@@ -507,17 +507,17 @@ function lacuna_notifications_views_default_views() {
   $handler->display->display_options['style_plugin'] = 'default';
   $handler->display->display_options['row_plugin'] = 'fields';
   $handler->display->display_options['row_options']['hide_empty'] = TRUE;
-  /* Relationship: Flags: user_notification_flag counter */
+  /* Relationship: Flags: user_notifications_flag counter */
   $handler->display->display_options['relationships']['flag_count_rel']['id'] = 'flag_count_rel';
   $handler->display->display_options['relationships']['flag_count_rel']['table'] = 'users';
   $handler->display->display_options['relationships']['flag_count_rel']['field'] = 'flag_count_rel';
-  $handler->display->display_options['relationships']['flag_count_rel']['flag'] = 'user_notification_flag';
-  /* Relationship: Flags: user_notification_flag */
+  $handler->display->display_options['relationships']['flag_count_rel']['flag'] = 'user_notifications_flag';
+  /* Relationship: Flags: user_notifications_flag */
   $handler->display->display_options['relationships']['flag_content_rel']['id'] = 'flag_content_rel';
   $handler->display->display_options['relationships']['flag_content_rel']['table'] = 'users';
   $handler->display->display_options['relationships']['flag_content_rel']['field'] = 'flag_content_rel';
   $handler->display->display_options['relationships']['flag_content_rel']['required'] = 0;
-  $handler->display->display_options['relationships']['flag_content_rel']['flag'] = 'user_notification_flag';
+  $handler->display->display_options['relationships']['flag_content_rel']['flag'] = 'user_notifications_flag';
   $handler->display->display_options['relationships']['flag_content_rel']['user_scope'] = 'any';
   /* Field: Flags: Flag counter */
   $handler->display->display_options['fields']['count']['id'] = 'count';
@@ -529,7 +529,10 @@ function lacuna_notifications_views_default_views() {
   $handler->display->display_options['fields']['count']['alter']['alter_text'] = TRUE;
   $handler->display->display_options['fields']['count']['alter']['text'] = '<i class="fa fa-bell">[count]</i>';
   $handler->display->display_options['fields']['count']['alter']['path'] = 'recent-interactions';
+  $handler->display->display_options['fields']['count']['element_type'] = 'div';
+  $handler->display->display_options['fields']['count']['element_class'] = 'notification-badge';
   $handler->display->display_options['fields']['count']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['count']['hide_empty'] = TRUE;
   $handler->display->display_options['fields']['count']['empty_zero'] = TRUE;
   $handler->display->display_options['fields']['count']['hide_alter_empty'] = FALSE;
   /* Filter criterion: User: Current */
