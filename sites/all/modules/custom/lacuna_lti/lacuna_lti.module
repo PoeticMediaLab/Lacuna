@@ -1,0 +1,44 @@
+<?php
+
+/***
+ * @return array
+ *
+ * Implements hook_permission().
+ */
+function lacuna_lti_permission() {
+  return array(
+    'administer lti resources' => array(
+      'title' => t('Administer LTI Resources'),
+      'description' => t('May manage settings for providing list of LTI-available resources.'),
+    ),
+    'search lti resources' => array(
+      'title' => t('Search LTI Resources'),
+      'description' => t('May search site from LTI Consumer for resources')
+    )
+  );
+}
+/***
+ * Implements hook_menu().
+ */
+function lacuna_lti_menu() {
+  $items = array();
+  $items['lti/resources'] = array(
+    'page callback' => 'lacuna_lti_resources',
+    'access arguments' => array('search lti resources'),
+    'type' => MENU_CALLBACK,
+    'file' => 'lti_resources.callbacks.inc',
+  );
+  $items['lti/resources/admin'] = array(
+    'page callback' => 'lacuna_lti_admin',
+    'access arguments' => array('administer lti resources'),
+    'type' => MENU_CALLBACK,
+    'file' => 'lti_resources.admin.inc'
+  );
+  $items['lti/course/setup'] = array(
+    'page callback' => 'lacuna_lti_setup',
+    'access arguments' => array('administer lti resources', 'create course content'),
+    'type' => MENU_CALLBACK,
+    'file' => 'lti_resources.admin.inc'
+  );
+  return $items;
+}
