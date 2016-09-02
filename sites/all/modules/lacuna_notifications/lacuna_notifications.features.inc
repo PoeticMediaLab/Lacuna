@@ -8,6 +8,9 @@
  * Implements hook_ctools_plugin_api().
  */
 function lacuna_notifications_ctools_plugin_api($module = NULL, $api = NULL) {
+  if ($module == "context" && $api == "context") {
+    return array("version" => "3");
+  }
   if ($module == "strongarm" && $api == "strongarm") {
     return array("version" => "1");
   }
@@ -25,11 +28,11 @@ function lacuna_notifications_views_api($module = NULL, $api = NULL) {
  */
 function lacuna_notifications_flag_default_flags() {
   $flags = array();
-  // Exported flag: "User Notification Flag".
-  $flags['user_notification_flag'] = array(
+  // Exported flag: "User Notifications Flag".
+  $flags['user_notifications_flag'] = array(
     'entity_type' => 'user',
-    'title' => 'User Notification Flag',
-    'global' => 0,
+    'title' => 'User Notifications Flag',
+    'global' => 1,
     'types' => array(),
     'flag_short' => 'Flag this item',
     'flag_long' => '',
@@ -45,16 +48,16 @@ function lacuna_notifications_flag_default_flags() {
       'token' => 0,
     ),
     'show_as_field' => 0,
-    'show_on_form' => 1,
+    'show_on_form' => 0,
     'access_author' => '',
     'show_contextual_link' => 0,
     'show_on_profile' => 0,
     'access_uid' => '',
+    'api_version' => 3,
     'module' => 'lacuna_notifications',
     'locked' => array(
       0 => 'name',
     ),
-    'api_version' => 3,
   );
   return $flags;
 

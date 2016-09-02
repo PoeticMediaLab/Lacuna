@@ -32,6 +32,13 @@ function lacuna_notifications_views_default_views() {
   $handler->display->display_options['pager']['options']['items_per_page'] = '5';
   $handler->display->display_options['style_plugin'] = 'default';
   $handler->display->display_options['row_plugin'] = 'fields';
+  /* No results behavior: Global: Text area */
+  $handler->display->display_options['empty']['area']['id'] = 'area';
+  $handler->display->display_options['empty']['area']['table'] = 'views';
+  $handler->display->display_options['empty']['area']['field'] = 'area';
+  $handler->display->display_options['empty']['area']['empty'] = TRUE;
+  $handler->display->display_options['empty']['area']['content'] = 'No responses have been annotated yet.';
+  $handler->display->display_options['empty']['area']['format'] = 'filtered_html';
   /* Relationship: Entity Reference: Referenced Entity */
   $handler->display->display_options['relationships']['field_message_content_target_id']['id'] = 'field_message_content_target_id';
   $handler->display->display_options['relationships']['field_message_content_target_id']['table'] = 'field_data_field_message_content';
@@ -142,26 +149,13 @@ function lacuna_notifications_views_default_views() {
   $handler->display->display_options['pager']['options']['items_per_page'] = '5';
   $handler->display->display_options['style_plugin'] = 'default';
   $handler->display->display_options['row_plugin'] = 'fields';
-  /* Header: Global: View area */
-  $handler->display->display_options['header']['view']['id'] = 'view';
-  $handler->display->display_options['header']['view']['table'] = 'views';
-  $handler->display->display_options['header']['view']['field'] = 'view';
-  $handler->display->display_options['header']['view']['empty'] = TRUE;
-  $handler->display->display_options['header']['view']['view_to_insert'] = 'annotations_on_responses_view:block';
-  /* Header: Global: Text area */
-  $handler->display->display_options['header']['area']['id'] = 'area';
-  $handler->display->display_options['header']['area']['table'] = 'views';
-  $handler->display->display_options['header']['area']['field'] = 'area';
-  /* Footer: Global: View area */
-  $handler->display->display_options['footer']['view']['id'] = 'view';
-  $handler->display->display_options['footer']['view']['table'] = 'views';
-  $handler->display->display_options['footer']['view']['field'] = 'view';
-  $handler->display->display_options['footer']['view']['empty'] = TRUE;
-  $handler->display->display_options['footer']['view']['view_to_insert'] = 'comments_on_threads_view:block';
-  /* Footer: Global: Text area */
-  $handler->display->display_options['footer']['area']['id'] = 'area';
-  $handler->display->display_options['footer']['area']['table'] = 'views';
-  $handler->display->display_options['footer']['area']['field'] = 'area';
+  /* No results behavior: Global: Text area */
+  $handler->display->display_options['empty']['area']['id'] = 'area';
+  $handler->display->display_options['empty']['area']['table'] = 'views';
+  $handler->display->display_options['empty']['area']['field'] = 'area';
+  $handler->display->display_options['empty']['area']['empty'] = TRUE;
+  $handler->display->display_options['empty']['area']['content'] = 'No comments have been posted on responses in your course yet.';
+  $handler->display->display_options['empty']['area']['format'] = 'filtered_html';
   /* Relationship: Entity Reference: Referenced Entity */
   $handler->display->display_options['relationships']['field_message_comment_target_id']['id'] = 'field_message_comment_target_id';
   $handler->display->display_options['relationships']['field_message_comment_target_id']['table'] = 'field_data_field_message_comment';
@@ -251,6 +245,7 @@ function lacuna_notifications_views_default_views() {
   $handler = $view->new_display('page', 'Page', 'page_1');
   $handler->display->display_options['defaults']['title'] = FALSE;
   $handler->display->display_options['title'] = 'Recent Interactions';
+  $handler->display->display_options['enabled'] = FALSE;
   $handler->display->display_options['defaults']['header'] = FALSE;
   /* Header: Global: Text area */
   $handler->display->display_options['header']['area']['id'] = 'area';
@@ -348,6 +343,13 @@ function lacuna_notifications_views_default_views() {
   $handler->display->display_options['pager']['options']['items_per_page'] = '5';
   $handler->display->display_options['style_plugin'] = 'default';
   $handler->display->display_options['row_plugin'] = 'fields';
+  /* No results behavior: Global: Text area */
+  $handler->display->display_options['empty']['area']['id'] = 'area';
+  $handler->display->display_options['empty']['area']['table'] = 'views';
+  $handler->display->display_options['empty']['area']['field'] = 'area';
+  $handler->display->display_options['empty']['area']['empty'] = TRUE;
+  $handler->display->display_options['empty']['area']['content'] = 'No comments have been posted on threads in your course yet.';
+  $handler->display->display_options['empty']['area']['format'] = 'filtered_html';
   /* Relationship: Entity Reference: Referenced Entity */
   $handler->display->display_options['relationships']['field_message_comment_target_id']['id'] = 'field_message_comment_target_id';
   $handler->display->display_options['relationships']['field_message_comment_target_id']['table'] = 'field_data_field_message_comment';
@@ -452,18 +454,18 @@ function lacuna_notifications_views_default_views() {
   $handler->display->display_options['pager']['options']['items_per_page'] = '5';
   $handler->display->display_options['style_plugin'] = 'default';
   $handler->display->display_options['row_plugin'] = 'fields';
-  /* Relationship: Flags: user_notification_flag */
+  /* Relationship: Flags: user_notifications_flag */
   $handler->display->display_options['relationships']['flag_content_rel']['id'] = 'flag_content_rel';
   $handler->display->display_options['relationships']['flag_content_rel']['table'] = 'users';
   $handler->display->display_options['relationships']['flag_content_rel']['field'] = 'flag_content_rel';
   $handler->display->display_options['relationships']['flag_content_rel']['required'] = 0;
-  $handler->display->display_options['relationships']['flag_content_rel']['flag'] = 'user_notification_flag';
+  $handler->display->display_options['relationships']['flag_content_rel']['flag'] = 'user_notifications_flag';
   $handler->display->display_options['relationships']['flag_content_rel']['user_scope'] = 'any';
-  /* Relationship: Flags: user_notification_flag counter */
+  /* Relationship: Flags: user_notifications_flag counter */
   $handler->display->display_options['relationships']['flag_count_rel']['id'] = 'flag_count_rel';
   $handler->display->display_options['relationships']['flag_count_rel']['table'] = 'users';
   $handler->display->display_options['relationships']['flag_count_rel']['field'] = 'flag_count_rel';
-  $handler->display->display_options['relationships']['flag_count_rel']['flag'] = 'user_notification_flag';
+  $handler->display->display_options['relationships']['flag_count_rel']['flag'] = 'user_notifications_flag';
   /* Field: User: Name */
   $handler->display->display_options['fields']['name']['id'] = 'name';
   $handler->display->display_options['fields']['name']['table'] = 'users';

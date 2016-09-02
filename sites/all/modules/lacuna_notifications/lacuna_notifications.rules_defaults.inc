@@ -30,12 +30,13 @@ function lacuna_notifications_default_rules_configuration() {
       ],
       "DO" : [
         { "flag_flaguser" : {
-            "flag" : "user_notification_flag",
+            "flag" : "user_notifications_flag",
             "user" : [ "node:field-annotation-reference:author" ],
             "flagging_user" : [ "node:author" ],
             "permission_check" : "1"
           }
-        }
+        },
+        { "drupal_message" : { "message" : "hey good job" } }
       ]
     }
   }');
@@ -64,7 +65,7 @@ function lacuna_notifications_default_rules_configuration() {
           }
         },
         { "flag_flaguser" : {
-            "flag" : "user_notification_flag",
+            "flag" : "user_notifications_flag",
             "user" : [ "comment:node:author" ],
             "flagging_user" : [ "comment:author" ],
             "permission_check" : "1"
@@ -98,7 +99,7 @@ function lacuna_notifications_default_rules_configuration() {
           }
         },
         { "flag_flaguser" : {
-            "flag" : "user_notification_flag",
+            "flag" : "user_notifications_flag",
             "user" : [ "comment:node:author" ],
             "flagging_user" : [ "comment:author" ],
             "permission_check" : "1"
