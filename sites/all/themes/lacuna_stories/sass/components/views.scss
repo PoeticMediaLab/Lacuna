@@ -79,18 +79,7 @@ div.view-stitchings {
 }
 
 /* Centers the Add to Thread & Remove From Thread buttons*/
-.vbo-views-form {
-  #views-form-sewing-kit-page > div, #views-form-stitchings-vbo-block > div {
-  display: flex;
-  flex-flow: column nowrap;
-  }
-}
-
 .vbo-views-form .container-inline.form-wrapper {
-  // display: flex;
-  // flex-flow: column nowrap;
-  order: 3;
-
   .fieldset-wrapper {
     text-align: center;
   }
