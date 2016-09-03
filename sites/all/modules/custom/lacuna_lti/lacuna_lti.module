@@ -26,19 +26,25 @@ function lacuna_lti_menu() {
     'page callback' => 'lacuna_lti_resources',
     'access arguments' => array('search lti resources'),
     'type' => MENU_CALLBACK,
-    'file' => 'lti_resources.callbacks.inc',
+    'file' => 'lacuna_lti.callbacks.inc',
   );
   $items['lti/resources/admin'] = array(
     'page callback' => 'lacuna_lti_admin',
     'access arguments' => array('administer lti resources'),
     'type' => MENU_CALLBACK,
-    'file' => 'lti_resources.admin.inc'
+    'file' => 'lacuna_lti.admin.inc'
   );
   $items['lti/course/setup'] = array(
     'page callback' => 'lacuna_lti_setup',
     'access arguments' => array('administer lti resources', 'create course content'),
     'type' => MENU_CALLBACK,
-    'file' => 'lti_resources.admin.inc'
+    'file' => 'lacuna_lti.admin.inc'
+  );
+  $items['lti/canvas.xml'] = array(
+    'page callback' => 'lacuna_lti_canvas_xml',
+    'access arguments' => array(),
+    'type' => MENU_CALLBACK,
+    'file' => 'lacuna_lti.canvas.inc',
   );
   return $items;
 }
