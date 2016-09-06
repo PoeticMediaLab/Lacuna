@@ -32,6 +32,7 @@ features[rules_config][] = rules_log_new_annotation_on_response
 features[rules_config][] = rules_log_new_comment_on_response
 features[rules_config][] = rules_log_new_comment_on_thread
 features[rules_config][] = rules_log_new_group_content
+features[rules_config][] = rules_unflag_users_after_page_view
 features[variable][] = field_bundle_settings_message__log_new_comment
 features[variable][] = field_bundle_settings_message__log_new_content
 features[views_view][] = annotations_on_responses_view

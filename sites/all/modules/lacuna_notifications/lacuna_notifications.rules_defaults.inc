@@ -144,5 +144,25 @@ function lacuna_notifications_default_rules_configuration() {
       ]
     }
   }');
+  $items['rules_unflag_users_after_page_view'] = entity_import('rules_config', '{ "rules_unflag_users_after_page_view" : {
+      "LABEL" : "Unflag Users After Page View",
+      "PLUGIN" : "reaction rule",
+      "OWNER" : "rules",
+      "REQUIRES" : [ "rules", "flag" ],
+      "ON" : { "node_view" : [] },
+      "IF" : [
+        { "text_matches" : { "text" : [ "node:title" ], "match" : "Latest Conversations" } }
+      ],
+      "DO" : [
+        { "flag_unflaguser" : {
+            "flag" : "user_notifications_flag",
+            "user" : [ "site:current-user" ],
+            "flagging_user" : [ "site:current-user" ],
+            "permission_check" : "1"
+          }
+        }
+      ]
+    }
+  }');
   return $items;
 }
