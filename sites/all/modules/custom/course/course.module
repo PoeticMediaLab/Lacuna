@@ -19,7 +19,7 @@ function course_menu() {
   $items = array();
   $items['course-setup'] = array(
     'title' => 'Create a New Course',
-    'description' => 'course creation.',
+    'description' => 'Course creation process',
     'page callback' => 'course_create_authorize',
     'access callback' => 'course_setup_access',
     'type' => MENU_NORMAL_ITEM,
@@ -27,7 +27,7 @@ function course_menu() {
   );
   $items['course-setup/add-course'] = array(
     'title' => 'Create Your New Course',
-    'description' => 'course creation.',
+    'description' => 'Add a new course',
     'page callback' => 'course_create',
     'access callback' => 'course_setup_access',
     'type' => MENU_NORMAL_ITEM,
@@ -809,6 +809,25 @@ function course_form_course_node_form_alter(&$form, &$form_state, $form_id) {
   $form['og_roles_permissions']['#access'] = FALSE;
   $form['#submit'] = array('course_create_form_submit');
   $form['actions']['submit']['#submit'][] = 'course_create_form_submit';
+  unset($form['actions']['preview']);
+}
+
+// Saves course data and moves to the next step in the set up process
+function course_save_course_continue_setup($course) {
+  $course_wrapper = entity_metadata_wrapper('node', $course);
+  try {
+    $course_wrapper->save();
+    $nid = $course_wrapper->nid->value();
+    if (!empty($nid)) {
+      course_set_selected_course($nid);
+      drupal_goto("course-setup/organize");
+    }
+  }
+  catch (Exception $e) {
+    watchdog_exception('course_create_form_submit', $e, NULL, NULL, WATCHDOG_ERROR);
+    drupal_set_message(t("There was an error creating your course.  Please try again and/or contact your institution's Lacuna administrator for assistance."), 'error');
+    drupal_goto("course-setup/add-course");
+  }
 }
 
 function course_create_form_submit($form, &$form_state) {
@@ -824,20 +843,7 @@ function course_create_form_submit($form, &$form_state) {
       'path' => array('pathauto' => TRUE),
 		);
 		$course = entity_create('node', array_merge($form_state['values'], $values));
-		$course_wrapper = entity_metadata_wrapper('node', $course);
-		try {
-			$course_wrapper->save();
-			$nid = $course_wrapper->nid->value();
-			if (!empty($nid)) {
-				course_set_selected_course($nid);
-				drupal_goto("course-setup/organize");
-			}
-		}
-		catch (Exception $e) {
-			watchdog_exception('course_create_form_submit', $e, NULL, NULL, WATCHDOG_ERROR);
-			drupal_set_message("There was an error creating your course.  Please try again and/or contact your institution's Lacuna administrator for assistance.", 'error');
-			drupal_goto("course-setup/add-course");
-		}
+    course_save_course_continue_setup($course);
 	}
 }
 
