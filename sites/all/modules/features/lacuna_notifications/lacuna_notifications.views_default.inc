@@ -250,14 +250,12 @@ function lacuna_notifications_views_default_views() {
   $handler->display->display_options['filters']['uid_current']['table'] = 'users';
   $handler->display->display_options['filters']['uid_current']['field'] = 'uid_current';
   $handler->display->display_options['filters']['uid_current']['relationship'] = 'uid_1';
-  $handler->display->display_options['filters']['uid_current']['value'] = '0';
+  $handler->display->display_options['filters']['uid_current']['value'] = 'All';
   $handler->display->display_options['filters']['uid_current']['exposed'] = TRUE;
   $handler->display->display_options['filters']['uid_current']['expose']['operator_id'] = '';
   $handler->display->display_options['filters']['uid_current']['expose']['label'] = 'Limit to My Responses';
   $handler->display->display_options['filters']['uid_current']['expose']['operator'] = 'uid_current_op';
   $handler->display->display_options['filters']['uid_current']['expose']['identifier'] = 'uid_current';
-  $handler->display->display_options['filters']['uid_current']['expose']['required'] = TRUE;
-  $handler->display->display_options['filters']['uid_current']['expose']['remember'] = TRUE;
   $handler->display->display_options['filters']['uid_current']['expose']['remember_roles'] = array(
     2 => '2',
     1 => 0,
@@ -363,8 +361,10 @@ function lacuna_notifications_views_default_views() {
   );
   $handler->display->display_options['exposed_form']['options']['input_required'] = 0;
   $handler->display->display_options['exposed_form']['options']['text_input_required_format'] = 'filtered_html';
-  $handler->display->display_options['pager']['type'] = 'some';
-  $handler->display->display_options['pager']['options']['items_per_page'] = '5';
+  $handler->display->display_options['pager']['type'] = 'mini';
+  $handler->display->display_options['pager']['options']['items_per_page'] = '10';
+  $handler->display->display_options['pager']['options']['offset'] = '0';
+  $handler->display->display_options['pager']['options']['id'] = '0';
   $handler->display->display_options['style_plugin'] = 'default';
   $handler->display->display_options['row_plugin'] = 'fields';
   /* No results behavior: Global: Text area */
@@ -411,6 +411,7 @@ function lacuna_notifications_views_default_views() {
   $handler->display->display_options['fields']['name']['label'] = '';
   $handler->display->display_options['fields']['name']['exclude'] = TRUE;
   $handler->display->display_options['fields']['name']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['name']['link_to_user'] = FALSE;
   /* Field: Content: Title */
   $handler->display->display_options['fields']['title']['id'] = 'title';
   $handler->display->display_options['fields']['title']['table'] = 'node';
@@ -419,18 +420,31 @@ function lacuna_notifications_views_default_views() {
   $handler->display->display_options['fields']['title']['label'] = '';
   $handler->display->display_options['fields']['title']['exclude'] = TRUE;
   $handler->display->display_options['fields']['title']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['title']['link_to_node'] = FALSE;
   /* Field: Content: Path */
   $handler->display->display_options['fields']['path']['id'] = 'path';
   $handler->display->display_options['fields']['path']['table'] = 'node';
   $handler->display->display_options['fields']['path']['field'] = 'path';
   $handler->display->display_options['fields']['path']['relationship'] = 'nid';
   $handler->display->display_options['fields']['path']['exclude'] = TRUE;
+  /* Field: Comment: Comment */
+  $handler->display->display_options['fields']['comment_body']['id'] = 'comment_body';
+  $handler->display->display_options['fields']['comment_body']['table'] = 'field_data_comment_body';
+  $handler->display->display_options['fields']['comment_body']['field'] = 'comment_body';
+  $handler->display->display_options['fields']['comment_body']['relationship'] = 'field_message_comment_target_id';
+  $handler->display->display_options['fields']['comment_body']['label'] = '';
+  $handler->display->display_options['fields']['comment_body']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['comment_body']['alter']['max_length'] = '50';
+  $handler->display->display_options['fields']['comment_body']['alter']['ellipsis'] = FALSE;
+  $handler->display->display_options['fields']['comment_body']['alter']['trim'] = TRUE;
+  $handler->display->display_options['fields']['comment_body']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['comment_body']['type'] = 'text_plain';
   /* Field: Global: Custom text */
   $handler->display->display_options['fields']['nothing']['id'] = 'nothing';
   $handler->display->display_options['fields']['nothing']['table'] = 'views';
   $handler->display->display_options['fields']['nothing']['field'] = 'nothing';
   $handler->display->display_options['fields']['nothing']['label'] = '';
-  $handler->display->display_options['fields']['nothing']['alter']['text'] = '[name] commented on <a href="[path]">[title]</a>';
+  $handler->display->display_options['fields']['nothing']['alter']['text'] = '[name] commented on <a href="[path]">[title]</a> ([comment_body]...)';
   $handler->display->display_options['fields']['nothing']['element_label_colon'] = FALSE;
   /* Sort criterion: Message: Timestamp */
   $handler->display->display_options['sorts']['timestamp']['id'] = 'timestamp';
@@ -460,13 +474,12 @@ function lacuna_notifications_views_default_views() {
   $handler->display->display_options['filters']['uid_current']['table'] = 'users';
   $handler->display->display_options['filters']['uid_current']['field'] = 'uid_current';
   $handler->display->display_options['filters']['uid_current']['relationship'] = 'uid';
-  $handler->display->display_options['filters']['uid_current']['value'] = '0';
+  $handler->display->display_options['filters']['uid_current']['value'] = 'All';
   $handler->display->display_options['filters']['uid_current']['exposed'] = TRUE;
   $handler->display->display_options['filters']['uid_current']['expose']['operator_id'] = '';
   $handler->display->display_options['filters']['uid_current']['expose']['label'] = 'Limit to My Responses';
   $handler->display->display_options['filters']['uid_current']['expose']['operator'] = 'uid_current_op';
   $handler->display->display_options['filters']['uid_current']['expose']['identifier'] = 'uid_current';
-  $handler->display->display_options['filters']['uid_current']['expose']['required'] = TRUE;
   $handler->display->display_options['filters']['uid_current']['expose']['remember_roles'] = array(
     2 => '2',
     1 => 0,
@@ -699,6 +712,7 @@ function lacuna_notifications_views_default_views() {
   $handler->display->display_options['fields']['name']['label'] = '';
   $handler->display->display_options['fields']['name']['exclude'] = TRUE;
   $handler->display->display_options['fields']['name']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['name']['link_to_user'] = FALSE;
   /* Field: Content: Title */
   $handler->display->display_options['fields']['title']['id'] = 'title';
   $handler->display->display_options['fields']['title']['table'] = 'node';
@@ -707,6 +721,7 @@ function lacuna_notifications_views_default_views() {
   $handler->display->display_options['fields']['title']['label'] = '';
   $handler->display->display_options['fields']['title']['exclude'] = TRUE;
   $handler->display->display_options['fields']['title']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['title']['link_to_node'] = FALSE;
   /* Field: Content: Path */
   $handler->display->display_options['fields']['path']['id'] = 'path';
   $handler->display->display_options['fields']['path']['table'] = 'node';
@@ -743,13 +758,12 @@ function lacuna_notifications_views_default_views() {
   $handler->display->display_options['filters']['uid_current']['table'] = 'users';
   $handler->display->display_options['filters']['uid_current']['field'] = 'uid_current';
   $handler->display->display_options['filters']['uid_current']['relationship'] = 'uid';
-  $handler->display->display_options['filters']['uid_current']['value'] = '0';
+  $handler->display->display_options['filters']['uid_current']['value'] = 'All';
   $handler->display->display_options['filters']['uid_current']['exposed'] = TRUE;
   $handler->display->display_options['filters']['uid_current']['expose']['operator_id'] = '';
   $handler->display->display_options['filters']['uid_current']['expose']['label'] = 'Limit to My Threads';
   $handler->display->display_options['filters']['uid_current']['expose']['operator'] = 'uid_current_op';
   $handler->display->display_options['filters']['uid_current']['expose']['identifier'] = 'uid_current';
-  $handler->display->display_options['filters']['uid_current']['expose']['required'] = TRUE;
   $handler->display->display_options['filters']['uid_current']['expose']['remember_roles'] = array(
     2 => '2',
     1 => 0,
