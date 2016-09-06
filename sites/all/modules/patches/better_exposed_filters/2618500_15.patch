@@ -1,0 +1,32 @@
+diff --git a/better_exposed_filters_exposed_form_plugin.inc b/better_exposed_filters_exposed_form_plugin.inc
+index 7298658..64169a0 100644
+--- a/better_exposed_filters_exposed_form_plugin.inc
++++ b/better_exposed_filters_exposed_form_plugin.inc
+@@ -1410,7 +1410,27 @@ dateFormat: "dd-mm-yy"
+           $form[$filter_id]['#description'] = $options['more_options']['bef_filter_description'];
+           $form[$filter_id]['#return_value'] = 1;
+           $form[$filter_id]['#type'] = 'checkbox';
++          // Views populates missing values in $form_state['input'] with the
++          // defaults and a checkbox does not appear in $_GET (or $_POST) so it
++          // will appear to be missing when a user submits a form. Because of
++          // this, instead of unchecking the checkbox value will revert to the
++          // default. More, the default value for select values is reused which
++          // results in the checkbox always checked. So we need to add a form
++          // element to see whether the form is submitted or not and then we
++          // need to look at $_GET directly to see whether the checkbox is
++          // there. For security reasons, we must not copy the $_GET value.
+ 
++          // First, let's figure out a short name for the signal element and
++          // then add it.
++          if (empty($signal)) {
++            for ($signal = 'a'; isset($form[$signal]); $signal++);
++            // This is all the signal element needs.
++            $form[$signal]['#type'] = 'hidden';
++          }
++          $checked = isset($form_state['input'][$signal]) ? isset($_GET[$filter_id]) : $form[$filter_id]['#default_value'];
++          // Now we know whether the checkbox is checked or not, set #value
++          // accordingly.
++          $form[$filter_id]['#value'] = $checked ? $form[$filter_id]['#return_value'] : 0;
+           // Handoff to the theme layer.
+           $form[$filter_id]['#theme'] = 'checkbox';
+           break;
