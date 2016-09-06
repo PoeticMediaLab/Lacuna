@@ -471,3 +471,11 @@ body.not-logged-in div.field-name-group-group a {
     }
   }
 }
+
+/*remove box shadow and border around article on the "Latest Conversations" page*/
+body.latest-conversations-page {
+  article.node-page {
+    border: none;
+    box-shadow: none;
+  }
+}

@@ -26,7 +26,6 @@ features[field_base][] = field_message_content
 features[field_instance][] = message-log_new_comment-field_message_comment
 features[field_instance][] = message-log_new_content-field_message_content
 features[flag][] = user_notifications_flag
-features[menu_links][] = main-menu_recent-interactions:node/17
 features[message_type][] = log_new_comment
 features[message_type][] = log_new_content
 features[rules_config][] = rules_log_new_annotation_on_response

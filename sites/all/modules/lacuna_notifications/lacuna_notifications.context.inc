@@ -19,32 +19,35 @@ function lacuna_notifications_context_default_contexts() {
   $context->conditions = array(
     'path' => array(
       'values' => array(
-        'recent-interactions' => 'recent-interactions',
+        'latest-conversations' => 'latest-conversations',
       ),
     ),
   );
   $context->reactions = array(
     'block' => array(
       'blocks' => array(
-        'views-comments_on_threads_view-block' => array(
+        'views-b12c389f8fc7310c5e95d7ae0209ba2a' => array(
           'module' => 'views',
-          'delta' => 'comments_on_threads_view-block',
+          'delta' => 'b12c389f8fc7310c5e95d7ae0209ba2a',
           'region' => 'content',
-          'weight' => '-10',
+          'weight' => '-25',
         ),
         'views-220158f4a69df629932c5cc73344defd' => array(
           'module' => 'views',
           'delta' => '220158f4a69df629932c5cc73344defd',
           'region' => 'content',
-          'weight' => '-9',
+          'weight' => '-24',
         ),
-        'views-b12c389f8fc7310c5e95d7ae0209ba2a' => array(
+        'views-comments_on_threads_view-block' => array(
           'module' => 'views',
-          'delta' => 'b12c389f8fc7310c5e95d7ae0209ba2a',
+          'delta' => 'comments_on_threads_view-block',
           'region' => 'content',
-          'weight' => '-8',
+          'weight' => '-23',
         ),
       ),
+    ),
+    'theme_html' => array(
+      'class' => 'latest-conversations-page',
     ),
   );
   $context->condition_mode = 0;

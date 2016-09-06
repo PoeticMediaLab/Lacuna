@@ -63,6 +63,12 @@ function lacuna_notifications_views_default_views() {
   $handler->display->display_options['relationships']['uid']['table'] = 'node';
   $handler->display->display_options['relationships']['uid']['field'] = 'uid';
   $handler->display->display_options['relationships']['uid']['relationship'] = 'field_message_content_target_id';
+  /* Relationship: Content: Author */
+  $handler->display->display_options['relationships']['uid_1']['id'] = 'uid_1';
+  $handler->display->display_options['relationships']['uid_1']['table'] = 'node';
+  $handler->display->display_options['relationships']['uid_1']['field'] = 'uid';
+  $handler->display->display_options['relationships']['uid_1']['relationship'] = 'field_annotation_reference_target_id';
+  $handler->display->display_options['relationships']['uid_1']['label'] = 'annotated content author';
   /* Field: Message: Message ID */
   $handler->display->display_options['fields']['mid']['id'] = 'mid';
   $handler->display->display_options['fields']['mid']['table'] = 'message';
@@ -121,6 +127,27 @@ function lacuna_notifications_views_default_views() {
   $handler->display->display_options['filters']['type']['relationship'] = 'field_annotation_reference_target_id';
   $handler->display->display_options['filters']['type']['value'] = array(
     'response' => 'response',
+  );
+  /* Filter criterion: User: Current */
+  $handler->display->display_options['filters']['uid_current']['id'] = 'uid_current';
+  $handler->display->display_options['filters']['uid_current']['table'] = 'users';
+  $handler->display->display_options['filters']['uid_current']['field'] = 'uid_current';
+  $handler->display->display_options['filters']['uid_current']['relationship'] = 'uid_1';
+  $handler->display->display_options['filters']['uid_current']['value'] = 'All';
+  $handler->display->display_options['filters']['uid_current']['exposed'] = TRUE;
+  $handler->display->display_options['filters']['uid_current']['expose']['operator_id'] = '';
+  $handler->display->display_options['filters']['uid_current']['expose']['label'] = 'Limit results to your Responses';
+  $handler->display->display_options['filters']['uid_current']['expose']['operator'] = 'uid_current_op';
+  $handler->display->display_options['filters']['uid_current']['expose']['identifier'] = 'uid_current';
+  $handler->display->display_options['filters']['uid_current']['expose']['remember'] = TRUE;
+  $handler->display->display_options['filters']['uid_current']['expose']['remember_roles'] = array(
+    2 => 0,
+    6 => '6',
+    3 => '3',
+    4 => '4',
+    7 => '7',
+    5 => '5',
+    1 => 0,
   );
 
   /* Display: Block */
