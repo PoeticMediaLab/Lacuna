@@ -75,6 +75,21 @@ function lacuna_lti_get_context_variable_name() {
   return 'lacuna_lti_context_' . $user->uid;
 }
 
+/***
+ *
+ * Checks if user's session has LTI context; if so, saves it as a variable
+ * and returns the data
+ *
+ ***/
+function lacuna_lti_context() {
+  $lti_context = FALSE;
+  if (array_key_exists('lti_tool_provider_context_info', $_SESSION)) {
+    $lti_context = $_SESSION['lti_tool_provider_context_info'];
+    variable_set(lacuna_lti_get_context_variable_name(), $lti_context); // Save the LMS's request info
+  }
+  return $lti_context;
+}
+
 // Return the URLs for a list of resources
 function lacuna_lti_resource_add(&$nodes, $context) {
   global $base_url;
@@ -92,3 +107,4 @@ function lacuna_lti_resource_add(&$nodes, $context) {
   // LTI POSTs in a return URL for us to send our results
   drupal_goto($lti_context['ext_content_return_url'] . '?' . $query_string);
 }
+
