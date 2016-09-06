@@ -804,6 +804,9 @@ function course_form_course_node_form_alter(&$form, &$form_state, $form_id) {
 	$files = (isset($form_state['build_info']['files'])) ? $form_state['build_info']['files'] : array();
 	$files[] = drupal_get_path('module', 'node') . '/node.pages.inc';
 	$form_state['build_info']['files'] = $files;
+  $form['additional_settings']['#access'] = FALSE;
+  $form['body'][LANGUAGE_NONE][0]['format']['#access'] = FALSE;
+  $form['og_roles_permissions']['#access'] = FALSE;
   $form['#submit'] = array('course_create_form_submit');
   $form['actions']['submit']['#submit'][] = 'course_create_form_submit';
 }
