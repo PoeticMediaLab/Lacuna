@@ -108,3 +108,7 @@ function lacuna_lti_resource_add(&$nodes, $context) {
   drupal_goto($lti_context['ext_content_return_url'] . '?' . $query_string);
 }
 
+function lacuna_lti_form_course_node_form_alter(&$form, &$form_state, $form_id) {
+  // Hide the LMS ID field; only needed internally
+  $form['field_lms_id']['#access'] = FALSE;
+}
