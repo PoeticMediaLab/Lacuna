@@ -42,8 +42,8 @@ function lacuna_lti_menu() {
   );
   $items['lti/canvas.xml'] = array(
     'page callback' => 'lacuna_lti_canvas_xml',
-    'access arguments' => array(),
     'type' => MENU_CALLBACK,
+    'access arguments' => array('access content'),
     'file' => 'lacuna_lti.canvas.inc',
   );
   return $items;

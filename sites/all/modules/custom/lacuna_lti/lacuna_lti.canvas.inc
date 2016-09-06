@@ -14,11 +14,14 @@ function lacuna_lti_canvas_xml() {
   $xmlRoot = lacuna_lti_canvas_xml_namespaces($domtree, $xmlRoot);
   $element = $domtree->createElement('blti:title', 'Lacuna');
   $xmlRoot->appendChild($element);
-  $element = $domtree->createElement('blti:description', '<!--[CDATA[Lacuna is an open-source, online learning tool focused on tools for digital annotation. Lacuna allows instructors, students, and co-learners to discover different ways of reading, interpreting, and discussing course materials.]]-->');
+  $f = $domtree->createDocumentFragment();
+  $f->appendXML('<!--[CDATA[Lacuna is an open-source, online learning tool focused on tools for digital annotation. Lacuna allows instructors, students, and co-learners to discover different ways of reading, interpreting, and discussing course materials.]]-->');
+  $element = $domtree->createElement('blti:description');
+  $element->appendChild($f);
   $xmlRoot->appendChild($element);
   $element = $domtree->createElement('blti:launch_url', $base_url . '/lti');
   $xmlRoot->appendChild($element);
-  $iconUrl = $base_url . drupal_get_path('theme', 'lacuna_stories') . 'logo.png';
+  $iconUrl = $base_url . '/' . drupal_get_path('theme', 'lacuna_stories') . '/logo.png';
   $element = $domtree->createElement('blti:icon', $iconUrl);
   $xmlRoot->appendChild($element);
   $extensions = $domtree->createElement('blti:extensions');
@@ -29,19 +32,23 @@ function lacuna_lti_canvas_xml() {
   $extension_settings = lacuna_lti_canvas_xml_lticm_values($iconUrl);
   foreach ($extension_settings as $key => $value) {
     if (!is_array($value)) {
-      lacuna_lti_add_property($domtree, $extensions, $key, $value);
+      lacuna_lti_canvas_xml_add_property($domtree, $extensions, $key, $value);
     } else {
-      $options = $domtree->createElement('lticm:options');
-      $attr = $domtree->createAttribute('name');
-      $attr->value = $key;
-      $options->appendChild($attr);
-      $extensions->appendChild($options);
       foreach ($value as $opt_key => $opt_val) {
-        lacuna_lti_add_property($domtree, $options, $opt_key, $opt_val);
+        $options = $domtree->createElement('lticm:options');
+        $attr = $domtree->createAttribute('name');
+        $attr->value = $key;
+        $options->appendChild($attr);
+        $extensions->appendChild($options);
+        lacuna_lti_canvas_xml_add_property($domtree, $options, $opt_key, $opt_val);
       }
     }
   }
-  print($xmlRoot);
+  $domtree->preserveWhiteSpace = true;
+  $domtree->formatOutput = true;
+  $xmlstring = $domtree->saveXML();
+  drupal_add_http_header('Content-Type' ,'text/xml; utf-8');
+  print($xmlstring);
   drupal_exit();
 }
 
@@ -53,12 +60,21 @@ function lacuna_lti_canvas_xml() {
  *
  * Add a property with name and value to the given element.
  */
-function lacuna_lti_add_property($domtree, $element, $name, $value) {
-  $property = $domtree->createElement('lticm:property', $value);
-  $attr = $domtree->createAttribute('name');
-  $attr->value = $name;
-  $element->appendChild($property);
-  $property->appendChild($attr);
+function lacuna_lti_canvas_xml_add_property($domtree, $element, $name, $value) {
+  if (is_array($value)) {
+    $attr = $domtree->createAttribute('name');
+    $attr->value = $name;
+    $element->appendChild($attr);
+    foreach ($value as $key => $val) {
+      lacuna_lti_canvas_xml_add_property($domtree, $element, $key, $val);
+    }
+  } else {
+    $property = $domtree->createElement('lticm:property', $value);
+    $attr = $domtree->createAttribute('name');
+    $attr->value = $name;
+    $element->appendChild($property);
+    $property->appendChild($attr);
+  }
 }
 
 /***
