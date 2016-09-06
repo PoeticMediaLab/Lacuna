@@ -90,6 +90,5 @@ function lacuna_lti_resource_add(&$nodes, $context) {
   }
 
   // LTI POSTs in a return URL for us to send our results
-  ddl($lti_context['ext_content_return_url'] . '?' . $query_string);
   drupal_goto($lti_context['ext_content_return_url'] . '?' . $query_string);
 }
