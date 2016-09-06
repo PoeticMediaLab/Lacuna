@@ -30,7 +30,7 @@ function lacuna_lti_menu() {
   );
   $items['lti/course/setup'] = array(
     'page callback' => 'lacuna_lti_setup',
-    'access arguments' => array('administer lti resources', 'create course content'),
+    'access arguments' => array('create course content'), // No reason to deny otherwise
     'type' => MENU_CALLBACK,
     'file' => 'lacuna_lti.admin.inc'
   );
@@ -81,19 +81,27 @@ function lacuna_lti_get_context_variable_name() {
  * and returns the data
  *
  ***/
-function lacuna_lti_context() {
-  $lti_context = FALSE;
+function lacuna_lti_context($new = FALSE) {
   if (array_key_exists('lti_tool_provider_context_info', $_SESSION)) {
     $lti_context = $_SESSION['lti_tool_provider_context_info'];
     variable_set(lacuna_lti_get_context_variable_name(), $lti_context); // Save the LMS's request info
+  } elseif (!$new) {
+    $lti_context = variable_get(lacuna_lti_get_context_variable_name());
+  } else {
+    $lti_context = FALSE; // nothing found!
   }
   return $lti_context;
+}
+
+function lacuna_lti_lti_tool_provider_launch_alter(&$launch_info, $account) {
+  ddl($launch_info);
+  ddl($account);
 }
 
 // Return the URLs for a list of resources
 function lacuna_lti_resource_add(&$nodes, $context) {
   global $base_url;
-  $lti_context = variable_get(lacuna_lti_get_context_variable_name());
+  $lti_context = lacuna_lti_context();
   $query_string = 'return_type=' . $lti_context['ext_content_return_types'];
   foreach ($nodes as $nid => $node) {
     $path = drupal_get_path_alias('node/' . $nid);
@@ -111,4 +119,13 @@ function lacuna_lti_resource_add(&$nodes, $context) {
 function lacuna_lti_form_course_node_form_alter(&$form, &$form_state, $form_id) {
   // Hide the LMS ID field; only needed internally
   $form['field_lms_id']['#access'] = FALSE;
+  // Change the form submit button so we can handle it
+  $form['actions']['submit']['#submit'][] = 'lacuna_lti_course_create_form_submit';
+}
+
+function lacuna_lti_course_create_form_submit($form, &$form_state) {
+  $course = node_load($form['nid']['#value']);
+  $course->status = NODE_PUBLISHED;
+  // Continue the set up process
+  course_save_course_continue_setup($course);
 }
