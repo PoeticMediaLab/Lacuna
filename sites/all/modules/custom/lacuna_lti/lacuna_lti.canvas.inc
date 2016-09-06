@@ -116,9 +116,12 @@ function lacuna_lti_canvas_xml_lticm_values($iconUrl) {
         'url' => $base_url . '/lti/resources',
         'text' => 'Add resources from Lacuna',
         'label' => 'Search Lacuna documents',
+        'selection_width' => 800,
+        'selection_height' => 600,
       ),
       'course_navigation' => array(
         'label' => 'Lacuna Course Setup',
+        'text' => 'Lacuna Course Setup',
         'enabled' => 'true',
         'url' => $base_url . '/lti/course/setup',
         'visibility' => 'admins'

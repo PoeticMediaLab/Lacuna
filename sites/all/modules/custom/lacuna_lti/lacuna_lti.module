@@ -22,12 +22,6 @@ function lacuna_lti_permission() {
  */
 function lacuna_lti_menu() {
   $items = array();
-  $items['lti/resources'] = array(
-    'page callback' => 'lacuna_lti_resources',
-    'access arguments' => array('search lti resources'),
-    'type' => MENU_CALLBACK,
-    'file' => 'lacuna_lti.callbacks.inc',
-  );
   $items['lti/resources/admin'] = array(
     'page callback' => 'lacuna_lti_admin',
     'access arguments' => array('administer lti resources'),
@@ -40,6 +34,12 @@ function lacuna_lti_menu() {
     'type' => MENU_CALLBACK,
     'file' => 'lacuna_lti.admin.inc'
   );
+  $items['lti/resources'] = array(
+    'page callback' => 'lacuna_lti_resource_list',
+    'type' => MENU_CALLBACK,
+    'access arguments' => array('access content'),
+    'file' => 'lacuna_lti.resources.inc',
+  );
   $items['lti/canvas.xml'] = array(
     'page callback' => 'lacuna_lti_canvas_xml',
     'type' => MENU_CALLBACK,
@@ -47,4 +47,49 @@ function lacuna_lti_menu() {
     'file' => 'lacuna_lti.canvas.inc',
   );
   return $items;
+}
+
+/***
+ *
+ * Implement a VBO action for instructors to select resources in assignments
+ *
+ ***/
+function lacuna_lti_action_info() {
+  return array(
+    'lacuna_lti_resource_add' => array(
+      'type' => 'node',
+      'label' => t('Select a Resource'),
+      'configurable' => FALSE,
+      'vbo_configurable' => FALSE,
+      'triggers' => array('any'),
+      'aggregate' => TRUE,
+      // @see https://www.drupal.org/node/2542120
+      'behavior' => array('views_property'), // just check for viewing permissions
+    ),
+  );
+}
+
+// Returns the variable name for the LTI context variable
+function lacuna_lti_get_context_variable_name() {
+  global $user;
+  return 'lacuna_lti_context_' . $user->uid;
+}
+
+// Return the URLs for a list of resources
+function lacuna_lti_resource_add(&$nodes, $context) {
+  global $base_url;
+  $lti_context = variable_get(lacuna_lti_get_context_variable_name());
+  $query_string = 'return_type=' . $lti_context['ext_content_return_types'];
+  foreach ($nodes as $nid => $node) {
+    $path = drupal_get_path_alias('node/' . $nid);
+    if (strlen($query_string) > 0) {
+      $query_string .= '&';
+    }
+    $query_string .= 'url=' . $base_url . '/' . $path;
+    $query_string .= '&title="' . $node->title . '"';
+  }
+
+  // LTI POSTs in a return URL for us to send our results
+  ddl($lti_context['ext_content_return_url'] . '?' . $query_string);
+  drupal_goto($lti_context['ext_content_return_url'] . '?' . $query_string);
 }
