@@ -60,6 +60,9 @@ function lti_configuration_strongarm() {
   $strongarm->name = 'lti_tool_provider_og_group_mapping';
   $strongarm->value = array(
     'context_id' => 'field_lms_id',
+    'context_label' => 'field_course_id',
+    'context_title' => 'title',
+    'context_type' => 'none',
   );
   $export['lti_tool_provider_og_group_mapping'] = $strongarm;
 
@@ -90,14 +93,14 @@ function lti_configuration_strongarm() {
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'lti_tool_provider_og_provision_groups';
-  $strongarm->value = 0;
+  $strongarm->value = 1;
   $export['lti_tool_provider_og_provision_groups'] = $strongarm;
 
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'lti_tool_provider_og_provision_groups_anon';
-  $strongarm->value = '';
+  $strongarm->value = 0;
   $export['lti_tool_provider_og_provision_groups_anon'] = $strongarm;
 
   $strongarm = new stdClass();
