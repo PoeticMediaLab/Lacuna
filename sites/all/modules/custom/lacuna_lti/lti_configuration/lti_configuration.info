@@ -1,4 +1,4 @@
-name = LTI Configuration
+name = LTI Support
 description = Configuration and dependencies for Lacuna LTI Support
 core = 7.x
 package = Lacuna Stories

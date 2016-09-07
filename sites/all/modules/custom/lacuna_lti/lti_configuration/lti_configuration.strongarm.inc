@@ -30,28 +30,41 @@ function lti_configuration_strongarm() {
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'lti_tool_provider_memberships_subgroups';
-  $strongarm->value = 0;
+  $strongarm->value = 1;
   $export['lti_tool_provider_memberships_subgroups'] = $strongarm;
 
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'lti_tool_provider_memberships_subgroup_mapping';
-  $strongarm->value = array();
+  $strongarm->value = array(
+    'group_id' => 'field_group_description',
+    'title' => 'title',
+    'LTI context group reference' => 'og_group_ref',
+  );
   $export['lti_tool_provider_memberships_subgroup_mapping'] = $strongarm;
 
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'lti_tool_provider_memberships_subgroup_mapping_bundle';
-  $strongarm->value = 'none:None';
+  $strongarm->value = 'node:peer_group';
   $export['lti_tool_provider_memberships_subgroup_mapping_bundle'] = $strongarm;
 
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'lti_tool_provider_memberships_subgroup_role_array';
-  $strongarm->value = array();
+  $strongarm->value = array(
+    'Learner' => '5',
+    'Instructor' => '5',
+    'ContentDeveloper' => '5',
+    'Member' => '5',
+    'Manager' => '5',
+    'Mentor' => '5',
+    'Administrator' => '5',
+    'TeachingAssistant' => '5',
+  );
   $export['lti_tool_provider_memberships_subgroup_role_array'] = $strongarm;
 
   $strongarm = new stdClass();
