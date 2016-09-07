@@ -127,7 +127,7 @@ function lacuna_lti_resource_add(&$nodes, $context) {
       $query_string .= '&';
     }
     // Invoke the LTI login routines, then reroute to the document
-    $query_string .= 'url=' . $base_url . '/lti?destination=' . $path;
+    $query_string .= 'url=' . $base_url . '/lti?destination=/' . $path;
     $query_string .= '&title="' . $node->title . '"';
   }
 
