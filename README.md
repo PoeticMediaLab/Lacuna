@@ -149,6 +149,7 @@ Many people have put time and effort into this project. For a fuller list of the
 * Daniel Bush
 * Shiraz Dindar
 * Zhila Emadi
+* Irene Hsu
 * Cody Leff
 * Tim Loudon
 * Matt Mowers
