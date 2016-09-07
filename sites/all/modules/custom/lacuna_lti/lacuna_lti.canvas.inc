@@ -21,7 +21,7 @@ function lacuna_lti_canvas_xml() {
   $xmlRoot->appendChild($element);
   $element = $domtree->createElement('blti:launch_url', $base_url . '/lti');
   $xmlRoot->appendChild($element);
-  $iconUrl = $base_url . '/' . drupal_get_path('theme', 'lacuna_stories') . '/logo.png';
+  $iconUrl = $base_url . '/' . drupal_get_path('theme', 'lacuna_stories') . '/favicon.ico';
   $element = $domtree->createElement('blti:icon', $iconUrl);
   $xmlRoot->appendChild($element);
   $extensions = $domtree->createElement('blti:extensions');
@@ -113,7 +113,7 @@ function lacuna_lti_canvas_xml_lticm_values($iconUrl) {
     'options' => array(
       'resource_selection' => array(
         'enabled' => 'true',
-        'url' => $base_url . '/lti/resources',
+        'url' => $base_url . '/lti?destination=/lti/resources',
         'text' => 'Add resources from Lacuna',
         'label' => 'Search Lacuna documents',
         'selection_width' => 800,
@@ -123,7 +123,7 @@ function lacuna_lti_canvas_xml_lticm_values($iconUrl) {
         'label' => 'Lacuna Course Setup',
         'text' => 'Lacuna Course Setup',
         'enabled' => 'true',
-        'url' => $base_url . '/lti/course/setup',
+        'url' => $base_url . '/lti?destination=/lti/course/setup',
         'visibility' => 'admins'
       )
     )
