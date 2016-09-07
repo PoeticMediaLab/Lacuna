@@ -34,12 +34,6 @@ function lacuna_lti_menu() {
     'type' => MENU_CALLBACK,
     'file' => 'lacuna_lti.admin.inc'
   );
-  $items['lti/resources'] = array(
-    'page callback' => 'lacuna_lti_resource_list',
-    'type' => MENU_CALLBACK,
-    'access arguments' => array('access content'),
-    'file' => 'lacuna_lti.resources.inc',
-  );
   $items['lti/canvas.xml'] = array(
     'page callback' => 'lacuna_lti_canvas_xml',
     'type' => MENU_CALLBACK,
@@ -91,6 +85,7 @@ function lacuna_lti_set_context($context) {
 function lacuna_lti_lti_tool_provider_launch_alter(&$launch_info, $account) {
   // Save current LTI context
   lacuna_lti_set_context($launch_info);
+  lacuna_lti_course_select();
 }
 
 // Clear LTI context
@@ -98,11 +93,31 @@ function lacuna_lti_user_logout($account) {
   lacuna_lti_set_context(FALSE);
 }
 
+// Find the current course from the LTI context
+// Set it internally so that the user's course context switches correctly
+function lacuna_lti_course_select() {
+  $lti_context = lacuna_lti_get_context();
+  $query = new EntityFieldQuery();
+  $query->entityCondition('entity_type', 'node')
+    ->entityCondition('bundle', 'course')
+    ->fieldCondition('field_lms_id', 'value', $lti_context['context_id'], '=');
+  $result = $query->execute();
+  if (!isset($result['node'])) {
+    // LTI Tool Provider module should have created it already
+    drupal_set_message(t('Something went wrong finding your course. Please contact the site administrator'), 'error');
+    drupal_goto('/');
+  } else {
+    $nid = array_keys($result['node']); // Avoid PHP strict warning
+    $nid = array_shift($nid);
+    course_set_selected_course($nid);
+    return $nid;
+  }
+}
+
 // Return the URLs for a list of resources
 function lacuna_lti_resource_add(&$nodes, $context) {
   global $base_url;
   $lti_context = lacuna_lti_get_context();
-  ddl($lti_context);
   if (array_key_exists('ext_content_return_types', $lti_context)) {
     $query_string = 'return_type=' . $lti_context['ext_content_return_types'];
   }
