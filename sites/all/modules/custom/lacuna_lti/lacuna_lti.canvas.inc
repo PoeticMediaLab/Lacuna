@@ -113,7 +113,7 @@ function lacuna_lti_canvas_xml_lticm_values($iconUrl) {
     'options' => array(
       'resource_selection' => array(
         'enabled' => 'true',
-        'url' => $base_url . '/lti?destination=/lti/resources',
+        'url' => $base_url . '/lti?destination=/lti_resource_list',
         'text' => 'Add resources from Lacuna',
         'label' => 'Search Lacuna documents',
         'selection_width' => 800,
