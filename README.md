@@ -110,12 +110,28 @@ After users have accounts on the site, they need to be members of a course to ac
 ## Reading, Annotating, and Writing
 Please see the Instructor's Guide, Student Guide, and FAQ that come included with Lacuna under the "Help" menu. We also have several helpful videos and other documentation on our [project website](http://www.lacunastories.com).
 
+# Canvas / LTI Support
+As of version 2.2, Lacuna supports integration with Canvas and other Learning Management Systems that support the [Learning Tools Interoperability] (https://www.imsglobal.org/activity/learning-tools-interoperability) standards. This section of the guide describes how to enable and configure this support, with a focus on Canvas. If you are an instructore, you probably will need to consult with your local Lacuna site administrator to enable this support. *NOTE*: It is strongly recommended that you serve Lacuna through the HTTPS protocol. Most LMSes will complain or refuse to work if you don't. 
+
+## Enable LTI Support
+The first step is to enable the 'LTI Support' Feature, which can be found at '/admin/structure/features' under the 'Lacuna Stories' section. This feature will allow your Lacuna instance to accept LTI requests from any LMS that supports it. If you have made any changes to Lacuna's default roles and user permissions, you will need to review all the LTI settings so that they reflect your customized configuration.  
+
+## Add LTI Tool Consumer
+Next, you must add an LTI Tool Consumer by visiting '/admin/config/lti-tool-provider/lti-tool-consumers' and clicking 'Add a new LTI Tool Consumer'. This step requires you to generate a secure key and secret, which will be shared with any instructors who wish to add Lacuna as an extension to your institution's LMS. These values can be whatever you like, but should be [cryptographically secure] (https://xkcd.com/936/). You may also create a new Tool Consumer for each instructor that will use Lacuna. This ensures that you are not sharing secrets and keys among multiple users.
+
+## Add Lacuna as a Canvas app
+Lacuna provides a URL that makes it easy to add it as an app to Canvas. The path is <your-site-url>/lti/canvas.xml. See [How do I configure an external app for an account using a URL] (https://guides.instructure.com/m/4214/l/74559-how-do-i-configure-an-external-app-for-an-account-using-a-url) for details about how to configure Canvas with this URL.
+ 
+## Using Lacuna in Canvas
+Once configured as a Canvas app, Lacuna will add a menu item 'Lacuna Course Setup', which is visible only to instructors and administrators. Instructors should first click on this link to get started setting up their course and materials within Lacuna. They will be guided through the process and may return at any time. Once documents have been added to Lacuna, they will be available as a resource for assignments. Read [How do I add an external app as an assignment submission type?](https://guides.instructure.com/m/4152/l/501360?data-resolve-url=true&data-manual-id=4152) for details about how to integrate Lacuna into an assignment. *NOTE*: We recommend that assignments using Lacuna open the app in a new tab for the best user experience. 
+
+
 # Staying Up to Date
 ## Drupal core and contributed modules
 Like any software, Drupal has frequent updates to maintain security and to add new features. Although we will try to keep this repository up-to-date with the latest versions of all included modules and to ensure that the site continues to work, it should generally be safe for you to run standard updates on your own site (with the usual caveat that you should test on a development copy first, not on your production server). I do it all the time and the updates work fine. If you find that an update somehow breaks Lacuna, please file a bug report.
 
 ## Lacuna updates
-As we add new features and fix bugs, we will increment the Lacuna version number and update the GitHub repository. To include these changes on your site, you will need to update your copy of the software by running the following commands within your installion directory:
+As we add new features and fix bugs, we will increment the Lacuna version number and update the GitHub repository. To include these changes on your site, you will need to update your copy of the software by running the following commands within your installation directory:
 
 ```
 git pull origin master
