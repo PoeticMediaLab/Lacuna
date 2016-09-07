@@ -1,0 +1,8 @@
+name = Lacuna LTI Support
+description = Enable Lacuna to be an LTI Tool Provider
+core = 7.x
+package = Lacuna Stories
+version = 7.x-1.0
+dependencies[] = lti_tool_provider
+dependencies[] = lti_tool_provider_og
+dependencies[] = course

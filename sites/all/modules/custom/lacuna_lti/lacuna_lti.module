@@ -1,0 +1,150 @@
+<?php
+
+/***
+ * @return array
+ *
+ * Implements hook_permission().
+ */
+function lacuna_lti_permission() {
+  return array(
+    'administer lti resources' => array(
+      'title' => t('Administer LTI Resources'),
+      'description' => t('May manage settings for providing list of LTI-available resources.'),
+    ),
+    'search lti resources' => array(
+      'title' => t('Search LTI Resources'),
+      'description' => t('May search site from LTI Consumer for resources')
+    )
+  );
+}
+/***
+ * Implements hook_menu().
+ */
+function lacuna_lti_menu() {
+  $items = array();
+  $items['lti/resources/admin'] = array(
+    'page callback' => 'lacuna_lti_admin',
+    'access arguments' => array('administer lti resources'),
+    'type' => MENU_CALLBACK,
+    'file' => 'lacuna_lti.admin.inc'
+  );
+  $items['lti/course/setup'] = array(
+    'page callback' => 'lacuna_lti_setup',
+    'access arguments' => array('create course content'), // No reason to deny otherwise
+    'type' => MENU_CALLBACK,
+    'file' => 'lacuna_lti.admin.inc'
+  );
+  $items['lti/canvas.xml'] = array(
+    'page callback' => 'lacuna_lti_canvas_xml',
+    'type' => MENU_CALLBACK,
+    'access arguments' => array('access content'),
+    'file' => 'lacuna_lti.canvas.inc',
+  );
+  return $items;
+}
+
+/***
+ *
+ * Implement a VBO action for instructors to select resources in assignments
+ *
+ ***/
+function lacuna_lti_action_info() {
+  return array(
+    'lacuna_lti_resource_add' => array(
+      'type' => 'node',
+      'label' => t('Select a Resource'),
+      'configurable' => FALSE,
+      'vbo_configurable' => FALSE,
+      'triggers' => array('any'),
+      'aggregate' => TRUE,
+      // @see https://www.drupal.org/node/2542120
+      'behavior' => array('views_property'), // just check for viewing permissions
+    ),
+  );
+}
+
+// Returns the variable name for the LTI context variable
+function lacuna_lti_get_context_variable_name() {
+  global $user;
+  return 'lacuna_lti_context_' . $user->uid;
+}
+
+/***
+ *
+ * Routines to handle persistence of LTI context data
+ *
+ ***/
+function lacuna_lti_get_context() {
+  return variable_get(lacuna_lti_get_context_variable_name());
+}
+
+function lacuna_lti_set_context($context) {
+  variable_set(lacuna_lti_get_context_variable_name(), $context);
+}
+
+function lacuna_lti_lti_tool_provider_launch_alter(&$launch_info, $account) {
+  // Save current LTI context
+  lacuna_lti_set_context($launch_info);
+  lacuna_lti_course_select();
+}
+
+// Clear LTI context
+function lacuna_lti_user_logout($account) {
+  lacuna_lti_set_context(FALSE);
+}
+
+// Find the current course from the LTI context
+// Set it internally so that the user's course context switches correctly
+function lacuna_lti_course_select() {
+  $lti_context = lacuna_lti_get_context();
+  $query = new EntityFieldQuery();
+  $query->entityCondition('entity_type', 'node')
+    ->entityCondition('bundle', 'course')
+    ->fieldCondition('field_lms_id', 'value', $lti_context['context_id'], '=');
+  $result = $query->execute();
+  if (!isset($result['node'])) {
+    // LTI Tool Provider module should have created it already
+    drupal_set_message(t('Something went wrong finding your course. Please contact the site administrator'), 'error');
+    drupal_goto('/');
+  } else {
+    $nid = array_keys($result['node']); // Avoid PHP strict warning
+    $nid = array_shift($nid);
+    course_set_selected_course($nid);
+    return $nid;
+  }
+}
+
+// Return the URLs for a list of resources
+function lacuna_lti_resource_add(&$nodes, $context) {
+  global $base_url;
+  $lti_context = lacuna_lti_get_context();
+  if (array_key_exists('ext_content_return_types', $lti_context)) {
+    $query_string = 'return_type=' . $lti_context['ext_content_return_types'];
+  }
+  foreach ($nodes as $nid => $node) {
+    $path = drupal_get_path_alias('node/' . $nid);
+    if (strlen($query_string) > 0) {
+      $query_string .= '&';
+    }
+    // Invoke the LTI login routines, then reroute to the document
+    $query_string .= 'url=' . $base_url . '/lti?destination=/' . $path;
+    $query_string .= '&title="' . $node->title . '"';
+  }
+
+  // LTI POSTs in a return URL for us to send our results
+  drupal_goto($lti_context['ext_content_return_url'] . '?' . $query_string);
+}
+
+function lacuna_lti_form_course_node_form_alter(&$form, &$form_state, $form_id) {
+  // Hide the LMS ID field; only needed internally
+  $form['field_lms_id']['#access'] = FALSE;
+  // Change the form submit button so we can handle it
+  $form['actions']['submit']['#submit'][] = 'lacuna_lti_course_create_form_submit';
+}
+
+function lacuna_lti_course_create_form_submit($form, &$form_state) {
+  $course = node_load($form['nid']['#value']);
+  $course->status = NODE_PUBLISHED;
+  // Continue the set up process
+  course_save_course_continue_setup($course);
+}
