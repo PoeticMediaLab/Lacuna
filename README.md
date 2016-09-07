@@ -2,12 +2,12 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
-- [What is Lacuna Stories?](#what-is-lacuna-stories)
+- [What is Lacuna?](#what-is-lacuna-stories)
 - [Overview](#overview)
   - [Technical Details](#technical-details)
   - [Annotation in Drupal](#annotation-in-drupal)
   - [Annotator.js Plugins](#annotatorjs-plugins)
-- [How to Use Lacuna Stories](#how-to-use-lacuna-stories)
+- [How to Use Lacuna](#how-to-use-lacuna-stories)
   - [Installation Instructions](#installation-instructions)
   - [Post-Installation Tasks](#post-installation-tasks)
   - [Adding Courses and Documents](#adding-courses-and-documents)
@@ -21,9 +21,9 @@
   - [Reading, Annotating, and Writing](#reading-annotating-and-writing)
 - [Staying Up to Date](#staying-up-to-date)
   - [Drupal core and contributed modules](#drupal-core-and-contributed-modules)
-  - [Lacuna Stories updates](#lacuna-stories-updates)
+  - [Lacuna updates](#lacuna-stories-updates)
 - [How to Contribute](#how-to-contribute)
-  - [Use Lacuna Stories and Provide Feedback](#use-lacuna-stories-and-provide-feedback)
+  - [Use Lacuna and Provide Feedback](#use-lacuna-stories-and-provide-feedback)
   - [Submit a Bug Report](#submit-a-bug-report)
   - [Suggest New Features](#suggest-new-features)
   - [Submit a Pull Request](#submit-a-pull-request)
@@ -49,6 +49,7 @@ Speaking of plugins, we've developed a number of new ones for the 1.2.x branch o
 
 ## Installation Instructions
 
+**NOTE**: You very much need to perform the tasks listsed in our [Post-Installation Tasks[(#post-installation-tasks) section. 
 Follow the standard [Drupal installation process](https://www.drupal.org/documentation/install), but instead of downloading the code as stated in Step 1, download our code instead:
 
 ```
@@ -69,12 +70,12 @@ NOTE: [Clean URLs](https://www.drupal.org/getting-started/clean-urls) are *requi
 
 ## Post-Installation Tasks
 
-After installing, there are a few steps you will want to take to improve the user experience.
+After installing, there are a few steps you must still take.
 
 * Disable warnings and error messages (admin/config/development/logging)
 * Enable compression and caching (admin/config/development/performance)
 
-* Review the Course Creation settings (admin/config/content/lacuna-courses). These are the settings that determine the defaults for new courses. You may wish to require a password before instructors can create new courses. If so, you can set that here. You can also set the default genres, media, and priorities for documents. Be sure to click "Submit" at the bottom of the page after confirming these settings, even if you haven't changed anything; this will ensure that your site has initial values for these items.
+* Review the Course Creation settings (admin/config/content/lacuna-courses). These are the settings that determine the defaults for new courses. You may wish to require a password before instructors can create new courses. If so, you can set that here. You can also set the default genres, media, and priorities for documents. **Be sure to click "Submit" at the bottom of the page after confirming these settings, even if you haven't changed anything**; this will ensure that your site has initial values for these items.
 
 * Review the Page Turner settings (admin/config/user-interface/page-turner). We recommend that you enable the Page Turner for documents or other node types that may be too long to read in an infinite scrolling window.
 
