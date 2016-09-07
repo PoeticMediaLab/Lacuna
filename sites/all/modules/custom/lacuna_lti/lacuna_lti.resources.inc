@@ -1,7 +1,7 @@
 <?php
 
 function lacuna_lti_resource_list() {
-  $lti_context = lacuna_lti_context();
+  $lti_context = lacuna_lti_get_context();
   if ($lti_context) {
     drupal_goto('lti_resource_list'); // now go to the view
   } else {
