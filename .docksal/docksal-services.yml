@@ -1,5 +1,5 @@
 # Docker and Docker Compose based environment for Drupal.
-# See https://github.com/blinkreaction/drude for more information and documentation.
+# See https://github.com/docksal/docksal for more information and documentation.
 
 version: "2"
 

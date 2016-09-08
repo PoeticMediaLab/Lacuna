@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-## Web-based script to initialize Drude powered Drupal 7 site
+## Web-based script to initialize Docksal powered Drupal 7 site
 ## Usage:
-##   dsh exec-url https://raw.githubusercontent.com/blinkreaction/drude-d7-testing/master/.drude/commands/web-init
+##   fin exec-url https://raw.githubusercontent.com/docksal/drupal7/master/.docksal/commands/web-init
 
 # Abort if anything fails
 set -e
@@ -33,12 +33,12 @@ _confirm ()
 	done
 }
 
-echo -e "${green}Drude powered Drupal 7 project setup${NC}"
+echo -e "${green}Docksal powered Drupal 7 project setup${NC}"
 echo "------------------------------------------------"
-echo -e "Preparing to download Drupal 7 project to ${yellow}$(pwd)/drude-d7-testing${NC}"
+echo -e "Preparing to download Drupal 7 project to ${yellow}$(pwd)/docksal-drupal7${NC}"
 _confirm "Continue with this folder?"
 echo -e "${green_bg} INIT ${NC}${green} Cloning repository...${NC}"
 
-git clone -b master https://github.com/blinkreaction/drude-d7-testing.git && \
-	cd drude-d7-testing && \
-	dsh init
+git clone -b master https://github.com/docksal/drupal7.git && \
+	cd docksal-drupal7 && \
+	fin init

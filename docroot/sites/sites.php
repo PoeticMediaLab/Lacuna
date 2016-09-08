@@ -1,4 +1,4 @@
 <?php
 
-$sites['drupal7-site1.drude'] = 'site1';
-$sites['drupal7-site2.drude'] = 'site2';
+$sites['drupal7-site1.docksal'] = 'site1';
+$sites['drupal7-site2.docksal'] = 'site2';

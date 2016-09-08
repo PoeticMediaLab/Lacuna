@@ -15,7 +15,7 @@ $conf['file_temporary_path'] = '/tmp';
 $conf['file_chmod_directory'] = 0777;
 $conf['file_chmod_file'] = 0666;
 
-# Reverse proxy configuration (Drude's vhost-proxy)
+# Reverse proxy configuration (Docksal's vhost-proxy)
 $conf['reverse_proxy'] = TRUE;
 $conf['reverse_proxy_addresses'] = array($_SERVER['REMOTE_ADDR']);
 // HTTPS behind reverse-proxy

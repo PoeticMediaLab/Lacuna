@@ -3,7 +3,7 @@ default:
   extensions:
     Behat\MinkExtension:
       # URL of the site when accessed locally.
-      base_url: http://drupal7.drude
+      base_url: http://drupal7.docksal
       # Configure browser to be used. Browser must be available on wd_host.
       # Stick with chrome by default. It's 2x faster than firefox or phantomjs (your results may vary).
       browser_name: chrome

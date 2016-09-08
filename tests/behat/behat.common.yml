@@ -37,11 +37,11 @@ default:
         success_message_selector: '#messages .messages.status'
 
 # Docker profile.
-# For use inside the CLI container in Drude.
+# For use inside the CLI container in Docksal.
 docker:
   extensions:
     Behat\MinkExtension:
-      # URL of the site when accessed inside Drude.
+      # URL of the site when accessed inside Docksal.
       base_url: http://web
       # Configure browser to be used. Browser must be available on wd_host.
       # Stick with chrome by default. It's 2x faster than firefox or phantomjs (your results may vary).
@@ -51,8 +51,8 @@ docker:
         capabilities: { "browser": "chrome", "version": "*" }
     Drupal\DrupalExtension:
       drupal:
-        # Site docroot inside Drude.
+        # Site docroot inside Docksal.
         drupal_root: /var/www/docroot
       drush:
-        # Site docroot inside Drude.
+        # Site docroot inside Docksal.
         root: /var/www/docroot

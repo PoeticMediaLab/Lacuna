@@ -1,12 +1,12 @@
 #!/bin/bash
 set -e
 
-## Initialize Drude powered Drupal 7 Installation
+## Initialize Docksal powered Drupal 7 Installation
 
 # Set to the appropriate site directory ##
 SITE_DIRECTORY='default'
 # Set to the appropriate site directory
-SITE_DOMAIN='drupal7.drude'
+SITE_DOMAIN='drupal7.docksal'
 # Set to the appropriate site alias for the DB source
 #SOURCE_ALIAS='@none'
 
@@ -81,7 +81,7 @@ init_settings ()
   cd "$GIT_ROOT"
 
   # docker-compose
-  _copy_settings_file ".drude/drude-local-minimal.yml" "docker-compose.yml"
+  _copy_settings_file ".docksal/docksal-local-minimal.yml" "docker-compose.yml"
   
   # Drupal
   #_copy_settings_file "docroot/sites/example.sites.local.php" "docroot/sites/sites.local.php"
@@ -105,7 +105,7 @@ site_install ()
     site_name="--site-name='$1'"
   fi
   # We disable email sending here so site-install does not return an error
-  dsh exec "PHP_OPTIONS="'"-d sendmail_path=`which true`"'" drush site-install -y ${site_name}"
+  fin exec "PHP_OPTIONS="'"-d sendmail_path=`which true`"'" drush site-install -y ${site_name}"
 }
 
 # Create a new DB
@@ -118,7 +118,7 @@ db_create ()
   local mysql_exec='mysql -h $DB_1_PORT_3306_TCP_ADDR --user=root --password=$DB_1_ENV_MYSQL_ROOT_PASSWORD -e ';
   local query="DROP DATABASE IF EXISTS ${database}; CREATE DATABASE ${database}; GRANT ALL ON ${database}.* TO "'$DB_1_ENV_MYSQL_USER'"@'%'"
 
-  dsh exec "${mysql_exec} \"${query}\""
+  fin exec "${mysql_exec} \"${query}\""
 }
 
 # Import database from the source site alias
@@ -127,7 +127,7 @@ db_import ()
   #_confirm "Do you want to import DB from ${SOURCE_ALIAS}?"
 
   cd "$GIT_ROOT/docroot"
-  dsh drush -l "$SITE_DOMAIN" sql-sync "$SOURCE_ALIAS" @self -y
+  fin drush -l "$SITE_DOMAIN" sql-sync "$SOURCE_ALIAS" @self -y
 }
 
 # Misc drush commands to bring DB up-to-date
@@ -137,11 +137,11 @@ db_updates ()
   echo-yellow "Applying DB updates..."
   set -x
 
-  dsh drush -l ${SITE_DOMAIN} status
-  dsh drush -l ${SITE_DOMAIN} updb -y
-  dsh drush -l ${SITE_DOMAIN} fr-all -y
-  dsh drush -l ${SITE_DOMAIN} cc all
-  dsh drush -l ${SITE_DOMAIN} cron -v
+  fin drush -l ${SITE_DOMAIN} status
+  fin drush -l ${SITE_DOMAIN} updb -y
+  fin drush -l ${SITE_DOMAIN} fr-all -y
+  fin drush -l ${SITE_DOMAIN} cc all
+  fin drush -l ${SITE_DOMAIN} cron -v
 
   set +x
 }
@@ -154,7 +154,7 @@ local_settings ()
   cd docroot
   set -x
 
-  dsh drush -l ${SITE_DOMAIN} en stage_file_proxy -y
+  fin drush -l ${SITE_DOMAIN} en stage_file_proxy -y
 
   set +x
 }
@@ -167,8 +167,8 @@ compass_compile ()
   set -x
 
   #cd docroot/sites/all/themes/<themename>
-  #dsh exec bundle install
-  #dsh exec bundle exec compass compile
+  #fin exec bundle install
+  #fin exec bundle exec compass compile
 
   set +x
 }
@@ -180,7 +180,7 @@ run_behat ()
 
   echo -e "${yellow}Launching Behat validation tests...${NC}"
   cd tests/behat
-  dsh behat --format=pretty --out=std --format=junit --out=junit features/drush-si-validation.feature
+  fin behat --format=pretty --out=std --format=junit --out=junit features/drush-si-validation.feature
 }
 
 #-------------------------- Execution --------------------------------
@@ -199,10 +199,10 @@ init_settings
 
 if [[ $DOCKER_RUNNING == "true" ]]; then
   echo -e "${green_bg} Step 2 ${NC}${green} Recreating services...${NC}"
-  dsh reset -f
+  fin reset -f
 else
   echo -e "${green_bg} Step 2 ${NC}${green} Creating services...${NC}"
-  dsh up
+  fin up
 fi
 
 echo "Waiting 10s for MySQL to initialize...";
@@ -212,9 +212,9 @@ echo -e "${green_bg} Step 3 ${NC}${green} Installing site...${NC}"
 site_install "My Drupal 7 Site"
 
 # Uncomment line below to install site 1
-#db_create 'site1' && site_install 'drupal7-site1.drude'
+#db_create 'site1' && site_install 'drupal7-site1.docksal'
 # Uncomment line below to install site 2
-#db_create 'site2' && site_install 'drupal7-site2.drude'
+#db_create 'site2' && site_install 'drupal7-site2.docksal'
 
 # Examples of other things that can be done.
 #db_import
