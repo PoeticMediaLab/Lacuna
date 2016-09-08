@@ -10,4 +10,4 @@
     | title           | group_access  |
     | Course Private  | Closed: Not visible to students. I will edit it later to make it visible.        |
     When I go to the "course" node named "Course Private"
-    Then I should see "Course Private" in the "Page Title" region
+    Then I should see "Course Private" in the "Course Selected" region
