@@ -15,11 +15,14 @@ select#edit-thread-add {
   height: 34px;
 }
 
-/* The "Add to Thread" button for Sewing Kit */
-.view-sewing-kit {
-  fieldset.container-inline {
-    border: 0;
+/* VBO styling */
+div.view {
+  div.vbo-views-form {
+    fieldset.container-inline {
+      border: 0;
+    }
   }
+
   .views-widget-filter-created,
   .views-widget-filter-created_1 {
     display: none;
@@ -28,8 +31,10 @@ select#edit-thread-add {
     margin-left: 33%;
   }
   input[id^='edit-actionsewing-kit-stitch'],
-  input[id^='edit-actionviews-data-export-action-csv-export'] {
-    width: 200px;
+  input[id^='edit-actionviews-data-export-action-csv-export'],
+  input[id^='edit-actionlacuna-lti-resource-add']
+  {
+    width: auto;
     display: inline-block;
     height: 50px;
     font-size: 14pt;
@@ -41,6 +46,16 @@ select#edit-thread-add {
     label {
       width: 15%;
     }
+  }
+  td.views-field-views-bulk-operations .form-type-radio {
+    margin-left: 5px;
+    margin-right: 5px;
+  }
+}
+
+div.view-list-resource-list {
+  th.views-field-field-image {
+    width: 50px;
   }
 }
 
