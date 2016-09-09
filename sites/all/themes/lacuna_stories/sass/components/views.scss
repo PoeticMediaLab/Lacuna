@@ -67,9 +67,9 @@ div#block-views-stitchings-block-1,
 div.view-stitchings {
   margin-left: 5%;
   margin-right: 5%;
-  .fieldset-wrapper {
+  /*.fieldset-wrapper {
     text-align: center;
-  }
+  }*/
   th.views-field-views-bulk-operations {
     div.form-type-checkbox {
       margin-left: 0em !important;
@@ -81,13 +81,40 @@ div.view-stitchings {
   }
   fieldset#edit-select {
     border: none;
+    margin-left: 0;
     input[id^='edit-actionsewing-kit-remove'] {
       width: auto;
-      height: 50px;
-      font-size: 14pt;
+      height: 35px;
+      font-size: 10pt;
+      position: relative;
+      top: 25px;
+    }
+  }
+  td.views-field-views-bulk-operations {
+    min-width: 50px;
+    input.vbo-select.form-checkbox {
+      display: block;
+      float: right;
+      margin-right: 40%;
+      position: relative;
+      top: -50%;
+      -webkit-transform: translateY(50%);
+      -o-transform: translateY(50%);
+      -moz-transform: translateY(50%);
+      -ms-transform: translateY(50%);
+      transform: translateY(50%);
+    }
+    div.handle {
+      margin: 0;
+      position: relative;
+      left: 12px;
+    }
+    div.form-item.form-type-checkbox {
+      float: right;
     }
   }
 }
+
 
 
 /* Center the "Select all" options */
@@ -284,6 +311,8 @@ table.views-table {
   th.views-field-views-bulk-operations,
   th.views-field-nothing {
     width: 1% !important;
+    text-align: right;
+    padding-right: 0.5em;
   }
   td.views-field-category {
     text-align: center;

@@ -51,7 +51,8 @@
     // Hard-coded view title; bad, I know, but other option
     // is to load the entire view, then get the title, which
     // causes a PHP warning about passing non-variables by references
-    print '<h2 id="stitchings">Stitchings</h2>';
+    // commenting this title out, because Brian and I decided it's unnecessary, as well as an unfamiliar term for users
+    // print '<h2 id="stitchings">Stitchings</h2>';
     if ($user->uid === $node->uid) {
       // Allow node author to edit the stitchings
       print views_embed_view('stitchings', 'vbo_block', $node->nid);
