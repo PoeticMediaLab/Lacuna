@@ -57,9 +57,15 @@ class Annotator.Plugin.Replies extends Annotator.Plugin
     @addClasses(field, 'hidden')
     field.style.display = "none";
 
-  toggleVisibility: (field) =>
+  toggleVisibility: (field, event = null) =>
     if @replyClasses.hidden in field.classList
-      @show(field)
+      @show(field)  # show first so we have offsetWidth/Height values
+      if event
+        left = event.clientX - field.offsetWidth / 2
+        top = event.pageY - field.offsetHeight
+        field.style.left = left + 'px'
+        field.style.top = top + 'px'
+        @annotator.viewer.hide()
     else
       @hide(field)
 
@@ -117,7 +123,7 @@ class Annotator.Plugin.Replies extends Annotator.Plugin
     @addClasses(span, 'reply')
     replyArea = @addReplyArea(annotation, 0, pid)
     @hide(replyArea)
-    span.addEventListener("click", () => @toggleVisibility(replyArea))
+    span.addEventListener("click", (event) => @toggleVisibility(replyArea, event))
     field.appendChild(span)
 
   initReplies: (field, annotation) =>
