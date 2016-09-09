@@ -91,9 +91,9 @@ return FALSE;',
   $context->reactions = array(
     'block' => array(
       'blocks' => array(
-        'lacuna_stories-front_page_banner' => array(
-          'module' => 'lacuna_stories',
-          'delta' => 'front_page_banner',
+        'block-1' => array(
+          'module' => 'block',
+          'delta' => '1',
           'region' => 'highlighted',
           'weight' => '-10',
         ),
