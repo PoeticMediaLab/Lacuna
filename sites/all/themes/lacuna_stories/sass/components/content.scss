@@ -339,3 +339,16 @@ li.statistics_counter {
 li.comment_forbidden {
   margin-left: 5%;
 }
+
+div.lacuna-lti-landing-page {
+  h1 {
+    text-align: center;
+  }
+  div.lacuna-lti-landing-item {
+    border: 1px solid slategray;
+    padding: 25px 0px 25px 0px;
+    text-align: center;
+    font-size: x-large;
+    margin-bottom: 5px;
+  }
+}
