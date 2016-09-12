@@ -15,3 +15,17 @@ function lacuna_user_account_install()
     ->condition('name', 'lacuna_user_account', '=')
     ->execute();
 }
+
+/**
+ * Delete unused user account fields.
+ */
+function lacuna_user_account_update_7001() {
+  field_delete_field('field_how_i_learn');
+  field_delete_field('field_learning_goals');
+  // Also delete the field group "Learning"
+  // @see: http://stackoverflow.com/questions/7826486/delete-field-group-programmatically
+  if ($group = field_group_load_field_group('group_learning', 'user', 'user', 'form')) {
+    ctools_include('export');
+    field_group_group_export_delete($group, FALSE);
+  }
+}
