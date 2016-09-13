@@ -1,0 +1,19 @@
+<?php
+
+/***
+ * @return mixed
+ * Implements hook_requirements(). Provide current version number in status report.
+ */
+
+function lacuna_version_requirements($phase) {
+  $requirements = array();
+  if ($phase == 'runtime') {
+    $requirements['0lacuna'] = array(
+      'title' => t('Lacuna Version'),
+      'value' => '2.2',
+      'severity' => REQUIREMENT_INFO,
+      'weight' => -100,
+    );
+  }
+  return $requirements;
+}

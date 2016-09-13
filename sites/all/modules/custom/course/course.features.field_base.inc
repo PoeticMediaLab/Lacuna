@@ -241,6 +241,30 @@ function course_field_default_field_bases() {
     'type' => 'datetime',
   );
 
+  // Exported field_base: 'field_lms_id'.
+  $field_bases['field_lms_id'] = array(
+    'active' => 1,
+    'cardinality' => 1,
+    'deleted' => 0,
+    'entity_types' => array(),
+    'field_name' => 'field_lms_id',
+    'field_permissions' => array(
+      'type' => 1,
+    ),
+    'indexes' => array(
+      'format' => array(
+        0 => 'format',
+      ),
+    ),
+    'locked' => 0,
+    'module' => 'text',
+    'settings' => array(
+      'max_length' => 255,
+    ),
+    'translatable' => 0,
+    'type' => 'text',
+  );
+
   // Exported field_base: 'field_name'.
   $field_bases['field_name'] = array(
     'active' => 1,

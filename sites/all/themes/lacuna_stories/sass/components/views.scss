@@ -22,14 +22,14 @@ div.view {
       border: 0;
     }
   }
-
   .views-widget-filter-created,
   .views-widget-filter-created_1 {
     display: none;
   }
+  /*
   .fieldset-wrapper {
     margin-left: 33%;
-  }
+  } */
   input[id^='edit-actionsewing-kit-stitch'],
   input[id^='edit-actionviews-data-export-action-csv-export'],
   input[id^='edit-actionlacuna-lti-resource-add']
@@ -115,6 +115,12 @@ div.view-stitchings {
   }
 }
 
+/* Centers the Add to Thread & Remove From Thread buttons*/
+.vbo-views-form .container-inline.form-wrapper {
+  .fieldset-wrapper {
+    text-align: center;
+  }
+}
 
 
 /* Center the "Select all" options */
@@ -157,7 +163,7 @@ div.views-row-last span.views-field-field-image div.topic_image  {
   padding-top:0px;
 }*/
 .views-exposed-form .views-exposed-widget label {
-  min-width: 150px;
+  min-width: 160px;
 }
 
 /* View-specific theming, for Materials, Responses, Threads */
@@ -283,16 +289,28 @@ $views-link-hover-color: #1588BA;
     text-align: left;
   }
 }
+
+/* enables horizontal scrolling for table*/
+.view-content {
+  overflow: auto;
+} 
+
 table.views-table {
   width: 100%;
+  font-family: $base-font-family;
 }
 
 .views-table tr {
   text-align: left;
+  overflow-x: auto;
 }
 
 .view-sewing-kit,
 .view-stitchings {
+  .views-table thead {
+    border-bottom: 4px solid #bfbfbf !important;
+  }
+
   th.views-field-category,
   th.views-field-text,
   th.views-field-quote,
@@ -302,6 +320,8 @@ table.views-table {
   th {
     width: 2%;
     max-width: 5%;
+    padding: 1em .75em 0em;
+    font-size: 14px;
   }
   th.views-field-text,
   th.views-field-quote {
@@ -313,6 +333,32 @@ table.views-table {
     width: 1% !important;
     text-align: right;
     padding-right: 0.5em;
+    padding-left: 1.5em;
+  }
+  th.active {
+    img {
+      margin-left: 8px;
+    }
+  }
+
+  tr.odd, tr.even {
+    border: none !important;
+  }
+  tr.odd {
+    background-color: #f8f8f8 !important;
+  }
+  td {
+    padding: 1em .75em 1em;
+    font-size: 14px;
+    line-height: normal;
+
+  }
+  td.views-field-views-bulk-operations {
+      padding-left: 1.5em;
+      padding-right: 0em;
+    }
+  td.active {
+    background-color: rgba(21,136,186,.08) !important;
   }
   td.views-field-category {
     text-align: center;

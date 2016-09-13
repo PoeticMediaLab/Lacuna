@@ -532,3 +532,13 @@ function lacuna_visualizations_cron() {
     watchdog('lacuna_visualizations', 'Rebuilt all dashboard data', array(), WATCHDOG_NOTICE);
   }
 }
+
+/**
+ * Implements hook_update_projects_alter().
+ * Prevent the d3 module from updating to 7.x-1.0-alpha2.
+ * That version is broken.
+ * @see: https://www.drupal.org/node/2753961
+ */
+function lacuna_visualizations_update_projects_alter(&$projects) {
+  unset($projects['d3']);
+}

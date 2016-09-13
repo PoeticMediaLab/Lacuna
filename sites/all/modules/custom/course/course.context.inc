@@ -51,10 +51,12 @@ if ($current_node->type == \'course\') {
 }
 
 // Course content; try to switch context
-$new_course = $current_node->og_group_ref[LANGUAGE_NONE][0][\'target_id\'];
-course_set_selected_course($new_course);
-if (course_get_selected_course()== $new_course) {
-  return TRUE;
+if (isset($current_node->og_group_ref)) {
+  $new_course = $current_node->og_group_ref[LANGUAGE_NONE][0][\'target_id\'];
+  course_set_selected_course($new_course);
+  if (course_get_selected_course()== $new_course) {
+    return TRUE;
+  }
 }
 return FALSE;',
       ),
@@ -91,9 +93,9 @@ return FALSE;',
   $context->reactions = array(
     'block' => array(
       'blocks' => array(
-        'lacuna_stories-front_page_banner' => array(
-          'module' => 'lacuna_stories',
-          'delta' => 'front_page_banner',
+        'block-1' => array(
+          'module' => 'block',
+          'delta' => '1',
           'region' => 'highlighted',
           'weight' => '-10',
         ),
