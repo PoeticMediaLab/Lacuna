@@ -22,6 +22,7 @@ dependencies[] = fpa
 dependencies[] = honeypot
 dependencies[] = jquery_update
 dependencies[] = lacuna_updates
+dependencies[] = lacuna_version
 dependencies[] = libraries
 dependencies[] = link
 dependencies[] = media_wysiwyg
