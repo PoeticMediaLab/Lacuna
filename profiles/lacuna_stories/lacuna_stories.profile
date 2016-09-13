@@ -330,7 +330,8 @@ function lacuna_stories_set_annotator_settings() {
     'Categories' => 'Categories',
     'Richtext' => 'Richtext',
     'Filters' => 'Filters',
-//    'Comment' => 'Comment', // Disabled until fixed
+    'Replies' => 'Replies',
+    'Loading' => 'Loading',
     'Tags' => 'Tags',
     'Privacy' => 'Privacy',
 		'Histogram' => 'Histogram',
@@ -480,7 +481,6 @@ function lacuna_stories_late_feature_and_module_enabling () {
 		'lacuna_stories_materials',	// Depends on the Workflow for Materials Publications
 		'lacuna_stories_threads',	// Depends on Materials
 		'lacuna_stories_responses',	// Depends on Materials
-		'lacuna_stories_irb_form', // Webform is created on install
     'lacuna_stories_visualizations', // Visualizations require responses to be active
   );
   module_enable($module_list);

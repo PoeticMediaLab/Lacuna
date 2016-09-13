@@ -229,92 +229,6 @@ function lacuna_stories_people_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'user-user-field_how_i_learn'.
-  $field_instances['user-user-field_how_i_learn'] = array(
-    'bundle' => 'user',
-    'default_value' => NULL,
-    'deleted' => 0,
-    'description' => '',
-    'display' => array(
-      'default' => array(
-        'label' => 'above',
-        'module' => 'text',
-        'settings' => array(),
-        'type' => 'text_default',
-        'weight' => 15,
-      ),
-      'full' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
-      ),
-    ),
-    'entity_type' => 'user',
-    'field_name' => 'field_how_i_learn',
-    'label' => 'How I Learn',
-    'required' => 0,
-    'settings' => array(
-      'text_processing' => 0,
-      'user_register_form' => 1,
-    ),
-    'widget' => array(
-      'active' => 1,
-      'module' => 'text',
-      'settings' => array(
-        'maxlength_js' => 300,
-        'maxlength_js_enforce' => 1,
-        'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
-        'maxlength_js_truncate_html' => 1,
-        'rows' => 5,
-      ),
-      'type' => 'text_textarea',
-      'weight' => 4,
-    ),
-  );
-
-  // Exported field_instance: 'user-user-field_learning_goals'.
-  $field_instances['user-user-field_learning_goals'] = array(
-    'bundle' => 'user',
-    'default_value' => NULL,
-    'deleted' => 0,
-    'description' => '',
-    'display' => array(
-      'default' => array(
-        'label' => 'above',
-        'module' => 'text',
-        'settings' => array(),
-        'type' => 'text_default',
-        'weight' => 16,
-      ),
-      'full' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
-      ),
-    ),
-    'entity_type' => 'user',
-    'field_name' => 'field_learning_goals',
-    'label' => 'Learning Goals',
-    'required' => 0,
-    'settings' => array(
-      'text_processing' => 0,
-      'user_register_form' => 1,
-    ),
-    'widget' => array(
-      'active' => 1,
-      'module' => 'text',
-      'settings' => array(
-        'maxlength_js' => 1,
-        'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
-        'size' => 60,
-      ),
-      'type' => 'text_textfield',
-      'weight' => 5,
-    ),
-  );
-
   // Exported field_instance: 'user-user-field_major_degree'.
   $field_instances['user-user-field_major_degree'] = array(
     'bundle' => 'user',
@@ -443,9 +357,7 @@ function lacuna_stories_people_field_default_field_instances() {
   t('Display Name');
   t('Education');
   t('Gender');
-  t('How I Learn');
   t('I agree to the Terms of Use');
-  t('Learning Goals');
   t('Major/Degree');
   t('Please read the Lacuna <a href="http://www.lacunastories.com/termsofuse/" target="_blank">Terms of Use</a> before accepting.');
   t('The name under which you would like your work to appear.');

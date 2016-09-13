@@ -19,9 +19,9 @@ function lti_configuration_strongarm() {
     'Instructor' => '4',
     'ContentDeveloper' => '3',
     'Member' => '2',
-    'Manager' => '3',
+    'Manager' => '4',
     'Mentor' => '4',
-    'Administrator' => '3',
+    'Administrator' => '4',
     'TeachingAssistant' => '4',
   );
   $export['lti_tool_provider_global_role_array'] = $strongarm;

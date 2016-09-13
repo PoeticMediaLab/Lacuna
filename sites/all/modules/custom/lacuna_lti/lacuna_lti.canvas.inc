@@ -121,7 +121,7 @@ function lacuna_lti_canvas_xml_lticm_values($iconUrl) {
       ),
       'course_navigation' => array(
         'label' => 'Lacuna Course Setup',
-        'text' => 'Lacuna Course Setup',
+        'text' => 'Manage Lacuna',
         'enabled' => 'true',
         'url' => $base_url . '/lti?destination=/lti/course/setup',
         'visibility' => 'admins'
