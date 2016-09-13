@@ -10,6 +10,21 @@
 function lacuna_stories_people_user_default_permissions() {
   $permissions = array();
 
+  // Exported permission: 'access avatars'.
+  $permissions['access avatars'] = array(
+    'name' => 'access avatars',
+    'roles' => array(
+      'Content Manager' => 'Content Manager',
+      'Instructor' => 'Instructor',
+      'Researcher' => 'Researcher',
+      'Site Administrator' => 'Site Administrator',
+      'Student' => 'Student',
+      'anonymous user' => 'anonymous user',
+      'authenticated user' => 'authenticated user',
+    ),
+    'module' => 'avatar_selection',
+  );
+
   // Exported permission: 'access notify'.
   $permissions['access notify'] = array(
     'name' => 'access notify',
@@ -56,6 +71,16 @@ function lacuna_stories_people_user_default_permissions() {
       'Student' => 'Student',
     ),
     'module' => 'user',
+  );
+
+  // Exported permission: 'administer avatar selection'.
+  $permissions['administer avatar selection'] = array(
+    'name' => 'administer avatar selection',
+    'roles' => array(
+      'Content Manager' => 'Content Manager',
+      'Site Administrator' => 'Site Administrator',
+    ),
+    'module' => 'avatar_selection',
   );
 
   // Exported permission: 'administer contact forms'.
@@ -352,6 +377,21 @@ function lacuna_stories_people_user_default_permissions() {
       'Site Administrator' => 'Site Administrator',
     ),
     'module' => 'user',
+  );
+
+  // Exported permission: 'upload avatar in profile'.
+  $permissions['upload avatar in profile'] = array(
+    'name' => 'upload avatar in profile',
+    'roles' => array(
+      'Content Manager' => 'Content Manager',
+      'Instructor' => 'Instructor',
+      'Researcher' => 'Researcher',
+      'Site Administrator' => 'Site Administrator',
+      'Student' => 'Student',
+      'anonymous user' => 'anonymous user',
+      'authenticated user' => 'authenticated user',
+    ),
+    'module' => 'avatar_selection',
   );
 
   // Exported permission: 'view field_about_me'.
