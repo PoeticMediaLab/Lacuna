@@ -41,10 +41,11 @@ div.view {
   }
   .chosen-container {
     max-width: 60% !important;
+    width: 200px !important;
   }
   .views-exposed-form {
     label {
-      width: 15%;
+      width: 16%;
     }
   }
   td.views-field-views-bulk-operations .form-type-radio {
@@ -131,12 +132,9 @@ div.views-row-last span.views-field-field-image div.topic_image  {
   clear: both;
   width: 100%;
 }
-/*.views-exposed-form .views-exposed-widget.views-reset-button {
-  margin-top: 10px;
-  padding-top:0px;
-}*/
+
 .views-exposed-form .views-exposed-widget label {
-  min-width: 160px;
+  min-width: 180px;
 }
 
 /* View-specific theming, for Materials, Responses, Threads */

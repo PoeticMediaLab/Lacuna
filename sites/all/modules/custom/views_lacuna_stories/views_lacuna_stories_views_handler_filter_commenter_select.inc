@@ -10,9 +10,7 @@ class views_lacuna_stories_views_handler_filter_commenter_select extends views_h
       $title = variable_get('anonymous', t('Anonymous'));
     }
     else {
-      // $this->argument is a uid
       $title = format_username(user_load($this->argument));
-//      $title = db_query('SELECT u.name FROM {users} u WHERE u.uid = :uid', array(':uid' => $this->argument))->fetchField();
     }
     if (empty($title)) {
       return t('No user');
@@ -58,7 +56,7 @@ class views_lacuna_stories_views_handler_filter_commenter_select extends views_h
       // We don't need Guest user here, so remove it.
       unset($users[0]);
       // Also remove super user
-//      unset($users[1]);
+      unset($users[1]);
 
       // Sort by username.
       natsort($users);
