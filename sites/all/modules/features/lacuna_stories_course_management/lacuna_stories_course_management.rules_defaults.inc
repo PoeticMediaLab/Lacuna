@@ -14,7 +14,7 @@ function lacuna_stories_course_management_default_rules_configuration() {
       "PLUGIN" : "reaction rule",
       "OWNER" : "rules",
       "REQUIRES" : [ "rules", "og" ],
-      "ON" : { "og_user_insert" : [] },
+      "ON" : { "og_user_approved" : [] },
       "IF" : [
         { "data_is" : { "data" : [ "og-membership:state" ], "value" : "1" } },
         { "entity_is_of_type" : { "entity" : [ "og-membership:group" ], "type" : "node" } }
