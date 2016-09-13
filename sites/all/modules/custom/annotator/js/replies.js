@@ -299,8 +299,8 @@
       replyArea = this.addReplyArea(annotation, 0, reply.id, '');
       this.hide(replyArea);
       replyLink.addEventListener("click", (function(_this) {
-        return function() {
-          return _this.toggleVisibility(replyArea);
+        return function(event) {
+          return _this.toggleVisibility(replyArea, event);
         };
       })(this));
       if (reply.permissions == null) {
@@ -312,8 +312,8 @@
         editArea = this.addReplyArea(annotation, reply.id, reply.pid, reply.text);
         this.hide(editArea);
         edit.addEventListener("click", (function(_this) {
-          return function() {
-            return _this.toggleVisibility(editArea);
+          return function(event) {
+            return _this.toggleVisibility(editArea, event);
           };
         })(this));
         return controls.appendChild(edit);
