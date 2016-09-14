@@ -1153,22 +1153,14 @@ function lacuna_notifications_configuration_views_default_views() {
   $handler->display->display_options['relationships']['flag_content_rel']['required'] = 0;
   $handler->display->display_options['relationships']['flag_content_rel']['flag'] = 'user_notifications_flag';
   $handler->display->display_options['relationships']['flag_content_rel']['user_scope'] = 'any';
-  /* Field: Flags: Flag counter */
-  $handler->display->display_options['fields']['count']['id'] = 'count';
-  $handler->display->display_options['fields']['count']['table'] = 'flag_counts';
-  $handler->display->display_options['fields']['count']['field'] = 'count';
-  $handler->display->display_options['fields']['count']['relationship'] = 'flag_count_rel';
-  $handler->display->display_options['fields']['count']['group_type'] = 'count';
-  $handler->display->display_options['fields']['count']['label'] = '';
-  $handler->display->display_options['fields']['count']['alter']['alter_text'] = TRUE;
-  $handler->display->display_options['fields']['count']['alter']['text'] = '<i class="fa fa-bell">[count]</i>';
-  $handler->display->display_options['fields']['count']['alter']['path'] = 'recent-interactions';
-  $handler->display->display_options['fields']['count']['element_type'] = 'div';
-  $handler->display->display_options['fields']['count']['element_class'] = 'notification-badge';
-  $handler->display->display_options['fields']['count']['element_label_colon'] = FALSE;
-  $handler->display->display_options['fields']['count']['hide_empty'] = TRUE;
-  $handler->display->display_options['fields']['count']['empty_zero'] = TRUE;
-  $handler->display->display_options['fields']['count']['hide_alter_empty'] = FALSE;
+  /* Field: Flags: Flagged */
+  $handler->display->display_options['fields']['flagged']['id'] = 'flagged';
+  $handler->display->display_options['fields']['flagged']['table'] = 'flagging';
+  $handler->display->display_options['fields']['flagged']['field'] = 'flagged';
+  $handler->display->display_options['fields']['flagged']['relationship'] = 'flag_content_rel';
+  $handler->display->display_options['fields']['flagged']['group_type'] = 'count';
+  $handler->display->display_options['fields']['flagged']['label'] = '';
+  $handler->display->display_options['fields']['flagged']['element_label_colon'] = FALSE;
   /* Filter criterion: User: Current */
   $handler->display->display_options['filters']['uid_current']['id'] = 'uid_current';
   $handler->display->display_options['filters']['uid_current']['table'] = 'users';

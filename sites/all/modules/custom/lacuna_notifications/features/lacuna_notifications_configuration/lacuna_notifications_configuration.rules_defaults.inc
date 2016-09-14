@@ -182,11 +182,9 @@ function lacuna_notifications_configuration_default_rules_configuration() {
       "LABEL" : "Unflag Users After Page View",
       "PLUGIN" : "reaction rule",
       "OWNER" : "rules",
-      "REQUIRES" : [ "rules", "flag" ],
-      "ON" : { "node_view" : [] },
-      "IF" : [
-        { "text_matches" : { "text" : [ "node:title" ], "match" : "Latest Conversations" } }
-      ],
+      "REQUIRES" : [ "pathrules", "flag", "rules" ],
+      "ON" : { "init" : [] },
+      "IF" : [ { "pathrules_checkpath" : { "path" : "latest-conversations" } } ],
       "DO" : [
         { "flag_unflaguser" : {
             "flag" : "user_notifications_flag",
