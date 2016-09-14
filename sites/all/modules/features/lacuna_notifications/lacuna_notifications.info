@@ -37,6 +37,7 @@ features[variable][] = field_bundle_settings_message__log_new_content
 features[views_view][] = annotations_on_responses_view
 features[views_view][] = comments_on_responses_view
 features[views_view][] = comments_on_threads_view
+features[views_view][] = replies_to_annotations_view
 features[views_view][] = total_notifications_view
 features_exclude[dependencies][flag] = flag
 features_exclude[dependencies][context] = context
