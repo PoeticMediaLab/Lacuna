@@ -1,23 +1,22 @@
 <?php
 /**
  * @file
- * lacuna_notifications.features.menu_links.inc
+ * lacuna_notifications_configuration.features.menu_links.inc
  */
 
 /**
  * Implements hook_menu_default_menu_links().
  */
-function lacuna_notifications_menu_default_menu_links() {
+function lacuna_notifications_configuration_menu_default_menu_links() {
   $menu_links = array();
 
-  // Exported menu link: main-menu_recent-interactions:node/17.
-  $menu_links['main-menu_recent-interactions:node/17'] = array(
+  // Exported menu link: main-menu_latest-conversations:latest-conversations.
+  $menu_links['main-menu_latest-conversations:latest-conversations'] = array(
     'menu_name' => 'main-menu',
-    'link_path' => 'node/17',
-    'router_path' => 'node/%',
-    'link_title' => 'Recent Interactions',
+    'link_path' => 'latest-conversations',
+    'router_path' => 'latest-conversations',
+    'link_title' => 'Latest Conversations',
     'options' => array(
-      'identifier' => 'main-menu_recent-interactions:node/17',
       'link_badge' => array(
         'callback' => 'menu_badges_execute_view',
         'arguments' => array(
@@ -29,6 +28,7 @@ function lacuna_notifications_menu_default_menu_links() {
       'attributes' => array(
         'title' => '',
       ),
+      'identifier' => 'main-menu_latest-conversations:latest-conversations',
     ),
     'module' => 'menu',
     'hidden' => 0,
@@ -42,7 +42,7 @@ function lacuna_notifications_menu_default_menu_links() {
 
   // Translatables
   // Included for use with string extractors like potx.
-  t('Recent Interactions');
+  t('Latest Conversations');
 
   return $menu_links;
 }

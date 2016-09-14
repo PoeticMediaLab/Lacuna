@@ -1,13 +1,13 @@
 <?php
 /**
  * @file
- * lacuna_notifications.strongarm.inc
+ * lacuna_notifications_configuration.strongarm.inc
  */
 
 /**
  * Implements hook_strongarm().
  */
-function lacuna_notifications_strongarm() {
+function lacuna_notifications_configuration_strongarm() {
   $export = array();
 
   $strongarm = new stdClass();

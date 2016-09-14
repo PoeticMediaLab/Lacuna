@@ -1,14 +1,48 @@
 <?php
 /**
  * @file
- * lacuna_notifications.rules_defaults.inc
+ * lacuna_notifications_configuration.rules_defaults.inc
  */
 
 /**
  * Implements hook_default_rules_configuration().
  */
-function lacuna_notifications_default_rules_configuration() {
+function lacuna_notifications_configuration_default_rules_configuration() {
   $items = array();
+  $items['lacuna_notifications_log_new_annotation_reply_comment_'] = entity_import('rules_config', '{ "lacuna_notifications_log_new_annotation_reply_comment_" : {
+      "LABEL" : "Log New Annotation Reply (Comment)",
+      "PLUGIN" : "reaction rule",
+      "OWNER" : "rules",
+      "REQUIRES" : [ "rules", "flag", "comment" ],
+      "ON" : { "comment_insert--comment_node_annotation" : { "bundle" : "comment_node_annotation" } },
+      "IF" : [
+        { "NOT data_is" : { "data" : [ "comment:author" ], "value" : [ "comment:node:author" ] } }
+      ],
+      "DO" : [
+        { "entity_create" : {
+            "USING" : {
+              "type" : "message",
+              "param_type" : "log_new_comment",
+              "param_user" : [ "comment:author" ]
+            },
+            "PROVIDE" : { "entity_created" : { "entity_created" : "Created entity" } }
+          }
+        },
+        { "data_set" : {
+            "data" : [ "entity-created:field-message-comment" ],
+            "value" : [ "comment" ]
+          }
+        },
+        { "flag_flaguser" : {
+            "flag" : "user_notifications_flag",
+            "user" : [ "comment:node:author" ],
+            "flagging_user" : [ "comment:author" ],
+            "permission_check" : "1"
+          }
+        }
+      ]
+    }
+  }');
   $items['rules_log_new_annotation_on_response'] = entity_import('rules_config', '{ "rules_log_new_annotation_on_response" : {
       "LABEL" : "Log New Annotation on Response",
       "PLUGIN" : "reaction rule",

@@ -4,4 +4,4 @@
  * Code for the Lacuna Notifications feature.
  */
 
-include_once 'lacuna_notifications.features.inc';
+include_once 'lacuna_notifications_configuration.features.inc';

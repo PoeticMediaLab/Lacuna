@@ -1,13 +1,13 @@
 <?php
 /**
  * @file
- * lacuna_notifications.features.inc
+ * lacuna_notifications_configuration.features.inc
  */
 
 /**
  * Implements hook_ctools_plugin_api().
  */
-function lacuna_notifications_ctools_plugin_api($module = NULL, $api = NULL) {
+function lacuna_notifications_configuration_ctools_plugin_api($module = NULL, $api = NULL) {
   if ($module == "context" && $api == "context") {
     return array("version" => "3");
   }
@@ -19,14 +19,14 @@ function lacuna_notifications_ctools_plugin_api($module = NULL, $api = NULL) {
 /**
  * Implements hook_views_api().
  */
-function lacuna_notifications_views_api($module = NULL, $api = NULL) {
+function lacuna_notifications_configuration_views_api($module = NULL, $api = NULL) {
   return array("api" => "3.0");
 }
 
 /**
  * Implements hook_flag_default_flags().
  */
-function lacuna_notifications_flag_default_flags() {
+function lacuna_notifications_configuration_flag_default_flags() {
   $flags = array();
   // Exported flag: "User Notifications Flag".
   $flags['user_notifications_flag'] = array(
@@ -53,7 +53,7 @@ function lacuna_notifications_flag_default_flags() {
     'show_contextual_link' => 0,
     'show_on_profile' => 0,
     'access_uid' => '',
-    'module' => 'lacuna_notifications',
+    'module' => 'lacuna_notifications_configuration',
     'locked' => array(
       0 => 'name',
     ),
@@ -66,7 +66,7 @@ function lacuna_notifications_flag_default_flags() {
 /**
  * Implements hook_default_message_type().
  */
-function lacuna_notifications_default_message_type() {
+function lacuna_notifications_configuration_default_message_type() {
   $items = array();
   $items['log_new_comment'] = entity_import('message_type', '{
     "name" : "log_new_comment",

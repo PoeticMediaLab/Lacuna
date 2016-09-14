@@ -1,13 +1,13 @@
 <?php
 /**
  * @file
- * lacuna_notifications.views_default.inc
+ * lacuna_notifications_configuration.views_default.inc
  */
 
 /**
  * Implements hook_views_default_views().
  */
-function lacuna_notifications_views_default_views() {
+function lacuna_notifications_configuration_views_default_views() {
   $export = array();
 
   $view = new view();

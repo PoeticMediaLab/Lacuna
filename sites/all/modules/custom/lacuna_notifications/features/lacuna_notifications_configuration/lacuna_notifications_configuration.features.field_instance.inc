@@ -1,13 +1,13 @@
 <?php
 /**
  * @file
- * lacuna_notifications.features.field_instance.inc
+ * lacuna_notifications_configuration.features.field_instance.inc
  */
 
 /**
  * Implements hook_field_default_field_instances().
  */
-function lacuna_notifications_field_default_field_instances() {
+function lacuna_notifications_configuration_field_default_field_instances() {
   $field_instances = array();
 
   // Exported field_instance: 'message-log_new_comment-field_message_comment'.
