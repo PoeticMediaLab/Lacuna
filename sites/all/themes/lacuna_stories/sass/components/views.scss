@@ -482,11 +482,14 @@ body.page-latest-conversations {
   div.latest-conversations-banner {
     width: 100%;
     height: 20vh;
-    background-color: navajowhite;
+    background-image: url(../images/conversationsbanner.jpg);
+    background-size: cover;
+    background-position: center;
+    border: 4px solid #cccccc;
   }
   h2.conversations-title {
     color: #465F73;
-    font-size: 1.6em;
+    font-size: 1.9em;
     letter-spacing: -.03em;
     font-family: $lacunafont;
   }
@@ -498,36 +501,30 @@ body.page-latest-conversations {
     }
   }
   .view-annotations-on-responses-view, .view-comments-on-responses-view, .view-comments-on-threads-view, .view-replies-to-annotations-view {
-  border-bottom: 1px solid #efefef;
   padding-bottom: 30px;
+  div.view-tile {
+    border: 2.5px solid #cccccc;
+    width: 95%;
+    padding-left: 10px;
+  }
   ul.pager {
     text-align: left !important;
-  }
-  .view-content {
-    padding-left: 25px;
-    }
   }
   p.view-subject {
     margin-left: 15px;
   }
 }
+}
 
 div.conversations-view-block, div.comments-responses-block {
-  width: 50%;
+  width: 48%;
   float: left;
   clear: both;
-  div.view-replies-to-annotations-view, div.view-comments-on-responses-view {
-  }
 }
 
 div.annotations-view-block, div.comments-threads-block {
-  width: 50%;
+  width: 48%;
   float: right;
-  div.view-annotations-on-responses-view, div.view-comments-on-threads-view {
-  }
-  h2.conversations-title {
-
-  }
 }
 
 

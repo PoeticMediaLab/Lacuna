@@ -476,31 +476,5 @@ body.not-logged-in div.field-name-group-group a {
   }
 }
 
-/*remove box shadow and border around article on the "Latest Conversations" page*/
-body.latest-conversations-page {
-  article.node-page {
-    border: none;
-    box-shadow: none;
-  }
-}
 
-/*styling views blocks on Latest Conversations page*/
-body.latest-conversations-page {
-  h2.block-title {
-    font-family: "Source Sans Pro", $arial;
-    color: #94b725;
-    letter-spacing: -.03em;
-    font-weight: 400;
-    text-transform: uppercase;
-    font-size: 1.7em;
-  }
-}
 
-.view-annotations-on-responses-view, .view-comments-on-responses-view, .view-comments-on-threads-view, .view-replies-to-annotations-view {
-  ul.pager {
-    text-align: left !important;
-  }
-  .view-content {
-    padding-left: 25px;
-  }
-}
