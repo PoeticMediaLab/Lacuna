@@ -185,7 +185,6 @@ function lacuna_notifications_configuration_views_default_views() {
   $handler->display->display_options['fields']['field_annotation_text']['exclude'] = TRUE;
   $handler->display->display_options['fields']['field_annotation_text']['alter']['alter_text'] = TRUE;
   $handler->display->display_options['fields']['field_annotation_text']['alter']['max_length'] = '40';
-  $handler->display->display_options['fields']['field_annotation_text']['alter']['ellipsis'] = FALSE;
   $handler->display->display_options['fields']['field_annotation_text']['alter']['trim'] = TRUE;
   $handler->display->display_options['fields']['field_annotation_text']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['field_annotation_text']['type'] = 'text_plain';
@@ -206,7 +205,7 @@ function lacuna_notifications_configuration_views_default_views() {
   $handler->display->display_options['fields']['nothing']['table'] = 'views';
   $handler->display->display_options['fields']['nothing']['field'] = 'nothing';
   $handler->display->display_options['fields']['nothing']['label'] = '';
-  $handler->display->display_options['fields']['nothing']['alter']['text'] = '<p>On [created], [name] <a href="[path]?id=[nid]">annotated</a> <em>[title]</em>:</p><p class="view-excerpt">[field_annotation_text]...</p>';
+  $handler->display->display_options['fields']['nothing']['alter']['text'] = '<p>On [created], [name] <a href="[path]?id=[nid]">annotated</a> <em>[title]</em>:</p><p class="view-excerpt"><i class="fa fa-arrow-right" aria-hidden="true"></i>[field_annotation_text]</p>';
   $handler->display->display_options['fields']['nothing']['element_label_colon'] = FALSE;
   /* Sort criterion: Message: Timestamp */
   $handler->display->display_options['sorts']['timestamp']['id'] = 'timestamp';
@@ -429,12 +428,23 @@ function lacuna_notifications_configuration_views_default_views() {
   $handler->display->display_options['fields']['comment_body']['alter']['trim'] = TRUE;
   $handler->display->display_options['fields']['comment_body']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['comment_body']['type'] = 'text_plain';
+  /* Field: Comment: Title */
+  $handler->display->display_options['fields']['subject']['id'] = 'subject';
+  $handler->display->display_options['fields']['subject']['table'] = 'comment';
+  $handler->display->display_options['fields']['subject']['field'] = 'subject';
+  $handler->display->display_options['fields']['subject']['relationship'] = 'field_message_comment_target_id';
+  $handler->display->display_options['fields']['subject']['label'] = '';
+  $handler->display->display_options['fields']['subject']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['subject']['alter']['max_length'] = '40';
+  $handler->display->display_options['fields']['subject']['alter']['trim'] = TRUE;
+  $handler->display->display_options['fields']['subject']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['subject']['link_to_comment'] = FALSE;
   /* Field: Global: Custom text */
   $handler->display->display_options['fields']['nothing']['id'] = 'nothing';
   $handler->display->display_options['fields']['nothing']['table'] = 'views';
   $handler->display->display_options['fields']['nothing']['field'] = 'nothing';
   $handler->display->display_options['fields']['nothing']['label'] = '';
-  $handler->display->display_options['fields']['nothing']['alter']['text'] = '<p>[name] commented on <a href="[path]">[title]</a>:</p><p>[comment_body]</p>';
+  $handler->display->display_options['fields']['nothing']['alter']['text'] = '<p>[name] commented on <a href="[path]">[title]</a>:</p><p class="view-subject">Subject: [subject]<p class="view-excerpt"><i class="fa fa-arrow-right" aria-hidden="true"></i>Comment: [comment_body]</p></p>';
   $handler->display->display_options['fields']['nothing']['element_label_colon'] = FALSE;
   /* Sort criterion: Message: Timestamp */
   $handler->display->display_options['sorts']['timestamp']['id'] = 'timestamp';
@@ -717,13 +727,27 @@ function lacuna_notifications_configuration_views_default_views() {
   $handler->display->display_options['fields']['comment_body']['exclude'] = TRUE;
   $handler->display->display_options['fields']['comment_body']['alter']['max_length'] = '40';
   $handler->display->display_options['fields']['comment_body']['alter']['trim'] = TRUE;
+  $handler->display->display_options['fields']['comment_body']['element_type'] = 'span';
   $handler->display->display_options['fields']['comment_body']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['comment_body']['type'] = 'text_plain';
+  /* Field: Comment: Title */
+  $handler->display->display_options['fields']['subject']['id'] = 'subject';
+  $handler->display->display_options['fields']['subject']['table'] = 'comment';
+  $handler->display->display_options['fields']['subject']['field'] = 'subject';
+  $handler->display->display_options['fields']['subject']['relationship'] = 'field_message_comment_target_id';
+  $handler->display->display_options['fields']['subject']['label'] = '';
+  $handler->display->display_options['fields']['subject']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['subject']['alter']['max_length'] = '40';
+  $handler->display->display_options['fields']['subject']['alter']['trim'] = TRUE;
+  $handler->display->display_options['fields']['subject']['element_type'] = 'span';
+  $handler->display->display_options['fields']['subject']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['subject']['link_to_comment'] = FALSE;
   /* Field: Global: Custom text */
   $handler->display->display_options['fields']['nothing']['id'] = 'nothing';
   $handler->display->display_options['fields']['nothing']['table'] = 'views';
   $handler->display->display_options['fields']['nothing']['field'] = 'nothing';
   $handler->display->display_options['fields']['nothing']['label'] = '';
-  $handler->display->display_options['fields']['nothing']['alter']['text'] = '<p>[name] commented on <a href="[path]">[title]</a>:</p><p>[comment_body]</p>';
+  $handler->display->display_options['fields']['nothing']['alter']['text'] = '<p>[name] commented on <a href="[path]">[title]</a>:</p><p class="view-subject">Subject: [subject]</p><p class="view-excerpt"><i class="fa fa-arrow-right" aria-hidden="true"></i>Comment: [comment_body]</p>';
   $handler->display->display_options['fields']['nothing']['element_label_colon'] = FALSE;
   /* Filter criterion: Content: Type */
   $handler->display->display_options['filters']['type']['id'] = 'type';
@@ -850,7 +874,7 @@ function lacuna_notifications_configuration_views_default_views() {
   $handler->display->display_options['exposed_form']['options']['input_required'] = 0;
   $handler->display->display_options['exposed_form']['options']['text_input_required_format'] = 'filtered_html';
   $handler->display->display_options['pager']['type'] = 'mini';
-  $handler->display->display_options['pager']['options']['items_per_page'] = '10';
+  $handler->display->display_options['pager']['options']['items_per_page'] = '5';
   $handler->display->display_options['pager']['options']['offset'] = '0';
   $handler->display->display_options['pager']['options']['id'] = '0';
   $handler->display->display_options['style_plugin'] = 'default';
@@ -929,7 +953,6 @@ function lacuna_notifications_configuration_views_default_views() {
   $handler->display->display_options['fields']['comment_body']['label'] = '';
   $handler->display->display_options['fields']['comment_body']['exclude'] = TRUE;
   $handler->display->display_options['fields']['comment_body']['alter']['max_length'] = '50';
-  $handler->display->display_options['fields']['comment_body']['alter']['ellipsis'] = FALSE;
   $handler->display->display_options['fields']['comment_body']['alter']['trim'] = TRUE;
   $handler->display->display_options['fields']['comment_body']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['comment_body']['type'] = 'text_plain';
@@ -945,7 +968,7 @@ function lacuna_notifications_configuration_views_default_views() {
   $handler->display->display_options['fields']['nothing']['table'] = 'views';
   $handler->display->display_options['fields']['nothing']['field'] = 'nothing';
   $handler->display->display_options['fields']['nothing']['label'] = '';
-  $handler->display->display_options['fields']['nothing']['alter']['text'] = '<p>[name] replied to [name_1]\'s <a href="[path]">[title]</a>:</p><p>[comment_body]</p>';
+  $handler->display->display_options['fields']['nothing']['alter']['text'] = '<p>[name] replied to [name_1]\'s <a href="[path]">[title]</a>:</p><p class="view-excerpt"><i class="fa fa-arrow-right" aria-hidden="true"></i>[comment_body]</p>';
   $handler->display->display_options['fields']['nothing']['element_label_colon'] = FALSE;
   /* Sort criterion: Message: Timestamp */
   $handler->display->display_options['sorts']['timestamp']['id'] = 'timestamp';
