@@ -457,22 +457,78 @@ body.page-course-setup-add-materials {
   }
 }
 
-/*for the Recent Interactions page, which consists of the Annotations on Responses, Comments on Responses, and Comments on Threads view blocks -- Daniel*/
+/*for the Latest Conversations page, which consists of the Replies to Annotations, Annotations on Responses, Comments on Responses, and Comments on Threads view blocks -- Daniel*/
 $lacunafont: "Source Sans Pro", sans-serif, arial;
 $lacunablue: #465F73;
 $lacunagreen: #506038;
 
-.page-recent-interactions h1#page-title {
-  color: rgb(70, 95, 115);
-  font-family: $lacunafont;
-  letter-spacing: -.01em;
-  font-size: 2em;
-}
-
-.view-comments-on-responses-view {
-  .annotations-view-title, .comments-view-title, .comments-threads-view-title {
-      font-family: $lacunafont;
-      text-transform: uppercase;
-      color: $lacunagreen;
+/*remove box shadow and border around article on the "Latest Conversations" page*/
+body.latest-conversations-page {
+  article.node-page {
+    border: none;
+    box-shadow: none;
   }
 }
+
+
+body.page-latest-conversations {
+  h1#page-title {
+    color: #1588BA;
+    font-family: $lacunafont;
+    font-size: 2.2em;
+    letter-spacing: -.03em;
+    text-transform: uppercase;
+  }
+  div.latest-conversations-banner {
+    width: 100%;
+    height: 20vh;
+    background-color: navajowhite;
+  }
+  h2.conversations-title {
+    color: #465F73;
+    font-size: 1.6em;
+    letter-spacing: -.03em;
+    font-family: $lacunafont;
+  }
+  p.view-excerpt {
+    font-style: italic;
+    margin-left: 15px;
+    i {
+      margin-right: 10px;
+    }
+  }
+  .view-annotations-on-responses-view, .view-comments-on-responses-view, .view-comments-on-threads-view, .view-replies-to-annotations-view {
+  border-bottom: 1px solid #efefef;
+  padding-bottom: 30px;
+  ul.pager {
+    text-align: left !important;
+  }
+  .view-content {
+    padding-left: 25px;
+    }
+  }
+  p.view-subject {
+    margin-left: 15px;
+  }
+}
+
+div.conversations-view-block, div.comments-responses-block {
+  width: 50%;
+  float: left;
+  clear: both;
+  div.view-replies-to-annotations-view, div.view-comments-on-responses-view {
+  }
+}
+
+div.annotations-view-block, div.comments-threads-block {
+  width: 50%;
+  float: right;
+  div.view-annotations-on-responses-view, div.view-comments-on-threads-view {
+  }
+  h2.conversations-title {
+
+  }
+}
+
+
+
