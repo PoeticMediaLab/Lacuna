@@ -206,7 +206,7 @@ function lacuna_notifications_configuration_views_default_views() {
   $handler->display->display_options['fields']['nothing']['table'] = 'views';
   $handler->display->display_options['fields']['nothing']['field'] = 'nothing';
   $handler->display->display_options['fields']['nothing']['label'] = '';
-  $handler->display->display_options['fields']['nothing']['alter']['text'] = 'On [created], [name] <a href="[path]?id=[nid]">annotated</a> <em>[title]</em> ([field_annotation_text]...)';
+  $handler->display->display_options['fields']['nothing']['alter']['text'] = '<p>On [created], [name] <a href="[path]?id=[nid]">annotated</a> <em>[title]</em>:</p><p class="view-excerpt">[field_annotation_text]...</p>';
   $handler->display->display_options['fields']['nothing']['element_label_colon'] = FALSE;
   /* Sort criterion: Message: Timestamp */
   $handler->display->display_options['sorts']['timestamp']['id'] = 'timestamp';
@@ -434,7 +434,7 @@ function lacuna_notifications_configuration_views_default_views() {
   $handler->display->display_options['fields']['nothing']['table'] = 'views';
   $handler->display->display_options['fields']['nothing']['field'] = 'nothing';
   $handler->display->display_options['fields']['nothing']['label'] = '';
-  $handler->display->display_options['fields']['nothing']['alter']['text'] = '[name] commented on <a href="[path]">[title]</a> ([comment_body]...)';
+  $handler->display->display_options['fields']['nothing']['alter']['text'] = '<p>[name] commented on <a href="[path]">[title]</a>:</p><p>[comment_body]</p>';
   $handler->display->display_options['fields']['nothing']['element_label_colon'] = FALSE;
   /* Sort criterion: Message: Timestamp */
   $handler->display->display_options['sorts']['timestamp']['id'] = 'timestamp';
@@ -708,12 +708,22 @@ function lacuna_notifications_configuration_views_default_views() {
   $handler->display->display_options['fields']['path']['field'] = 'path';
   $handler->display->display_options['fields']['path']['relationship'] = 'nid';
   $handler->display->display_options['fields']['path']['exclude'] = TRUE;
+  /* Field: Comment: Comment */
+  $handler->display->display_options['fields']['comment_body']['id'] = 'comment_body';
+  $handler->display->display_options['fields']['comment_body']['table'] = 'field_data_comment_body';
+  $handler->display->display_options['fields']['comment_body']['field'] = 'comment_body';
+  $handler->display->display_options['fields']['comment_body']['relationship'] = 'field_message_comment_target_id';
+  $handler->display->display_options['fields']['comment_body']['label'] = '';
+  $handler->display->display_options['fields']['comment_body']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['comment_body']['alter']['max_length'] = '40';
+  $handler->display->display_options['fields']['comment_body']['alter']['trim'] = TRUE;
+  $handler->display->display_options['fields']['comment_body']['element_label_colon'] = FALSE;
   /* Field: Global: Custom text */
   $handler->display->display_options['fields']['nothing']['id'] = 'nothing';
   $handler->display->display_options['fields']['nothing']['table'] = 'views';
   $handler->display->display_options['fields']['nothing']['field'] = 'nothing';
   $handler->display->display_options['fields']['nothing']['label'] = '';
-  $handler->display->display_options['fields']['nothing']['alter']['text'] = '[name] commented on <a href="[path]">[title]</a>';
+  $handler->display->display_options['fields']['nothing']['alter']['text'] = '<p>[name] commented on <a href="[path]">[title]</a>:</p><p>[comment_body]</p>';
   $handler->display->display_options['fields']['nothing']['element_label_colon'] = FALSE;
   /* Filter criterion: Content: Type */
   $handler->display->display_options['filters']['type']['id'] = 'type';
@@ -935,7 +945,7 @@ function lacuna_notifications_configuration_views_default_views() {
   $handler->display->display_options['fields']['nothing']['table'] = 'views';
   $handler->display->display_options['fields']['nothing']['field'] = 'nothing';
   $handler->display->display_options['fields']['nothing']['label'] = '';
-  $handler->display->display_options['fields']['nothing']['alter']['text'] = '[name] replied to [name_1]\'s <a href="[path]">[title]</a> ([comment_body]...)';
+  $handler->display->display_options['fields']['nothing']['alter']['text'] = '<p>[name] replied to [name_1]\'s <a href="[path]">[title]</a>:</p><p>[comment_body]</p>';
   $handler->display->display_options['fields']['nothing']['element_label_colon'] = FALSE;
   /* Sort criterion: Message: Timestamp */
   $handler->display->display_options['sorts']['timestamp']['id'] = 'timestamp';
@@ -1158,7 +1168,6 @@ function lacuna_notifications_configuration_views_default_views() {
   $handler->display->display_options['fields']['flagged']['table'] = 'flagging';
   $handler->display->display_options['fields']['flagged']['field'] = 'flagged';
   $handler->display->display_options['fields']['flagged']['relationship'] = 'flag_content_rel';
-  $handler->display->display_options['fields']['flagged']['group_type'] = 'count';
   $handler->display->display_options['fields']['flagged']['label'] = '';
   $handler->display->display_options['fields']['flagged']['element_label_colon'] = FALSE;
   /* Filter criterion: User: Current */
