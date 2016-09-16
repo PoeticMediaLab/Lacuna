@@ -207,7 +207,7 @@ class Annotator.Plugin.Replies extends Annotator.Plugin
     # reply.id == 0 indicates a new reply
     replyArea = @addReplyArea(annotation, 0, reply.id, '')
     @hide(replyArea)
-    replyLink.addEventListener("click", () => @toggleVisibility(replyArea))
+    replyLink.addEventListener("click", (event) => @toggleVisibility(replyArea, event))
 
     if !reply.permissions?
       return
@@ -217,7 +217,7 @@ class Annotator.Plugin.Replies extends Annotator.Plugin
       @addClasses(edit, 'edit')
       editArea = @addReplyArea(annotation, reply.id, reply.pid, reply.text)
       @hide(editArea)
-      edit.addEventListener("click", () => @toggleVisibility(editArea))
+      edit.addEventListener("click", (event) => @toggleVisibility(editArea, event))
       controls.appendChild(edit)
 
 #     Leaving comment deletion unavailable (it works)

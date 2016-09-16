@@ -443,11 +443,11 @@ $privacy-selected: rgba(19, 149, 25, 0.74);
     > ol.annotator-reply-list {
       // Only the first list item should be scrollable this way
       overflow: auto;
+      max-height: 200px;
     }
     
     ol.annotator-reply-list {
       padding: 0px;
-      max-height: 200px;
       margin-left: 15px;
     }
     li.annotator-reply-replyarea {
