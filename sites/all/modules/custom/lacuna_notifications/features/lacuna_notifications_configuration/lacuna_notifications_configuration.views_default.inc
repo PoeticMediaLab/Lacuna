@@ -1212,6 +1212,8 @@ function lacuna_notifications_configuration_views_default_views() {
   $handler->display->display_options['fields']['flagged']['relationship'] = 'flag_content_rel';
   $handler->display->display_options['fields']['flagged']['label'] = '';
   $handler->display->display_options['fields']['flagged']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['flagged']['type'] = 'boolean';
+  $handler->display->display_options['fields']['flagged']['not'] = 0;
   /* Filter criterion: User: Current */
   $handler->display->display_options['filters']['uid_current']['id'] = 'uid_current';
   $handler->display->display_options['filters']['uid_current']['table'] = 'users';
