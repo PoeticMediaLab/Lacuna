@@ -516,16 +516,25 @@ body.page-latest-conversations {
 }
 }
 
-div.conversations-view-block, div.comments-responses-block {
+@media (min-width: 775px) {
+  div.conversations-view-block, div.comments-responses-block {
   width: 48%;
   float: left;
   clear: both;
 }
 
+
 div.annotations-view-block, div.comments-threads-block {
   width: 48%;
   float: right;
 }
+}
 
-
+/*stack the views on smaller screens*/
+@media (max-width: 774px) {
+  div.conversations-view-block, div.comments-responses-block, div.comments-threads-block, div.annotations-view-block {
+    width: 100%;
+    float: left;
+  }
+}
 
