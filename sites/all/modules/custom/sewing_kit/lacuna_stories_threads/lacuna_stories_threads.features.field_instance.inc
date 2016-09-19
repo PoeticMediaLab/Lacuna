@@ -236,7 +236,7 @@ function lacuna_stories_threads_field_default_field_instances() {
     'description' => 'Describe why these pieces are stitched together',
     'display' => array(
       'default' => array(
-        'label' => 'above',
+        'label' => 'hidden',
         'module' => 'text',
         'settings' => array(),
         'type' => 'text_default',
