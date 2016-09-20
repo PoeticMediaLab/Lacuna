@@ -34,6 +34,12 @@ function lacuna_lti_menu() {
     'type' => MENU_CALLBACK,
     'file' => 'lacuna_lti.admin.inc'
   );
+  $items['lti/landing'] = array(
+    'page callback' => 'lacuna_lti_landing',
+    'access arguments' => array('access content'),
+    'type' => MENU_CALLBACK,
+    'file' => 'lacuna_lti.pages.inc'
+  );
   $items['lti/canvas.xml'] = array(
     'page callback' => 'lacuna_lti_canvas_xml',
     'type' => MENU_CALLBACK,
@@ -85,7 +91,6 @@ function lacuna_lti_set_context($context) {
 function lacuna_lti_lti_tool_provider_launch_alter(&$launch_info, $account) {
   // Save current LTI context
   lacuna_lti_set_context($launch_info);
-  lacuna_lti_course_select();
 }
 
 // Clear LTI context
