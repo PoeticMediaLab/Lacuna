@@ -655,7 +655,7 @@
     };
 
     View.prototype.checkboxStateChange = function(id, attr, state) {
-      return $("input[name='" + id + "'").attr(attr, state);
+      return $("input[name='" + id + "']").attr(attr, state);
     };
 
     View.prototype.checkboxCheck = function(id) {
