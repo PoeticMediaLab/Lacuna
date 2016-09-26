@@ -41,7 +41,13 @@ function lacuna_lti_menu() {
     'file' => 'lacuna_lti.pages.inc'
   );
   $items['lti/canvas.xml'] = array(
-    'page callback' => 'lacuna_lti_canvas_xml',
+    'page callback' => 'lacuna_lti_canvas_admin',
+    'type' => MENU_CALLBACK,
+    'access arguments' => array('access content'),
+    'file' => 'lacuna_lti.canvas.inc',
+  );
+  $items['lti/canvas_student.xml'] = array(
+    'page callback' => 'lacuna_lti_canvas_student',
     'type' => MENU_CALLBACK,
     'access arguments' => array('access content'),
     'file' => 'lacuna_lti.canvas.inc',
