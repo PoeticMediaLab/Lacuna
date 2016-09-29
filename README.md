@@ -15,7 +15,7 @@ Features:
 
 **This is a one time setup - skip this if you already have a working Docksal environment.**  
 
-Follow [Docksal environment setup instructions](https://github.com/docksal/docksal/blob/master/docs/docksal-env-setup.md)
+Follow [Docksal environment setup instructions](https://github.com/docksal/docksal/blob/develop/docs/env-setup.md)
    
 ### Step #2: Project setup
 
@@ -23,7 +23,7 @@ Follow [Docksal environment setup instructions](https://github.com/docksal/docks
 
     ```
     git clone https://github.com/docksal/drupal7.git
-    cd docksal-drupal7
+    cd drupal7
     ```
 
 2. Initialize the site
