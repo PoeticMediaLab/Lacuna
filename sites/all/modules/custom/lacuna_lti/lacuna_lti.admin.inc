@@ -5,7 +5,6 @@
  * If course has already been created, then send them to manage the course.
  */
 function lacuna_lti_setup() {
-  header_remove('X-Frame-Options'); // Necessary for security to allow embedding
   $nid = lacuna_lti_course_select();
   $wrapper = entity_metadata_wrapper('node', $nid);
   $field_info = field_info_instances('node', 'course');

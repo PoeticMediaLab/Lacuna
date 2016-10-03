@@ -5,6 +5,8 @@
  * Strips out all header/footer/menus
  * Meant to be integrated in an iFrame within the LMS
  */
+header_remove('X-Frame-Options'); // Necessary for security to allow embedding
+
 ?>
 
 <div id="page">
