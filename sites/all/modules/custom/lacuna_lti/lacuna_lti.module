@@ -97,6 +97,7 @@ function lacuna_lti_set_context($context) {
 function lacuna_lti_lti_tool_provider_launch_alter(&$launch_info, $account) {
   // Save current LTI context
   lacuna_lti_set_context($launch_info);
+  header_remove('X-Frame-Options');
 }
 
 // Clear LTI context
