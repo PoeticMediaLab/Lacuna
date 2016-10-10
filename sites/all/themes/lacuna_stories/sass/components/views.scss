@@ -41,10 +41,11 @@ div.view {
   }
   .chosen-container {
     max-width: 60% !important;
+    width: 200px !important;
   }
   .views-exposed-form {
     label {
-      width: 15%;
+      width: 16%;
     }
   }
   td.views-field-views-bulk-operations .form-type-radio {
@@ -67,9 +68,9 @@ div#block-views-stitchings-block-1,
 div.view-stitchings {
   margin-left: 5%;
   margin-right: 5%;
-  .fieldset-wrapper {
+  /*.fieldset-wrapper {
     text-align: center;
-  }
+  }*/
   th.views-field-views-bulk-operations {
     div.form-type-checkbox {
       margin-left: 0em !important;
@@ -81,10 +82,36 @@ div.view-stitchings {
   }
   fieldset#edit-select {
     border: none;
+    margin-left: 5em;
     input[id^='edit-actionsewing-kit-remove'] {
       width: auto;
-      height: 50px;
-      font-size: 14pt;
+      height: 35px;
+      font-size: 10pt;
+      position: relative;
+      top: 25px;
+      left: -45.2%;
+    }
+  }
+  td.views-field-views-bulk-operations {
+    min-width: 50px;
+    input.vbo-select.form-checkbox {
+      display: block;
+      float: right;
+      margin-right: 40%;
+      position: relative;
+      top: -50%;
+      -webkit-transform: translateY(50%);
+      -o-transform: translateY(50%);
+      -moz-transform: translateY(50%);
+      -ms-transform: translateY(50%);
+      transform: translateY(50%);
+    }
+    div.handle {
+      margin: 0;
+      position: relative;
+    }
+    div.form-item.form-type-checkbox {
+      float: right;
     }
   }
 }
@@ -95,6 +122,7 @@ div.view-stitchings {
     text-align: center;
   }
 }
+
 
 /* Center the "Select all" options */
 .vbo-fieldset-select-all {
@@ -131,12 +159,9 @@ div.views-row-last span.views-field-field-image div.topic_image  {
   clear: both;
   width: 100%;
 }
-/*.views-exposed-form .views-exposed-widget.views-reset-button {
-  margin-top: 10px;
-  padding-top:0px;
-}*/
+
 .views-exposed-form .views-exposed-widget label {
-  min-width: 160px;
+  min-width: 180px;
 }
 
 /* View-specific theming, for Materials, Responses, Threads */
@@ -296,6 +321,9 @@ table.views-table {
     padding: 1em .75em 0em;
     font-size: 14px;
   }
+  th.views-field-name {
+    width: 7%;
+  }
   th.views-field-text,
   th.views-field-quote {
       width: 10% !important;
@@ -304,6 +332,8 @@ table.views-table {
   th.views-field-views-bulk-operations,
   th.views-field-nothing {
     width: 1% !important;
+    text-align: right;
+    padding-right: 0.5em;
     padding-left: 1.5em;
   }
   th.active {

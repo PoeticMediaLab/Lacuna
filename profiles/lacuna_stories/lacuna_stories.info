@@ -145,5 +145,6 @@ dependencies[] = lacuna_stories_page_turner
 dependencies[] = lacuna_stories_peer_groups
 dependencies[] = lacuna_stories_people
 dependencies[] = lacuna_stories_tags
+dependencies[] = lacuna_performance
 
 

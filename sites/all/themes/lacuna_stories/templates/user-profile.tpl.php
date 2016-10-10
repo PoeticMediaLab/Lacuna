@@ -36,7 +36,7 @@
 				<p class="title">Responses</p>
         <?php
           print views_embed_view('responses_by_user', 'block');
-          $responsesEmpty = empty(views_get_view_result('responses_by_user', 'block'));
+          $responsesEmpty = !views_get_view_result('responses_by_user', 'block');
         ?>
 			</div>
 			<div class="field-wrapper">
@@ -47,7 +47,7 @@
         <p class="title">Annotations</p>
         <?php
           print views_embed_view('annotations_by_user', 'block');
-          $annotationsEmpty = empty(views_get_view_result('annotations_by_user', 'block'));
+          $annotationsEmpty = !views_get_view_result('annotations_by_user', 'block');
         ?>
       </div>
 		</div>

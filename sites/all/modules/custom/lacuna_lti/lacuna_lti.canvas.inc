@@ -1,9 +1,17 @@
 <?php
 
+function lacuna_lti_canvas_admin() {
+  lacuna_lti_canvas_xml('admin');
+}
+
+function lacuna_lti_canvas_student() {
+  lacuna_lti_canvas_xml('student');
+}
+
 /***
  * Generate XML to configure Lacuna as an app for Canvas
  */
-function lacuna_lti_canvas_xml() {
+function lacuna_lti_canvas_xml($menu_choice) {
   global $base_url;
   /* create a dom document with encoding utf8 */
   $domtree = new DOMDocument('1.0', 'UTF-8');
@@ -29,18 +37,23 @@ function lacuna_lti_canvas_xml() {
   $attr->value = "canvas.instructure.com";
   $xmlRoot->appendChild($extensions);
   $extensions->appendChild($attr);
-  $extension_settings = lacuna_lti_canvas_xml_lticm_values($iconUrl);
+  if ($menu_choice == 'admin') {
+    $extension_settings = lacuna_lti_canvas_xml_admin_values($iconUrl);
+  } elseif ($menu_choice == 'student') {
+    $extension_settings = lacuna_lti_canvas_xml_student_values($iconUrl);
+  }
   foreach ($extension_settings as $key => $value) {
     if (!is_array($value)) {
       lacuna_lti_canvas_xml_add_property($domtree, $extensions, $key, $value);
     } else {
-      foreach ($value as $opt_key => $opt_val) {
+      foreach ($value as $values) {
         $options = $domtree->createElement('lticm:options');
         $attr = $domtree->createAttribute('name');
-        $attr->value = $key;
+        $attr->value = $values['name'];
+        unset($values['name']);
         $options->appendChild($attr);
         $extensions->appendChild($options);
-        lacuna_lti_canvas_xml_add_property($domtree, $options, $opt_key, $opt_val);
+        lacuna_lti_canvas_xml_add_property($domtree, $options, $attr->value, $values);
       }
     }
   }
@@ -104,28 +117,50 @@ function lacuna_lti_canvas_xml_namespaces($domtree, $xmlRoot) {
  * @return array
  * Provides the property names, values, and options for Canvas configuration
  */
-function lacuna_lti_canvas_xml_lticm_values($iconUrl) {
+function lacuna_lti_canvas_xml_admin_values($iconUrl) {
   global $base_url;
   return array(
     'tool_id' => 'lacuna',
     'icon_url' => $iconUrl,
-    'privacy_level' => 'public',
+    'privacy_level' => 'admins',
     'options' => array(
-      'resource_selection' => array(
+      array(
+        'name' => 'resource_selection',
         'enabled' => 'true',
         'url' => $base_url . '/lti?destination=/lti_resource_list',
         'text' => 'Add resources from Lacuna',
-        'label' => 'Search Lacuna documents',
         'selection_width' => 800,
         'selection_height' => 600,
       ),
-      'course_navigation' => array(
-        'label' => 'Lacuna Course Setup',
+      array(
+        'name' => 'course_navigation',
         'text' => 'Manage Lacuna',
         'enabled' => 'true',
         'url' => $base_url . '/lti?destination=/lti/course/setup',
-        'visibility' => 'admins'
-      )
-    )
+        'visibility' => 'admins',
+      ),
+    ),
   );
+}
+
+/***
+ * @param $iconUrl
+ * @return array
+ * Return XML settings for the optional student menu
+ */
+function lacuna_lti_canvas_xml_student_values($iconUrl) {
+  global $base_url;
+  return array(
+    'tool_id' => 'lacuna_student',
+    'icon_url' => $iconUrl,
+    'privacy_level' => 'members',
+    'options' => array(
+      array(
+        'name' => 'course_navigation',
+        'text' => 'Lacuna',
+        'enabled' => 'true',
+        'url' => $base_url . '/lti?destination=/lti/landing',
+        'visibility' => 'members',
+      )
+    ));
 }

@@ -1,0 +1,213 @@
+diff --git a/plugins/views_data_export_plugin_display_export.inc b/plugins/views_data_export_plugin_display_export.inc
+index a461566..ff8918e 100644
+--- a/plugins/views_data_export_plugin_display_export.inc
++++ b/plugins/views_data_export_plugin_display_export.inc
+@@ -62,6 +62,8 @@ class views_data_export_plugin_display_export extends views_plugin_display_feed
+   function option_definition() {
+     $options = parent::option_definition();
+     $options['use_batch'] = array('default' => 'no_batch');
++    $options['link_only'] = array('default' => 'no');
++    $options['css_class_icon'] = array('default' => '');
+     $options['items_per_page'] = array('default' => '0');
+     $options['return_path'] = array('default' => '');
+     $options['style_plugin']['default'] = 'views_data_export_csv';
+@@ -93,6 +95,18 @@ class views_data_export_plugin_display_export extends views_plugin_display_feed
+       'value' => ($this->get_option('use_batch') == 'batch' ? t('Yes') : t('No')),
+     );
+ 
++    $options['link_only'] = array(
++      'category' => 'page',
++      'title' => t('Link only'),
++      'value' => ($this->get_option('link_only') == 'yes' ? t('Yes') : t('No')),
++    );
++
++    $options['css_class_icon'] = array(
++      'category' => 'page',
++      'title' => t('CSS class'),
++      'value' => ($this->get_option('css_class_icon') ? $this->get_option('css_class_icon') : t('None')),
++    );
++
+     if (!$this->is_compatible() && $this->get_option('use_batch')) {
+       $options['use_batch']['value'] .= ' <strong>' . t('(Warning: incompatible)') . '</strong>';
+     }
+@@ -106,6 +120,24 @@ class views_data_export_plugin_display_export extends views_plugin_display_feed
+     parent::options_form($form, $form_state);
+ 
+     switch ($form_state['section']) {
++      case 'link_only':
++        $form['link_only'] = array(
++          '#type' => 'radios',
++          '#description' => t(''),
++          '#default_value' => $this->get_option('link_only'),
++          '#options' => array(
++            'yes' => t('The attach text will be displayed as a link instead of the feed icon.'),
++            'no' => t('Keeps the original feed icon.'),
++          ),
++        );
++        break;
++      case 'css_class_icon':
++        $form['css_class_icon'] = array(
++          '#type' => 'textfield',
++          '#description' => t('Extra CSS class name(s) that will be added to the icon image/link. '),
++          '#default_value' => $this->get_option('css_class_icon'),
++        );
++        break;
+       case 'use_batch':
+         $form['#title'] .= t('Batched export');
+         $form['use_batch'] = array(
+@@ -189,6 +221,12 @@ class views_data_export_plugin_display_export extends views_plugin_display_feed
+         $this->set_option('segment_size', $form_state['values']['segment_size']);
+         $this->set_option('return_path', $form_state['values']['return_path']);
+         break;
++      case 'link_only':
++        $this->set_option('link_only', $form_state['values']['link_only']);
++        break;
++      case 'css_class_icon':
++        $this->set_option('css_class_icon', $form_state['values']['css_class_icon']);
++        break;
+     }
+   }
+ 
+diff --git a/plugins/views_data_export_plugin_style_export.inc b/plugins/views_data_export_plugin_style_export.inc
+index 493796f..6c7d3ed 100644
+--- a/plugins/views_data_export_plugin_style_export.inc
++++ b/plugins/views_data_export_plugin_style_export.inc
+@@ -169,10 +169,12 @@ class views_data_export_plugin_style_export extends views_plugin_style {
+         $this->view->feed_icon = '';
+       }
+       $this->view->feed_icon .= theme($theme_pattern, array(
+-          'image_path' => $this->definition['export feed icon'],
++          'type' => $type,
+           'url' => $this->view->get_url(NULL, $path),
+           'query' => $query,
+           'text' => $this->options['attach_text'],
++          'link_only' => isset($this->display->display_options['link_only']) ? $this->display->display_options['link_only'] : '',
++          'css_class_icon' => isset($this->display->display_options['css_class_icon']) ? $this->display->display_options['css_class_icon'] : '',
+         )
+       );
+     }
+diff --git a/theme/views_data_export.theme.inc b/theme/views_data_export.theme.inc
+index 8416d96..b2c553e 100644
+--- a/theme/views_data_export.theme.inc
++++ b/theme/views_data_export.theme.inc
+@@ -41,12 +41,22 @@ function theme_views_data_export_message($var) {
+  */
+ function theme_views_data_export_feed_icon($variables) {
+   extract($variables, EXTR_SKIP);
+-  $url_options = array('html' => TRUE);
+   if ($query) {
+     $url_options['query'] = $query;
+   }
+-  $image = theme('image', array('path' => $image_path, 'alt' => $text, 'title' => $text));
+-  return l($image, $url, $url_options);
++  $url_options['attributes']['class'] = "views-data-export-$type-attach";
++  if ('yes' == $link_only) {
++    $url_options['attributes']['class'] .= "-without-icon";
++  }
++  else {
++    $url_options['attributes']['title'] = $text;
++  }
++
++  if ($css_class_icon) {
++    $url_options['attributes']['class'] .= " $css_class_icon";
++  }
++
++  return l($text, $url, $url_options);
+ }
+ 
+ /**
+diff --git a/views_data_export.css b/views_data_export.css
+new file mode 100644
+index 0000000..7d38192
+--- /dev/null
++++ b/views_data_export.css
+@@ -0,0 +1,32 @@
++.views-data-export-doc-attach,
++.views-data-export-csv-attach,
++.views-data-export-txt-attach,
++.views-data-export-xls-attach,
++.views-data-export-xml-attach {
++  width: 36px;
++  height: 14px;
++  text-indent: -1000px;
++  background-repeat: no-repeat;
++  display: inline-block;
++  outline: none;
++}
++
++.views-data-export-doc-attach {
++  background-image: url(images/doc.png);
++}
++
++.views-data-export-csv-attach {
++  background-image: url(images/csv.png);
++}
++
++.views-data-export-txt-attach {
++  background-image: url(images/txt.png);
++}
++
++.views-data-export-xls-attach {
++  background-image: url(images/xls.png);
++}
++
++.views-data-export-xml-attach {
++  background-image: url(images/xml.png);
++}
+\ No newline at end of file
+diff --git a/views_data_export.module b/views_data_export.module
+index 92d9bf2..8d7d1af 100644
+--- a/views_data_export.module
++++ b/views_data_export.module
+@@ -19,6 +19,7 @@ function views_data_export_init() {
+   // We have to include our theme preprocessors here until:
+   // http://drupal.org/node/1096770 is fixed.
+   module_load_include('inc', 'views_data_export', 'theme/views_data_export.theme');
++  drupal_add_css( drupal_get_path('module','views_data_export') . '/views_data_export.css' );
+ }
+ 
+ /**
+diff --git a/views_data_export.views.inc b/views_data_export.views.inc
+index c433c79..3625127 100644
+--- a/views_data_export.views.inc
++++ b/views_data_export.views.inc
+@@ -59,7 +59,6 @@ function views_data_export_views_plugins() {
+         'export feed type' => 'csv',
+         'export feed text' => 'CSV',
+         'export feed file' => '%view.csv',
+-        'export feed icon' => drupal_get_path('module', 'views_data_export') . '/images/csv.png',
+         'additional themes' => array(
+           'views_data_export_csv_header' => 'style',
+           'views_data_export_csv_body' => 'style',
+@@ -75,7 +74,6 @@ function views_data_export_views_plugins() {
+         'export feed type' => 'doc',
+         'export feed text' => 'Word Document',
+         'export feed file' => '%view.doc',
+-        'export feed icon' => drupal_get_path('module', 'views_data_export') . '/images/doc.png',
+         'additional themes' => array(
+           'views_data_export_doc_header' => 'style',
+           'views_data_export_doc_body' => 'style',
+@@ -91,7 +89,6 @@ function views_data_export_views_plugins() {
+         'export feed type' => 'txt',
+         'export feed text' => 'Plain Text Document',
+         'export feed file' => '%view.txt',
+-        'export feed icon' => drupal_get_path('module', 'views_data_export') . '/images/txt.png',
+         'additional themes' => array(
+           'views_data_export_txt_header' => 'style',
+           'views_data_export_txt_body' => 'style',
+@@ -107,7 +104,6 @@ function views_data_export_views_plugins() {
+         'export feed type' => 'xls',
+         'export feed text' => 'XLS',
+         'export feed file' => '%view.xls',
+-        'export feed icon' => drupal_get_path('module', 'views_data_export') . '/images/xls.png',
+         'additional themes' => array(
+           'views_data_export_xls_header' => 'style',
+           'views_data_export_xls_body' => 'style',
+@@ -123,7 +119,6 @@ function views_data_export_views_plugins() {
+         'export feed type' => 'xml',
+         'export feed text' => 'XML',
+         'export feed file' => '%view.xml',
+-        'export feed icon' => drupal_get_path('module', 'views_data_export') . '/images/xml.png',
+         'additional themes' => array(
+           'views_data_export_xml_header' => 'style',
+           'views_data_export_xml_body' => 'style',

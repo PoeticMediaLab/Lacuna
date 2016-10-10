@@ -603,15 +603,11 @@ label.annotator-privacy-group {
 
 
 /* Some change in the design of Annotator */
-.annotator-editor .annotator-widget{
+.annotator-editor .annotator-widget {
   min-width: 300px;
 }
 
-.annotator-widget .annotator-listing{
-  padding: 1px;
-}
-
-.annotator-widget.annotator-listing{
+.annotator-widget .annotator-listing {
   padding: 0px 10px 0px;                                   // this adds 10px of padding to the .annotator-widget.annotator-listing box in .annotator-outer.annotator-viewer for better readability (ih, 08/15)
 }
 
