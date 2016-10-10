@@ -19,20 +19,6 @@ function lacuna_notifications_configuration_default_rules_configuration() {
         { "NOT data_is" : { "data" : [ "comment:author" ], "value" : [ "comment:node:author" ] } }
       ],
       "DO" : [
-        { "entity_create" : {
-            "USING" : {
-              "type" : "message",
-              "param_type" : "log_new_comment",
-              "param_user" : [ "comment:author" ]
-            },
-            "PROVIDE" : { "entity_created" : { "entity_created" : "Created entity" } }
-          }
-        },
-        { "data_set" : {
-            "data" : [ "entity-created:field-message-comment" ],
-            "value" : [ "comment" ]
-          }
-        },
         { "flag_flaguser" : {
             "flag" : "user_notifications_flag",
             "user" : [ "comment:node:author" ],
@@ -83,20 +69,6 @@ function lacuna_notifications_configuration_default_rules_configuration() {
         { "NOT data_is" : { "data" : [ "comment:author" ], "value" : [ "comment:node:author" ] } }
       ],
       "DO" : [
-        { "entity_create" : {
-            "USING" : {
-              "type" : "message",
-              "param_type" : "log_new_comment",
-              "param_user" : [ "comment:author" ]
-            },
-            "PROVIDE" : { "entity_created" : { "entity_created" : "Created entity" } }
-          }
-        },
-        { "data_set" : {
-            "data" : [ "entity-created:field-message-comment" ],
-            "value" : [ "comment" ]
-          }
-        },
         { "flag_flaguser" : {
             "flag" : "user_notifications_flag",
             "user" : [ "comment:node:author" ],
@@ -117,62 +89,11 @@ function lacuna_notifications_configuration_default_rules_configuration() {
         { "NOT data_is" : { "data" : [ "comment:author" ], "value" : [ "comment:node:author" ] } }
       ],
       "DO" : [
-        { "entity_create" : {
-            "USING" : {
-              "type" : "message",
-              "param_type" : "log_new_comment",
-              "param_user" : [ "comment:author" ]
-            },
-            "PROVIDE" : { "entity_created" : { "entity_created" : "Created entity" } }
-          }
-        },
-        { "data_set" : {
-            "data" : [ "entity-created:field-message-comment" ],
-            "value" : [ "comment" ]
-          }
-        },
         { "flag_flaguser" : {
             "flag" : "user_notifications_flag",
             "user" : [ "comment:node:author" ],
             "flagging_user" : [ "comment:author" ],
             "permission_check" : "1"
-          }
-        }
-      ]
-    }
-  }');
-  $items['rules_log_new_group_content'] = entity_import('rules_config', '{ "rules_log_new_group_content" : {
-      "LABEL" : "Log New Group Content",
-      "PLUGIN" : "reaction rule",
-      "OWNER" : "rules",
-      "REQUIRES" : [ "rules" ],
-      "ON" : { "node_insert" : [] },
-      "IF" : [
-        { "entity_is_of_bundle" : {
-            "entity" : [ "node" ],
-            "type" : "node",
-            "bundle" : { "value" : {
-                "annotation" : "annotation",
-                "response" : "response",
-                "thread" : "thread"
-              }
-            }
-          }
-        }
-      ],
-      "DO" : [
-        { "entity_create" : {
-            "USING" : {
-              "type" : "message",
-              "param_type" : "log_new_content",
-              "param_user" : [ "node:author" ]
-            },
-            "PROVIDE" : { "entity_created" : { "entity_created" : "Created entity" } }
-          }
-        },
-        { "data_set" : {
-            "data" : [ "entity-created:field-message-content" ],
-            "value" : [ "node" ]
           }
         }
       ]
