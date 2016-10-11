@@ -9,6 +9,7 @@ dependencies[] = entity
 dependencies[] = entityreference
 dependencies[] = features
 dependencies[] = flag
+dependencies[] = lacuna_notifications
 dependencies[] = lacuna_stories_menus
 dependencies[] = menu
 dependencies[] = menu_badges
