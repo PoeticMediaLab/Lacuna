@@ -252,7 +252,7 @@ function course_views_query_alter(&$view, &$query) {
   // Not an ideal situation. It would be better if the Course module had an API by which other modules
   // could register their views as needing course-level restrictions, then Course iterated through
   // that list to alter the queries in a more abstract way.
-  $where_node_views = array('responses', 'documents', 'threads', 'all_content', 'my_content', 'responses_by_user', 'annotations_by_user', 'peer_groups', 'lti_resource_list');
+  $where_node_views = array('responses', 'documents', 'threads', 'all_content', 'my_content', 'responses_by_user', 'annotations_by_user', 'peer_groups', 'lti_resource_list', 'annotations_on_responses_view', 'comments-on-responses-view', 'replies_to_annotations_view', 'comments_on_threads_view');
   $where_user_views = array('people', 'all_emails');
 	$gid = course_get_selected_course();
 
