@@ -577,7 +577,7 @@ function lacuna_notifications_configuration_views_default_views() {
   $handler->display->display_options['empty']['area']['table'] = 'views';
   $handler->display->display_options['empty']['area']['field'] = 'area';
   $handler->display->display_options['empty']['area']['empty'] = TRUE;
-  $handler->display->display_options['empty']['area']['content'] = 'No comments have been posted on responses in your course yet.';
+  $handler->display->display_options['empty']['area']['content'] = 'No comments have been posted on threads in your course yet.';
   $handler->display->display_options['empty']['area']['format'] = 'filtered_html';
   /* Relationship: Comment: Content */
   $handler->display->display_options['relationships']['nid']['id'] = 'nid';
@@ -699,17 +699,18 @@ function lacuna_notifications_configuration_views_default_views() {
   $export['comments_on_threads_view'] = $view;
 
   $view = new view();
-  $view->name = 'replies_to_annotations_view';
+  $view->name = 'replies_on_annotations_view';
   $view->description = '';
   $view->tag = 'default';
   $view->base_table = 'comment';
-  $view->human_name = 'Replies to Annotations View';
+  $view->human_name = 'Replies on Annotations View';
   $view->core = 7;
   $view->api_version = '3.0';
   $view->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
 
   /* Display: Master */
   $handler = $view->new_display('default', 'Master', 'default');
+  $handler->display->display_options['title'] = 'Replies on Annotations View';
   $handler->display->display_options['use_ajax'] = TRUE;
   $handler->display->display_options['use_more_always'] = FALSE;
   $handler->display->display_options['access']['type'] = 'perm';
@@ -789,35 +790,31 @@ function lacuna_notifications_configuration_views_default_views() {
   );
   $handler->display->display_options['exposed_form']['options']['input_required'] = 0;
   $handler->display->display_options['exposed_form']['options']['text_input_required_format'] = 'filtered_html';
-  $handler->display->display_options['pager']['type'] = 'mini';
+  $handler->display->display_options['pager']['type'] = 'full';
   $handler->display->display_options['pager']['options']['items_per_page'] = '5';
-  $handler->display->display_options['pager']['options']['offset'] = '0';
-  $handler->display->display_options['pager']['options']['id'] = '0';
   $handler->display->display_options['style_plugin'] = 'default';
   $handler->display->display_options['row_plugin'] = 'fields';
-  /* No results behavior: Global: Text area */
-  $handler->display->display_options['empty']['area']['id'] = 'area';
-  $handler->display->display_options['empty']['area']['table'] = 'views';
-  $handler->display->display_options['empty']['area']['field'] = 'area';
-  $handler->display->display_options['empty']['area']['empty'] = TRUE;
-  $handler->display->display_options['empty']['area']['content'] = 'No comments have been posted on responses in your course yet.';
-  $handler->display->display_options['empty']['area']['format'] = 'filtered_html';
   /* Relationship: Comment: Content */
   $handler->display->display_options['relationships']['nid']['id'] = 'nid';
   $handler->display->display_options['relationships']['nid']['table'] = 'comment';
   $handler->display->display_options['relationships']['nid']['field'] = 'nid';
   $handler->display->display_options['relationships']['nid']['required'] = TRUE;
-  /* Relationship: Content: Author */
+  /* Relationship: Comment: Author */
   $handler->display->display_options['relationships']['uid']['id'] = 'uid';
-  $handler->display->display_options['relationships']['uid']['table'] = 'node';
+  $handler->display->display_options['relationships']['uid']['table'] = 'comment';
   $handler->display->display_options['relationships']['uid']['field'] = 'uid';
-  $handler->display->display_options['relationships']['uid']['relationship'] = 'nid';
-  $handler->display->display_options['relationships']['uid']['label'] = 'content author';
+  $handler->display->display_options['relationships']['uid']['label'] = 'comment author';
+  /* Relationship: Content: Author */
+  $handler->display->display_options['relationships']['uid_1']['id'] = 'uid_1';
+  $handler->display->display_options['relationships']['uid_1']['table'] = 'node';
+  $handler->display->display_options['relationships']['uid_1']['field'] = 'uid';
+  $handler->display->display_options['relationships']['uid_1']['relationship'] = 'nid';
   /* Relationship: Entity Reference: Referenced Entity */
   $handler->display->display_options['relationships']['field_annotation_reference_target_id']['id'] = 'field_annotation_reference_target_id';
   $handler->display->display_options['relationships']['field_annotation_reference_target_id']['table'] = 'field_data_field_annotation_reference';
   $handler->display->display_options['relationships']['field_annotation_reference_target_id']['field'] = 'field_annotation_reference_target_id';
   $handler->display->display_options['relationships']['field_annotation_reference_target_id']['relationship'] = 'nid';
+  $handler->display->display_options['relationships']['field_annotation_reference_target_id']['label'] = 'Annotated content';
   /* Field: Comment: Title */
   $handler->display->display_options['fields']['subject']['id'] = 'subject';
   $handler->display->display_options['fields']['subject']['table'] = 'comment';
@@ -832,66 +829,49 @@ function lacuna_notifications_configuration_views_default_views() {
   $handler->display->display_options['fields']['name']['id'] = 'name';
   $handler->display->display_options['fields']['name']['table'] = 'comment';
   $handler->display->display_options['fields']['name']['field'] = 'name';
-  $handler->display->display_options['fields']['name']['label'] = '';
   $handler->display->display_options['fields']['name']['exclude'] = TRUE;
-  $handler->display->display_options['fields']['name']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['name']['link_to_user'] = FALSE;
   /* Field: User: Name */
   $handler->display->display_options['fields']['name_1']['id'] = 'name_1';
   $handler->display->display_options['fields']['name_1']['table'] = 'users';
   $handler->display->display_options['fields']['name_1']['field'] = 'name';
-  $handler->display->display_options['fields']['name_1']['relationship'] = 'uid';
-  $handler->display->display_options['fields']['name_1']['label'] = '';
+  $handler->display->display_options['fields']['name_1']['relationship'] = 'uid_1';
   $handler->display->display_options['fields']['name_1']['exclude'] = TRUE;
-  $handler->display->display_options['fields']['name_1']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['name_1']['link_to_user'] = FALSE;
-  /* Field: Content: Title */
-  $handler->display->display_options['fields']['title']['id'] = 'title';
-  $handler->display->display_options['fields']['title']['table'] = 'node';
-  $handler->display->display_options['fields']['title']['field'] = 'title';
-  $handler->display->display_options['fields']['title']['relationship'] = 'nid';
-  $handler->display->display_options['fields']['title']['label'] = '';
-  $handler->display->display_options['fields']['title']['exclude'] = TRUE;
-  $handler->display->display_options['fields']['title']['element_label_colon'] = FALSE;
   /* Field: Content: Path */
   $handler->display->display_options['fields']['path']['id'] = 'path';
   $handler->display->display_options['fields']['path']['table'] = 'node';
   $handler->display->display_options['fields']['path']['field'] = 'path';
   $handler->display->display_options['fields']['path']['relationship'] = 'field_annotation_reference_target_id';
-  $handler->display->display_options['fields']['path']['label'] = '';
   $handler->display->display_options['fields']['path']['exclude'] = TRUE;
-  $handler->display->display_options['fields']['path']['element_label_colon'] = FALSE;
   /* Field: Content: Nid */
   $handler->display->display_options['fields']['nid']['id'] = 'nid';
   $handler->display->display_options['fields']['nid']['table'] = 'node';
   $handler->display->display_options['fields']['nid']['field'] = 'nid';
   $handler->display->display_options['fields']['nid']['relationship'] = 'nid';
   $handler->display->display_options['fields']['nid']['exclude'] = TRUE;
+  /* Field: Content: Title */
+  $handler->display->display_options['fields']['title']['id'] = 'title';
+  $handler->display->display_options['fields']['title']['table'] = 'node';
+  $handler->display->display_options['fields']['title']['field'] = 'title';
+  $handler->display->display_options['fields']['title']['relationship'] = 'field_annotation_reference_target_id';
+  $handler->display->display_options['fields']['title']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['title']['link_to_node'] = FALSE;
   /* Field: Comment: Comment */
   $handler->display->display_options['fields']['comment_body']['id'] = 'comment_body';
   $handler->display->display_options['fields']['comment_body']['table'] = 'field_data_comment_body';
   $handler->display->display_options['fields']['comment_body']['field'] = 'comment_body';
-  $handler->display->display_options['fields']['comment_body']['label'] = '';
   $handler->display->display_options['fields']['comment_body']['exclude'] = TRUE;
-  $handler->display->display_options['fields']['comment_body']['alter']['alter_text'] = TRUE;
-  $handler->display->display_options['fields']['comment_body']['alter']['max_length'] = '40';
-  $handler->display->display_options['fields']['comment_body']['alter']['trim'] = TRUE;
-  $handler->display->display_options['fields']['comment_body']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['comment_body']['type'] = 'text_plain';
   /* Field: Global: Custom text */
   $handler->display->display_options['fields']['nothing']['id'] = 'nothing';
   $handler->display->display_options['fields']['nothing']['table'] = 'views';
   $handler->display->display_options['fields']['nothing']['field'] = 'nothing';
   $handler->display->display_options['fields']['nothing']['label'] = '';
-  $handler->display->display_options['fields']['nothing']['alter']['text'] = '<p>[name] replied to [name_1]\'s <a href="[path]?id=[nid]">[title]</a>:</p><p class="view-excerpt"><i class="fa fa-arrow-right" aria-hidden="true"></i>[comment_body]</p>';
+  $handler->display->display_options['fields']['nothing']['alter']['text'] = '<p>[name] replied to [name_1]\'s <a href="[path]?id=[nid]>annotation</a> of <em>[title]</em>:</p><p class="view-excerpt"><i class="fa fa-arrow-right" aria-hidden="true">[comment_body]</i></p>';
   $handler->display->display_options['fields']['nothing']['element_type'] = 'div';
   $handler->display->display_options['fields']['nothing']['element_class'] = '.view-tile';
   $handler->display->display_options['fields']['nothing']['element_label_colon'] = FALSE;
-  /* Sort criterion: Comment: Post date */
-  $handler->display->display_options['sorts']['created']['id'] = 'created';
-  $handler->display->display_options['sorts']['created']['table'] = 'comment';
-  $handler->display->display_options['sorts']['created']['field'] = 'created';
-  $handler->display->display_options['sorts']['created']['order'] = 'DESC';
   /* Filter criterion: Comment: Approved */
   $handler->display->display_options['filters']['status']['id'] = 'status';
   $handler->display->display_options['filters']['status']['table'] = 'comment';
@@ -919,27 +899,26 @@ function lacuna_notifications_configuration_views_default_views() {
   $handler->display->display_options['filters']['uid_current']['id'] = 'uid_current';
   $handler->display->display_options['filters']['uid_current']['table'] = 'users';
   $handler->display->display_options['filters']['uid_current']['field'] = 'uid_current';
-  $handler->display->display_options['filters']['uid_current']['relationship'] = 'uid';
+  $handler->display->display_options['filters']['uid_current']['relationship'] = 'uid_1';
   $handler->display->display_options['filters']['uid_current']['value'] = '0';
   $handler->display->display_options['filters']['uid_current']['exposed'] = TRUE;
   $handler->display->display_options['filters']['uid_current']['expose']['operator_id'] = '';
-  $handler->display->display_options['filters']['uid_current']['expose']['label'] = 'Limit to My Annotations';
+  $handler->display->display_options['filters']['uid_current']['expose']['label'] = 'Limit to your annotations';
   $handler->display->display_options['filters']['uid_current']['expose']['operator'] = 'uid_current_op';
   $handler->display->display_options['filters']['uid_current']['expose']['identifier'] = 'uid_current';
-  $handler->display->display_options['filters']['uid_current']['expose']['remember'] = TRUE;
   $handler->display->display_options['filters']['uid_current']['expose']['remember_roles'] = array(
     2 => '2',
     1 => 0,
-    6 => 0,
+    5 => 0,
     3 => 0,
     4 => 0,
-    7 => 0,
-    5 => 0,
+    6 => 0,
+    8 => 0,
   );
 
   /* Display: Block */
   $handler = $view->new_display('block', 'Block', 'block');
-  $export['replies_to_annotations_view'] = $view;
+  $export['replies_on_annotations_view'] = $view;
 
   $view = new view();
   $view->name = 'total_notifications_view';
