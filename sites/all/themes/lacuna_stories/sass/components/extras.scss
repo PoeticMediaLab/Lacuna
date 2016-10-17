@@ -466,7 +466,11 @@ body.not-logged-in div.field-name-group-group a {
     margin-left: 10px;
     float: right;
     position: relative;
-    top: -30px;
+    top: 50%;
+    -webkit-transform: translateY(-50%);
+    -moz-transform: translateY(-180%);
+    -o-transform: translateY(-50%);
+    transform: translateY(-50%);
     left: 13px;
     span.link-badge.link-badge-menu_badges_execute_view {
         background: rgb(21, 136, 186) none repeat scroll 0% 0% !important;

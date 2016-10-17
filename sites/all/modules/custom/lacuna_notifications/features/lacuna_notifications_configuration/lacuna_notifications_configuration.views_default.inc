@@ -11,11 +11,11 @@ function lacuna_notifications_configuration_views_default_views() {
   $export = array();
 
   $view = new view();
-  $view->name = 'annotations_on_responses_view_2';
+  $view->name = 'annotations_on_responses_view';
   $view->description = '';
   $view->tag = 'default';
   $view->base_table = 'node';
-  $view->human_name = 'Annotations on Responses View 2';
+  $view->human_name = 'Annotations on Responses View';
   $view->core = 7;
   $view->api_version = '3.0';
   $view->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
@@ -104,6 +104,13 @@ function lacuna_notifications_configuration_views_default_views() {
   $handler->display->display_options['pager']['options']['items_per_page'] = '5';
   $handler->display->display_options['style_plugin'] = 'default';
   $handler->display->display_options['row_plugin'] = 'fields';
+  /* No results behavior: Global: Text area */
+  $handler->display->display_options['empty']['area']['id'] = 'area';
+  $handler->display->display_options['empty']['area']['table'] = 'views';
+  $handler->display->display_options['empty']['area']['field'] = 'area';
+  $handler->display->display_options['empty']['area']['empty'] = TRUE;
+  $handler->display->display_options['empty']['area']['content'] = 'There are no annotations on responses in your course yet.';
+  $handler->display->display_options['empty']['area']['format'] = 'filtered_html';
   /* Relationship: Content: Author */
   $handler->display->display_options['relationships']['uid']['id'] = 'uid';
   $handler->display->display_options['relationships']['uid']['table'] = 'node';
@@ -243,14 +250,14 @@ function lacuna_notifications_configuration_views_default_views() {
 
   /* Display: Block */
   $handler = $view->new_display('block', 'Block', 'block');
-  $export['annotations_on_responses_view_2'] = $view;
+  $export['annotations_on_responses_view'] = $view;
 
   $view = new view();
-  $view->name = 'comments_on_responses_view_2';
+  $view->name = 'comments_on_responses_view';
   $view->description = '';
   $view->tag = 'default';
   $view->base_table = 'comment';
-  $view->human_name = 'Comments on Responses View 2';
+  $view->human_name = 'Comments on Responses View';
   $view->core = 7;
   $view->api_version = '3.0';
   $view->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
@@ -466,14 +473,14 @@ function lacuna_notifications_configuration_views_default_views() {
 
   /* Display: Block */
   $handler = $view->new_display('block', 'Block', 'block');
-  $export['comments_on_responses_view_2'] = $view;
+  $export['comments_on_responses_view'] = $view;
 
   $view = new view();
-  $view->name = 'comments_on_threads_view_2';
+  $view->name = 'comments_on_threads_view';
   $view->description = '';
   $view->tag = 'default';
   $view->base_table = 'comment';
-  $view->human_name = 'Comments on Threads View 2';
+  $view->human_name = 'Comments on Threads View';
   $view->core = 7;
   $view->api_version = '3.0';
   $view->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
@@ -689,14 +696,14 @@ function lacuna_notifications_configuration_views_default_views() {
 
   /* Display: Block */
   $handler = $view->new_display('block', 'Block', 'block');
-  $export['comments_on_threads_view_2'] = $view;
+  $export['comments_on_threads_view'] = $view;
 
   $view = new view();
-  $view->name = 'replies_to_annotations_view_2';
+  $view->name = 'replies_to_annotations_view';
   $view->description = '';
   $view->tag = 'default';
   $view->base_table = 'comment';
-  $view->human_name = 'Replies to Annotations View 2';
+  $view->human_name = 'Replies to Annotations View';
   $view->core = 7;
   $view->api_version = '3.0';
   $view->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
@@ -932,7 +939,7 @@ function lacuna_notifications_configuration_views_default_views() {
 
   /* Display: Block */
   $handler = $view->new_display('block', 'Block', 'block');
-  $export['replies_to_annotations_view_2'] = $view;
+  $export['replies_to_annotations_view'] = $view;
 
   $view = new view();
   $view->name = 'total_notifications_view';
