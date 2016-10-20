@@ -3,11 +3,11 @@ Lacuna Release Notes
 
 Version 2.2
 -----------
-September XX, 2016
+October 20, 2016
 
 ### Additions
  * Added Canvas and general LTI support
- * Release notes!
+ * Release notes (it's about time)!
 
 ### Removals
  * Removed HTML Purifier, CKEditor modules
