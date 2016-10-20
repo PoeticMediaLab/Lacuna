@@ -17,7 +17,7 @@ function lacuna_stories_system_wysiwyg_default_profiles() {
     'settings' => array(
       'default' => 1,
       'user_choose' => 0,
-      'show_toggle' => 1,
+      'show_toggle' => 0,
       'add_to_summaries' => 1,
       'theme' => '',
       'language' => 'en',
@@ -40,7 +40,10 @@ function lacuna_stories_system_wysiwyg_default_profiles() {
           'Anchor' => 1,
           'Superscript' => 1,
           'Subscript' => 1,
+          'Blockquote' => 1,
+          'Source' => 1,
           'PasteFromWord' => 1,
+          'RemoveFormat' => 1,
           'Styles' => 1,
         ),
         'drupal' => array(
@@ -51,13 +54,20 @@ function lacuna_stories_system_wysiwyg_default_profiles() {
       'resize_enabled' => 1,
       'default_toolbar_grouping' => 0,
       'simple_source_formatting' => 0,
-      'acf_mode' => 0,
-      'acf_allowed_content' => '',
+      'acf_mode' => 2,
+      'acf_allowed_content' => 'img[title,alt,src,data-cke-saved-src](wysiwyg-break,drupal-content);
+video[width,height,controls,src](*);
+source[src,type];
+audio[controls,src](*);
+img[*](media-element,file-default);
+a[type,length,href,id,name];
+h1 h2 h3 h4 blockquote strong em u s i text-align block sub sup center cite q li ul ol;
+p{text-align};',
       'css_setting' => 'theme',
       'css_path' => '',
       'stylesSet' => '',
       'block_formats' => 'p,address,pre,h2,h3,h4,h5,h6,div',
-      'advanced__active_tab' => 'edit-basic',
+      'advanced__active_tab' => 'edit-output',
       'forcePasteAsPlainText' => 0,
     ),
     'rdf_mapping' => array(),
@@ -106,20 +116,21 @@ function lacuna_stories_system_wysiwyg_default_profiles() {
       'toolbarLocation' => 'top',
       'resize_enabled' => 1,
       'default_toolbar_grouping' => 0,
-      'simple_source_formatting' => 1,
+      'simple_source_formatting' => 0,
       'acf_mode' => 2,
       'acf_allowed_content' => 'img[title,alt,src,data-cke-saved-src](wysiwyg-break,drupal-content);
 video[width,height,controls,src](*);
 source[src,type];
 audio[controls,src](*);
 img[*](media-element,file-default);
-a[type,length,href];
-h1 h2 h3 p blockquote strong em u s i text-align block sub sup center;',
+a[type,length,href,id,name];
+h1 h2 h3 h4 blockquote strong em u s i text-align block sub sup center cite q li ul ol;
+p{text-align};',
       'css_setting' => 'theme',
       'css_path' => '',
       'stylesSet' => '',
       'block_formats' => 'p,address,pre,h2,h3,h4,h5,h6,div',
-      'advanced__active_tab' => 'edit-paste',
+      'advanced__active_tab' => 'edit-output',
       'forcePasteAsPlainText' => 0,
     ),
     'rdf_mapping' => array(),

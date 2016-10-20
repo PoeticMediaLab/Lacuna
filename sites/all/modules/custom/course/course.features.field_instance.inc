@@ -380,6 +380,48 @@ function course_field_default_field_instances() {
     ),
   );
 
+  // Exported field_instance: 'node-course-field_lms_id'.
+  $field_instances['node-course-field_lms_id'] = array(
+    'bundle' => 'course',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => 'If using an external LMS like Canvas, put the LTI context_id value here.',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'text',
+        'settings' => array(),
+        'type' => 'text_default',
+        'weight' => 32,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_lms_id',
+    'label' => 'LMS ID',
+    'required' => 0,
+    'settings' => array(
+      'text_processing' => 0,
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'text',
+      'settings' => array(
+        'maxlength_js' => 0,
+        'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
+        'size' => 60,
+      ),
+      'type' => 'text_textfield',
+      'weight' => 18,
+    ),
+  );
+
   // Exported field_instance: 'node-course-field_name'.
   $field_instances['node-course-field_name'] = array(
     'bundle' => 'course',
@@ -831,8 +873,10 @@ function course_field_default_field_instances() {
   t('End Date');
   t('For courses that span terms, select multiple terms. Note, selecting multiple terms does not create separate courses.');
   t('Group');
+  t('If using an external LMS like Canvas, put the LTI context_id value here.');
   t('If you have a syllabus for your course, please upload it now. <strong>You can update your syllabus at any time, and it will be visible on the Course Information page to enrolled students only.</strong>');
   t('Instructor Name:');
+  t('LMS ID');
   t('Optional - If applicable, what is the secondary cross-listed course ID (with no spaces)?');
   t('Request message');
   t('Start Date');

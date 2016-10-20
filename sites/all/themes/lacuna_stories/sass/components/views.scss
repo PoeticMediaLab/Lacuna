@@ -15,32 +15,48 @@ select#edit-thread-add {
   height: 34px;
 }
 
-/* The "Add to Thread" button for Sewing Kit */
-.view-sewing-kit {
-  fieldset.container-inline {
-    border: 0;
+/* VBO styling */
+div.view {
+  div.vbo-views-form {
+    fieldset.container-inline {
+      border: 0;
+    }
   }
   .views-widget-filter-created,
   .views-widget-filter-created_1 {
     display: none;
   }
+  /*
   .fieldset-wrapper {
     margin-left: 33%;
-  }
+  } */
   input[id^='edit-actionsewing-kit-stitch'],
-  input[id^='edit-actionviews-data-export-action-csv-export'] {
-    width: 200px;
+  input[id^='edit-actionviews-data-export-action-csv-export'],
+  input[id^='edit-actionlacuna-lti-resource-add']
+  {
+    width: auto;
     display: inline-block;
     height: 50px;
     font-size: 14pt;
   }
   .chosen-container {
     max-width: 60% !important;
+    width: 200px !important;
   }
   .views-exposed-form {
     label {
-      width: 15%;
+      width: 16%;
     }
+  }
+  td.views-field-views-bulk-operations .form-type-radio {
+    margin-left: 5px;
+    margin-right: 5px;
+  }
+}
+
+div.view-list-resource-list {
+  th.views-field-field-image {
+    width: 50px;
   }
 }
 
@@ -52,9 +68,9 @@ div#block-views-stitchings-block-1,
 div.view-stitchings {
   margin-left: 5%;
   margin-right: 5%;
-  .fieldset-wrapper {
+  /*.fieldset-wrapper {
     text-align: center;
-  }
+  }*/
   th.views-field-views-bulk-operations {
     div.form-type-checkbox {
       margin-left: 0em !important;
@@ -66,11 +82,44 @@ div.view-stitchings {
   }
   fieldset#edit-select {
     border: none;
+    margin-left: 5em;
     input[id^='edit-actionsewing-kit-remove'] {
       width: auto;
-      height: 50px;
-      font-size: 14pt;
+      height: 35px;
+      font-size: 10pt;
+      position: relative;
+      top: 25px;
+      left: -45.2%;
     }
+  }
+  td.views-field-views-bulk-operations {
+    min-width: 50px;
+    input.vbo-select.form-checkbox {
+      display: block;
+      float: right;
+      margin-right: 40%;
+      position: relative;
+      top: -50%;
+      -webkit-transform: translateY(50%);
+      -o-transform: translateY(50%);
+      -moz-transform: translateY(50%);
+      -ms-transform: translateY(50%);
+      transform: translateY(50%);
+    }
+    div.handle {
+      margin: 0;
+      position: relative;
+    }
+    div.form-item.form-type-checkbox {
+      float: right;
+    }
+  }
+}
+
+/* Centers the Add to Thread & Remove From Thread buttons*/
+.vbo-views-form .container-inline.form-wrapper {
+  .fieldset-wrapper {
+    text-align: center;
   }
 }
 
@@ -110,12 +159,9 @@ div.views-row-last span.views-field-field-image div.topic_image  {
   clear: both;
   width: 100%;
 }
-/*.views-exposed-form .views-exposed-widget.views-reset-button {
-  margin-top: 10px;
-  padding-top:0px;
-}*/
+
 .views-exposed-form .views-exposed-widget label {
-  min-width: 150px;
+  min-width: 180px;
 }
 
 /* View-specific theming, for Materials, Responses, Threads */
@@ -241,16 +287,28 @@ $views-link-hover-color: #1588BA;
     text-align: left;
   }
 }
+
+/* enables horizontal scrolling for table*/
+.view-content {
+  overflow: auto;
+} 
+
 table.views-table {
   width: 100%;
+  font-family: $base-font-family;
 }
 
 .views-table tr {
   text-align: left;
+  overflow-x: auto;
 }
 
 .view-sewing-kit,
 .view-stitchings {
+  .views-table thead {
+    border-bottom: 4px solid #bfbfbf !important;
+  }
+
   th.views-field-category,
   th.views-field-text,
   th.views-field-quote,
@@ -260,6 +318,11 @@ table.views-table {
   th {
     width: 2%;
     max-width: 5%;
+    padding: 1em .75em 0em;
+    font-size: 14px;
+  }
+  th.views-field-name {
+    width: 7%;
   }
   th.views-field-text,
   th.views-field-quote {
@@ -269,6 +332,34 @@ table.views-table {
   th.views-field-views-bulk-operations,
   th.views-field-nothing {
     width: 1% !important;
+    text-align: right;
+    padding-right: 0.5em;
+    padding-left: 1.5em;
+  }
+  th.active {
+    img {
+      margin-left: 8px;
+    }
+  }
+
+  tr.odd, tr.even {
+    border: none !important;
+  }
+  tr.odd {
+    background-color: #f8f8f8 !important;
+  }
+  td {
+    padding: 1em .75em 1em;
+    font-size: 14px;
+    line-height: normal;
+
+  }
+  td.views-field-views-bulk-operations {
+      padding-left: 1.5em;
+      padding-right: 0em;
+    }
+  td.active {
+    background-color: rgba(21,136,186,.08) !important;
   }
   td.views-field-category {
     text-align: center;

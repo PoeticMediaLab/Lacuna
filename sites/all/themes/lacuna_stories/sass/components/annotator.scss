@@ -126,6 +126,9 @@ $category-selected: rgba(22,147,165, .8);
     top: 200px;
     z-index: 1;
   }
+  #annotation-filters-wrapper h2 {
+    width: 9em !important;
+  }
 
 #annotation-filters {
     position: relative;
@@ -440,11 +443,11 @@ $privacy-selected: rgba(19, 149, 25, 0.74);
     > ol.annotator-reply-list {
       // Only the first list item should be scrollable this way
       overflow: auto;
+      max-height: 200px;
     }
     
     ol.annotator-reply-list {
       padding: 0px;
-      max-height: 200px;
       margin-left: 15px;
     }
     li.annotator-reply-replyarea {
@@ -493,19 +496,15 @@ $privacy-selected: rgba(19, 149, 25, 0.74);
 }
 
 .annotator-reply-form {
-  position: fixed;
+  position: absolute;
   display: block;
   background: rgba(250,250,250, .9);
-  width: 25%;
-  left: 25%;
-  top: 20%;
   overflow: auto;
-  z-index: 100;
+  z-index: 1000;
   padding: 10px;
   border: 1px solid black;
-  display: none;
+  width: 30%;
   .annotator-reply-text {
-    width: 30%;
     height: 50px;
   }
 
@@ -604,15 +603,11 @@ label.annotator-privacy-group {
 
 
 /* Some change in the design of Annotator */
-.annotator-editor .annotator-widget{
+.annotator-editor .annotator-widget {
   min-width: 300px;
 }
 
-.annotator-widget .annotator-listing{
-  padding: 1px;
-}
-
-.annotator-widget.annotator-listing{
+.annotator-widget .annotator-listing {
   padding: 0px 10px 0px;                                   // this adds 10px of padding to the .annotator-widget.annotator-listing box in .annotator-outer.annotator-viewer for better readability (ih, 08/15)
 }
 

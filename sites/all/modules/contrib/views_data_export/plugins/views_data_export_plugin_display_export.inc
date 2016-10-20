@@ -62,6 +62,8 @@ class views_data_export_plugin_display_export extends views_plugin_display_feed 
   function option_definition() {
     $options = parent::option_definition();
     $options['use_batch'] = array('default' => 'no_batch');
+    $options['link_only'] = array('default' => 'no');
+    $options['css_class_icon'] = array('default' => '');
     $options['items_per_page'] = array('default' => '0');
     $options['return_path'] = array('default' => '');
     $options['style_plugin']['default'] = 'views_data_export_csv';
@@ -93,6 +95,18 @@ class views_data_export_plugin_display_export extends views_plugin_display_feed 
       'value' => ($this->get_option('use_batch') == 'batch' ? t('Yes') : t('No')),
     );
 
+    $options['link_only'] = array(
+      'category' => 'page',
+      'title' => t('Link only'),
+      'value' => ($this->get_option('link_only') == 'yes' ? t('Yes') : t('No')),
+    );
+
+    $options['css_class_icon'] = array(
+      'category' => 'page',
+      'title' => t('CSS class'),
+      'value' => ($this->get_option('css_class_icon') ? $this->get_option('css_class_icon') : t('None')),
+    );
+
     if (!$this->is_compatible() && $this->get_option('use_batch')) {
       $options['use_batch']['value'] .= ' <strong>' . t('(Warning: incompatible)') . '</strong>';
     }
@@ -106,6 +120,24 @@ class views_data_export_plugin_display_export extends views_plugin_display_feed 
     parent::options_form($form, $form_state);
 
     switch ($form_state['section']) {
+      case 'link_only':
+        $form['link_only'] = array(
+          '#type' => 'radios',
+          '#description' => t(''),
+          '#default_value' => $this->get_option('link_only'),
+          '#options' => array(
+            'yes' => t('The attach text will be displayed as a link instead of the feed icon.'),
+            'no' => t('Keeps the original feed icon.'),
+          ),
+        );
+        break;
+      case 'css_class_icon':
+        $form['css_class_icon'] = array(
+          '#type' => 'textfield',
+          '#description' => t('Extra CSS class name(s) that will be added to the icon image/link. '),
+          '#default_value' => $this->get_option('css_class_icon'),
+        );
+        break;
       case 'use_batch':
         $form['#title'] .= t('Batched export');
         $form['use_batch'] = array(
@@ -188,6 +220,12 @@ class views_data_export_plugin_display_export extends views_plugin_display_feed 
         $this->set_option('use_batch', $form_state['values']['use_batch']);
         $this->set_option('segment_size', $form_state['values']['segment_size']);
         $this->set_option('return_path', $form_state['values']['return_path']);
+        break;
+      case 'link_only':
+        $this->set_option('link_only', $form_state['values']['link_only']);
+        break;
+      case 'css_class_icon':
+        $this->set_option('css_class_icon', $form_state['values']['css_class_icon']);
         break;
     }
   }
@@ -297,8 +335,11 @@ class views_data_export_plugin_display_export extends views_plugin_display_feed 
     $this->initialize_index();
     //$this->batched_execution_state->fid = $this->outputfile_create();
 
-    // Initialize the progress counter
-    $this->batched_execution_state->sandbox['max'] = db_query('SELECT COUNT(*) FROM {' . $this->index_tablename() . '}')->fetchField();
+    // Initialize the progress counter.
+    if (db_table_exists($this->index_tablename())) {
+      $this->batched_execution_state->sandbox['max'] = db_query('SELECT COUNT(*) FROM {' . $this->index_tablename() . '}')->fetchField();
+    }
+
     // Record the time we started.
     list($usec, $sec) = explode(' ', microtime());
     $this->batched_execution_state->sandbox['started'] = (float) $usec + (float) $sec;

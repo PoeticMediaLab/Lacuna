@@ -214,13 +214,17 @@ body.node-type-document {
   font-weight: 500;
   text-transform: uppercase;
   color: #1588ba;
-  letter-spacing: -.03em;
+  letter-spacing: -.01em;
   font-size: 2em;
   line-height: 1em;
   }
 }
 
 body.node-type-response #page-title {
+  display: none;
+}
+
+body.node-type-thread #page-title {
   display: none;
 }
 

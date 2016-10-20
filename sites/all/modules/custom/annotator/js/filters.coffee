@@ -489,7 +489,7 @@ class View
     return
 
   checkboxStateChange: (id, attr, state) ->
-    $("input[name='#{id}'").attr(attr, state)
+    $("input[name='#{id}']").attr(attr, state)
 
   # Some helper methods for changing checkbox state in a readable fashion
   checkboxCheck: (id) ->

@@ -98,10 +98,20 @@
       return field.style.display = "none";
     };
 
-    Replies.prototype.toggleVisibility = function(field) {
-      var ref;
+    Replies.prototype.toggleVisibility = function(field, event) {
+      var left, ref, top;
+      if (event == null) {
+        event = null;
+      }
       if (ref = this.replyClasses.hidden, indexOf.call(field.classList, ref) >= 0) {
-        return this.show(field);
+        this.show(field);
+        if (event) {
+          left = event.clientX - field.offsetWidth / 2;
+          top = event.pageY - field.offsetHeight;
+          field.style.left = left + 'px';
+          field.style.top = top + 'px';
+          return this.annotator.viewer.hide();
+        }
       } else {
         return this.hide(field);
       }
@@ -181,8 +191,8 @@
       replyArea = this.addReplyArea(annotation, 0, pid);
       this.hide(replyArea);
       span.addEventListener("click", (function(_this) {
-        return function() {
-          return _this.toggleVisibility(replyArea);
+        return function(event) {
+          return _this.toggleVisibility(replyArea, event);
         };
       })(this));
       return field.appendChild(span);
@@ -289,8 +299,8 @@
       replyArea = this.addReplyArea(annotation, 0, reply.id, '');
       this.hide(replyArea);
       replyLink.addEventListener("click", (function(_this) {
-        return function() {
-          return _this.toggleVisibility(replyArea);
+        return function(event) {
+          return _this.toggleVisibility(replyArea, event);
         };
       })(this));
       if (reply.permissions == null) {
@@ -302,8 +312,8 @@
         editArea = this.addReplyArea(annotation, reply.id, reply.pid, reply.text);
         this.hide(editArea);
         edit.addEventListener("click", (function(_this) {
-          return function() {
-            return _this.toggleVisibility(editArea);
+          return function(event) {
+            return _this.toggleVisibility(editArea, event);
           };
         })(this));
         return controls.appendChild(edit);

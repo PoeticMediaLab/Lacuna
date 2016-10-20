@@ -10,6 +10,21 @@
 function lacuna_stories_people_user_default_permissions() {
   $permissions = array();
 
+  // Exported permission: 'access avatars'.
+  $permissions['access avatars'] = array(
+    'name' => 'access avatars',
+    'roles' => array(
+      'Content Manager' => 'Content Manager',
+      'Instructor' => 'Instructor',
+      'Researcher' => 'Researcher',
+      'Site Administrator' => 'Site Administrator',
+      'Student' => 'Student',
+      'anonymous user' => 'anonymous user',
+      'authenticated user' => 'authenticated user',
+    ),
+    'module' => 'avatar_selection',
+  );
+
   // Exported permission: 'access notify'.
   $permissions['access notify'] = array(
     'name' => 'access notify',
@@ -56,6 +71,16 @@ function lacuna_stories_people_user_default_permissions() {
       'Student' => 'Student',
     ),
     'module' => 'user',
+  );
+
+  // Exported permission: 'administer avatar selection'.
+  $permissions['administer avatar selection'] = array(
+    'name' => 'administer avatar selection',
+    'roles' => array(
+      'Content Manager' => 'Content Manager',
+      'Site Administrator' => 'Site Administrator',
+    ),
+    'module' => 'avatar_selection',
   );
 
   // Exported permission: 'administer contact forms'.
@@ -189,24 +214,6 @@ function lacuna_stories_people_user_default_permissions() {
     'module' => 'field_permissions',
   );
 
-  // Exported permission: 'create field_how_i_learn'.
-  $permissions['create field_how_i_learn'] = array(
-    'name' => 'create field_how_i_learn',
-    'roles' => array(
-      'authenticated user' => 'authenticated user',
-    ),
-    'module' => 'field_permissions',
-  );
-
-  // Exported permission: 'create field_learning_goals'.
-  $permissions['create field_learning_goals'] = array(
-    'name' => 'create field_learning_goals',
-    'roles' => array(
-      'authenticated user' => 'authenticated user',
-    ),
-    'module' => 'field_permissions',
-  );
-
   // Exported permission: 'create field_major_degree'.
   $permissions['create field_major_degree'] = array(
     'name' => 'create field_major_degree',
@@ -265,24 +272,6 @@ function lacuna_stories_people_user_default_permissions() {
   // Exported permission: 'edit field_gender'.
   $permissions['edit field_gender'] = array(
     'name' => 'edit field_gender',
-    'roles' => array(
-      'Site Administrator' => 'Site Administrator',
-    ),
-    'module' => 'field_permissions',
-  );
-
-  // Exported permission: 'edit field_how_i_learn'.
-  $permissions['edit field_how_i_learn'] = array(
-    'name' => 'edit field_how_i_learn',
-    'roles' => array(
-      'Site Administrator' => 'Site Administrator',
-    ),
-    'module' => 'field_permissions',
-  );
-
-  // Exported permission: 'edit field_learning_goals'.
-  $permissions['edit field_learning_goals'] = array(
-    'name' => 'edit field_learning_goals',
     'roles' => array(
       'Site Administrator' => 'Site Administrator',
     ),
@@ -355,24 +344,6 @@ function lacuna_stories_people_user_default_permissions() {
     'module' => 'field_permissions',
   );
 
-  // Exported permission: 'edit own field_how_i_learn'.
-  $permissions['edit own field_how_i_learn'] = array(
-    'name' => 'edit own field_how_i_learn',
-    'roles' => array(
-      'authenticated user' => 'authenticated user',
-    ),
-    'module' => 'field_permissions',
-  );
-
-  // Exported permission: 'edit own field_learning_goals'.
-  $permissions['edit own field_learning_goals'] = array(
-    'name' => 'edit own field_learning_goals',
-    'roles' => array(
-      'authenticated user' => 'authenticated user',
-    ),
-    'module' => 'field_permissions',
-  );
-
   // Exported permission: 'edit own field_major_degree'.
   $permissions['edit own field_major_degree'] = array(
     'name' => 'edit own field_major_degree',
@@ -408,6 +379,21 @@ function lacuna_stories_people_user_default_permissions() {
     'module' => 'user',
   );
 
+  // Exported permission: 'upload avatar in profile'.
+  $permissions['upload avatar in profile'] = array(
+    'name' => 'upload avatar in profile',
+    'roles' => array(
+      'Content Manager' => 'Content Manager',
+      'Instructor' => 'Instructor',
+      'Researcher' => 'Researcher',
+      'Site Administrator' => 'Site Administrator',
+      'Student' => 'Student',
+      'anonymous user' => 'anonymous user',
+      'authenticated user' => 'authenticated user',
+    ),
+    'module' => 'avatar_selection',
+  );
+
   // Exported permission: 'view field_about_me'.
   $permissions['view field_about_me'] = array(
     'name' => 'view field_about_me',
@@ -441,28 +427,6 @@ function lacuna_stories_people_user_default_permissions() {
   $permissions['view field_gender'] = array(
     'name' => 'view field_gender',
     'roles' => array(
-      'Instructor' => 'Instructor',
-      'Site Administrator' => 'Site Administrator',
-    ),
-    'module' => 'field_permissions',
-  );
-
-  // Exported permission: 'view field_how_i_learn'.
-  $permissions['view field_how_i_learn'] = array(
-    'name' => 'view field_how_i_learn',
-    'roles' => array(
-      'Content Manager' => 'Content Manager',
-      'Instructor' => 'Instructor',
-      'Site Administrator' => 'Site Administrator',
-    ),
-    'module' => 'field_permissions',
-  );
-
-  // Exported permission: 'view field_learning_goals'.
-  $permissions['view field_learning_goals'] = array(
-    'name' => 'view field_learning_goals',
-    'roles' => array(
-      'Content Manager' => 'Content Manager',
       'Instructor' => 'Instructor',
       'Site Administrator' => 'Site Administrator',
     ),
@@ -534,24 +498,6 @@ function lacuna_stories_people_user_default_permissions() {
       'Instructor' => 'Instructor',
       'Site Administrator' => 'Site Administrator',
       'Student' => 'Student',
-      'authenticated user' => 'authenticated user',
-    ),
-    'module' => 'field_permissions',
-  );
-
-  // Exported permission: 'view own field_how_i_learn'.
-  $permissions['view own field_how_i_learn'] = array(
-    'name' => 'view own field_how_i_learn',
-    'roles' => array(
-      'authenticated user' => 'authenticated user',
-    ),
-    'module' => 'field_permissions',
-  );
-
-  // Exported permission: 'view own field_learning_goals'.
-  $permissions['view own field_learning_goals'] = array(
-    'name' => 'view own field_learning_goals',
-    'roles' => array(
       'authenticated user' => 'authenticated user',
     ),
     'module' => 'field_permissions',
