@@ -2,7 +2,7 @@
 
 # Docker DB connection settings.
 $databases['default']['default'] = array (
-  'database' => 'site2',
+  'database' => 'anothersite',
   'username' => 'drupal',
   'password' => '123',
   'host' => 'db',

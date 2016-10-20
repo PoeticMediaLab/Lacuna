@@ -1,14 +1,22 @@
 #!/bin/bash
+
+# Fail on errors
 set -e
 
 ## Initialize Docksal powered Drupal 7 Installation
 
-# Set to the appropriate site directory ##
-SITE_DIRECTORY='default'
-# Set to the appropriate site directory
-SITE_DOMAIN='drupal7.docksal'
-# Set to the appropriate site alias for the DB source
-#SOURCE_ALIAS='@none'
+#-------------------------- Settings --------------------------------
+
+# PROJECT_ROOT is passed from fin.
+# The following variables are configured in the '.env' file: DOCROOT, SITE_DIRECTORY, SOURCE_ALIAS and others.
+
+DOCROOT_PATH="${PROJECT_ROOT}/${DOCROOT}"
+SITEDIR_PATH="${DOCROOT_PATH}/sites/${SITE_DIRECTORY}"
+
+#-------------------------- END: Settings --------------------------------
+
+
+#-------------------------- Helper functions --------------------------------
 
 # Console colors
 red='\033[0;31m'
@@ -75,19 +83,18 @@ _copy_settings_file()
   fi
 }
 
+#-------------------------- END: Helper functions --------------------------------
+
+
+#-------------------------- Functions --------------------------------
+
 # Copy settings files
 init_settings ()
 {
-  cd "$GIT_ROOT"
+  cd $PROJECT_ROOT
 
-  # docker-compose
-  _copy_settings_file ".docksal/docksal-local-minimal.yml" "docker-compose.yml"
-  
   # Drupal
-  #_copy_settings_file "docroot/sites/example.sites.local.php" "docroot/sites/sites.local.php"
-  _copy_settings_file "docroot/sites/${SITE_DIRECTORY}/example.settings.local.php" "docroot/sites/${SITE_DIRECTORY}/settings.local.php"
-  _copy_settings_file "docroot/sites/site1/example.settings.local.php" "docroot/sites/site1/settings.local.php"
-  _copy_settings_file "docroot/sites/site2/example.settings.local.php" "docroot/sites/site2/settings.local.php"
+  _copy_settings_file "${SITEDIR_PATH}/example.settings.local.php" "${SITEDIR_PATH}/settings.local.php"
   
   # Behat
   _copy_settings_file 'tests/behat/behat.yml.dist' 'tests/behat/behat.yml'
@@ -97,15 +104,23 @@ init_settings ()
 # @param $1 site-name (domain)
 site_install ()
 {
-  cd "$GIT_ROOT/docroot"
+  cd $DOCROOT_PATH
 
-  local site_name=''
-  if [[ $1 != '' ]]; then
-    # Append site name to the argements list if provided
-    site_name="--site-name='$1'"
-  fi
   # We disable email sending here so site-install does not return an error
-  fin exec "PHP_OPTIONS="'"-d sendmail_path=`which true`"'" drush site-install -y ${site_name}"
+  fin exec "PHP_OPTIONS="'"-d sendmail_path=`which true`"'" drush site-install -y --site-name='My Drupal 7 Site'"
+}
+
+site_install_anothersite ()
+{
+  cd $DOCROOT_PATH
+  
+  # Initialize settings
+  _copy_settings_file "sites/example.com/example.settings.local.php" "sites/example.com/settings.local.php"
+  # Create DB
+  db_create 'anothersite'
+  # Install site
+  fin exec "PHP_OPTIONS="'"-d sendmail_path=`which true`"'" drush @drupal7.anothersite site-install -y --site-name='Another Drupal 7 Site'"
+  echo -e "Open ${yellow}http://anothersite.drupal7.docksal${NC} in your browser to view site1"
 }
 
 # Create a new DB
@@ -114,9 +129,9 @@ db_create ()
 {
   echo-yellow "Creating DB ${1}..."
 
-  local database=${1}
-  local mysql_exec='mysql -h $DB_1_PORT_3306_TCP_ADDR --user=root --password=$DB_1_ENV_MYSQL_ROOT_PASSWORD -e ';
-  local query="DROP DATABASE IF EXISTS ${database}; CREATE DATABASE ${database}; GRANT ALL ON ${database}.* TO "'$DB_1_ENV_MYSQL_USER'"@'%'"
+  local database="${1}"
+  local mysql_exec="mysql -h db --user=root --password=${MYSQL_ROOT_PASSWORD} -e ";
+  local query="DROP DATABASE IF EXISTS ${database}; CREATE DATABASE ${database}; GRANT ALL ON ${database}.* TO '${MYSQL_USER}'@'%'"
 
   fin exec "${mysql_exec} \"${query}\""
 }
@@ -124,74 +139,73 @@ db_create ()
 # Import database from the source site alias
 db_import ()
 {
-  #_confirm "Do you want to import DB from ${SOURCE_ALIAS}?"
+  _confirm "Do you want to import DB from ${SOURCE_ALIAS}?"
 
-  cd "$GIT_ROOT/docroot"
-  fin drush -l "$SITE_DOMAIN" sql-sync "$SOURCE_ALIAS" @self -y
+  cd $DOCROOT_PATH
+  fin drush -l "${SITE_DIRECTORY}" sql-sync "${SOURCE_ALIAS}" @self -y
 }
 
 # Misc drush commands to bring DB up-to-date
 db_updates ()
 {
-  cd "$GIT_ROOT/docroot"
+  cd $DOCROOT_PATH
   echo-yellow "Applying DB updates..."
+  
   set -x
-
-  fin drush -l ${SITE_DOMAIN} status
-  fin drush -l ${SITE_DOMAIN} updb -y
-  fin drush -l ${SITE_DOMAIN} fr-all -y
-  fin drush -l ${SITE_DOMAIN} cc all
-  fin drush -l ${SITE_DOMAIN} cron -v
-
+  fin drush -l $SITE_DIRECTORY status
+  fin drush -l $SITE_DIRECTORY rr # resolve moved modules
+  fin drush -l $SITE_DIRECTORY updb -y # run necessary db updaes
+  #fin drush -l $SITE_DIRECTORY fra -y # revert features
+  fin drush -l $SITE_DIRECTORY cc all # clear caches
+  fin drush -l $SITE_DIRECTORY cron -v
   set +x
 }
 
 # Local adjustments
 local_settings ()
 {
-  cd "$GIT_ROOT"
+  cd $DOCROOT_PATH
   echo-yellow "Applying local settings..."
-  cd docroot
+
   set -x
-
-  fin drush -l ${SITE_DOMAIN} en stage_file_proxy -y
-
+  fin drush -l $SITE_DIRECTORY en "${MODULES_ENABLED}" -y
+  fin drush -l $SITE_DIRECTORY dis "${MODULES_DISABLED}" -y
   set +x
 }
 
 # Compile Sass
 compass_compile ()
 {
-  cd "$GIT_ROOT"
+  cd $PROJECT_ROOT
   echo-yellow "Compiling Sass..."
-  set -x
 
-  #cd docroot/sites/all/themes/<themename>
-  #fin exec bundle install
-  #fin exec bundle exec compass compile
-
-  set +x
+#  set -x
+#  cd ${DOCROOT_PATH}/sites/all/themes/<themename>
+#  fin exec bundle install
+#  fin exec bundle exec compass compile
+#  set +x
 }
 
 # Run basic Behat validation tests
 run_behat ()
 {
-  cd "$GIT_ROOT"
+  cd $PROJECT_ROOT
 
   echo -e "${yellow}Launching Behat validation tests...${NC}"
   cd tests/behat
-  fin behat --format=pretty --out=std --format=junit --out=junit features/drush-si-validation.feature
+  fin behat --format=pretty --out=std --format=junit --out=junit features/blackbox.feature
 }
+
+#-------------------------- END: Functions --------------------------------
+
 
 #-------------------------- Execution --------------------------------
 
-# Set repo root as working directory.
-GIT_ROOT=$(git rev-parse --show-toplevel)
-if [[ -z "$GIT_ROOT" ]]; then
+if [[ -z $PROJECT_ROOT ]]; then
 	echo-red "Git repository was not found"
 	exit 1;
 fi
-cd "$GIT_ROOT"
+cd $PROJECT_ROOT
 
 # Project initialization steps
 echo -e "${green_bg} Step 1 ${NC}${green} Initializing local project configuration...${NC}"
@@ -209,27 +223,25 @@ echo "Waiting 10s for MySQL to initialize...";
 sleep 10
 
 echo -e "${green_bg} Step 3 ${NC}${green} Installing site...${NC}"
-site_install "My Drupal 7 Site"
-
-# Uncomment line below to install site 1
-#db_create 'site1' && site_install 'drupal7-site1.docksal'
-# Uncomment line below to install site 2
-#db_create 'site2' && site_install 'drupal7-site2.docksal'
+site_install
 
 # Examples of other things that can be done.
 #db_import
-#db_updates
-#local_settings
+db_updates
+local_settings
 #compass_compile
-#run_behat
+run_behat
+# Multisite - install an additional site
+site_install_anothersite
+
 
 if is_windows; then
 	echo-green "Add ${SITE_DOMAIN} to your hosts file (/etc/hosts), e.g.:"
-	echo-green "192.168.10.10  ${SITE_DOMAIN}"
-	echo-green "Alternatively configure wildcard DNS resolution and never edit the hosts file again! Instructions:"
-	echo-green "https://github.com/blinkreaction/boot2docker-vagrant/blob/develop/docs/networking.md#dns-resolution"
+	echo-green "192.168.64.100 ${SITE_DOMAIN}"
 	echo
 fi
 
 echo -en "${green_bg} DONE! ${NC} "
 echo -e "Open ${yellow}http://${SITE_DOMAIN}${NC} in your browser to verify the setup."
+
+#-------------------------- END: Execution --------------------------------

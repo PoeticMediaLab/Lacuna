@@ -61,57 +61,30 @@ Some common tasks that can be handled by the init script:
 ## Behat test examples
 
 Behat tests are stored in [tests/behat](tests/behat).  
-Uncomment selenium service in `docker-compose.yml` and it's link in `web` service. 
 
-```yml
-# Web node
-web:
-  ...
-  links:
-    - cli
-    - browser
-...
-# selenium2 node
-# Uncomment the service definition section below and the link in the web service above to start using selenium2 driver for Behat tests requiring JS support.
-browser:
-  hostname: browser
-  image: selenium/standalone-chrome
-  ports:
-    - "4444"
-  environment:
-    - DOMAIN_NAME=docksal-drupal7.browser.docker
-```
-
-Run `fin up` to have `browser` service up and running.
-
-Then run Behat tests: 
+Example of running Behat tests: 
 
 ```
-fin behat
+fin behat features/blackbox.feature
 ```
 
 
 ## Drupal multisite example
 
-There are two additional sites configured in this project:
+There is an additional site configured in this project: `anothersite.drupal7.docksal`
 
- - drupal7-site1.docksal
- - drupal7-site2.docksal
-
-To install them 
+To have it installed during `fin int` 
 
 1. Uncomment the following block in [.docksal/commands/init](.docksal/commands/init):
 
     ```
-    # Uncomment line below to install site 1
-    db_create 'site1' && site_install 'drupal7-site1.docksal'
-    # Uncomment line below to install site 2
-    db_create 'site2' && site_install 'drupal7-site2.docksal'
+    # Multisite - install an additional site
+    site_install_anothersite
     ```
 
 2. Run `fin init` again
-3. **On Windows** add both domains to your hosts file 
+3. **On Windows** add another domain mapping to your hosts file 
 
 ```
-192.168.10.10	drupal7-site1.docksal drupal7-site2.docksal
+192.168.64.100	anothersite.drupal7.docksal
 ```
