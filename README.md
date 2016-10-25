@@ -4,7 +4,7 @@ This is a sample vanilla Drupal 7 installation pre-configured for use with Docks
 
 Features:
 
-- Vannila Drupal 7
+- Vanilla Drupal 7
 - `fin init` example
 - Drupal multisite example
 - Behat setup example and sample tests

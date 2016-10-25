@@ -3,8 +3,8 @@
 # Docker DB connection settings.
 $databases['default']['default'] = array (
   'database' => 'anothersite',
-  'username' => 'drupal',
-  'password' => '123',
+  'username' => 'user',
+  'password' => 'user',
   'host' => 'db',
   'driver' => 'mysql',
 );
