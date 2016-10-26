@@ -19,6 +19,8 @@ services:
     labels:
       - io.docksal.virtual-host=${VIRTUAL_HOST}
       - io.docksal.project-root=${PROJECT_ROOT}
+    environment:
+      - VIRTUAL_HOST=${VIRTUAL_HOST}
     depends_on:
       - cli
 
