@@ -25,6 +25,10 @@ class Annotator.Plugin.Histogram extends Annotator.Plugin
     return unless Annotator.supported()
     return unless Annotator.Plugin.Filters # Must have the annotation IDs the filters add
 
+    # Disables Histogram for single-page documents!
+    # 11/2/16 by <codymleff@gmail.com> 
+    return unless @layout.horizontal
+
     if @layout.horizontal
       # Note: horizontal uses an ID, vertical does not >:O
       d3.select('#' + @layout.container).insert('svg:svg', ':first-child')
