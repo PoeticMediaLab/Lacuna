@@ -93,7 +93,7 @@
 			links[i].data.date = nodes[links[i].source].data.date;
 		}
 	} else {
-		links = {};
+		links = [];
 	}
 
     var force = d3.layout.force(height)
