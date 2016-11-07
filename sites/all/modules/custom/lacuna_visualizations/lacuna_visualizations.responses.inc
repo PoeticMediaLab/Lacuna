@@ -110,56 +110,39 @@ function lacuna_visualizations_responses() {
       }
     }
 
-
+    /*  Creates links between a response and any bibliographic                *
+    *   references, if present.  Cleaned up and debugged by                   *
+    *   <codymleff@gmail.com> on 11/4/16.                                    */
     if ($item->type == "response") {
+      
       $dataArray['author'] = $item->name;
+      if (isset($item->field_bibliographic_item)) {
+        
+        $linkArray = $item->field_bibliographic_item[LANGUAGE_NONE];
+        for ($i = 0; $i < count($linkArray); $i++) {
 
-      // draw links based off of node's field_bibliographic_entry.
-      // this is a rewrite of the below outcommented code
-      // which essentialy changes references to $field_bibliographic_entry to $docId
-      // (NOTE: THIS DOES NOT WORK FOR RESPONSES THAT HAVE MULTIPLE BIBLIO LINKS):
+          $linkedNid = $linkArray[$i]['target_id'];
+          foreach ($nodes as $node) {
+            if ($node->nid == $linkedNid) {
+            
+              $linkedNode = $node;
+              break;
 
-      if (isset($item->field_bibliographic_item)) {// !empty($docId)) {   //OKAY NEVER MIND: FIELD_BIBLIOGRAPHIC_ITEM, NOT FIELD_BIBLIOGRAPHIC_ENTRY
-        $linkArray = $item->field_bibliographic_item;// $docId;
-
-        // not sure what this does...
-        for ($i = 0; $i < count($linkArray[LANGUAGE_NONE]); $i++) {
-          $linkedNid = $linkArray[LANGUAGE_NONE][$i]['target_id'];
-
-          if (array_key_exists($linkedNid, $nodes)) {
-            graphapi_add_link($graph, $item->nid, $linkedNid);                                // added this
-            $linkedNid_title = '';
-            foreach($nodes as $node) {
-              if ($node->type == 'document') {
-                if ($node->nid == $linkedNid) {
-                  $linkedNid_title = $node->title;                                           // sets title
-                }
-              }
             }
-            // array_push($dataArray['linksTitles'], $nodes[$linkedNid]->title);              // original of below
-            array_push($dataArray['linksTitles'], $linkedNid_title);                 // changed $linkedNid to $item->nid
-            array_push($dataArray['linksURL'], $GLOBALS['base_url'] . '/node/' . $linkedNid);
-            graphapi_set_link_data($graph, $title, $nodes[$linkedNid]->title, $item->created);
           }
-        }
-      } // end if($item->field_bibliographic_item)
 
-      /*
-      if (isset($item->field_bibliographic_entry)) {
-        $linkArray = $item->field_bibliographic_entry;
-        for ($i = 0; $i < count($linkArray[LANGUAGE_NONE]); $i++) {
-          $linkedNid = $linkArray[LANGUAGE_NONE][$i]['target_id'];
-          if (array_key_exists($linkedNid, $nodes)) {
-            // graphapi_add_link($graph, $title, $nodes[$linkedNid]->title);
-            array_push($dataArray['linksTitles'], $nodes[$linkedNid]->title);
-            array_push($dataArray['linksURL'], $GLOBALS['base_url'] . '/node/' . $linkedNid);
-          	graphapi_set_link_data($graph, $title, $nodes[$linkedNid]->title, $item->created);
-          }
+          graphapi_add_link($graph, $item->title, $linkedNode->title);
+          graphapi_set_link_data($graph, $item->title, $linkedNode->title, $item->created);
+
+          array_push($dataArray['linksTitles'], $linkedNode->title);
+          array_push($dataArray['linksURL'], $GLOBALS['base_url'] . '/node/' . $linkedNid);
+        
         }
-      } // end if($item->field_bibliographic_item)
-      */
-    }	// end if($item->type == "response")
-    graphapi_set_node_data($graph, $title, $dataArray);
+      }
+    }
+
+    graphapi_set_node_data($graph, $item->title, $dataArray);
+
   }
 
   $usersQuery = new EntityFieldQuery();
