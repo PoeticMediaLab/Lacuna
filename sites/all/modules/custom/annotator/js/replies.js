@@ -218,7 +218,11 @@
 
     Replies.prototype.initReplies = function(field, annotation) {
       var n_replies, replies, replies_text, span;
-      n_replies = Object.keys(annotation.comments).length;
+      if (annotation.comments == null) {
+        n_replies = Object.keys(annotation.comments).length;
+      } else {
+        n_replies = 0;
+      }
       replies_text = "Replies";
       if (n_replies === 1) {
         replies_text = "Reply";
