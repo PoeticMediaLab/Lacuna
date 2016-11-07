@@ -607,8 +607,9 @@ label.annotator-privacy-group {
   min-width: 300px;
 }
 
-.annotator-widget .annotator-listing {
-  padding: 0px 10px 0px;                                   // this adds 10px of padding to the .annotator-widget.annotator-listing box in .annotator-outer.annotator-viewer for better readability (ih, 08/15)
+//  Updated to select only the viewer, by CML on 11/2/16.
+.annotator-viewer .annotator-widget {
+  padding: 0 10px;
 }
 
 /* Fix to show icons */
@@ -638,6 +639,13 @@ label.annotator-privacy-group {
 .annotator-editor .annotator-widget .annotator-listing .annotator-item {
   line-height: 2.5em;
   color: #1588ba;
+}
+
+
+//  Added to prevent the privacy group buttons from wrapping in WebKit, by CML on 11/2/16.
+.annotator-editor .annotator-privacy {
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .annotator-notice,
