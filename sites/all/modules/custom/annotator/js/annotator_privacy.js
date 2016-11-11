@@ -5,6 +5,7 @@
       if ($.isFunction($(document).on)) { // workaround for /admin using jquery 1.5.1 (otherwise, f() does not exist error)
         // need to use .on for future DOM elements, 1.5.1 has .delegate
         $(document).on( "click", "form.annotator-widget .annotator-privacy-types .annotator-privacy-type", function(e) {
+          if ($(this).hasClass("checked")) return;
           $(this).toggleClass("checked");
           if ("Peer-Groups" == $(this).attr("id")) {
             $(".annotator-widget .annotator-privacy-groups").toggleClass("show-groups");
