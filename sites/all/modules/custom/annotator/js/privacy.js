@@ -93,7 +93,7 @@
     };
 
     Privacy.prototype.savePrivacy = function(Editor, annotation) {
-      var audience, peer_groups;
+      var audience, group, no_peer_groups_selected, peer_groups;
       annotation.privacy_options = {};
       peer_groups = {};
       audience = {};
@@ -119,6 +119,22 @@
           });
         };
       })(this));
+      console.log(audience, peer_groups);
+      if (audience['peer-groups']) {
+        no_peer_groups_selected = true;
+        for (group in peer_groups) {
+          if (peer_groups[group].selected) {
+            no_peer_groups_selected = false;
+            break;
+          }
+        }
+        if (no_peer_groups_selected) {
+          audience['peer-groups'] = 0;
+          if (!audience['instructor']) {
+            audience['private'] = 1;
+          }
+        }
+      }
       annotation.privacy_options.audience = audience;
       return annotation.privacy_options.groups = {
         peer_groups: peer_groups

@@ -83,6 +83,21 @@ class Annotator.Plugin.Privacy extends Annotator.Plugin
         group_name = parent[0].textContent
         peer_groups[gid] = 0: group_name, selected: checked
 
+    # Added by <codymleff@gmail.com> on 11/14/16 to prevent setting
+    # Peer-Groups as the audience without having any peer groups
+    # selected.
+    console.log(audience, peer_groups)
+    if audience['peer-groups']
+      no_peer_groups_selected = true
+      for group of peer_groups
+        if peer_groups[group].selected
+          no_peer_groups_selected = false
+          break
+      if no_peer_groups_selected
+        audience['peer-groups'] = 0
+        if not audience['instructor']
+          audience['private'] = 1
+
     annotation.privacy_options.audience = audience
     annotation.privacy_options.groups = {peer_groups: peer_groups}
 
