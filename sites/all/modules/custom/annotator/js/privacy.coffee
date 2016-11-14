@@ -49,7 +49,10 @@ class Annotator.Plugin.Privacy extends Annotator.Plugin
       checked = if settings.audience[privacy_type.toLowerCase()] then 'checked' else ''
       if "Peer-Groups" == privacy_type && "checked" == checked
         show_groups = 'show-groups'
-      privacy_html += '<span class="' + @className.types.default + ' ' + checked + '" id="' + privacy_type + '">' + privacy_type + '</span>'
+      peer_groups = settings.groups.peer_groups
+      if peer_groups.length == 0 then peer_groups_disabled = ' peer-groups-disabled'
+      else peer_groups_disabled = ''
+      privacy_html += '<span class="' + @className.types.default + ' ' + checked + peer_groups_disabled + '" id="' + privacy_type + '">' + privacy_type + '</span>'
     privacy_html += '</span>'
 
     groups = settings.groups
