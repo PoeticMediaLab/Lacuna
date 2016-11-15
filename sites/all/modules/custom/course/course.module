@@ -100,7 +100,7 @@ function course_menu() {
     'type' => MENU_NORMAL_ITEM,
     'file' => 'course.pages.inc',
   );
-  $items['course/user/autocomplete'] = array(
+  $items['peer_group/user/autocomplete'] = array(
     'page callback' => 'course_user_autocomplete',
     'page arguments' => array(3),
     'access arguments' => array('access user profiles'),
@@ -822,7 +822,10 @@ function course_form_course_node_form_alter(&$form, &$form_state, $form_id) {
 
 // Limit the list of users in a peer group to the current course's users
 function course_form_og_ui_add_users_alter(&$form, &$form_state, $form_id) {
-  $form['og_user']['name']['#autocomplete_path'] = 'course/user/autocomplete';
+  $node = entity_load_single('node', $form['gid']['#value']);
+  if ($node->type == 'peer_group') {
+    $form['og_user']['name']['#autocomplete_path'] = 'peer_group/user/autocomplete';
+  }
 }
 
 
