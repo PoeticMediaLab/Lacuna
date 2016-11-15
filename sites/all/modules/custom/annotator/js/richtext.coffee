@@ -40,6 +40,9 @@ class Annotator.Plugin.RichText extends Annotator.Plugin
       removePlugins: 'elementspath,font,resize',
       allowedContent: true,
       autoUpdateElement: true,
+
+      # Added to allow auto-embedding over HTTPS, by using our own API key.
+      embed_provider: '//iframe.ly/api/oembed?url={url}&callback={callback}&api_key=e529751634b5c7b99f5700',
       }
     )
 
