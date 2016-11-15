@@ -344,3 +344,21 @@ function course_tags_autocomplete($vocab_name, $match) {
 	}
 	drupal_json_output($matches);
 }
+
+// Provide autocomplete list of users in current course
+function course_user_autocomplete($match) {
+  $gid = course_get_selected_course();
+  $course = entity_load_single('node', $gid);
+  $uids = og_get_group_members_properties($course, array(), 'members', 'node');
+  $users = user_load_multiple($uids);
+
+  $matches = array();
+  $match = trim($match);
+  foreach ($users as $user) {
+    $name = format_username($user);
+    if (strpos($name, $match) !== FALSE) {
+      $matches[$user->name] = $name;
+    }
+  }
+  drupal_json_output($matches);
+}
