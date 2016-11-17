@@ -366,7 +366,9 @@ function annotation_api_update($id) {
   $annotation = node_load($id);
   if ($annotation != FALSE) {
     $entity = annotation_api_from_stdin();
-    if (isset($entity->reply) || annotation_access('edit', $annotation)) {
+    if (annotation_access('edit', $annotation) ||
+      (isset($entity->reply) && annotation_access('view', $annotation)))
+    {
       $annotation = annotation_drupal_format($entity, TRUE);
       node_save($annotation);
       // Send response
