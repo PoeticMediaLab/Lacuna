@@ -139,7 +139,7 @@ class Annotator.Plugin.Replies extends Annotator.Plugin
     field.appendChild(span)
 
   initReplies: (field, annotation) =>
-    if !annotation.comments?
+    if annotation.comments?
       n_replies = Object.keys(annotation.comments).length
     else
       n_replies = 0
