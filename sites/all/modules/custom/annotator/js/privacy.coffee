@@ -49,7 +49,10 @@ class Annotator.Plugin.Privacy extends Annotator.Plugin
       checked = if settings.audience[privacy_type.toLowerCase()] then 'checked' else ''
       if "Peer-Groups" == privacy_type && "checked" == checked
         show_groups = 'show-groups'
-      privacy_html += '<span class="' + @className.types.default + ' ' + checked + '" id="' + privacy_type + '">' + privacy_type + '</span>'
+      peer_groups = settings.groups.peer_groups
+      if peer_groups.length == 0 then peer_groups_disabled = ' peer-groups-disabled'
+      else peer_groups_disabled = ''
+      privacy_html += '<span class="' + @className.types.default + ' ' + checked + peer_groups_disabled + '" id="' + privacy_type + '">' + privacy_type + '</span>'
     privacy_html += '</span>'
 
     groups = settings.groups
@@ -79,6 +82,20 @@ class Annotator.Plugin.Privacy extends Annotator.Plugin
         parent = $(this).parent()
         group_name = parent[0].textContent
         peer_groups[gid] = 0: group_name, selected: checked
+
+    # Added by <codymleff@gmail.com> on 11/14/16 to prevent setting
+    # Peer-Groups as the audience without having any peer groups
+    # selected.
+    if audience['peer-groups']
+      no_peer_groups_selected = true
+      for group of peer_groups
+        if peer_groups[group].selected
+          no_peer_groups_selected = false
+          break
+      if no_peer_groups_selected
+        audience['peer-groups'] = 0
+        if not audience['instructor']
+          audience['private'] = 1
 
     annotation.privacy_options.audience = audience
     annotation.privacy_options.groups = {peer_groups: peer_groups}
