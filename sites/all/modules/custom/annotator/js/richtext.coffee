@@ -45,7 +45,7 @@ class Annotator.Plugin.RichText extends Annotator.Plugin
     # Sets custom Iframely API key, if set in
     # Configuration -> Content Authoring -> Annotator -> Richtext.
     key = Drupal.settings.annotator_richtext.iframely_api_key
-    if (key)
+    if (key?.length)
       base = '//iframe.ly/api/oembed?url={url}&callback={callback}&api_key=';
       config.embed_provider = base + key
 

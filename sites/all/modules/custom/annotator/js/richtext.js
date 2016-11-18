@@ -43,7 +43,7 @@
         autoUpdateElement: true
       };
       key = Drupal.settings.annotator_richtext.iframely_api_key;
-      if (key) {
+      if ((key != null ? key.length : void 0)) {
         base = '//iframe.ly/api/oembed?url={url}&callback={callback}&api_key=';
         config.embed_provider = base + key;
       }

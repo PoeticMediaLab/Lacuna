@@ -13,10 +13,14 @@ class RichtextAnnotatorPlugin extends AnnotatorPlugin {
   /*  Allows an admistrator to include an iframe.ly API key for
   *   automatic content embedding over SSL.  */
   public function settingsForm() {
+    $defaults = $this->settings();
+    if (!isset($defaults['iframely_api_key'])) {
+      $defaults['iframely_api_key'] = '';
+    }
     $form['iframely_api_key'] = array(
       '#type' => 'textfield',
       '#title' => t('Iframely API key'),
-      '#default_value' => parent::settings()['iframely_api_key'],
+      '#default_value' => $defaults['iframely_api_key'],
       '#description' => t("To automatically embed content when the URL is pasted into the rich text editor, Annotator uses the Iframely service.  If your installation of Lacuna uses the https:// protocol, you'll need to sign up for your own Iframely API key at <a href=\"https://iframely.com/signup\">https://iframely.com/signup</a>, then enter the key here to enable this functionality." )
     );
     return $form;
