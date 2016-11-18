@@ -86,7 +86,6 @@ class Annotator.Plugin.Privacy extends Annotator.Plugin
     # Added by <codymleff@gmail.com> on 11/14/16 to prevent setting
     # Peer-Groups as the audience without having any peer groups
     # selected.
-    console.log(audience, peer_groups)
     if audience['peer-groups']
       no_peer_groups_selected = true
       for group of peer_groups

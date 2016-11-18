@@ -119,7 +119,6 @@
           });
         };
       })(this));
-      console.log(audience, peer_groups);
       if (audience['peer-groups']) {
         no_peer_groups_selected = true;
         for (group in peer_groups) {
