@@ -365,6 +365,12 @@ $privacy-selected: rgba(19, 149, 25, 0.74);
 
 .annotator-editor .annotator-privacy-types {
   margin-left: 4px;
+
+  //  Peer-Groups disabled style
+  #Peer-Groups.peer-groups-disabled {
+    background-color: rgba(50,50,50,0.33);
+  }
+
 }
 
 .annotator-editor {
