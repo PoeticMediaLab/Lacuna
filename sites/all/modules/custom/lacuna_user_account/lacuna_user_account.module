@@ -61,33 +61,24 @@ function lacuna_user_account_form_validate($form, &$form_state) {
 function lacuna_user_account_user_access($requested_user) {
   
   global $user;
-  $logged_in_user = user_load($user->uid);
 
-  //  Returns false if the user isn't authenticated
-  if (isset($logged_in_user->roles[1])) return false;
+  //  Return false if the user isn't authenticated
+  if (!user_is_logged_in()) return false;
 
-  //  Returns true if the user is an administrator
-  if (isset($logged_in_user->roles[5])) return true;
+  //  Return true if the user has access to administer user accounts
+  if (user_access('administer users')) return true;
 
-  //  Returns true if the requested profile is the user's own
-  if ($logged_in_user->uid === $requested_user->uid) return true;
+  //  Return true if the requested profile is the user's own
+  if ($user->uid === $requested_user->uid) return true;
 
-  //  Returns true if the user shares a course with the requested profile
-  $logged_in_user_courses = $logged_in_user->og_user_node['und'];
-  $requested_user_courses = $requested_user->og_user_node['und'];
-  if (isset($logged_in_user_courses) && isset($requested_user_courses)) {
+  //  Return true if the user shares a course with the requested profile
+  $logged_in_user_courses = og_get_groups_by_user($user, 'node');
+  if ($logged_in_user_courses == NULL) return false;
+  $requested_user_courses = og_get_groups_by_user($requested_user, 'node');
+  if ($requested_user_courses == NULL) return false;
+  $shared_courses = array_intersect($logged_in_user_courses, $requested_user_courses);
+  if (count($shared_courses) > 0) return true;
 
-    foreach ($logged_in_user_courses as $logged_in_user_course) {
-
-      foreach ($requested_user_courses as $requested_user_course) {
-
-        if ($logged_in_user_course['target_id'] === $requested_user_course['target_id']) return true;
-
-      }
-    }
-  }
-
-  //  Returns false otherwise
+  //  Return false otherwise
   return false;
-
 }
