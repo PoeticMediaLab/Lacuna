@@ -22,7 +22,7 @@ Drupal.behaviors.annotator_dashboard = {
    if (window.location.pathname.indexOf('/visualization/dashboard') > -1 && window.innerWidth < 1215) {
 
     var meta_viewport = document.querySelector('head meta[name="viewport"]');
-    meta_viewport.content = "width=1215px";
+    meta_viewport.content = "width=1215";
 
    }
   }
