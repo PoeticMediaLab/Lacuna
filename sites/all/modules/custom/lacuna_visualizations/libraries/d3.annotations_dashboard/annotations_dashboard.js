@@ -831,6 +831,8 @@ function main(data) {
 		    .orient("bottom")
 		    .ticks(null)
 		    .tickFormat(function(d, i) {
+		    	/*	Displays ticks by week if there are too many to
+		    	*	clearly display.   */
 		    	if (data.length > 30) return i % 7 === 0 ? d : '';
 		    	else return d;
 		    });
