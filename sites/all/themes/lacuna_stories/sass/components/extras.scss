@@ -438,6 +438,15 @@ body.not-logged-in div.field-name-group-group {
   letter-spacing: -.01em;
 }
 
+@media only screen and (max-width: 540px) {
+
+  .toboggan-unified #login-message {
+    font-size: 1.5em;
+    margin-top: -.5em;
+  }
+
+}
+
 .toboggan-unified #register-link {
   width: auto !important;
 }

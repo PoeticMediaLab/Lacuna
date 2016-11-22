@@ -434,7 +434,7 @@
 
     }
 
-    div#content {
+    #content {
         padding-left: 25px;
         padding-right: 25px;
     }
@@ -443,7 +443,7 @@
 
 @media only screen and (max-width: 540px) {
 
-    body.page-home #content {
+    #content {
         padding: 0 10px;
     }
 
