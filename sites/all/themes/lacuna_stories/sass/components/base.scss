@@ -103,8 +103,10 @@ article.node-document {
   /*
   *   Added as part of making header menu work on smaller screens.
   */
-  padding-left: 0px;
-  text-align: center;
+  @media (max-width: 540px) {
+    padding-left: 0px;
+    text-align: center;
+  }
   
   #course-name {
     display: block;

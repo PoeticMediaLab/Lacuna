@@ -365,6 +365,35 @@ div.node-course.view-mode-full {
       border: 1px solid #d1d5d3;
       margin-top: 40px;
     }
+
+    @media (max-width: 540px) {
+
+      .group-left {
+
+        width: 100%;
+        font-size: .75em;
+
+        & > * {
+          margin-left: 0;
+          margin-right: 0;
+        }
+
+      }
+
+      .group-right {
+
+        width: 100%;
+        font-size: .85em;
+
+        & > .field.field-label-inline {
+          margin-left: 10%;
+          margin-right: 10%;
+        }
+
+      }
+
+    }
+
     .field-name-field-course-term {
       margin-left: 10%;
       margin-right: 20%;
@@ -429,6 +458,19 @@ body.not-logged-in div.field-name-group-group {
   margin-left: 30px;
   font-size: 1.5em;
   width: auto;
+}
+
+@media (max-width: 540px) {
+  a.group.subscribe,
+  a.group.unsubscribe {
+    margin: auto;
+    padding: .5em 1em;
+    font-size: 1.25em;
+    line-height: 1.25;
+    display: block;
+    position: relative;
+    top: 1em;
+  }
 }
 
 .toboggan-unified #login-message {
