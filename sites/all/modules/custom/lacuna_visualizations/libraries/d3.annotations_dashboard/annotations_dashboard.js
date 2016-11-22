@@ -826,16 +826,15 @@ function main(data) {
 				.domain(data.map(function (d) { return d.x; }))
 		    	.rangeRoundBands([size.bar.padding.left, size.bar.width - size.bar.padding.right - size.bar.padding.left], .1);
 
+			//	Create ticks
+		    var factor = (data.length > 16 ? Math.floor(data.length / 8) : 1);
+		    var ticks = [];
+		    for (var i = 0; i < data.length; i += factor) ticks.push(data[i].x);
+
 			xAxis = d3.svg.axis()
 		    .scale(bar_x)
 		    .orient("bottom")
-		    .ticks(null)
-		    .tickFormat(function(d, i) {
-		    	/*	Displays ticks by week if there are too many to
-		    	*	clearly display.   */
-		    	if (data.length > 30) return i % 7 === 0 ? d : '';
-		    	else return d;
-		    });
+		    .tickValues(ticks)
 			;
 
   		bar_chart.append("g")
