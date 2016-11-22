@@ -21,6 +21,16 @@ li.views-fluid-grid-inline.views-fluid-grid-item.views-row:hover {
 	box-shadow: 0px 0px 10px 0px black;
 }
 
+@media only screen and (max-width: 540px) {
+
+  .views-fluid-grid-item {
+    width: auto !important;
+    margin: 1em 0 !important;
+    box-shadow: none !important;
+    height: auto !important;
+  }
+
+}
 
 .views-field-field-course-image {
 		height: 175px;
@@ -273,10 +283,10 @@ body {
     text-align: center;
     margin: auto;
     position: relative;
-    top: 0;
+    top: 3.25em;
     left: 0;
-    transform: translate(0%, 90%);
-    -webkit-transform: translate(0%, 90%);
+    transform: none;
+    -webkit-transform: none;
 }
 
 .lacuna-stories-image {

@@ -11,9 +11,6 @@ body {
   background-color: $bg-color;
   line-height: 1.5em;
   box-shadow: none;
-
-  //  added min window width
-  min-width: 600px;
 }
 
 /*  Adds 5em margins to left and right of document
@@ -106,7 +103,9 @@ article.node-document {
   /*
   *   Added as part of making header menu work on smaller screens.
   */
-  padding-left: 10px;
+  padding-left: 0px;
+  text-align: center;
+  
   #course-name {
     display: block;
     // font-size: medium;
