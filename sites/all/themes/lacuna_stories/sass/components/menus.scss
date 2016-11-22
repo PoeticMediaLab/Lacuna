@@ -17,6 +17,12 @@ a.nolink {
  margin-bottom: 0px;
 }
 
+@media (max-width: 540px) {
+  #block-superfish-1 {
+    width: 100%;
+  }
+}
+
 #superfish-1, #superfish-2 {
  padding-bottom: 0px;
  margin-top: 0px;

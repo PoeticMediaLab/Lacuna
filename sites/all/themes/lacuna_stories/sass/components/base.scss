@@ -114,6 +114,12 @@ article.node-document {
     letter-spacing: .7px;
     margin-top: -4px;
     text-transform: uppercase;
+
+    @media (max-width: 540px) {
+      line-height: 1.5;
+      margin-top: .25em;
+    }
+
   }
 }
 

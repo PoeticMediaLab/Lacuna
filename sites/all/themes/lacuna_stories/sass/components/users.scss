@@ -248,7 +248,9 @@ $profile-height: 220px;
 		height: auto;
 		vertical-align: bottom;
 		text-align: left;
-
+		@media (max-width: 540px) {
+			font-size: .75em;
+		}
 	}
 
 	#user-command-buttons {
@@ -326,6 +328,12 @@ $profile-height: 220px;
 			margin: 0;
 			td {
 				text-align: center;
+				@media (max-width: 540px) {
+					display: inline-block;
+					padding: .5em;
+					width: 100%;
+					box-sizing: border-box;
+				}
 				p {
 					font-style: italic;
 				}
