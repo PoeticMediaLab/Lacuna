@@ -35,11 +35,23 @@ article.node {
   section#comments h2 {
     margin-left: 2.5em;
   }
+  @media (max-width: 540px) {
+    margin-top: 0;
+    padding-top: 0;
+  }
 }
 
 article.node-document {
   .field-type-text-long {
     min-height: 800px;
+    @media (max-width: 540px) {
+      margin-left: 1em;
+      margin-right: 1em;
+      margin-top: -.5em;
+      font-size: .8em;
+      line-height: 1.25;
+      text-align: left;
+    }
   }
 }
 
@@ -225,6 +237,46 @@ body.node-type-document {
   font-size: 2em;
   line-height: 1em;
   }
+
+  @media (max-width: 540px) {
+    
+    #page {
+
+      padding-left: 0;
+      padding-right: 1.75em;
+      padding-top: 0.25em;
+
+      #main {
+
+        margin-top: 1.5rem;
+        margin-left: 0.25em;
+        margin-right: 0.25em;
+        border-top: 1px solid #ccc;
+        padding-top: 1.5rem;
+
+        #content {
+          padding: 0;
+        }
+
+        #page-title {
+
+          font-size: 1.75em;
+          line-height: 1.15;
+
+          #document-authors {
+            margin-top: 0.75em;
+          }
+
+        }
+
+      }
+
+    }
+
+    
+    
+  }
+
 }
 
 body.node-type-response #page-title {
