@@ -483,17 +483,12 @@
 
     }
 
-    #content {
-        padding-left: 25px;
-        padding-right: 25px;
+    @media (min-width: 541px) {
+        #content {
+            padding-left: 25px;
+            padding-right: 25px;
+        }
     }
 
 }
 
-@media only screen and (max-width: 540px) {
-
-    #content {
-        padding: 0 10px;
-    }
-
-}
