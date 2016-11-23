@@ -47,11 +47,37 @@ article.node-document {
     @media (max-width: 540px) {
       margin-left: 1em;
       margin-right: 1em;
-      margin-top: -.5em;
-      font-size: .8em;
+      margin-top: -0.5em;
+      font-size: 0.8em;
       line-height: 1.25;
       text-align: left;
     }
+  }
+}
+
+@media (max-width: 540px) {
+  article.node.node-response {
+
+    margin-top: -2em;
+
+    header,
+    .field,
+    fieldset,
+    #comments {
+      margin-left: 1em;
+      margin-right: 1em;
+      text-align: left;
+      font-size: .8em;
+      line-height: 1.25;
+    }
+
+    #comments .comments__form-title,
+    #comments form > div > div,
+    #comments form .form-item {
+      margin-left: 0;
+      margin-right: 0;
+    }
+
   }
 }
 
@@ -237,7 +263,10 @@ body.node-type-document {
   font-size: 2em;
   line-height: 1em;
   }
+}
 
+body.node-type-document,
+body.node-type-response {
   @media (max-width: 540px) {
     
     #page {
@@ -274,8 +303,6 @@ body.node-type-document {
 
     }
 
-    
-    
   }
 
 }
