@@ -358,6 +358,7 @@
 
 .annotator-touch-viewer .annotator-widget {
     min-width: 380px;
+    @media (max-width: 540px) { min-width: 0; }
 }
 
 .annotator-touch-viewer div {
@@ -382,32 +383,46 @@
     text-align: right;
 }
 
-.annotator-touch-viewer li.annotator-visible .annotator-touch-controls {
-    display: block;
-}
+.annotator-touch-viewer li {
 
-.annotator-touch-viewer .annotator-touch-controls::before {
-    content: '';
-    display: inline-block;
-    height: 100%;
-    vertical-align: middle;
-}
+    &.annotator-visible .annotator-touch-controls {
+        display: block;
+    }
 
-.annotator-touch-viewer .annotator-touch-controls > * {
-    display: inline-block;
-    margin-right: 10px;
-    vertical-align: middle;
-}
+    .annotator-touch-controls {
 
-.annotator-touch-viewer .annotator-touch-controls button.annotator-button {
-    line-height: 1;
-    padding: .75em 1.5em;
-    border-radius: 4px;
-    border: none;
-    background-color: rgba(22, 147, 165, 0.5);
-    color: #fff;
-    font-weight: 600;
-    letter-spacing: .5px;
+        @media (max-width: 540px) {
+            padding-right: 0;
+            font-size: 0.95em;
+        }
+
+        &::before {
+            content: '';
+            display: inline-block;
+            height: 100%;
+            vertical-align: middle;
+        }
+
+        & > * {
+            display: inline-block;
+            margin-right: 10px;
+            vertical-align: middle;
+            @media (max-width: 540px) { font-size: 1em; }
+        }
+
+        button.annotator-button {
+            line-height: 1;
+            padding: .75em 1.5em;
+            border-radius: 4px;
+            border: none;
+            background-color: rgba(22, 147, 165, 0.5);
+            color: #fff;
+            font-weight: 600;
+            letter-spacing: .5px;
+        }
+
+    }
+
 }
 
 //  For tags on small screens
