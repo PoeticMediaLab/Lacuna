@@ -36,7 +36,7 @@
 
 /* Styles for smaller screens */
 
-@media only screen and (max-width: 480px) {
+@media only screen and (max-width: 540px) {
     .annotator-touch-viewer {
         left: 0 !important;
         width: 100%;
@@ -79,6 +79,7 @@
         -ms-box-shadow: none;
         -o-box-shadow: none;
         box-shadow: none;
+        overflow-x: hidden;
     }
 
     .annotator-touch-editor .annotator-touch-widget-inner {
@@ -161,10 +162,27 @@
 }
 
 .annotator-touch-editor .annotator-touch-widget {
+    
     pointer-events: all;
     width: 370px;
     left: 25%;
     position: fixed;
+
+}
+
+@media (max-width: 540px) {
+
+    .annotator-touch-editor.tab-out .annotator-touch-widget {
+        width: 100vw;
+        height: 100vh;
+        left: 0;
+        top: 0;
+        padding: 1em;
+        box-sizing: border-box;
+        position: fixed;
+        background-color: rgba(0, 0, 0, .5);
+    }
+
 }
 
 .annotator-touch-editor .annotator-touch-widget-inner {
@@ -178,8 +196,22 @@
     display: none;
 }
 
-.annotator-touch-editor .annotator-widget .annotator-item {
+.annotator-touch-editor .annotator-widget .annotator-listing .annotator-item {
     border-top-color: rgba(0, 0, 0, 0.15);
+    @media (max-width: 540px) {
+        
+        line-height: 1.75em;
+
+        &.annotator-item-quote {
+            line-height: 1em;
+        }
+
+        &.fa::before,
+        input#annotator-field-4 {
+            font-size: .75em;
+        }
+
+    }
 }
 
 .annotator-touch-editor .annotator-widget .annotator-item,
@@ -225,6 +257,7 @@
     background-color: #fbfae9;
     color: #a58129;
     padding: 10px 7px;
+    @media (max-width: 540px) { line-height: 1em; }
 }
 
 
@@ -259,6 +292,7 @@
     box-shadow: 0px -2px 2px gray;
     font-weight: bold;
     color: white;
+    transition: opacity .5s;
 }
 
 .annotator-touch-widget .annotator-button {
