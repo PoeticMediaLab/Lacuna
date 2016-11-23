@@ -107,3 +107,47 @@ table.tabledrag-processed td label {
   }
 }
 
+@media (max-width: 540px) {
+  body.page-node-add-response {
+
+    fieldset {
+      
+      min-width: 0;
+
+      #edit-field-bibliographic-item-und-0-target-id {
+        width: 100%;
+      }
+
+    }
+
+    div.vertical-tabs {
+      
+      margin: 1em 0;
+
+      ul.vertical-tabs-list {
+
+        width: 100%;
+        margin: 0;
+        border-top: none;
+
+        li {
+          border-left: none;
+        }
+
+      }
+
+    }
+
+    .media-widget .button.browse {
+      float: left;
+      margin-bottom: 0.75em;
+    }
+
+    .form-actions .form-submit {
+      width: 125px;
+    }
+
+  }
+
+}
+
