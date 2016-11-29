@@ -238,7 +238,7 @@ td.value {
 #dashboard #visual-content #right
 {
     text-align: right;
-    top: 52px;
+    top: -20px;
     position: absolute;
     left: 650px;
 }
