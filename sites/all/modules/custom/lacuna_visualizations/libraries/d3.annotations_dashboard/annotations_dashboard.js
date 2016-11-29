@@ -1089,10 +1089,47 @@ function main(data) {
       return vars;
   }
 
+  /*
+  * Transforms dashboard when containing element is less than the
+  * width of the dashboard contents.
+  */
+  function enableDynamicResizing() {
+    
+    /*
+    * Widths are hard-coded in because
+    * they're pretty tricky to determine programmatically, and I
+    * thought this way would actually be more maintainable than
+    * including a bunch of complex queries.
+    */
+    var dashboardWidth = 1162;
+
+    var container = document.querySelector('#annotations_dashboard');
+    var innerContainer = container.querySelector('#dashboard');
+    var tooltip = document.querySelector('body > .tooltip');
+
+    var scaleDashboard = function() {
+
+      var containerWidth = container.getBoundingClientRect().width;
+
+      if (containerWidth < dashboardWidth) {
+
+        var ratio = containerWidth / dashboardWidth;
+        innerContainer.style.transform = 'scale(' + ratio + ')';
+
+      } else innerContainer.style.transform = 'none';
+
+    };
+
+    scaleDashboard();
+    window.addEventListener('resize', scaleDashboard);
+
+  }
+
 	// Initial creation
 	update();
 	label_pie_charts();	// only need to label them once
 	manageURLQuery();
+  enableDynamicResizing();
 } // end main()
 } // Drupal.d3.annotations
 })(jQuery);	// End of Drupal wrapper

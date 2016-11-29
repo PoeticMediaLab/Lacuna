@@ -211,6 +211,9 @@ td.value {
   text-align: right;
   padding-left: 15px;
 }
+#dashboard {
+  transform-origin: left top;
+}
 #dashboard a.dashboard-button
 {
   min-height: 20px;
@@ -220,6 +223,7 @@ td.value {
 #dashboard #visual-content
 {
   margin-bottom: 25px;
+  position: relative;
 }
 #dashboard #visual-content, #dashboard #visual-content tr
 {
@@ -234,7 +238,7 @@ td.value {
 #dashboard #visual-content #right
 {
     text-align: right;
-    top: 52px;
+    top: -20px;
     position: absolute;
     left: 650px;
 }
