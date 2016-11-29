@@ -70,4 +70,4 @@ August 25, 2016
  
 Version 2.0
 -----------
-2.0 was a major restructuring of Lacuna. Rather than supporting a single course per site, Lacuna was redesigned to allow an unlimited number of courses in a single install. It also added an installation profile, granular annotati
+2.0 was a major restructuring of Lacuna. Rather than supporting a single course per site, Lacuna was redesigned to allow an unlimited number of courses in a single install. It also added an installation profile, granular annotation privacy levels, and numerous other features.
