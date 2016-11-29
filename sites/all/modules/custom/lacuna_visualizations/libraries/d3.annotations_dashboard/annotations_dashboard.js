@@ -814,9 +814,6 @@ function main(data) {
 		});
 		var g = dim.group();
 		var data = fill_empty_dates(g.all());
-		
-		// Only display every other label
-		for (var i = 0; i < data.length; i++) data.splice(i, 1);
 
 		if (bar_chart === null) {
 			bar_chart = d3.select("div#time_brush").append("svg")
@@ -829,10 +826,15 @@ function main(data) {
 				.domain(data.map(function (d) { return d.x; }))
 		    	.rangeRoundBands([size.bar.padding.left, size.bar.width - size.bar.padding.right - size.bar.padding.left], .1);
 
+			//	Create ticks
+		    var factor = (data.length > 16 ? Math.floor(data.length / 8) : 1);
+		    var ticks = [];
+		    for (var i = 0; i < data.length; i += factor) ticks.push(data[i].x);
+
 			xAxis = d3.svg.axis()
 		    .scale(bar_x)
 		    .orient("bottom")
-		    .ticks(10)
+		    .tickValues(ticks)
 			;
 
   		bar_chart.append("g")
