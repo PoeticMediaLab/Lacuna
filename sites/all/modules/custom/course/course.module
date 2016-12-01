@@ -117,6 +117,7 @@ function course_menu() {
 function course_setup_access() {
   global $user;
   $key = "Course_Auth_Code_User_" . $user->uid;
+  $cookiePrefix = "Drupal_visitor_";
   $canCreate = user_access('create course content');
 
   // we only want to check access when we are actually on a protected page
@@ -147,7 +148,7 @@ function course_setup_access() {
     drupal_set_message("Please contact your institution's Lacuna administrator. Your account does not have access to create a course.", 'error', FALSE);
     return FALSE;
   }
-  elseif (($cache = cache_get($key)) && $_COOKIE['Lacuna_Course_Setup' . $key] == $cache->data) {
+  elseif (($cache = cache_get($key)) && $_COOKIE[$cookiePrefix . $key] == $cache->data) {
     // VALID
     return TRUE;
   }

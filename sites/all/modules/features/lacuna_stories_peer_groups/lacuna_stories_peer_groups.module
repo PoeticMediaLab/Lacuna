@@ -137,3 +137,20 @@ function lacuna_stories_peer_groups_form_og_ui_confirm_subscribe_alter(&$form, &
   $form['og_membership_request']['#access'] = FALSE;
 }
 
+/**
+ * Implements hook_form_alter().
+ *
+ * Returns the user to the Peer Groups page after deleting a group.
+ */
+function lacuna_stories_peer_groups_form_node_delete_confirm_alter(&$form, &$form_state, $form_id) {
+  if ($form['#node']->type === 'peer_group') {
+    $form['#submit'][] = 'redirect_after_peer_group_deletion';
+  }
+}
+
+/**
+ * Handler to set redirect location after peer group deletion.
+ */
+function redirect_after_peer_group_deletion($form, &$form_state) {
+  $form_state['redirect'] = 'peer-groups';
+}
