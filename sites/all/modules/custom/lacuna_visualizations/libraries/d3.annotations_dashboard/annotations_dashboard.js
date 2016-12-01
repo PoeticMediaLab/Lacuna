@@ -824,7 +824,7 @@ function main(data) {
 		if (bar_x === null) {
 			bar_x = d3.scale.ordinal()
 				.domain(data.map(function (d) { return d.x; }))
-		    	.rangeRoundBands([size.bar.padding.left, size.bar.width - size.bar.padding.right - size.bar.padding.left], .1);
+		    	.rangeBands([size.bar.padding.left, size.bar.width - size.bar.padding.right - size.bar.padding.left], .1);
 
 			//	Create ticks
 		    var factor = (data.length > 16 ? Math.floor(data.length / 8) : 1);
@@ -886,7 +886,7 @@ function main(data) {
 
   	bars.attr("width", bar_width)
   		.attr("y", function (d) { return bar_y(d.y) })
-  		.attr("x", function (d) { return bar_x(d.x) })
+  		.attr("x", function (d) { console.log(bar_x(d.x)); return bar_x(d.x) })
   		.attr("height", function (d) { return size.bar.height - bar_y(d.y) })
   		;
 
