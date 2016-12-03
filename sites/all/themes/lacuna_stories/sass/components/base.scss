@@ -81,6 +81,31 @@ article.node-document {
   }
 }
 
+@media (max-width: 540px) {
+  article.node-thread {
+    margin-left: 1em;
+    margin-right: 1em;
+
+    header {
+      margin-left: 1em;
+      margin-right: 1em;
+    }
+
+    .username-and-date {
+      font-size: .75em;
+    }
+
+    .field-type-text-long {
+      margin-left: 1em;
+      margin-right: 1em;
+      margin-top: -0.5em;
+      font-size: 0.8em;
+      line-height: 1.25;
+      text-align: left;
+    }
+  }
+}
+
 #name-and-slogan {
   font-size: 1em;
 }
