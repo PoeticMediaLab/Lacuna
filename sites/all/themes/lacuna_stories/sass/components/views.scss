@@ -633,3 +633,32 @@ body.page-course-setup-add-materials {
     float: left;
   }
 }
+
+/*
+* Responsive styles for the Digital Research Consent Form
+*/
+
+@media (max-width: 540px) {
+
+  article.node-webform {
+
+    margin-left: 0;
+    margin-right: 0;
+    text-align: left;
+
+    > .field,
+    .form-item,
+    .form-actions {
+
+      margin-left: 1em;
+      margin-right: 1em;
+
+    }
+
+    > .field {
+      margin-top: 1em;
+    }
+
+  }
+
+}
