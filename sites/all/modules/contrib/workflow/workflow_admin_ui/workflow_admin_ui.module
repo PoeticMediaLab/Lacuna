@@ -74,7 +74,8 @@ function workflow_admin_ui_help($path, $arg) {
         role is built in and refers to the user who authored the node.')
       . '<br /><i>'
       . t("If not all roles are in the list, please review which roles may
-        'participate in workflows' <a href='!url'> on the Permissions page</a>.",
+        'participate in workflows' <a href='!url'> on the Permissions page</a>.
+        </i>",
         array('!url' => url('admin/people/permissions', array(
           'fragment' => 'module-workflow'))));
 

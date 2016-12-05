@@ -30,21 +30,27 @@ function workflow_vbo_next_action_info() {
 function workflow_vbo_next_state_action($entity, array $context) {
   global $user;
 
-  if (!isset($entity)) {
+  // Get the entity type, entity and entity ID.
+  if (isset($context['entity_type'])) {
+    // In a VBO Action.
+    $entity_type = $context['entity_type'];
+  }
+  else {
+    // In an Advanced Action.
+    $entity_type = str_replace(array('_insert', '_update' , '_delete'), '', $context['hook']);
+  }
+  // Change the state of latest revision, not current revision.
+  if (isset($context[$entity_type])) {
+    $entity = $context[$entity_type];
+  }
+  elseif (!isset($entity)) {
     $entity = $context['node'];
   }
   // In 'after saving new content', the node is already saved. Avoid second insert.
   // Todo: clone?
   unset($entity->is_new);
 
-  // Get the entity type and numeric ID.
-  $entity_type = ($vbo_action = isset($context['entity_type'])) ?
-    // In a VBO Action.
-    $context['entity_type'] :
-    // In an Advanced Action. 
-    str_replace(array('_insert', '_update' , '_delete'), '', $context['hook']);
   list($entity_id, , $entity_bundle) = entity_extract_ids($entity_type, $entity);
-
   if (!$entity_id) {
     watchdog('workflow_vbo', 'Unable to get current entity ID - entity is not yet saved.');
     return;

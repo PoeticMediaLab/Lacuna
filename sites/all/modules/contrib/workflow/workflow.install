@@ -793,10 +793,24 @@ function workflow_update_7016() {
  * Add a primary key to {workflow_scheduled_transition}.
  */
 function workflow_update_7017() {
-  db_add_field('workflow_scheduled_transition', 'tid', array(
+  // Drop existing primary key.
+  db_drop_primary_key('workflow_scheduled_transition');
+
+  // Add new primary key.
+  $spec = array(
     'type' => 'serial',
-    ), array(
+  );
+  $keys_new =  array(
     'primary key' => array('tid'),
-  ));
-  return t('Added stid primary key to {workflow_scheduled_transition}');
+  );
+  db_add_field('workflow_scheduled_transition', 'tid', $spec, $keys_new);
+
+  return t('Added tid primary key to {workflow_scheduled_transition}');
+}
+
+/**
+ * Enable the List module, newly added as a dependency.
+ */
+function workflow_update_7200() {
+  module_enable(array('list'));
 }

@@ -317,6 +317,13 @@ function workflow_entity_property_info_alter(&$info) {
     'description' => t('The date, time the transition was executed.'),
   );
 
+  $info['WorkflowTransition']['properties']['entity'] = array(
+    'type' => 'entity',
+    'label' => t('Entity'),
+    'description' => t("The Entity that this state change applies to."),
+    'getter callback' => '_workflow_metadata_workflow_get_properties',
+  );
+
   // Properties for WorkflowScheduledTransition.
   $info['WorkflowScheduledTransition']['properties']['scheduled']['type'] = 'date';
   $info['WorkflowScheduledTransition']['properties']['workflow'] = $info['WorkflowTransition']['properties']['workflow'];
@@ -388,6 +395,10 @@ function _workflow_metadata_workflow_get_properties($entity, array $options, $na
       }
       return $langcode;
 
+    case 'entity':
+      $entity_wrapper = entity_metadata_wrapper($entity->entity_type, $entity->nid);
+      return $entity_wrapper;
+
     // The following properties need more love. Also test their tokens!
     case 'options':
       return 'n/a';
@@ -420,8 +431,8 @@ function workflow_field_extra_fields() {
           'label' => t('State Id'),
           'description' => t('Target state Id'),
           'weight' => -4,
-          'edit' => 'hoi edit', // (optional) String containing markup (normally a link) used as the element's 'edit' operation in the administration interface. Only for 'form' context.
-          'delete' => 'hoi delete', // (optional) String containing markup (normally a link) used as the element's 'delete' operation in the administration interface. Only for 'form' context.
+          // 'edit' => 'test', // (optional) String containing markup (normally a link) used as the element's 'edit' operation in the administration interface. Only for 'form' context.
+          // 'delete' => 'test', // (optional) String containing markup (normally a link) used as the element's 'delete' operation in the administration interface. Only for 'form' context.
         ),
         'scheduled_container' => array(
           'label' => t('Scheduling'),
