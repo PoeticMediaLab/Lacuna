@@ -680,9 +680,10 @@ function wysiwyg_get_css() {
   }
 
   $files = array();
+  $query = ($string = variable_get('css_js_query_string', NULL)) ? '?' . $string : '';
   foreach (drupal_add_css() as $filepath => $info) {
     if ($info['group'] >= CSS_THEME && $info['type'] != 'inline' && $info['media'] != 'print' && file_exists($filepath)) {
-      $files[] = file_create_url($filepath);
+      $files[] = file_create_url($filepath) . $query;
     }
   }
   return $files;
@@ -911,6 +912,9 @@ function wysiwyg_get_all_editors() {
     $editors[$editor] = array_merge($editors[$editor], $editors[$editor]['versions'][$version]);
     unset($editors[$editor]['versions']);
   }
+
+  drupal_alter('wysiwyg_editor', $editors);
+
   return $editors;
 }
 
@@ -1130,7 +1134,7 @@ function wysiwyg_get_directories($plugintype) {
  *  An array with placeholder information for creating a JavaScript function
  *  reference on the client.
  */
-function wysiwyg_wrap_js_callback($name, $context = null) {
+function wysiwyg_wrap_js_callback($name, $context = NULL) {
   $obj = array(
     'drupalWysiwygType' => 'callback',
     'name' => $name,
@@ -1153,7 +1157,7 @@ function wysiwyg_wrap_js_callback($name, $context = null) {
  *  An array with placeholder information for creating a JavaScript RegExp
  *  object on the client.
  */
-function wysiwyg_wrap_js_regexp($regexp, $modifiers = null) {
+function wysiwyg_wrap_js_regexp($regexp, $modifiers = NULL) {
   $obj = array(
     'drupalWysiwygType' => 'regexp',
     'regexp' => $regexp,

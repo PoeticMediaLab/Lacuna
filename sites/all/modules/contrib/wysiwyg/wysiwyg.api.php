@@ -53,6 +53,8 @@ function hook_wysiwyg_plugin($editor, $version) {
             // A list of buttons provided by this native plugin. The key has to
             // match the corresponding JavaScript implementation. The value is
             // is displayed on the editor configuration form only.
+            // CKEditor-specific note: The internal button name/key is
+            // capitalized, i.e. Img_assist.
             'buttons' => array(
               'img_assist' => t('Image Assist'),
             ),
@@ -249,6 +251,16 @@ function hook_INCLUDE_editor() {
     ),
   );
   return $editor;
+}
+
+/**
+ * Alter editor definitions defined by other modules.
+ *
+ * @param array $editors
+ *   The Editors to alter.
+ */
+function hook_wysiwyg_editor_alter(&$editors) {
+  $editors['editor']['version callback'] = 'my_own_version_callback';
 }
 
 /**
