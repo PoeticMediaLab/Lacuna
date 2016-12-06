@@ -87,6 +87,16 @@
 /* Logo image. */
 .header__logo-image {
   vertical-align: bottom;
+  width: 198px;
+  height: 65px;
+  background-size: contain;
+
+  background-image: url('/sites/all/themes/lacuna_stories/logo.png');
+
+  @media (max-resolution: 1dppx) {
+    background-image: url('/sites/all/themes/lacuna_stories/logo-1x.png');
+  }
+
 }
 
 /* Wrapper for website name and slogan. */
