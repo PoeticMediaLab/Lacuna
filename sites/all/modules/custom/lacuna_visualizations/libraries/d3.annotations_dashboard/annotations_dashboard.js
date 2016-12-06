@@ -814,9 +814,6 @@ function main(data) {
 		});
 		var g = dim.group();
 		var data = fill_empty_dates(g.all());
-		
-		// Only display every other label
-		for (var i = 0; i < data.length; i++) data.splice(i, 1);
 
 		if (bar_chart === null) {
 			bar_chart = d3.select("div#time_brush").append("svg")
@@ -827,12 +824,22 @@ function main(data) {
 		if (bar_x === null) {
 			bar_x = d3.scale.ordinal()
 				.domain(data.map(function (d) { return d.x; }))
-		    	.rangeRoundBands([size.bar.padding.left, size.bar.width - size.bar.padding.right - size.bar.padding.left], .1);
+		    	.rangeBands([size.bar.padding.left, size.bar.width - size.bar.padding.right - size.bar.padding.left], .1);
+
+			//	Create ticks
+		    var factor = (data.length > 16 ? Math.floor(data.length / 8) : 1);
+		    var ticks = [];
+		    for (var i = 0; i < data.length; i += factor) ticks.push(data[i].x);
+
+			//	Create ticks
+		    var factor = (data.length > 16 ? Math.floor(data.length / 8) : 1);
+		    var ticks = [];
+		    for (var i = 0; i < data.length; i += factor) ticks.push(data[i].x);
 
 			xAxis = d3.svg.axis()
 		    .scale(bar_x)
 		    .orient("bottom")
-		    .ticks(10)
+		    .tickValues(ticks)
 			;
 
   		bar_chart.append("g")
@@ -884,7 +891,7 @@ function main(data) {
 
   	bars.attr("width", bar_width)
   		.attr("y", function (d) { return bar_y(d.y) })
-  		.attr("x", function (d) { return bar_x(d.x) })
+  		.attr("x", function (d) { console.log(bar_x(d.x)); return bar_x(d.x) })
   		.attr("height", function (d) { return size.bar.height - bar_y(d.y) })
   		;
 

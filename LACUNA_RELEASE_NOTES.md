@@ -26,6 +26,8 @@ This is a bug fix release.
  * Cleaned up warning messages in javascript console from Annotation Dashboard
  * Prevent annotation tags from being duplicated; now correctly re-uses existing, identical tags when available
  * Avoid scrollbars on long response titles
+ * Redirect users to Peer Groups page instead of home page after deleting a peer group
+ * If course creation requires a password, accept it correctly
 
 Version 2.2: Canvas/LTI Support
 -----------

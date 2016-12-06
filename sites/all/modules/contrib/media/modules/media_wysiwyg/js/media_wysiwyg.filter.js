@@ -43,10 +43,17 @@
           // Re-build the media if the macro has changed from the tagmap.
           if (!media && media_definition.fid) {
             Drupal.media.filter.ensureSourceMap();
-            var source = Drupal.settings.mediaSourceMap[media_definition.fid];
-            media = document.createElement(source.tagName);
-            media.src = source.src;
-            media.innerHTML = source.innerHTML;
+            var source;
+            if (source = Drupal.settings.mediaSourceMap[media_definition.fid]) {
+              media = document.createElement(source.tagName);
+              media.src = source.src;
+              media.innerHTML = source.innerHTML;
+            }
+            else {
+              // If the media element can't be found, leave it in to be resolved
+              // by the user later.
+              continue;
+            }
           }
 
           // Apply attributes.
@@ -62,6 +69,103 @@
     },
 
     /**
+     * Returns alt and title field attribute data from the corresponding fields.
+     *
+     * Specifically looks for file_entity module's file_image_alt_text and
+     * file_image_title_text fields as those are by default used to store
+     * override values for image alt and title attributes.
+     *
+     * @param options (array)
+     *   Options passed through a popup form submission.
+     * @param includeFieldID (bool)
+     *   If set, the returned object will have extra keys with the IDs of the
+     *   found fields.
+     *
+     * If the alt or title fields were not found, their keys will be excluded
+     * from the returned array.
+     *
+     * @return
+     *   An object with the following keys:
+     *   - alt: The value of the alt field.
+     *   - altField: The id of the alt field.
+     *   - title: The value of the title field.
+     *   - titleField: The id of the title field.
+     */
+    parseAttributeFields: function(options, includeFieldID) {
+      var attributes = {};
+
+      for (var field in options) {
+        // If the field is set to false, use an empty string for output.
+        options[field] = options[field] === false ? '' : options[field];
+        //if (field.match(/^field_file_image_alt_text/)) {
+        if (field.match(new RegExp('^' + Drupal.settings.media.img_alt_field))) {
+          attributes.alt = options[field];
+          if (includeFieldID) {
+            attributes.altField = field;
+          }
+        }
+
+        //if (field.match(/^field_file_image_title_text/)) {
+        if (field.match(new RegExp('^' + Drupal.settings.media.img_title_field))) {
+          attributes.title = options[field];
+          if (includeFieldID) {
+            attributes.titleField = field;
+          }
+        }
+      }
+
+      return attributes;
+    },
+
+    /**
+     * Ensures changes made to fielded attributes are done on the fields too.
+     *
+     * This should be called when creating a macro tag from a placeholder.
+     *
+     * Changed made to attributes represented by fields are synced back to the
+     * corresponding fields, if they exist. The alt/title attribute
+     * values encoded in the macro will override the alt/title field values (set
+     * in the Media dialog) during rendering of both WYSIWYG placeholders and
+     * the final file entity on the server. Syncing makes changes applied to a
+     * placeholder's alt/title attribute using native WYSIWYG tools visible in
+     * the fields shown in the Media dialog.
+     *
+     * The reverse should be done when creating a placeholder from a macro tag
+     * so changes made in the Media dialog are reflected in the placeholder's
+     * alt and title attributes or the values there become stale and the change
+     * appears uneffective.
+     *
+     * @param file_info (object)
+     *   A JSON decoded object of the file being inserted/updated.
+     */
+    syncAttributesToFields: function(file_info) {
+      if (!file_info) {
+        file_info = {};
+      }
+      if (!file_info.attributes) {
+        file_info.attributes = {};
+      }
+      if (!file_info.fields) {
+        file_info.fields = {};
+      }
+      var fields = Drupal.media.filter.parseAttributeFields(file_info.fields, true);
+
+      // If the title attribute has changed, ensure the title field is updated.
+      var titleAttr = file_info.attributes.title || false;
+      if (fields.titleField && (titleAttr !== fields.title)) {
+        file_info.fields[fields.titleField] = titleAttr;
+      }
+
+      // If the alt attribute has changed, ensure the alt field is updated.
+      var altAttr = file_info.attributes.alt || false;
+      if (fields.altField && (altAttr !== fields.alt)) {
+        file_info.fields[fields.altField] = altAttr;
+      }
+
+      return file_info;
+    },
+
+    /**
      * Replaces media elements with tokens.
      *
      * @param content (string)
@@ -69,9 +173,6 @@
      */
     replacePlaceholderWithToken: function(content) {
       Drupal.media.filter.ensure_tagmap();
-
-      // Rewrite the tagmap in case any of the macros have changed.
-      Drupal.settings.tagmap = {};
 
       // Replace all media placeholders with their JSON macro representations.
       //
@@ -98,10 +199,14 @@
       var matches = content.match(RegExp(regex, 'gi'));
       if (matches) {
         for (i = 0; i < matches.length; i++) {
-          markup = matches[i];
-          macro = Drupal.media.filter.create_macro($(markup));
-          Drupal.settings.tagmap[macro] = markup;
-          content = content.replace(markup, macro);
+          var markup = matches[i];
+          var macro = Drupal.media.filter.create_macro($(markup));
+          // If we have a truthy response, store the macro and perform the
+          // replacement.
+          if (macro) {
+            Drupal.settings.tagmap[macro] = markup;
+            content = content.replace(markup, macro);
+          }
         }
       }
 
@@ -127,15 +232,20 @@
 
       // Parse out link wrappers. They will be re-applied when the image is
       // rendered on the front-end.
-      if (element.is('a')) {
+      if (element.is('a') && element.find('img').length) {
         element = element.children();
       }
+
+      // Extract attributes represented by fields and use those values to keep
+      // them in sync, usually alt and title.
+      var attributes = Drupal.media.filter.parseAttributeFields(info.fields);
+      info.attributes = $.extend(info.attributes, attributes);
 
       // Move attributes from the file info array to the placeholder element.
       if (info.attributes) {
         $.each(Drupal.settings.media.wysiwyg_allowed_attributes, function(i, a) {
           if (info.attributes[a]) {
-            element.attr(a, info.attributes[a]);
+            element.attr(a, $('<textarea />').html(info.attributes[a]).text());
           }
         });
         delete(info.attributes);
@@ -153,6 +263,18 @@
 
       // Store the data in the data map.
       Drupal.media.filter.ensureDataMap();
+
+      // Generate a "delta" to allow for multiple embeddings of the same file.
+      var delta = Drupal.media.filter.fileEmbedDelta(info.fid, element);
+      if (Drupal.settings.mediaDataMap[info.fid]) {
+        info.field_deltas = Drupal.settings.mediaDataMap[info.fid].field_deltas || {};
+      }
+      else {
+        info.field_deltas = {};
+      }
+      info.field_deltas[delta] = info.fields;
+      element.attr('data-delta', delta);
+
       Drupal.settings.mediaDataMap[info.fid] = info;
 
       // Store the fid in the DOM to retrieve the data from the info map.
@@ -163,6 +285,10 @@
 
       var classes = ['media-element'];
       if (info.view_mode) {
+        // Remove any existing view mode classes.
+        element.removeClass (function (index, css) {
+          return (css.match (/\bfile-\S+/g) || []).join(' ');
+        });
         classes.push('file-' + info.view_mode.replace(/_/g, '-'));
       }
       element.addClass(classes.join(' '));
@@ -200,7 +326,7 @@
      *    A media element with associated file info via a file id (fid).
      */
     extract_file_info: function (element) {
-      var fid, file_info, value;
+      var fid, file_info, value, delta;
 
       if (fid = element.data('fid')) {
         Drupal.media.filter.ensureDataMap();
@@ -220,10 +346,27 @@
 
           // Extract the link text, if there is any.
           file_info.link_text = element.find('a').html();
+
+          // When a file is embedded, its fields can be overridden. To allow for
+          // the edge case where the same file is embedded multiple times with
+          // different field overrides, we look for a data-delta attribute on
+          // the element, and use that to decide which set of data in the
+          // "field_deltas" property to use.
+          if (delta = element.data('delta')) {
+            if (file_info.field_deltas && file_info.field_deltas[delta]) {
+              file_info.fields = file_info.field_deltas[delta];
+
+              // Also look for an overridden view mode, aka "format".
+              // Check for existance of fields to make it backward compatible.
+              if (file_info.fields && file_info.fields.format && file_info.view_mode) {
+                file_info.view_mode = file_info.fields.format;
+              }
+            }
+          }
         }
       }
 
-      return file_info;
+      return Drupal.media.filter.syncAttributesToFields(file_info);
     },
 
     /**
@@ -281,6 +424,24 @@
     ensure_tagmap: function () {
       Drupal.settings.tagmap = Drupal.settings.tagmap || {};
       return Drupal.settings.tagmap;
+    },
+
+    /**
+     * Generates a unique "delta" for each embedding of a particular file.
+     */
+    fileEmbedDelta: function(fid, element) {
+      // Check to see if the element already has one.
+      if (element && element.data('delta')) {
+        return element.data('delta');
+      }
+      // Otherwise, generate a new one. Arbitrarily start with 1.
+      var delta = 1;
+      Drupal.settings.mediaDeltas = Drupal.settings.mediaDeltas || {};
+      if (Drupal.settings.mediaDeltas[fid]) {
+        delta = Drupal.settings.mediaDeltas[fid] + 1;
+      }
+      Drupal.settings.mediaDeltas[fid] = delta;
+      return delta;
     }
   }
 

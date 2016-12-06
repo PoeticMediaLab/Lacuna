@@ -7,7 +7,7 @@
   Drupal.behaviors.superfish = {
     attach: function (context, settings) {
       // Take a look at each list to apply Superfish to.
-      $.each(settings.superfish || {}, function(index, options) {
+      $.each(settings.superfish || {}, function (index, options) {
         // Process all Superfish lists.
         $('#superfish-' + options.id, context).once('superfish', function() {
           var list = $(this);

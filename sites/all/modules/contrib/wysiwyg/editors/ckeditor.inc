@@ -389,7 +389,11 @@ function wysiwyg_ckeditor_settings($editor, $config, $theme) {
         $settings['contentsCss'] = reset($css);
       }
       elseif ($config['css_setting'] == 'self' && isset($config['css_path'])) {
-        $settings['contentsCss'] = strtr($config['css_path'], array('%b' => base_path(), '%t' => drupal_get_path('theme', variable_get('theme_default', NULL))));
+        $settings['contentsCss'] = strtr($config['css_path'], array(
+          '%b' => base_path(),
+          '%t' => drupal_get_path('theme', variable_get('theme_default', NULL)),
+          '%q' => variable_get('css_js_query_string', ''),
+        ));
       }
     }
     else {
@@ -397,7 +401,11 @@ function wysiwyg_ckeditor_settings($editor, $config, $theme) {
         $settings['contentsCss'] = wysiwyg_get_css();
       }
       elseif ($config['css_setting'] == 'self' && isset($config['css_path'])) {
-        $settings['contentsCss'] = explode(',', strtr($config['css_path'], array('%b' => base_path(), '%t' => drupal_get_path('theme', variable_get('theme_default', NULL)))));
+        $settings['contentsCss'] = explode(',', strtr($config['css_path'], array(
+          '%b' => base_path(),
+          '%t' => drupal_get_path('theme', variable_get('theme_default', NULL)),
+          '%q' => variable_get('css_js_query_string', ''),
+        )));
       }
     }
   }

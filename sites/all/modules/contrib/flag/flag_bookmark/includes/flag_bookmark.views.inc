@@ -14,7 +14,7 @@ function flag_bookmark_views_plugins() {
       'flag_bookmark_plugin_owner_perm' => array(
         'title' => t("Current user ID matches argument value"),
         'handler' => 'flag_bookmark_plugin_validate_user',
-        'path' => drupal_get_path('module', 'flag_bookmarks') . '/plugins',
+        'path' => drupal_get_path('module', 'flag_bookmark') . '/plugins',
       ),
     ),
   );
