@@ -12,6 +12,27 @@ function media_file_edit_modal($form, &$form_state, $file, $js) {
   ctools_include('modal');
   ctools_include('ajax');
 
+  // If entity translation is enabled for the file entities and we have parent
+  // entity form/source langcodes, use them for the currently edited file.
+  if (!empty($_GET['media_parent_entity_form_langcode']) && is_string($_GET['media_parent_entity_form_langcode']) && module_invoke('entity_translation', 'enabled', 'file', $file)) {
+    $languages = language_list();
+    if (isset($languages[$_GET['media_parent_entity_form_langcode']])) {
+      $langcode = $_GET['media_parent_entity_form_langcode'];
+      $translation_handler = entity_translation_get_handler('file', $file);
+      $translation_handler->setFormLanguage($langcode);
+      $translations = $translation_handler->getTranslations();
+      if (!isset($translations->data[$langcode])) {
+        if (!empty($_GET['media_parent_entity_source_langcode']) && is_string($_GET['media_parent_entity_source_langcode']) && isset($translations->data[$_GET['media_parent_entity_source_langcode']])) {
+          $source_langcode = $_GET['media_parent_entity_source_langcode'];
+        }
+        else {
+          $source_langcode = $translation_handler->getLanguage();
+        }
+        $translation_handler->setSourceLanguage($source_langcode);
+      }
+    }
+  }
+
   $form_state['ajax'] = $js;
   form_load_include($form_state, 'inc', 'file_entity', 'file_entity.pages');
 

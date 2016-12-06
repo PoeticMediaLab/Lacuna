@@ -1,4 +1,3 @@
-
 /* Table cells. */
 .field-permissions-cell,
 .field-permissions-header {
@@ -29,20 +28,19 @@ html.js .field-permissions-tooltip {
   color: #444;
   background-color: #f0f0f0;
   border: 1px solid #aaa;
-
   /* CSS3 properties not supported by all browsers. */
   -webkit-box-shadow: 2px 2px 2px #ccc;
-   -khtml-box-shadow: 2px 2px 2px #ccc;
-    -icab-box-shadow: 2px 2px 2px #ccc;
-     -moz-box-shadow: 2px 2px 2px #ccc;
-       -o-box-shadow: 2px 2px 2px #ccc;
-          box-shadow: 2px 2px 2px #ccc;
+  -khtml-box-shadow: 2px 2px 2px #ccc;
+  -icab-box-shadow: 2px 2px 2px #ccc;
+  -moz-box-shadow: 2px 2px 2px #ccc;
+  -o-box-shadow: 2px 2px 2px #ccc;
+  box-shadow: 2px 2px 2px #ccc;
   -webkit-border-radius: 5px;
-   -khtml-border-radius: 5px;
-    -icab-border-radius: 5px;
-     -moz-border-radius: 5px;
-       -o-border-radius: 5px;
-          border-radius: 5px;
+  -khtml-border-radius: 5px;
+  -icab-border-radius: 5px;
+  -moz-border-radius: 5px;
+  -o-border-radius: 5px;
+  border-radius: 5px;
 }
 .field-permissions-tooltip .item-list,
 #field-permissions-tooltip .item-list {

@@ -32,44 +32,33 @@ Drupal.wysiwyg.editor.attach.whizzywig = function(context, params, settings) {
 };
 
 /**
- * Detach a single or all editors.
+ * Detach a single editor instance.
  */
 Drupal.wysiwyg.editor.detach.whizzywig = function (context, params, trigger) {
-  var instance = this;
-  var detach = function (index) {
-    var id = whizzies[index], $field = $('#' + id);
+  for (var index = 0; index < whizzies.length; index++) {
+    if (whizzies[index] !== this.field) {
+      continue;
+    }
+    var $field = $('#' + this.field);
 
     // Save contents of editor back into textarea.
-    $field.val(instance.getContent());
+    $field.val(this.getContent());
     // If the editor is just being serialized (not detached), our work is done.
     if (trigger == 'serialize') {
       return;
     }
     // Move original textarea back to its previous location.
-    var $container = $('#CONTAINER' + id);
+    var $container = $('#CONTAINER' + this.field);
     $field.insertBefore($container);
     // Remove editor instance.
     $container.remove();
     whizzies.splice(index, 1);
 
     // Restore original textarea styling.
-    if ('originalStyle' in instance) {
-      $field.removeAttr('style').attr('style', instance.originalStyle);
+    if ('originalStyle' in this) {
+      $field.removeAttr('style').attr('style', this.originalStyle);
     }
-  }
-
-  if (typeof params != 'undefined') {
-    for (var i = 0; i < whizzies.length; i++) {
-      if (whizzies[i] == params.field) {
-        detach(i);
-        break;
-      }
-    }
-  }
-  else {
-    while (whizzies.length > 0) {
-      detach(0);
-    }
+    break;
   }
 };
 

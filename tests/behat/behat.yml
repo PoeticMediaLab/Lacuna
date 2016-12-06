@@ -10,17 +10,17 @@ default:
     Behat\MinkExtension:
       goutte: ~
       selenium2:
-        wd_host: http://lacunastories.dev:4444/wd/hub
+        wd_host: http://lacuna.dev:4444/wd/hub
         capabilities: {"browser": "firefox", "version": "21"}
-      base_url: http://lacunastories.dev
+      base_url: http://lacuna.dev
     Drupal\DrupalExtension:
       blackbox: ~
       api_driver: "drupal"
       drush:
         alias: "local"
-        root: /var/www/lacunastories
+        root: /var/www/lacuna
       drupal:
-        drupal_root: "/var/www/lacunastories"
+        drupal_root: "/var/www/lacuna"
       text:
         log_out: "Log Out"
         log_in: "Log in"

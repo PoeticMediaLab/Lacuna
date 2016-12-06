@@ -351,7 +351,16 @@ Drupal.media.popups.getDialogOptions = function () {
     },
     zIndex: Drupal.settings.media.dialogOptions.zindex,
     close: function (event, ui) {
-      $(event.target).remove();
+      var elem = $(event.target);
+      var id = elem.attr('id');
+      if(id == 'mediaStyleSelector') {
+        $(this).dialog("destroy");
+        $('#mediaStyleSelector').remove();
+      }
+      else {
+        $(this).dialog("destroy");
+        $('#mediaBrowser').remove();
+      }
     }
   };
 };
