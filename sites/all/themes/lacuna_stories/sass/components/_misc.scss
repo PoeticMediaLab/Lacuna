@@ -89,13 +89,14 @@
   vertical-align: bottom;
   width: 198px;
   height: 65px;
+  background-size: contain;
 
-  //  Added to enhance CSS image scaling
-  image-rendering: -moz-crisp-edges;
-  image-rendering: -o-crisp-edges;
-  image-rendering: -webkit-optimize-contrast;
-  image-rendering: crisp-edges;
-  -ms-interpolation-mode: nearest-neighbor;
+  background-image: url('/sites/all/themes/lacuna_stories/logo.png');
+
+  @media (max-resolution: 1dppx) {
+    background-image: url('/sites/all/themes/lacuna_stories/logo-1x.png');
+  }
+
 }
 
 /* Wrapper for website name and slogan. */
