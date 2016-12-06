@@ -16,6 +16,9 @@ class workflow_views_handler_field_username extends views_handler_field_user_nam
     if ($field == NULL) {
       if ($uid = $this->get_value($values, 'uid')) {
         $account = user_load($uid);
+        if (!$account) {
+          return "Anonymous (not verified)";
+        }
         return $account->name;
       }
     }

@@ -26,7 +26,7 @@ class FieldPermissionsTestCase extends DrupalWebTestCase {
     parent::setUp('field_ui', 'field_permissions');
 
     // Create test user.
-    $admin_permissions = array('access content', 'administer nodes', 'bypass node access', 'administer content types', 'administer taxonomy', 'administer permissions', 'create page content');
+    $admin_permissions = array('access content', 'administer nodes', 'bypass node access', 'administer content types', 'administer taxonomy', 'administer permissions', 'create page content', 'administer fields');
     $this->limited_user = $this->drupalCreateUser($admin_permissions);
     $all_rids = array_keys($this->limited_user->roles);
     sort($all_rids);
@@ -162,11 +162,11 @@ class FieldPermissionsTestCase extends DrupalWebTestCase {
     // See if we have that exposed on the permissions UI as well now.
     $this->drupalGet('admin/people/permissions');
     $this->assertText(t('Field Permissions'));
-    $this->assertRaw(t('Create own value for field %field', array('%field' => $field_info['name'])));
-    $this->assertRaw(t('Edit own value for field %field', array('%field' => $field_info['name'])));
-    $this->assertRaw(t("Edit anyone's value for field %field", array('%field' => $field_info['name'])));
-    $this->assertRaw(t('View own value for field %field', array('%field' => $field_info['name'])));
-    $this->assertRaw(t("View anyone's value for field %field", array('%field' => $field_info['name'])));
+    $this->assertRaw(t('Create own value for field %field', array('%field' => $field_info['machine_name'])));
+    $this->assertRaw(t('Edit own value for field %field', array('%field' => $field_info['machine_name'])));
+    $this->assertRaw(t("Edit anyone's value for field %field", array('%field' => $field_info['machine_name'])));
+    $this->assertRaw(t('View own value for field %field', array('%field' => $field_info['machine_name'])));
+    $this->assertRaw(t("View anyone's value for field %field", array('%field' => $field_info['machine_name'])));
 
     // == CREATE ===============================================================
 

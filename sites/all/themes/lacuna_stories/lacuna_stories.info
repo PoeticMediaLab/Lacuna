@@ -68,7 +68,6 @@ stylesheets[all][] = css/styles.css
 
 scripts[] = js/script.js
 scripts[] = js/iframe_resize.js
-scripts[] = js/annotations_dashboard_viewport.js
 
 ; This section lists the regions defined in Zen's default page.tpl.php and
 ; maintenance-page.tpl.php files. The name in brackets is the machine name of

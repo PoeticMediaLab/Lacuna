@@ -80,30 +80,17 @@ Drupal.wysiwyg.editor.attach.yui = function(context, params, settings) {
 };
 
 /**
- * Detach a single or all editors.
- *
- * See Drupal.wysiwyg.editor.detach.none() for a full desciption of this hook.
+ * Detach a single editor instance.
  */
 Drupal.wysiwyg.editor.detach.yui = function (context, params, trigger) {
   var method = (trigger && trigger == 'serialize') ? 'saveHTML' : 'destroy';
-  if (typeof params != 'undefined') {
-    var instance = YAHOO.widget.EditorInfo._instances[params.field];
-    if (instance) {
-      instance[method]();
-      if (method == 'destroy') {
-        delete YAHOO.widget.EditorInfo._instances[params.field];
-      }
-    }
+  var instance = YAHOO.widget.EditorInfo._instances[params.field];
+  if (!instance) {
+    return;
   }
-  else {
-    for (var e in YAHOO.widget.EditorInfo._instances) {
-      // Save contents of all editors back into textareas.
-      var instance = YAHOO.widget.EditorInfo._instances[e];
-      instance[method]();
-      if (method == 'destroy') {
-        delete YAHOO.widget.EditorInfo._instances[e];
-      }
-    }
+  instance[method]();
+  if (method != 'serialize') {
+    delete YAHOO.widget.EditorInfo._instances[params.field];
   }
 };
 

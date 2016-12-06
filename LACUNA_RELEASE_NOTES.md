@@ -1,8 +1,9 @@
 Lacuna Release Notes
 ====================
 
-Version 2.2.1
+Version 2.2.1: Fix many Bugs
 -------------
+November 18, 2016
 
 This is a bug fix release.
 
@@ -10,22 +11,25 @@ This is a bug fix release.
  * Disabled annotation histogram on single-page documents
  * Prevent students from viewing profiles of students in other courses
  * Minor visual improvements
- * No longer use the last sharing option as default in an annotation; default is now  "everyone"
+ * No longer use the last choice as default permissions for an annotation; default is now "Everyone"
+ * Patched field_group module to support PHP 7
 
 
 ### Fixes
- * Fixed bug to allow students to reply to each other's annotations
- * Fixed annotation replies to work on mobile devices
- * Fixed buttons wrapping incorrectly in Safari in the annotator window
- * Fixed Responses Map to show links correctly
+ * Fixed bug preventing students from replying to each other's annotations
+ * Annotation replies work on mobile devices
+ * Annotator buttons no longer wrap incorrectly in Safari
+ * Responses Map shows links correctly
  * Improved display of privacy options in Annotation Dashboard
- * Allow media embeds in annotations when site is SSL
+ * Allow media embeds in annotations when site is served over HTTPS
  * Prevent students from selecting peer groups in an annotation when they are not a member of any
  * Cleaned up warning messages in javascript console from Annotation Dashboard
  * Prevent annotation tags from being duplicated; now correctly re-uses existing, identical tags when available
  * Avoid scrollbars on long response titles
+ * Redirect users to Peer Groups page instead of home page after deleting a peer group
+ * If course creation requires a password, accept it correctly
 
-Version 2.2
+Version 2.2: Canvas/LTI Support
 -----------
 October 20, 2016
 
@@ -45,7 +49,7 @@ October 20, 2016
 ### Fixes
  * Fixed WYWISYG formatting for text alignment and bullets in Filtered HTML format
 
-Version 2.1 
+Version 2.1: Threaded Replies to Annotations
 -----------
 August 25, 2016
 
