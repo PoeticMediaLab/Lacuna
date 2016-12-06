@@ -89,6 +89,13 @@
   vertical-align: bottom;
   width: 198px;
   height: 65px;
+
+  //  Added to enhance CSS image scaling
+  image-rendering: -moz-crisp-edges;
+  image-rendering: -o-crisp-edges;
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
+  -ms-interpolation-mode: nearest-neighbor;
 }
 
 /* Wrapper for website name and slogan. */
