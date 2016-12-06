@@ -3,10 +3,15 @@ description = An API for creating visualizations from D3 libraries
 core = 7.x
 dependencies[] = libraries (>=2.0)
 package = Visualization
+configure = admin/config/d3/settings
+files[] = includes/D3LibraryInfoProcessor.inc
+files[] = includes/D3LibraryInfoController.inc
+files[] = includes/D3DataMapping.inc
+files[] = tests/d3_info_handler.test
 
-; Information added by Drupal.org packaging script on 2015-02-21
-version = "7.x-1.x-dev"
+; Information added by Drupal.org packaging script on 2016-08-03
+version = "7.x-1.0-alpha2+4-dev"
 core = "7.x"
 project = "d3"
-datestamp = "1424552583"
+datestamp = "1470250440"
 

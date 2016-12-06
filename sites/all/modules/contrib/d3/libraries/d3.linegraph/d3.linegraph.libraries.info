@@ -5,11 +5,22 @@ files[css][] = linegraph.css
 version = 0.1
 dependencies[] = d3.extend
 dependencies[] = d3.tooltip
-views = 2.5
+views[version] = 3.0
+views[fields][rows][__data_type] = 2dnnv
+views[fields][rows][x_label][label] = X label
+views[fields][rows][x_label][type] = string
+views[fields][rows][x_label][description] = The label that appears on the X axis.
+views[fields][rows][value] = { __repeated: TRUE, __cardinality: 0, label: Numeric value, type: integer, description: The numeric value that will be used to plot each dot (circle) on the line }
+views[fields][legend][__cardinality] = 0
+views[fields][legend][__data_type] = 1dn 
+views[fields][legend][label] = Line label
+views[fields][legend][description] = The meaning of each different line.
+views[fields][legend][type] = string
+views[settings] = views-settings.php
 
-; Information added by Drupal.org packaging script on 2015-02-21
-version = "7.x-1.x-dev"
+; Information added by Drupal.org packaging script on 2016-08-03
+version = "7.x-1.0-alpha2+4-dev"
 core = "7.x"
 project = "d3"
-datestamp = "1424552583"
+datestamp = "1470250440"
 
