@@ -13,6 +13,7 @@ This is a bug fix release.
  * Minor visual improvements
  * No longer use the last choice as default permissions for an annotation; default is now "Everyone"
  * Patched field_group module to support PHP 7
+ * Updated all contributed modules without outstanding updates
 
 
 ### Fixes
@@ -28,6 +29,7 @@ This is a bug fix release.
  * Avoid scrollbars on long response titles
  * Redirect users to Peer Groups page instead of home page after deleting a peer group
  * If course creation requires a password, accept it correctly
+ * Patched d3 module so that it can be updated again
 
 Version 2.2: Canvas/LTI Support
 -----------
