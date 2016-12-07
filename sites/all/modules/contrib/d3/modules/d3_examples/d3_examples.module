@@ -9,14 +9,14 @@
  */
 function d3_examples_menu() {
 
-  $items['examples'] = array(
+  $items['d3/examples'] = array(
     'title' => 'D3 examples',
     'description' => 'Different visualization examples using d3.',
     'page callback' => 'd3_examples_linegraph',
     'access callback' => TRUE,
   );
 
-  $items['examples/line'] = array(
+  $items['d3/examples/line'] = array(
     'title' => 'Line graph',
     'description' => 'Uses d3 module to create a sample line graph',
     'access callback' => TRUE,
@@ -25,7 +25,7 @@ function d3_examples_menu() {
   );
 
   if (module_exists('graphapi')) {
-    $items['examples/forcedirected'] = array(
+    $items['d3/examples/forcedirected'] = array(
       'title' => 'Force directed graph',
       'description' => 'Uses d3 module to create a sample force directed graph',
       'access callback' => TRUE,
@@ -34,7 +34,7 @@ function d3_examples_menu() {
     );
   }
 
-  $items['examples/column'] = array(
+  $items['d3/examples/column'] = array(
     'title' => 'Column chart',
     'description' => 'Uses d3 module to create a sample column chart',
     'access callback' => TRUE,
@@ -42,7 +42,7 @@ function d3_examples_menu() {
     'type' => MENU_LOCAL_TASK,
   );
 
-  $items['examples/bar'] = array(
+  $items['d3/examples/bar'] = array(
     'title' => 'Bar chart',
     'description' => 'Uses d3 module to create a sample bar chart',
     'access callback' => TRUE,
@@ -50,7 +50,7 @@ function d3_examples_menu() {
     'type' => MENU_LOCAL_TASK,
   );
 
-  $items['examples/pie'] = array(
+  $items['d3/examples/pie'] = array(
     'title' => 'Pie chart',
     'description' => 'Uses d3 module to create a sample pie chart.',
     'access callback' => TRUE,
@@ -68,7 +68,7 @@ function d3_examples_linegraph() {
 
   $chart = array(
     'id' => 'visualization',
-    'type' => 'LineGraph',
+    'type' => 'linegraph',
     'legend' => array(
       'Development',
       'QA',
@@ -121,7 +121,7 @@ function d3_examples_column() {
 
   $chart = array(
     'id' => 'visualization',
-    'type' => 'ColumnChart',
+    'type' => 'columnchart',
     'legend' => array(
       'Development',
       'QA',
@@ -151,7 +151,7 @@ function d3_examples_bar() {
   // Temporary data until I get randomization working.
   $chart = array(
     'id' => 'visualization',
-    'type' => 'BarChart',
+    'type' => 'barchart',
     'legend' => array(
       'Development',
       'QA',
@@ -186,7 +186,7 @@ function d3_examples_bar() {
 function d3_examples_pie() {
   $chart = array(
     'id' => 'visualization',
-    'type' => 'PieChart',
+    'type' => 'piechart',
     'rows' => array(
       array('Development', 500),
       array('Strategy', 50),

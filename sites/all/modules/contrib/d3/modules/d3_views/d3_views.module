@@ -18,13 +18,21 @@ function d3_views_views_api() {
  * Implements hook_theme().
  */
 function d3_views_theme() {
-
   return array(
     'views_ui_style_d3_options_form' => array(
       'render element' => 'form',
     ),
   );
+}
 
+function d3_views_library_info_handlers() {
+  return array(
+    'views' => array(
+      'processor' => 'D3ViewsLibraryInfoProcessor',
+      'controller' => 'D3ViewsLibraryInfoController',
+      'mapping' => 'D3ViewsDataMapping',
+    ),
+  );
 }
 
 /**
@@ -35,32 +43,55 @@ function d3_preprocess_views_ui_style_d3_options_form(&$vars) {
 }
 
 /**
+ * Helper function to keep code for each row contained.
+ *
+ * @see theme_views_ui_style_d3_options_form().
+ */
+function _theme_views_ui_style_d3_options_form_row(&$element, &$header) {
+  $td = array();
+  foreach (element_children($element) as $key) {
+    // Use the title for the header of the table, and not the label.
+    $header[] = isset($element[$key]['#title']) ? $element[$key]['#title'] : '';
+    // Make sure it doesn't get rendered as a label.
+    unset($element[$key]['#title']);
+    $td[] = drupal_render($element[$key]);
+  }
+  return $td;
+}
+
+/**
  * Theme the form for the table style plugin.
  */
 function theme_views_ui_style_d3_options_form($variables) {
   $form = $variables['form'];
-
   $output = drupal_render($form['library']);
 
-  $header = array(
-    t('Field'),
-    t('Display'),
-    t('Aggregation'),
-    t('Data type'),
-  );
-  $rows = array();
-  foreach (element_children($form['columns']) as $id) {
-    $row = array();
-    $row[] = drupal_render($form['columns'][$id]['name']);
-    $row[] = drupal_render($form['columns'][$id]['display']);
-    $row[] = drupal_render($form['columns'][$id]['aggregate']);
-    $row[] = drupal_render($form['columns'][$id]['type']);
-
-    $rows[] = $row;
+  $required = &$form['fields'];
+  // Loop over each type of dataset, default will be 'rows'.
+  foreach (element_children($required) as $id) {
+    $header = array();
+    $rows = array();
+    // This row does not have sub fields.
+    if (!empty($required[$id]['field'])) {
+      $rows[] = _theme_views_ui_style_d3_options_form_row($required[$id], $header);
+    }
+    else {
+      // Each of these sub fields another mapping.
+      foreach (element_children($required[$id]) as $field_name) {
+        $header = array();
+        $rows[] = _theme_views_ui_style_d3_options_form_row($required[$id][$field_name], $header);
+      }
+    }
+    // Each data array has an option to convert it to a numeric array.
+    $rows[] = array(array('data' => drupal_render($form['numeric'][$id]), 'colspan' => count($header)));
+    $required['table' . $id] = array(
+      '#caption' => isset($required[$id]['#caption']) ? $required[$id]['#caption'] : FALSE,
+      '#theme' => 'table',
+      '#rows' => $rows,
+      '#header' => $header,
+    );
   }
 
-  $output .= '<fieldset><legend>Data</legend>' . theme('table', array('header' => $header, 'rows' => $rows)) . '</fieldset>';
-
-  $output .= drupal_render_children($form);
+  $output .= drupal_render($required) . drupal_render_children($form);
   return $output;
 }

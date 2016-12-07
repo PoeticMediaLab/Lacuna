@@ -758,7 +758,7 @@ function main(data) {
 				// BUG: This doesn't work right
 				if (pie_type == 'annotation_tags' && typeof a[pie_type] === 'array') {
 					// loop through tags array
-					console.log(a.annotation_tags, 'annotation_tags');
+					//console.log(a.annotation_tags, 'annotation_tags');
 					a.annotation_tags.forEach(function (tag) {
 						pie_slice_keys['annotation_tags'].push(tag);
 					})
@@ -891,7 +891,7 @@ function main(data) {
 
   	bars.attr("width", bar_width)
   		.attr("y", function (d) { return bar_y(d.y) })
-  		.attr("x", function (d) { console.log(bar_x(d.x)); return bar_x(d.x) })
+  		.attr("x", function (d) { return bar_x(d.x) })
   		.attr("height", function (d) { return size.bar.height - bar_y(d.y) })
   		;
 
