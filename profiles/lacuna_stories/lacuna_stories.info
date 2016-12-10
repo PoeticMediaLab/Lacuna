@@ -1,6 +1,6 @@
 ; Packaging information for lacuna_stories
 name = "Lacuna Stories"
-description = "Installation profile for Lacuna Stories."
+description = "Installation profile for Lacuna."
 exclusive = TRUE
 core = "7.x"
 distribution_name = "Lacuna"
