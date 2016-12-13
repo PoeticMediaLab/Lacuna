@@ -80,6 +80,31 @@ function lacuna_stories_peer_groups_field_default_field_bases() {
     'type' => 'button_field',
   );
 
+  // Exported field_base: 'field_peer_group_image'.
+  $field_bases['field_peer_group_image'] = array(
+    'active' => 1,
+    'cardinality' => 1,
+    'deleted' => 0,
+    'entity_types' => array(),
+    'field_name' => 'field_peer_group_image',
+    'field_permissions' => array(
+      'type' => 0,
+    ),
+    'indexes' => array(
+      'fid' => array(
+        0 => 'fid',
+      ),
+    ),
+    'locked' => 0,
+    'module' => 'image',
+    'settings' => array(
+      'default_image' => 0,
+      'uri_scheme' => 'public',
+    ),
+    'translatable' => 0,
+    'type' => 'image',
+  );
+
   // Exported field_base: 'og_user_node1'.
   $field_bases['og_user_node1'] = array(
     'active' => 1,

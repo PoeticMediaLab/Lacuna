@@ -133,6 +133,56 @@ function lacuna_stories_peer_groups_field_default_field_instances() {
     ),
   );
 
+  // Exported field_instance: 'node-peer_group-field_peer_group_image'.
+  $field_instances['node-peer_group-field_peer_group_image'] = array(
+    'bundle' => 'peer_group',
+    'deleted' => 0,
+    'description' => 'Upload an image to represent your peer group.',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'image',
+        'settings' => array(
+          'image_link' => '',
+          'image_style' => '',
+        ),
+        'type' => 'image',
+        'weight' => 16,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_peer_group_image',
+    'label' => 'Peer Group Image',
+    'required' => 0,
+    'settings' => array(
+      'alt_field' => 0,
+      'default_image' => 23,
+      'file_directory' => '',
+      'file_extensions' => 'png gif jpg jpeg',
+      'max_filesize' => '',
+      'max_resolution' => '',
+      'min_resolution' => '',
+      'title_field' => 0,
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'image',
+      'settings' => array(
+        'preview_image_style' => 'thumbnail',
+        'progress_indicator' => 'throbber',
+      ),
+      'type' => 'image_image',
+      'weight' => 8,
+    ),
+  );
+
   // Exported field_instance: 'node-peer_group-group_access'.
   $field_instances['node-peer_group-group_access'] = array(
     'bundle' => 'peer_group',
@@ -377,7 +427,9 @@ This setting can be changed at any time.');
   t('Groups audience');
   t('Join Group');
   t('Leave Group');
+  t('Peer Group Image');
   t('Peer Group(s)');
+  t('Upload an image to represent your peer group.');
 
   return $field_instances;
 }
