@@ -54,6 +54,88 @@ function lacuna_stories_peer_groups_field_default_field_instances() {
     ),
   );
 
+  // Exported field_instance: 'node-peer_group-field_join_group'.
+  $field_instances['node-peer_group-field_join_group'] = array(
+    'bundle' => 'peer_group',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'button_field',
+        'settings' => array(),
+        'type' => 'button_field_default',
+        'weight' => 5,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_join_group',
+    'label' => 'Join Group',
+    'required' => FALSE,
+    'settings' => array(
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'button_field',
+      'settings' => array(
+        'additional_classes' => '',
+        'edit_hidden' => 1,
+        'text' => 'Join Group',
+      ),
+      'type' => 'button_field_html',
+      'weight' => 7,
+    ),
+  );
+
+  // Exported field_instance: 'node-peer_group-field_leave_group'.
+  $field_instances['node-peer_group-field_leave_group'] = array(
+    'bundle' => 'peer_group',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'button_field',
+        'settings' => array(),
+        'type' => 'button_field_default',
+        'weight' => 4,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_leave_group',
+    'label' => 'Leave Group',
+    'required' => FALSE,
+    'settings' => array(
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'button_field',
+      'settings' => array(
+        'additional_classes' => '',
+        'edit_hidden' => 1,
+        'text' => 'Leave Group',
+      ),
+      'type' => 'button_field_html',
+      'weight' => 6,
+    ),
+  );
+
   // Exported field_instance: 'node-peer_group-group_access'.
   $field_instances['node-peer_group-group_access'] = array(
     'bundle' => 'peer_group',
@@ -301,6 +383,8 @@ This setting can be changed at any time.');
   t('Group');
   t('Group Visibility');
   t('Groups audience');
+  t('Join Group');
+  t('Leave Group');
   t('Peer Group(s)');
 
   return $field_instances;

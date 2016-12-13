@@ -32,6 +32,54 @@ function lacuna_stories_peer_groups_field_default_field_bases() {
     'type' => 'text_long',
   );
 
+  // Exported field_base: 'field_join_group'.
+  $field_bases['field_join_group'] = array(
+    'active' => 1,
+    'cardinality' => 1,
+    'deleted' => 0,
+    'entity_types' => array(),
+    'field_name' => 'field_join_group',
+    'field_permissions' => array(
+      'type' => 0,
+    ),
+    'indexes' => array(
+      'value' => array(
+        0 => 'value',
+      ),
+    ),
+    'locked' => 0,
+    'module' => 'button_field',
+    'settings' => array(
+      'confirmation' => '',
+    ),
+    'translatable' => 0,
+    'type' => 'button_field',
+  );
+
+  // Exported field_base: 'field_leave_group'.
+  $field_bases['field_leave_group'] = array(
+    'active' => 1,
+    'cardinality' => 1,
+    'deleted' => 0,
+    'entity_types' => array(),
+    'field_name' => 'field_leave_group',
+    'field_permissions' => array(
+      'type' => 0,
+    ),
+    'indexes' => array(
+      'value' => array(
+        0 => 'value',
+      ),
+    ),
+    'locked' => 0,
+    'module' => 'button_field',
+    'settings' => array(
+      'confirmation' => '',
+    ),
+    'translatable' => 0,
+    'type' => 'button_field',
+  );
+
   // Exported field_base: 'og_user_node1'.
   $field_bases['og_user_node1'] = array(
     'active' => 1,
