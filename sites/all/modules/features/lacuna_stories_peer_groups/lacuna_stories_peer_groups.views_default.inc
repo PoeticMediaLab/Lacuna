@@ -240,12 +240,12 @@ function lacuna_stories_peer_groups_views_default_views() {
 ';
   $handler->display->display_options['fields']['php']['use_php_click_sortable'] = '0';
   $handler->display->display_options['fields']['php']['php_click_sortable'] = '';
-  /* Field: Content: Leave Group */
-  $handler->display->display_options['fields']['field_leave_group']['id'] = 'field_leave_group';
-  $handler->display->display_options['fields']['field_leave_group']['table'] = 'field_data_field_leave_group';
-  $handler->display->display_options['fields']['field_leave_group']['field'] = 'field_leave_group';
-  $handler->display->display_options['fields']['field_leave_group']['label'] = '';
-  $handler->display->display_options['fields']['field_leave_group']['element_label_colon'] = FALSE;
+  /* Field: Content: Join Group */
+  $handler->display->display_options['fields']['field_join_group']['id'] = 'field_join_group';
+  $handler->display->display_options['fields']['field_join_group']['table'] = 'field_data_field_join_group';
+  $handler->display->display_options['fields']['field_join_group']['field'] = 'field_join_group';
+  $handler->display->display_options['fields']['field_join_group']['label'] = '';
+  $handler->display->display_options['fields']['field_join_group']['element_label_colon'] = FALSE;
   $handler->display->display_options['defaults']['arguments'] = FALSE;
   $handler->display->display_options['defaults']['filter_groups'] = FALSE;
   $handler->display->display_options['defaults']['filters'] = FALSE;

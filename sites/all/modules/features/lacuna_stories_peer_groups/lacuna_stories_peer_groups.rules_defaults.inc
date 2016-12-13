@@ -30,8 +30,8 @@ function lacuna_stories_peer_groups_default_rules_configuration() {
       ],
       "DO" : [
         { "og_subcribe_user" : { "user" : [ "site:current-user" ], "group" : [ "entity" ] } },
-        { "redirect" : { "url" : "[site:current-page]" } },
-        { "drupal_message" : { "message" : "You have been added to the Peer Group [entity:title]" } }
+        { "redirect" : { "url" : "peer-groups" } },
+        { "drupal_message" : { "message" : "You have been added to this peer group." } }
       ]
     }
   }');
@@ -57,8 +57,8 @@ function lacuna_stories_peer_groups_default_rules_configuration() {
       ],
       "DO" : [
         { "og_unsubscribe_user" : { "user" : [ "site:current-user" ], "group" : [ "entity" ] } },
-        { "redirect" : { "url" : "[site:current-page]" } },
-        { "drupal_message" : { "message" : "You have been removed from the Peer Group [entity:title]" } }
+        { "redirect" : { "url" : "peer-groups" } },
+        { "drupal_message" : { "message" : "You have been removed from this peer group." } }
       ]
     }
   }');
