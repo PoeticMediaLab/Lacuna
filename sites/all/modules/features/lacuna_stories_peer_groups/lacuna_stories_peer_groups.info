@@ -26,6 +26,7 @@ dependencies[] = views_php
 features[ctools][] = ds:ds:1
 features[ctools][] = strongarm:strongarm:1
 features[ctools][] = views:views_default:3.0
+features[ds_fields][] = peer_group_members
 features[features_api][] = api:2
 features[field_base][] = field_group_description
 features[field_base][] = field_join_group
