@@ -98,6 +98,7 @@ features[variable][] = node_options_peer_group
 features[variable][] = node_preview_peer_group
 features[variable][] = node_submitted_peer_group
 features[variable][] = pathauto_node_peer_group_pattern
+features[views_view][] = peer_groups
 features_exclude[dependencies][og_ui] = og_ui
 features_exclude[dependencies][og_vocab] = og_vocab
 features_exclude[field_base][group_access] = group_access
