@@ -441,3 +441,26 @@ body.not-logged-in div.field-name-group-group a {
   padding: 5px;
 }
 
+
+/*theming for Peer Groups pages --DMB 12/13/2016*/
+div.node-peer-group.view-mode-full {
+    .group-header {
+        width: 100%;
+        height: 35vh;
+        overflow: hidden;
+        border-bottom: 1px solid #d1d5d3;
+      }
+    .field-name-title {
+        font-size: 2em;
+        text-align: left;
+        letter-spacing: -.01em;
+        text-transform: uppercase;
+        color: #1588ba;
+        line-height: 1em;
+        margin-right: 5%;
+    }
+    .field-name-title h2 {
+        font-family: "Source Sans Pro", $arial !important;
+        font-weight: 500;
+    }
+}
