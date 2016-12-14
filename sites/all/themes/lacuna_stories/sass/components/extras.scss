@@ -463,4 +463,37 @@ div.node-peer-group.view-mode-full {
         font-family: "Source Sans Pro", $arial !important;
         font-weight: 500;
     }
+    .views-row {
+      clear: left;
+      padding-top: 20px;
+    }
+    .views-field-picture {
+      width: 100px;
+      float: left;
+      margin-right: 20px;
+    }
+    .view-peer-groups-image img {
+      border-radius: 50%;
+    }
 }
+
+.view-peer-groups {
+  .views-fluid-grid-item {
+    display: block;
+    margin-bottom: 2em;
+    max-width: 450px;
+  }
+  .views-field-field-peer-group-image {
+    float: left;
+  }
+  .view-peer-groups-image {
+    img {
+      border-radius: 50%;
+      margin-right: 20px;
+      margin-left: 10px;
+      margin-top: 5px;
+    }
+  }
+}
+
+

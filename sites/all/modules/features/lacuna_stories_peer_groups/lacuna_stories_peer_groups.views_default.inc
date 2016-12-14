@@ -54,6 +54,16 @@ function lacuna_stories_peer_groups_views_default_views() {
   $handler->display->display_options['relationships']['og_membership_rel']['id'] = 'og_membership_rel';
   $handler->display->display_options['relationships']['og_membership_rel']['table'] = 'users';
   $handler->display->display_options['relationships']['og_membership_rel']['field'] = 'og_membership_rel';
+  /* Field: User: Picture */
+  $handler->display->display_options['fields']['picture']['id'] = 'picture';
+  $handler->display->display_options['fields']['picture']['table'] = 'users';
+  $handler->display->display_options['fields']['picture']['field'] = 'picture';
+  $handler->display->display_options['fields']['picture']['label'] = '';
+  $handler->display->display_options['fields']['picture']['element_type'] = 'div';
+  $handler->display->display_options['fields']['picture']['element_class'] = '.view-peer-groups-image';
+  $handler->display->display_options['fields']['picture']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['picture']['link_photo_to_profile'] = FALSE;
+  $handler->display->display_options['fields']['picture']['image_style'] = 'square_thumbnail';
   /* Field: User: Name */
   $handler->display->display_options['fields']['name']['id'] = 'name';
   $handler->display->display_options['fields']['name']['table'] = 'users';
@@ -67,7 +77,8 @@ function lacuna_stories_peer_groups_views_default_views() {
   $handler->display->display_options['fields']['created']['field'] = 'created';
   $handler->display->display_options['fields']['created']['relationship'] = 'og_membership_rel';
   $handler->display->display_options['fields']['created']['label'] = 'Date Joined';
-  $handler->display->display_options['fields']['created']['date_format'] = 'short';
+  $handler->display->display_options['fields']['created']['date_format'] = 'custom';
+  $handler->display->display_options['fields']['created']['custom_date_format'] = 'm/d/Y';
   $handler->display->display_options['fields']['created']['second_date_format'] = 'long';
   /* Field: Global: PHP */
   $handler->display->display_options['fields']['php']['id'] = 'php';
@@ -141,36 +152,14 @@ print lacuna_stories_peer_groups_member_links ($row, $view);
   $handler->display->display_options['pager']['options']['offset'] = '0';
   $handler->display->display_options['pager']['options']['id'] = '0';
   $handler->display->display_options['pager']['options']['quantity'] = '9';
-  $handler->display->display_options['style_plugin'] = 'table';
-  $handler->display->display_options['style_options']['columns'] = array(
-    'title' => 'title',
-    'created' => 'created',
-    'uid' => 'uid',
+  $handler->display->display_options['style_plugin'] = 'fluid_grid';
+  $handler->display->display_options['style_options']['items_width'] = '';
+  $handler->display->display_options['style_options']['advanced_layout'] = array(
+    'css3' => TRUE,
   );
-  $handler->display->display_options['style_options']['default'] = 'created';
-  $handler->display->display_options['style_options']['info'] = array(
-    'title' => array(
-      'sortable' => 1,
-      'default_sort_order' => 'asc',
-      'align' => '',
-      'separator' => '',
-      'empty_column' => 0,
-    ),
-    'created' => array(
-      'sortable' => 1,
-      'default_sort_order' => 'desc',
-      'align' => '',
-      'separator' => '',
-      'empty_column' => 0,
-    ),
-    'uid' => array(
-      'sortable' => 1,
-      'default_sort_order' => 'desc',
-      'align' => '',
-      'separator' => '',
-      'empty_column' => 0,
-    ),
-  );
+  $handler->display->display_options['style_options']['box_shadow'] = '1';
+  $handler->display->display_options['style_options']['border_radius'] = '1';
+  $handler->display->display_options['row_plugin'] = 'fields';
   /* Header: Global: Text area */
   $handler->display->display_options['header']['area']['id'] = 'area';
   $handler->display->display_options['header']['area']['table'] = 'views';
@@ -191,13 +180,28 @@ print lacuna_stories_peer_groups_member_links ($row, $view);
   $handler->display->display_options['relationships']['og_membership_related_user']['table'] = 'og_membership';
   $handler->display->display_options['relationships']['og_membership_related_user']['field'] = 'og_membership_related_user';
   $handler->display->display_options['relationships']['og_membership_related_user']['relationship'] = 'og_membership_rel_group';
+  /* Field: Content: Peer Group Image */
+  $handler->display->display_options['fields']['field_peer_group_image']['id'] = 'field_peer_group_image';
+  $handler->display->display_options['fields']['field_peer_group_image']['table'] = 'field_data_field_peer_group_image';
+  $handler->display->display_options['fields']['field_peer_group_image']['field'] = 'field_peer_group_image';
+  $handler->display->display_options['fields']['field_peer_group_image']['label'] = '';
+  $handler->display->display_options['fields']['field_peer_group_image']['element_type'] = 'div';
+  $handler->display->display_options['fields']['field_peer_group_image']['element_class'] = '.view-peer-groups-image';
+  $handler->display->display_options['fields']['field_peer_group_image']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['field_peer_group_image']['click_sort_column'] = 'fid';
+  $handler->display->display_options['fields']['field_peer_group_image']['settings'] = array(
+    'image_style' => 'square_thumbnail',
+    'image_link' => '',
+  );
+  $handler->display->display_options['fields']['field_peer_group_image']['group_column'] = 'entity_id';
   /* Field: Content: Title */
   $handler->display->display_options['fields']['title']['id'] = 'title';
   $handler->display->display_options['fields']['title']['table'] = 'node';
   $handler->display->display_options['fields']['title']['field'] = 'title';
-  $handler->display->display_options['fields']['title']['label'] = 'Group Name';
+  $handler->display->display_options['fields']['title']['label'] = '';
   $handler->display->display_options['fields']['title']['alter']['word_boundary'] = FALSE;
   $handler->display->display_options['fields']['title']['alter']['ellipsis'] = FALSE;
+  $handler->display->display_options['fields']['title']['element_label_colon'] = FALSE;
   /* Field: COUNT(User: Uid) */
   $handler->display->display_options['fields']['uid']['id'] = 'uid';
   $handler->display->display_options['fields']['uid']['table'] = 'users';
@@ -205,24 +209,34 @@ print lacuna_stories_peer_groups_member_links ($row, $view);
   $handler->display->display_options['fields']['uid']['relationship'] = 'og_membership_related_user';
   $handler->display->display_options['fields']['uid']['group_type'] = 'count';
   $handler->display->display_options['fields']['uid']['label'] = 'Members';
+  $handler->display->display_options['fields']['uid']['element_default_classes'] = FALSE;
   /* Field: Content: Post date */
   $handler->display->display_options['fields']['created']['id'] = 'created';
   $handler->display->display_options['fields']['created']['table'] = 'node';
   $handler->display->display_options['fields']['created']['field'] = 'created';
   $handler->display->display_options['fields']['created']['label'] = 'Created';
-  $handler->display->display_options['fields']['created']['date_format'] = 'short';
+  $handler->display->display_options['fields']['created']['date_format'] = 'custom';
+  $handler->display->display_options['fields']['created']['custom_date_format'] = 'm/d/Y';
   $handler->display->display_options['fields']['created']['second_date_format'] = 'long';
   /* Field: Global: PHP */
   $handler->display->display_options['fields']['php']['id'] = 'php';
   $handler->display->display_options['fields']['php']['table'] = 'views';
   $handler->display->display_options['fields']['php']['field'] = 'php';
   $handler->display->display_options['fields']['php']['label'] = '';
+  $handler->display->display_options['fields']['php']['exclude'] = TRUE;
   $handler->display->display_options['fields']['php']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['php']['use_php_setup'] = 0;
   $handler->display->display_options['fields']['php']['php_output'] = '<?php print lacuna_stories_peer_groups_listing_join_leave_link ($data, $view) ?>
 ';
   $handler->display->display_options['fields']['php']['use_php_click_sortable'] = '0';
   $handler->display->display_options['fields']['php']['php_click_sortable'] = '';
+  /* Field: Content: Join Group */
+  $handler->display->display_options['fields']['field_join_group']['id'] = 'field_join_group';
+  $handler->display->display_options['fields']['field_join_group']['table'] = 'field_data_field_join_group';
+  $handler->display->display_options['fields']['field_join_group']['field'] = 'field_join_group';
+  $handler->display->display_options['fields']['field_join_group']['label'] = '';
+  $handler->display->display_options['fields']['field_join_group']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['field_join_group']['element_default_classes'] = FALSE;
   /* Contextual filter: Content: Author uid */
   $handler->display->display_options['arguments']['uid']['id'] = 'uid';
   $handler->display->display_options['arguments']['uid']['table'] = 'node';
@@ -257,13 +271,28 @@ print lacuna_stories_peer_groups_member_links ($row, $view);
   /* Display: Joined Peer Groups */
   $handler = $view->new_display('block', 'Joined Peer Groups', 'joined_peer_groups');
   $handler->display->display_options['defaults']['fields'] = FALSE;
+  /* Field: Content: Peer Group Image */
+  $handler->display->display_options['fields']['field_peer_group_image']['id'] = 'field_peer_group_image';
+  $handler->display->display_options['fields']['field_peer_group_image']['table'] = 'field_data_field_peer_group_image';
+  $handler->display->display_options['fields']['field_peer_group_image']['field'] = 'field_peer_group_image';
+  $handler->display->display_options['fields']['field_peer_group_image']['label'] = '';
+  $handler->display->display_options['fields']['field_peer_group_image']['element_type'] = 'div';
+  $handler->display->display_options['fields']['field_peer_group_image']['element_class'] = '.view-peer-groups-image';
+  $handler->display->display_options['fields']['field_peer_group_image']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['field_peer_group_image']['click_sort_column'] = 'fid';
+  $handler->display->display_options['fields']['field_peer_group_image']['settings'] = array(
+    'image_style' => 'square_thumbnail',
+    'image_link' => '',
+  );
+  $handler->display->display_options['fields']['field_peer_group_image']['group_column'] = 'entity_id';
   /* Field: Content: Title */
   $handler->display->display_options['fields']['title']['id'] = 'title';
   $handler->display->display_options['fields']['title']['table'] = 'node';
   $handler->display->display_options['fields']['title']['field'] = 'title';
-  $handler->display->display_options['fields']['title']['label'] = 'Group Name';
+  $handler->display->display_options['fields']['title']['label'] = '';
   $handler->display->display_options['fields']['title']['alter']['word_boundary'] = FALSE;
   $handler->display->display_options['fields']['title']['alter']['ellipsis'] = FALSE;
+  $handler->display->display_options['fields']['title']['element_label_colon'] = FALSE;
   /* Field: COUNT(User: Uid) */
   $handler->display->display_options['fields']['uid']['id'] = 'uid';
   $handler->display->display_options['fields']['uid']['table'] = 'users';
@@ -271,12 +300,15 @@ print lacuna_stories_peer_groups_member_links ($row, $view);
   $handler->display->display_options['fields']['uid']['relationship'] = 'og_membership_related_user';
   $handler->display->display_options['fields']['uid']['group_type'] = 'count';
   $handler->display->display_options['fields']['uid']['label'] = 'Members';
+  $handler->display->display_options['fields']['uid']['element_wrapper_type'] = 'div';
+  $handler->display->display_options['fields']['uid']['element_wrapper_class'] = '.peer-group-members';
   /* Field: Content: Post date */
   $handler->display->display_options['fields']['created']['id'] = 'created';
   $handler->display->display_options['fields']['created']['table'] = 'node';
   $handler->display->display_options['fields']['created']['field'] = 'created';
   $handler->display->display_options['fields']['created']['label'] = 'Created';
-  $handler->display->display_options['fields']['created']['date_format'] = 'short';
+  $handler->display->display_options['fields']['created']['date_format'] = 'custom';
+  $handler->display->display_options['fields']['created']['custom_date_format'] = 'm/d/Y';
   $handler->display->display_options['fields']['created']['second_date_format'] = 'long';
   /* Field: Global: PHP */
   $handler->display->display_options['fields']['php']['id'] = 'php';
@@ -296,6 +328,7 @@ print lacuna_stories_peer_groups_member_links ($row, $view);
   $handler->display->display_options['fields']['field_leave_group']['field'] = 'field_leave_group';
   $handler->display->display_options['fields']['field_leave_group']['label'] = '';
   $handler->display->display_options['fields']['field_leave_group']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['field_leave_group']['element_default_classes'] = FALSE;
   $handler->display->display_options['defaults']['arguments'] = FALSE;
   /* Contextual filter: Content: Author uid */
   $handler->display->display_options['arguments']['uid']['id'] = 'uid';
@@ -312,46 +345,6 @@ print lacuna_stories_peer_groups_member_links ($row, $view);
   $handler = $view->new_display('block', 'Unjoined Peer Groups', 'unjoined_peer_groups');
   $handler->display->display_options['defaults']['title'] = FALSE;
   $handler->display->display_options['title'] = 'Open to Join';
-  $handler->display->display_options['defaults']['fields'] = FALSE;
-  /* Field: Content: Title */
-  $handler->display->display_options['fields']['title']['id'] = 'title';
-  $handler->display->display_options['fields']['title']['table'] = 'node';
-  $handler->display->display_options['fields']['title']['field'] = 'title';
-  $handler->display->display_options['fields']['title']['label'] = 'Group Name';
-  $handler->display->display_options['fields']['title']['alter']['word_boundary'] = FALSE;
-  $handler->display->display_options['fields']['title']['alter']['ellipsis'] = FALSE;
-  /* Field: COUNT(User: Uid) */
-  $handler->display->display_options['fields']['uid']['id'] = 'uid';
-  $handler->display->display_options['fields']['uid']['table'] = 'users';
-  $handler->display->display_options['fields']['uid']['field'] = 'uid';
-  $handler->display->display_options['fields']['uid']['relationship'] = 'og_membership_related_user';
-  $handler->display->display_options['fields']['uid']['group_type'] = 'count';
-  $handler->display->display_options['fields']['uid']['label'] = 'Members';
-  /* Field: Content: Post date */
-  $handler->display->display_options['fields']['created']['id'] = 'created';
-  $handler->display->display_options['fields']['created']['table'] = 'node';
-  $handler->display->display_options['fields']['created']['field'] = 'created';
-  $handler->display->display_options['fields']['created']['label'] = 'Created';
-  $handler->display->display_options['fields']['created']['date_format'] = 'short';
-  $handler->display->display_options['fields']['created']['second_date_format'] = 'long';
-  /* Field: Global: PHP */
-  $handler->display->display_options['fields']['php']['id'] = 'php';
-  $handler->display->display_options['fields']['php']['table'] = 'views';
-  $handler->display->display_options['fields']['php']['field'] = 'php';
-  $handler->display->display_options['fields']['php']['label'] = '';
-  $handler->display->display_options['fields']['php']['exclude'] = TRUE;
-  $handler->display->display_options['fields']['php']['element_label_colon'] = FALSE;
-  $handler->display->display_options['fields']['php']['use_php_setup'] = 0;
-  $handler->display->display_options['fields']['php']['php_output'] = '<?php print lacuna_stories_peer_groups_listing_join_leave_link ($data, $view) ?>
-';
-  $handler->display->display_options['fields']['php']['use_php_click_sortable'] = '0';
-  $handler->display->display_options['fields']['php']['php_click_sortable'] = '';
-  /* Field: Content: Join Group */
-  $handler->display->display_options['fields']['field_join_group']['id'] = 'field_join_group';
-  $handler->display->display_options['fields']['field_join_group']['table'] = 'field_data_field_join_group';
-  $handler->display->display_options['fields']['field_join_group']['field'] = 'field_join_group';
-  $handler->display->display_options['fields']['field_join_group']['label'] = '';
-  $handler->display->display_options['fields']['field_join_group']['element_label_colon'] = FALSE;
   $handler->display->display_options['defaults']['arguments'] = FALSE;
   $handler->display->display_options['defaults']['filter_groups'] = FALSE;
   $handler->display->display_options['defaults']['filters'] = FALSE;
