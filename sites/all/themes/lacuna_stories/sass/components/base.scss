@@ -11,9 +11,6 @@ body {
   background-color: $bg-color;
   line-height: 1.5em;
   box-shadow: none;
-
-  //  added min window width
-  min-width: 600px;
 }
 
 /*  Adds 5em margins to left and right of document
@@ -38,11 +35,74 @@ article.node {
   section#comments h2 {
     margin-left: 2.5em;
   }
+  @media (max-width: 540px) {
+    margin-top: 0;
+    padding-top: 0;
+  }
 }
 
 article.node-document {
   .field-type-text-long {
     min-height: 800px;
+    @media (max-width: 540px) {
+      margin-left: 1em;
+      margin-right: 1em;
+      margin-top: -0.5em;
+      font-size: 0.8em;
+      line-height: 1.25;
+      text-align: left;
+    }
+  }
+}
+
+@media (max-width: 540px) {
+  article.node.node-response {
+
+    margin-top: -2em;
+
+    header,
+    .field,
+    fieldset,
+    #comments {
+      margin-left: 1em;
+      margin-right: 1em;
+      text-align: left;
+      font-size: .8em;
+      line-height: 1.25;
+    }
+
+    #comments .comments__form-title,
+    #comments form > div > div,
+    #comments form .form-item {
+      margin-left: 0;
+      margin-right: 0;
+    }
+
+  }
+}
+
+@media (max-width: 540px) {
+  article.node-thread {
+    margin-left: 1em;
+    margin-right: 1em;
+
+    header {
+      margin-left: 1em;
+      margin-right: 1em;
+    }
+
+    .username-and-date {
+      font-size: .75em;
+    }
+
+    .field-type-text-long {
+      margin-left: 1em;
+      margin-right: 1em;
+      margin-top: -0.5em;
+      font-size: 0.8em;
+      line-height: 1.25;
+      text-align: left;
+    }
   }
 }
 
@@ -107,6 +167,12 @@ article.node-document {
   *   Added as part of making header menu work on smaller screens.
   */
   padding-left: 10px;
+  @media (max-width: 540px) {
+    padding-left: 0px;
+    margin-top: 1rem;
+    text-align: center;
+  }
+  
   #course-name {
     display: block;
     // font-size: medium;
@@ -115,6 +181,12 @@ article.node-document {
     letter-spacing: .7px;
     margin-top: -4px;
     text-transform: uppercase;
+
+    @media (max-width: 540px) {
+      line-height: 1.5;
+      margin-top: .25em;
+    }
+
   }
 }
 
@@ -218,6 +290,48 @@ body.node-type-document {
   font-size: 2em;
   line-height: 1em;
   }
+}
+
+body.node-type-document,
+body.node-type-response {
+  @media (max-width: 540px) {
+    
+    #page {
+
+      padding-left: 0;
+      padding-right: 1.75em;
+      padding-top: 0.25em;
+
+      #main {
+
+        margin-top: 1.5rem;
+        margin-left: 0.25em;
+        margin-right: 0.25em;
+        border-top: 1px solid #ccc;
+        padding-top: 1.5rem;
+
+        #content {
+          padding: 0;
+          position: relative;
+        }
+
+        #page-title {
+
+          font-size: 1.75em;
+          line-height: 1.15;
+
+          #document-authors {
+            margin-top: 0.75em;
+          }
+
+        }
+
+      }
+
+    }
+
+  }
+
 }
 
 body.node-type-response #page-title {
