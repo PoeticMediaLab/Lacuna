@@ -13,7 +13,7 @@ function lacuna_lti_setup() {
   // Exception for fields with default values
   foreach ($field_info as $field => $settings) {
     if (($settings['required'] == TRUE) &&
-      empty($wrapper->$field->value()) &&
+      !$wrapper->$field->value() &&
       !isset($settings['default_value'])) // OG fields
     {
         $form_complete = FALSE;
