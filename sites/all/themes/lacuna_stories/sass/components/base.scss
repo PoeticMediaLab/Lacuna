@@ -166,8 +166,10 @@ article.node-document {
   /*
   *   Added as part of making header menu work on smaller screens.
   */
+  padding-left: 10px;
   @media (max-width: 540px) {
     padding-left: 0px;
+    margin-top: 1rem;
     text-align: center;
   }
   

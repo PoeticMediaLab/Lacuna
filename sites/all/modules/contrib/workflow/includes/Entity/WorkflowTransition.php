@@ -278,6 +278,7 @@ class WorkflowTransition extends Entity {
     if ($force) {
       $this->force($force);
     }
+    $force = $this->isForced();
 
     // Store the transition, so it can be easily fetched later on.
     // Store in an array, to prepare for multiple workflow_fields per entity.

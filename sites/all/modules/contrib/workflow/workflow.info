@@ -4,6 +4,7 @@ package = Workflow
 core = 7.x
 
 dependencies[] = entity (>7.x-1.5)
+dependencies[] = list
 
 files[] = includes/Entity/Workflow.php
 files[] = includes/Entity/WorkflowInterface.php
@@ -15,10 +16,11 @@ files[] = includes/Field/WorkflowD7Base.php
 files[] = includes/Field/WorkflowItem.php
 files[] = includes/Field/WorkflowDefaultWidget.php
 files[] = includes/Form/WorkflowTransitionForm.php
+files[] = workflow.features.inc
 
-; Information added by Drupal.org packaging script on 2015-12-31
-version = "7.x-2.8"
+; Information added by Drupal.org packaging script on 2016-11-06
+version = "7.x-2.9"
 core = "7.x"
 project = "workflow"
-datestamp = "1451565855"
+datestamp = "1478455741"
 

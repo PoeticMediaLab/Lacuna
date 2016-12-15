@@ -1042,16 +1042,30 @@ function webform_file_download($uri) {
     $submission = reset($submissions);
   }
 
-  // Grant access based on access to the submission.
+  // Grant or deny file access based on access to the submission.
   if (!empty($submission)) {
     $node = node_load($submission->nid);
     if (webform_submission_access($node, $submission)) {
       return file_get_content_headers($file);
     }
+    else {
+      return -1;
+    }
   }
   // Grant access to files uploaded by a user before the submission is saved.
   elseif (!empty($file) && !empty($_SESSION['webform_files'][$file->fid])) {
     return file_get_content_headers($file);
+  }
+
+  // Ensure we never completely ignore a webform file request.
+  if (strpos(file_uri_target($uri), 'webform/') === 0) {
+    // The file is not part of a submission or a submission-in-progress (by
+    // the current user), however it may be part of a submission-in-progress
+    // (or an abandoned submission) by another user. We assume that all files
+    // under our enforced directory prefix are in fact webform files, and so
+    // we deny access to the file. Abandoned uploads will be deleted by
+    // system_cron() in due course.
+    return -1;
   }
 }
 

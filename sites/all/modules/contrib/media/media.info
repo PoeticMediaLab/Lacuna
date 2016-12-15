@@ -24,9 +24,9 @@ configure = admin/config/media/browser
 ; We have to add a fake version so Git checkouts do not fail Media dependencies
 version = 7.x-2.x-dev
 
-; Information added by Drupal.org packaging script on 2016-05-31
-version = "7.x-2.0-beta2"
+; Information added by Drupal.org packaging script on 2016-11-24
+version = "7.x-2.0-beta10"
 core = "7.x"
 project = "media"
-datestamp = "1464653492"
+datestamp = "1480015684"
 

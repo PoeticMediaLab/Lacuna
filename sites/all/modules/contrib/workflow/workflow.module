@@ -10,7 +10,8 @@ define('WORKFLOW_CREATION_DEFAULT_WEIGHT', -50);
 define('WORKFLOW_DELETION', 0);
 // Couldn't find a more elegant way to preserve translation.
 define('WORKFLOW_CREATION_STATE_NAME', '(' . t('creation') . ')');
-define('WORKFLOW_ROLE_AUTHOR_NAME', '(' . t('author') . ')');
+// #2657072 brackets are added later to indicate a special role, and distinguish from frequently used 'author' role.
+define('WORKFLOW_ROLE_AUTHOR_NAME', 'author');
 define('WORKFLOW_ROLE_AUTHOR_RID', '-1');
 
 // The definition of the Field_info property type. Shared between 'workflow_field' and 'workflow_rules'.
@@ -342,6 +343,7 @@ function workflow_cron() {
   $clear_cache = FALSE;
   // If the time now is greater than the time to execute a transition, do it.
   foreach (WorkflowScheduledTransition::loadBetween(0, REQUEST_TIME) as $scheduled_transition) {
+    /* @var $scheduled_transition WorkflowScheduledTransition */
     $entity_type = $scheduled_transition->entity_type;
     $entity = $scheduled_transition->getEntity();
     $field_name = $scheduled_transition->field_name;
@@ -361,8 +363,7 @@ function workflow_cron() {
       // The scheduled transition is not scheduled anymore, and is also deleted from DB.
       // A watchdog message is created with the result.
       $scheduled_transition->schedule(FALSE);
-      $scheduled_transition->force(TRUE);
-      workflow_execute_transition($entity_type, $entity, $field_name, $scheduled_transition);
+      workflow_execute_transition($entity_type, $entity, $field_name, $scheduled_transition, TRUE);
 
       if (!$field_name) {
         $clear_cache = TRUE;
@@ -539,22 +540,24 @@ function workflow_execute_transition($entity_type, $entity, $field_name, $transi
   if ($force) {
     $transition->force($force);
   }
+  $force = $transition->isForced();
 
   if ($field_name) {
     // @todo: use $new_sid = $transition->execute() without generating infinite loops.
+    $langcode = $transition->language;
 
     // Do a separate update to update the field (Workflow Field API)
     // This will call hook_field_update() and WorkflowFieldDefaultWidget::submit().
-    $langcode = $transition->language;
     $entity->{$field_name}[$langcode][0]['transition'] = $transition;
     $entity->{$field_name}[$langcode][0]['value'] = $transition->new_sid;
-    // Save ony the field, not the complete entity.
+    // Save only the field, not the complete entity.
     workflow_entity_field_save($entity_type, $entity, $field_name, $langcode, FALSE);
 
     $new_sid = workflow_node_current_state($entity, $entity_type, $field_name);
   }
   else {
     // For Node API, the node is not saved, since all fields are custom.
+    // Force = TRUE for backwards compatibility with version 7.x-1.2
     $new_sid = $transition->execute($force = TRUE);
   }
 
@@ -570,10 +573,9 @@ function workflow_execute_transition($entity_type, $entity, $field_name, $transi
 function workflow_get_roles($permission = 'participate in workflow') {
   static $roles = NULL;
   if (!$roles[$permission]) {
-    $roles[$permission] = array(WORKFLOW_ROLE_AUTHOR_RID => WORKFLOW_ROLE_AUTHOR_NAME);
-    $roles[$permission] += user_roles(FALSE, $permission);
-    foreach ($roles[$permission] as $rid => &$role_name) {
-      $name = check_plain(t($role_name));
+    $roles[$permission][WORKFLOW_ROLE_AUTHOR_RID] =  '(' . t(WORKFLOW_ROLE_AUTHOR_NAME) . ')';
+    foreach (user_roles(FALSE, $permission) as $rid => $role_name) {
+      $roles[$permission][$rid] = check_plain(t($role_name));
     }
   }
   return $roles[$permission];
@@ -732,22 +734,44 @@ function workflow_node_previous_state($entity, $entity_type, $field_name) {
     return $sid; // <-- exit !!!
   }
 
+  $previous_entity = NULL;
+  if (isset($entity->old_vid) && ($entity->vid - $entity->old_vid) <= 1) {
+    // Using the Revisioning module, get the old revision from DB,
+    // if it is NOT the previous version.
+    // The old revision from which to get our state, if it is not the revision
+    // to which we want to switch.
+    $previous_entity = entity_revision_load($entity_type, $entity->old_vid);
+  }
+  elseif (isset($entity->{$field_name}) && isset($entity->{$field_name}[$langcode][0]['workflow']['workflow_entity'])) {
+    // Still using the Revisioning module, get the old revision from DB.
+    $previous_entity = $entity->{$field_name}[$langcode][0]['workflow']['workflow_entity'];
+  }
+  elseif (isset($entity->original)) {
+    $previous_entity = $entity->original;
+  }
+
   if ($field_name === '') {
     // Workflow Node API: Get current/previous state for a Workflow Node.
     // Multi-language not supported.
     // N.B. Do not use a page cache. This gives problems with Rules.
+    // Todo D7: support for Revisioning module.
     $sid = isset($entity->workflow) ? $entity->workflow : FALSE;
   }
   elseif ($field_name) {
     // Workflow Field API.
-    if (isset($entity->original)) {
+    if (isset($previous_entity)) {
       // A changed node.
 
-      $wrapper = entity_metadata_wrapper($entity_type, $entity->original);
+      $wrapper = entity_metadata_wrapper($entity_type, $previous_entity);
       $sid = $wrapper->{$field_name}->value();
 
       // Get language. Multi-language is not supported for Workflow Node.
-      $langcode = _workflow_metadata_workflow_get_properties($entity->original, array(), 'langcode', $entity_type, $field_name);
+      $langcode = _workflow_metadata_workflow_get_properties($previous_entity, array(), 'langcode', $entity_type, $field_name);
+    }
+    elseif (isset($entity->workflow_transitions[$field_name]->sid)) {
+      // A new node. Upon save with Workflow Access enabled, the sid is needed
+      // in workflow_access_node_access_records.
+      $sid = $entity->workflow_transitions[$field_name]->sid;
     }
   }
   else {
@@ -1157,7 +1181,7 @@ function _workflow_info_field($field_name, $workflow = NULL) {
  */
 function workflow_debug($class_name, $function_name, $line = '', $value1 = '', $value2 = '') {
   $debug_switch = FALSE;
-  $debug_switch = TRUE;
+//  $debug_switch = TRUE;
 
   if (!$debug_switch) {
     return;
