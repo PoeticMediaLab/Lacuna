@@ -30,6 +30,7 @@ This is a bug fix release.
  * Redirect users to Peer Groups page instead of home page after deleting a peer group
  * If course creation requires a password, accept it correctly
  * Patched d3 module so that it can be updated again
+ * Fixed Canvas support so course setup works with older versions of PHP (<5.5)
 
 Version 2.2: Canvas/LTI Support
 -----------
