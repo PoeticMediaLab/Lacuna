@@ -11,7 +11,7 @@ $databases['default']['default'] = array (
 
 # File system settings.
 $conf['file_temporary_path'] = '/tmp';
-# Workaround for permission issues with NFS shares in Vagrant
+# Workaround for permission issues with NFS shares
 $conf['file_chmod_directory'] = 0777;
 $conf['file_chmod_file'] = 0666;
 
