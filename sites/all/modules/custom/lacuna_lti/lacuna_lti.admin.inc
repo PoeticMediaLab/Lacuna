@@ -5,6 +5,7 @@
  * If course has already been created, then send them to manage the course.
  */
 function lacuna_lti_setup() {
+  global $base_url;
   $nid = lacuna_lti_course_select();
   $wrapper = entity_metadata_wrapper('node', $nid);
   $field_info = field_info_instances('node', 'course');
@@ -21,13 +22,13 @@ function lacuna_lti_setup() {
   }
   if ($form_complete == FALSE) {
     drupal_set_title('Complete Course Information');
-    drupal_goto('node/' . $nid . '/edit');
+    drupal_goto($base_url . '/node/' . $nid . '/edit');
   } else {
     // Form complete, provide a landing page instead with the links under 'Manage'
     $markup = "<div class='lacuna-lti-landing-page'>";
     $markup .= '<h1>Manage Your Lacuna Course</h1>';
     $markup .= "<div class='lacuna-lti-landing-item'>";
-    $markup .= "<a href='/node/" . $nid . "/edit' target='_blank'>";
+    $markup .= "<a href='" . $base_url . "/node/" . $nid . "/edit' target='_blank'>";
     $markup .= "Edit Course Information";
     $markup .= "</a></div>";
 
