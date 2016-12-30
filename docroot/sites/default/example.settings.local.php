@@ -1,6 +1,6 @@
 <?php
 
-# Docker DB connection settings.
+# Docksal DB connection settings.
 $databases['default']['default'] = array (
   'database' => 'default',
   'username' => 'user',
@@ -15,7 +15,7 @@ $conf['file_temporary_path'] = '/tmp';
 $conf['file_chmod_directory'] = 0777;
 $conf['file_chmod_file'] = 0666;
 
-# Reverse proxy configuration (Docksal's vhost-proxy)
+# Reverse proxy configuration (Docksal vhost-proxy)
 if (!drupal_is_cli()) {
     $conf['reverse_proxy'] = TRUE;
     $conf['reverse_proxy_addresses'] = array($_SERVER['REMOTE_ADDR']);
