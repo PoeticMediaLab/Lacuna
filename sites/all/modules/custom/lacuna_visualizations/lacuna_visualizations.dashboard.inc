@@ -88,6 +88,8 @@ function lacuna_visualizations_annotation_dashboard_build_data($course_id) {
     // Sharing options; we just need the overall option (Private, Everyone, etc.), not details
     if (isset($annotation->field_annotation_audience[$annotation->language])) {
       $data->audience = ucfirst($annotation->field_annotation_audience[$annotation->language][0]['value']);
+    } else {
+      $data->audience = 'Unknown';
     }
 
     // Taxonomies: tags and categories

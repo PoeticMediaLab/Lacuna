@@ -94,29 +94,19 @@ Drupal.wysiwyg.editor.attach.tinymce = function(context, params, settings) {
 };
 
 /**
- * Detach a single or all editors.
+ * Detach a single editor instance.
  *
  * See Drupal.wysiwyg.editor.detach.none() for a full desciption of this hook.
  */
 Drupal.wysiwyg.editor.detach.tinymce = function (context, params, trigger) {
-  if (typeof params != 'undefined') {
-    var instance = tinyMCE.get(params.field);
-    if (instance) {
-      instance.save();
-      if (trigger != 'serialize') {
-        instance.remove();
-      }
-    }
+  var instance = tinyMCE.get(params.field);
+  if (!instance) {
+    return;
   }
-  else {
-    // Save contents of all editors back into textareas.
-    tinyMCE.triggerSave();
-    if (trigger != 'serialize') {
-      // Remove all editor instances.
-      for (var instance in tinyMCE.editors) {
-        tinyMCE.editors[instance].remove();
-      }
-    }
+  instance.save();
+  if (trigger !== 'serialize') {
+    // The onRemove event fires before this returns.
+    instance.remove();
   }
 };
 

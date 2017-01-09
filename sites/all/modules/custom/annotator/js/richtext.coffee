@@ -29,7 +29,7 @@ class Annotator.Plugin.RichText extends Annotator.Plugin
 
   pluginInit: ->
     return unless Annotator.supported()
-    CKEDITOR.replace(editor_instance, {
+    config = {
       extraPlugins: 'lineutils,embed,autoembed,image2',
       toolbar: [
           { name: 'paragraph', items: ['NumberedList', 'BulletedList'] },
@@ -40,8 +40,16 @@ class Annotator.Plugin.RichText extends Annotator.Plugin
       removePlugins: 'elementspath,font,resize',
       allowedContent: true,
       autoUpdateElement: true,
-      }
-    )
+    }
+
+    # Sets custom Iframely API key, if set in
+    # Configuration -> Content Authoring -> Annotator -> Richtext.
+    key = Drupal.settings.annotator_richtext.iframely_api_key
+    if (key?.length)
+      base = '//iframe.ly/api/oembed?url={url}&callback={callback}&api_key=';
+      config.embed_provider = base + key
+
+    CKEDITOR.replace(editor_instance, config)
 
     # @annotator.subscribe 'annotationEditorSubmit', (Editor, annotation) => @saveText(Editor, annotation)
     @annotator.subscribe 'annotationEditorShown', (Editor, annotation) => @updateText(Editor, annotation)

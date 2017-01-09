@@ -186,40 +186,6 @@ class Annotator.Plugin.Touch extends Annotator.Plugin
     @toggle.bind("tap": @_onToggleTap)
     @toggle.hide() unless @options.useHighlighter
 
-  # Sets the Editor panel to absolute positioning to prevent the keyboard
-  # from moving the panel all around the screen.
-  _stickEditor: ->
-    # select the tab and editor elements
-    tab = $('.annotator-touch-controls.annotator-touch-widget')
-    editor = $('.annotator-touch-editor .annotator-touch-widget')
-
-    # set the editor position to absolute
-    editorTopOffset = +getComputedStyle(editor[0]).top.replace('px', '') + window.scrollY
-    editorRightOffset = 0
-    styleString = 'position: absolute; top: ' + editorTopOffset + 'px; right: ' + editorRightOffset + 'px; '
-    editor.attr('style', styleString)
-
-    # set the tab position to absolute
-    tabTopOffset = +getComputedStyle(tab[0]).top.replace('px', '') + window.scrollY
-    tabRightOffset = +getComputedStyle(tab[0]).right.replace('px', '')
-    styleString = 'position: absolute; top: ' + tabTopOffset + 'px; right: ' + tabRightOffset + 'px;'
-    tab.attr('style', styleString);
-
-    # something styles the editor wrapper so the box appears off-screen,
-    # so this undoes that.
-    editor.parent().attr('style', 'left: 0px; top: 0px;')
-
-  # Reverts the Editor panel to fixed positioning.
-  _unstickEditor: ->
-    # select the tab and editor elements
-    tab = $('.annotator-touch-controls.annotator-touch-widget')
-    editor = $('.annotator-touch-editor .annotator-touch-widget')
-
-    # remove style tags
-    editor.attr('style', '')
-    tab.attr('style', '')
-
-
   # Setup method that creates the @editor and @viewer properties. Should
   # only be called once by the @pluginInit() method.
   #
@@ -255,9 +221,6 @@ class Annotator.Plugin.Touch extends Annotator.Plugin
       document.selection.empty() if (document.selection)
       window.getSelection().removeAllRanges() if window.getSelection and window.getSelection().removeAllRanges
 
-      # stick the editor to the page with absolute positioning
-      @_stickEditor()
-
     @annotator.viewer.on "show", =>
       @highlighter.disable() if @highlighter
 
@@ -268,9 +231,6 @@ class Annotator.Plugin.Touch extends Annotator.Plugin
       @controls.removeClass('tab-out')
       @editor.element.addClass('tab-in')
       @controls.addClass('tab-in')
-
-      # unstick the editor from the page
-      @_unstickEditor()
 
       @utils.nextTick =>
         @highlighter.enable().deselect() if @highlighter

@@ -26,48 +26,39 @@ Drupal.wysiwyg.editor.attach.fckeditor = function(context, params, settings) {
 };
 
 /**
- * Detach a single or all editors.
+ * Detach a single editor instance.
  */
 Drupal.wysiwyg.editor.detach.fckeditor = function (context, params, trigger) {
-  var instances = [];
-  if (typeof params != 'undefined' && typeof FCKeditorAPI != 'undefined') {
-    var instance = FCKeditorAPI.GetInstance(params.field);
-    if (instance) {
-      instances[params.field] = instance;
-    }
+  var instanceName = params.field;
+  var instance = FCKeditorAPI.GetInstance(instanceName);
+  if (!instance) {
+    return;
   }
-  else {
-    instances = FCKeditorAPI.__Instances;
+  instance.UpdateLinkedField();
+  if (trigger == 'serialize') {
+    // The editor is not being removed from the DOM, so updating the linked
+    // field is the only action necessary.
+    return;
   }
-
-  for (var instanceName in instances) {
-    var instance = instances[instanceName];
-    instance.UpdateLinkedField();
-    if (trigger == 'serialize') {
-      // The editor is not being removed from the DOM, so updating the linked
-      // field is the only action necessary.
-      continue;
-    }
-    // Since we already detach the editor and update the textarea, the submit
-    // event handler needs to be removed to prevent data loss (in IE).
-    // FCKeditor uses 2 nested iFrames; instance.EditingArea.Window is the
-    // deepest. Its parent is the iFrame containing the editor.
-    var instanceScope = instance.EditingArea.Window.parent;
-    instanceScope.FCKTools.RemoveEventListener(instance.GetParentForm(), 'submit', instance.UpdateLinkedField); 
-    // Run cleanups before forcing an unload of the iFrames or IE crashes.
-    // This also deletes the instance from the FCKeditorAPI.__Instances array.
-    instanceScope.FCKTools.RemoveEventListener(instanceScope, 'unload', instanceScope.FCKeditorAPI_Cleanup);
-    instanceScope.FCKTools.RemoveEventListener(instanceScope, 'beforeunload', instanceScope.FCKeditorAPI_ConfirmCleanup);
-    if (jQuery.isFunction(instanceScope.FCKIECleanup_Cleanup)) {
-      instanceScope.FCKIECleanup_Cleanup();
-    }
-    instanceScope.FCKeditorAPI_ConfirmCleanup();
-    instanceScope.FCKeditorAPI_Cleanup();
-    // Remove the editor elements.
-    $('#' + instanceName + '___Config').remove();
-    $('#' + instanceName + '___Frame').remove();
-    $('#' + instanceName).show();
+  // Since we already detach the editor and update the textarea, the submit
+  // event handler needs to be removed to prevent data loss (in IE).
+  // FCKeditor uses 2 nested iFrames; instance.EditingArea.Window is the
+  // deepest. Its parent is the iFrame containing the editor.
+  var instanceScope = instance.EditingArea.Window.parent;
+  instanceScope.FCKTools.RemoveEventListener(instance.GetParentForm(), 'submit', instance.UpdateLinkedField);
+  // Run cleanups before forcing an unload of the iFrames or IE crashes.
+  // This also deletes the instance from the FCKeditorAPI.__Instances array.
+  instanceScope.FCKTools.RemoveEventListener(instanceScope, 'unload', instanceScope.FCKeditorAPI_Cleanup);
+  instanceScope.FCKTools.RemoveEventListener(instanceScope, 'beforeunload', instanceScope.FCKeditorAPI_ConfirmCleanup);
+  if (jQuery.isFunction(instanceScope.FCKIECleanup_Cleanup)) {
+    instanceScope.FCKIECleanup_Cleanup();
   }
+  instanceScope.FCKeditorAPI_ConfirmCleanup();
+  instanceScope.FCKeditorAPI_Cleanup();
+  // Remove the editor elements.
+  $('#' + instanceName + '___Config').remove();
+  $('#' + instanceName + '___Frame').remove();
+  $('#' + instanceName).show();
 };
 
 Drupal.wysiwyg.editor.instance.fckeditor = {

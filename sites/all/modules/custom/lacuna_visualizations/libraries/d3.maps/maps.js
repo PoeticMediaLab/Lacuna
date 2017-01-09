@@ -93,7 +93,7 @@
 			links[i].data.date = nodes[links[i].source].data.date;
 		}
 	} else {
-		links = {};
+		links = [];
 	}
 
     var force = d3.layout.force(height)
@@ -879,6 +879,53 @@
 		}
 		return vars;
 	}
+
+	/*
+	* Transforms map when containing element is less than the
+	* width of the map contents.
+	*/
+	function enableDynamicResizing() {
+	  
+	  /*
+	  * Widths are hard-coded in because
+	  * they're pretty tricky to determine programmatically, and I
+	  * thought this way would actually be more maintainable than
+	  * including a bunch of complex queries.
+	  */
+	  var containerThreshold = 1020;
+	  var innerContainerMinWidth = 1000;
+
+	  var container = document.querySelector('#content');
+	  var innerContainer = container.querySelector('.d3.maps');
+
+	  var scaleMap = function() {
+
+	    var containerWidth = container.getBoundingClientRect().width;
+
+	    if (containerWidth < containerThreshold) {
+
+	      var ratio = containerWidth / containerThreshold;
+	      innerContainer.style.width = innerContainerMinWidth + 'px';
+	      innerContainer.style.transform = 'scale(' + ratio + ')';
+
+	    } else {
+
+	    	innerContainer.style.transform = 'none';
+	    	innerContainer.style.width = 'auto';
+
+	    }
+
+	  };
+
+	  innerContainer.style.transformOrigin = 'left top';
+
+	  scaleMap();
+	  window.addEventListener('resize', scaleMap);
+
+	}
+
+	enableDynamicResizing();
+
 }
 
 })(jQuery);

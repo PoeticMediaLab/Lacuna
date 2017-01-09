@@ -92,10 +92,18 @@ class Annotator.Plugin.Replies extends Annotator.Plugin
     @addClasses(save, 'save')
     save.innerHTML = "Save"
     save.addEventListener("click", () => @saveReply(annotation, textarea, id, pid))
+    save.addEventListener("touchend", (event) => 
+      @saveReply(annotation, textarea, id, pid)
+      event.stopPropagation()
+    )
     cancel = document.createElement("a")
     @addClasses(cancel, 'button')
     cancel.innerHTML = "Cancel"
     cancel.addEventListener("click", () => @cancelReply(textarea))
+    cancel.addEventListener("touchend", (event) => 
+      @cancelReply(textarea)
+      event.stopPropagation()
+    )
     buttons.appendChild(cancel)
     buttons.appendChild(save)
     form.appendChild(textarea)
@@ -124,10 +132,17 @@ class Annotator.Plugin.Replies extends Annotator.Plugin
     replyArea = @addReplyArea(annotation, 0, pid)
     @hide(replyArea)
     span.addEventListener("click", (event) => @toggleVisibility(replyArea, event))
+    span.addEventListener("touchend", (event) => 
+      @toggleVisibility(replyArea, event)
+      event.stopPropagation()
+    )
     field.appendChild(span)
 
   initReplies: (field, annotation) =>
-    n_replies = Object.keys(annotation.comments).length
+    if annotation.comments?
+      n_replies = Object.keys(annotation.comments).length
+    else
+      n_replies = 0
     replies_text = "Replies"
     if n_replies == 1
       replies_text = "Reply"  # because English
@@ -137,6 +152,10 @@ class Annotator.Plugin.Replies extends Annotator.Plugin
       field.appendChild(span)
       replies = @drawReplies(field, annotation)
       span.addEventListener("click", () => @toggleVisibility(replies))
+      span.addEventListener("touchend", (event) => 
+        @toggleVisibility(replies)
+        event.stopPropagation()
+      )
       @hide(replies)
     @addClasses(field, 'base')
     @addReplyLink(field, annotation)
@@ -208,6 +227,10 @@ class Annotator.Plugin.Replies extends Annotator.Plugin
     replyArea = @addReplyArea(annotation, 0, reply.id, '')
     @hide(replyArea)
     replyLink.addEventListener("click", (event) => @toggleVisibility(replyArea, event))
+    replyLink.addEventListener("touchend", (event) => 
+      @toggleVisibility(replyArea, event)
+      event.stopPropagation()
+    )
 
     if !reply.permissions?
       return
@@ -218,6 +241,10 @@ class Annotator.Plugin.Replies extends Annotator.Plugin
       editArea = @addReplyArea(annotation, reply.id, reply.pid, reply.text)
       @hide(editArea)
       edit.addEventListener("click", (event) => @toggleVisibility(editArea, event))
+      edit.addEventListener("touchend", (event) => 
+        @toggleVisibility(editArea, event)
+        event.stopPropagation()
+      )
       controls.appendChild(edit)
 
 #     Leaving comment deletion unavailable (it works)

@@ -125,7 +125,11 @@ class Annotator.Plugin.Tags extends Annotator.Plugin
   setAnnotationTags: (field, annotation) =>
     annotation.tags = this.parseTags(@input.val())
 
+  # Sorts tags after a new tag is added by AJAX.  Modified to correctly
+  # re-sort flagged (curated) tags above other tags.
   sortTags: (a, b) ->
+    if a.flagged and !b.flagged then return -1
+    if !a.flagged and b.flagged then return 1
     return a.label.localeCompare(b.label)
 
   updateAutocompleteTags: (event, annotation) =>

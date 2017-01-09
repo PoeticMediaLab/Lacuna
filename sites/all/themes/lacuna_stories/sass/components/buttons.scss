@@ -189,6 +189,35 @@ input[value='Save']:active,
   padding: 10px;
 }
 
+@media only screen and (max-width: 540px) {
+
+  .toboggan-unified div#login-links {
+    
+    margin: 40px 0;
+
+    a.login-link {
+      display: block;
+      margin: 10px auto;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+  }
+
+  #login-form,
+  #register-form {
+
+    font-size: .75em;
+
+    .description {
+      line-height: 1.5;
+      margin-top: 1em;
+    }
+
+  }
+
+}
+
 .lacuna-button a {
   color: #FFFFFF;
 }
@@ -203,6 +232,13 @@ input[id^='edit-actionsewing-kit-remove'] {
   background-color: #5f6677; // #92a6c4;
   background-image: linear-gradient(to bottom, #747c92, #5f6677); // #92a6c4, #39404a);
 }
+
+@media (max-width: 540px) {
+  #register-form .form-submit {
+    width: 175px
+  }
+}
+
 .form-submit:hover,
 .form-submit:focus,
 input[id^='edit-actionsewing-kit-remove']:hover,

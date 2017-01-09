@@ -369,6 +369,153 @@ table.views-table {
   }
 }
 
+
+/*
+* Styles for responsive tables.
+*/
+
+@media (max-width: 920px) {
+
+  .view-sewing-kit,
+  .view-stitchings,
+  .view-threads {
+
+    table, thead, tbody, th, td, tr {
+      display: block;
+    }
+
+    thead tr {
+      position: absolute;
+      left: -9999px;
+      top: -9999px;
+    }
+
+    tr:not(.views-table-row-select-all),
+    tr.odd:not(.views-table-row-select-all) {
+
+      border-bottom: 2px solid #aaa !important;
+      padding-left: 0;
+      padding-right: 0;
+
+      td,
+      td.views-field-views-bulk-operations {
+
+        border-bottom: 1px solid #ddd;
+        padding-left: 50%;
+        padding-right: 5%;
+        width: 100%;
+        position: relative;
+        box-sizing: border-box;
+
+        &:last-child { border-bottom: none; }
+        
+        &::before {
+          position: absolute;
+          top: 50%;
+          transform: translateY(-50%);
+          left: 0;
+          width: 45%;
+          padding-left: 5%;
+          font-weight: 600;
+        }
+
+      }
+
+    }
+
+    tr.views-table-row-select-all input {
+      white-space: normal;
+      display: block;
+      width: 100%;
+    }
+
+  }
+  
+
+  /*
+  * Hard-coded table header values for Sewing Kit and Threads
+  */
+
+  $sewing-kit-headings: 'Select',
+                        'Annotated Content',
+                        'Excerpt',
+                        'Annotation Text',
+                        'Annotator',
+                        'Tags',
+                        'Category',
+                        'Shared With',
+                        'Replies',
+                        'View in Document';
+
+  $threads-headings: 'Title',
+                     'Author',
+                     'Description',
+                     'Post date';
+
+  $stitchings-headings: 'Annotator',
+                     'Annotated Content',
+                     'Excerpt',
+                     'Annotation Text',
+                     'Category',
+                     'Tags',
+                     'View in Document';
+
+  .view-sewing-kit .view-content {
+
+    padding-top: 2em;
+    border-top: 4px solid #bfbfbf;
+    margin-top: 2.5em;
+
+    table tbody td.views-field {
+
+      @for $i from 1 through length($sewing_kit_headings) {
+          
+        $heading: nth($sewing_kit_headings, $i);
+
+        &:nth-child(#{$i})::before {
+          content: '#{$heading}:';
+        }
+
+      }
+
+    }
+
+  }
+
+  .view-threads table tbody td.views-field {
+
+    @for $i from 1 through length($threads-headings) {
+        
+      $heading: nth($threads-headings, $i);
+
+      &:nth-child(#{$i})::before {
+        content: '#{$heading}:';
+      }
+
+    }
+
+  }
+
+  .view-stitchings table tbody td.views-field {
+
+    @for $i from 1 through length($stitchings-headings) {
+        
+      $heading: nth($stitchings-headings, $i);
+
+      &:nth-child(#{$i})::before {
+        content: '#{$heading}:';
+      }
+
+    }
+
+  }
+
+}
+
+
+
+
+
 .view-people {
   .views-field-name,
   .views-field-rid {
@@ -485,4 +632,33 @@ body.page-course-setup-add-materials {
   div.view-display-id-course_block {
     float: left;
   }
+}
+
+/*
+* Responsive styles for the Digital Research Consent Form
+*/
+
+@media (max-width: 540px) {
+
+  article.node-webform {
+
+    margin-left: 0;
+    margin-right: 0;
+    text-align: left;
+
+    > .field,
+    .form-item,
+    .form-actions {
+
+      margin-left: 1em;
+      margin-right: 1em;
+
+    }
+
+    > .field {
+      margin-top: 1em;
+    }
+
+  }
+
 }

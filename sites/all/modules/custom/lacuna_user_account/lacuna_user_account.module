@@ -15,6 +15,13 @@ function lacuna_user_account_menu_alter(&$items) {
   $items['user/%user/shortcuts']['type'] = MENU_CALLBACK;
   $items['user/%user/contact']['type'] = MENU_CALLBACK;
   $items['user/%user/notify']['type'] = MENU_CALLBACK;
+
+  //  Added to restrict view access so students can only see
+  //  profiles of students in their same courses.
+  //
+  //  By <codymleff@gmail.com> on 11/13/16
+  $items['user/%user']['access callback'] = 'lacuna_user_account_user_access';
+
 }
 
 /**
@@ -43,4 +50,35 @@ function lacuna_user_account_form_validate($form, &$form_state) {
   $form['account'] = $form['account_settings']['items'];
   // original validation function
   user_account_form_validate($form, $form_state);
+}
+
+
+/**
+* Returns true/false if the current user ($user) should be allowed
+* to see the requested user ($account) page.  Added by <codymleff@gmail.com>
+* on 11/13/16.
+*/
+function lacuna_user_account_user_access($requested_user) {
+  
+  global $user;
+
+  //  Return false if the user isn't authenticated
+  if (!user_is_logged_in()) return false;
+
+  //  Return true if the user has access to administer user accounts
+  if (user_access('administer users')) return true;
+
+  //  Return true if the requested profile is the user's own
+  if ($user->uid === $requested_user->uid) return true;
+
+  //  Return true if the user shares a course with the requested profile
+  $logged_in_user_courses = og_get_groups_by_user($user, 'node');
+  if ($logged_in_user_courses == NULL) return false;
+  $requested_user_courses = og_get_groups_by_user($requested_user, 'node');
+  if ($requested_user_courses == NULL) return false;
+  $shared_courses = array_intersect($logged_in_user_courses, $requested_user_courses);
+  if (count($shared_courses) > 0) return true;
+
+  //  Return false otherwise
+  return false;
 }

@@ -52,7 +52,7 @@ function d3_requirements($phase) {
     $requirements['d3']['value'] .= $t('!download the library and place all
       javascript files in a folder entitled "d3" located in your default
       libraries folder. E.g. sites/all/libraries/d3/d3.min.js.', array(
-        '!download' => l($t('Download'), 'http://d3js.org/')
+        '!download' => l($t('Download'), 'https://d3js.org/')
       )
     );
 

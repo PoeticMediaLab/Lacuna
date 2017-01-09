@@ -284,7 +284,9 @@ function PTView(model, elements) {
 
         //  Detect window width for small screens.
         var widthDecimal;
-        if (window.innerWidth < 768) widthDecimal = .83;
+        if (window.innerWidth < 400) widthDecimal = .75;
+        else if (window.innerWidth < 540) widthDecimal = .8;
+        else if (window.innerWidth < 768) widthDecimal = .83;
         else if (window.innerWidth > 1200) widthDecimal = .9;
         else widthDecimal = .86;
 

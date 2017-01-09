@@ -664,14 +664,24 @@ function webform_get_submissions($filters = array(), $header = NULL, $pager_coun
   }
 
   // Query the required submission data.
-  $query = db_select('webform_submitted_data', 'sd');
-  $query->leftJoin('webform_submissions', 's', 's.sid = sd.sid');
+  $query = db_select('webform_submissions', 's');
   $query->leftJoin('users', 'u', 'u.uid = s.uid');
   $query
     ->fields('s')
-    ->fields('sd', array('cid', 'no', 'data'))
     ->fields('u', array('name'))
-    ->condition('sd.sid', $sids, 'IN')
+    ->condition('s.sid', $sids, 'IN');
+
+  $submissions = $query->execute()->fetchAllAssoc('sid');
+
+  foreach ($submissions as $sid => $submission) {
+    $submissions[$sid]->data = array();
+  }
+
+  // Query the required submission data.
+  $query = db_select('webform_submitted_data', 'sd');
+  $query
+    ->fields('sd', array('sid', 'cid', 'no', 'data'))
+    ->condition('sd.sid', array_keys($submissions), 'IN')
     ->orderBy('sd.sid', 'ASC')
     ->orderBy('sd.cid', 'ASC')
     ->orderBy('sd.no', 'ASC');
@@ -682,27 +692,12 @@ function webform_get_submissions($filters = array(), $header = NULL, $pager_coun
     $query->condition('sd.nid', $filters['nid']);
   }
 
-  $result = $query->execute();
-
-  // Convert the queried rows into submissions.
-  $previous = 0;
-  foreach ($result as $row) {
-    if ($row->sid != $previous) {
-      $submissions[$row->sid] = new stdClass();
-      $submissions[$row->sid]->sid = $row->sid;
-      $submissions[$row->sid]->nid = $row->nid;
-      $submissions[$row->sid]->submitted = $row->submitted;
-      $submissions[$row->sid]->remote_addr = $row->remote_addr;
-      $submissions[$row->sid]->uid = $row->uid;
-      $submissions[$row->sid]->name = $row->name;
-      $submissions[$row->sid]->is_draft = $row->is_draft;
-      $submissions[$row->sid]->data = array();
-    }
-    // CID may be NULL if this submission does not actually contain any data.
-    if ($row->cid) {
+  if ($submissions) {
+    $result = $query->execute();
+    // Convert the queried rows into submission data.
+    foreach ($result as $row) {
       $submissions[$row->sid]->data[$row->cid]['value'][$row->no] = $row->data;
     }
-    $previous = $row->sid;
   }
 
   foreach (module_implements('webform_submission_load') as $module) {
@@ -710,7 +705,12 @@ function webform_get_submissions($filters = array(), $header = NULL, $pager_coun
     $function($submissions);
   }
 
-  return $submissions;
+  // Reorder submissions to reflect table header sorting.
+  $ordered_submissions = array();
+  foreach($sids as $sid) {
+    $ordered_submissions[$sid] = $submissions[$sid];
+  }
+  return $ordered_submissions;
 }
 
 /**

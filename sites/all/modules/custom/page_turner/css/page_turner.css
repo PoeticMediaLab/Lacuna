@@ -12,6 +12,15 @@
   clear: both;
 }
 
+@media (max-width: 540px) {
+
+  #page-turner-nav {
+    height: 35px;
+    font-size: .75em;
+  }
+
+}
+
 rect#page-turner-nav {
   fill: rgba(240,240,240,.5);
   stroke: none;
@@ -31,6 +40,24 @@ rect#page-turner-nav {
   cursor: default;
   margin-top: -20px;
   margin-bottom: 10px;
+}
+
+@media (max-width: 540px) {
+
+  #page-turner-pages-container {
+    width: 100%;
+  }
+
+  #page-turner-pages-container > * {
+    float: left;
+    margin-right: .25em;
+  }
+
+  #page-turner-pages-container > #page-turner-bookmark-button {
+    float: right;
+    margin-right: 0;
+  }
+
 }
 
 #page-turner-pages-numbers {

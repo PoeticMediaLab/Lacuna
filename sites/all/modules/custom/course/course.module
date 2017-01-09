@@ -100,6 +100,13 @@ function course_menu() {
     'type' => MENU_NORMAL_ITEM,
     'file' => 'course.pages.inc',
   );
+  $items['peer_group/user/autocomplete'] = array(
+    'page callback' => 'course_user_autocomplete',
+    'page arguments' => array(3),
+    'access arguments' => array('access user profiles'),
+    'type' => MENU_CALLBACK,
+    'file' => 'course.pages.inc'
+  );
 
   return $items;
 }
@@ -110,6 +117,7 @@ function course_menu() {
 function course_setup_access() {
   global $user;
   $key = "Course_Auth_Code_User_" . $user->uid;
+  $cookiePrefix = "Drupal_visitor_";
   $canCreate = user_access('create course content');
 
   // we only want to check access when we are actually on a protected page
@@ -140,7 +148,7 @@ function course_setup_access() {
     drupal_set_message("Please contact your institution's Lacuna administrator. Your account does not have access to create a course.", 'error', FALSE);
     return FALSE;
   }
-  elseif (($cache = cache_get($key)) && $_COOKIE['Lacuna_Course_Setup' . $key] == $cache->data) {
+  elseif (($cache = cache_get($key)) && $_COOKIE[$cookiePrefix . $key] == $cache->data) {
     // VALID
     return TRUE;
   }
@@ -812,6 +820,16 @@ function course_form_course_node_form_alter(&$form, &$form_state, $form_id) {
   unset($form['actions']['preview']);
 }
 
+
+// Limit the list of users in a peer group to the current course's users
+function course_form_og_ui_add_users_alter(&$form, &$form_state, $form_id) {
+  $node = entity_load_single('node', $form['gid']['#value']);
+  if ($node->type == 'peer_group') {
+    $form['og_user']['name']['#autocomplete_path'] = 'peer_group/user/autocomplete';
+  }
+}
+
+
 // Saves course data and moves to the next step in the set up process
 function course_save_course_continue_setup($course) {
   $course_wrapper = entity_metadata_wrapper('node', $course);
@@ -1085,7 +1103,6 @@ function course_finish_material_block_content() {
     foreach($docs as $doc) {
       $node = node_load($doc);
       drupal_set_message(t('You did not finish adding a document. The partially-completed information has been deleted.'), 'warning');
-      ddl($node);
     }
   }
 }
