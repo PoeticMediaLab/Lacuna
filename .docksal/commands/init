@@ -1,9 +1,11 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-# Fail on errors
+## Initialize a Docksal powered Drupal 7 site
+##
+## Usage: fin init
+
+# Abort if anything fails
 set -e
-
-## Initialize Docksal powered Drupal 7 Installation
 
 #-------------------------- Settings --------------------------------
 
@@ -30,12 +32,6 @@ echo-green () { echo -e "${green}$1${NC}"; }
 echo-green-bg () { echo -e "${green_bg}$1${NC}"; }
 echo-yellow () { echo -e "${yellow}$1${NC}"; }
 
-# Check whether shell is interactive (otherwise we are running in a non-interactive script environment)
-is_tty ()
-{
-	[[ "$(/usr/bin/tty || true)" != "not a tty" ]]
-}
-
 is_windows ()
 {
 	local res=$(uname | grep 'CYGWIN_NT')
@@ -46,40 +42,20 @@ is_windows ()
 	fi
 }
 
-# Yes/no confirmation dialog with an optional message
-# @param $1 confirmation message
-_confirm ()
+# Copy a settings file.
+# Skips if the destination file already exists.
+# @param $1 source file
+# @param $2 destination file
+copy_settings_file()
 {
-	# Skip checks if not a tty
-	if ! is_tty ; then return 0; fi
-
-	while true; do
-		read -p "$1 [y/n]: " answer
-		case $answer in
-			[Yy]|[Yy][Ee][Ss] )
-				break
-				;;
-			[Nn]|[Nn][Oo] )
-				exit 1
-				;;
-			* )
-				echo 'Please answer yes or no.'
-		esac
-	done
-}
-
-# Copy a settings file from $source to $dest
-# Skips if the $dest already exists.
-_copy_settings_file()
-{
-	local source=${1}
-	local dest=${2}
+	local source="$1"
+	local dest="$2"
 	
 	if [[ ! -f $dest ]]; then
 		echo "Copying ${dest}..."
-		cp "$source" "$dest"
+		cp $source $dest
 	else
-		echo-yellow "${dest} already in place"
+		echo-yellow "${dest} already in place."
 	fi
 }
 
@@ -87,18 +63,17 @@ _copy_settings_file()
 
 #-------------------------- Functions --------------------------------
 
-# Copy settings files
+# Initialize local settings files
 init_settings ()
 {
-	_copy_settings_file "${SITEDIR_PATH}/example.settings.local.php" "${SITEDIR_PATH}/settings.local.php"
+	copy_settings_file "${SITEDIR_PATH}/example.settings.local.php" "${SITEDIR_PATH}/settings.local.php"
 }
 
-# Install the site
-# @param $1 site-name (domain)
+# Install site
 site_install ()
 {
 	cd $DOCROOT_PATH
-	
+
 	# We disable email sending here so site-install does not return an error
 	fin exec "PHP_OPTIONS="'"-d sendmail_path=`which true`"'" drush site-install -y --site-name='My Drupal 7 Site'"
 }
@@ -128,7 +103,7 @@ echo "Waiting 10s for MySQL to initialize...";
 sleep 10
 
 echo -e "${green_bg} Step 3 ${NC}${green} Installing site...${NC}"
-site_install
+time site_install
 
 if is_windows; then
 	echo-green "Add ${VIRTUAL_HOST} to your hosts file (/etc/hosts), e.g.:"
