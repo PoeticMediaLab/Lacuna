@@ -8,8 +8,9 @@ set -e
 #-------------------------- Settings --------------------------------
 
 # PROJECT_ROOT is passed from fin.
-# The following variables are configured in the '.env' file: DOCROOT, SITE_DIRECTORY, SOURCE_ALIAS and others.
+# The following variables are configured in the '.env' file: DOCROOT, VIRTUAL_HOST.
 
+SITE_DIRECTORY="default"
 DOCROOT_PATH="${PROJECT_ROOT}/${DOCROOT}"
 SITEDIR_PATH="${DOCROOT_PATH}/sites/${SITE_DIRECTORY}"
 
@@ -89,13 +90,7 @@ _copy_settings_file()
 # Copy settings files
 init_settings ()
 {
-	cd $PROJECT_ROOT
-	
-	# Drupal
 	_copy_settings_file "${SITEDIR_PATH}/example.settings.local.php" "${SITEDIR_PATH}/settings.local.php"
-	
-	# Behat
-	_copy_settings_file 'tests/behat/behat.yml.dist' 'tests/behat/behat.yml'
 }
 
 # Install the site
@@ -108,101 +103,14 @@ site_install ()
 	fin exec "PHP_OPTIONS="'"-d sendmail_path=`which true`"'" drush site-install -y --site-name='My Drupal 7 Site'"
 }
 
-site_install_anothersite ()
-{
-	cd $DOCROOT_PATH
-	
-	# Initialize settings
-	_copy_settings_file "sites/example.com/example.settings.local.php" "sites/example.com/settings.local.php"
-	# Create DB
-	db_create 'anothersite'
-	# Install site
-	fin exec "PHP_OPTIONS="'"-d sendmail_path=`which true`"'" drush @drupal7.anothersite site-install -y --site-name='Another Drupal 7 Site'"
-	echo -e "Open ${yellow}http://anothersite.drupal7.docksal${NC} in your browser to view site1"
-}
-
-# Create a new DB
-# @param $1 DB name
-db_create ()
-{
-	echo-yellow "Creating DB ${1}..."
-	
-	local database="${1}"
-	local mysql_exec="mysql -h db --user=root --password=${MYSQL_ROOT_PASSWORD} -e ";
-	local query="DROP DATABASE IF EXISTS ${database}; CREATE DATABASE ${database}; GRANT ALL ON ${database}.* TO '${MYSQL_USER}'@'%'"
-	
-	fin exec "${mysql_exec} \"${query}\""
-}
-
-# Import database from the source site alias
-db_import ()
-{
-	_confirm "Do you want to import DB from ${SOURCE_ALIAS}?"
-	
-	cd $DOCROOT_PATH
-	fin drush -l "${SITE_DIRECTORY}" sql-sync "${SOURCE_ALIAS}" @self -y
-}
-
-# Misc drush commands to bring DB up-to-date
-db_updates ()
-{
-	cd $DOCROOT_PATH
-	echo-yellow "Applying DB updates..."
-	
-	set -x
-	fin drush -l $SITE_DIRECTORY status
-	fin drush -l $SITE_DIRECTORY rr # resolve moved modules
-	fin drush -l $SITE_DIRECTORY updb -y # run necessary db updaes
-	#fin drush -l $SITE_DIRECTORY fra -y # revert features
-	fin drush -l $SITE_DIRECTORY cc all # clear caches
-	fin drush -l $SITE_DIRECTORY cron -v
-	set +x
-}
-
-# Local adjustments
-local_settings ()
-{
-	cd $DOCROOT_PATH
-	echo-yellow "Applying local settings..."
-	
-	set -x
-	fin drush -l $SITE_DIRECTORY en "${MODULES_ENABLED}" -y
-	fin drush -l $SITE_DIRECTORY dis "${MODULES_DISABLED}" -y
-	set +x
-}
-
-# Compile Sass
-compass_compile ()
-{
-	cd $PROJECT_ROOT
-	echo-yellow "Compiling Sass..."
-	
-#	set -x
-#	cd ${DOCROOT_PATH}/sites/all/themes/<themename>
-#	fin exec bundle install
-#	fin exec bundle exec compass compile
-#	set +x
-}
-
-# Run basic Behat validation tests
-run_behat ()
-{
-	cd $PROJECT_ROOT
-	
-	echo -e "${yellow}Launching Behat validation tests...${NC}"
-	cd tests/behat
-	fin behat --format=pretty --out=std --format=junit --out=junit features/blackbox.feature
-}
-
 #-------------------------- END: Functions --------------------------------
 
 #-------------------------- Execution --------------------------------
 
-if [[ -z $PROJECT_ROOT ]]; then
-	echo-red "Git repository was not found"
-	exit 1;
+if [[ "$PROJECT_ROOT" == "" ]]; then
+	echo-red "\$PROJECT_ROOT is not set"
+	exit 1
 fi
-cd $PROJECT_ROOT
 
 # Project initialization steps
 echo -e "${green_bg} Step 1 ${NC}${green} Initializing local project configuration...${NC}"
@@ -223,23 +131,12 @@ echo -e "${green_bg} Step 3 ${NC}${green} Installing site...${NC}"
 site_install
 
 if is_windows; then
-	echo-green "Add ${SITE_DOMAIN} to your hosts file (/etc/hosts), e.g.:"
-	echo-green "192.168.64.100 ${SITE_DOMAIN}"
+	echo-green "Add ${VIRTUAL_HOST} to your hosts file (/etc/hosts), e.g.:"
+	echo-green "192.168.64.100 ${VIRTUAL_HOST}"
 	echo
 fi
 
 echo -en "${green_bg} DONE! ${NC} "
-echo -e "Open ${yellow}http://${SITE_DOMAIN}${NC} in your browser to verify the setup."
-
-# Examples of other things that can be done.
-
-#db_import
-#db_updates
-#local_settings
-#compass_compile
-#run_behat
-
-# Multisite - install an additional site
-#site_install_anothersite
+echo -e "Open ${yellow}http://${VIRTUAL_HOST}${NC} in your browser to verify the setup."
 
 #-------------------------- END: Execution --------------------------------
