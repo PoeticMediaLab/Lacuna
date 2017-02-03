@@ -1,6 +1,15 @@
 Lacuna Release Notes
 ====================
 
+Version 2.2.2: LTI bug fix release
+-------------
+January 27, 2017
+
+A minor release that fixes a critical bug in LTI integration.
+
+### Fixes
+ * Correct paths for using Lacuna from within an LTI environment
+
 Version 2.2.1: Fix many Bugs
 -------------
 November 18, 2016
@@ -30,6 +39,7 @@ This is a bug fix release.
  * Redirect users to Peer Groups page instead of home page after deleting a peer group
  * If course creation requires a password, accept it correctly
  * Patched d3 module so that it can be updated again
+ * Fixed Canvas support so course setup works with older versions of PHP (<5.5)
 
 Version 2.2: Canvas/LTI Support
 -----------
