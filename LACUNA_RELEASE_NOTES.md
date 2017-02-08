@@ -1,6 +1,12 @@
 Lacuna Release Notes
 ====================
 
+Version 2.2.3:
+-------------
+
+### Fixes
+ * Annotation Dashboard cache administration form fixed
+
 Version 2.2.2: LTI bug fix release
 -------------
 January 27, 2017
