@@ -1,6 +1,15 @@
 Lacuna Release Notes
 ====================
 
+Version 2.2.2: LTI bug fix release
+-------------
+January 27, 2017
+
+A minor release that fixes a critical bug in LTI integration.
+
+### Fixes
+ * Correct paths for using Lacuna from within an LTI environment
+
 Version 2.2.1: Fix many Bugs
 -------------
 November 18, 2016
