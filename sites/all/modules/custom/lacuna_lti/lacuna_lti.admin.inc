@@ -37,7 +37,7 @@ function lacuna_lti_setup() {
       if ($branch['link']['title'] == 'Manage') {
         foreach ($branch['below'] as $leaf) {
           $markup .= "<div class='lacuna-lti-landing-item' id='lacuna-lti-" . strtolower(str_replace(' ', '-', $leaf['link']['title'])) . "''>";
-          $markup .= "<a href='" . $base_url . $leaf['link']['href']. "' target='_blank'>" . $leaf['link']['title'] . "</a>";
+          $markup .= "<a href='" . $base_url . '/' . $leaf['link']['href']. "' target='_blank'>" . $leaf['link']['title'] . "</a>";
           $markup .= "</div>";
         }
       }
