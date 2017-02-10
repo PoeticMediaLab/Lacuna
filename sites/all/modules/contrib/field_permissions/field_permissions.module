@@ -80,6 +80,13 @@ function field_permissions_form_field_ui_field_edit_form_alter(&$form, &$form_st
 }
 
 /**
+ * Implements hook_field_permissions_userid_ENTITY_TYPE_alter().
+ */
+function field_permissions_field_permissions_userid_field_collection_item_alter(&$uid, $entity) {
+  $uid = isset($entity->hostEntity()->uid) ? $entity->hostEntity()->uid : $uid;
+}
+
+/**
  * Implementation of hook_field_access().
  *
  * @param $op
@@ -124,6 +131,12 @@ function field_permissions_field_access($op, $field, $entity_type, $entity, $acc
   }
   // Otherwise, check access by permission.
   elseif ($field['field_permissions']['type'] == FIELD_PERMISSIONS_CUSTOM) {
+    // Allow other modules to deny access first.
+    $result = module_invoke_all('field_permissions_custom_field_access', $op, $field, $entity_type, $entity, $account);
+    if (in_array(FALSE, $result)) {
+      return FALSE;
+    }
+
     if (!isset($entity)) {
       return field_permissions_empty_entity_access($op, $field['field_name'], $account);
     }
@@ -258,5 +271,76 @@ function _field_permissions_entity_is_owned_by_account($entity, $account) {
   // set (for example, if the entity type does not store a uid or does not have
   // a concept of "ownership"), we need to assume that the provided user
   // account does not own it.
-  return isset($entity->uid) && $entity->uid == $account->uid;
+  $uid = isset($entity->uid) ? $entity->uid : FALSE;
+  if (method_exists($entity, 'entityType')) {
+    drupal_alter('field_permissions_userid_' . $entity->entityType(), $uid, $entity);
+  }
+
+  return $uid === $account->uid;
+}
+
+/**
+ * Implements hook_features_pipe_COMPONENT_alter().
+ *
+ * Add field permissions to features when exporting a field_base.
+ */
+function field_permissions_features_pipe_field_base_alter(&$pipe, $data, $export) {
+  // Validate if there are field_base components that will be exported for this
+  // feature.
+  if (isset($export['features']['field_base'])) {
+    module_load_include('inc', 'field_permissions', 'field_permissions.admin');
+    // Iterate through the exported field_base components for this feature and
+    // add the defined field permissions.
+    foreach ($export['features']['field_base'] as $field_name) {
+      $field = field_info_field($field_name);
+      if (isset($field['field_permissions']['type']) && $field['field_permissions']['type'] == FIELD_PERMISSIONS_CUSTOM) {
+        $perms = field_permissions_list_field_permissions($field, '');
+        foreach ($perms as $perm => $info) {
+          $pipe['user_permission'][] = $perm;
+        }
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_field_attach_form().
+ */
+function field_permissions_field_attach_form($entity_type, $entity, &$form, &$form_state, $langcode) {
+  // Some fields are validated if they are #required even if field's #access
+  // property is set to false. For example: file/image fields, options fields.
+  foreach (element_children($form) as $key) {
+    if (isset($form[$key]['#access']) && !$form[$key]['#access']) {
+      _field_permissions_make_elements_non_required($form[$key]);
+    }
+  }
+}
+
+/**
+ * Sets the #required property to FALSE recursively on form elements.
+ */
+function _field_permissions_make_elements_non_required(&$elements) {
+  if (!is_array($elements)) {
+    return;
+  }
+  if (!empty($elements['#required'])) {
+    $elements['#required'] = FALSE;
+  }
+  foreach (element_children($elements) as $key) {
+    _field_permissions_make_elements_non_required($elements[$key]);
+  }
+}
+
+/**
+ * Implements hook_field_delete_field().
+ */
+function field_permissions_field_delete_field($field) {
+  // Delete any permissions related to the deleted field.
+  $all_permissions = array_keys(field_permissions_permission());
+  if (!empty($all_permissions)) {
+    db_delete('role_permission')
+      ->condition('module', 'field_permissions')
+      ->condition('permission', $all_permissions, 'NOT IN')
+      ->execute();
+  }
 }

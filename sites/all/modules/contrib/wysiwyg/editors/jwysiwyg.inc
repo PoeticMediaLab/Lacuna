@@ -21,6 +21,7 @@ function wysiwyg_jwysiwyg_editor() {
     ),
     'version callback' => 'wysiwyg_jwysiwyg_version',
     'settings form callback' => 'wysiwyg_jwysiwyg_settings_form',
+    'settings callback' => 'wysiwyg_jwysiwyg_settings',
     // @todo Wrong property; add separate properties for editor requisites.
     'css path' => wysiwyg_get_path('jwysiwyg'),
     'versions' => array(
@@ -40,6 +41,27 @@ function wysiwyg_jwysiwyg_settings_form(&$form, &$form_state) {
   $form['buttons']['#access'] = FALSE;
   $form['basic']['language']['#access'] = FALSE;
   $form['css']['#access'] = FALSE;
+}
+
+/**
+ * Return runtime editor settings for a given wysiwyg profile.
+ *
+ * @param $editor
+ *   A processed hook_editor() array of editor properties.
+ * @param $config
+ *   An array containing wysiwyg editor profile settings.
+ * @param $theme
+ *   The name of a theme/GUI/skin to use.
+ *
+ * @return
+ *   A settings array to be populated in
+ *   Drupal.settings.wysiwyg.configs.{editor}
+ */
+function wysiwyg_jwysiwyg_settings($editor, $config, $theme) {
+  $settings = array(
+    'initialContent' => '',
+  );
+  return $settings;
 }
 
 /**

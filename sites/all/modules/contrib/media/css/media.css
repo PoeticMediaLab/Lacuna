@@ -142,3 +142,9 @@
   margin-right: 10px;
   vertical-align: middle;
 }
+
+/* Exposed filter field */
+/* Use similar look and feel of a disabled field */
+.media-ajaxing-disabled {
+  background-color: #EBEBE4;
+}

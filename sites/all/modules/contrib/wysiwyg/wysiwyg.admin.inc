@@ -122,7 +122,7 @@ function wysiwyg_profile_form($form, &$form_state, $profile) {
         $icon = '';
         if (!empty($meta['path'])) {
           // @todo Button icon locations are different in editors, editor versions,
-          //   and contrib/custom plugins (like Image Assist, f.e.).
+          // and contrib/custom plugins (like Image Assist, f.e.).
           $img_src = $meta['path'] . "/images/$name.gif";
           // Handle plugins that have more than one button.
           if (!file_exists($img_src)) {
@@ -189,7 +189,7 @@ function wysiwyg_profile_form($form, &$form_state, $profile) {
     '#default_value' => $settings['css_path'],
     '#size' => 40,
     '#maxlength' => 255,
-    '#description' => t('If "Define CSS" was selected above, enter path to a CSS file or a list of CSS files separated by a comma.') . '<br />' . t('Available tokens: <code>%b</code> (base path, eg: <code>/</code>), <code>%t</code> (path to theme, eg: <code>themes/garland</code>)') . '<br />' . t('Example:') . ' css/editor.css,/themes/garland/style.css,%b%t/style.css,http://example.com/external.css',
+    '#description' => t('If "Define CSS" was selected above, enter path to a CSS file or a list of CSS files separated by a comma.') . '<br />' . t('Available tokens: <code>%b</code> (base path, eg: <code>/</code>), <code>%t</code> (path to theme, eg: <code>themes/garland</code>), <code>%q</code> (<code>css_js_query_string</code> variable, used for cache-busting)') . '<br />' . t('Example:') . ' css/editor.css,/themes/garland/style.css,%b%t/style.css?%q,http://example.com/external.css',
   );
 
   $form['advanced'] = array(

@@ -41,6 +41,30 @@
         .attr("width", width)
         .attr("height", height);
 
+    // Add definitions
+    var defs = svg.append("defs");
+
+    defs.selectAll("marker")
+        .data([
+          { id: 'arrow', path : "M-5,-5L5,0L-5,5"},
+          { id: 'circle', path: 'M 0, 0  m -5, 0  a 5,5 0 1,0 10,0  a 5,5 0 1,0 -10,0'}
+        ])
+      .enter().append("marker")
+        .attr("id", function (d) {
+            return d.id;
+        })
+        .attr("viewBox", "-5 -5 10 10")
+        .attr("refX", 10)
+        .attr("refY", 0)
+        .attr("markerWidth", 10)
+        .attr("markerHeight", 10)
+        .attr("orient", "auto")
+        .append("path")
+        .attr("d", function(d){return d.path;})
+        .attr('class', function(d){return 'marker marker-' + d.id})
+        .style('fill', '#000')
+    ;
+
     var graph = svg.append("g")
         .attr("class", "data");
 
@@ -52,6 +76,9 @@
     var link = graph.selectAll("line.link")
         .data(links)
       .enter().append("line")
+        .attr("marker-end", function (d) {
+            return "url(#arrow)";
+        })
         .attr("class", "link")
         .style("stroke", function(d) {  return d3.hsl(d.data.fill); })
         .style("stroke-width", 1);
@@ -69,12 +96,28 @@
       .style("stroke", function(d) { return d3.hsl(d.data.fill); })
       .style("stroke-width", 3);
 
-    node.append("svg:text")
-      .attr("class", "nodetext")
-      .attr("dx", 10)
-      .attr("dy", ".35em")
-      .attr('font-size', '10')
-      .text(function(d) { return d.name });
+    // filter on items that have and don't have an d.data.uri
+    var hasUri = function(d) { return d.data && d.data.uri && d.data.uri.length > 0;};
+    var noUri = function(d) { return !hasUri(d)};
+    node.filter(hasUri)
+      .append("svg:a")
+        .attr("xlink:href", function(d) {
+          return d.data.uri;
+        })
+      .append("svg:text")
+        .attr("class", "nodetext")
+        .attr("dx", 10)
+        .attr("dy", ".35em")
+        .attr('font-size', '10')
+        .text(function(d) { return d.name });
+
+    node.filter(noUri)
+      .append("svg:text")
+        .attr("class", "nodetext")
+        .attr("dx", 10)
+        .attr("dy", ".35em")
+        .attr('font-size', '10')
+        .text(function(d) { return d.name });
 
     force.on("tick", function() {
       link.attr("x1", function(d) { return d.source.x; })

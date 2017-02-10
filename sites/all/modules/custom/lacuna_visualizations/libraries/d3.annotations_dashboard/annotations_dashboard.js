@@ -758,7 +758,7 @@ function main(data) {
 				// BUG: This doesn't work right
 				if (pie_type == 'annotation_tags' && typeof a[pie_type] === 'array') {
 					// loop through tags array
-					console.log(a.annotation_tags, 'annotation_tags');
+					//console.log(a.annotation_tags, 'annotation_tags');
 					a.annotation_tags.forEach(function (tag) {
 						pie_slice_keys['annotation_tags'].push(tag);
 					})
@@ -824,15 +824,22 @@ function main(data) {
 		if (bar_x === null) {
 			bar_x = d3.scale.ordinal()
 				.domain(data.map(function (d) { return d.x; }))
-		    	.rangeRoundBands([size.bar.padding.left, size.bar.width - size.bar.padding.right - size.bar.padding.left], .1);
+		    	.rangeBands([size.bar.padding.left, size.bar.width - size.bar.padding.right - size.bar.padding.left], .1);
+
+			//	Create ticks
+		    var factor = (data.length > 16 ? Math.floor(data.length / 8) : 1);
+		    var ticks = [];
+		    for (var i = 0; i < data.length; i += factor) ticks.push(data[i].x);
+
+			//	Create ticks
+		    var factor = (data.length > 16 ? Math.floor(data.length / 8) : 1);
+		    var ticks = [];
+		    for (var i = 0; i < data.length; i += factor) ticks.push(data[i].x);
 
 			xAxis = d3.svg.axis()
 		    .scale(bar_x)
 		    .orient("bottom")
-		    // Only display every other label
-		    .tickValues(data.map(function (d,i) {
-		    	if (i % 7 === 0) { return d.x}
-		    }))
+		    .tickValues(ticks)
 			;
 
   		bar_chart.append("g")
@@ -1089,10 +1096,47 @@ function main(data) {
       return vars;
   }
 
+  /*
+  * Transforms dashboard when containing element is less than the
+  * width of the dashboard contents.
+  */
+  function enableDynamicResizing() {
+    
+    /*
+    * Widths are hard-coded in because
+    * they're pretty tricky to determine programmatically, and I
+    * thought this way would actually be more maintainable than
+    * including a bunch of complex queries.
+    */
+    var dashboardWidth = 1162;
+
+    var container = document.querySelector('#annotations_dashboard');
+    var innerContainer = container.querySelector('#dashboard');
+    var tooltip = document.querySelector('body > .tooltip');
+
+    var scaleDashboard = function() {
+
+      var containerWidth = container.getBoundingClientRect().width;
+
+      if (containerWidth < dashboardWidth) {
+
+        var ratio = containerWidth / dashboardWidth;
+        innerContainer.style.transform = 'scale(' + ratio + ')';
+
+      } else innerContainer.style.transform = 'none';
+
+    };
+
+    scaleDashboard();
+    window.addEventListener('resize', scaleDashboard);
+
+  }
+
 	// Initial creation
 	update();
 	label_pie_charts();	// only need to label them once
 	manageURLQuery();
+  enableDynamicResizing();
 } // end main()
 } // Drupal.d3.annotations
 })(jQuery);	// End of Drupal wrapper

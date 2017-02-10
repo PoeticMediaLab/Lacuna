@@ -188,27 +188,15 @@ Drupal.wysiwyg.editor.attach.ckeditor = function(context, params, settings) {
 };
 
 /**
- * Detach a single or all editors.
- *
- * @todo 3.x: editor.prototype.getInstances() should always return an array
- *   containing all instances or the passed in params.field instance, but
- *   always return an array to simplify all detach functions.
+ * Detach a single editor instance.
  */
 Drupal.wysiwyg.editor.detach.ckeditor = function (context, params, trigger) {
   var method = (trigger == 'serialize') ? 'updateElement' : 'destroy';
-  if (typeof params != 'undefined') {
-    var instance = CKEDITOR.instances[params.field];
-    if (instance) {
-      instance[method]();
-    }
+  var instance = CKEDITOR.instances[params.field];
+  if (!instance) {
+    return;
   }
-  else {
-    for (var instanceName in CKEDITOR.instances) {
-      if (CKEDITOR.instances.hasOwnProperty(instanceName)) {
-        CKEDITOR.instances[instanceName][method]();
-      }
-    }
-  }
+  instance[method]();
 };
 
 Drupal.wysiwyg.editor.instance.ckeditor = {

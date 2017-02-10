@@ -1,10 +1,17 @@
-#edit-options .form-item div.description {
+h4.d3-options-required-fields {
+  font-size: 1em;
+}
+#views-ui-edit-display-form #edit-options .form-item div.description {
   font-size: 11px;
 }
-#edit-options fieldset {
+#views-ui-edit-display-form #edit-options caption {
+  text-align: left;
+  font-weight: bold;
+}
+#views-ui-edit-display-form #edit-options fieldset {
   padding: 0;
   border: none;
 }
-#edit-options legend {
+#views-ui-edit-display-form #edit-options legend {
   font: bold 13px;
 }

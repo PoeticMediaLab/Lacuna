@@ -41,11 +41,6 @@ function wysiwyg_tinymce_editor() {
     ),
     'proxy plugin settings callback' => '_wysiwyg_tinymce_proxy_plugin_settings',
     'versions' => array(
-      '2.1' => array(
-        'js files' => array('tinymce-2.js'),
-        'css files' => array('tinymce-2.css'),
-        'download url' => 'http://sourceforge.net/project/showfiles.php?group_id=103281&package_id=111430&release_id=557383',
-      ),
       // @todo Starting from 3.3, tiny_mce.js may support JS aggregation.
       '3.1' => array(
         'js files' => array('tinymce-3.js'),
@@ -369,7 +364,11 @@ function wysiwyg_tinymce_settings($editor, $config, $theme) {
       $settings['content_css'] = implode(',', wysiwyg_get_css());
     }
     elseif ($config['css_setting'] == 'self' && isset($config['css_path'])) {
-      $settings['content_css'] = strtr($config['css_path'], array('%b' => base_path(), '%t' => drupal_get_path('theme', variable_get('theme_default', NULL))));
+      $settings['content_css'] = strtr($config['css_path'], array(
+        '%b' => base_path(),
+        '%t' => drupal_get_path('theme', variable_get('theme_default', NULL)),
+        '%q' => variable_get('css_js_query_string', ''),
+      ));
     }
   }
 
@@ -691,15 +690,6 @@ function _wysiwyg_tinymce_plugins($editor) {
       'load' => TRUE,
     ),
   );
-  if (version_compare($editor['installed version'], '3', '<')) {
-    $plugins['flash'] = array(
-      'path' => $editor['library path'] . '/plugins/flash',
-      'buttons' => array('flash' => t('Flash')),
-      'extended_valid_elements' => array('img[class|src|alt|title|hspace|vspace|width|height|align|onmouseover|onmouseout|name|obj|param|embed]'),
-      'internal' => TRUE,
-      'load' => TRUE,
-    );
-  }
   if (version_compare($editor['installed version'], '2.0.6', '>')) {
     $plugins['media'] = array(
       'path' => $editor['library path'] . '/plugins/media',

@@ -365,6 +365,12 @@ $privacy-selected: rgba(19, 149, 25, 0.74);
 
 .annotator-editor .annotator-privacy-types {
   margin-left: 4px;
+
+  //  Peer-Groups disabled style
+  #Peer-Groups.peer-groups-disabled {
+    background-color: rgba(50,50,50,0.33);
+  }
+
 }
 
 .annotator-editor {
@@ -406,11 +412,14 @@ $privacy-selected: rgba(19, 149, 25, 0.74);
     margin-left: 0px;
   }
   .annotator-privacy {
-    padding-left: 0;
-    padding-top: 0;
+    padding: 0;
+    margin-bottom: -1em;
+  }
+  .annotator-privacy-groups {
+    padding-bottom: 0;
   }
   .annotator-privacy-group.checked {
-    padding: 6px;
+    padding: 1px 0 1px 40%;
     // margin: 1px 1px 0px;
     -webkit-border-radius: 6px;
     -moz-border-radius: 6px;
@@ -504,6 +513,12 @@ $privacy-selected: rgba(19, 149, 25, 0.74);
   padding: 10px;
   border: 1px solid black;
   width: 30%;
+  
+  @media (max-width: 540px) {
+    width: 100%;
+    box-sizing: border-box;
+  }
+
   .annotator-reply-text {
     height: 50px;
   }
@@ -607,8 +622,9 @@ label.annotator-privacy-group {
   min-width: 300px;
 }
 
-.annotator-widget .annotator-listing {
-  padding: 0px 10px 0px;                                   // this adds 10px of padding to the .annotator-widget.annotator-listing box in .annotator-outer.annotator-viewer for better readability (ih, 08/15)
+//  Updated to select only the viewer, by CML on 11/2/16.
+.annotator-viewer .annotator-widget {
+  padding: 0 10px;
 }
 
 /* Fix to show icons */
@@ -638,6 +654,13 @@ label.annotator-privacy-group {
 .annotator-editor .annotator-widget .annotator-listing .annotator-item {
   line-height: 2.5em;
   color: #1588ba;
+}
+
+
+//  Added to prevent the privacy group buttons from wrapping in WebKit, by CML on 11/2/16.
+.annotator-editor .annotator-privacy {
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .annotator-notice,

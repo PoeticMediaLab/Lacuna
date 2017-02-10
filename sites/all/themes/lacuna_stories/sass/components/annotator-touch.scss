@@ -4,7 +4,7 @@
 /*  For tabbed annotation editor  */
 
 .annotator-touch-editor.tab-out .annotator-touch-widget {
-    left: calc(100% - 370px);
+    left: 0px;
     top: 10px;
 }
 
@@ -36,7 +36,7 @@
 
 /* Styles for smaller screens */
 
-@media only screen and (max-width: 480px) {
+@media only screen and (max-width: 540px) {
     .annotator-touch-viewer {
         left: 0 !important;
         width: 100%;
@@ -79,6 +79,7 @@
         -ms-box-shadow: none;
         -o-box-shadow: none;
         box-shadow: none;
+        overflow-x: hidden;
     }
 
     .annotator-touch-editor .annotator-touch-widget-inner {
@@ -161,10 +162,27 @@
 }
 
 .annotator-touch-editor .annotator-touch-widget {
+    
     pointer-events: all;
     width: 370px;
     left: 25%;
     position: fixed;
+
+}
+
+@media (max-width: 540px) {
+
+    .annotator-touch-editor.tab-out .annotator-touch-widget {
+        width: 100vw;
+        height: 100vh;
+        left: 0;
+        top: 0;
+        padding: 1em;
+        box-sizing: border-box;
+        position: fixed;
+        background-color: rgba(0, 0, 0, .5);
+    }
+
 }
 
 .annotator-touch-editor .annotator-touch-widget-inner {
@@ -178,8 +196,22 @@
     display: none;
 }
 
-.annotator-touch-editor .annotator-widget .annotator-item {
+.annotator-touch-editor .annotator-widget .annotator-listing .annotator-item {
     border-top-color: rgba(0, 0, 0, 0.15);
+    @media (max-width: 540px) {
+        
+        line-height: 1.75em;
+
+        &.annotator-item-quote {
+            line-height: 1em;
+        }
+
+        &.fa::before,
+        input#annotator-field-4 {
+            font-size: .75em;
+        }
+
+    }
 }
 
 .annotator-touch-editor .annotator-widget .annotator-item,
@@ -225,6 +257,7 @@
     background-color: #fbfae9;
     color: #a58129;
     padding: 10px 7px;
+    @media (max-width: 540px) { line-height: 1em; }
 }
 
 
@@ -232,11 +265,6 @@
 * Touch styles
 * from annotator/css/annotator.touch.css
 */
-
-.annotator-viewer .annotator-touch-controls .annotator-edit::after {
-    /* Assign the image once to ensure data uri is not repeated. */
-    background-image: url(../images/icon-sprite.png);
-}
 
 .annotator-selection-handle::after {
     background-image: url(../images/handle.png);
@@ -264,6 +292,7 @@
     box-shadow: 0px -2px 2px gray;
     font-weight: bold;
     color: white;
+    transition: opacity .5s;
 }
 
 .annotator-touch-widget .annotator-button {
@@ -329,6 +358,7 @@
 
 .annotator-touch-viewer .annotator-widget {
     min-width: 380px;
+    @media (max-width: 540px) { min-width: 0; }
 }
 
 .annotator-touch-viewer div {
@@ -342,88 +372,58 @@
 }
 
 .annotator-touch-viewer .annotator-touch-controls {
-    position: absolute;
-    top: 0;
-    left: auto;
-    right: 0;
     display: none;
-    background: rgba(255, 255, 255, 0.6);
-    background: -webkit-gradient(
-        linear, right top, left top,
-        from(rgba(255, 255, 255, 0.8)),
-        color-stop(0.9, rgba(255, 255, 255, 0.8)),
-        to(rgba(255, 255, 255, 0))
-        );
-    background: -moz-linear-gradient(
-        0deg,
-        from(rgba(255, 255, 255, 0.8)) 90%,
-        to(rgba(255, 255, 255, 0))
-        );
-    background: -webkit-linear-gradient(
-        0deg,
-        from(rgba(255, 255, 255, 0.8)) 90%,
-        to(rgba(255, 255, 255, 0))
-        );
-//  Commented out because it wouldn't compile in compass.
-/*
-background: linear-gradient(
-to bottom,
-from(rgba(255, 255, 255, 0.8)) 90%,
-to(rgba(255, 255, 255, 0))
-);
-*/
--webkit-box-pack: end;
--webkit-box-align: center;
--webkit-box-orient: horizontal;
--moz-box-pack: end;
--moz-box-align: center;
--moz-box-orient: horizontal;
-box-pack: end;
-box-align: center;
-box-orient: horizontal;
-padding: 10px;
-bottom: 0;
-padding: 0 10px 0 20px;
-}
-
-.annotator-touch-viewer li.annotator-visible .annotator-touch-controls {
-    display: -webkit-box;
-    display: -moz-box;
-    display: box;
-}
-
-.annotator-touch-viewer .annotator-touch-controls button {
-    padding-left: 40px;
+    position: absolute;
+    box-sizing: border-box;
+    width: 100%;
+    height: 100%;
     padding-right: 20px;
-    margin-left: 6px;
+    background-color: rgba(255, 255, 255, 0.85);
+    z-index: 1;
+    text-align: right;
 }
 
-.annotator-touch-viewer .annotator-touch-controls .annotator-edit::after {
-    background-position: 0 -15px;
-}
+.annotator-touch-viewer li {
 
-.annotator-touch-viewer .annotator-touch-controls .annotator-edit:hover::after,
-.annotator-touch-viewer .annotator-touch-controls .annotator-edit:focus::after,
-.annotator-touch-viewer .annotator-touch-controls .annotator-edit:active::after,
-.annotator-touch-viewer .annotator-touch-controls .annotator-edit.annotator-focus::after {
-    background-position: 0 -30px;
-}
-
-.annotator-touch-viewer .annotator-touch-controls button::after {
-    left: 15px;
-}
-
-//  to fix Edit and Delete buttons looking weird
-.annotator-touch-viewer .annotator-button {
-    line-height: 1.5em;
-    padding-bottom: .6em;
-    padding-top: .5em;
-
-    &.annotator-edit {
-        padding-right: 2em !important;
+    &.annotator-visible .annotator-touch-controls {
+        display: block;
     }
-}
 
+    .annotator-touch-controls {
+
+        @media (max-width: 540px) {
+            padding-right: 0;
+            font-size: 0.95em;
+        }
+
+        &::before {
+            content: '';
+            display: inline-block;
+            height: 100%;
+            vertical-align: middle;
+        }
+
+        & > * {
+            display: inline-block;
+            margin-right: 10px;
+            vertical-align: middle;
+            @media (max-width: 540px) { font-size: 1em; }
+        }
+
+        button.annotator-button {
+            line-height: 1;
+            padding: .75em 1.5em;
+            border-radius: 4px;
+            border: none;
+            background-color: rgba(22, 147, 165, 0.5);
+            color: #fff;
+            font-weight: 600;
+            letter-spacing: .5px;
+        }
+
+    }
+
+}
 
 //  For tags on small screens
 
@@ -452,6 +452,7 @@ padding: 0 10px 0 20px;
         width: $width;
 
         right: 0em;
+        transition: right .5s;
 
         &.hidden {
 
@@ -462,26 +463,32 @@ padding: 0 10px 0 20px;
         h2 {
 
             border-radius: 2px;
-            padding: 4px;
+            padding: 4px 20px;
             background-color: #eee;
             box-shadow: 0px -2px 2px gray;
-            padding-bottom: 15px;
             position: absolute;
             -webkit-transform: rotate(270deg);
             -moz-transform: rotate(270deg);
             -ms-transform: rotate(270deg);
             -o-transform: rotate(270deg);
-            width: 12em;
-            right: 6.3em;
+            transform: rotate(270deg);
+            font-size: 1.4em;
+            width: 11em !important;
             top: 6em;
+            right: 6.1em;
+            font-variant: normal;
+            text-transform: none;
 
         }
 
     }
 
-    div#content {
-        padding-left: 25px;
-        padding-right: 25px;
+    @media (min-width: 541px) {
+        #content {
+            padding-left: 25px;
+            padding-right: 25px;
+        }
     }
 
 }
+

@@ -7,32 +7,22 @@ class PrivacyAnnotatorPlugin extends AnnotatorPlugin {
 
   public function setup() {
 
-    // Build annotator.js privacy options
+    /*
+    *   Removed code that retrieved saved annotation privacy defaults
+    *   for the node, changing behavior so it defaults to 'Everyone'
+    *   for every new annotation.
+    *
+    *   <codymleff@gmail.com> on 11/16/16
+    */
 
-    $annotatable_node =  annotator_check_annotatable_node();
+    $audience = array(
+      'private' => 0,
+      'instructor' => 0,
+      'peer-groups' => 0,
+      'everyone' => 1
+    );
+    $peer_groups = annotation_build_peer_groups();    
 
-    // Check for default privacy options for this user for this node
-    global $user;
-    if (isset ($user->data['annotation_privacy_defaults'][$annotatable_node->nid])) {
-      $privacy_options = $user->data['annotation_privacy_defaults'][$annotatable_node->nid];
-      $audience = $privacy_options['audience'];
-      $default_groups = $privacy_options['groups'];
-      $possible_groups = annotation_build_peer_groups();
-      $peer_groups = array_merge ($default_groups, $possible_groups);
-    }
-
-    // No default privacy options default for this user for this node, so use general default
-    else {
-      // Main audience value
-      $audience = array(
-        'private' => 0,
-        'instructor' => 0,
-        'peer-groups' => 0,
-        'everyone' => 1
-      );
-      $peer_groups = annotation_build_peer_groups();
-
-    }
     $privacy_options = array(
       'audience' => $audience,
       'groups' => $peer_groups,

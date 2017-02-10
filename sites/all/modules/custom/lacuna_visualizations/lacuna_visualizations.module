@@ -118,84 +118,6 @@ function lacuna_visualizations_get_libraries() {
 }
 
 
-/**
- * Implements hook_libraries_info().
- */
-function lacuna_visualizations_libraries_info() {
-
-  $libraries = array();
-
-  // Drupal ext adds behaviors and d3 global object.
-  $libraries['d3.drupal'] = array(
-    'name' => 'D3 Drupal ext',
-    'vendor url' => 'http://drupal.org/sandbox/asherry/1477334',
-    'files' => array(
-      'js' => array(
-        'd3.js',
-      ),
-    ),
-    'path' => 'js',
-    'library path' => drupal_get_path('module', 'lacuna_visualizations'),
-    'dependencies' => array('d3'),
-    'version' => '1',
-  );
-
-  // Path to library, (if installed).
-  $path = libraries_get_path('d3');
-
-  if ($path) {
-    $files = array();
-    // In the repository the files might me named d3.js and d3.min.js.
-    $files += file_scan_directory($path, '/d3.js|d3.min.js/');
-    // They could also have the version # in the file name.
-    $files += file_scan_directory($path, '/d3.v[0-9](.min)?.js/');
-
-    // If we don't have any files we shouldn't add the library at all.
-    // This will fire drupal error and direct the user to reports.
-    if (count($files) == 0) {
-      return $libraries;
-    }
-
-    // This will be the default file.
-    // @TODO: Add this to d3 settings so you can choose.
-    $file = array_shift($files);
-    $version = 0;
-
-    // If this is a repository, there should be a package file. We can filter
-    // out the version number.
-    $package = file_exists($path . '/package.json') ? file_get_contents($path . '/package.json') : FALSE;
-    if ($package) {
-      preg_match('/\"version\"\:\ \"([0-9\.]*)\"/', $package, $version_matches);
-      if (isset($version_matches[1])) {
-        $version = $version_matches[1];
-      }
-    }
-    // If this is from the zip file, we should be able to get the version
-    // from the actual file itself.
-    if (strpos($file->filename, '.v')) {
-      preg_match('/\.v([0-9])/', $file->filename, $version_matches);
-      if (isset($version_matches[1])) {
-        $version = $version_matches[1];
-      }
-    }
-
-    $libraries['d3'] = array(
-      'name' => 'D3',
-      'vendor url' => 'http://d3js.org/',
-      'download url' => 'http://d3js.org/',
-      'files' => array(
-        'js' => array(
-          $file->filename,
-        ),
-      ),
-      'version' => $version,
-    );
-  }
-
-  return $libraries;
-}
-
-
 
 /**
  * Implements hook_libraries_info_alter().
@@ -219,33 +141,10 @@ function lacuna_visualizations_libraries_info_alter(&$libraries) {
 /**
  * Implements hook_theme().
  */
+
 function lacuna_visualizations_theme() {
-  foreach (libraries_info() as $path => $library) {
-    // Call this function to get all fields - i.e. library path.
-    $library = libraries_load($path);
-    // If a template was specified in the .info file or hook_libraries_info.
-    if (isset($library['template'])) {
-      // Change d3.[library name] to d3_[library name] for a theme key.
-      $theme_key = str_replace('.', '_', $library['machine name']);
-      $themes[$theme_key] = array(
-        'template' => $library['template'],
-        'path' => $library['library path'],
-      );
-    }
-  }
-
   // template can be changed in the .info file for a library.
-  $themes['d3'] = array(
-    'variables' => array(),
-    'template' => 'lacuna_visualizations',
-  );
-
-  $themes['d3_graphapi'] = array(
-    'variables' => array(
-      'graph' => NULL,
-      'config' => NULL,
-    ),
-  );
+  $themes['d3']['template'] = 'lacuna_visualizations';
   return $themes;
 }
 
@@ -533,12 +432,3 @@ function lacuna_visualizations_cron() {
   }
 }
 
-/**
- * Implements hook_update_projects_alter().
- * Prevent the d3 module from updating to 7.x-1.0-alpha2.
- * That version is broken.
- * @see: https://www.drupal.org/node/2753961
- */
-function lacuna_visualizations_update_projects_alter(&$projects) {
-  unset($projects['d3']);
-}

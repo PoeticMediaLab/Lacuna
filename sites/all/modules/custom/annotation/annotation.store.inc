@@ -94,23 +94,21 @@ function annotation_sanitize_uri($uri) {
 function annotation_get_term_id($term_name, $taxonomy_name) {
   $taxonomy = taxonomy_vocabulary_machine_name_load($taxonomy_name);
   $terms = taxonomy_get_term_by_name($term_name, $taxonomy_name);
-  $tid = NULL;
   $course_id = course_get_selected_course();
   foreach ($terms as $term) {
     if ($term->vid == $taxonomy->vid) {
       if (isset($term->field_term_course)) {
         // course-specific term
         if ($term->field_term_course[LANGUAGE_NONE][0]['target_id'] == $course_id) {
-          $tid = $term->tid;
+          return $term->tid;
         }
       } else {
         // Not a course-specific taxonomy term
-        $tid = $term->tid;
+        return $term->tid;
       }
-      break;  // go with the first match
     }
   }
-  return($tid);
+  return null;
 }
 
 /**
@@ -365,8 +363,10 @@ function annotation_api_read($id) {
 function annotation_api_update($id) {
   $annotation = node_load($id);
   if ($annotation != FALSE) {
-    if (annotation_access('edit', $annotation)) {
-      $entity = annotation_api_from_stdin();
+    $entity = annotation_api_from_stdin();
+    if (annotation_access('edit', $annotation) ||
+      (isset($entity->reply) && annotation_access('view', $annotation)))
+    {
       $annotation = annotation_drupal_format($entity, TRUE);
       node_save($annotation);
       // Send response
