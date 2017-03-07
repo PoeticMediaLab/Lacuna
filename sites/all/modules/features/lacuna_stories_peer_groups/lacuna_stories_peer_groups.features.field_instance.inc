@@ -214,10 +214,10 @@ function lacuna_stories_peer_groups_field_default_field_instances() {
     'entity_type' => 'node',
     'field_name' => 'field_peer_group_image',
     'label' => 'Peer Group Image',
-    'required' => 0,
+    'required' => 1,
     'settings' => array(
       'alt_field' => 0,
-      'default_image' => 23,
+      'default_image' => 0,
       'file_directory' => '',
       'file_extensions' => 'png gif jpg jpeg',
       'max_filesize' => '',
