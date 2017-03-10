@@ -79,7 +79,7 @@ function lacuna_stories_peer_groups_join_peer_group($gid) {
 // Page callback. Currently the entirety of the Peer Group listing page is generated here.
 function lacuna_stories_peer_groups_peer_groups_listings() {
   $output = '<div class="peer-groups-illustration"></div>';
-  $output .= l ('Create a Peer Group', 'node/add/peer-group');
+  $output .= l ('Create a Peer Group', 'node/add/peer-group', array('attributes' => array('class' => array('create-peer-group'))));
   $peer_group_views = array (
     'my_peer_groups',
     'joined_peer_groups',
