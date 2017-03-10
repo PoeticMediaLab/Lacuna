@@ -476,12 +476,13 @@ div.node-peer-group.view-mode-full {
       border-radius: 50%;
     }
 }
-
+/*theming for Peer Groups view (../peer-groups) -- DMB 3/9/2017*/
 .view-peer-groups {
   .views-fluid-grid-item {
     display: block;
     margin-bottom: 2em;
     max-width: 450px;
+    height: 100px;
   }
   .views-field-field-peer-group-image {
     float: left;
@@ -494,6 +495,15 @@ div.node-peer-group.view-mode-full {
       margin-top: 5px;
     }
   }
+}
+
+div.peer-groups-illustration {
+  width: 100%;
+  height: 20vh;
+  background-image: url(../images/peer-groups-illustration.png);
+  background-size: cover;
+  background-position: center;
+  border: 4px solid #cccccc;
 }
 
 
