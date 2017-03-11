@@ -207,7 +207,7 @@ td.active {
 }
 
 
-body.node-type-document {
+body.node-type-document, body.page-peer-groups {
  #page-title {
   font-family: $lacuna-header-font;
   margin-bottom: 20px;
@@ -220,7 +220,7 @@ body.node-type-document {
   }
 }
 
-body.node-type-response #page-title {
+body.node-type-response #page-title, {
   display: none;
 }
 

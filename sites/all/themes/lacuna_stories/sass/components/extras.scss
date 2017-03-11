@@ -417,9 +417,24 @@ a.group.subscribe,
 a.group.unsubscribe,
 body.not-logged-in div.field-name-group-group {
   margin-left: 30px;
-  font-size: 1.5em;
+  font-size: 1em;
   width: auto;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  padding-left: 10px;
+  padding-right: 10px;
 }
+
+a.create-peer-group {
+  font-size: 1em;
+  width: auto;
+  margin-top: 40px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
 
 .toboggan-unified #login-message {
   font-family: "Source Sans Pro", sans-serif;
@@ -481,8 +496,10 @@ div.node-peer-group.view-mode-full {
   .views-fluid-grid-item {
     display: block;
     margin-bottom: 2em;
-    max-width: 450px;
+    width: 330px !important;
     height: 100px;
+    float: left;
+    margin-right: 30px;
   }
   .views-field-field-peer-group-image {
     float: left;
@@ -494,6 +511,12 @@ div.node-peer-group.view-mode-full {
       margin-left: 10px;
       margin-top: 5px;
     }
+  }
+  .views-field-title span {
+    display: block;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
   }
 }
 
