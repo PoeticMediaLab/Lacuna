@@ -153,7 +153,7 @@ print lacuna_stories_peer_groups_member_links ($row, $view);
   $handler->display->display_options['pager']['options']['id'] = '0';
   $handler->display->display_options['pager']['options']['quantity'] = '9';
   $handler->display->display_options['style_plugin'] = 'fluid_grid';
-  $handler->display->display_options['style_options']['items_width'] = '';
+  $handler->display->display_options['style_options']['items_width'] = '350';
   $handler->display->display_options['style_options']['advanced_layout'] = array(
     'css3' => TRUE,
   );
