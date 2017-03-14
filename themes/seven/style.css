@@ -835,8 +835,15 @@ body.in-maintenance .form-submit {
   display: block;
 }
 body.in-maintenance #logo {
-  margin-bottom: 1.5em;
-  max-width: 180px;
+  width: 180px;
+  height: 180px;
+  background-size: contain;
+  background-image: url('/themes/seven/logo.png');
+}
+@media (max-resolution: 1dppx) {
+  body.in-maintenance #logo {
+    background-image: url('/themes/seven/logo-1x.png');
+  }
 }
 ol.task-list {
   margin-left: 0; /* LTR */
