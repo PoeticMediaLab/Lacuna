@@ -288,11 +288,6 @@ $views-link-hover-color: #1588BA;
   }
 }
 
-/* enables horizontal scrolling for table*/
-.view-content {
-  overflow: auto;
-} 
-
 table.views-table {
   width: 100%;
   font-family: $base-font-family;
