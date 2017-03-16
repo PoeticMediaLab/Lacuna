@@ -652,7 +652,9 @@ function annotation_api_entity_prepare($annotation, $op) {
       }
 
       // Quote
-      $entity->quote = $annotation->field_annotation_quote[$annotation->language][0]['value'];
+      if (isset($annotation->field_annotation_quote[$annotation->language])) {
+        $entity->quote = $annotation->field_annotation_quote[$annotation->language][0]['value'];
+      }
 
       // Category is for the Category plugin
       // Uses a Drupal taxonomy, like tags
