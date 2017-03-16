@@ -50,7 +50,7 @@ class Annotator.Plugin.Privacy extends Annotator.Plugin
       if "Peer-Groups" == privacy_type && "checked" == checked
         show_groups = 'show-groups'
       peer_groups = settings.groups.peer_groups
-      if peer_groups.length == 0 then peer_groups_disabled = ' peer-groups-disabled'
+      if !peer_groups? or peer_groups.length == 0 then peer_groups_disabled = ' peer-groups-disabled'
       else peer_groups_disabled = ''
       privacy_html += '<span class="' + @className.types.default + ' ' + checked + peer_groups_disabled + '" id="' + privacy_type + '">' + privacy_type + '</span>'
     privacy_html += '</span>'
