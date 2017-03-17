@@ -870,13 +870,19 @@ if (oldBeforeSerialize) {
       }
     });
     if (excludeSelectors.length > 0) {
+      var ajaxHtmlIdsArray = options.data['ajax_html_ids[]'];
+      if (!ajaxHtmlIdsArray || ajaxHtmlIdsArray.length === 0) {
+        return ret;
+      }
       options.data['ajax_html_ids[]'] = [];
       $('[id]:not(' + excludeSelectors.join(',') + ')').each(function () {
-      options.data['ajax_html_ids[]'].push(this.id);
+        if ($.inArray(this.id, ajaxHtmlIdsArray) !== -1) {
+          options.data['ajax_html_ids[]'].push(this.id);
+        }
       });
     }
     return ret;
-  }
+  };
 }
 
 // Respond to CTools detach behaviors event.

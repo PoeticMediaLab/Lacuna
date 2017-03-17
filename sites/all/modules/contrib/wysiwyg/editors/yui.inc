@@ -40,6 +40,8 @@ function wysiwyg_yui_editor() {
         ),
       ),
     ),
+    'install note callback' => 'wysiwyg_yui_install_note',
+    'verified version range' => array('2.7.0', '2.9.0'),
     'version callback' => 'wysiwyg_yui_version',
     'themes callback' => 'wysiwyg_yui_themes',
     'settings form callback' => 'wysiwyg_yui_settings_form',
@@ -61,6 +63,14 @@ function wysiwyg_yui_editor() {
     ),
   );
   return $editor;
+}
+
+/**
+ * Return an install note.
+ */
+function wysiwyg_yui_install_note() {
+  $output = '<p class="warning">' . t('YUI 3 is not supported because it does not contain a complete editor.') . '</p>';
+  return $output;
 }
 
 /**
@@ -238,7 +248,7 @@ function wysiwyg_yui_settings($editor, $config, $theme) {
 
   if (isset($config['css_setting'])) {
     if ($config['css_setting'] == 'theme') {
-      $settings['extracss'] = wysiwyg_get_css();
+      $settings['extracss'] = wysiwyg_get_css(isset($config['css_theme']) ? $config['css_theme'] : '');
     }
     elseif ($config['css_setting'] == 'self' && isset($config['css_path'])) {
       $settings['extracss'] = strtr($config['css_path'], array(
