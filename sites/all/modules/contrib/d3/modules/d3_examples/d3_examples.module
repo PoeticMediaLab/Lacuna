@@ -76,11 +76,11 @@ function d3_examples_linegraph() {
       'Design',
     ),
     'rows' => array(
-      array('1st Quarter 2011',10,20,26,35),
-      array('2nd Quarter 2011',20,26,27,37),
-      array('3rd Quarter 2011',10,50,28,50),
-      array('4th Quarter 2011',15,76,49,51),
-      array('1st Quarter 2012',20,100,50,52),
+      array('1st Quarter 2011', 10, 20, 26, 35),
+      array('2nd Quarter 2011', 20, 26, 27, 37),
+      array('3rd Quarter 2011', 10, 50, 28, 50),
+      array('4th Quarter 2011', 15, 76, 49, 51),
+      array('1st Quarter 2012', 20, 100, 50, 52),
     ),
   );
 
@@ -129,12 +129,12 @@ function d3_examples_column() {
       'Design',
     ),
     'rows' => array(
-      array('1st Quarter 2011',10,20,26,35),
-      array('2nd Quarter 2011',20,26,27,37),
-      array('3rd Quarter 2011',10,50,28,50),
-      array('4th Quarter 2011',15,76,49,51),
-      array('1st Quarter 2012',20,100,50,52),
-      array('2nd Quarter 2012',4,1,110,40),
+      array('1st Quarter 2011', 10, 20, 26, 35),
+      array('2nd Quarter 2011', 20, 26, 27, 37),
+      array('3rd Quarter 2011', 10, 50, 28, 50),
+      array('4th Quarter 2011', 15, 76, 49, 51),
+      array('1st Quarter 2012', 20, 100, 50, 52),
+      array('2nd Quarter 2012', 4, 1, 110, 40),
     ),
   );
 
@@ -143,6 +143,7 @@ function d3_examples_column() {
 
 /**
  * Generates a random example bar graph.
+ *
  * @return string
  *   HTML for the page content.
  */
