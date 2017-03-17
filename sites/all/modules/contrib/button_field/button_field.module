@@ -1,0 +1,497 @@
+<?php
+
+/**
+ * @file
+ * Defines a field, widget and formatter for the button field type.
+ */
+
+/**
+ * Implements button_field_views_api().
+ */
+function button_field_views_api() {
+  return array(
+    'api' => 3,
+    'path' => drupal_get_path('module', 'button_field') . '/includes/views',
+  ); // end return
+} // end button_field_views_api()
+
+/**
+ * Form builder callback for the dummy form used to render button field's on a
+ * display that is not editable.
+ */
+function button_field_dummy_form($form, &$form_state) {
+  // Set the form's language
+  $langcode = $form_state['#' . $form_state['#entity_type']]->language;
+  $form['language']['#value'] = $langcode;
+
+  // Add the field and the instance to the form state.
+  $field_name = $form_state['#field']['field_name'];
+  $form_state['field'][$field_name][$langcode]['field'] =
+    &$form_state['#field'];
+  $form_state['field'][$field_name][$langcode]['instance'] =
+    &$form_state['#instance'];
+
+  // Add the field element to the form
+  $form[$field_name][$langcode][0] = $form_state['#element'];
+
+  return $form;
+} // end function button_field_dummy_form()
+
+/**
+ * Callback function for the FAPI ajax framework, used on edit forms.
+ */
+function button_field_callback_ajax(&$form, &$form_state) {
+  // Get the field that was clicked.
+  $language = $form['language']['#value'];
+  $field_name = $form_state['triggering_element']['#array_parents'][0];
+  $field = $form_state['field'][$field_name][$language]['field'];
+
+  // Get the entity and its type.
+  list($entity_type, $entity) = _button_field_callback_get_entity($form,
+    $form_state, $field_name, $language);
+
+  // Trigger the rules event.
+  $entity_wrapper = entity_metadata_wrapper($entity_type, $entity);
+  rules_invoke_all('button_field_clicked', $field, $entity_wrapper);
+
+  return _button_field_ajax_response();
+} // end function button_field_callback_ajax()
+
+/**
+ * Creates a Drupal Ajax buttonFieldLocation command.
+ *
+ * @param string $url
+ *   New location for the page
+ */
+function button_field_ajax_command_location($url) {
+  return array(
+    'command' => 'buttonFieldLocation',
+    'url' => $url,
+  );
+}
+
+/**
+ * Implements hook_field_info().
+ */
+function button_field_field_info() {
+  return array(
+    'button_field' => array(
+      'label' => t('Button'),
+      'description' =>
+        t('Displays a button that, when clicked, fires a rules event'),
+      'default_widget' => 'button_field_html',
+      'default_formatter' => 'button_field_default',
+    ),
+  ); // end return
+} // end function button_field_field_info()
+
+/**
+ * Implements hook_field_schema().
+ */
+function button_field_field_schema($field) {
+  return array(
+    'columns' => array(
+      'value' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+      ),
+    ),
+    'indexes' => array(
+      'value' => array('value'),
+    ),
+  ); // end return
+} // end function button_field_field_schema()
+
+/**
+ * Implements hook_field_is_empty().
+ */
+function button_field_field_is_empty($item, $field) {
+  return TRUE;
+} // end function button_field_content_is_empty()
+
+/**
+ * Implements hook_field_formatter_info().
+ */
+function button_field_field_formatter_info() {
+  return array(
+    'button_field_default' => array(
+      'label' => t('Default'),
+      'field types' => array('button_field'),
+    ),
+  ); // end return
+} // end function button_field_field_formatter_info()
+
+/**
+ * Implements hook_field_formatter_view().
+ */
+function button_field_field_formatter_view($entity_type, $entity, $field,
+  $instance, $langcode, $items, $display) {
+  $ids = entity_extract_ids($entity_type, $entity);
+  $entity_id = $ids[0];
+
+  // Build the field element id and the javascript settings for the field
+  $delta = (isset($display['views_row_id']) ? $display['views_row_id'] : 0);
+  $id = _button_field_build_id($field, 'view', $delta, $langcode);
+  _button_field_build_settings($id, $field, $entity_type, $entity_id);
+
+  $element = _button_field_build_element($id, $instance, $entity_type, $entity);
+  
+  $form_state = array(
+  	'build_info' => array('args' => array(&$entity)),
+    '#entity_type' => $entity_type,
+    '#' . $entity_type => &$entity,
+    '#field' => &$field,
+    '#instance' => &$instance,
+    '#element' => $element,
+  ); // end $form_state
+  $form = drupal_build_form('button_field_dummy_form', $form_state);
+  
+  $element = ajax_process_form($element, $form_state);
+  $form[$field['field_name']] = $element;
+  $form_state['#element'] = $element;
+  form_set_cache($form['#build_id'], $form, $form_state);
+  
+  $form = _button_field_get_dummy_form($entity_type, $entity, $field, $instance, $element);
+  
+  return $form;
+} // end function button_field_field_formatter_view()
+
+/**
+ * Implements hook_field_widget_info().
+ */
+function button_field_field_widget_info() {
+  return array(
+    'button_field_html' => array(
+      'label' => 'HTML Button',
+      'field types' => array('button_field'),
+    ),
+    'button_field_image' => array(
+      'label' => 'Image Button',
+      'field types' => array('button_field'),
+    ),
+  ); // end return
+} // end function button_field_field_widget_info()
+
+/**
+ * Implements hook_field_settings_form().
+ */
+function button_field_field_settings_form($field, $instance, $has_data) {
+  return array(
+    'confirmation' => array(
+      '#type' => 'textfield',
+      '#title' => t('Confirmation message'),
+      '#default_value' => (isset($field['settings']['confirmation'])
+        ? $field['settings']['confirmation'] : FALSE),
+      '#description' => t('You may enter a confirmation message to be ' .
+          'displayed to the user before running any rules. If you do not ' .
+          'want the user to see a confirmation message you can leave this ' .
+          'setting empty.'),
+    ),
+  ); // end return
+} // end function button_field_field_settings_form()
+
+/**
+ * Implements hook_field_widget_settings_form().
+ */
+function button_field_field_widget_settings_form($field, $instance) {
+  $form = array(
+    'additional_classes' => array(
+      '#type' => 'textfield',
+      '#title' => t('Additional classes'),
+      '#default_value' => (isset($instance['settings']['additional_classes'])
+        ? $instance['settings']['additional_classes'] : NULL),
+      '#description' => t('Optionally, specify any classes to be applied to ' .
+        'the element. All button field elements will always have the ' .
+        '"button_field" class. Seperate multiple classes with a space.')
+    ),
+    'edit_hidden' => array(
+      '#type' => 'checkbox',
+      '#title' => t('Hide on edit form'),
+      '#default_value' => (isset($instance['settings']['edit_hidden'])
+        ? $instance['settings']['edit_hidden'] : TRUE),
+      '#description' => t('Whether or not this field will be rendered on ' .
+        'the node edit and add forms. Note: Nodes do not get assisgned a ' .
+        'node id on the add form; therefore, any Rules that require the ' .
+        'node to be available on button click will not function properly.'),
+    ),
+  ); // end $form
+
+  $widget_settings = array();
+  $widget = $instance['widget'];
+  switch ($instance['widget']['type']) {
+    case 'button_field_html':
+
+      $widget_settings['text'] = array(
+        '#type' => 'textfield',
+        '#title' => t('Button Text'),
+        '#default_value' => (isset($widget['settings']['text'])
+          ? $widget['settings']['text']
+          : $instance['label']),
+        '#required' => TRUE,
+      ); // end $widget_settings['text']
+      break;
+
+    case 'button_field_image':
+
+      $widget_settings['image_path'] = array(
+        '#type' => 'textfield',
+        '#title' => t('Image path'),
+        '#default_value' => (isset($widget['settings']['image_path'])
+          ? $widget['settings']['image_path'] : NULL),
+        '#required' => TRUE,
+      ); // end $widget_settings['image_path']
+
+      $widget_settings['alt_text'] = array(
+        '#type' => 'textfield',
+        '#title' => t('Alt text'),
+        '#default_value' => (isset($widget['settings']['alt_text'])
+          ? $widget['settings']['alt_text']
+          : $instance['label']),
+        '#required' => TRUE,
+      ); // end $widget_settings['alt_text']
+
+      $widget_settings['title_text'] = array(
+        '#type' => 'textfield',
+        '#title' => t('Title text'),
+        '#default_value' => (isset($widget['settings']['title_text'])
+          ? $widget['settings']['title_text'] : $instance['label']),
+        '#required' => FALSE,
+      ); // end $widget_settings['title_text']
+      break;
+  } // end switch $instance['widget']['type']
+
+  return array_merge($widget_settings, $form);
+} // end function button_field_field_widget_settings_form()
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ *
+ * Hides the required and cardinality fields and removes the default value from
+ * the field_ui_field_edit_form because it does not apply to this field type.
+ */
+function button_field_form_field_ui_field_edit_form_alter(&$form, &$form_state,
+  $form_id) {
+  if ($form['#field']['type'] == 'button_field') {
+    // Hide the required field and set it to false.
+    $form['instance']['required']['#type'] = 'hidden';
+    $form['instance']['required']['#value'] = FALSE;
+
+    // Hide the cardinality and set it to one.
+    $form['field']['cardinality']['#type'] = 'hidden';
+    $form['field']['cardinality']['#value'] = 1;
+
+    // No need for a default value.
+    unset($form['instance']['default_value_widget']);
+  }
+} // end function button_field_form_field_ui_field_edit_form_alter()
+
+/**
+ * Implements hook_field_widget_form().
+ */
+function button_field_field_widget_form(&$form, &$form_state, $field, $instance,
+  $langcode, $items, $delta, $element) {
+  // If this field is to be hidden on the edit form then we have nothing to do.
+  if ($instance['widget']['settings']['edit_hidden']) {
+    return $element;
+  } // end if this field is to be hidden
+
+  $entity_type = $element['#entity_type'];
+  $entity_id = $entity = NULL;
+  if (isset($form_state[$entity_type])) {
+    $entity = &$form_state[$entity_type];
+    $ids = entity_extract_ids($entity_type, $entity);
+    $entity_id = $ids[0];
+  }
+
+  $id = _button_field_build_id($field, 'edit', $delta, $langcode);
+  $element = _button_field_build_element($id, $instance, $entity_type, $entity);
+
+  return $element;
+} // end function button_field_field_widget_form()
+
+/**
+ * Gets the entity and its type from the form or form state during the ajax
+ * callback.
+ *
+ * @param $form
+ * @param $form_state
+ * @param $field_name
+ *   Machine name of the field that triggered the callback.
+ * @param $language
+ *   The form's language
+ * @return array
+ *   Entity and entity type.
+ */
+function _button_field_callback_get_entity($form, $form_state, $field_name, $language) {
+  // If the field element is present in the form state (which should only occur
+  // if the button is on a non-ediatable display) then we can get the entity and
+  // its type directly from there. Otherwise, we need to get it from the field
+  // on the form.
+  if (!empty($form_state['#element'])) {
+    $entity_type = $form_state['#element']['#entity_type'];
+    $entity = $form_state['#element']['#entity'];
+  } // end if we can get the entity from the form state
+  else {
+    $entity_type = $form[$field_name][$language][0]['#entity_type'];
+    $entity = &$form[$field_name][$language][0]['#entity'];
+  } // end else we need to get the entity from the form
+
+  return array($entity_type, &$entity);
+} // end function _button_field_callback_get_entity()
+
+/**
+ * Builds the response for an ajax callback.
+ */
+function _button_field_ajax_response() {
+  // Check to see if a page redirect action was used.
+  $commands = array();
+  $url = NULL;
+  $force = FALSE;
+  if (isset($GLOBALS['_rules_action_drupal_goto_do'])) {
+    list($url, $force) = $GLOBALS['_rules_action_drupal_goto_do'];
+  } // end if a page redirect action was used
+
+  // Check to see if we have a destination set and we are not forced to use a
+  // redirect action.
+  if (!$force && isset($_REQUEST['destination']) && !empty($_REQUEST['destination'])) {
+    $url = urldecode($_REQUEST['destination']);
+  } // end if we have a destination
+
+  // If we have a url that we need to set the location to, get an ajax location
+  // command to that url.
+  if (!empty($url)) {
+    $commands[] = button_field_ajax_command_location($url);
+  } // end if we have a url to set the location to
+
+  return array('#type' => 'ajax', '#commands' => $commands);
+} // end function _button_field_ajax_response()
+
+/**
+ * Builds the renderable array for a button field widget.
+ *
+ * @param string $id
+ *   Id for the field element.
+ * @param array $instance
+ *   The instance of the field being rendered.
+ * @param string $entity_type
+ *   The type of entity that the button field is being rendered for.
+ * @param stdClass $entity
+ *   The entity that the button field is being rendered for.
+ */
+function _button_field_build_element($id, $instance, $entity_type, $entity) {
+  $class = array('button_field');
+  if (isset($instance['additional_class'])) {
+    $class = array_merge($classes, explode(' ', $instance['additional_class']));
+  }
+
+  $element = array(
+    '#type' => 'button',
+    '#id' => $id,
+    '#name' => $id,
+    '#attributes' => array('class' => $class),
+    '#value' => (isset($instance['widget']['settings']['text'])
+      ? $instance['widget']['settings']['text'] : $instance['label']),
+    // Button elements do not obey the #description index, so we need to add
+    // our own suffix here.
+    '#suffix' => '<div class="description">' .
+      (!empty($instance['description'])
+        ? $instance['description']
+        : '') . '</div>',
+    '#entity_type' => $entity_type,
+    '#entity' => $entity,
+    '#ajax' => array(
+      'callback' => 'button_field_callback_ajax',
+    ),
+  ); // end $element
+
+  // If this is an image button then we need to set the type appropriatly as
+  // well as the image source.
+  if ('button_field_image' == $instance['widget']['type']) {
+    $element['#type'] = 'image_button';
+    $element['#src'] = $instance['widget']['settings']['image_path'];
+  } // end if this is an image button
+
+  return $element;
+} // end function _button_field_build_element()
+
+/**
+ * Builds the javascript settings for the field.
+ *
+ * @param string $id
+ *   Id of the buton field element.
+ * @param array $field
+ *   Field being rendered.
+ * @param string $entity_type
+ *   Type of the entity that the field is being rendered on.
+ * @param integer $entity_id
+ *   Id of the entity that the field is being rendered on
+ */
+function _button_field_build_settings($id, $field, $entity_type, $entity_id) {
+  $settings[$id] = array(
+      'confirmation' => $field['settings']['confirmation'],
+      'entity_id' => $entity_id,
+      'entity_type' => $entity_type,
+      'field_name' => $field['field_name'],
+  ); // end $settings[$id]
+  drupal_add_js($settings, 'setting');
+} // end function _button_field_build_settings()
+
+/**
+ * Builds the id for a button field instance.
+ *
+ * @param array $field
+ *   Field info array.
+ * @param string $mode
+ *   Mode that the field will be rendered in (view|edit).
+ * @param integer $delta
+ *   Delta of the instance being rendered.
+ * @param string $language
+ *   Language of the current field.
+ * @return string
+ *   Id to be used for the field.
+ */
+function _button_field_build_id($field, $mode = 'edit', $delta = 0, $language = LANGUAGE_NONE) {
+  $parts = array(
+    $mode,
+    str_replace('_', '-', $field['field_name']),
+    $language,
+    $delta,
+    'value',
+  ); // end $parts
+
+  return implode('-', $parts);
+} // end function _button_field_build_id()
+
+/**
+ * Gets the dummy form to be used with button fields on a view form.
+ *
+ * @param string $entity_type
+ *   The type of entity that the button field is being rendered for.
+ * @param stdClass $entity
+ *   The entity that the button field is being rendered for.
+ * @param array $field
+ *   The button field that is being rendered.
+ * @param array $instance
+ *   The current instance of the button field that is being rendered.
+ * @param array $element
+ *   The renderable array element for the button field.
+ * @return array
+ *   The form as a renderable array.
+ */
+function _button_field_get_dummy_form($entity_type, $entity, $field, $instance, $element) {
+  $form_state = array(
+    'build_info' => array('args' => array(&$entity)),
+    '#entity_type' => $entity_type,
+    '#' . $entity_type => &$entity,
+    '#field' => &$field,
+    '#instance' => &$instance,
+    '#element' => $element,
+  ); // end $form_state
+
+  // Build the form and add it to the cache. 
+  $form = drupal_build_form('button_field_dummy_form', $form_state);
+  form_set_cache($form['#build_id'], $form, $form_state);
+
+  return $form;
+} // end function _button_field_get_dummy_form()
