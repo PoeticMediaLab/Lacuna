@@ -1,9 +1,8 @@
-name = PSR-4 Test cases
-description = Test classes to be discovered by simpletest.
+name = Nyan cat engine based test theme
+description = Theme for testing the module-provided theme engines.
 core = 7.x
-
 hidden = TRUE
-package = Testing
+engine = nyan_cat
 
 ; Information added by Drupal.org packaging script on 2017-02-01
 version = "7.54"
