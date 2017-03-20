@@ -18,12 +18,12 @@ function lacuna_stories_peer_groups_ds_field_settings_info() {
   $ds_fieldsetting->view_mode = 'default';
   $ds_fieldsetting->settings = array(
     'peer_group_members' => array(
-      'weight' => '0',
+      'weight' => '3',
       'label' => 'hidden',
       'format' => 'default',
     ),
     'title' => array(
-      'weight' => '0',
+      'weight' => '1',
       'label' => 'hidden',
       'format' => 'default',
       'formatter_settings' => array(
@@ -78,18 +78,20 @@ function lacuna_stories_peer_groups_ds_layout_settings_info() {
   $ds_layout->layout = 'ds_2col_stacked';
   $ds_layout->settings = array(
     'regions' => array(
-      'left' => array(
-        0 => 'title',
-        1 => 'peer_group_members',
-      ),
       'header' => array(
-        2 => 'field_peer_group_image',
+        0 => 'field_peer_group_image',
+      ),
+      'left' => array(
+        1 => 'title',
+        2 => 'field_group_description',
+        3 => 'peer_group_members',
       ),
     ),
     'fields' => array(
-      'title' => 'left',
-      'peer_group_members' => 'left',
       'field_peer_group_image' => 'header',
+      'title' => 'left',
+      'field_group_description' => 'left',
+      'peer_group_members' => 'left',
     ),
     'classes' => array(),
     'wrappers' => array(
