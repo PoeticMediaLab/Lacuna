@@ -88,7 +88,7 @@ function lacuna_stories_peer_groups_peer_groups_listings() {
   foreach ($peer_group_views as $peer_group_view) {
     $view = views_get_view('peer_groups');
     $view->set_display($peer_group_view);
-    $output .= '<h4>' . $view->get_title() . '</h4>';
+    $output .= '<h4 class="peer-group-name">' . $view->get_title() . '</h4>';
     $output .= $view->preview($peer_group_view);
   }
   return $output;
