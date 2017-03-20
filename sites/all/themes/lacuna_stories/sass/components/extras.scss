@@ -325,6 +325,7 @@ div.node-course.view-mode-full {
         margin-right: 5%;
     }
 
+
     .field-name-field-name {
       margin-left: 5%;
       margin-right: 5%;
@@ -465,6 +466,11 @@ div.node-peer-group.view-mode-full {
         overflow: hidden;
         border-bottom: 1px solid #d1d5d3;
       }
+
+    .group-left {
+      width: 95%;
+    }
+
     .field-name-title {
         font-size: 2em;
         text-align: left;
@@ -473,14 +479,29 @@ div.node-peer-group.view-mode-full {
         color: #1588ba;
         line-height: 1em;
         margin-right: 5%;
+        margin-left: 5%;
     }
     .field-name-title h2 {
         font-family: "Source Sans Pro", $arial !important;
         font-weight: 500;
     }
+
+    .field-name-field-group-description {
+      margin-left: 5%;
+      border-bottom-style: solid;
+      border-bottom-width: 2px;
+      border-bottom-color: #ececec;
+        p {
+          font-family: Georgia, serif;
+        }
+    }
+
+    .field-name-peer-group-members {
+      margin-left: 5%;
+    }
+
     .views-row {
       clear: left;
-      padding-top: 20px;
     }
     .views-field-picture {
       width: 100px;
