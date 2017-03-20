@@ -3,9 +3,9 @@ description = D3 Force Directed Graph example library for module dependencies
 files[js][] = module_dependencies.js
 version = 0.1
 
-; Information added by Drupal.org packaging script on 2016-08-03
-version = "7.x-1.0-alpha2+4-dev"
+; Information added by Drupal.org packaging script on 2016-12-07
+version = "7.x-1.0-alpha3"
 core = "7.x"
 project = "d3"
-datestamp = "1470250440"
+datestamp = "1481138585"
 

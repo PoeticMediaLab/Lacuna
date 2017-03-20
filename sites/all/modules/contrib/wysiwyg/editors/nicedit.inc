@@ -19,6 +19,7 @@ function wysiwyg_nicedit_editor() {
         'files' => array('nicEdit.js'),
       ),
     ),
+    'verified version range' => array('0.9', '0.9'),
     'version callback' => 'wysiwyg_nicedit_version',
     'settings form callback' => 'wysiwyg_nicedit_settings_form',
     'settings callback' => 'wysiwyg_nicedit_settings',

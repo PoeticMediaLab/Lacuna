@@ -159,7 +159,7 @@ function lacuna_stories_threads_views_default_views() {
   $handler->display->display_options['relationships']['uid']['field'] = 'uid';
   /* Field: Bulk operations: Content */
   $handler->display->display_options['fields']['views_bulk_operations']['id'] = 'views_bulk_operations';
-  $handler->display->display_options['fields']['views_bulk_operations']['table'] = 'node';
+  $handler->display->display_options['fields']['views_bulk_operations']['table'] = 'views_entity_node';
   $handler->display->display_options['fields']['views_bulk_operations']['field'] = 'views_bulk_operations';
   $handler->display->display_options['fields']['views_bulk_operations']['label'] = 'Select for Thread';
   $handler->display->display_options['fields']['views_bulk_operations']['vbo_settings']['display_type'] = '1';
@@ -571,7 +571,8 @@ if (module_exists(\'course\')) {
   $handler->display->display_options['pager']['options']['offset'] = '0';
   $handler->display->display_options['style_plugin'] = 'table';
   $handler->display->display_options['style_options']['columns'] = array(
-    'draggableviews' => 'draggableviews',
+    'views_bulk_operations' => 'views_bulk_operations',
+    'nid_1' => 'nid_1',
     'name' => 'name',
     'field_annotation_reference' => 'field_annotation_reference',
     'field_annotation_quote' => 'field_annotation_quote',
@@ -581,23 +582,32 @@ if (module_exists(\'course\')) {
     'nid' => 'nid',
     'path' => 'path',
     'nothing' => 'nothing',
+    'draggableviews' => 'draggableviews',
+    'weight' => 'weight',
   );
-  $handler->display->display_options['style_options']['default'] = 'field_annotation_reference';
+  $handler->display->display_options['style_options']['default'] = 'weight';
   $handler->display->display_options['style_options']['info'] = array(
-    'draggableviews' => array(
+    'views_bulk_operations' => array(
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'nid_1' => array(
+      'sortable' => 0,
+      'default_sort_order' => 'asc',
       'align' => '',
       'separator' => '',
       'empty_column' => 0,
     ),
     'name' => array(
-      'sortable' => 1,
+      'sortable' => 0,
       'default_sort_order' => 'asc',
       'align' => '',
       'separator' => '',
       'empty_column' => 0,
     ),
     'field_annotation_reference' => array(
-      'sortable' => 1,
+      'sortable' => 0,
       'default_sort_order' => 'asc',
       'align' => '',
       'separator' => '',
@@ -618,7 +628,7 @@ if (module_exists(\'course\')) {
       'empty_column' => 0,
     ),
     'field_annotation_category' => array(
-      'sortable' => 1,
+      'sortable' => 0,
       'default_sort_order' => 'asc',
       'align' => '',
       'separator' => '',
@@ -642,6 +652,18 @@ if (module_exists(\'course\')) {
       'empty_column' => 0,
     ),
     'nothing' => array(
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'draggableviews' => array(
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'weight' => array(
+      'sortable' => 1,
+      'default_sort_order' => 'asc',
       'align' => '',
       'separator' => '',
       'empty_column' => 0,
@@ -836,7 +858,7 @@ if (module_exists(\'course\')) {
   $handler->display->display_options['defaults']['fields'] = FALSE;
   /* Field: Bulk operations: Content */
   $handler->display->display_options['fields']['views_bulk_operations']['id'] = 'views_bulk_operations';
-  $handler->display->display_options['fields']['views_bulk_operations']['table'] = 'node';
+  $handler->display->display_options['fields']['views_bulk_operations']['table'] = 'views_entity_node';
   $handler->display->display_options['fields']['views_bulk_operations']['field'] = 'views_bulk_operations';
   $handler->display->display_options['fields']['views_bulk_operations']['vbo_settings']['display_type'] = '1';
   $handler->display->display_options['fields']['views_bulk_operations']['vbo_settings']['enable_select_all_pages'] = 1;
@@ -926,6 +948,11 @@ if (module_exists(\'course\')) {
   $handler->display->display_options['fields']['draggableviews']['element_default_classes'] = FALSE;
   $handler->display->display_options['fields']['draggableviews']['hide_alter_empty'] = FALSE;
   $handler->display->display_options['fields']['draggableviews']['draggableviews']['ajax'] = 1;
+  /* Field: Draggableviews: Weight */
+  $handler->display->display_options['fields']['weight']['id'] = 'weight';
+  $handler->display->display_options['fields']['weight']['table'] = 'draggableviews_structure';
+  $handler->display->display_options['fields']['weight']['field'] = 'weight';
+  $handler->display->display_options['fields']['weight']['exclude'] = TRUE;
 
   /* Display: Doc Data export */
   $handler = $view->new_display('views_data_export', 'Doc Data export', 'views_data_export_1');
@@ -1149,9 +1176,9 @@ if (module_exists(\'course\')) {
   $handler->display->display_options['access']['role'] = array(
     3 => '3',
     4 => '4',
-    8 => '8',
     5 => '5',
     6 => '6',
+    7 => '7',
   );
   $handler->display->display_options['cache']['type'] = 'none';
   $handler->display->display_options['query']['type'] = 'views_query';

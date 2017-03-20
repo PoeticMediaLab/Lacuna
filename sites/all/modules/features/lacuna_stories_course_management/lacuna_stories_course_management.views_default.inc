@@ -276,7 +276,7 @@ function lacuna_stories_course_management_views_default_views() {
   $handler->display->display_options['relationships']['uid']['required'] = TRUE;
   /* Field: Bulk operations: Content */
   $handler->display->display_options['fields']['views_bulk_operations']['id'] = 'views_bulk_operations';
-  $handler->display->display_options['fields']['views_bulk_operations']['table'] = 'node';
+  $handler->display->display_options['fields']['views_bulk_operations']['table'] = 'views_entity_node';
   $handler->display->display_options['fields']['views_bulk_operations']['field'] = 'views_bulk_operations';
   $handler->display->display_options['fields']['views_bulk_operations']['label'] = '';
   $handler->display->display_options['fields']['views_bulk_operations']['element_label_colon'] = FALSE;
@@ -461,7 +461,7 @@ function lacuna_stories_course_management_views_default_views() {
   $handler->display->display_options['header']['area']['empty'] = TRUE;
   $handler->display->display_options['header']['area']['content'] = 'As a site administrator or instructor, you can designate certain tags as “curated.” They will then appear at the top of the list of suggested tags on the annotator window. Adding your own curated tags, or adding popular user-generated tags to a “curated” status, can facilitate a shared vocabulary for your users. The tag cloud to the left indicates each tag’s usage frequency on your course or project site.
 
-<a href="/annotation_tags/add" class="lacuna-button">Add a New Tag</a>';
+<a href="annotation_tags/add" class="lacuna-button">Add a New Tag</a>';
   $handler->display->display_options['header']['area']['format'] = 'full_html';
   /* No results behavior: Global: Text area */
   $handler->display->display_options['empty']['area']['id'] = 'area';
@@ -623,7 +623,7 @@ function lacuna_stories_course_management_views_default_views() {
   $handler->display->display_options['fields']['state']['element_class'] = 'member-status';
   /* Field: Bulk operations: User */
   $handler->display->display_options['fields']['views_bulk_operations']['id'] = 'views_bulk_operations';
-  $handler->display->display_options['fields']['views_bulk_operations']['table'] = 'users';
+  $handler->display->display_options['fields']['views_bulk_operations']['table'] = 'views_entity_user';
   $handler->display->display_options['fields']['views_bulk_operations']['field'] = 'views_bulk_operations';
   $handler->display->display_options['fields']['views_bulk_operations']['label'] = '';
   $handler->display->display_options['fields']['views_bulk_operations']['element_label_colon'] = FALSE;

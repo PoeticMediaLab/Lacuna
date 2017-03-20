@@ -11,8 +11,9 @@
   Drupal.d3 = {
     draw: function(element, settings) {
       // Invoke JavaScript library function, if it exists.
-      if (Drupal.d3[settings.type]) {
-        Drupal.d3[settings.type](element, settings);
+      var name = settings.type.toLowerCase();
+      if (Drupal.d3[name]) {
+        Drupal.d3[name](element, settings);
       }
     }
   };

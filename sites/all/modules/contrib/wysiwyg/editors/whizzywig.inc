@@ -19,6 +19,7 @@ function wysiwyg_whizzywig_editor() {
         'files' => array('whizzywig.js'),
       ),
     ),
+    'verified version range' => array('55', '63'),
     'version callback' => 'wysiwyg_whizzywig_version',
     'settings form callback' => 'wysiwyg_whizzywig_settings_form',
     'settings callback' => 'wysiwyg_whizzywig_settings',

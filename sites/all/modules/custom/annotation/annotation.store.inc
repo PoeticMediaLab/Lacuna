@@ -330,6 +330,10 @@ function annotation_drupal_format($entity, $update = FALSE) {
 function annotation_api_create() {
   if (annotation_access('create')) {
     $entity = annotation_api_from_stdin();
+    // prevent edge case where there's no quote!
+    if (!isset($entity->quote)) {
+      $entity->quote = '';
+    }
     $annotation = annotation_drupal_format($entity);
     $annotation->comment = 2; // enable comments
     $annotation = node_submit($annotation);
@@ -652,7 +656,9 @@ function annotation_api_entity_prepare($annotation, $op) {
       }
 
       // Quote
-      $entity->quote = $annotation->field_annotation_quote[$annotation->language][0]['value'];
+      if (isset($annotation->field_annotation_quote[$annotation->language])) {
+        $entity->quote = $annotation->field_annotation_quote[$annotation->language][0]['value'];
+      }
 
       // Category is for the Category plugin
       // Uses a Drupal taxonomy, like tags

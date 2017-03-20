@@ -28,6 +28,7 @@ function wysiwyg_wymeditor_editor() {
         'files' => array('jquery.wymeditor.js'),
       ),
     ),
+    'verified version range' => array('0.5', '1.0.0b5'),
     'version callback' => 'wysiwyg_wymeditor_version',
     'themes callback' => 'wysiwyg_wymeditor_themes',
     'settings form callback' => 'wysiwyg_wymeditor_settings_form',
@@ -202,7 +203,7 @@ function wysiwyg_wymeditor_settings($editor, $config, $theme) {
   if (isset($config['css_setting'])) {
     if ($config['css_setting'] == 'theme') {
       // WYMeditor only supports one CSS file currently.
-      $css = wysiwyg_get_css();
+      $css = wysiwyg_get_css(isset($config['css_theme']) ? $config['css_theme'] : '');
       $settings['stylesheet'] = reset($css);
     }
     elseif ($config['css_setting'] == 'self' && isset($config['css_path'])) {

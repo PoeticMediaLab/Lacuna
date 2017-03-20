@@ -19,6 +19,7 @@ function wysiwyg_jwysiwyg_editor() {
         'files' => array('jquery.wysiwyg.js'),
       ),
     ),
+    'verified version range' => array('0.5', '0.97'),
     'version callback' => 'wysiwyg_jwysiwyg_version',
     'settings form callback' => 'wysiwyg_jwysiwyg_settings_form',
     'settings callback' => 'wysiwyg_jwysiwyg_settings',

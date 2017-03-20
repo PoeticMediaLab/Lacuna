@@ -1,6 +1,24 @@
 Lacuna Release Notes
 ====================
 
+Version 2.2.3:
+-------------
+
+### Fixes
+ * Annotation Dashboard cache administration form fixed
+ * Reordering threads now works
+ * Installation profile uses Lacuna logo
+ * Fixed permissions on new install
+ * Improved responsive design of annotation dashboard
+ * Fixed Materials display when texts have long list of authors
+ * Sharing options sometimes didn't show up correctly
+ * Adding some backend error checking to get rid of a PHP warning when loading highlights (i.e., annotations without text)
+ * Fixed link to add tags in "Curate Tags" menu item when Lacuna is not installed in the webserver's root directory
+ 
+### Changes
+ * Updated Views, Views Bulk Operations, d3, Webform, Media, WYWISYG, Diff, and Token modules
+ 
+
 Version 2.2.2: LTI bug fix release
 -------------
 January 27, 2017

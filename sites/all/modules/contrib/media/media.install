@@ -65,6 +65,8 @@ function media_uninstall() {
   variable_del('media_zindex');
   variable_del('media_backgroundcolor');
   variable_del('media_opacity');
+  // bulk edit option
+  variable_del('media_bulk_upload_edit');
 }
 
 /**
@@ -867,7 +869,12 @@ function media_update_7208() {
       // Merge existing type with new ones.
       if ($new_type = file_type_load($type->name)) {
         $new_type->mimetypes = array_merge($type->mimetypes, $new_type->mimetypes);
-        $new_type->streams = array_merge($type->streams, $new_type->streams);
+        if (!empty($new_type->streams)) {
+          $new_type->streams = array_merge($type->streams, $new_type->streams);
+        }
+        else{
+          $new_type->streams = $type->streams;
+        }
       }
       else {
         $new_type = $type;

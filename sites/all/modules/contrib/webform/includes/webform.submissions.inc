@@ -611,7 +611,7 @@ function webform_get_submissions($filters = array(), $header = NULL, $pager_coun
 
   // No need to find SIDs if it was given to us.
   if (isset($filters['sid'])) {
-    $sids = array($filters['sid']);
+    $sids = (array) $filters['sid'];
   }
   // Build the list of SIDs that need to be retrieved.
   else {

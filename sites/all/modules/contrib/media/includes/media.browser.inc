@@ -16,7 +16,7 @@ function media_browser($selected = NULL) {
 
   // If we just did a multiple upload, do the multiform file edit. The flag that
   // tells us that we need to do this is $params['render_multi_edit_form'].
-  if (isset($params['render_multi_edit_form']) && isset($params['fid']) && module_exists('media_bulk_upload')) {
+  if (variable_get('media_bulk_upload_edit', TRUE) && isset($params['render_multi_edit_form']) && isset($params['fid']) && module_exists('media_bulk_upload')) {
     module_load_include('inc', 'media_bulk_upload', 'includes/media_bulk_upload.pages');
     $files = file_load_multiple($params['fid']);
     $multi_edit_form = media_bulk_upload_file_page_edit_multiple($files);

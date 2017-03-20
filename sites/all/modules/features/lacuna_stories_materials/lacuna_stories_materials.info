@@ -97,6 +97,7 @@ features[variable][] = comment_document
 features[variable][] = comment_form_location_document
 features[variable][] = comment_preview_document
 features[variable][] = comment_subject_field_document
+features[variable][] = content_access_document
 features[variable][] = field_bundle_settings_node__document
 features[variable][] = menu_options_document
 features[variable][] = menu_parent_document

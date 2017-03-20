@@ -1,5 +1,5 @@
 
-Drupal.wysiwyg = Drupal.wysiwyg || { 'instances': {}, 'excludeIdSelectors': {} };
+Drupal.wysiwyg = Drupal.wysiwyg || { 'instances': {}, 'excludeIdSelectors': { 'tokens': ['[id^="token-"]'] } };
 
 Drupal.wysiwyg.editor = Drupal.wysiwyg.editor || { 'init': {}, 'update': {}, 'attach': {}, 'detach': {}, 'instance': {} };
 
