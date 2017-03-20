@@ -84,6 +84,14 @@
   padding: 0;
 }
 
+@media only screen and (max-width: 540px) {
+
+  .header {
+    margin-top: .5em;
+  }
+
+}
+
 /* Logo image. */
 .header__logo-image {
   vertical-align: bottom;
@@ -136,13 +144,14 @@
 
 /* Wrapper for any blocks placed in the header region. */
 .header__region {
- /*  Changed from 'clear: both;' as part of style rearranging
- *   to make site work at smaller window widths / tablets.
- *   --Cody
- */
-float: right;
-position: relative;
-top: 0.4rem;
+  float: right;
+  position: relative;
+  top: 0.4rem;
+  @media (max-width: 959px) {
+    right: .5rem;
+    top: 32.5px;
+    transform: translateY(-50%);
+  }
 }
 
 /**

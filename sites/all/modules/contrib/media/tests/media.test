@@ -915,7 +915,7 @@ class MediaElementSettingsTestCase extends MediaFileFieldTestCase {
     $multiselect = ($field['cardinality'] > 1 || $field['cardinality'] == FIELD_CARDINALITY_UNLIMITED);
     $field_widget = array(
         'elements' => array(
-          '#edit-' . $field_name . '-' . LANGUAGE_NONE . '-0-upload' => array(
+          '.js-media-element-edit-' . $field_name . '-' . LANGUAGE_NONE . '-0-upload' => array(
             'global' => array(
               'types' => array(
                 'image' => 'image',

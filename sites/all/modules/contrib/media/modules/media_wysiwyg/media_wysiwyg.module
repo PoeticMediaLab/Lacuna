@@ -18,10 +18,25 @@ require_once dirname(__FILE__) . '/includes/media_wysiwyg.uuid.inc';
 require_once dirname(__FILE__) . '/includes/media_wysiwyg.features.inc';
 
 /**
+ * Implements hook_page_build().
+ */
+function media_wysiwyg_page_build(&$page) {
+  // We need to load some minor CSS if media alignment is enabled.
+  if (variable_get('media_wysiwyg_alignment', FALSE)) {
+    $page['page_bottom']['media_wysiwyg']['#attached']['css'] = array(
+      drupal_get_path('module', 'media_wysiwyg') . '/css/media_wysiwyg.base.css' => array(
+        'every_page' => TRUE,
+      ),
+    );
+  }
+}
+
+/**
  * Implements hook_hook_info().
  */
 function media_wysiwyg_hook_info() {
   $hooks = array(
+    'media_wysiwyg_allowed_attributes_alter',
     'media_wysiwyg_token_to_markup_alter',
     'media_wysiwyg_allowed_view_modes_alter',
     'media_wysiwyg_format_form_prepare_alter',
@@ -102,9 +117,15 @@ function media_wysiwyg_pre_render_text_format($element) {
     return $element;
   }
 
-  $tagmap = _media_wysiwyg_generate_tagMap($field['#value']);
+  $tagmap = array();
 
-  if (isset($tagmap)) {
+  foreach (array('value', 'summary') as $column) {
+    if (isset($element[$column])) {
+      $tagmap += _media_wysiwyg_generate_tagMap($element[$column]['#value']);
+    }
+  }
+
+  if (!empty($tagmap)) {
     $element['#attached']['js'][] = array(
       'data' => array(
         'tagmap' => $tagmap,
@@ -119,7 +140,7 @@ function media_wysiwyg_pre_render_text_format($element) {
 
   // Add wysiwyg-specific settings.
   $settings = array(
-    'wysiwyg_allowed_attributes' => variable_get('media_wysiwyg_wysiwyg_allowed_attributes', _media_wysiwyg_wysiwyg_allowed_attributes_default()),
+    'wysiwyg_allowed_attributes' => media_wysiwyg_allowed_attributes(),
     'img_alt_field' => 'field_file_image_alt_text',
     'img_title_field' => 'field_file_image_title_text',
   );
@@ -141,6 +162,7 @@ function media_wysiwyg_pre_render_text_format($element) {
   $element['#attached']['js'][] = array(
     'data' => array(
       'media' => $settings,
+      'mediaDoLinkText' => (boolean) variable_get('media_wysiwyg_use_link_text_for_filename', 1),
     ),
     'type' => 'setting',
   );
@@ -267,7 +289,28 @@ function media_wysiwyg_form_media_admin_config_browser_alter(&$form, &$form_stat
     '#title' => t('Override field types in WYSIWYG'),
     '#options' => $options,
     '#default_value' => variable_get('media_wysiwyg_wysiwyg_override_field_types', array('text', 'text_long')),
-    '#description' => t('If checked, then the field type may be overridden in the WYSIWYG editor. Not all field types (e.g. Term reference) currently support being overridden so the desired result might not be achieved.')
+    '#description' => t('If checked, then the field type may be overridden in the WYSIWYG editor. Not all field types/widgets (e.g. Term reference autocomplete) currently support being overridden so the desired result might not be achieved.')
+  );
+
+  $form['wysiwyg']['media_wysiwyg_wysiwyg_override_multivalue'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Override multi-value fields in WYSIWYG'),
+    '#description' => t('If checked, then multi-value fields may be overridden in the WYSIWYG editor. Not all field types/widgets (e.g. Term reference autocomplete) currently support being overridden so the desired result might not be achieved.'),
+    '#default_value' => variable_get('media_wysiwyg_wysiwyg_override_multivalue', FALSE),
+  );
+
+  $form['wysiwyg']['media_wysiwyg_use_link_text_for_filename'] = array(
+    '#type' => 'checkbox',
+    '#title' => t("Use link text for filename"),
+    '#default_value' => variable_get('media_wysiwyg_use_link_text_for_filename', 1),
+    '#description' => t('When formatting inserted media, allow editable link text to be used in place of the filename. Turn this off if your file view modes handle link formatting.'),
+  );
+
+  $form['wysiwyg']['media_wysiwyg_alignment'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Provide alignment option when embedding media'),
+    '#default_value' => variable_get('media_wysiwyg_alignment', FALSE),
+    '#description' => t('If checked, there will be an alignment (left/right/center) option when embedding media in a WYSIWYG.'),
   );
 
   $form['#submit'][] = 'media_wysiwyg_admin_config_browser_pre_submit';
@@ -320,13 +363,14 @@ function media_wysiwyg_wysiwyg_include_directory($type) {
 }
 
 /**
- * Returns the default set of allowed attributes for use with WYSIWYG.
+ * Returns the set of allowed attributes for use with WYSIWYG.
  *
  * @return array
  *   An array of whitelisted attributes.
  */
-function _media_wysiwyg_wysiwyg_allowed_attributes_default() {
-  return array(
+function media_wysiwyg_allowed_attributes() {
+  // Support the legacy variable for this.
+  $allowed_attributes = variable_get('media_wysiwyg_wysiwyg_allowed_attributes', array(
     'alt',
     'title',
     'height',
@@ -343,7 +387,9 @@ function _media_wysiwyg_wysiwyg_allowed_attributes_default() {
     'data-picture-align',
     'data-picture-mapping',
     'data-delta',
-  );
+  ));
+  drupal_alter('media_wysiwyg_allowed_attributes', $allowed_attributes);
+  return $allowed_attributes;  
 }
 
 /**
@@ -541,11 +587,9 @@ function media_wysiwyg_file_displays_alter(&$displays, $file, $view_mode) {
  * Add a file type named 'WYSIWYG'.
  */
 function media_wysiwyg_entity_info_alter(&$entity_info) {
-  $entity_info['file']['view modes'] += array(
-    'wysiwyg' => array(
-      'label' => t('WYSIWYG'),
-      'custom settings' => TRUE,
-    ),
+  $entity_info['file']['view modes']['wysiwyg'] = array(
+    'label' => t('WYSIWYG'),
+    'custom settings' => TRUE,
   );
 }
 

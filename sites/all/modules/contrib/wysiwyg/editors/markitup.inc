@@ -25,6 +25,7 @@ function wysiwyg_markitup_editor() {
       ),
     ),
     'install note callback' => 'wysiwyg_markitup_install_note',
+    'verified version range' => array('1.1.5', '1.1.14'),
     'version callback' => 'wysiwyg_markitup_version',
     'themes callback' => 'wysiwyg_markitup_themes',
     'settings form callback' => 'wysiwyg_markitup_settings_form',

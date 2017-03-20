@@ -7,6 +7,13 @@ $border-color: #eee;
 // User registration form
 form#user-register-form {
 
+  //  Prevent fieldsets from exceeding page width on small screens
+  @media (max-width: 540px) {
+    fieldset {
+      min-width: 0;
+    }
+  }
+
   // Remove ugly padding around fieldsets in forms
   fieldset.form-wrapper {
     margin: 0px;
@@ -25,6 +32,7 @@ form#user-register-form {
   fieldset.collapsible {
     border: 1px solid $border-color;
     padding-left: 1em;
+    @media (max-width: 540px) { padding-right: 1em; }
   }
 
   table.tabledrag-processed {
@@ -47,9 +55,14 @@ form#user-register-form {
       }
       .fieldset-wrapper {
         .date-no-float {
+          @media (max-width: 540px) { width: 100%; }
           .form-type-date-text {
             #edit-field-date-of-birth-und-0-value {
               padding: 0px;
+            }
+            @media (max-width: 540px) {
+              margin-right: 0;
+              input { width: 100%; }
             }
           }
         }
@@ -92,5 +105,49 @@ table.tabledrag-processed td label {
       padding-left: 5px;
     }
   }
+}
+
+@media (max-width: 540px) {
+  body.page-node-add-response {
+
+    fieldset {
+      
+      min-width: 0;
+
+      #edit-field-bibliographic-item-und-0-target-id {
+        width: 100%;
+      }
+
+    }
+
+    div.vertical-tabs {
+      
+      margin: 1em 0;
+
+      ul.vertical-tabs-list {
+
+        width: 100%;
+        margin: 0;
+        border-top: none;
+
+        li {
+          border-left: none;
+        }
+
+      }
+
+    }
+
+    .media-widget .button.browse {
+      float: left;
+      margin-bottom: 0.75em;
+    }
+
+    .form-actions .form-submit {
+      width: 125px;
+    }
+
+  }
+
 }
 

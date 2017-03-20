@@ -248,7 +248,9 @@ $profile-height: 220px;
 		height: auto;
 		vertical-align: bottom;
 		text-align: left;
-
+		@media (max-width: 540px) {
+			font-size: .75em;
+		}
 	}
 
 	#user-command-buttons {
@@ -326,6 +328,12 @@ $profile-height: 220px;
 			margin: 0;
 			td {
 				text-align: center;
+				@media (max-width: 540px) {
+					display: inline-block;
+					padding: .5em;
+					width: 100%;
+					box-sizing: border-box;
+				}
 				p {
 					font-style: italic;
 				}
@@ -547,14 +555,23 @@ $profile-height: 220px;
  user profile styles, use of variables
  */
 .view-people {
-  .views-field-rid {
-    width: $profile-width;
-    height: 1em;
-  }
-  tr {
-  	height: $profile-height + ($profile-height / 2);
-  	vertical-align: top;
-  }
+	ul {
+		margin: 0;
+		padding: 0;
+		text-align: center;
+		li {
+			display: inline-block;
+			margin: 2em;
+			@media (max-width: 450px) {
+				margin-left: 0;
+				margin-right: 0;
+			}
+			.views-field-rid {
+			  width: $profile-width;
+			  height: 1em;
+			}
+		}
+	}
 }
 
 /*excludes node title from user pages*/

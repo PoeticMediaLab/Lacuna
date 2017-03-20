@@ -513,6 +513,12 @@ $privacy-selected: rgba(19, 149, 25, 0.74);
   padding: 10px;
   border: 1px solid black;
   width: 30%;
+  
+  @media (max-width: 540px) {
+    width: 100%;
+    box-sizing: border-box;
+  }
+
   .annotator-reply-text {
     height: 50px;
   }

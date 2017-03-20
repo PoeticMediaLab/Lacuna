@@ -15,6 +15,33 @@ a.nolink {
  font-size: 1em;
  font-family: $base-font-family;
  margin-bottom: 0px;
+ @media (max-width: 959px) {
+  position: relative;
+  height: 1.5rem;
+  margin-top: .5rem;
+  &::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 2rem;
+    height: 1.5rem;
+    background: linear-gradient(
+      to bottom, 
+      #aaa, #aaa 20%, 
+      #fff 20%, #fff 40%, 
+      #aaa 40%, #aaa 60%, 
+      #fff 60%, #fff 80%, 
+      #aaa 80%, #aaa 100%
+    );
+    pointer-events: none;
+  }
+  select {
+   width: 2rem;
+   height: 1.4rem;
+   margin-top: .05rem;
+  }
+ }
 }
 
 #superfish-1, #superfish-2 {

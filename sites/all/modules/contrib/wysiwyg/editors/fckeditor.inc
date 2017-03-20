@@ -19,6 +19,7 @@ function wysiwyg_fckeditor_editor() {
         'files' => array('fckeditor.js'),
       ),
     ),
+    'verified version range' => array('2.6.0', '2.6.11'),
     'version callback' => 'wysiwyg_fckeditor_version',
     'themes callback' => 'wysiwyg_fckeditor_themes',
     'settings form callback' => 'wysiwyg_fckeditor_settings_form',
@@ -121,6 +122,7 @@ function wysiwyg_fckeditor_settings_form(&$form, &$form_state) {
     '#maxlength' => 250,
     '#description' => t('Semicolon separated list of HTML block formats. Possible values: <code>@format-list</code>.', array('@format-list' => 'p;h1;h2;h3;h4;h5;h6;div;address;pre')) . ' ' . t('Uses the <a href="@url">@setting</a> setting internally.', array('@setting' => 'FontFormats', '@url' => url('http://docs.cksource.com/FCKeditor_2.x/Developers_Guide/Configuration/Configuration_Options/FontFormats'))),
   );
+
   $form['paste'] = array(
     '#type' => 'fieldset',
     '#title' => t('Paste plugin'),
@@ -182,22 +184,21 @@ function wysiwyg_fckeditor_settings($editor, $config, $theme) {
   if (isset($config['FontFormats'])) {
     $settings['FontFormats'] = preg_replace('@\s+@', '', $config['FontFormats']);
   }
-  if (isset($config['FormatOutput'])) {
-    $settings['FormatOutput'] = $config['FormatOutput'];
-  }
-  if (isset($config['FormatSource'])) {
-    $settings['FormatSource'] = $config['FormatSource'];
-  }
-  if (isset($config['ForcePasteAsPlainText'])) {
-    $settings['ForcePasteAsPlainText'] = $config['ForcePasteAsPlainText'];
-  }
-  if (isset($config['AutoDetectPasteFromWord'])) {
-    $settings['AutoDetectPasteFromWord'] = $config['AutoDetectPasteFromWord'];
+  $check_if_set = array(
+    'AutoDetectPasteFromWord',
+    'ForcePasteAsPlainText',
+    'FormatOutput',
+    'FormatSource',
+  );
+  foreach ($check_if_set as $setting_name) {
+    if (isset($config[$setting_name])) {
+      $settings[$setting_name] = $config[$setting_name];
+    }
   }
 
   if (isset($config['css_setting'])) {
     if ($config['css_setting'] == 'theme') {
-      $settings['EditorAreaCSS'] = implode(',', wysiwyg_get_css());
+      $settings['EditorAreaCSS'] = implode(',', wysiwyg_get_css(isset($config['css_theme']) ? $config['css_theme'] : ''));
     }
     elseif ($config['css_setting'] == 'self' && isset($config['css_path'])) {
       $settings['EditorAreaCSS'] = strtr($config['css_path'], array(

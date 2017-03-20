@@ -1,6 +1,33 @@
 Lacuna Release Notes
 ====================
 
+Version 2.2.3:
+-------------
+
+### Fixes
+ * Annotation Dashboard cache administration form fixed
+ * Reordering threads now works
+ * Installation profile uses Lacuna logo
+ * Fixed permissions on new install
+ * Improved responsive design of annotation dashboard
+ * Fixed Materials display when texts have long list of authors
+ * Sharing options sometimes didn't show up correctly
+ * Adding some backend error checking to get rid of a PHP warning when loading highlights (i.e., annotations without text)
+ * Fixed link to add tags in "Curate Tags" menu item when Lacuna is not installed in the webserver's root directory
+ 
+### Changes
+ * Updated Views, Views Bulk Operations, d3, Webform, Media, WYWISYG, Diff, and Token modules
+ 
+
+Version 2.2.2: LTI bug fix release
+-------------
+January 27, 2017
+
+A minor release that fixes a critical bug in LTI integration.
+
+### Fixes
+ * Correct paths for using Lacuna from within an LTI environment
+
 Version 2.2.1: Fix many Bugs
 -------------
 November 18, 2016
@@ -30,6 +57,7 @@ This is a bug fix release.
  * Redirect users to Peer Groups page instead of home page after deleting a peer group
  * If course creation requires a password, accept it correctly
  * Patched d3 module so that it can be updated again
+ * Fixed Canvas support so course setup works with older versions of PHP (<5.5)
 
 Version 2.2: Canvas/LTI Support
 -----------

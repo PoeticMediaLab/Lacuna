@@ -15,10 +15,6 @@ function lacuna_stories_system_wysiwyg_default_profiles() {
     'format' => 'filtered_html',
     'editor' => 'ckeditor',
     'settings' => array(
-      'default' => 1,
-      'user_choose' => 0,
-      'show_toggle' => 0,
-      'add_to_summaries' => 1,
       'theme' => '',
       'language' => 'en',
       'buttons' => array(
@@ -70,6 +66,14 @@ p{text-align};',
       'advanced__active_tab' => 'edit-output',
       'forcePasteAsPlainText' => 0,
     ),
+    'preferences' => array(
+      'add_to_summaries' => 1,
+      'default' => 1,
+      'show_toggle' => 0,
+      'user_choose' => 0,
+      'version' => NULL,
+    ),
+    'name' => 'formatfiltered_html',
     'rdf_mapping' => array(),
   );
 
@@ -78,10 +82,6 @@ p{text-align};',
     'format' => 'full_html',
     'editor' => 'ckeditor',
     'settings' => array(
-      'default' => 1,
-      'user_choose' => 0,
-      'show_toggle' => 1,
-      'add_to_summaries' => 1,
       'theme' => '',
       'language' => 'en',
       'buttons' => array(
@@ -133,6 +133,14 @@ p{text-align};',
       'advanced__active_tab' => 'edit-output',
       'forcePasteAsPlainText' => 0,
     ),
+    'preferences' => array(
+      'add_to_summaries' => 1,
+      'default' => 1,
+      'show_toggle' => 1,
+      'user_choose' => 0,
+      'version' => NULL,
+    ),
+    'name' => 'formatfull_html',
     'rdf_mapping' => array(),
   );
 

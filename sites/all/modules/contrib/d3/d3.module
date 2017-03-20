@@ -320,7 +320,8 @@ function d3_libraries_info() {
       ),
       'version arguments' => array(
         'file' => 'd3.min.js',
-        'pattern' => '/version\:\"([0-9\.]*)\"/',
+        // Match ‘version:"3.4.4"’ or ‘Version 4.4.0. ’
+        'pattern' => '/(?|version\:\"([0-9\.]*)\"|Version ([0-9\.]*)\. )/',
         'lines' => 3,
         'cols' => 40000,
       ),

@@ -674,7 +674,7 @@ function media_element_info() {
     '#value_callback' => 'media_file_value',
     '#element_validate' => array('media_element_validate'),
     '#pre_render' => array('media_element_pre_render'),
-    '#theme' => 'media_element',
+    '#theme' => 'media_widget',
     '#theme_wrappers' => array('form_element'),
     '#size' => 22,
     '#extended' => FALSE,
@@ -828,11 +828,16 @@ function media_element_process($element, &$form_state, $form) {
   // Media browser attach code.
   $element['#attached']['js'][] = drupal_get_path('module', 'media') . '/js/media.js';
 
+  // IDs of form elements are 'unstable' in Drupal because of drupal_html_id
+  // add a class for our Javascript instead.
+  $element_js_class = drupal_html_class('js-media-element-' . $element['#id']);
+  $element['upload']['#attributes']['class'][] = $element_js_class;
+
   // Add the media options to the page as JavaScript settings.
   $element['browse_button']['#attached']['js'] = array(
     array(
       'type' => 'setting',
-      'data' => array('media' => array('elements' => array('#' . $element['#id'] => $element['#media_options'])))
+      'data' => array('media' => array('elements' => array('.' . $element_js_class => $element['#media_options'])))
     )
   );
 
