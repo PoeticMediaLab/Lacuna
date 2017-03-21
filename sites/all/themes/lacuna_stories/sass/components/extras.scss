@@ -335,6 +335,7 @@ div.node-course.view-mode-full {
         margin-right: 5%;
     }
 
+
     .field-name-field-name {
       margin-left: 5%;
       margin-right: 5%;
@@ -456,7 +457,26 @@ a.group.subscribe,
 a.group.unsubscribe,
 body.not-logged-in div.field-name-group-group {
   margin-left: 30px;
-  font-size: 1.5em;
+  font-size: 1em;
+  width: auto;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+a.create-peer-group {
+  font-size: 1em;
+  width: auto;
+  margin-top: 40px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.view-peer-group-members .view-header a {
+  font-size: 1em;
   width: auto;
 }
 
@@ -500,5 +520,147 @@ body.not-logged-in div.field-name-group-group {
 body.not-logged-in div.field-name-group-group a {
   color: #ffffff;
   padding: 5px;
+}
+
+
+/*theming for Peer Groups pages --DMB 12/13/2016*/
+div.node-peer-group.view-mode-full {
+    .group-header {
+        width: 100%;
+        height: 35vh;
+        overflow: hidden;
+        border-bottom: 1px solid #d1d5d3;
+      }
+
+    .group-left {
+      width: 95%;
+    }
+
+    .field-name-title {
+        font-size: 2em;
+        text-align: left;
+        letter-spacing: -.01em;
+        text-transform: uppercase;
+        color: #1588ba;
+        line-height: 1em;
+        margin-right: 5%;
+        margin-left: 5%;
+    }
+    .field-name-title h2 {
+        font-family: "Source Sans Pro", $arial !important;
+        font-weight: 500;
+    }
+
+    .field-name-field-group-description {
+      margin-left: 5%;
+      border-bottom-style: solid;
+      border-bottom-width: 2px;
+      border-bottom-color: #ececec;
+        p {
+          font-family: Georgia, serif;
+        }
+    }
+
+    .field-name-peer-group-members {
+      margin-left: 5%;
+    }
+    .views-field-picture {
+      width: 220px;
+      height: 220px;
+      float: left;
+      margin-right: 20px;
+      border: 1px solid rgba(7,7,7,0.2);
+      border-radius: 50%;
+    }
+    .view-peer-groups-image img {
+      width: 220px;
+      height: auto;
+      border-radius: 50%;
+    }
+    div.views-field-name, div.views-field-php {
+      float: left;
+      width: 100%;
+      margin-top: 15px;
+      text-align: center;
+      p {
+        text-align: center;
+      }
+    }
+}
+/*theming for Peer Groups view (../peer-groups) -- DMB 3/9/2017*/
+.view-peer-groups {
+  .views-fluid-grid-item {
+    display: block;
+    margin-bottom: 2em;
+    width: 330px !important;
+    height: 100px;
+    float: left;
+    margin-right: 30px;
+  }
+  .views-field-field-peer-group-image {
+    float: left;
+  }
+  .view-peer-groups-image {
+    img {
+      border-radius: 50%;
+      margin-right: 20px;
+      margin-left: 10px;
+      margin-top: 5px;
+    }
+  }
+  .views-field-title span {
+    display: block;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+  .views-field-name a.username {
+    display: block;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+  h4.peer-group-name {
+    width: 100%;
+    float: left;
+  }
+}
+
+div.view-display-id-joined_peer_groups, div.view-display-id-my_peer_groups, div.view-display-id-unjoined_peer_groups {
+    width: 100%;
+    float: left;
+    margin-bottom: 25px;
+  }
+
+div.peer-groups-illustration {
+  width: 100%;
+  height: 20vh;
+  background-image: url(../images/peer-groups-illustration.png);
+  background-size: cover;
+  background-position: center;
+  border: 4px solid #cccccc;
+}
+
+/*styles for Peer Group Members view --DMB 3/20/17*/
+div#block-views-peer-group-members-block-1 {
+  .views-row {
+    float: left;
+    width: 220px;
+    margin-top: 2em;
+    margin-right: 2em;
+      .views-field-name p {
+        margin: 0;
+        display: block;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+      }
+  }
+  .views-row:first-child {
+    .views-field-name p {
+      font-weight: 800;
+    }
+  }
+
 }
 

@@ -18,11 +18,18 @@ function lacuna_stories_peer_groups_field_default_field_instances() {
     'description' => '',
     'display' => array(
       'default' => array(
+        'label' => 'hidden',
+        'module' => 'text',
+        'settings' => array(),
+        'type' => 'text_default',
+        'weight' => 2,
+      ),
+      'full' => array(
         'label' => 'above',
         'module' => 'text',
         'settings' => array(),
         'type' => 'text_default',
-        'weight' => 3,
+        'weight' => 14,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -50,6 +57,191 @@ function lacuna_stories_peer_groups_field_default_field_instances() {
         'rows' => 5,
       ),
       'type' => 'text_textarea',
+      'weight' => 2,
+    ),
+  );
+
+  // Exported field_instance: 'node-peer_group-field_join_group'.
+  $field_instances['node-peer_group-field_join_group'] = array(
+    'bundle' => 'peer_group',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 16,
+      ),
+      'full' => array(
+        'label' => 'above',
+        'module' => 'button_field',
+        'settings' => array(),
+        'type' => 'button_field_default',
+        'weight' => 16,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_join_group',
+    'label' => 'Join Group',
+    'required' => FALSE,
+    'settings' => array(
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'button_field',
+      'settings' => array(
+        'additional_classes' => '',
+        'edit_hidden' => 1,
+        'text' => 'Join Group',
+      ),
+      'type' => 'button_field_html',
+      'weight' => 8,
+    ),
+  );
+
+  // Exported field_instance: 'node-peer_group-field_leave_group'.
+  $field_instances['node-peer_group-field_leave_group'] = array(
+    'bundle' => 'peer_group',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 15,
+      ),
+      'full' => array(
+        'label' => 'above',
+        'module' => 'button_field',
+        'settings' => array(),
+        'type' => 'button_field_default',
+        'weight' => 15,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_leave_group',
+    'label' => 'Leave Group',
+    'required' => FALSE,
+    'settings' => array(
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'button_field',
+      'settings' => array(
+        'additional_classes' => '',
+        'edit_hidden' => 1,
+        'text' => 'Leave Group',
+      ),
+      'type' => 'button_field_html',
+      'weight' => 7,
+    ),
+  );
+
+  // Exported field_instance: 'node-peer_group-field_peer_group_image'.
+  $field_instances['node-peer_group-field_peer_group_image'] = array(
+    'bundle' => 'peer_group',
+    'deleted' => 0,
+    'description' => 'Upload an image to represent your peer group.',
+    'display' => array(
+      'default' => array(
+        'label' => 'hidden',
+        'module' => 'bg_image_formatter',
+        'settings' => array(
+          'css_settings' => array(
+            'bg_image_attachment' => 'scroll',
+            'bg_image_background_size' => 'cover',
+            'bg_image_background_size_ie8' => 0,
+            'bg_image_color' => '#FFFFFF',
+            'bg_image_important' => 1,
+            'bg_image_media_query' => 'all',
+            'bg_image_repeat' => 'no-repeat',
+            'bg_image_selector' => '.group-header',
+            'bg_image_x' => 'left',
+            'bg_image_y' => 'top',
+          ),
+          'image_style' => '',
+          'multiple' => 0,
+        ),
+        'type' => 'bg_image_formatter',
+        'weight' => 0,
+      ),
+      'full' => array(
+        'label' => 'hidden',
+        'module' => 'bg_image_formatter',
+        'settings' => array(
+          'css_settings' => array(
+            'bg_image_attachment' => 'scroll',
+            'bg_image_background_size' => 'cover',
+            'bg_image_background_size_ie8' => 1,
+            'bg_image_color' => '#FFFFFF',
+            'bg_image_important' => 1,
+            'bg_image_media_query' => 'all',
+            'bg_image_repeat' => 'no-repeat',
+            'bg_image_selector' => 'body',
+            'bg_image_x' => 'left',
+            'bg_image_y' => 'top',
+          ),
+          'image_style' => 'course_views_style',
+          'multiple' => 0,
+        ),
+        'type' => 'bg_image_formatter',
+        'weight' => 0,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_peer_group_image',
+    'label' => 'Peer Group Image',
+    'required' => 1,
+    'settings' => array(
+      'alt_field' => 0,
+      'default_image' => 0,
+      'file_directory' => '',
+      'file_extensions' => 'png gif jpg jpeg',
+      'max_filesize' => '',
+      'max_resolution' => '',
+      'min_resolution' => '',
+      'title_field' => 0,
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'media',
+      'settings' => array(
+        'allowed_schemes' => array(
+          'public' => 'public',
+        ),
+        'allowed_types' => array(
+          'image' => 'image',
+        ),
+        'browser_plugins' => array(),
+        'preview_image_style' => 'thumbnail',
+        'progress_indicator' => 'throbber',
+      ),
+      'type' => 'media_generic',
       'weight' => 1,
     ),
   );
@@ -71,10 +263,16 @@ This setting can be changed at any time.',
     'display' => array(
       'default' => array(
         'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 13,
+      ),
+      'full' => array(
+        'label' => 'above',
         'module' => 'list',
         'settings' => array(),
         'type' => 'list_default',
-        'weight' => 1,
+        'weight' => 12,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -105,7 +303,7 @@ This setting can be changed at any time.',
       'module' => 'options',
       'settings' => array(),
       'type' => 'options_buttons',
-      'weight' => 2,
+      'weight' => 3,
     ),
     'widget_type' => 'options_select',
   );
@@ -123,12 +321,16 @@ This setting can be changed at any time.',
     'display' => array(
       'default' => array(
         'label' => 'hidden',
-        'module' => 'og_ui',
-        'settings' => array(
-          'field_name' => FALSE,
-        ),
-        'type' => 'og_group_subscribe',
-        'weight' => 0,
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 12,
+      ),
+      'full' => array(
+        'label' => 'hidden',
+        'module' => 'list',
+        'settings' => array(),
+        'type' => 'list_default',
+        'weight' => 11,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -165,7 +367,7 @@ This setting can be changed at any time.',
         'og_hide' => 1,
       ),
       'type' => 'options_onoff',
-      'weight' => 3,
+      'weight' => 4,
     ),
   );
 
@@ -178,10 +380,18 @@ This setting can be changed at any time.',
     'display' => array(
       'default' => array(
         'label' => 'above',
-        'module' => 'og_ui',
         'settings' => array(),
-        'type' => 'og_list_default',
-        'weight' => 2,
+        'type' => 'hidden',
+        'weight' => 14,
+      ),
+      'full' => array(
+        'label' => 'above',
+        'module' => 'entityreference',
+        'settings' => array(
+          'link' => FALSE,
+        ),
+        'type' => 'entityreference_label',
+        'weight' => 13,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -224,7 +434,7 @@ This setting can be changed at any time.',
       'module' => 'og',
       'settings' => array(),
       'type' => 'og_complex',
-      'weight' => 5,
+      'weight' => 6,
     ),
   );
 
@@ -301,7 +511,11 @@ This setting can be changed at any time.');
   t('Group');
   t('Group Visibility');
   t('Groups audience');
+  t('Join Group');
+  t('Leave Group');
+  t('Peer Group Image');
   t('Peer Group(s)');
+  t('Upload an image to represent your peer group.');
 
   return $field_instances;
 }
