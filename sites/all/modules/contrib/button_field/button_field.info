@@ -1,0 +1,17 @@
+name = Button Field
+description = Adds a button field type
+package = Fields
+core = 7.x
+dependencies[] = field
+dependencies[] = rules
+scripts[] = js/button_field.ajax.js
+
+; Views handlers
+files[] = includes/views/handlers/button_field_handler_field.inc
+
+; Information added by drupal.org packaging script on 2012-02-24
+version = "7.x-1.0-beta1"
+core = "7.x"
+project = "button_field"
+datestamp = "1330051237"
+

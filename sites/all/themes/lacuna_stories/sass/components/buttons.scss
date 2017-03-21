@@ -20,6 +20,9 @@ input[type="submit"] {
 .form-submit,
 .page-turner-bookmark-button,
 .af-button-large,
+a.create-peer-group,
+.view-peer-group-members .view-header a,
+.view-peer-group-members .views-field-php a,
 a.group.subscribe,
 a.group.unsubscribe,
 div.toboggan-unified #login-links a,
@@ -109,6 +112,8 @@ input[value='Save'],
 .form-submit:focus,
 .af-button-large:hover,
 .af-button-large:focus,
+.view-peer-group-members .view-header a:hover,
+a.create-peer-group:hover,
 a.group.subscribe:hover,
 a.group.unsubscribe:hover,
 body.not-logged-in div.field-name-group-group:hover,
@@ -227,6 +232,7 @@ input[value='Save']:active,
   font-size: default !important;
 }
 
+.view-peer-group-members .views-field-php a,
 .form-submit,
 input[id^='edit-actionsewing-kit-remove'] {
   background-color: #5f6677; // #92a6c4;
@@ -245,6 +251,7 @@ input[id^='edit-actionsewing-kit-remove']:hover,
 input[id^='edit-actionsewing-kit-remove']:focus{
   background-color: #5f6677; // #39404a;
 }
+.view-peer-group-members .views-field-php a:hover,
 .form-submit:active,
 input[id^='edit-actionsewing-kit-remove']:active {
   background-color: #545a69;
