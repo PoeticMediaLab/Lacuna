@@ -367,6 +367,10 @@ function lacuna_notifications_configuration_views_default_views() {
   $handler->display->display_options['relationships']['uid']['field'] = 'uid';
   $handler->display->display_options['relationships']['uid']['relationship'] = 'nid';
   $handler->display->display_options['relationships']['uid']['label'] = 'content author';
+  /* Relationship: Comment: Author */
+  $handler->display->display_options['relationships']['uid_1']['id'] = 'uid_1';
+  $handler->display->display_options['relationships']['uid_1']['table'] = 'comment';
+  $handler->display->display_options['relationships']['uid_1']['field'] = 'uid';
   /* Field: Comment: Title */
   $handler->display->display_options['fields']['subject']['id'] = 'subject';
   $handler->display->display_options['fields']['subject']['table'] = 'comment';
@@ -385,6 +389,13 @@ function lacuna_notifications_configuration_views_default_views() {
   $handler->display->display_options['fields']['name']['exclude'] = TRUE;
   $handler->display->display_options['fields']['name']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['name']['link_to_user'] = FALSE;
+  /* Field: User: Name */
+  $handler->display->display_options['fields']['name_1']['id'] = 'name_1';
+  $handler->display->display_options['fields']['name_1']['table'] = 'users';
+  $handler->display->display_options['fields']['name_1']['field'] = 'name';
+  $handler->display->display_options['fields']['name_1']['relationship'] = 'uid_1';
+  $handler->display->display_options['fields']['name_1']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['name_1']['link_to_user'] = FALSE;
   /* Field: Content: Title */
   $handler->display->display_options['fields']['title']['id'] = 'title';
   $handler->display->display_options['fields']['title']['table'] = 'node';
@@ -417,7 +428,7 @@ function lacuna_notifications_configuration_views_default_views() {
   $handler->display->display_options['fields']['nothing']['table'] = 'views';
   $handler->display->display_options['fields']['nothing']['field'] = 'nothing';
   $handler->display->display_options['fields']['nothing']['label'] = '';
-  $handler->display->display_options['fields']['nothing']['alter']['text'] = '<p>[name] commented on <a href="[path]">[title]</a>:</p><p class="view-subject">Subject: [subject]<p class="view-excerpt"><i class="fa fa-arrow-right" aria-hidden="true"></i>Comment: [comment_body]</p></p>';
+  $handler->display->display_options['fields']['nothing']['alter']['text'] = '<p>[name_1] commented on <a href="[path]">[title]</a>:</p><p class="view-subject">Subject: [subject]<p class="view-excerpt"><i class="fa fa-arrow-right" aria-hidden="true"></i>Comment: [comment_body]</p></p>';
   $handler->display->display_options['fields']['nothing']['element_type'] = 'div';
   $handler->display->display_options['fields']['nothing']['element_class'] = '.view-tile';
   $handler->display->display_options['fields']['nothing']['element_label_colon'] = FALSE;
