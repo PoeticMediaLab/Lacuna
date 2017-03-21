@@ -1,15 +1,16 @@
 Lacuna Release Notes
 ====================
 
-Version 2.2.3:
+Version 2.2.3
 -------------
+March XX, 2017
+
+A minor version release that fixes several bugs, provides updated contributed and core modules, and improves the installation experience. Most work on this release done by Cody Leff and Daniel Bush.
 
 ### Fixes
  * Annotation Dashboard cache administration form fixed
  * Reordering threads now works
- * Installation profile uses Lacuna logo
  * Fixed permissions on new install
- * Improved responsive design of annotation dashboard
  * Fixed Materials display when texts have long list of authors
  * Sharing options sometimes didn't show up correctly
  * Adding some backend error checking to get rid of a PHP warning when loading highlights (i.e., annotations without text)
@@ -17,6 +18,10 @@ Version 2.2.3:
  
 ### Changes
  * Updated Views, Views Bulk Operations, d3, Webform, Media, WYWISYG, Diff, and Token modules
+ * Installation profile uses Lacuna logo
+ * Improved responsive design of annotation dashboard
+ * Major improvements to Peer Group UI: Easier to join and leave groups, better theming.
+
  
 
 Version 2.2.2: LTI bug fix release
