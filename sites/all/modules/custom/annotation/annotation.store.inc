@@ -87,6 +87,7 @@ function annotation_sanitize_uri($uri) {
     if ($real_path) {
       $path = $real_path;
     }
+    $path = str_replace('./', '/', $path); // strip any stray '.'s
     // Sometimes we need only the internal path; sometimes we need the full URL
     return(array('root' => $root, 'path' => $path));
 }
