@@ -1,11 +1,14 @@
 Lacuna Release Notes
 ====================
 
-Version 2.2.3
+Version 2.3
 -------------
 March XX, 2017
 
-A minor version release that fixes several bugs, provides updated contributed and core modules, and improves the installation experience. Most work on this release done by Cody Leff and Daniel Bush.
+A minor version release that adds a new "Latest Conversation" page, fixes several bugs, provides updated contributed and core modules, and improves the installation experience. Most work on this release done by Cody Leff and Daniel Bush.
+
+### Additions
+ * Added a "Latest Conversations" page that shows user-relevant updates.
 
 ### Fixes
  * Annotation Dashboard cache administration form fixed
