@@ -110,6 +110,27 @@ function lacuna_stories_menus_menu_default_menu_links() {
     'weight' => -44,
     'customized' => 1,
   );
+  // Exported menu link: main-menu_recent-interactions:recent-interactions.
+  $menu_links['main-menu_recent-interactions:recent-interactions'] = array(
+    'menu_name' => 'main-menu',
+    'link_path' => 'recent-interactions',
+    'router_path' => 'recent-interactions',
+    'link_title' => 'Recent Interactions',
+    'options' => array(
+      'attributes' => array(
+        'title' => '',
+      ),
+      'identifier' => 'main-menu_recent-interactions:recent-interactions',
+    ),
+    'module' => 'menu',
+    'hidden' => 0,
+    'external' => 0,
+    'has_children' => 0,
+    'expanded' => 0,
+    'weight' => -11,
+    'customized' => 1,
+    'parent_identifier' => 'main-menu_reflect:<nolink>',
+  );
   // Exported menu link: main-menu_reflect:<nolink>.
   $menu_links['main-menu_reflect:<nolink>'] = array(
     'menu_name' => 'main-menu',
@@ -221,6 +242,7 @@ function lacuna_stories_menus_menu_default_menu_links() {
   t('Help');
   t('Log In');
   t('Log Out');
+  t('Recent Interactions');
   t('Reflect');
   t('Register');
 

@@ -1,0 +1,13 @@
+diff --git a/link_badges.module b/link_badges.module
+index b20d307..d9155e6 100644
+--- a/link_badges.module
++++ b/link_badges.module
+@@ -12,7 +12,7 @@
+ function link_badges_preprocess_link(&$variables) {
+   // Other modules can cause this to run more than once.
+   // Check to see if we've already added a badge here.
+-  if (!empty($variables['options']['attributes']['class']) && in_array('link-badge-wrapper', $variables['options']['attributes']['class'])) {
++  if (!empty($variables['options']['attributes']['class']) && is_array($variables['options']['attributes']['class']) && in_array('link-badge-wrapper', $variables['options']['attributes']['class'])) {
+     return;
+   }
+   if (!empty($variables['options']['link_badge'])) {

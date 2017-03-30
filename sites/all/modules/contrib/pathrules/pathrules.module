@@ -1,0 +1,56 @@
+<?php
+/**
+ * @file
+ * Rules conditions based on url paths.
+ *
+ * @author Kale Worsley (kale@egressive.com)
+ */
+
+/**
+ * Implementation of hook_rules_condition_info().
+ */
+function pathrules_rules_condition_info() {
+  return array(
+    'pathrules_checkpath' => array(
+      'label' => t('Check path'),
+      'group' => t('Path'),
+      'parameter' => array(
+        'path' => array(
+          'type' => 'text',
+          'label' => t('Path to check'),
+          'description' => t('The path that is check against the URL. Beginning and trailing spaces will be stripped.'),
+        ),
+        'operation' => array(
+          'type' => 'text',
+          'label' => t('Comparison operation'),
+          'options list' => 'pathrules_data_text_comparison_operation_list',
+          'restriction' => 'input',
+          'default value' => 'contains',
+          'optional' => TRUE,
+          'description' => t('In case the comparison operation @regex is selected, the matching pattern will be interpreted as a <a href="@regex-wikipedia">regular expression</a>.  Tip: <a href="@RegExr">RegExr: Online Regular Expression Testing Tool</a> is helpful for learning, writing, and testing Regular Expressions.', array('@regex-wikipedia' => 'http://en.wikipedia.org/wiki/Regular_expression', '@RegExr' => 'http://gskinner.com/RegExr/', '@regex' => t('regular expression'))),
+        ),
+      ),
+    ),
+  );
+}
+
+/**
+ * Extend the default text comparison operator list with "equals".
+ */
+function pathrules_data_text_comparison_operation_list() {
+  $operations = rules_data_text_comparison_operation_list();
+  return $operations += array('equals' => t('equals'));
+}
+
+/**
+ * Rules condition callback.
+ */
+function pathrules_checkpath($path, $op = 'contains') {
+  $current_uri = request_path();
+  if ($op == 'equals') {
+    return $current_uri == $path;
+  }
+  // Just call the rules text comparison function.
+  module_load_include('inc', 'rules', 'modules/data.eval');
+  return rules_data_text_comparison(request_uri(), $path, $op);
+}

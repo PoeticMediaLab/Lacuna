@@ -1,0 +1,11 @@
+name=Path Rules
+description=Rules conditions based on url paths.
+core=7.x
+dependencies[]=rules
+
+; Information added by drupal.org packaging script on 2013-06-10
+version = "7.x-1.0"
+core = "7.x"
+project = "pathrules"
+datestamp = "1370876163"
+

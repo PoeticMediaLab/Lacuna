@@ -453,7 +453,7 @@ class EntityReference_SelectionHandler_Generic_comment extends EntityReference_S
     // bundle.
     $conditions = &$query->conditions();
     foreach ($conditions as $key => &$condition) {
-      if ($key !== '#conjunction' && is_string($condition['field']) && $condition['field'] === 'node_type') {
+      if ($key !== '#conjunction' && is_string($condition['field']) && $condition['field'] === 'comment.node_type') {
         $condition['field'] = $node_alias . '.type';
         foreach ($condition['value'] as &$value) {
           if (substr($value, 0, 13) == 'comment_node_') {

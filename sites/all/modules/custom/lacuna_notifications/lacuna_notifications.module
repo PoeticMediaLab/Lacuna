@@ -1,0 +1,16 @@
+<?php
+
+
+/***
+ * Implements hook_menu().
+ */
+function lacuna_notifications_menu() {
+  $items = array();
+  $items['latest-conversations'] = array(
+    'page callback' => 'lacuna_notifications_conversations',
+    'access arguments' => array('access content'),
+    'type' => MENU_CALLBACK,
+    'file' => 'lacuna_notifications.pages.inc'
+  );
+  return $items;
+}
