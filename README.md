@@ -116,6 +116,12 @@ Next, you must add an LTI Tool Consumer by visiting '/admin/config/lti-tool-prov
 
 ### Add Lacuna as a Canvas app
 Lacuna provides a URL that makes it easy to add it as an app to Canvas. The path is SITE_URL/lti/canvas.xml. See [How do I configure an external app for an account using a URL] (https://guides.instructure.com/m/4214/l/74559-how-do-i-configure-an-external-app-for-an-account-using-a-url) for details about how to configure Canvas with this URL. Be sure to set the "Privacy" option for Lacuna to "Public". This ensures that students' names and correct email addresses will be used in Lacuna; it will *not* expose their information to the public or to members of other courses.
+
+Site administrators, please note: Canvas will attempt to embed Lacuna within an iFrame. By default, Drupal will not permit this behavior for security reasons. If you want to use Lacuna within Canvas, add the following line to your settings.php file:
+
+  <code>$conf['x_frame_options'] = '';</code>
+  
+  For more information about this issue, see [this post](https://www.drupal.org/node/2735873). 
  
 ### Using Lacuna in Canvas
 Once configured as a Canvas app, Lacuna will add a menu item 'Lacuna Course Setup', which is visible only to instructors and administrators. Instructors should first click on this link to get started setting up their course and materials within Lacuna. They will be guided through the process and may return at any time. Once documents have been added to Lacuna, they will be available as a resource for assignments. Read [How do I add an external app as an assignment submission type?](https://guides.instructure.com/m/4152/l/501360?data-resolve-url=true&data-manual-id=4152) for details about how to integrate Lacuna into an assignment. *NOTE*: We recommend that assignments using Lacuna open the app in a new tab for the best user experience. 
