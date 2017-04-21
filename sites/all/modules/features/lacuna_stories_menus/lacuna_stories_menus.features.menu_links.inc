@@ -151,6 +151,24 @@ function lacuna_stories_menus_menu_default_menu_links() {
     'weight' => -47,
     'customized' => 1,
   );
+  // Exported menu link: main-menu_report-a-bug:node/14.
+  $menu_links['main-menu_report-a-bug:node/14'] = array(
+    'menu_name' => 'main-menu',
+    'link_path' => 'node/14',
+    'router_path' => 'node/%',
+    'link_title' => 'Report a Bug',
+    'options' => array(
+      'identifier' => 'main-menu_report-a-bug:node/14',
+    ),
+    'module' => 'menu',
+    'hidden' => 0,
+    'external' => 0,
+    'has_children' => 0,
+    'expanded' => 0,
+    'weight' => -8,
+    'customized' => 0,
+    'parent_identifier' => 'main-menu_help:<nolink>',
+  );
   // Exported menu link: menu-institutional-menu_about:http://www.lacunastories.com.
   $menu_links['menu-institutional-menu_about:http://www.lacunastories.com'] = array(
     'menu_name' => 'menu-institutional-menu',
@@ -245,6 +263,7 @@ function lacuna_stories_menus_menu_default_menu_links() {
   t('Recent Interactions');
   t('Reflect');
   t('Register');
+  t('Report a Bug');
 
   return $menu_links;
 }
