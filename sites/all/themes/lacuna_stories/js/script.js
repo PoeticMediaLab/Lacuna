@@ -28,6 +28,14 @@ Drupal.behaviors.mobileSupport = {
       });
     }
 
+    /*
+    * Modifies the viewport tag for screen sizes under 600px.
+    */
+    if (window.innerWidth < 600) {
+      var meta = document.querySelector('meta[name="viewport"]');
+      meta.setAttribute('content', 'width=600');
+    }
+
   }
 };
 
