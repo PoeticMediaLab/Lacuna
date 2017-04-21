@@ -1,0 +1,16 @@
+name = Lacuna Email Notifications
+description = Features related to Lacuna's email notification system
+core = 7.x
+package = Lacuna Stories
+dependencies[] = ctools
+dependencies[] = entity
+dependencies[] = mailsystem
+dependencies[] = mimemail
+dependencies[] = mimemail_action
+dependencies[] = mimemail_compress
+dependencies[] = rules
+dependencies[] = strongarm
+features[ctools][] = strongarm:strongarm:1
+features[features_api][] = api:2
+features[rules_config][] = rules_notification_of_annotation_on_response
+features[variable][] = mail_system
