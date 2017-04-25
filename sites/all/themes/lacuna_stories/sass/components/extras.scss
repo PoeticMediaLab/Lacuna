@@ -566,6 +566,31 @@ body.not-logged-in div.field-name-group-group a {
 }
 
 
+/*playing around with replacement for menu badge, using font awesome icon and hiding menu text --DMB 4/25/2017*/
+a.fa.fa-bell.sf-depth-1 {
+width: 1em;
+height: 1em;
+overflow: hidden;
+display: inline-block;
+color: transparent;
+}
+
+ul#superfish-1 .fa-bell::before {
+  color: #b0b0b0;
+}
+
+ul#superfish-1 li.last.sf-depth-1:hover {
+  background: transparent !important;
+}
+
+ul#superfish-1 a.fa.fa-bell:hover {
+  background: transparent !important;
+}
+
+ul#superfish-1 .fa-bell:hover:before {
+  color: #555555;
+}
+
 /*theming for Peer Groups pages --DMB 12/13/2016*/
 div.node-peer-group.view-mode-full {
     .group-header {
