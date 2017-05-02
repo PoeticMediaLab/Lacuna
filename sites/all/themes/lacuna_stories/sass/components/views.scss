@@ -684,7 +684,16 @@ body.page-latest-conversations {
   p.view-subject {
     margin-left: 15px;
   }
-}
+  }
+  div.views-exposed-form label {
+    width: auto;
+    font-family: $lacunafont;
+    text-transform: uppercase;
+    color: #4e4e4e;
+  }
+  div#edit-uid-current-all {
+    display: none;
+  }
 }
 
 @media (min-width: 775px) {

@@ -284,3 +284,120 @@ input[id^='edit-actionsewing-kit-remove']:active {
   }
 }
 
+.af-button, .annotator-reply-button, div#edit-uid-current-1 a, div#edit-uid-current-0 a {                // ih (8/16): changes made to button design
+    cursor: pointer;                                 // moved from annotator.scss to buttons.scss to allow us to use it in other parts of the site --DMB 5/2/17
+    display: inline-block;
+    color: black;
+    padding: 0px;
+    margin: 0px 6px 15px 6px;
+    text-align: center;
+    font-variant: small-caps;
+    // text-transform: uppercase;
+    width: 25%;
+    background-repeat: repeat-x;
+    border-color: rgba(0, 0, 0, 0) rgba(0, 0, 0, 0) rgba(0, 0, 0, 0);
+    // border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+    // background-color: #92a6c4;
+    // background-image: linear-gradient(to bottom, #92a6c4, #39404a);
+    background-image: linear-gradient(to top, #939dab, #b0b7c1); 
+    color: #FFFFFF;
+    // text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+    -moz-border-bottom-colors: none;
+    -moz-border-left-colors: none;
+    -moz-border-right-colors: none;
+    -moz-border-top-colors: none;
+    border-image: none;
+    // border-radius: 4px 4px 4px 4px;
+    border-radius: 2px;
+    // border-style: solid;
+    border-width: 1px;
+    // box-shadow: 0 1px 0 rgba(255, 255, 255, 0.2) inset, 0 1px 2px rgba(0, 0, 0, 0.05);
+    margin-bottom: 0;
+    text-align: center;
+    vertical-align: middle;
+    font-weight: normal;
+    font-size: 13px;
+    margin-right: 5px;
+    letter-spacing: .5px;
+}
+
+.af-button:hover, div#edit-uid-current-1 a:hover, div#edit-uid-current-0 a:hover {
+    // background-color: #39404a;
+    background-color: #939dab;
+    background-position: 0 -15px;
+    transition: background-color ease-in 0
+}
+
+.af-button-active:hover, 
+div#edit-uid-current-1 a.active:hover,
+div#edit-uid-current-1 a:not(.active) ~ div#edit-uid-current-0:hover {
+    background-color: #83a220; // #88b551;
+    color: #FFFFFF;
+    background-position: 0 15px;
+    text-decoration: none;
+    transition: background-color ease-in 0s;
+}
+
+.af-button-active, 
+div#edit-uid-current-1 a.active,
+div#edit-uid-current-1 a:not(.active) ~ div#edit-uid-current-0
+ {
+    // background-color: #c4df2c;
+    // background-image: linear-gradient(to bottom, #c4df2c, #88b551);
+    background-color: #a5cc29; // #98ca5b;
+    background-image: linear-gradient(to top, #a5cc29, #83a220);// #98ca5b, #88b551);
+}
+
+.af-button-reset:hover,
+.af-button-reset:focus {
+    background-color: #5d6476;
+    color: #FFFFFF;
+    background-position: 0 -15px;
+    display: block;
+    width: 90%;
+        margin-bottom: 5%;
+    margin-left: auto;
+    margin-right: auto;
+    transition: background-color ease-in 0s;
+}
+
+.af-button-reset:active {
+    background-color: #525868;
+    // color: #FFFFFF;
+    background-position: 0 -20px;
+    /*
+    display: block;
+    width: 90%;
+        margin-bottom: 5%;
+    margin-left: auto;
+    margin-right: auto; */
+    transition: background-color ease-in 0s;
+}
+
+.af-button-reset {
+    width: 90%;
+    margin-bottom: 5%;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+    background-color: #5d6476;
+    background-image: linear-gradient(to bottom, #747c92, #5d6476);
+}
+
+.af-annotation-hide {
+    background-color: transparent !important;
+}
+
+.af-button-user {
+  margin-left: 7.5px;
+  margin-right:7.5px;
+}
+
+div#edit-uid-current-1 a, div#edit-uid-current-0 a {
+  width: 45px;
+  padding-left: 10px;
+  padding-right: 10px;
+  color: #ffffff;
+  float: left;
+}
+
