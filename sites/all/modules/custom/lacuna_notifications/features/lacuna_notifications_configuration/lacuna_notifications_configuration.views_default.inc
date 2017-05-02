@@ -195,7 +195,7 @@ function lacuna_notifications_configuration_views_default_views() {
   $handler->display->display_options['fields']['nothing']['table'] = 'views';
   $handler->display->display_options['fields']['nothing']['field'] = 'nothing';
   $handler->display->display_options['fields']['nothing']['label'] = '';
-  $handler->display->display_options['fields']['nothing']['alter']['text'] = '<p>On [created], [name] <a href="[path]?id=[nid]">annotated</a> <em>[title_1]</em>:</p><p class="view-excerpt"><i class="fa fa-arrow-right" aria-hidden="true"></i>[field_annotation_text]</p>';
+  $handler->display->display_options['fields']['nothing']['alter']['text'] = '<p>On [created], [name] <a href="[path]?id=[nid]">annotated</a> <em>[title_1]</em>:</p><p class="view-excerpt">"[field_annotation_text]"</p>';
   $handler->display->display_options['fields']['nothing']['element_type'] = 'div';
   $handler->display->display_options['fields']['nothing']['element_class'] = '.view-tile';
   $handler->display->display_options['fields']['nothing']['element_label_colon'] = FALSE;
@@ -501,7 +501,7 @@ function lacuna_notifications_configuration_views_default_views() {
   $handler->display->display_options['fields']['nothing']['table'] = 'views';
   $handler->display->display_options['fields']['nothing']['field'] = 'nothing';
   $handler->display->display_options['fields']['nothing']['label'] = '';
-  $handler->display->display_options['fields']['nothing']['alter']['text'] = '<p>[name_1] commented on <a href="[path]">[title]</a>:</p><p class="view-subject">Subject: [subject]<p class="view-excerpt"><i class="fa fa-arrow-right" aria-hidden="true"></i>Comment: [comment_body]</p></p>';
+  $handler->display->display_options['fields']['nothing']['alter']['text'] = '<p>[name_1] commented on <a href="[path]">[title]</a>:</p><p class="view-excerpt">"[comment_body]"</p>';
   $handler->display->display_options['fields']['nothing']['element_type'] = 'div';
   $handler->display->display_options['fields']['nothing']['element_class'] = '.view-tile';
   $handler->display->display_options['fields']['nothing']['element_label_colon'] = FALSE;
@@ -723,7 +723,7 @@ function lacuna_notifications_configuration_views_default_views() {
   $handler->display->display_options['fields']['nothing']['table'] = 'views';
   $handler->display->display_options['fields']['nothing']['field'] = 'nothing';
   $handler->display->display_options['fields']['nothing']['label'] = '';
-  $handler->display->display_options['fields']['nothing']['alter']['text'] = '<p>[name] commented on <a href="[path]">[title]</a>:</p><p class="view-subject">Subject: [subject]<p class="view-excerpt"><i class="fa fa-arrow-right" aria-hidden="true"></i>Comment: [comment_body]</p></p>';
+  $handler->display->display_options['fields']['nothing']['alter']['text'] = '<p>[name] commented on <a href="[path]">[title]</a>:</p><p class="view-excerpt">"[comment_body]"</p>';
   $handler->display->display_options['fields']['nothing']['element_type'] = 'div';
   $handler->display->display_options['fields']['nothing']['element_class'] = '.view-tile';
   $handler->display->display_options['fields']['nothing']['element_label_colon'] = FALSE;
@@ -1019,7 +1019,7 @@ function lacuna_notifications_configuration_views_default_views() {
   $handler->display->display_options['fields']['nothing']['table'] = 'views';
   $handler->display->display_options['fields']['nothing']['field'] = 'nothing';
   $handler->display->display_options['fields']['nothing']['label'] = '';
-  $handler->display->display_options['fields']['nothing']['alter']['text'] = '<p>[name] replied to [name_1]\'s <a href="[path]?id=[nid]>annotation</a> of <em>[title]</em>:</p><p class="view-excerpt"><i class="fa fa-arrow-right" aria-hidden="true">[comment_body]</i></p>';
+  $handler->display->display_options['fields']['nothing']['alter']['text'] = '<p>[name] replied to [name_1]\'s <a href="[path]?id=[nid]>annotation</a> of <em>[title]</em>:</p><p class="view-excerpt">"[comment_body]"</p>';
   $handler->display->display_options['fields']['nothing']['element_type'] = 'div';
   $handler->display->display_options['fields']['nothing']['element_class'] = '.view-tile';
   $handler->display->display_options['fields']['nothing']['element_label_colon'] = FALSE;
