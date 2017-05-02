@@ -260,7 +260,7 @@ function course_views_query_alter(&$view, &$query) {
   // Not an ideal situation. It would be better if the Course module had an API by which other modules
   // could register their views as needing course-level restrictions, then Course iterated through
   // that list to alter the queries in a more abstract way.
-  $where_node_views = array('responses', 'documents', 'threads', 'all_content', 'my_content', 'responses_by_user', 'annotations_by_user', 'peer_groups', 'lti_resource_list', 'annotations_on_responses_view', 'comments_on_responses_view', 'replies_on_annotations_view', 'comments_on_threads_view');
+  $where_node_views = array('responses', 'documents', 'threads', 'all_content', 'my_content', 'responses_by_user', 'annotations_by_user', 'peer_groups', 'lti_resource_list', 'annotations_on_responses_view');
   $where_user_views = array('people', 'all_emails');
 	$gid = course_get_selected_course();
 
@@ -273,7 +273,7 @@ function course_views_query_alter(&$view, &$query) {
     $query->add_where_expression(0, "node.nid IN (SELECT etid FROM og_membership WHERE gid = " . $gid . " AND og_membership.entity_type = 'node')");
   }
 
-  if ($view->name == 'comments_by_user') {
+  if (in_array($view->name, array('comments_by_user', 'comments_on_responses_view', 'comments_on_threads_view', 'replies_on_annotations_view'))) {
     // This view uses 'node_comment' not just 'node' as the table name
     $query->add_where_expression(0, "node_comment.nid IN (SELECT etid FROM og_membership WHERE gid = " . $gid . " AND og_membership.entity_type = 'node')");
   }
