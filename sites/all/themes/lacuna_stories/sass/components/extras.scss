@@ -566,36 +566,21 @@ body.not-logged-in div.field-name-group-group a {
 }
 
 
-/*playing around with replacement for menu badge, using font awesome icon and hiding menu text --DMB 4/25/2017*/
-/*a.fa.fa-bell.sf-depth-1 {
-width: 1em;
-height: 1em;
-overflow: hidden;
-display: inline-block;
-color: transparent;
-}
-
-ul#superfish-1 .fa-bell::before {
-  color: #b0b0b0;
-}
-
-ul#superfish-1 li.last.sf-depth-1:hover {
-  background: transparent !important;
-}
-
-ul#superfish-1 a.fa.fa-bell:hover {
-  background: transparent !important;
-}
-
-ul#superfish-1 .fa-bell:hover:before {
-  color: #555555;
-}
-*/
+/*styling for the notifications menu item, font awesome bell icon produced by the menu notifications view --DMB 5/2/17*/
 
 .view-notifications-view i.fa.fa-bell.active {
   color: #1588ba;
-
 }
+
+.view-notifications-view i.fa.fa-bell.active:hover {
+  color: #094762;
+}
+
+div#block-superfish-1 div.view-notifications-view a:hover {
+  color: #9e9e9e;
+}
+
+
 /*theming for Peer Groups pages --DMB 12/13/2016*/
 div.node-peer-group.view-mode-full {
     .group-header {
