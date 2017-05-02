@@ -231,13 +231,12 @@ function lacuna_notifications_configuration_views_default_views() {
   $handler->display->display_options['filters']['uid_current']['table'] = 'users';
   $handler->display->display_options['filters']['uid_current']['field'] = 'uid_current';
   $handler->display->display_options['filters']['uid_current']['relationship'] = 'uid_1';
-  $handler->display->display_options['filters']['uid_current']['value'] = 'All';
+  $handler->display->display_options['filters']['uid_current']['value'] = '1';
   $handler->display->display_options['filters']['uid_current']['exposed'] = TRUE;
   $handler->display->display_options['filters']['uid_current']['expose']['operator_id'] = '';
   $handler->display->display_options['filters']['uid_current']['expose']['label'] = 'Limit to My Responses';
   $handler->display->display_options['filters']['uid_current']['expose']['operator'] = 'uid_current_op';
   $handler->display->display_options['filters']['uid_current']['expose']['identifier'] = 'uid_current';
-  $handler->display->display_options['filters']['uid_current']['expose']['remember'] = TRUE;
   $handler->display->display_options['filters']['uid_current']['expose']['remember_roles'] = array(
     2 => '2',
     1 => 0,
@@ -539,13 +538,12 @@ function lacuna_notifications_configuration_views_default_views() {
   $handler->display->display_options['filters']['uid_current']['table'] = 'users';
   $handler->display->display_options['filters']['uid_current']['field'] = 'uid_current';
   $handler->display->display_options['filters']['uid_current']['relationship'] = 'uid';
-  $handler->display->display_options['filters']['uid_current']['value'] = 'All';
+  $handler->display->display_options['filters']['uid_current']['value'] = '1';
   $handler->display->display_options['filters']['uid_current']['exposed'] = TRUE;
   $handler->display->display_options['filters']['uid_current']['expose']['operator_id'] = '';
   $handler->display->display_options['filters']['uid_current']['expose']['label'] = 'Limit to My Responses';
   $handler->display->display_options['filters']['uid_current']['expose']['operator'] = 'uid_current_op';
   $handler->display->display_options['filters']['uid_current']['expose']['identifier'] = 'uid_current';
-  $handler->display->display_options['filters']['uid_current']['expose']['remember'] = TRUE;
   $handler->display->display_options['filters']['uid_current']['expose']['remember_roles'] = array(
     2 => '2',
     1 => 0,
@@ -762,13 +760,12 @@ function lacuna_notifications_configuration_views_default_views() {
   $handler->display->display_options['filters']['uid_current']['table'] = 'users';
   $handler->display->display_options['filters']['uid_current']['field'] = 'uid_current';
   $handler->display->display_options['filters']['uid_current']['relationship'] = 'uid';
-  $handler->display->display_options['filters']['uid_current']['value'] = '0';
+  $handler->display->display_options['filters']['uid_current']['value'] = '1';
   $handler->display->display_options['filters']['uid_current']['exposed'] = TRUE;
   $handler->display->display_options['filters']['uid_current']['expose']['operator_id'] = '';
   $handler->display->display_options['filters']['uid_current']['expose']['label'] = 'Limit to My Threads';
   $handler->display->display_options['filters']['uid_current']['expose']['operator'] = 'uid_current_op';
   $handler->display->display_options['filters']['uid_current']['expose']['identifier'] = 'uid_current';
-  $handler->display->display_options['filters']['uid_current']['expose']['remember'] = TRUE;
   $handler->display->display_options['filters']['uid_current']['expose']['remember_roles'] = array(
     2 => '2',
     1 => 0,
@@ -1059,20 +1056,20 @@ function lacuna_notifications_configuration_views_default_views() {
   $handler->display->display_options['filters']['uid_current']['table'] = 'users';
   $handler->display->display_options['filters']['uid_current']['field'] = 'uid_current';
   $handler->display->display_options['filters']['uid_current']['relationship'] = 'uid_1';
-  $handler->display->display_options['filters']['uid_current']['value'] = '0';
+  $handler->display->display_options['filters']['uid_current']['value'] = '1';
   $handler->display->display_options['filters']['uid_current']['exposed'] = TRUE;
   $handler->display->display_options['filters']['uid_current']['expose']['operator_id'] = '';
-  $handler->display->display_options['filters']['uid_current']['expose']['label'] = 'Limit to your annotations';
+  $handler->display->display_options['filters']['uid_current']['expose']['label'] = 'Limit to My Annotations';
   $handler->display->display_options['filters']['uid_current']['expose']['operator'] = 'uid_current_op';
   $handler->display->display_options['filters']['uid_current']['expose']['identifier'] = 'uid_current';
   $handler->display->display_options['filters']['uid_current']['expose']['remember_roles'] = array(
     2 => '2',
     1 => 0,
-    5 => 0,
+    6 => 0,
     3 => 0,
     4 => 0,
-    6 => 0,
-    8 => 0,
+    7 => 0,
+    5 => 0,
   );
 
   /* Display: Block */
