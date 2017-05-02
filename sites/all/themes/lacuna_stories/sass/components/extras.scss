@@ -567,7 +567,7 @@ body.not-logged-in div.field-name-group-group a {
 
 
 /*playing around with replacement for menu badge, using font awesome icon and hiding menu text --DMB 4/25/2017*/
-a.fa.fa-bell.sf-depth-1 {
+/*a.fa.fa-bell.sf-depth-1 {
 width: 1em;
 height: 1em;
 overflow: hidden;
@@ -590,7 +590,12 @@ ul#superfish-1 a.fa.fa-bell:hover {
 ul#superfish-1 .fa-bell:hover:before {
   color: #555555;
 }
+*/
 
+.view-notifications-view i.fa.fa-bell.active {
+  color: #1588ba;
+
+}
 /*theming for Peer Groups pages --DMB 12/13/2016*/
 div.node-peer-group.view-mode-full {
     .group-header {
