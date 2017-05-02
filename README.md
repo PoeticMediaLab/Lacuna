@@ -106,16 +106,25 @@ After users have accounts on the site, they need to be members of a course to ac
 Please see the Instructor's Guide, Student Guide, and FAQ that come included with Lacuna under the "Help" menu. We also have several helpful videos and other documentation on our [project website](http://www.lacunastories.com).
 
 # Canvas / LTI Support
-As of version 2.2, Lacuna supports integration with Canvas and other Learning Management Systems that support the [Learning Tools Interoperability] (https://www.imsglobal.org/activity/learning-tools-interoperability) standards. This section of the guide describes how to enable and configure this support, with a focus on Canvas. If you are an instructor, you probably will need to consult with your local Lacuna site administrator to enable this support. *NOTE*: It is strongly recommended that you serve Lacuna through the HTTPS protocol. Most LMSes will complain or refuse to work if you don't. 
+As of version 2.2, Lacuna supports integration with Canvas and other Learning Management Systems that support the [Learning Tools Interoperability](https://www.imsglobal.org/activity/learning-tools-interoperability) standards. This section of the guide describes how to enable and configure this support, with a focus on Canvas. If you are an instructor, you probably will need to consult with your local Lacuna site administrator to enable this support. *NOTE*: It is strongly recommended that you serve Lacuna through the HTTPS protocol. Most LMSes will complain or refuse to work if you don't. 
 
 ### Enable LTI Support
-The first step is to enable the 'LTI Support' Feature, which can be found at '/admin/structure/features' under the 'Lacuna Stories' section. This feature will allow your Lacuna instance to accept LTI requests from any LMS that supports it. If you have made any changes to Lacuna's default roles and user permissions, you will need to review all the LTI settings so that they reflect your customized configuration.  
+The first step is to enable the 'LTI Support' Feature, which can be found at '/admin/structure/features' under the 'Lacuna Stories' section. This feature will allow your Lacuna instance to accept LTI requests from any LMS that supports it. If you have made any changes to Lacuna's default roles and user permissions, you will need to review all the LTI settings so that they reflect your customized configuration.
 
 ### Add LTI Tool Consumer
-Next, you must add an LTI Tool Consumer by visiting '/admin/config/lti-tool-provider/lti-tool-consumers' and clicking 'Add a new LTI Tool Consumer'. This step requires you to generate a secure key and secret, which will be shared with any instructors who wish to add Lacuna as an extension to your institution's LMS. These values can be whatever you like, but should be [cryptographically secure] (https://xkcd.com/936/). You may also create a new Tool Consumer for each instructor that will use Lacuna. This ensures that you are not sharing secrets and keys among multiple users.
+Next, you must add an LTI Tool Consumer by visiting '/admin/config/lti-tool-provider/lti-tool-consumers' and clicking 'Add a new LTI Tool Consumer'. This step requires you to generate a secure key and secret, which will be shared with any instructors who wish to add Lacuna as an extension to your institution's LMS. These values can be whatever you like, but should be [cryptographically secure](https://xkcd.com/936/). You **must** create a new Tool Consumer for each course that 
+will use Lacuna as an LTI app.
 
 ### Add Lacuna as a Canvas app
-Lacuna provides a URL that makes it easy to add it as an app to Canvas. The path is SITE_URL/lti/canvas.xml. See [How do I configure an external app for an account using a URL] (https://guides.instructure.com/m/4214/l/74559-how-do-i-configure-an-external-app-for-an-account-using-a-url) for details about how to configure Canvas with this URL.
+Lacuna provides a URL that makes it easy to add it as an app to Canvas. The path is SITE_URL/lti/canvas.xml. See [How do I configure an external app for an account using a URL](https://guides.instructure.com/m/4214/l/74559-how-do-i-configure-an-external-app-for-an-account-using-a-url) for details about how to configure Canvas with this URL. Be sure to set the "Privacy" option for Lacuna to "Public". This ensures that students' names and correct email addresses will be used in Lacuna; it will *not* expose their information to the public or to members of other courses.
+
+Courses should *not* already be created in Lacuna. Instead, if you want to use Canvas with Lacuna, create the course through Canvas via the "Manage Lacuna" menu item.
+
+Site administrators, please note: Canvas will attempt to embed Lacuna within an iFrame. By default, Drupal will not permit this behavior for security reasons. If you want to use Lacuna within Canvas, add the following line to your settings.php file:
+
+  <code>$conf['x_frame_options'] = '';</code>
+  
+  For more information about this issue, see [this post](https://www.drupal.org/node/2735873). 
  
 ### Using Lacuna in Canvas
 Once configured as a Canvas app, Lacuna will add a menu item 'Lacuna Course Setup', which is visible only to instructors and administrators. Instructors should first click on this link to get started setting up their course and materials within Lacuna. They will be guided through the process and may return at any time. Once documents have been added to Lacuna, they will be available as a resource for assignments. Read [How do I add an external app as an assignment submission type?](https://guides.instructure.com/m/4152/l/501360?data-resolve-url=true&data-manual-id=4152) for details about how to integrate Lacuna into an assignment. *NOTE*: We recommend that assignments using Lacuna open the app in a new tab for the best user experience. 
