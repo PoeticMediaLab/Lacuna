@@ -665,16 +665,14 @@ body.page-latest-conversations {
     font-family: $lacunafont;
   }
   p.view-excerpt {
-    font-style: italic;
     margin-left: 15px;
-    i {
-      margin-right: 10px;
-    }
+    margin-top: 0;
+    margin-bottom: 10px;
   }
   .view-annotations-on-responses-view, .view-comments-on-responses-view, .view-comments-on-threads-view, .view-replies-on-annotations-view {
   padding-bottom: 30px;
   div.view-tile {
-    border: 2.5px solid #cccccc;
+    border-bottom: 0.5px solid #cccccc;
     width: 95%;
     padding-left: 10px;
   }
