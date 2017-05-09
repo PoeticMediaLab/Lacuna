@@ -1,0 +1,1 @@
+(function ($) { Drupal.behaviors.latest_conversations = {   attach: function (context, settings) { var str = document.getElementById("edit-uid-current-all").innerHTML;   var res = str.replace("- Any -", "No");   document.getElementById("edit-uid-current-all").innerHTML = res;} }; }(jQuery));

@@ -1,6 +1,7 @@
 <?php 
 
 function lacuna_notifications_conversations() {
+	drupal_add_js(drupal_get_path('module', 'lacuna_notifications') . '/js/lacuna_notifications.js');
 	$output = "<div class='latest-conversations-banner'></div><div class='conversations-view-block'><h2 class='conversations-title'>Replies to Annotations</h2>";
 	$output .= views_embed_view('replies_on_annotations_view', 'block');
 	$output .= "</div>";
