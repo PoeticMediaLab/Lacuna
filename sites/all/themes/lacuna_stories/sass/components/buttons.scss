@@ -284,7 +284,7 @@ input[id^='edit-actionsewing-kit-remove']:active {
   }
 }
 
-.af-button, .annotator-reply-button, div#edit-uid-current-1 a, div#edit-uid-current-0 a {                // ih (8/16): changes made to button design
+.af-button, .annotator-reply-button {                // ih (8/16): changes made to button design
     cursor: pointer;                                 // moved from annotator.scss to buttons.scss to allow us to use it in other parts of the site --DMB 5/2/17
     display: inline-block;
     color: black;
@@ -321,16 +321,16 @@ input[id^='edit-actionsewing-kit-remove']:active {
     letter-spacing: .5px;
 }
 
-.af-button:hover, div#edit-uid-current-1 a:hover, div#edit-uid-current-0 a:hover {
+
+
+.af-button:hover {
     // background-color: #39404a;
     background-color: #939dab;
     background-position: 0 -15px;
     transition: background-color ease-in 0
 }
 
-.af-button-active:hover, 
-div#edit-uid-current-1 a.active:hover,
-div#edit-uid-current-1 a:not(.active) ~ div#edit-uid-current-0:hover {
+.af-button-active:hover {
     background-color: #83a220; // #88b551;
     color: #FFFFFF;
     background-position: 0 15px;
@@ -338,10 +338,7 @@ div#edit-uid-current-1 a:not(.active) ~ div#edit-uid-current-0:hover {
     transition: background-color ease-in 0s;
 }
 
-.af-button-active, 
-div#edit-uid-current-1 a.active,
-div#edit-uid-current-1 a:not(.active) ~ div#edit-uid-current-0
- {
+.af-button-active {
     // background-color: #c4df2c;
     // background-image: linear-gradient(to bottom, #c4df2c, #88b551);
     background-color: #a5cc29; // #98ca5b;
@@ -393,11 +390,5 @@ div#edit-uid-current-1 a:not(.active) ~ div#edit-uid-current-0
   margin-right:7.5px;
 }
 
-div#edit-uid-current-1 a, div#edit-uid-current-0 a {
-  width: 45px;
-  padding-left: 10px;
-  padding-right: 10px;
-  color: #ffffff;
-  float: left;
-}
+
 
