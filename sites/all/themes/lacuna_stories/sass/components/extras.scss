@@ -577,8 +577,13 @@ body.not-logged-in div.field-name-group-group a {
 }
 
 div#block-superfish-1 div.view-notifications-view a:hover {
-  color: #9e9e9e;
+  color: #555555 !important;
 }
+
+div#block-superfish-1 div.view-notifications-view a {
+  color: #9e9e9e !important;
+}
+
 
 
 /*theming for Peer Groups pages --DMB 12/13/2016*/

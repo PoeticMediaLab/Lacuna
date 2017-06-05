@@ -945,7 +945,7 @@ function lacuna_notifications_configuration_views_default_views() {
   $handler->display->display_options['fields']['nothing']['table'] = 'views';
   $handler->display->display_options['fields']['nothing']['field'] = 'nothing';
   $handler->display->display_options['fields']['nothing']['label'] = '';
-  $handler->display->display_options['fields']['nothing']['alter']['text'] = '<p>[name] replied to [name_1]\'s <a href="[path]?id=[nid]>annotation</a> of <em>[title]</em>:</p><p class="view-excerpt">"[comment_body]"</p>';
+  $handler->display->display_options['fields']['nothing']['alter']['text'] = '<p>[name] replied to [name_1]\'s <a href="[path]?id=[nid]">annotation</a> of <em>[title]</em>:</p><p class="view-excerpt">"[comment_body]"</p>';
   $handler->display->display_options['fields']['nothing']['element_type'] = 'div';
   $handler->display->display_options['fields']['nothing']['element_class'] = '.view-tile';
   $handler->display->display_options['fields']['nothing']['element_label_colon'] = FALSE;
