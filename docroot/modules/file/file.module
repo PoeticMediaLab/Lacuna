@@ -146,8 +146,9 @@ function file_file_download($uri, $field_type = 'file') {
   // headers for files controlled by other modules. Make an exception for
   // temporary files where the host entity has not yet been saved (for example,
   // an image preview on a node/add form) in which case, allow download by the
-  // file's owner.
-  if (empty($references) && ($file->status == FILE_STATUS_PERMANENT || $file->uid != $user->uid)) {
+  // file's owner. For anonymous file owners, only the browser session that
+  // uploaded the file should be granted access.
+  if (empty($references) && ($file->status == FILE_STATUS_PERMANENT || $file->uid != $user->uid || (!$user->uid && empty($_SESSION['anonymous_allowed_file_ids'][$file->fid])))) {
       return;
   }
 
@@ -280,9 +281,10 @@ function file_ajax_upload() {
     $form['#suffix'] .= '<span class="ajax-new-content"></span>';
   }
 
-  $output = theme('status_messages') . drupal_render($form);
+  $form['#prefix'] .= theme('status_messages');
+  $output = drupal_render($form);
   $js = drupal_add_js();
-  $settings = call_user_func_array('array_merge_recursive', $js['settings']['data']);
+  $settings = drupal_array_merge_deep_array($js['settings']['data']);
 
   $commands[] = ajax_command_replace(NULL, $output, $settings);
   return array('#type' => 'ajax', '#commands' => $commands);
@@ -457,6 +459,17 @@ function file_managed_file_process($element, &$form_state, $form) {
       '#markup' => theme('file_link', array('file' => $element['#file'])) . ' ',
       '#weight' => -10,
     );
+    // Anonymous users who have uploaded a temporary file need a
+    // non-session-based token added so file_managed_file_value() can check
+    // that they have permission to use this file on subsequent submissions of
+    // the same form (for example, after an Ajax upload or form validation
+    // error).
+    if (!$GLOBALS['user']->uid && $element['#file']->status != FILE_STATUS_PERMANENT) {
+      $element['fid_token'] = array(
+        '#type' => 'hidden',
+        '#value' => drupal_hmac_base64('file-' . $fid, drupal_get_private_key() . drupal_get_hash_salt()),
+      );
+    }
   }
 
   // Add the extension list to the page as JavaScript settings.
@@ -533,13 +546,24 @@ function file_managed_file_value(&$element, $input = FALSE, $form_state = NULL) 
           $force_default = TRUE;
         }
         // Temporary files that belong to other users should never be allowed.
-        // Since file ownership can't be determined for anonymous users, they
-        // are not allowed to reuse temporary files at all.
-        elseif ($file->status != FILE_STATUS_PERMANENT && (!$GLOBALS['user']->uid || $file->uid != $GLOBALS['user']->uid)) {
-          $force_default = TRUE;
+        elseif ($file->status != FILE_STATUS_PERMANENT) {
+          if ($GLOBALS['user']->uid && $file->uid != $GLOBALS['user']->uid) {
+            $force_default = TRUE;
+          }
+          // Since file ownership can't be determined for anonymous users, they
+          // are not allowed to reuse temporary files at all. But they do need
+          // to be able to reuse their own files from earlier submissions of
+          // the same form, so to allow that, check for the token added by
+          // file_managed_file_process().
+          elseif (!$GLOBALS['user']->uid) {
+            $token = drupal_array_get_nested_value($form_state['input'], array_merge($element['#parents'], array('fid_token')));
+            if ($token !== drupal_hmac_base64('file-' . $file->fid, drupal_get_private_key() . drupal_get_hash_salt())) {
+              $force_default = TRUE;
+            }
+          }
         }
         // If all checks pass, allow the file to be changed.
-        else {
+        if (!$force_default) {
           $fid = $file->fid;
         }
       }
