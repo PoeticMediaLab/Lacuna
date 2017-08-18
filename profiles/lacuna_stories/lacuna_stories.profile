@@ -288,7 +288,8 @@ function lacuna_stories_set_basic_pages_permissions()
     ->range(0,1)
     ->execute();
 
-  $nid = array_keys($entities['node'])[0];
+  $keys = array_keys($entities['node']); // to support PHP <5.4
+  $nid = $keys[0];
   $node = node_load($nid);
 
   content_access_save_per_node_settings($node, $settings);
