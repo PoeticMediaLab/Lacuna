@@ -126,12 +126,13 @@ function workflow_notify_workflow($op, $old_state, $new_state, $entity, $force, 
  * @param $entity_type
  */
 function workflow_notify_entity_update($entity, $entity_type) {
-  $field_name = NULL;
-
-  $new_state = workflow_node_current_state($entity, $entity_type, $field_name);
-  $transition = $entity->workflow_transitions[$field_name];
-
-  _workflow_notify($new_state, $entity, $entity_type, $field_name, $transition, $user = NULL);
+  if (isset($entity->workflow_transitions)) {
+    $new_state = workflow_node_current_state($entity, $entity_type, $field_name);
+    foreach ($entity->workflow_transitions as $field_name => &$transition) {
+      $new_state = workflow_node_current_state($entity, $entity_type, $field_name);
+      _workflow_notify($new_state, $entity, $entity_type, $field_name, $transition, $user = NULL);
+    }
+  }
   return;
 }
 
@@ -145,6 +146,11 @@ function workflow_notify_mail($key, &$message, $params) {
       $filter = $params['filter'];
       $message['send'] = TRUE;
 
+      $entity_type = $params['data']['entity_type'];
+      $entity = isset($params['data']['entity']) ? $params['data']['entity'] : $params['data']['node'];
+      $entity_uri = entity_uri($entity_type, $entity);
+      list($entity_id, , $entity_bundle) = entity_extract_ids($entity_type, $entity);
+
       $message['subject'] = filter_xss(token_replace($params['context']['subject'], $params['data'], $params));
       $message['body'][] = check_markup(token_replace($params['context']['body'], $params['data'], $params), $filter);
 
@@ -155,11 +161,10 @@ function workflow_notify_mail($key, &$message, $params) {
           '@to' => $message['to'],
           '@from' => $message['from'],
         ),
-        WATCHDOG_INFO, l(t('view'), 'node/' . $params['data']['node']->nid));
+        WATCHDOG_INFO, l(t('view'), $entity_uri['path']));
       return;
   }
 }
-
 
 /**
  * Calls drupal_mail() to notify users.
@@ -187,12 +192,13 @@ function _workflow_notify($new_state, $entity, $entity_type = '', $field_name = 
 
   // Okay, we are notifying someone of this change.
   // So let's get the workflow object.
+  $entity_uri = entity_uri($entity_type, $entity);
   list($entity_id, , $entity_bundle) = entity_extract_ids($entity_type, $entity);
   /* @var $workflow Workflow */
   $workflow = workflow_get_workflows_by_type($entity_bundle, $entity_type);
   $wid = $workflow->getWorkflowId();
 
-    // And all the states.
+  // And all the states.
   $states = $workflow->getStates(TRUE);
 
   // Get the specific roles to notify.
@@ -226,13 +232,13 @@ function _workflow_notify($new_state, $entity, $entity_type = '', $field_name = 
   // Call all modules that want to limit the list.
   $args = array(
     'users' => $accounts,
-    'node' => $entity,
-    'entity' => $entity, // Preparing for entities, keeping backward compatibility.
     'entity_type' => $entity_type,
     'state' => $new_state,
     'roles' => $notify,
     'workflow' => $workflow,
   );
+  // Preparing for entities, keeping backward compatibility.
+  $args += $entity_type == 'node' ? array('node' => $entity) : array('entity' => $entity);
   foreach (module_implements('workflow_notify') as $module) {
     $function = $module . '_workflow_notify';
     $function('users', $args);
@@ -245,7 +251,7 @@ function _workflow_notify($new_state, $entity, $entity_type = '', $field_name = 
   // Just quit if there are no users.
   if (empty($accounts)) {
     watchdog('workflow_notify', 'No recipients - email skipped.', array(),
-      WATCHDOG_DEBUG, l(t('view'), 'node/' . $entity_id)); // @todo: other entity types.
+      WATCHDOG_DEBUG, l(t('view'), $entity_uri['path']));
     return;
   }
 
@@ -257,13 +263,13 @@ function _workflow_notify($new_state, $entity, $entity_type = '', $field_name = 
     'clear' => TRUE,
     'sanitize' => FALSE,
     'data' => array(
-      'node' => $entity,
-      'entity' => $entity, // Preparing for entities, keeping backward compatibility.
-      'entity_type' => $entity_type,
       'user' => $user,
+      'entity_type' => $entity_type,
     ),
     'filter' => variable_get('workflow_notify_filter_format_' . $wid, 'filtered_html'),
   );
+  // Preparing for entities, keeping backward compatibility.
+  $params['data'] += $entity_type == 'node' ? array('node' => $entity) : array('entity' => $entity);
 
   // Build the subject and body of the mail.
   // Token replacement occurs in hook_mail().
@@ -287,7 +293,7 @@ function _workflow_notify($new_state, $entity, $entity_type = '', $field_name = 
   // Send the email.
   drupal_mail('workflow_notify',
     'workflow_notify',
-    implode(';', $addr_list),
+    implode(', ', $addr_list),
     language_default(),
     $params,
     $from);

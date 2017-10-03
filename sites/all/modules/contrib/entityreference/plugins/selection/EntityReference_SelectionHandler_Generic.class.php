@@ -208,7 +208,11 @@ class EntityReference_SelectionHandler_Generic implements EntityReference_Select
    * Implements EntityReferenceHandler::validateAutocompleteInput().
    */
   public function validateAutocompleteInput($input, &$element, &$form_state, $form) {
-      $entities = $this->getReferencableEntities($input, '=', 6);
+      $bundled_entities = $this->getReferencableEntities($input, '=', 6);
+      $entities = array();
+      foreach($bundled_entities as $entities_list) {
+        $entities += $entities_list;
+      }
       if (empty($entities)) {
         // Error if there are no entities available for a required field.
         form_error($element, t('There are no entities matching "%value"', array('%value' => $input)));
@@ -305,7 +309,7 @@ class EntityReference_SelectionHandler_Generic implements EntityReference_Select
    */
   public function getLabel($entity) {
     $target_type = $this->field['settings']['target_type'];
-    return entity_access('view', $target_type, $entity) ? entity_label($target_type, $entity) : t('- Restricted access -');
+    return entity_access('view', $target_type, $entity) ? entity_label($target_type, $entity) : t(ENTITYREFERENCE_DENIED);
   }
 
   /**
@@ -453,7 +457,7 @@ class EntityReference_SelectionHandler_Generic_comment extends EntityReference_S
     // bundle.
     $conditions = &$query->conditions();
     foreach ($conditions as $key => &$condition) {
-      if ($key !== '#conjunction' && is_string($condition['field']) && $condition['field'] === 'comment.node_type') {
+      if ($key !== '#conjunction' && is_string($condition['field']) && $condition['field'] === 'node_type') {
         $condition['field'] = $node_alias . '.type';
         foreach ($condition['value'] as &$value) {
           if (substr($value, 0, 13) == 'comment_node_') {

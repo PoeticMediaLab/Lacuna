@@ -6,8 +6,8 @@
  */
 
 // Includes the hooks for the 'conventional' (version D5/D6/D7.1) Node API.
-module_load_include('inc', 'workflow', 'workflow.node.type_map');
-module_load_include('inc', 'workflow', 'workflow.deprecated');
+require_once(dirname(__DIR__)) . '/workflow.node.type_map.inc';
+require_once(dirname(__DIR__)) . '/workflow.deprecated.inc';
 
 /**
  * Implements hook_ctools_plugin_directory().

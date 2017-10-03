@@ -95,7 +95,18 @@ function file_entity_file_update($file) {
     $query->execute();
   }
 
-  if (module_exists('image') && file_entity_file_get_mimetype_type($file) == 'image' && $file->filesize) {
+  if (module_exists('image') && file_entity_file_get_mimetype_type($file) == 'image' && $file->filesize && isset($file->original)) {
+    if (!isset($file->metadata)) {
+      $file->metadata = array();
+    }
+
+    if (!isset($file->original->metadata)) {
+      if (!is_object($file->original)) {
+        $file->original = new stdClass();
+      }
+      $file->original->metadata = array();
+    }
+
     // If the file has changed dimensions or a new file has been uploaded,
     // update any image field reference to this file and flush image style
     // derivatives.
@@ -139,16 +150,12 @@ function file_entity_file_delete($file) {
  * Implements hook_file_mimetype_mapping_alter().
  */
 function file_entity_file_mimetype_mapping_alter(&$mapping) {
-  // Add support for mka and mkv.
-  // @todo Remove when http://drupal.org/node/1443070 is fixed in core.
-  $new_mappings['mka'] = 'audio/x-matroska';
-  $new_mappings['mkv'] = 'video/x-matroska';
+  // For info on adding new mime-types to core: http://drupal.org/node/1443070.
 
-  // Add support for weba, webm, and webp.
-  // @todo Remove when http://drupal.org/node/1443070 is fixed in core.
-  $new_mappings['weba'] = 'audio/webm';
-  $new_mappings['webm'] = 'video/webm';
-  $new_mappings['webp'] = 'image/webp';
+  // @todo. Remove after fixing this in core http://drupal.org/node/2912875.
+  // Add support for autocad drawings.
+  $new_mappings['dwg'] = 'application/acad';
+  // For info on adding new mime-types to file_entity: drupal.org/node/2900830.
 
   foreach ($new_mappings as $extension => $mime_type) {
     if (!in_array($mime_type, $mapping['mimetypes'])) {
@@ -167,12 +174,45 @@ function file_entity_file_mimetype_mapping_alter(&$mapping) {
  */
 function file_entity_file_load($files) {
   // Add alt and title text to images.
+  file_entity_set_title_alt_properties($files);
+
+  // Load and unserialize metadata.
+  $results = db_query("SELECT * FROM {file_metadata} WHERE fid IN (:fids)", array(':fids' => array_keys($files)));
+
+  foreach ($results as $result) {
+    $name = $result->name;
+
+    // image.module required height and width to be properties of the file.
+    if ($name == 'height' || $name == 'width') {
+      $files[$result->fid]->$name = unserialize($result->value);
+    }
+
+    $files[$result->fid]->metadata[$name] = unserialize($result->value);
+  }
+}
+
+/**
+ * Implements hook_entitycache_ENTITY_TYPE_load().
+ */
+function file_entitycache_file_load($files) {
+  // Integrates with entitycache - ensures the alt and title text on images is
+  // localized.
+  file_entity_set_title_alt_properties($files);
+}
+
+/**
+ * Set the title / alt properties of file objects.
+ *
+ * @param array $files List of file entities.
+ */
+function file_entity_set_title_alt_properties($files) {
   $alt = variable_get('file_entity_alt', '[file:field_file_image_alt_text]');
   $title = variable_get('file_entity_title', '[file:field_file_image_title_text]');
 
   $replace_options = array(
     'clear' => TRUE,
     'sanitize' => FALSE,
+    'language' => $GLOBALS['language'],
   );
 
   foreach ($files as $file) {
@@ -195,20 +235,6 @@ function file_entity_file_load($files) {
       // token so we revert the encoding done during tokenization.
       $file->title = decode_entities($output);
     }
-  }
-
-  // Load and unserialize metadata.
-  $results = db_query("SELECT * FROM {file_metadata} WHERE fid IN (:fids)", array(':fids' => array_keys($files)));
-
-  foreach ($results as $result) {
-    $name = $result->name;
-
-    // image.module required height and width to be properties of the file.
-    if ($name == 'height' || $name == 'width') {
-      $files[$result->fid]->$name = unserialize($result->value);
-    }
-
-    $files[$result->fid]->metadata[$name] = unserialize($result->value);
   }
 }
 

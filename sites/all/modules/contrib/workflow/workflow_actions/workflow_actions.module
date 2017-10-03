@@ -76,7 +76,7 @@ function workflow_actions_entity_update($entity, $entity_type) {
   // P.S. You should not mix workflow field and workflow node!!
   if (module_exists('workflowfield') && !module_exists('workflownode')) {
     if (isset($entity->workflow_transitions)) {
-      foreach ($entity->workflow_transitions as $transition) {
+      foreach ($entity->workflow_transitions as &$transition) {
         // $transition->post_execute(); // equivalent with hook_entity_save().
         _workflow_actions_do($transition);
       }
@@ -224,7 +224,7 @@ function workflow_actions_action_info_alter(&$info) {
  * @param $transition.
  *   A Workflow Transition object.
  */
-function _workflow_actions_do($transition) {
+function _workflow_actions_do(&$transition) {
   $entity_type = $transition->entity_type;
   $entity = $transition->getEntity();
   $old_sid = $transition->old_sid;
@@ -245,7 +245,10 @@ function _workflow_actions_do($transition) {
       $aids = trigger_get_assigned_actions($hook);
     }
 
-    if ($aids) {
+    if ($aids && !isset($transition->workflow_actions_done[$hook])) {
+      // Avoid multiple executions if the entity_save is repeated in an action.
+      $transition->workflow_actions_done[$hook] = TRUE;
+
       $context = array(
         'hook' => $hook,
         'entity_type' => $entity_type,

@@ -7,9 +7,9 @@
 // The name of the Workfow form and function, to be used in various callbacks.
 define('WORKFLOWFIELD_FORM', 'workflowfield_field_widget_form');
 
-module_load_include('inc', 'workflowfield', 'workflowfield.field');
-module_load_include('inc', 'workflowfield', 'workflowfield.widget');
-module_load_include('inc', 'workflowfield', 'workflowfield.formatter');
+require_once dirname(__FILE__) . '/workflowfield.field.inc';
+require_once dirname(__FILE__) . '/workflowfield.widget.inc';
+require_once dirname(__FILE__) . '/workflowfield.formatter.inc';
 
 /**
  * Implements hook_help().

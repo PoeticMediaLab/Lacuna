@@ -105,9 +105,11 @@ function _workflowfield_metadata_property_get($entity, array $options, $name, $e
       if (!$sid && isset($data['workflow'])) {
         // $new_entity = $entity->original; // is NULL :-(
         list($entity_id, , ) = entity_extract_ids($entity_type, $entity);
-        $new_entity = entity_load_single($entity_type, $entity_id);
-        $workflow = $new_entity->{$name}[$langcode][$delta];
-        $sid = isset($workflow['value']) ? (int) $workflow['value'] : 0;
+        if (!empty($entity_id)) {
+          $new_entity = entity_load_single($entity_type, $entity_id);
+          $workflow = $new_entity->{$name}[$langcode][$delta];
+          $sid = isset($workflow['value']) ? (int)$workflow['value'] : 0;
+        }
       }
 
       $data[$columns[0]] = $sid;

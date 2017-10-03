@@ -110,6 +110,28 @@ class WorkflowConfigTransition extends Entity {
     return TRUE;
   }
 
+  /**
+   * Generate a machine name for a transition.
+   */
+  public static function machineName($start_name, $end_name) {
+    $new_name   = sprintf("%s_to_%s", $start_name, $end_name);
+
+    // Special case: replace parens in creation state transition names.
+    $new_name   = str_replace("(creation)", "_creation", $new_name);
+
+    return $new_name;
+  }
+
+  public function save() {
+    parent::save();
+
+    // Ensure Workflow is marked overridden.
+    $workflow = $this->getWorkflow();
+    if ($workflow->status == ENTITY_IN_CODE) {
+      $workflow->status = ENTITY_OVERRIDDEN;
+      $workflow->save();
+    }
+  }
 }
 
 /**

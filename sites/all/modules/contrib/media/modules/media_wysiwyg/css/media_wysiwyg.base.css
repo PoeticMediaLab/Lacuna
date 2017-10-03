@@ -11,5 +11,7 @@
   margin-left: 20px;
 }
 .media-wysiwyg-align-center {
+  text-align: -moz-center;
+  text-align: -webkit-center;
   text-align: center;
 }

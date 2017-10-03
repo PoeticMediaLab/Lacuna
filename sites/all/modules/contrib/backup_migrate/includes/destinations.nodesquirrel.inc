@@ -50,7 +50,7 @@ function backup_migrate_nodesquirrel_get_activate_help_text() {
  * Get a helper link to activate a site and create a tree.
  */
 function backup_migrate_nodesquirrel_get_activate_link() {
-  $activate_link = l('nodesquirrel.com/activate', variable_get('nodesquirrel_activate_url', 'http://manage.nodesquirrel.com/activate'), array('query' => array('url' => url('', array('absolute' => TRUE)), 'email' => variable_get('site_mail', ''), 'configure' => url($_GET['q'], array('absolute' => TRUE)))));
+  $activate_link = l('nodesquirrel.com/activate', variable_get('nodesquirrel_activate_url', 'https://manage.nodesquirrel.com/activate'), array('query' => array('url' => url('', array('absolute' => TRUE)), 'email' => variable_get('site_mail', ''), 'configure' => url($_GET['q'], array('absolute' => TRUE)))));
   return $activate_link;
 }
 
@@ -166,21 +166,19 @@ function backup_migrate_nodesquirrel_status_form($key, $destination, $status) {
         '#markup' => check_plain($status['plan_name'])
       );
 
-      if (isset($status['plan_id']) && strpos($status['plan_id'], 'trial') !== FALSE) {
-        if (isset($status['lifetime_backups']) && isset($status['lifetime_backups_used'])) {
-          $remains = $status['lifetime_backups'] - $status['lifetime_backups_used'];
-          $remains = $remains > 0 ? $remains : t('none');
-          $form['nodesquirrel_status']['plan_name']['#markup'] .= ' ' . t('(@remains remaining of @backups backup trial)', array('@backups' => $status['lifetime_backups'], '@remains' => $remains));
-        }
+      if (!empty($status['lifetime_backups']) && isset($status['lifetime_backups_used'])) {
+        $remains = $status['lifetime_backups'] - $status['lifetime_backups_used'];
+        $remains = $remains > 0 ? $remains : t('none');
+        $form['nodesquirrel_status']['plan_name']['#markup'] .= ' ' . t('(@remains remaining of @backups backup trial)', array('@backups' => $status['lifetime_backups'], '@remains' => $remains));
+      }
 
-        if (isset($status['lifespan']) && isset($status['age']) && $status['lifespan'] > 0) {
-          $remains = ceil(($status['lifespan'] - $status['age']) / 86400);
-          if ($remains <= 0) {
-            $form['nodesquirrel_status']['plan_name']['#markup'] .= ' ' . t('(Your !span day trial has expired.)', array('!span' => ceil($status['lifespan'] / 86400)));
-          }
-          else {
-            $form['nodesquirrel_status']['plan_name']['#markup'] .= ' ' . format_plural($remains, '(1 day remaining)', '(!span days remaining)', array('!span' => ceil($remains)));
-          }
+      if (!empty($status['lifespan']) && isset($status['age']) && $status['lifespan'] > 0) {
+        $remains = ceil(($status['lifespan'] - $status['age']) / 86400);
+        if ($remains <= 0) {
+          $form['nodesquirrel_status']['plan_name']['#markup'] .= ' ' . t('(Your !span day trial has expired.)', array('!span' => ceil($status['lifespan'] / 86400)));
+        }
+        else {
+          $form['nodesquirrel_status']['plan_name']['#markup'] .= ' ' . format_plural($remains, '(1 day remaining)', '(!span days remaining)', array('!span' => ceil($remains)));
         }
       }
 
@@ -431,9 +429,7 @@ class backup_migrate_destination_nodesquirrel extends backup_migrate_destination
 
           if ($confirm['success']) {
             // Set a message with a link to the manage console.
-            $url = variable_get('nodesquirrel_manage_url', 'http://manage.nodesquirrel.com') . '/backups/' . $this->_get_destination();
-            _backup_migrate_message('Your backup has been saved to your NodeSquirrel account. View it at !account', array('!account' => l($url, $url)));
-
+            _backup_migrate_message('Your backup has been saved to your NodeSquirrel account. View it at !account', array('!account' => backup_migrate_nodesquirrel_get_manage_link($this)));
             return $file;
           }
           else {
@@ -649,7 +645,7 @@ class backup_migrate_destination_nodesquirrel extends backup_migrate_destination
   }
 
   function add_scheme($url) {
-    return 'http://' . $url;
+    return 'https://' . $url;
   }
 
   /**

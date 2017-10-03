@@ -1347,7 +1347,7 @@ function backup_migrate_ui_export_form($form, &$form_state, $item) {
 }
 
 /**
- * List the previously created backups from accross multiple destinations.
+ * List the previously created backups from across multiple destinations.
  */
 function backup_migrate_ui_saved_backups() {
   backup_migrate_include('profiles', 'destinations', 'sources');
@@ -1389,7 +1389,7 @@ function backup_migrate_ui_saved_backups() {
 }
 
 /**
- * List the previously created backups from accross multiple destinations.
+ * List the previously created backups from across multiple destinations.
  */
 function backup_migrate_get_saved_backups($refresh = FALSE) {
   backup_migrate_include('profiles', 'destinations', 'sources');
@@ -1591,7 +1591,7 @@ function backup_migrate_backup_fail($message, $params, $settings) {
 }
 
 /**
- * Clean up when a backup operation suceeds.
+ * Clean up when a backup operation succeeds.
  */
 function backup_migrate_backup_succeed($message, $params, $settings) {
   backup_migrate_include('filters', 'files');
@@ -1613,7 +1613,7 @@ function backup_migrate_restore_fail($message, $params, $settings) {
 }
 
 /**
- * Clean up when a restore operation suceeds.
+ * Clean up when a restore operation succeeds.
  */
 function backup_migrate_restore_succeed($message, $params, $settings) {
   backup_migrate_include('filters', 'files');

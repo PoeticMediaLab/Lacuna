@@ -153,40 +153,8 @@ class EntityWorkflowUIController extends EntityDefaultUIController {
 
     switch ($op) {
       case 'revert':
-        // Do not delete the workflow, but recreate features_get_default($entity_type, $module);
-        // entity_delete($this->entityType, $id);
-        $workflow = $entity;
-        $entity_type = $this->entityType;
-        $funcname = $workflow->module . '_default_' . $this->entityType;
-        $defaults = $funcname();
-        // No defaults, no processing.
-        if (empty($defaults)) {
-          return;
-        }
-
-        foreach ($defaults as $name => $entity) {
-          $existing[$name] = workflow_load($name);
-          // If we got an existing entity with the same name, we reuse its entity id.
-          if (isset($existing[$name])) {
-            // Set the original as later reference.
-            $entity->original = $existing[$name];
-
-            // As we got an ID, the entity is not new.
-            $entity->wid = $entity->original->wid;
-            unset($entity->is_new);
-
-            // Update the status to be in code.
-            // $entity->status |= ENTITY_IN_CODE;
-            $entity->status = ENTITY_IN_CODE;
-
-            // We mark it for being in revert mode.
-            $entity->is_reverted = TRUE;
-            entity_save($entity_type, $entity);
-            unset($entity->is_reverted);
-          }
-          // The rest of the defaults is handled by default implementation.
-          // @see entity_defaults_rebuild()
-        }
+        $defaults = workflow_get_defaults($entity->module);
+        workflow_revert($defaults, $entity->getName());
         watchdog($this->entityType, 'Reverted %entity %label to the defaults.', $vars, WATCHDOG_NOTICE, $edit_link);
         return t('Reverted %entity %label to the defaults.', $vars);
 

@@ -134,6 +134,7 @@ function workflow_access_node_grants($account, $op) {
  */
 function workflow_access_node_access_records($node) {
   $grants = array();
+  $workflow_transitions_added = FALSE;
 
   // Only relevant for content with Workflow.
   if (!isset($node->workflow_transitions)) {
@@ -162,6 +163,7 @@ function workflow_access_node_access_records($node) {
         // Store in an array, to prepare for multiple workflow_fields per entity.
         // This is a.o. used in hook_entity_update to trigger 'transition post'.
         $node->workflow_transitions[$field_name] = $transition;
+        $workflow_transitions_added = TRUE;
       }
     }
   }
@@ -205,6 +207,11 @@ function workflow_access_node_access_records($node) {
       }
     }
   }
+
+  if ($workflow_transitions_added == TRUE) {
+    unset($node->workflow_transitions);
+  }
+
   return $grants;
 }
 

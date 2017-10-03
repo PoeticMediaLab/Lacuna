@@ -18,16 +18,17 @@ define('WORKFLOW_ROLE_AUTHOR_RID', '-1');
 define('WORKFLOWFIELD_PROPERTY_TYPE', 'text'); // @todo: 'list', 'text' or 'workflow'?
 
 // Add entity support file.
-module_load_include('inc', 'workflow', 'workflow.entity');
+require_once dirname(__FILE__) . '/workflow.entity.inc';
+
 // Add workflow block (credits to workflow_extensions module).
-module_load_include('inc', 'workflow', 'workflow.block');
+require_once dirname(__FILE__) . '/workflow.block.inc';
 
 // The type_map is only needed for workflow_node, but the API is used by
 // several third-party add-on modules. It's a small file, so just add it.
-module_load_include('inc', 'workflow', 'workflow.node.type_map');
+require_once dirname(__FILE__) . '/workflow.node.type_map.inc';
 
 // Split the rather long list of hooks for the form with action buttons.
-module_load_include('inc', 'workflow', 'workflow.form');
+require_once dirname(__FILE__) . '/workflow.form.inc';
 
 /**
  * Implements hook_help().
@@ -1163,6 +1164,29 @@ function _workflow_info_field($field_name, $workflow = NULL) {
   }
 
   return $field;
+}
+
+/**
+ * Get features defaults for workflows.
+ */
+function workflow_get_defaults($module) {
+  $funcname = $module . '_default_Workflow';
+  return $funcname();
+}
+
+/**
+ * Revert a single workflow.
+ */
+function workflow_revert($defaults, $name) {
+  $workflow = $defaults[$name];
+  $old = workflow_load_by_name($name);
+  if ($old) {
+    $workflow->wid = $old->wid;
+    $workflow->is_new = FALSE;
+    $workflow->is_reverted = TRUE;
+  }
+
+  $workflow->save();
 }
 
 /**

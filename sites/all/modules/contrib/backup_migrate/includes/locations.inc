@@ -45,7 +45,7 @@ function backup_migrate_backup_migrate_locations() {
  *    'all' - all available locations should be returned
  */
 function backup_migrate_get_locations($op = 'all') {
-  static $locations = NULL;
+  $locations = &drupal_static('backup_migrate_get_locations', NULL);
 
   // Get the list of locations and cache them locally.
   if ($locations === NULL) {
@@ -234,7 +234,7 @@ class backup_migrate_location extends backup_migrate_item {
   function get_list_row() {
     $out = parent::get_list_row();
 
-    // Supress locations with no actions as there's no value in showing them (and they may confuse new users).
+    // Suppress locations with no actions as there's no value in showing them (and they may confuse new users).
     if (empty($out['actions'])) {
       return NULL;
     }

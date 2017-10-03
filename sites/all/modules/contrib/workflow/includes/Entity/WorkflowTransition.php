@@ -273,17 +273,11 @@ class WorkflowTransition extends Entity {
     $entity_id = $this->entity_id;
     $field_name = $this->field_name;
 
-
     // Make sure $force is set in the transition, too.
     if ($force) {
       $this->force($force);
     }
     $force = $this->isForced();
-
-    // Store the transition, so it can be easily fetched later on.
-    // Store in an array, to prepare for multiple workflow_fields per entity.
-    // This is a.o. used in hook_entity_update to trigger 'transition post'.
-    $entity->workflow_transitions[$field_name] = $this;
 
     // Prepare an array of arguments for error messages.
     $args = array(
@@ -354,16 +348,27 @@ class WorkflowTransition extends Entity {
       // We may need to clean up something.
     }
 
-    // The transition is allowed. Let other modules modify the comment.
-    // @todo D8: remove all but last items from $context.
-    $context = array(
-      'node' => $entity,
-      'sid' => $new_sid,
-      'old_sid' => $old_sid,
-      'uid' => $user->uid,
-      'transition' => $this,
-    );
-    drupal_alter('workflow_comment', $this->comment, $context);
+    if ($state_changed || $this->comment) {
+      // Store the transition, so it can be easily fetched later on.
+      // Store in an array, to prepare for multiple workflow_fields per entity.
+      // This is a.o. used in hook_entity_update to trigger 'transition post'.
+      // Only add the Transition once! or you will encounter endless loops in
+      // hook_entity_update() in workflow_actions_entity_update et all.
+      if (!isset($entity->workflow_transitions[$field_name])) {
+        $entity->workflow_transitions[$field_name] = &$this;
+      }
+
+      // The transition is allowed. Let other modules modify the comment.
+      // @todo D8: remove all but last items from $context.
+      $context = array(
+        'node' => $entity,
+        'sid' => $new_sid,
+        'old_sid' => $old_sid,
+        'uid' => $user->uid,
+        'transition' => $this,
+      );
+      drupal_alter('workflow_comment', $this->comment, $context);
+    }
 
     // Now, change the database.
 
@@ -393,6 +398,8 @@ class WorkflowTransition extends Entity {
       // This is a Workflow Field.
       // Until now, adding code here (instead of in workflow_execute_transition() )
       // doesn't work, creating an endless loop.
+      // Update 10-dec-2016: the following line, added above, may have resolved that.
+      //     if (!isset($entity->workflow_transitions[$field_name]))
 /*
       if ($state_changed || $this->comment) {
         // Do a separate update to update the field (Workflow Field API)

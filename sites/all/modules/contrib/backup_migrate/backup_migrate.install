@@ -167,7 +167,7 @@ function backup_migrate_schema() {
       ),
       'machine_name' => array(
         'type' => 'varchar',
-        'length' => 32,
+        'length' => 255,
         'not null' => TRUE,
         'default' => '0',
         'description' => 'The primary identifier for a source.',
@@ -641,4 +641,24 @@ function backup_migrate_update_7303() {
  */
 function backup_migrate_update_7304() {
   db_query("UPDATE {backup_migrate_schedules} SET cron = 'builtin' WHERE cron = '0'");
+}
+
+/**
+ * Fix schema mismatch after upgrade.
+ */
+function backup_migrate_update_7305() {
+  foreach (array('backup_migrate_profiles', 'backup_migrate_destinations', 'backup_migrate_sources', 'backup_migrate_schedules') as $table) {
+    db_change_field($table, 'machine_name', 'machine_name', array(
+      'type' => 'varchar',
+      'length' => 255,
+      'not null' => TRUE,
+      'default' => '0',
+    ));
+  }
+  db_change_field('backup_migrate_schedules', 'cron', 'cron', array(
+    'type' => 'varchar',
+    'length' => 32,
+    'not null' => TRUE,
+    'default' => 'builtin',
+  ));
 }

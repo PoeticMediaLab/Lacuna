@@ -73,7 +73,7 @@ function session_cache_file_session_cache_set($method, $bin, $data) {
       drupal_set_message(t('Session cache file for empty session state could not be deleted.', array('%bin' => "$bin/$sid")), 'warning', FALSE);
     }
   }
-  elseif (!$path || !$sid || @file_put_contents("$path/$sid", serialize($data), FILE_EXISTS_REPLACE) === FALSE) {
+  elseif (!$path || !$sid || @file_put_contents("$path/$sid", json_encode($data), FILE_EXISTS_REPLACE) === FALSE) {
     drupal_set_message(t('Session cache file for session state %bin could not be written.', array('%bin' => "$bin/$sid")), 'error', FALSE);
   }
 }
@@ -87,7 +87,7 @@ function session_cache_file_session_cache_get($method, $bin) {
   }
   $path = session_cache_file_directory($bin);
   $sid = session_cache_get_sid();
-  $data = $path && $sid && file_exists("$path/$sid") ? unserialize(file_get_contents("$path/$sid")) : NULL;
+  $data = $path && $sid && file_exists("$path/$sid") ? json_decode(file_get_contents("$path/$sid"), TRUE) : NULL;
   return $data;
 }
 

@@ -140,7 +140,7 @@ class views_handler_filter_term_node_tid extends views_handler_filter_many_to_on
         $query->orderby('tv.name');
         $query->orderby('td.weight');
         $query->orderby('td.name');
-        $query->addTag('term_access');
+        $query->addTag('taxonomy_term_access');
         if ($this->options['limit']) {
           $query->condition('tv.machine_name', $vocabulary->machine_name);
         }
@@ -275,7 +275,7 @@ class views_handler_filter_term_node_tid extends views_handler_filter_many_to_on
 
     // We only validate if they've chosen the text field style.
     if ($this->options['type'] != 'textfield') {
-      if ($form_state['values'][$identifier] != 'All')  {
+      if (isset($form_state['values'][$identifier]) && $form_state['values'][$identifier] != 'All') {
         $this->validated_exposed_input = (array) $form_state['values'][$identifier];
       }
       return;
@@ -328,7 +328,7 @@ class views_handler_filter_term_node_tid extends views_handler_filter_many_to_on
     $query->fields('td');
     $query->condition('td.name', $names);
     $query->condition('tv.machine_name', $this->options['vocabulary']);
-    $query->addTag('term_access');
+    $query->addTag('taxonomy_term_access');
     $result = $query->execute();
     foreach ($result as $term) {
       unset($missing[strtolower($term->name)]);
