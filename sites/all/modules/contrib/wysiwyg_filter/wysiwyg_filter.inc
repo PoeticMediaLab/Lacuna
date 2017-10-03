@@ -123,6 +123,10 @@ function wysiwyg_filter_get_elements_blacklist() {
  * @see wysiwyg_filter_process()
  */
 function wysiwyg_filter_parse_valid_elements($valid_elements) {
+  $parsed_elements = &drupal_static(serialize($valid_elements));
+  if (isset($parsed_elements)) {
+    return $parsed_elements;
+  }
   // Remove whitespaces and split valid elements from a comma separate list of items into an array.
   $valid_elements = array_map('drupal_strtolower', array_filter(explode(',', preg_replace('#\s+#', '', $valid_elements))));
   $parsed_elements = array();
@@ -130,7 +134,7 @@ function wysiwyg_filter_parse_valid_elements($valid_elements) {
   foreach ($valid_elements as $valid_element) {
     // Extract the element name and its allowed attributes list
     // including special characters that will be parsed later.
-    if (preg_match('`^(@|[#+-]{0,1}[a-z0-9/]+)(\[([^]]*)\])*$`', $valid_element, $matches)) {
+    if (preg_match('`^(@|[#+-]{0,1}[a-z0-9-/]+)(\[([^]]*)\])*$`', $valid_element, $matches)) {
       // Element names can be specified by the special character "@" (used
       // to allow a common set of attributes for all valid HTML elements)
       // or a list of names separated by the special character "/".
@@ -294,7 +298,7 @@ function wysiwyg_filter_get_style_property_groups() {
   $regexp_integer = '[-]?[0-9]{1,3}';
   $regexp_number = '[-]?(?:[0-9]{0,3}|[0-9]{0,3}\.[0-9]{1,4})';
   $regexp_length = $regexp_number . '(?:px|pt|em|ex|in|cm|mm|pc)?';
-  $regexp_percent = '[-]?[12]?[0-9]{1,2}%';
+  $regexp_percent = '[-]?[0-9]*[.]?[0-9]*%';
   $regexp_color = '#[a-fA-F0-9]{3}|#[a-fA-F0-9]{6}|rgb\(\s*[0-9]{0,3}%?(?:\s*,\s*[0-9]{0,3}%?){2}\s*\)|[a-zA-Z]+';
   $regexp_bgcolor = $regexp_color . '|transparent';
   $regexp_border_width = $regexp_length . '|thin|medium|thick';
@@ -388,6 +392,7 @@ function wysiwyg_filter_get_style_property_groups() {
         'border-right-style' => '(?:' . $regexp_border_style . ')',
         'border-bottom-style' => '(?:' . $regexp_border_style . ')',
         'border-left-style' => '(?:' . $regexp_border_style . ')',
+        'border-radius' => '(?:' . $regexp_length . ')',
       ),
     ),
     'dimension' => array(
@@ -419,7 +424,7 @@ function wysiwyg_filter_get_style_property_groups() {
       'title' => t('Layout properties'),
       'properties' => array(
         'clear' => '(?:left|right|both|none)',
-        'display' => '(?:none|inline|block|list-item|run-in|compact|marker|table-(?:(?:row|header|group|column)-group|row|column|cell|caption)|(?:inline-)?table)',
+        'display' => '(?:none|inline|inline-block|block|list-item|run-in|compact|marker|table-(?:(?:row|header|group|column)-group|row|column|cell|caption)|(?:inline-)?table)',
         'float' => '(?:left|right|none)',
         'position' => '(?:static|relative|absolute|fixed)',
         'visibility' => '(?:visible|hidden|collapse)',
@@ -475,6 +480,9 @@ function wysiwyg_filter_get_style_property_groups() {
     $groups['font']['properties']['font-family'] . ')';
   $groups['font']['properties']['font'] = '(?:' . $regexp . ')(?:(?:\s+' . $regexp . ')+)';
 
+  // Allow other modules to alter groups
+  drupal_alter('wysiwyg_filter_style_property_groups', $groups);
+
   return $groups;
 }
 
@@ -496,9 +504,12 @@ function wysiwyg_filter_get_filter_options($format_name, $settings) {
     'nofollow_domains' => $settings['nofollow_domains'],
   );
   foreach (wysiwyg_filter_get_advanced_rules() as $rule_key => $rule_info) {
-    $filter_options[$rule_key] = array();
-    foreach ($settings["rule_$rule_key"] as $rule) {
-      $filter_options[$rule_key][] = '`^' . str_replace("\xFF", $rule_info['asterisk_expansion'], preg_quote(str_replace('*', "\xFF", $rule), '`')) . '$`';
+    $filter_options["rule_bypass_$rule_key"] = !empty($settings["rule_bypass_$rule_key"]);
+    if (!$filter_options["rule_bypass_$rule_key"]) {
+      $filter_options[$rule_key] = array();
+      foreach ($settings["rule_$rule_key"] as $rule) {
+        $filter_options[$rule_key][] = '`^' . str_replace("\xFF", $rule_info['asterisk_expansion'], preg_quote(str_replace('*', "\xFF", $rule), '`')) . '$`';
+      }
     }
   }
   return $filter_options;
