@@ -1,0 +1,52 @@
+.pdf-canvas {
+  border:1px solid black;
+}
+
+.pdf-content canvas {
+  box-shadow: black 0 0 10px;
+}
+
+/* CSS classes used by TextLayerBuilder to style the text layer divs */
+
+.textLayer {
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  color: #000;
+  font-family: sans-serif;
+  overflow: hidden;
+}
+
+.textLayer > div {
+  color: transparent;
+  position: absolute;
+  line-height: 1;
+  white-space: pre;
+  cursor: text;
+}
+
+.textLayer .highlight {
+  margin: -1px;
+  padding: 1px;
+
+  background-color: rgba(180, 0, 170, 0.2);
+  border-radius: 4px;
+}
+
+.textLayer .highlight.begin {
+  border-radius: 4px 0 0 4px;
+}
+
+.textLayer .highlight.end {
+  border-radius: 0 4px 4px 0;
+}
+
+.textLayer .highlight.middle {
+  border-radius: 0;
+}
+
+.textLayer .highlight.selected {
+  background-color: rgba(0, 100, 0, 0.2);
+}

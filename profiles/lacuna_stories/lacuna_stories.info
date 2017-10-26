@@ -129,6 +129,9 @@ dependencies[] = workflow_access
 dependencies[] = workflow_views
 dependencies[] = workflowfield
 
+; PDF Rendering
+dependencies[] = pdf
+
 ; Lacuna Stories
 dependencies[] = features
 dependencies[] = lacuna_stories_system

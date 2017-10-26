@@ -1,0 +1,51 @@
+<?php
+
+/**
+ * @file
+ * Install file for PDF module.
+ */
+
+/**
+ * Implements hook_requirements().
+ *
+ * Set a status message to indicate if PDF.js library can be located.
+ */
+function pdf_requirements($phase) {
+  $requirements = array();
+
+  switch ($phase) {
+    case 'runtime':
+
+      // Check for the PDF.js library.
+      $pdfjs_lib = libraries_detect('pdf.js');
+
+      // PDF.js is working correctly.
+      if ($pdfjs_lib['installed']) {
+        $value = $pdfjs_lib['version'];
+        $description = FALSE;
+        $severity = REQUIREMENT_OK;
+      }
+      // PDF.js not found.
+      else {
+        $value = t('Not installed');
+        $description = t('PDF.js cannot be found. Download PDF.js from !pdfjs-site, and extract it into your Drupal libraries directory. The folder in your libraries folder must be named pdf.js. (!more-info)',
+          array(
+            '!pdfjs-site' => l('http://mozilla.github.io/pdf.js', 'http://mozilla.github.io/pdf.js/getting_started/#download'),
+            '!more-info' => l(t('more information'), 'https://www.drupal.org/project/pdf'),
+          )
+        );
+        $severity = REQUIREMENT_ERROR;
+      }
+
+      // Declare requirement to Drupal.
+      $requirements[] = array(
+        'title' => t('PDF.js'),
+        'value' => $value,
+        'description' => $description,
+        'severity' => $severity,
+      );
+      break;
+  }
+
+  return $requirements;
+}

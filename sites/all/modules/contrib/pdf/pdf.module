@@ -1,0 +1,88 @@
+<?php
+module_load_include('inc', 'pdf', '/includes/pdf.field');
+
+/**
+ * Implements hook_theme().
+ */
+function pdf_theme() {
+  $theme = array(
+    'pdf_formatter_default' => array(
+      'variables' => array(
+        'file' => NULL,
+        'keep_pdfjs' => NULL,
+        'width' => NULL,
+        'height' => NULL,
+      ),
+      'file' => 'includes/pdf.field.inc',
+    ),
+    'pdf_formatter_thumbnail' => array(
+      'variables' => array(
+        'file' => NULL,
+        'scale' => 1,
+        'width' => NULL,
+        'height' => NULL,
+      ),
+      'file' => 'includes/pdf.field.inc',
+    ),
+    'pdf_formatter_pages' => array(
+      'variables' => array(
+        'file' => NULL,
+        'scale' => 1,
+      ),
+      'file' => 'includes/pdf.field.inc',
+    ),
+  );
+  return $theme;
+}
+
+/**
+ * Implements hook_libraries_info().
+ */
+function pdf_libraries_info() {
+  $libraries = array();
+
+  $libraries['pdf.js'] = array(
+    'name' => 'pdf.js',
+    'vendor url' => 'http://mozilla.github.io/pdf.js/',
+    'download url' => 'http://mozilla.github.io/pdf.js/getting_started/#download',
+    //  For some reason, this argument caused the library to not
+    //  load, so I hard-coded the version number below instead.
+    //  ----------
+    //  'version arguments' => array(
+    //    'file' => 'build/pdf.js',
+    //    'pattern' => '/ersion\s=\s\'(.*)\'/',
+    //    'lines' => 32,
+    //  ),
+    //  ----------
+    'version' => '1.9.426',
+    'files' => array(
+      'js' => array(
+        'build/pdf.js',
+      ),
+    ),
+    'variants' => array(
+      'viewer' => array(
+        'files' => array(
+          'js' => array(
+            'build/pdf.js',
+            'web/viewer.js',
+          ),
+        ),
+      ),
+      // DEV.
+      'textlayer' => array(
+        'files' => array(
+          'js' => array(
+            'build/pdf.js',
+            'web/pdf_find_bar.js',
+            'web/pdf_find_controller.js',
+            'web/ui_utils.js',
+            'web/text_layer_builder.js',
+          ),
+        ),
+      ),
+    ),
+  );
+
+  return $libraries;
+}
