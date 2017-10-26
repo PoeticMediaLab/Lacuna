@@ -5,3 +5,4 @@ package = Lacuna Stories
 version = 7.x-1.0
 dependencies[] = course
 dependencies[] = lacuna_stories_materials
+dependencies[] = pdf

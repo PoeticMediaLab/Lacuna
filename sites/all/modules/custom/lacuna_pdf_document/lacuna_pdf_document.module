@@ -25,3 +25,28 @@ function lacuna_pdf_document_form_document_node_form_alter( &$form, &$form_state
     );
 
 }
+
+
+/*
+*   Implements hook_preprocess_node().  Adds a 'pdf-document' class
+*   to nodes with PDF content, and remove the PDF field if document
+*   type is set to text.
+*/
+
+function lacuna_pdf_document_preprocess_node( &$node ) {
+
+    if ( $node['type'] === 'document' ) {
+        $lang = $node['language'];
+        $is_pdf = $node['field_doc_type'][$lang][0]['value'];
+        if ( $is_pdf ) {
+            
+            $node['classes_array'][] = 'pdf-document';
+        
+        } else {
+
+            hide($node['content']['field_doc_pdf']);
+
+        }
+    }
+
+}
