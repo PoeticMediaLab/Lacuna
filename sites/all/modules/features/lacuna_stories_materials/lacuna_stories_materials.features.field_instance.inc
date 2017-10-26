@@ -131,10 +131,14 @@ function lacuna_stories_materials_field_default_field_instances() {
     'description' => 'The content of the document in PDF form.',
     'display' => array(
       'default' => array(
-        'label' => 'above',
-        'module' => 'file',
-        'settings' => array(),
-        'type' => 'file_default',
+        'label' => 'hidden',
+        'module' => 'pdf',
+        'settings' => array(
+          'height' => '100%',
+          'keep_pdfjs' => 1,
+          'width' => '100%',
+        ),
+        'type' => 'pdf_default',
         'weight' => 12,
       ),
       'teaser' => array(
@@ -239,10 +243,9 @@ function lacuna_stories_materials_field_default_field_instances() {
     'description' => 'The format of the document content.',
     'display' => array(
       'default' => array(
-        'label' => 'above',
-        'module' => 'list',
+        'label' => 'hidden',
         'settings' => array(),
-        'type' => 'list_default',
+        'type' => 'hidden',
         'weight' => 13,
       ),
       'teaser' => array(
