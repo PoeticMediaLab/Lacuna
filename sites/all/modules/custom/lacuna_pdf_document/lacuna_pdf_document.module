@@ -41,6 +41,7 @@ function lacuna_pdf_document_preprocess_node( &$node ) {
         if ( $is_pdf ) {
             
             $node['classes_array'][] = 'pdf-document';
+            hide($node['content']['field_doc_text']);
         
         } else {
 
