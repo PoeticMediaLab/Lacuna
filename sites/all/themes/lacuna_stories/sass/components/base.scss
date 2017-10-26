@@ -41,6 +41,24 @@ article.node {
   }
 }
 
+/*
+* Removes margin and padding for PDF documents.
+*/
+
+article.node.pdf-document {
+  padding-top: 0;
+  padding-bottom: 0;
+  .field {
+    margin-left: 0;
+    margin-right: 0;
+    margin-bottom: 0;
+    iframe.pdf {
+      display: block;
+      height: 1000px;
+    }
+  }
+}
+
 article.node-document {
   .field-type-text-long {
     min-height: 800px;
