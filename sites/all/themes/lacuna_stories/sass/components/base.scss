@@ -55,6 +55,9 @@ article.node.pdf-document {
     iframe.pdf {
       display: block;
       height: 1000px;
+      @media (max-width: 540px) {
+        height: 400px;
+      }
     }
   }
 }
