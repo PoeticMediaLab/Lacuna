@@ -1,0 +1,27 @@
+<?php
+
+/*
+*   Implements hook_form_alter().  Shows the appropriate document
+*   content field based on the selected document type.
+*/
+
+function lacuna_pdf_document_form_document_node_form_alter( &$form, &$form_state, &$form_id ) {
+
+    $doc_type_selector = ':input[name^="field_doc_type"]';
+    $form['field_doc_text']['#states'] = array(
+        'visible' => array(
+            $doc_type_selector => array(
+                'value' => '0',
+            ),
+        ),
+    );
+
+    $form['field_doc_pdf']['#states'] = array(
+        'visible' => array(
+            $doc_type_selector => array(
+                'value' => '1',
+            ),
+        ),
+    );
+
+}
