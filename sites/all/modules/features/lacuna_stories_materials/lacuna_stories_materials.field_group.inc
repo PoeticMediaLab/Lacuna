@@ -57,12 +57,12 @@ function lacuna_stories_materials_field_group_info() {
     'weight' => '1',
     'children' => array(
       0 => 'field_bibliographic_entry',
-      1 => 'field_doc_genre',
-      2 => 'field_medium',
-      3 => 'field_tags',
-      4 => 'group_content_access',
-      5 => 'field_status',
-      6 => 'field_copyright',
+      1 => 'field_copyright',
+      2 => 'field_doc_genre',
+      3 => 'field_medium',
+      4 => 'field_status',
+      5 => 'group_content_access',
+      6 => 'field_tags',
     ),
     'format_type' => 'fieldset',
     'format_settings' => array(
@@ -89,11 +89,12 @@ function lacuna_stories_materials_field_group_info() {
     'label' => 'Content',
     'weight' => '0',
     'children' => array(
-      0 => 'field_doc_attachment',
-      1 => 'field_doc_text',
-      2 => 'field_image',
-      3 => 'field_media',
+      0 => 'field_doc_text',
+      1 => 'field_image',
+      2 => 'field_media',
+      3 => 'field_doc_pdf',
       4 => 'title',
+      5 => 'field_doc_type',
     ),
     'format_type' => 'fieldset',
     'format_settings' => array(
@@ -146,8 +147,8 @@ function lacuna_stories_materials_field_group_info() {
     'weight' => '2',
     'children' => array(
       0 => 'field_priority',
-      1 => 'og_group_ref',
-      2 => 'field_unit',
+      1 => 'field_unit',
+      2 => 'og_group_ref',
     ),
     'format_type' => 'fieldset',
     'format_settings' => array(

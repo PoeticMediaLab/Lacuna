@@ -99,7 +99,7 @@ function lacuna_stories_materials_views_default_views() {
   $handler->display->display_options['fields']['path_1']['exclude'] = TRUE;
   $handler->display->display_options['fields']['path_1']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['path_1']['absolute'] = TRUE;
-  /* Field: Content: Image */
+  /* Field: Content: Cover Image */
   $handler->display->display_options['fields']['field_image']['id'] = 'field_image';
   $handler->display->display_options['fields']['field_image']['table'] = 'field_data_field_image';
   $handler->display->display_options['fields']['field_image']['field'] = 'field_image';
@@ -307,7 +307,7 @@ function lacuna_stories_materials_views_default_views() {
   $handler->display->display_options['fields']['path_1']['alter']['path'] = '[path]';
   $handler->display->display_options['fields']['path_1']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['path_1']['absolute'] = TRUE;
-  /* Field: Content: Image */
+  /* Field: Content: Cover Image */
   $handler->display->display_options['fields']['field_image']['id'] = 'field_image';
   $handler->display->display_options['fields']['field_image']['table'] = 'field_data_field_image';
   $handler->display->display_options['fields']['field_image']['field'] = 'field_image';
