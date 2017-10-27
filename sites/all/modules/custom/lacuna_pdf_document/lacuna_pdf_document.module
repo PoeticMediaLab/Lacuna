@@ -29,8 +29,8 @@ function lacuna_pdf_document_form_document_node_form_alter( &$form, &$form_state
 
 /*
 *   Implements hook_preprocess_node().  Adds a 'pdf-document' class
-*   to nodes with PDF content, and remove the PDF field if document
-*   type is set to text.
+*   to nodes with PDF content and removes the PDF field if document for text
+*   documents.
 */
 
 function lacuna_pdf_document_preprocess_node( &$node ) {
@@ -39,15 +39,48 @@ function lacuna_pdf_document_preprocess_node( &$node ) {
         $lang = $node['language'];
         $is_pdf = $node['field_doc_type'][$lang][0]['value'];
         if ( $is_pdf ) {
-            
             $node['classes_array'][] = 'pdf-document';
-            hide($node['content']['field_doc_text']);
-        
+            hide( $node['content']['field_doc_text'] );
         } else {
-
-            hide($node['content']['field_doc_pdf']);
-
+            hide( $node['content']['field_doc_pdf'] );
         }
     }
+
+}
+
+
+/*
+*   Implements hook_field_formatter_info().  Defines the PDF field
+*   type.
+*/
+
+function lacuna_pdf_document_field_formatter_info() {
+    return array(
+        'pdf_document_content' => array(
+            'label' => 'PDF Document Content',
+            'field types' => array('file'),
+        ),
+    );
+}
+
+
+/*
+*   Implements hook_field_formatter_view().  Inserts an iframe for
+*   the PDF viewer and injects the JS code that loads the PDF.
+*/
+
+function lacuna_pdf_document_field_formatter_view($entity_type, $entity, $field, $instance, $langcode, $items, $display) {
+    
+    //  Injects JavaScript
+    $js_url = drupal_get_path( 'module', 'lacuna_pdf_document' ) . '/lacuna_pdf_document.js';
+    drupal_add_js( $js_url, 'file' );
+    $pdf_url = file_create_url( $items[0]['uri'] );
+    drupal_add_js( array( 'lacuna_pdf_document' => array( 'url' => $pdf_url ) ), 'setting' );
+
+    //  Renders viewer
+    $viewer_url = base_path() . 'sites/all/libraries/pdf.js/web/viewer.html';
+    return array(
+        array( '#markup' => '<iframe class="pdf" width="100%" height="100%" src="' . $viewer_url . '"></iframe>' ),
+    );
 
 }
