@@ -17,7 +17,6 @@ dependencies[] = lacuna_stories_tags
 dependencies[] = media
 dependencies[] = menu
 dependencies[] = node
-dependencies[] = pdf
 dependencies[] = strongarm
 dependencies[] = taxonomy
 dependencies[] = text
