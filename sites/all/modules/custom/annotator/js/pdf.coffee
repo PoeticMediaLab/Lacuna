@@ -6,4 +6,8 @@ class Annotator.Plugin.PDF extends Annotator.Plugin
 
   pluginInit: ->
     return unless Annotator.supported()
-    console.log('PDF annotations enabled!')
+    Drupal.PDFDocument.loaded.then(() ->
+
+      console.log('PDF document loaded and ready for annotation!', Drupal.PDFDocument.PDFViewerApplication)
+
+    )

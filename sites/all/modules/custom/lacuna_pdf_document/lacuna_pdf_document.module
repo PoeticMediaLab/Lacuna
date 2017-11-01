@@ -78,7 +78,7 @@ function lacuna_pdf_document_field_formatter_view($entity_type, $entity, $field,
         array(
             '#markup' => '<iframe class="pdf" width="100%" height="100%"></iframe>',
             '#attached' => array( 'js' => array(
-                array( 'type' => 'file', 'data' => $js_url ),
+                array( 'type' => 'file', 'data' => $js_url, 'group' => JS_LIBRARY ),
                 array( 'type' => 'setting', 'data' => array( 'lacuna_pdf_document' => array(
                     'viewer_src_url' => $viewer_src_url,
                     'pdf_url' => $pdf_url,

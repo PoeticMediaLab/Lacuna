@@ -17,7 +17,9 @@
       if (!Annotator.supported()) {
         return;
       }
-      return console.log('PDF annotations enabled!');
+      return Drupal.PDFDocument.loaded.then(function() {
+        return console.log('PDF document loaded and ready for annotation!', Drupal.PDFDocument.PDFViewerApplication);
+      });
     };
 
     return PDF;

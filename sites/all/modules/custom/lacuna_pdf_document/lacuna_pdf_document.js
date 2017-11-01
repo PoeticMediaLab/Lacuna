@@ -6,35 +6,33 @@
 
 (function() {
 
+    Drupal.behaviors.pdfDocument = {
+        attach: function() {
 
-    /*
-    *   References to the PDFJS library and the PDFViewerApplication
-    *   inside the iframe.
-    */
+            Drupal.PDFDocument = {}
+            Drupal.PDFDocument.loaded = Promise.resolve()
+            .then(function() {
 
-    var PDFJS, PDFViewerApplication
+                var viewer = document.querySelector('iframe.pdf')
+                var viewer_src_url = Drupal.settings.lacuna_pdf_document.viewer_src_url
+                var pdf_url = Drupal.settings.lacuna_pdf_document.pdf_url
+                viewer.src = viewer_src_url + '?file='
+                return new Promise(function(resolve) {
+                    
+                    viewer.addEventListener('load', function() {
 
+                        Drupal.PDFDocument.PDFJS = viewer.contentWindow.PDFJS
+                        Drupal.PDFDocument.PDFViewerApplication = viewer.contentWindow.PDFViewerApplication
+                        Drupal.PDFDocument.PDFViewerApplication.open(pdf_url)
+                        resolve()
+                        
+                    })
 
-    /*
-    *   Once the page and PDF-rendering iframe have loaded, gathers
-    *   references to the PDFJS library and PDFViewerApplication and
-    *   loads the content PDF.
-    */
+                })
 
-    document.addEventListener('DOMContentLoaded', function() {
+            })
 
-        var viewer = document.querySelector('iframe.pdf')
-        var viewer_src_url = Drupal.settings.lacuna_pdf_document.viewer_src_url
-        var pdf_url = Drupal.settings.lacuna_pdf_document.pdf_url
-        viewer.src = viewer_src_url + '?file='/* + encodeURIComponent(pdf_url)*/
-        viewer.addEventListener('load', function() {
-
-            PDFJS = viewer.contentWindow.PDFJS
-            PDFViewerApplication = viewer.contentWindow.PDFViewerApplication
-            PDFViewerApplication.open(pdf_url)
-            
-        })
-        
-    })
+        }
+    }
 
 })()
