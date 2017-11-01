@@ -6,33 +6,72 @@
 
 (function() {
 
-    Drupal.behaviors.pdfDocument = {
+    Drupal.behaviors.pdfDocumentView = {
         attach: function() {
 
-            Drupal.PDFDocument = {}
-            Drupal.PDFDocument.loaded = Promise.resolve()
-            .then(function() {
-
-                var viewer = document.querySelector('iframe.pdf')
-                var viewer_src_url = Drupal.settings.lacuna_pdf_document.viewer_src_url
-                var pdf_url = Drupal.settings.lacuna_pdf_document.pdf_url
-                viewer.src = viewer_src_url + '?file='
-                return new Promise(function(resolve) {
-                    
-                    viewer.addEventListener('load', function() {
-
-                        Drupal.PDFDocument.PDFJS = viewer.contentWindow.PDFJS
-                        Drupal.PDFDocument.PDFViewerApplication = viewer.contentWindow.PDFViewerApplication
-                        Drupal.PDFDocument.PDFViewerApplication.open(pdf_url)
-                        resolve()
-                        
-                    })
-
-                })
-
-            })
+            Drupal.PDFDocumentView = {}
+            Drupal.PDFDocumentView.loaded = Promise.resolve()
+            .then(loadPDFViewer)
+            .then(loadPDFInViewer)
+            .then(getPDFPages)
 
         }
     }
+
+
+    /*
+    *   Sets the iframe src attribute to load the PDF viewer, returning
+    *   a promise for the iframe finishing loading its contents.
+    */
+
+    function loadPDFViewer() {
+
+        var viewer = document.querySelector('iframe.pdf')
+        var viewer_src_url = Drupal.settings.lacuna_pdf_document.viewer_src_url
+        viewer.src = viewer_src_url + '?file='
+        return new Promise(function(resolve) {
+            
+            viewer.addEventListener('load', function() {
+                Drupal.PDFDocumentView.PDFJS = viewer.contentWindow.PDFJS
+                Drupal.PDFDocumentView.PDFViewerApplication = viewer.contentWindow.PDFViewerApplication
+                resolve()
+            })
+        
+        })
+
+    }
+
+
+    /*
+    *   Loads the document PDF into the PDF viewer, returning a
+    *   promise for the document completing loading.
+    */
+
+    function loadPDFInViewer() {
+
+        var viewer = Drupal.PDFDocumentView.PDFViewerApplication
+        var pdf_url = Drupal.settings.lacuna_pdf_document.pdf_url
+        return viewer.open(pdf_url)
+        .then(function() { return viewer.pdfLoadingTask })
+
+    }
+
+
+    /*
+    *   Waits for the pages to load and then saves a reference to the
+    *   internal _pages array of the PDFViewerApplication to Drupal.PDFDocumentView.
+    *   WARNING: makes use of internal API of demo viewer; be careful
+    *   when updating pdf.js package.
+    */
+
+    function getPDFPages() {
+
+        var viewer = Drupal.PDFDocumentView.PDFViewerApplication
+        return viewer.pdfViewer.pagesPromise.then(function() {
+            Drupal.PDFDocumentView.pdfPages = viewer.pdfViewer._pages
+        })
+
+    }
+
 
 })()
