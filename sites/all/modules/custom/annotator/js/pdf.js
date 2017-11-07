@@ -13,7 +13,9 @@
       return PDF.__super__.constructor.apply(this, arguments);
     }
 
-    PDF.prototype.ANNOTATION_LAYER_MARKUP = '<div class="pdf-annotation-layer" style="position: absolute; top: 0; right: 0; bottom: 0; left: 0; z-index: 1;"></div>';
+    PDF.prototype.ANNOTATION_LAYER_MARKUP = '<div class="pdf-annotation-layer"></div>';
+
+    PDF.prototype.ANNOTATION_MARKUP = '<div class="pdf-annotation"></div>';
 
     PDF.prototype.DRAG_THRESHOLD = 5;
 
@@ -24,7 +26,8 @@
       return Drupal.PDFDocumentView.loaded.then((function(_this) {
         return function() {
           _this.annotationLayers = _this.createAnnotationLayers();
-          return _this.listenForInteraction();
+          _this.listenForInteraction();
+          return _this.enableAnnotationCreation();
         };
       })(this));
     };
@@ -32,66 +35,59 @@
     PDF.prototype.createAnnotationLayers = function() {
       return Drupal.PDFDocumentView.pdfPages.map((function(_this) {
         return function(page) {
-          var annotationLayer, t;
-          t = document.createElement('div');
-          t.innerHTML = _this.ANNOTATION_LAYER_MARKUP;
-          return annotationLayer = page.div.appendChild(t.firstChild);
+          var $annotationLayer;
+          $annotationLayer = $(_this.ANNOTATION_LAYER_MARKUP);
+          $(page.div).append($annotationLayer);
+          return $annotationLayer[0];
         };
       })(this));
     };
 
     PDF.prototype.listenForInteraction = function() {
-      var dragging, mouseDown, mousedownCoordinates;
+      var dragging, mouseDown, mousedownAnnotationLayer, mousedownCoordinates;
       mouseDown = false;
       dragging = false;
+      mousedownAnnotationLayer = null;
       mousedownCoordinates = null;
       return $(this.annotationLayers).on('mousedown mousemove mouseup', (function(_this) {
         return function(event) {
-          var coordinates, page, rect;
-          page = _this.annotationLayers.indexOf(event.target);
-          rect = event.target.getBoundingClientRect();
+          var annotationLayer, coordinates, eventParameters, pageNumber, rect;
+          annotationLayer = mousedownAnnotationLayer || event.currentTarget;
+          pageNumber = _this.annotationLayers.indexOf(annotationLayer);
+          rect = annotationLayer.getBoundingClientRect();
           coordinates = {
             x: event.clientX - rect.x,
             y: event.clientY - rect.y
           };
+          eventParameters = {
+            annotationLayer: annotationLayer,
+            pageNumber: pageNumber,
+            coordinates: coordinates
+          };
           if (event.type === 'mousedown') {
             mouseDown = true;
+            mousedownAnnotationLayer = annotationLayer;
             mousedownCoordinates = coordinates;
           }
           if (event.type === 'mouseup') {
             mouseDown = false;
+            mousedownAnnotationLayer = null;
             mousedownCoordinates = null;
             if (dragging) {
               dragging = false;
-              _this.publish('pdf-dragend', {
-                event: event,
-                page: page,
-                coordinates: coordinates
-              });
+              _this.publish('pdf-dragend', eventParameters);
             } else {
-              _this.publish('pdf-click', {
-                event: event,
-                page: page,
-                coordinates: coordinates
-              });
+              _this.publish('pdf-click', eventParameters);
             }
           }
           if (mouseDown && event.type === 'mousemove') {
             if (!dragging) {
               if (_this.checkDragThreshold(coordinates, mousedownCoordinates)) {
                 dragging = true;
-                return _this.publish('pdf-dragstart', {
-                  event: event,
-                  page: page,
-                  coordinates: coordinates
-                });
+                return _this.publish('pdf-dragstart', eventParameters);
               }
             } else {
-              return _this.publish('pdf-dragmove', {
-                event: event,
-                page: page,
-                coordinates: coordinates
-              });
+              return _this.publish('pdf-dragmove', eventParameters);
             }
           }
         };
@@ -103,6 +99,38 @@
       x = current.x > down.x + this.DRAG_THRESHOLD || current.x < down.x - this.DRAG_THRESHOLD;
       y = current.y > down.y + this.DRAG_THRESHOLD || current.y < down.y - this.DRAG_THRESHOLD;
       return x || y;
+    };
+
+    PDF.prototype.enableAnnotationCreation = function() {
+      var $newAnnotation, pageNumber, startCoordinates;
+      $newAnnotation = null;
+      pageNumber = null;
+      startCoordinates = null;
+      this.subscribe('pdf-dragstart', (function(_this) {
+        return function(eventParameters) {
+          pageNumber = eventParameters.pageNumber;
+          startCoordinates = eventParameters.coordinates;
+          $newAnnotation = $(_this.ANNOTATION_MARKUP).addClass('new-annotation');
+          $newAnnotation.css('left', eventParameters.coordinates.x);
+          $newAnnotation.css('top', eventParameters.coordinates.y);
+          return $(eventParameters.annotationLayer).append($newAnnotation);
+        };
+      })(this));
+      this.subscribe('pdf-dragmove', (function(_this) {
+        return function(eventParameters) {
+          $newAnnotation.css('width', eventParameters.coordinates.x - startCoordinates.x);
+          return $newAnnotation.css('height', eventParameters.coordinates.y - startCoordinates.y);
+        };
+      })(this));
+      return this.subscribe('pdf-dragend', (function(_this) {
+        return function(eventParameters) {
+          $newAnnotation.removeClass('new-annotation');
+          console.log(pageNumber, [startCoordinates, eventParameters.coordinates]);
+          $newAnnotation = null;
+          pageNumber = null;
+          return startCoordinates = null;
+        };
+      })(this));
     };
 
     return PDF;

@@ -28,10 +28,16 @@
 
         var viewer = document.querySelector('iframe.pdf')
         var viewer_src_url = Drupal.settings.lacuna_pdf_document.viewer_src_url
+        var viewer_style_url = Drupal.settings.lacuna_pdf_document.viewer_style_url
         viewer.src = viewer_src_url + '?file='
         return new Promise(function(resolve) {
             
             viewer.addEventListener('load', function() {
+                var styleElement = document.createElement('link')
+                styleElement.href = viewer_style_url
+                styleElement.rel = 'stylesheet'
+                styleElement.type = 'text/css'
+                viewer.contentDocument.head.appendChild(styleElement)
                 Drupal.PDFDocumentView.PDFJS = viewer.contentWindow.PDFJS
                 Drupal.PDFDocumentView.PDFViewerApplication = viewer.contentWindow.PDFViewerApplication
                 resolve()

@@ -1,0 +1,32 @@
+/*
+* PDF annotation styles.  Since iframes aren't affected by CSS rules
+* applied to their parent document, the resultant CSS file must be
+* manually imported into the PDF viewer iframe.
+*/
+
+.pdf-annotation-layer {
+  
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 1;
+
+  .pdf-annotation {
+    
+    position: absolute;
+    background-color: rgba(74, 150, 226, .25);
+    border: 1px solid rgba(74, 150, 226, 0);
+    border-radius: 2px;
+    transition: background-color .25s, border .25s;
+
+    &.new-annotation,
+    &:hover {
+      background-color: rgba(74, 150, 226, .5);
+      border: 1px solid rgba(74, 150, 226, .75);
+    }
+  
+  }
+
+}
