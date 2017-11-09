@@ -102,35 +102,65 @@
     };
 
     PDF.prototype.enableAnnotationCreation = function() {
-      var $newAnnotation, pageNumber, startCoordinates;
-      $newAnnotation = null;
+      var $newAnnotationElement, pageNumber, startCoordinates;
+      $newAnnotationElement = null;
       pageNumber = null;
       startCoordinates = null;
       this.subscribe('pdf-dragstart', (function(_this) {
         return function(eventParameters) {
           pageNumber = eventParameters.pageNumber;
           startCoordinates = eventParameters.coordinates;
-          $newAnnotation = $(_this.ANNOTATION_MARKUP).addClass('new-annotation');
-          $newAnnotation.css('left', eventParameters.coordinates.x);
-          $newAnnotation.css('top', eventParameters.coordinates.y);
-          return $(eventParameters.annotationLayer).append($newAnnotation);
+          $newAnnotationElement = $(_this.ANNOTATION_MARKUP).addClass('new-annotation');
+          $newAnnotationElement.css('left', eventParameters.coordinates.x);
+          $newAnnotationElement.css('top', eventParameters.coordinates.y);
+          return $(eventParameters.annotationLayer).append($newAnnotationElement);
         };
       })(this));
       this.subscribe('pdf-dragmove', (function(_this) {
         return function(eventParameters) {
-          $newAnnotation.css('width', eventParameters.coordinates.x - startCoordinates.x);
-          return $newAnnotation.css('height', eventParameters.coordinates.y - startCoordinates.y);
+          var height, width;
+          width = eventParameters.coordinates.x - startCoordinates.x;
+          height = eventParameters.coordinates.y - startCoordinates.y;
+          $newAnnotationElement.css('width', width > 0 ? width : 0);
+          return $newAnnotationElement.css('height', height > 0 ? height : 0);
         };
       })(this));
       return this.subscribe('pdf-dragend', (function(_this) {
         return function(eventParameters) {
-          $newAnnotation.removeClass('new-annotation');
-          console.log(pageNumber, [startCoordinates, eventParameters.coordinates]);
-          $newAnnotation = null;
+          var annotation, endX, endY, height, ref, ref1, startX, startY, v, width;
+          v = Drupal.PDFDocumentView.pdfPages[pageNumber].viewport;
+          ref = v.convertToPdfPoint(startCoordinates.x, startCoordinates.y), startX = ref[0], startY = ref[1];
+          ref1 = v.convertToPdfPoint(eventParameters.coordinates.x, eventParameters.coordinates.y), endX = ref1[0], endY = ref1[1];
+          width = endX - startX;
+          height = endY - startY;
+          if (width > 0 && height < 0) {
+            annotation = _this.annotator.createAnnotation();
+            annotation.pdfRange = {
+              pageNumber: pageNumber,
+              startX: startX,
+              startY: startY,
+              width: width,
+              height: height
+            };
+            _this.openEditor(annotation, $newAnnotationElement);
+          } else {
+            $newAnnotationElement.remove();
+          }
+          $newAnnotationElement = null;
           pageNumber = null;
           return startCoordinates = null;
         };
       })(this));
+    };
+
+    PDF.prototype.openEditor = function(annotation, $element) {
+      var bottom, editorLocation, left, ref, right, top;
+      ref = $element[0].getBoundingClientRect(), top = ref.top, left = ref.left, bottom = ref.bottom, right = ref.right;
+      editorLocation = {
+        top: (top + bottom) / 2,
+        left: (left + right) / 2
+      };
+      return this.annotator.showEditor(annotation, editorLocation);
     };
 
     return PDF;
