@@ -152,7 +152,24 @@ function DashboardView(model, settings){
 		.domain([1,51,101])
 		.range(['Zero','Short','Medium','Long']);
 	self.dashboard_width = 1162; 
-	
+
+    var scale_dashboard = function() {
+    	var container = document.querySelector('#annotations_dashboard');
+    	var inner_container = container.querySelector('#dashboard');
+
+      	var container_width = container.getBoundingClientRect().width;
+
+		if (container_width < self.dashboard_width) {
+
+			var ratio = container_width / self.dashboard_width;
+			inner_container.style.transform = 'scale(' + ratio + ')';
+
+		} else inner_container.style.transform = 'none';
+    };
+
+    scale_dashboard();
+    window.addEventListener('resize', scale_dashboard);
+
 	
 	if (settings.config.size.graph.width) {
 		self.size.graph.width = settings.config.size.graph.width;
