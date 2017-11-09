@@ -19,8 +19,15 @@ class Annotator.Plugin.PDF extends Annotator.Plugin
 
   # Called after plugin initialization.
   pluginInit: ->
-    
+
     return unless Annotator.supported()
+    
+    # Listens for annotations loaded from API and draws them on
+    # the PDF annotation layers.
+    @subscribe('annotationsLoaded', (annotations) =>
+      @drawExistingAnnotations(annotations)
+    )
+
     Drupal.PDFDocumentView.loaded.then(=>
 
       # Finds the viewer iframe
@@ -37,7 +44,6 @@ class Annotator.Plugin.PDF extends Annotator.Plugin
       @enableAnnotationCreation()
 
       # TODO:
-      # - save annotations
       # - render existing PDF annotations on each page
       # - re-render PDF annotations when canvases are destroyed
       # - update cursors for creating, hovering and editing annotations
@@ -158,10 +164,8 @@ class Annotator.Plugin.PDF extends Annotator.Plugin
       width = endX - startX
       height = endY - startY
       if width > 0 and height < 0
-        annotation = @annotator.createAnnotation()
-        annotation.highlights = []
-        annotation.pdfRange = { pageNumber, startX, startY, width, height }
-        @openEditor(annotation, $newAnnotationElement)
+        pdfRange = { pageNumber, startX, startY, width, height }
+        @createAndEditAnnotation(pdfRange, $newAnnotationElement)
       
       else
         $newAnnotationElement.remove()
@@ -173,20 +177,42 @@ class Annotator.Plugin.PDF extends Annotator.Plugin
     )
 
 
+  # Creates a new annotation from the supplied range, then opens
+  # the editor with it.
+  createAndEditAnnotation: (pdfRange, $newAnnotationElement) ->
+
+    # Creates new annotation
+    annotation = @annotator.createAnnotation()
+    annotation.pdfRange = pdfRange
+    
+    # Initializes required fields, otherwise core code throws errors
+    annotation.quote      = []
+    annotation.ranges     = []
+    annotation.highlights = []
+
+    onSave = =>
+      @publish('annotationCreated', [annotation])
+
+    onCancel = =>
+      $newAnnotationElement.remove()
+
+    @openEditor(annotation, $newAnnotationElement, onSave, onCancel)
+
+
   # Opens the editor given an element and associated annotation,
   # listening for save/cancel events.
-  openEditor: (annotation, $element) ->
+  openEditor: (annotation, $annotationElement, onSave, onCancel) ->
     $(@$viewerIframe[0].contentDocument).find('#viewerContainer').css({ overflow: 'hidden' })
-    { top, left, bottom, right } = $element[0].getBoundingClientRect()
+    { top, left, bottom, right } = $annotationElement[0].getBoundingClientRect()
     editorLocation = { top: (top + bottom) / 2, left: (left + right) / 2 }
     
     save = =>
       cleanup()
-      @publish('annotationCreated', [annotation])
+      onSave()
 
     cancel = =>
       cleanup()
-      $element.remove()
+      onCancel()
 
     cleanup = =>
       $(@$viewerIframe[0].contentDocument).find('#viewerContainer').css({ overflow: 'auto' })
@@ -196,3 +222,8 @@ class Annotator.Plugin.PDF extends Annotator.Plugin
     @subscribe('annotationEditorHidden', cancel)
     @subscribe('annotationEditorSubmit', save)
     @annotator.showEditor(annotation, editorLocation)
+
+
+  # Renders existing annotations on the PDF annotation layers.
+  drawExistingAnnotations: (annotations) ->
+    console.log(annotations)

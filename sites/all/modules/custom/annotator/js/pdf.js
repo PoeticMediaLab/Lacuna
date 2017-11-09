@@ -23,6 +23,11 @@
       if (!Annotator.supported()) {
         return;
       }
+      this.subscribe('annotationsLoaded', (function(_this) {
+        return function(annotations) {
+          return _this.drawExistingAnnotations(annotations);
+        };
+      })(this));
       return Drupal.PDFDocumentView.loaded.then((function(_this) {
         return function() {
           _this.$viewerIframe = $('iframe.pdf');
@@ -128,23 +133,21 @@
       })(this));
       return this.subscribe('pdf-dragend', (function(_this) {
         return function(eventParameters) {
-          var annotation, endX, endY, height, ref, ref1, startX, startY, v, width;
+          var endX, endY, height, pdfRange, ref, ref1, startX, startY, v, width;
           v = Drupal.PDFDocumentView.pdfPages[pageNumber].viewport;
           ref = v.convertToPdfPoint(startCoordinates.x, startCoordinates.y), startX = ref[0], startY = ref[1];
           ref1 = v.convertToPdfPoint(eventParameters.coordinates.x, eventParameters.coordinates.y), endX = ref1[0], endY = ref1[1];
           width = endX - startX;
           height = endY - startY;
           if (width > 0 && height < 0) {
-            annotation = _this.annotator.createAnnotation();
-            annotation.highlights = [];
-            annotation.pdfRange = {
+            pdfRange = {
               pageNumber: pageNumber,
               startX: startX,
               startY: startY,
               width: width,
               height: height
             };
-            _this.openEditor(annotation, $newAnnotationElement);
+            _this.createAndEditAnnotation(pdfRange, $newAnnotationElement);
           } else {
             $newAnnotationElement.remove();
           }
@@ -155,12 +158,32 @@
       })(this));
     };
 
-    PDF.prototype.openEditor = function(annotation, $element) {
+    PDF.prototype.createAndEditAnnotation = function(pdfRange, $newAnnotationElement) {
+      var annotation, onCancel, onSave;
+      annotation = this.annotator.createAnnotation();
+      annotation.pdfRange = pdfRange;
+      annotation.quote = [];
+      annotation.ranges = [];
+      annotation.highlights = [];
+      onSave = (function(_this) {
+        return function() {
+          return _this.publish('annotationCreated', [annotation]);
+        };
+      })(this);
+      onCancel = (function(_this) {
+        return function() {
+          return $newAnnotationElement.remove();
+        };
+      })(this);
+      return this.openEditor(annotation, $newAnnotationElement, onSave, onCancel);
+    };
+
+    PDF.prototype.openEditor = function(annotation, $annotationElement, onSave, onCancel) {
       var bottom, cancel, cleanup, editorLocation, left, ref, right, save, top;
       $(this.$viewerIframe[0].contentDocument).find('#viewerContainer').css({
         overflow: 'hidden'
       });
-      ref = $element[0].getBoundingClientRect(), top = ref.top, left = ref.left, bottom = ref.bottom, right = ref.right;
+      ref = $annotationElement[0].getBoundingClientRect(), top = ref.top, left = ref.left, bottom = ref.bottom, right = ref.right;
       editorLocation = {
         top: (top + bottom) / 2,
         left: (left + right) / 2
@@ -168,13 +191,13 @@
       save = (function(_this) {
         return function() {
           cleanup();
-          return _this.publish('annotationCreated', [annotation]);
+          return onSave();
         };
       })(this);
       cancel = (function(_this) {
         return function() {
           cleanup();
-          return $element.remove();
+          return onCancel();
         };
       })(this);
       cleanup = (function(_this) {
@@ -189,6 +212,10 @@
       this.subscribe('annotationEditorHidden', cancel);
       this.subscribe('annotationEditorSubmit', save);
       return this.annotator.showEditor(annotation, editorLocation);
+    };
+
+    PDF.prototype.drawExistingAnnotations = function(annotations) {
+      return console.log(annotations);
     };
 
     return PDF;
