@@ -25,6 +25,7 @@
       }
       return Drupal.PDFDocumentView.loaded.then((function(_this) {
         return function() {
+          _this.$viewerIframe = $('iframe.pdf');
           _this.annotationLayers = _this.createAnnotationLayers();
           _this.listenForInteraction();
           return _this.enableAnnotationCreation();
@@ -135,6 +136,7 @@
           height = endY - startY;
           if (width > 0 && height < 0) {
             annotation = _this.annotator.createAnnotation();
+            annotation.highlights = [];
             annotation.pdfRange = {
               pageNumber: pageNumber,
               startX: startX,
@@ -154,12 +156,38 @@
     };
 
     PDF.prototype.openEditor = function(annotation, $element) {
-      var bottom, editorLocation, left, ref, right, top;
+      var bottom, cancel, cleanup, editorLocation, left, ref, right, save, top;
+      $(this.$viewerIframe[0].contentDocument).find('#viewerContainer').css({
+        overflow: 'hidden'
+      });
       ref = $element[0].getBoundingClientRect(), top = ref.top, left = ref.left, bottom = ref.bottom, right = ref.right;
       editorLocation = {
         top: (top + bottom) / 2,
         left: (left + right) / 2
       };
+      save = (function(_this) {
+        return function() {
+          cleanup();
+          return _this.publish('annotationCreated', [annotation]);
+        };
+      })(this);
+      cancel = (function(_this) {
+        return function() {
+          cleanup();
+          return $element.remove();
+        };
+      })(this);
+      cleanup = (function(_this) {
+        return function() {
+          $(_this.$viewerIframe[0].contentDocument).find('#viewerContainer').css({
+            overflow: 'auto'
+          });
+          _this.unsubscribe('annotationEditorHidden', cancel);
+          return _this.unsubscribe('annotationEditorSubmit', save);
+        };
+      })(this);
+      this.subscribe('annotationEditorHidden', cancel);
+      this.subscribe('annotationEditorSubmit', save);
       return this.annotator.showEditor(annotation, editorLocation);
     };
 

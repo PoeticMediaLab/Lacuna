@@ -23,6 +23,9 @@ class Annotator.Plugin.PDF extends Annotator.Plugin
     return unless Annotator.supported()
     Drupal.PDFDocumentView.loaded.then(=>
 
+      # Finds the viewer iframe
+      @$viewerIframe = $('iframe.pdf')
+
       # Adds a layer over the page <canvas> elements to hold annotations.
       @annotationLayers = @createAnnotationLayers()
 
@@ -156,6 +159,7 @@ class Annotator.Plugin.PDF extends Annotator.Plugin
       height = endY - startY
       if width > 0 and height < 0
         annotation = @annotator.createAnnotation()
+        annotation.highlights = []
         annotation.pdfRange = { pageNumber, startX, startY, width, height }
         @openEditor(annotation, $newAnnotationElement)
       
@@ -169,8 +173,26 @@ class Annotator.Plugin.PDF extends Annotator.Plugin
     )
 
 
-  # Opens the editor given an element and associated annotation.
+  # Opens the editor given an element and associated annotation,
+  # listening for save/cancel events.
   openEditor: (annotation, $element) ->
+    $(@$viewerIframe[0].contentDocument).find('#viewerContainer').css({ overflow: 'hidden' })
     { top, left, bottom, right } = $element[0].getBoundingClientRect()
     editorLocation = { top: (top + bottom) / 2, left: (left + right) / 2 }
+    
+    save = =>
+      cleanup()
+      @publish('annotationCreated', [annotation])
+
+    cancel = =>
+      cleanup()
+      $element.remove()
+
+    cleanup = =>
+      $(@$viewerIframe[0].contentDocument).find('#viewerContainer').css({ overflow: 'auto' })
+      @unsubscribe('annotationEditorHidden', cancel)
+      @unsubscribe('annotationEditorSubmit', save)
+
+    @subscribe('annotationEditorHidden', cancel)
+    @subscribe('annotationEditorSubmit', save)
     @annotator.showEditor(annotation, editorLocation)
