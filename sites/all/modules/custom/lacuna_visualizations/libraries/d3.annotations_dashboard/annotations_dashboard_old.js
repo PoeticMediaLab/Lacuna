@@ -268,10 +268,10 @@ function main(data) {
 				column: {user: 100, doc: 450}	// X coords for the two columns
 				};
 
-	// TODO: loop through settings; overwrite matching variables
-	// for (var key in settings) {
-	// 	// console.log(key, 'settings key');
-	// }
+	TODO: loop through settings; overwrite matching variables
+	for (var key in settings) {
+		// console.log(key, 'settings key');
+	}
 	if (settings.config.size.graph.width) {
 		size.graph.width = settings.config.size.graph.width;
 	}
@@ -1101,7 +1101,6 @@ function main(data) {
   * width of the dashboard contents.
   */
   function enableDynamicResizing() {
-    
     /*
     * Widths are hard-coded in because
     * they're pretty tricky to determine programmatically, and I
@@ -1136,7 +1135,7 @@ function main(data) {
 	update();
 	label_pie_charts();	// only need to label them once
 	manageURLQuery();
-  enableDynamicResizing();
+  	enableDynamicResizing();
 } // end main()
 } // Drupal.d3.annotations
 })(jQuery);	// End of Drupal wrapper

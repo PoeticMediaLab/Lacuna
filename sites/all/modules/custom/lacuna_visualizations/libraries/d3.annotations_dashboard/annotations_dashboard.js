@@ -9,7 +9,7 @@
 function DashboardModel(settings){
 	var self = this;
 	self.data = Array();
-	self.all = self.data;
+	self.all = Array();
 	self.timeFilter = null;
 
 	d3.json(settings.config.data_url, function (error, original_data) { // MODEL
@@ -19,9 +19,11 @@ function DashboardModel(settings){
         console.error(error);
       } else {
         self.data = self.data.push(original_data);
-        self.all = self.original_data;
+        self.all = self.all.push(original_data);
       }
     });	
+
+    console.log(self.data);
 }
 
 DashboardModel.prototype = {
@@ -53,11 +55,41 @@ DashboardModel.prototype = {
 	},
 
 	init_graph: function () {
+		var nodes = Array();
+		var edges = Array();
+		var nodes_unique = Array();	// tracks unique nodes
+		var edges_unique = Array();	// tracks unique edges
+		this.current().forEach(function (a) {
+			// Add nodes into lookup table and the nodes array
+			// The "type" attribute is *very* important
+			var source = this.add_to_graph(nodes_unique, nodes, a.username, {type: "user", uid : a.uid});
+			var target = this.add_to_graph(nodes_unique, nodes, a.documentTitle, {type: "doc", doc_id : a.doc_id});
 
+			// Add new edges, combine duplicate edges and increment weight & count
+			var edge_id = source.id + "," + target.id;
+			var edge = {source: source,
+						target: target,
+						id: edge_id,
+						count: 1};
+			edge = this.add_to_graph(edges_unique, edges, edge_id, edge);
+		});
+		return {nodes: nodes, edges: edges};
 	}, 
 
-	add_to_graph: function () {
-
+	add_to_graph: function (map, list, key, data) {
+		var item = data || {};
+		if (typeof key === "undefined" || !key) {
+			key = "Unknown";
+		}
+		if (typeof map[key] === "undefined") {
+			item.id = key;
+			item.count = 1;
+			list.push(item);	// it's just easier to also make the array here
+			map[key] = item;
+		} else {
+			map[key].count++;	// for annotation counts
+		}
+		return(map[key]);
 	},
 
 	gen_pie_nodes: function () {
@@ -151,8 +183,15 @@ function DashboardView(model, settings){
 	self.text_length_scale = d3.scale.threshold()
 		.domain([1,51,101])
 		.range(['Zero','Short','Medium','Long']);
-	self.dashboard_width = 1162; 
+	
 
+    /*
+    * Widths are hard-coded in because
+    * they're pretty tricky to determine programmatically, and I
+    * thought this way would actually be more maintainable than
+    * including a bunch of complex queries.
+    */
+	self.dashboard_width = 1162; 
     var scale_dashboard = function() {
     	var container = document.querySelector('#annotations_dashboard');
     	var inner_container = container.querySelector('#dashboard');
