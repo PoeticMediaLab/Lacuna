@@ -114,7 +114,7 @@ function lacuna_stories_annotations_strongarm() {
     'extra_fields' => array(
       'form' => array(
         'path' => array(
-          'weight' => '11',
+          'weight' => '12',
         ),
       ),
       'display' => array(),

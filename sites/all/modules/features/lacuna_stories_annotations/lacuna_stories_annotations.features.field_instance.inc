@@ -130,6 +130,50 @@ function lacuna_stories_annotations_field_default_field_instances() {
     ),
   );
 
+  // Exported field_instance: 'node-annotation-field_annotation_pdf_range'.
+  $field_instances['node-annotation-field_annotation_pdf_range'] = array(
+    'bundle' => 'annotation',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'text',
+        'settings' => array(),
+        'type' => 'text_default',
+        'weight' => 11,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_annotation_pdf_range',
+    'label' => 'PDF Range',
+    'required' => 0,
+    'settings' => array(
+      'text_processing' => 0,
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'text',
+      'settings' => array(
+        'maxlength_js' => '',
+        'maxlength_js_enforce' => 0,
+        'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
+        'maxlength_js_truncate_html' => 0,
+        'rows' => 5,
+      ),
+      'type' => 'text_textarea',
+      'weight' => 10,
+    ),
+  );
+
   // Exported field_instance: 'node-annotation-field_annotation_quote'.
   $field_instances['node-annotation-field_annotation_quote'] = array(
     'bundle' => 'annotation',
@@ -180,7 +224,7 @@ function lacuna_stories_annotations_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 13,
+        'weight' => 10,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -245,7 +289,7 @@ function lacuna_stories_annotations_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'entityreference_autocomplete',
-      'weight' => 10,
+      'weight' => 11,
     ),
   );
 
@@ -299,7 +343,7 @@ function lacuna_stories_annotations_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 12,
+        'weight' => 9,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -465,6 +509,7 @@ function lacuna_stories_annotations_field_default_field_instances() {
   t('Groups');
   t('If Instructor Viewable is checked, instructors for which courses should be able to view this?');
   t('Instructor Viewable by Instructors of these Courses');
+  t('PDF Range');
   t('Public Visibility');
   t('Ranges');
   t('The URI of the annotated work');
