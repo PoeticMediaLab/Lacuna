@@ -30,15 +30,20 @@
         return function() {
           _this.$viewerIframe = $('iframe.pdf');
           _this.annotationLayers = _this.createAnnotationLayers();
-          _this.listenForInteraction();
+          _this.listenForMouseEvents();
           return _this.enableAnnotationCreation();
         };
       })(this));
-      return this.subscribe('annotationsLoaded', (function(_this) {
+      this.subscribe('annotationsLoaded', (function(_this) {
         return function(annotations) {
           return promise.then(function() {
             return annotations.forEach(_this.drawExistingAnnotation.bind(_this));
           });
+        };
+      })(this));
+      return this.subscribe('annotationDeleted', (function(_this) {
+        return function(annotation) {
+          return annotation.$element.remove();
         };
       })(this));
     };
@@ -54,7 +59,7 @@
       })(this));
     };
 
-    PDF.prototype.listenForInteraction = function() {
+    PDF.prototype.listenForMouseEvents = function() {
       var dragging, mouseDown, mousedownAnnotationLayer, mousedownCoordinates;
       mouseDown = false;
       dragging = false;
@@ -184,6 +189,7 @@
       onSave = (function(_this) {
         return function() {
           _this.publish('annotationCreated', [annotation]);
+          annotation.$element = $newAnnotationElement;
           $newAnnotationElement.removeClass('new-annotation');
           $newAnnotationElement.data('annotation', annotation);
           $newAnnotationElement.on('mouseover', _this.onPdfHighlightMouseover);
@@ -246,6 +252,7 @@
         }), (ref2 = ref1[0], x1 = ref2[0], y1 = ref2[1]), (ref3 = ref1[1], x2 = ref3[0], y2 = ref3[1]);
         ref4 = [x2 - x1, y2 - y1], width = ref4[0], height = ref4[1];
         $annotationElement = $(this.ANNOTATION_MARKUP);
+        annotation.$element = $annotationElement;
         $annotationElement.css({
           left: x1,
           top: y1,

@@ -21,7 +21,6 @@ class Annotator.Plugin.PDF extends Annotator.Plugin
   pluginInit: ->
 
     return unless Annotator.supported()
-
     promise = Drupal.PDFDocumentView.loaded.then(=>
 
       # Finds the viewer iframe
@@ -31,25 +30,11 @@ class Annotator.Plugin.PDF extends Annotator.Plugin
       @annotationLayers = @createAnnotationLayers()
 
       # Adds listener to annotation layers for mouse events.
-      @listenForInteraction()
+      @listenForMouseEvents()
 
       # Responds to drags across annotation pages by creating new
       # annotations.
       @enableAnnotationCreation()
-
-      # TODO:
-      # - render existing PDF annotations on each page
-      # - re-render PDF annotations when canvases are destroyed
-      # - update cursors for creating, hovering and editing annotations
-
-      # ISSUES:
-      # - you can't select annotation that overlap from the previous
-      # page from the current page
-      #  - creating an annotation that overlaps into the second page
-      # selects text on the second page
-      # - some mouse actions register as drags but shouldn't (e.g. ctrl-click)
-      # - layering annotations can make them opaque and hide text.
-      # - annotation editor doesn't scroll with iframe contents.  solution could be to freeze iframe contents
 
     )
 
@@ -59,6 +44,12 @@ class Annotator.Plugin.PDF extends Annotator.Plugin
       promise.then(=>
         annotations.forEach(@drawExistingAnnotation.bind(@))
       )
+    )
+
+    # Listens for annotations being deleted and removes element from
+    # PDF annotation layer.
+    @subscribe('annotationDeleted', (annotation) =>
+      annotation.$element.remove()
     )
 
 
@@ -78,7 +69,7 @@ class Annotator.Plugin.PDF extends Annotator.Plugin
 
   # Attaches listeners to the PDF document page annotation layers,
   # publishing higher-level events to subscribed handlers.
-  listenForInteraction: ->
+  listenForMouseEvents: ->
 
     mouseDown = false
     dragging = false
@@ -197,6 +188,7 @@ class Annotator.Plugin.PDF extends Annotator.Plugin
 
     onSave = =>
       @publish('annotationCreated', [annotation])
+      annotation.$element = $newAnnotationElement
       $newAnnotationElement.removeClass('new-annotation')
       $newAnnotationElement.data('annotation', annotation)
       $newAnnotationElement.on('mouseover', @onPdfHighlightMouseover)
@@ -244,6 +236,7 @@ class Annotator.Plugin.PDF extends Annotator.Plugin
       [ [ x1, y1 ], [ x2, y2 ] ] = [ [ x1Pdf, y1Pdf ], [ x2Pdf, y2Pdf ] ].map(([ x, y ]) -> v.convertToViewportPoint(x, y))
       [ width, height ] = [ x2 - x1, y2 - y1 ]
       $annotationElement = $(@ANNOTATION_MARKUP)
+      annotation.$element = $annotationElement
       $annotationElement.css({ left: x1, top: y1, width, height })
       $annotationElement.data('annotation', annotation)
       $annotationElement.on('mouseover', @onPdfHighlightMouseover)
