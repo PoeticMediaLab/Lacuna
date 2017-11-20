@@ -21,79 +21,137 @@ class Annotator.Plugin.PDF extends Annotator.Plugin
   pluginInit: ->
 
     return unless Annotator.supported()
-    promise = Drupal.PDFDocumentView.loaded.then(=>
 
-      # Finds the viewer iframe
-      @$viewerIframe = $('iframe.pdf')
-
-      # Adds a layer over the page <canvas> elements to hold annotations.
-      @annotationLayers = @createAnnotationLayers()
-
-      # Adds listener to annotation layers for mouse events.
-      @listenForMouseEvents()
-
-      # Responds to drags across annotation pages by creating new
-      # annotations.
-      @enableAnnotationCreation()
-
-    )
-
-    # Listens for annotations loaded from API and draws them on
-    # the PDF annotation layers.
+    # Listens for annotations loaded from API and saves them to an in-memory
+    # store.
     @subscribe('annotationsLoaded', (annotations) =>
-      promise.then(=>
-        annotations.forEach(@drawExistingAnnotation.bind(@))
-      )
+      @annotations = annotations
     )
 
     # Listens for annotations being deleted and removes element from
-    # PDF annotation layer.
+    # PDF annotation layer and in-memory annotation store.
     @subscribe('annotationDeleted', (annotation) =>
       annotation.$element.remove()
+      index = @annotations.indexOf(annotation)
+      @annotations.splice(index, 1)
+    )
+
+    # Listens for and handles custom PDF annotation events from PDF
+    # annotation layers.
+    @handlePDFAnnotationCreationEvents()
+
+    # Enables annotation on each PDF page as it's loaded in the
+    # viewer.
+    Drupal.PDFDocumentView.loaded.then(=>
+
+      app = Drupal.PDFDocumentView.PDFViewerApplication
+
+      # Saves a reference to the viewer DOM node.
+      @viewerElement = app.pdfViewer.viewer
+
+      # Saves a reference to the viewer's internal rendered page store
+      pdfPages = app.pdfViewer._pages
+
+      # Creates an internal store of annotation layers
+      @annotationLayers = []
+
+      # Listens for custom PDFApplicationViewer 'pagerendered' event
+      # and enables annotation on each newly-rendered page.
+      @viewerElement.addEventListener('pagerendered', (event) =>
+        pageNumber = event.detail.pageNumber
+        pageView = pdfPages[pageNumber - 1]
+        @enableAnnotationsOnPage(pageNumber, pageView)
+      )
+
     )
 
 
-  # For each element containing a rendered page, creates an annotation
-  # layer for rendering existing annotations and capturing interaction
-  # events.
-  createAnnotationLayers: ->
+  # Enables annotation viewing and creation on a newly-rendered
+  # PDF page.
+  enableAnnotationsOnPage: (pageNumber, pageView) ->
 
-    Drupal.PDFDocumentView.pdfPages.map((page) => 
+    # Adds a layer over the page <canvas> elements to hold annotations.
+    annotationLayer = @createAnnotationLayer(pageView)
 
-      $annotationLayer = $(@ANNOTATION_LAYER_MARKUP)
-      $(page.div).append($annotationLayer)
-      return $annotationLayer[0]
+    # Loads existing annotations on the layer
+    @drawExistingAnnotations(pageNumber, pageView, annotationLayer)
+
+    # Adds listeners to annotation layer for mouse events.
+    @listenForAnnotationCreation(pageNumber, pageView, annotationLayer)
+
+
+
+  # Creates an annotation layer for rendering existing annotations
+  # and capturing interaction events.
+  createAnnotationLayer: (pageView) ->
+    annotationLayer = $(@ANNOTATION_LAYER_MARKUP)[0]
+    pageView.div.appendChild(annotationLayer)
+    return annotationLayer
+
+
+  # Creates a rectangle on the PDF page annotation layer for each
+  # existing annotation and attaches listeners to show the viewer.
+  drawExistingAnnotations: (pageNumber, pageView, annotationLayer) ->
+
+    @annotations.forEach((annotation) =>
+
+      if annotation.pdfRange and annotation.pdfRange.pageNumber is pageNumber
+
+        # Creates annotation element
+        $annotationElement = $(@ANNOTATION_MARKUP)
+        
+        # Calculates coordinates for rendering annotation and sets
+        # CSS properties to position.
+        { x1Pdf, y1Pdf, x2Pdf, y2Pdf } = annotation.pdfRange
+        v = pageView.viewport
+        [ [ x1, y1 ], [ x2, y2 ] ] = [ [ x1Pdf, y1Pdf ], [ x2Pdf, y2Pdf ] ].map(([ x, y ]) -> v.convertToViewportPoint(x, y))
+        [ width, height ] = [ x2 - x1, y2 - y1 ]
+        $annotationElement.css({ left: x1, top: y1, width, height })
+
+        # Links annotation element to annotation object.
+        @linkAnnotationElement($annotationElement, annotation)
+
+        # Renders annotation to DOM.
+        $(annotationLayer).append($annotationElement)
 
     )
+
+
+  # Links an annotation element to an annotation object, creating
+  # the necessary references and attaching the necessary listeners.
+  linkAnnotationElement: ($annotationElement, annotation) ->
+
+    # Saves new element as property of annotation object and
+    # saves annotation object as data member of annotation element
+    annotation.$element = $annotationElement
+    $annotationElement.data('annotation', annotation)
+
+    # Attaches handlers to show editor on annotation element mouseover.
+    $annotationElement.on('mouseover', @onPdfHighlightMouseover)
+    $annotationElement.on('mouseout', @annotator.startViewerHideTimer)
 
 
   # Attaches listeners to the PDF document page annotation layers,
   # publishing higher-level events to subscribed handlers.
-  listenForMouseEvents: ->
+  listenForAnnotationCreation: (pageNumber, pageView, annotationLayer) ->
 
     mouseDown = false
     dragging = false
-    mousedownAnnotationLayer = null
     mousedownCoordinates = null
-    $(@annotationLayers).on('mousedown mousemove mouseup', (event) =>
+    $(annotationLayer).on('mousedown mousemove mouseup', (event) =>
 
-      annotationLayer = mousedownAnnotationLayer || event.currentTarget
-      pageNumber = @annotationLayers.indexOf(annotationLayer)
       rect = annotationLayer.getBoundingClientRect()
       coordinates =
         x: event.clientX - rect.x
         y: event.clientY - rect.y
 
-      eventParameters = { annotationLayer: annotationLayer, pageNumber: pageNumber, coordinates: coordinates }
-
+      eventParameters = { pageNumber, pageView, annotationLayer, coordinates }
       if event.type is 'mousedown'
         mouseDown = true
-        mousedownAnnotationLayer = annotationLayer
         mousedownCoordinates = coordinates
 
       if event.type is 'mouseup'
         mouseDown = false
-        mousedownAnnotationLayer = null
         mousedownCoordinates = null
         if dragging
           dragging = false
@@ -125,7 +183,7 @@ class Annotator.Plugin.PDF extends Annotator.Plugin
   # Subscribes to PDF annotation layer drag events with handler
   # that allows selection over an area and triggers creation of a
   # new annotation.
-  enableAnnotationCreation: ->
+  handlePDFAnnotationCreationEvents: ->
 
     @creatingPdfAnnotation = false
     $newAnnotationElement = null
@@ -136,16 +194,14 @@ class Annotator.Plugin.PDF extends Annotator.Plugin
       pageNumber = eventParameters.pageNumber
       startCoordinates = eventParameters.coordinates
       $newAnnotationElement = $(@ANNOTATION_MARKUP).addClass('new-annotation')
-      $newAnnotationElement.css({ left: eventParameters.coordinates.x })
-      $newAnnotationElement.css({ top: eventParameters.coordinates.y })
+      $newAnnotationElement.css({ left: eventParameters.coordinates.x, top: eventParameters.coordinates.y })
       $(eventParameters.annotationLayer).append($newAnnotationElement)
     )
 
     @subscribe('pdf-dragmove', (eventParameters) =>
       width = eventParameters.coordinates.x - startCoordinates.x
       height = eventParameters.coordinates.y - startCoordinates.y
-      $newAnnotationElement.css({ width: if width > 0 then width else 0 })
-      $newAnnotationElement.css({ height: if height > 0 then height else 0 })
+      $newAnnotationElement.css({ width: (if width > 0 then width else 0), height: (if height > 0 then height else 0) })
     )
 
     @subscribe('pdf-dragend', (eventParameters) =>
@@ -153,14 +209,12 @@ class Annotator.Plugin.PDF extends Annotator.Plugin
       # Converts native CSS coordinates to PDF-specific coordinates,
       # for which the origin of each page is the lower-left corner
       # instead of the upper-left corner.
-      v = Drupal.PDFDocumentView.pdfPages[pageNumber].viewport
-      [x1Pdf, y1Pdf] = v.convertToPdfPoint(startCoordinates.x, startCoordinates.y)
-      [x2Pdf, y2Pdf] = v.convertToPdfPoint(eventParameters.coordinates.x, eventParameters.coordinates.y)
-      widthPdf = x2Pdf - x1Pdf
-      heightPdf = y2Pdf - y1Pdf
+      v = eventParameters.pageView.viewport
+      [ [ x1Pdf, y1Pdf ], [ x2Pdf, y2Pdf ] ] = [ [ startCoordinates.x, startCoordinates.y ], [ eventParameters.coordinates.x, eventParameters.coordinates.y ] ].map(([ x, y ]) -> v.convertToPdfPoint(x, y))
+      [ widthPdf, heightPdf ] = [ x2Pdf - x1Pdf, y2Pdf - y1Pdf ]
       if widthPdf > 0 and heightPdf < 0
         pdfRange = { pageNumber, x1Pdf, y1Pdf, x2Pdf, y2Pdf }
-        @createAndEditAnnotation(pdfRange, $newAnnotationElement)
+        @editNewAnnotation(pdfRange, $newAnnotationElement)
       
       else
         $newAnnotationElement.remove()
@@ -175,7 +229,7 @@ class Annotator.Plugin.PDF extends Annotator.Plugin
 
   # Creates a new annotation from the supplied range, then opens
   # the editor with it.
-  createAndEditAnnotation: (pdfRange, $newAnnotationElement) ->
+  editNewAnnotation: (pdfRange, $newAnnotationElement) ->
 
     # Creates new annotation
     annotation = @annotator.createAnnotation()
@@ -186,62 +240,29 @@ class Annotator.Plugin.PDF extends Annotator.Plugin
     annotation.ranges = []
     annotation.highlights = []
 
-    onSave = =>
-      @publish('annotationCreated', [annotation])
-      annotation.$element = $newAnnotationElement
-      $newAnnotationElement.removeClass('new-annotation')
-      $newAnnotationElement.data('annotation', annotation)
-      $newAnnotationElement.on('mouseover', @onPdfHighlightMouseover)
-      $newAnnotationElement.on('mouseout', @annotator.startViewerHideTimer)
-
-    onCancel = =>
-      $newAnnotationElement.remove()
-
-    @openEditor(annotation, $newAnnotationElement, onSave, onCancel)
-
-
-  # Opens the editor given an element and associated annotation,
-  # listening for save/cancel events.
-  openEditor: (annotation, $annotationElement, onSave, onCancel) ->
-    $(@$viewerIframe[0].contentDocument).find('#viewerContainer').css({ overflow: 'hidden' })
-    { top, left, bottom, right } = $annotationElement[0].getBoundingClientRect()
-    editorLocation = { top: (top + bottom) / 2, left: (left + right) / 2 }
-    
     save = =>
+      @publish('annotationCreated', [ annotation ])
+      $newAnnotationElement.removeClass('new-annotation')
+      @linkAnnotationElement($newAnnotationElement, annotation)
+      @annotations.push(annotation)
       cleanup()
-      onSave()
 
     cancel = =>
+      $newAnnotationElement.remove()
       cleanup()
-      onCancel()
 
     cleanup = =>
-      $(@$viewerIframe[0].contentDocument).find('#viewerContainer').css({ overflow: 'auto' })
+      $(@viewerElement.parentElement).css({ overflow: 'auto' })
       @unsubscribe('annotationEditorHidden', cancel)
       @unsubscribe('annotationEditorSubmit', save)
 
-    @subscribe('annotationEditorHidden', cancel)
+    # Calculates editor location and opens editor with new annotation.
+    $(@viewerElement.parentElement).css({ overflow: 'hidden' })
+    { top, left, bottom, right } = $newAnnotationElement[0].getBoundingClientRect()
+    editorLocation = { top: (top + bottom) / 2, left: (left + right) / 2 }
     @subscribe('annotationEditorSubmit', save)
+    @subscribe('annotationEditorHidden', cancel)
     @annotator.showEditor(annotation, editorLocation)
-
-
-  # Creates a rectangle on the PDF representing the annotation and
-  # attaches listeners to show the viewer.
-  drawExistingAnnotation: (annotation) ->
-
-    if annotation.pdfRange
-
-      { pageNumber, x1Pdf, y1Pdf, x2Pdf, y2Pdf } = annotation.pdfRange
-      v = Drupal.PDFDocumentView.pdfPages[pageNumber].viewport
-      [ [ x1, y1 ], [ x2, y2 ] ] = [ [ x1Pdf, y1Pdf ], [ x2Pdf, y2Pdf ] ].map(([ x, y ]) -> v.convertToViewportPoint(x, y))
-      [ width, height ] = [ x2 - x1, y2 - y1 ]
-      $annotationElement = $(@ANNOTATION_MARKUP)
-      annotation.$element = $annotationElement
-      $annotationElement.css({ left: x1, top: y1, width, height })
-      $annotationElement.data('annotation', annotation)
-      $annotationElement.on('mouseover', @onPdfHighlightMouseover)
-      $annotationElement.on('mouseout', @annotator.startViewerHideTimer)
-      $(@annotationLayers[pageNumber]).append($annotationElement)
 
 
   # PDF-specific versions of Annotator's internal onHighlightMouseover.

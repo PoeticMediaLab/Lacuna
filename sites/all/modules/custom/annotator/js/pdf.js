@@ -22,72 +22,113 @@
     PDF.prototype.DRAG_THRESHOLD = 5;
 
     PDF.prototype.pluginInit = function() {
-      var promise;
       if (!Annotator.supported()) {
         return;
       }
-      promise = Drupal.PDFDocumentView.loaded.then((function(_this) {
-        return function() {
-          _this.$viewerIframe = $('iframe.pdf');
-          _this.annotationLayers = _this.createAnnotationLayers();
-          _this.listenForMouseEvents();
-          return _this.enableAnnotationCreation();
-        };
-      })(this));
       this.subscribe('annotationsLoaded', (function(_this) {
         return function(annotations) {
-          return promise.then(function() {
-            return annotations.forEach(_this.drawExistingAnnotation.bind(_this));
+          return _this.annotations = annotations;
+        };
+      })(this));
+      this.subscribe('annotationDeleted', (function(_this) {
+        return function(annotation) {
+          var index;
+          annotation.$element.remove();
+          index = _this.annotations.indexOf(annotation);
+          return _this.annotations.splice(index, 1);
+        };
+      })(this));
+      this.handlePDFAnnotationCreationEvents();
+      return Drupal.PDFDocumentView.loaded.then((function(_this) {
+        return function() {
+          var app, pdfPages;
+          app = Drupal.PDFDocumentView.PDFViewerApplication;
+          _this.viewerElement = app.pdfViewer.viewer;
+          pdfPages = app.pdfViewer._pages;
+          _this.annotationLayers = [];
+          return _this.viewerElement.addEventListener('pagerendered', function(event) {
+            var pageNumber, pageView;
+            pageNumber = event.detail.pageNumber;
+            pageView = pdfPages[pageNumber - 1];
+            return _this.enableAnnotationsOnPage(pageNumber, pageView);
           });
         };
       })(this));
-      return this.subscribe('annotationDeleted', (function(_this) {
+    };
+
+    PDF.prototype.enableAnnotationsOnPage = function(pageNumber, pageView) {
+      var annotationLayer;
+      annotationLayer = this.createAnnotationLayer(pageView);
+      this.drawExistingAnnotations(pageNumber, pageView, annotationLayer);
+      return this.listenForAnnotationCreation(pageNumber, pageView, annotationLayer);
+    };
+
+    PDF.prototype.createAnnotationLayer = function(pageView) {
+      var annotationLayer;
+      annotationLayer = $(this.ANNOTATION_LAYER_MARKUP)[0];
+      pageView.div.appendChild(annotationLayer);
+      return annotationLayer;
+    };
+
+    PDF.prototype.drawExistingAnnotations = function(pageNumber, pageView, annotationLayer) {
+      return this.annotations.forEach((function(_this) {
         return function(annotation) {
-          return annotation.$element.remove();
+          var $annotationElement, height, ref, ref1, ref2, ref3, ref4, v, width, x1, x1Pdf, x2, x2Pdf, y1, y1Pdf, y2, y2Pdf;
+          if (annotation.pdfRange && annotation.pdfRange.pageNumber === pageNumber) {
+            $annotationElement = $(_this.ANNOTATION_MARKUP);
+            ref = annotation.pdfRange, x1Pdf = ref.x1Pdf, y1Pdf = ref.y1Pdf, x2Pdf = ref.x2Pdf, y2Pdf = ref.y2Pdf;
+            v = pageView.viewport;
+            ref1 = [[x1Pdf, y1Pdf], [x2Pdf, y2Pdf]].map(function(arg) {
+              var x, y;
+              x = arg[0], y = arg[1];
+              return v.convertToViewportPoint(x, y);
+            }), (ref2 = ref1[0], x1 = ref2[0], y1 = ref2[1]), (ref3 = ref1[1], x2 = ref3[0], y2 = ref3[1]);
+            ref4 = [x2 - x1, y2 - y1], width = ref4[0], height = ref4[1];
+            $annotationElement.css({
+              left: x1,
+              top: y1,
+              width: width,
+              height: height
+            });
+            _this.linkAnnotationElement($annotationElement, annotation);
+            return $(annotationLayer).append($annotationElement);
+          }
         };
       })(this));
     };
 
-    PDF.prototype.createAnnotationLayers = function() {
-      return Drupal.PDFDocumentView.pdfPages.map((function(_this) {
-        return function(page) {
-          var $annotationLayer;
-          $annotationLayer = $(_this.ANNOTATION_LAYER_MARKUP);
-          $(page.div).append($annotationLayer);
-          return $annotationLayer[0];
-        };
-      })(this));
+    PDF.prototype.linkAnnotationElement = function($annotationElement, annotation) {
+      annotation.$element = $annotationElement;
+      $annotationElement.data('annotation', annotation);
+      $annotationElement.on('mouseover', this.onPdfHighlightMouseover);
+      return $annotationElement.on('mouseout', this.annotator.startViewerHideTimer);
     };
 
-    PDF.prototype.listenForMouseEvents = function() {
-      var dragging, mouseDown, mousedownAnnotationLayer, mousedownCoordinates;
+    PDF.prototype.listenForAnnotationCreation = function(pageNumber, pageView, annotationLayer) {
+      var dragging, mouseDown, mousedownCoordinates;
       mouseDown = false;
       dragging = false;
-      mousedownAnnotationLayer = null;
       mousedownCoordinates = null;
-      return $(this.annotationLayers).on('mousedown mousemove mouseup', (function(_this) {
+      return $(annotationLayer).on('mousedown mousemove mouseup', (function(_this) {
         return function(event) {
-          var annotationLayer, coordinates, eventParameters, pageNumber, rect;
-          annotationLayer = mousedownAnnotationLayer || event.currentTarget;
-          pageNumber = _this.annotationLayers.indexOf(annotationLayer);
+          var coordinates, eventParameters, rect;
           rect = annotationLayer.getBoundingClientRect();
           coordinates = {
             x: event.clientX - rect.x,
             y: event.clientY - rect.y
           };
           eventParameters = {
-            annotationLayer: annotationLayer,
             pageNumber: pageNumber,
+            pageView: pageView,
+            annotationLayer: annotationLayer,
             coordinates: coordinates
           };
           if (event.type === 'mousedown') {
             mouseDown = true;
-            mousedownAnnotationLayer = annotationLayer;
             mousedownCoordinates = coordinates;
           }
           if (event.type === 'mouseup') {
             mouseDown = false;
-            mousedownAnnotationLayer = null;
             mousedownCoordinates = null;
             if (dragging) {
               dragging = false;
@@ -117,7 +158,7 @@
       return x || y;
     };
 
-    PDF.prototype.enableAnnotationCreation = function() {
+    PDF.prototype.handlePDFAnnotationCreationEvents = function() {
       var $newAnnotationElement, pageNumber, startCoordinates;
       this.creatingPdfAnnotation = false;
       $newAnnotationElement = null;
@@ -130,9 +171,7 @@
           startCoordinates = eventParameters.coordinates;
           $newAnnotationElement = $(_this.ANNOTATION_MARKUP).addClass('new-annotation');
           $newAnnotationElement.css({
-            left: eventParameters.coordinates.x
-          });
-          $newAnnotationElement.css({
+            left: eventParameters.coordinates.x,
             top: eventParameters.coordinates.y
           });
           return $(eventParameters.annotationLayer).append($newAnnotationElement);
@@ -143,22 +182,22 @@
           var height, width;
           width = eventParameters.coordinates.x - startCoordinates.x;
           height = eventParameters.coordinates.y - startCoordinates.y;
-          $newAnnotationElement.css({
-            width: width > 0 ? width : 0
-          });
           return $newAnnotationElement.css({
-            height: height > 0 ? height : 0
+            width: (width > 0 ? width : 0),
+            height: (height > 0 ? height : 0)
           });
         };
       })(this));
       return this.subscribe('pdf-dragend', (function(_this) {
         return function(eventParameters) {
-          var heightPdf, pdfRange, ref, ref1, v, widthPdf, x1Pdf, x2Pdf, y1Pdf, y2Pdf;
-          v = Drupal.PDFDocumentView.pdfPages[pageNumber].viewport;
-          ref = v.convertToPdfPoint(startCoordinates.x, startCoordinates.y), x1Pdf = ref[0], y1Pdf = ref[1];
-          ref1 = v.convertToPdfPoint(eventParameters.coordinates.x, eventParameters.coordinates.y), x2Pdf = ref1[0], y2Pdf = ref1[1];
-          widthPdf = x2Pdf - x1Pdf;
-          heightPdf = y2Pdf - y1Pdf;
+          var heightPdf, pdfRange, ref, ref1, ref2, ref3, v, widthPdf, x1Pdf, x2Pdf, y1Pdf, y2Pdf;
+          v = eventParameters.pageView.viewport;
+          ref = [[startCoordinates.x, startCoordinates.y], [eventParameters.coordinates.x, eventParameters.coordinates.y]].map(function(arg) {
+            var x, y;
+            x = arg[0], y = arg[1];
+            return v.convertToPdfPoint(x, y);
+          }), (ref1 = ref[0], x1Pdf = ref1[0], y1Pdf = ref1[1]), (ref2 = ref[1], x2Pdf = ref2[0], y2Pdf = ref2[1]);
+          ref3 = [x2Pdf - x1Pdf, y2Pdf - y1Pdf], widthPdf = ref3[0], heightPdf = ref3[1];
           if (widthPdf > 0 && heightPdf < 0) {
             pdfRange = {
               pageNumber: pageNumber,
@@ -167,7 +206,7 @@
               x2Pdf: x2Pdf,
               y2Pdf: y2Pdf
             };
-            _this.createAndEditAnnotation(pdfRange, $newAnnotationElement);
+            _this.editNewAnnotation(pdfRange, $newAnnotationElement);
           } else {
             $newAnnotationElement.remove();
           }
@@ -179,91 +218,48 @@
       })(this));
     };
 
-    PDF.prototype.createAndEditAnnotation = function(pdfRange, $newAnnotationElement) {
-      var annotation, onCancel, onSave;
+    PDF.prototype.editNewAnnotation = function(pdfRange, $newAnnotationElement) {
+      var annotation, bottom, cancel, cleanup, editorLocation, left, ref, right, save, top;
       annotation = this.annotator.createAnnotation();
       annotation.pdfRange = pdfRange;
       annotation.quote = [];
       annotation.ranges = [];
       annotation.highlights = [];
-      onSave = (function(_this) {
-        return function() {
-          _this.publish('annotationCreated', [annotation]);
-          annotation.$element = $newAnnotationElement;
-          $newAnnotationElement.removeClass('new-annotation');
-          $newAnnotationElement.data('annotation', annotation);
-          $newAnnotationElement.on('mouseover', _this.onPdfHighlightMouseover);
-          return $newAnnotationElement.on('mouseout', _this.annotator.startViewerHideTimer);
-        };
-      })(this);
-      onCancel = (function(_this) {
-        return function() {
-          return $newAnnotationElement.remove();
-        };
-      })(this);
-      return this.openEditor(annotation, $newAnnotationElement, onSave, onCancel);
-    };
-
-    PDF.prototype.openEditor = function(annotation, $annotationElement, onSave, onCancel) {
-      var bottom, cancel, cleanup, editorLocation, left, ref, right, save, top;
-      $(this.$viewerIframe[0].contentDocument).find('#viewerContainer').css({
-        overflow: 'hidden'
-      });
-      ref = $annotationElement[0].getBoundingClientRect(), top = ref.top, left = ref.left, bottom = ref.bottom, right = ref.right;
-      editorLocation = {
-        top: (top + bottom) / 2,
-        left: (left + right) / 2
-      };
       save = (function(_this) {
         return function() {
-          cleanup();
-          return onSave();
+          _this.publish('annotationCreated', [annotation]);
+          $newAnnotationElement.removeClass('new-annotation');
+          _this.linkAnnotationElement($newAnnotationElement, annotation);
+          _this.annotations.push(annotation);
+          return cleanup();
         };
       })(this);
       cancel = (function(_this) {
         return function() {
-          cleanup();
-          return onCancel();
+          $newAnnotationElement.remove();
+          return cleanup();
         };
       })(this);
       cleanup = (function(_this) {
         return function() {
-          $(_this.$viewerIframe[0].contentDocument).find('#viewerContainer').css({
+          $(_this.viewerElement.parentElement).css({
             overflow: 'auto'
           });
           _this.unsubscribe('annotationEditorHidden', cancel);
           return _this.unsubscribe('annotationEditorSubmit', save);
         };
       })(this);
-      this.subscribe('annotationEditorHidden', cancel);
+      $(this.viewerElement.parentElement).css({
+        overflow: 'hidden'
+      });
+      ref = $newAnnotationElement[0].getBoundingClientRect(), top = ref.top, left = ref.left, bottom = ref.bottom, right = ref.right;
+      editorLocation = {
+        top: (top + bottom) / 2,
+        left: (left + right) / 2
+      };
       this.subscribe('annotationEditorSubmit', save);
+      this.subscribe('annotationEditorHidden', cancel);
       return this.annotator.showEditor(annotation, editorLocation);
-    };
-
-    PDF.prototype.drawExistingAnnotation = function(annotation) {
-      var $annotationElement, height, pageNumber, ref, ref1, ref2, ref3, ref4, v, width, x1, x1Pdf, x2, x2Pdf, y1, y1Pdf, y2, y2Pdf;
-      if (annotation.pdfRange) {
-        ref = annotation.pdfRange, pageNumber = ref.pageNumber, x1Pdf = ref.x1Pdf, y1Pdf = ref.y1Pdf, x2Pdf = ref.x2Pdf, y2Pdf = ref.y2Pdf;
-        v = Drupal.PDFDocumentView.pdfPages[pageNumber].viewport;
-        ref1 = [[x1Pdf, y1Pdf], [x2Pdf, y2Pdf]].map(function(arg) {
-          var x, y;
-          x = arg[0], y = arg[1];
-          return v.convertToViewportPoint(x, y);
-        }), (ref2 = ref1[0], x1 = ref2[0], y1 = ref2[1]), (ref3 = ref1[1], x2 = ref3[0], y2 = ref3[1]);
-        ref4 = [x2 - x1, y2 - y1], width = ref4[0], height = ref4[1];
-        $annotationElement = $(this.ANNOTATION_MARKUP);
-        annotation.$element = $annotationElement;
-        $annotationElement.css({
-          left: x1,
-          top: y1,
-          width: width,
-          height: height
-        });
-        $annotationElement.data('annotation', annotation);
-        $annotationElement.on('mouseover', this.onPdfHighlightMouseover);
-        $annotationElement.on('mouseout', this.annotator.startViewerHideTimer);
-        return $(this.annotationLayers[pageNumber]).append($annotationElement);
-      }
     };
 
     PDF.prototype.onPdfHighlightMouseover = function(event) {

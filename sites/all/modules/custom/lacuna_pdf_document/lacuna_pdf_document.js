@@ -13,7 +13,6 @@
             Drupal.PDFDocumentView.loaded = Promise.resolve()
             .then(loadPDFViewer)
             .then(loadPDFInViewer)
-            .then(getPDFPages)
 
         }
     }
@@ -61,23 +60,5 @@
         .then(function() { return viewer.pdfLoadingTask })
 
     }
-
-
-    /*
-    *   Waits for the pages to load and then saves a reference to the
-    *   internal _pages array of the PDFViewerApplication to Drupal.PDFDocumentView.
-    *   WARNING: makes use of internal API of demo viewer; be careful
-    *   when updating pdf.js package.
-    */
-
-    function getPDFPages() {
-
-        var viewer = Drupal.PDFDocumentView.PDFViewerApplication
-        return viewer.pdfViewer.pagesPromise.then(function() {
-            Drupal.PDFDocumentView.pdfPages = viewer.pdfViewer._pages
-        })
-
-    }
-
 
 })()
