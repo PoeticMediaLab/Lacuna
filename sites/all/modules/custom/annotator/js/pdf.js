@@ -38,7 +38,7 @@
           return _this.annotations.splice(index, 1);
         };
       })(this));
-      this.preventPDFScrollingOnEdit();
+      this.listenForEditorEvents();
       Drupal.PDFDocumentView.loaded.then((function(_this) {
         return function() {
           var app, pdfPages;
@@ -57,13 +57,14 @@
       return this.handlePDFAnnotationCreationEvents();
     };
 
-    PDF.prototype.preventPDFScrollingOnEdit = function() {
+    PDF.prototype.listenForEditorEvents = function() {
       this.editing = false;
       this.subscribe('annotationEditorShown', (function(_this) {
         return function() {
           $(_this.viewerElement.parentElement).css({
             overflow: 'hidden'
           });
+          $(_this.viewerElement).addClass('editor-open');
           return _this.editing = true;
         };
       })(this));
@@ -72,6 +73,7 @@
           $(_this.viewerElement.parentElement).css({
             overflow: 'auto'
           });
+          $(_this.viewerElement).removeClass('editor-open');
           return _this.editing = false;
         };
       })(this));

@@ -36,8 +36,9 @@ class Annotator.Plugin.PDF extends Annotator.Plugin
       @annotations.splice(index, 1)
     )
 
-    # Prevents PDF scrolling when the Editor is open.
-    @preventPDFScrollingOnEdit()
+    # Prevents PDF scrolling, updates cursor and sets instance variable
+    # when the Editor is open.
+    @listenForEditorEvents()
 
     # Enables annotation on each PDF page as it's loaded in the
     # viewer.
@@ -70,18 +71,20 @@ class Annotator.Plugin.PDF extends Annotator.Plugin
 
 
   # Listens for Annotator events for the opening and closing of
-  # the Editor and freezes and unfreezes scrolling of the viewer
-  # accordingly.
-  preventPDFScrollingOnEdit: () ->
+  # the Editor and freezes and unfreezes scrolling of the viewer,
+  # sets an instance variable and updates the cursor accordingly.
+  listenForEditorEvents: () ->
 
     @editing = false
     @subscribe('annotationEditorShown', () =>
       $(@viewerElement.parentElement).css({ overflow: 'hidden' })
+      $(@viewerElement).addClass('editor-open')
       @editing = true
     )
 
     @subscribe('annotationEditorHidden', () =>
       $(@viewerElement.parentElement).css({ overflow: 'auto' })
+      $(@viewerElement).removeClass('editor-open')
       @editing = false
     )
 

@@ -12,6 +12,7 @@
   bottom: 0;
   left: 0;
   z-index: 1;
+  cursor: crosshair;
 
   .pdf-annotation {
     
@@ -21,12 +22,34 @@
     background-color: rgba(74, 150, 226, .25);
     border: 1px solid rgba(74, 150, 226, 0);
     border-radius: 2px;
+    cursor: pointer;
     transition: background-color .25s, border .25s;
 
     &.new-annotation,
     &:hover {
       background-color: rgba(74, 150, 226, .5);
       border: 1px solid rgba(74, 150, 226, .75);
+    }
+
+    &.new-annotation {
+      cursor: crosshair;
+    }
+  
+  }
+
+}
+
+.editor-open .pdf-annotation-layer {
+  
+  cursor: default;
+
+  .pdf-annotation {
+    
+    cursor: default;
+
+    &:not(.new-annotation):hover {
+      background-color: rgba(74, 150, 226, .25);
+      border: 1px solid rgba(74, 150, 226, 0);
     }
   
   }
