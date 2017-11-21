@@ -11,7 +11,7 @@
     extend(PDF, superClass);
 
     function PDF() {
-      this.onPdfHighlightMouseover = bind(this.onPdfHighlightMouseover, this);
+      this.onPDFHighlightMouseover = bind(this.onPDFHighlightMouseover, this);
       return PDF.__super__.constructor.apply(this, arguments);
     }
 
@@ -121,9 +121,22 @@
     };
 
     PDF.prototype.linkAnnotationElement = function($annotationElement, annotation) {
+      var THROTTLE_MS, throttling;
       annotation.$element = $annotationElement;
       $annotationElement.data('annotation', annotation);
-      $annotationElement.on('mouseover', this.onPdfHighlightMouseover);
+      THROTTLE_MS = 250;
+      throttling = false;
+      $annotationElement.on('mousemove', (function(_this) {
+        return function(event) {
+          if (!throttling) {
+            _this.onPDFHighlightMouseover(event);
+            throttling = true;
+            return setTimeout((function() {
+              return throttling = false;
+            }), THROTTLE_MS);
+          }
+        };
+      })(this));
       return $annotationElement.on('mouseout', this.annotator.startViewerHideTimer);
     };
 
@@ -278,8 +291,8 @@
       return this.annotator.showEditor(annotation, editorLocation);
     };
 
-    PDF.prototype.onPdfHighlightMouseover = function(event) {
-      var annotation, location;
+    PDF.prototype.onPDFHighlightMouseover = function(event) {
+      var annotations, location;
       this.annotator.clearViewerHideTimer();
       if (this.dragging || this.editing) {
         return false;
@@ -287,12 +300,38 @@
       if (this.annotator.viewer.isShown()) {
         this.annotator.viewer.hide();
       }
-      annotation = $(event.target).data('annotation');
+      annotations = this.getAnnotationsAtMouseLocation(event);
       location = {
         left: event.clientX,
         top: event.clientY
       };
-      return this.annotator.showViewer([annotation], location);
+      return this.annotator.showViewer(annotations, location);
+    };
+
+    PDF.prototype.getAnnotationsAtMouseLocation = function(event) {
+      var CHECKED_CLASS, annotations, checked, clientX, clientY, element, parentDocument;
+      clientX = event.clientX, clientY = event.clientY;
+      parentDocument = event.target.ownerDocument;
+      CHECKED_CLASS = 'under-mouse-position-checked';
+      checked = [];
+      annotations = [];
+      while (true) {
+        element = parentDocument.elementFromPoint(clientX, clientY);
+        if (element.classList.contains('pdf-annotation-layer')) {
+          break;
+        }
+        element.classList.add(CHECKED_CLASS);
+        checked.push(element);
+        if (element.classList.contains('pdf-annotation')) {
+          annotations.push(element);
+        }
+      }
+      Array.prototype.forEach.call(checked, (function(element) {
+        return element.classList.remove(CHECKED_CLASS);
+      }));
+      return Array.prototype.map.call(annotations, (function(element) {
+        return $(element).data('annotation');
+      }));
     };
 
     return PDF;

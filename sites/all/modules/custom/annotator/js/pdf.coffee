@@ -148,8 +148,18 @@ class Annotator.Plugin.PDF extends Annotator.Plugin
     annotation.$element = $annotationElement
     $annotationElement.data('annotation', annotation)
 
-    # Attaches handlers to show editor on annotation element mouseover.
-    $annotationElement.on('mouseover', @onPdfHighlightMouseover)
+    # Attaches handlers to show editor on annotation element mouseover,
+    # throttling event handler execution.
+    THROTTLE_MS = 250
+    throttling = false
+    $annotationElement.on('mousemove', (event) =>
+      if not throttling
+        @onPDFHighlightMouseover(event)
+        throttling = true
+        setTimeout((-> throttling = false), THROTTLE_MS)
+
+    )
+      
     $annotationElement.on('mouseout', @annotator.startViewerHideTimer)
 
 
@@ -286,7 +296,7 @@ class Annotator.Plugin.PDF extends Annotator.Plugin
 
 
   # PDF-specific versions of Annotator's internal onHighlightMouseover.
-  onPdfHighlightMouseover: (event) =>
+  onPDFHighlightMouseover: (event) =>
     
     @annotator.clearViewerHideTimer()
 
@@ -297,6 +307,28 @@ class Annotator.Plugin.PDF extends Annotator.Plugin
     @annotator.viewer.hide() if @annotator.viewer.isShown()
 
     # Now show the viewer with the wanted annotation
-    annotation = $(event.target).data('annotation')
+    annotations = @getAnnotationsAtMouseLocation(event)
     location = { left: event.clientX, top: event.clientY }
-    @annotator.showViewer([ annotation ], location)
+    @annotator.showViewer(annotations, location)
+
+
+  # Finds all annotations under the current mouse location.
+  getAnnotationsAtMouseLocation: (event) ->
+    
+    # Extracts mouse location and parent document
+    { clientX, clientY } = event
+    parentDocument = event.target.ownerDocument
+
+    # Checks each element under mouse position
+    CHECKED_CLASS = 'under-mouse-position-checked'
+    checked = []
+    annotations = []
+    while true
+      element = parentDocument.elementFromPoint(clientX, clientY)
+      break if element.classList.contains('pdf-annotation-layer')
+      element.classList.add(CHECKED_CLASS)
+      checked.push(element)
+      annotations.push(element) if element.classList.contains('pdf-annotation')
+
+    Array.prototype.forEach.call(checked, ((element) -> element.classList.remove(CHECKED_CLASS)))
+    return Array.prototype.map.call(annotations, ((element) -> $(element).data('annotation')))
