@@ -36,9 +36,8 @@ class Annotator.Plugin.PDF extends Annotator.Plugin
       @annotations.splice(index, 1)
     )
 
-    # Listens for and handles custom PDF annotation events from PDF
-    # annotation layers.
-    @handlePDFAnnotationCreationEvents()
+    # Prevents PDF scrolling when the Editor is open.
+    @preventPDFScrollingOnEdit()
 
     # Enables annotation on each PDF page as it's loaded in the
     # viewer.
@@ -65,6 +64,27 @@ class Annotator.Plugin.PDF extends Annotator.Plugin
 
     )
 
+    # Listens for and handles custom PDF annotation creation events
+    # from PDF annotation layers.
+    @handlePDFAnnotationCreationEvents()
+
+
+  # Listens for Annotator events for the opening and closing of
+  # the Editor and freezes and unfreezes scrolling of the viewer
+  # accordingly.
+  preventPDFScrollingOnEdit: () ->
+
+    @editing = false
+    @subscribe('annotationEditorShown', () =>
+      $(@viewerElement.parentElement).css({ overflow: 'hidden' })
+      @editing = true
+    )
+
+    @subscribe('annotationEditorHidden', () =>
+      $(@viewerElement.parentElement).css({ overflow: 'auto' })
+      @editing = false
+    )
+
 
   # Enables annotation viewing and creation on a newly-rendered
   # PDF page.
@@ -78,7 +98,6 @@ class Annotator.Plugin.PDF extends Annotator.Plugin
 
     # Adds listeners to annotation layer for mouse events.
     @listenForAnnotationCreation(pageNumber, pageView, annotationLayer)
-
 
 
   # Creates an annotation layer for rendering existing annotations
@@ -136,38 +155,41 @@ class Annotator.Plugin.PDF extends Annotator.Plugin
   listenForAnnotationCreation: (pageNumber, pageView, annotationLayer) ->
 
     mouseDown = false
-    dragging = false
+    @dragging = false
     mousedownCoordinates = null
     $(annotationLayer).on('mousedown mousemove mouseup', (event) =>
 
-      rect = annotationLayer.getBoundingClientRect()
-      coordinates =
-        x: event.clientX - rect.x
-        y: event.clientY - rect.y
+      # Disallows drag-to-create if the Editor is already open.
+      if not @editing
 
-      eventParameters = { pageNumber, pageView, annotationLayer, coordinates }
-      if event.type is 'mousedown'
-        mouseDown = true
-        mousedownCoordinates = coordinates
+        rect = annotationLayer.getBoundingClientRect()
+        coordinates =
+          x: event.clientX - rect.x
+          y: event.clientY - rect.y
 
-      if event.type is 'mouseup'
-        mouseDown = false
-        mousedownCoordinates = null
-        if dragging
-          dragging = false
-          @publish('pdf-dragend', eventParameters)
-        
-        else
-          @publish('pdf-click', eventParameters)
+        eventParameters = { pageNumber, pageView, annotationLayer, coordinates }
+        if event.type is 'mousedown'
+          mouseDown = true
+          mousedownCoordinates = coordinates
 
-      if mouseDown and event.type is 'mousemove'
-        if not dragging
-          if @checkDragThreshold(coordinates, mousedownCoordinates)
-            dragging = true
-            @publish('pdf-dragstart', eventParameters)
-        
-        else
-          @publish('pdf-dragmove', eventParameters)
+        if event.type is 'mouseup'
+          mouseDown = false
+          mousedownCoordinates = null
+          if @dragging
+            @dragging = false
+            @publish('pdf-dragend', eventParameters)
+          
+          else
+            @publish('pdf-click', eventParameters)
+
+        if mouseDown and event.type is 'mousemove'
+          if not @dragging
+            if @checkDragThreshold(coordinates, mousedownCoordinates)
+              @dragging = true
+              @publish('pdf-dragstart', eventParameters)
+          
+          else
+            @publish('pdf-dragmove', eventParameters)
 
     )
 
@@ -185,12 +207,10 @@ class Annotator.Plugin.PDF extends Annotator.Plugin
   # new annotation.
   handlePDFAnnotationCreationEvents: ->
 
-    @creatingPdfAnnotation = false
     $newAnnotationElement = null
     pageNumber = null
     startCoordinates = null
     @subscribe('pdf-dragstart', (eventParameters) =>
-      @creatingPdfAnnotation = true
       pageNumber = eventParameters.pageNumber
       startCoordinates = eventParameters.coordinates
       $newAnnotationElement = $(@ANNOTATION_MARKUP).addClass('new-annotation')
@@ -219,7 +239,6 @@ class Annotator.Plugin.PDF extends Annotator.Plugin
       else
         $newAnnotationElement.remove()
 
-      @creatingPdfAnnotation = false
       $newAnnotationElement = null
       pageNumber = null
       startCoordinates = null
@@ -252,12 +271,10 @@ class Annotator.Plugin.PDF extends Annotator.Plugin
       cleanup()
 
     cleanup = =>
-      $(@viewerElement.parentElement).css({ overflow: 'auto' })
       @unsubscribe('annotationEditorHidden', cancel)
       @unsubscribe('annotationEditorSubmit', save)
 
     # Calculates editor location and opens editor with new annotation.
-    $(@viewerElement.parentElement).css({ overflow: 'hidden' })
     { top, left, bottom, right } = $newAnnotationElement[0].getBoundingClientRect()
     editorLocation = { top: (top + bottom) / 2, left: (left + right) / 2 }
     @subscribe('annotationEditorSubmit', save)
@@ -270,8 +287,8 @@ class Annotator.Plugin.PDF extends Annotator.Plugin
     
     @annotator.clearViewerHideTimer()
 
-    # Don't do anything if we're creating an annotation
-    return false if @creatingPdfAnnotation
+    # Don't do anything if we're creating or editing an annotation
+    return false if @dragging or @editing
 
     # If the viewer is already shown, hide it first
     @annotator.viewer.hide() if @annotator.viewer.isShown()

@@ -38,8 +38,8 @@
           return _this.annotations.splice(index, 1);
         };
       })(this));
-      this.handlePDFAnnotationCreationEvents();
-      return Drupal.PDFDocumentView.loaded.then((function(_this) {
+      this.preventPDFScrollingOnEdit();
+      Drupal.PDFDocumentView.loaded.then((function(_this) {
         return function() {
           var app, pdfPages;
           app = Drupal.PDFDocumentView.PDFViewerApplication;
@@ -52,6 +52,27 @@
             pageView = pdfPages[pageNumber - 1];
             return _this.enableAnnotationsOnPage(pageNumber, pageView);
           });
+        };
+      })(this));
+      return this.handlePDFAnnotationCreationEvents();
+    };
+
+    PDF.prototype.preventPDFScrollingOnEdit = function() {
+      this.editing = false;
+      this.subscribe('annotationEditorShown', (function(_this) {
+        return function() {
+          $(_this.viewerElement.parentElement).css({
+            overflow: 'hidden'
+          });
+          return _this.editing = true;
+        };
+      })(this));
+      return this.subscribe('annotationEditorHidden', (function(_this) {
+        return function() {
+          $(_this.viewerElement.parentElement).css({
+            overflow: 'auto'
+          });
+          return _this.editing = false;
         };
       })(this));
     };
@@ -105,46 +126,48 @@
     };
 
     PDF.prototype.listenForAnnotationCreation = function(pageNumber, pageView, annotationLayer) {
-      var dragging, mouseDown, mousedownCoordinates;
+      var mouseDown, mousedownCoordinates;
       mouseDown = false;
-      dragging = false;
+      this.dragging = false;
       mousedownCoordinates = null;
       return $(annotationLayer).on('mousedown mousemove mouseup', (function(_this) {
         return function(event) {
           var coordinates, eventParameters, rect;
-          rect = annotationLayer.getBoundingClientRect();
-          coordinates = {
-            x: event.clientX - rect.x,
-            y: event.clientY - rect.y
-          };
-          eventParameters = {
-            pageNumber: pageNumber,
-            pageView: pageView,
-            annotationLayer: annotationLayer,
-            coordinates: coordinates
-          };
-          if (event.type === 'mousedown') {
-            mouseDown = true;
-            mousedownCoordinates = coordinates;
-          }
-          if (event.type === 'mouseup') {
-            mouseDown = false;
-            mousedownCoordinates = null;
-            if (dragging) {
-              dragging = false;
-              _this.publish('pdf-dragend', eventParameters);
-            } else {
-              _this.publish('pdf-click', eventParameters);
+          if (!_this.editing) {
+            rect = annotationLayer.getBoundingClientRect();
+            coordinates = {
+              x: event.clientX - rect.x,
+              y: event.clientY - rect.y
+            };
+            eventParameters = {
+              pageNumber: pageNumber,
+              pageView: pageView,
+              annotationLayer: annotationLayer,
+              coordinates: coordinates
+            };
+            if (event.type === 'mousedown') {
+              mouseDown = true;
+              mousedownCoordinates = coordinates;
             }
-          }
-          if (mouseDown && event.type === 'mousemove') {
-            if (!dragging) {
-              if (_this.checkDragThreshold(coordinates, mousedownCoordinates)) {
-                dragging = true;
-                return _this.publish('pdf-dragstart', eventParameters);
+            if (event.type === 'mouseup') {
+              mouseDown = false;
+              mousedownCoordinates = null;
+              if (_this.dragging) {
+                _this.dragging = false;
+                _this.publish('pdf-dragend', eventParameters);
+              } else {
+                _this.publish('pdf-click', eventParameters);
               }
-            } else {
-              return _this.publish('pdf-dragmove', eventParameters);
+            }
+            if (mouseDown && event.type === 'mousemove') {
+              if (!_this.dragging) {
+                if (_this.checkDragThreshold(coordinates, mousedownCoordinates)) {
+                  _this.dragging = true;
+                  return _this.publish('pdf-dragstart', eventParameters);
+                }
+              } else {
+                return _this.publish('pdf-dragmove', eventParameters);
+              }
             }
           }
         };
@@ -160,13 +183,11 @@
 
     PDF.prototype.handlePDFAnnotationCreationEvents = function() {
       var $newAnnotationElement, pageNumber, startCoordinates;
-      this.creatingPdfAnnotation = false;
       $newAnnotationElement = null;
       pageNumber = null;
       startCoordinates = null;
       this.subscribe('pdf-dragstart', (function(_this) {
         return function(eventParameters) {
-          _this.creatingPdfAnnotation = true;
           pageNumber = eventParameters.pageNumber;
           startCoordinates = eventParameters.coordinates;
           $newAnnotationElement = $(_this.ANNOTATION_MARKUP).addClass('new-annotation');
@@ -210,7 +231,6 @@
           } else {
             $newAnnotationElement.remove();
           }
-          _this.creatingPdfAnnotation = false;
           $newAnnotationElement = null;
           pageNumber = null;
           return startCoordinates = null;
@@ -242,16 +262,10 @@
       })(this);
       cleanup = (function(_this) {
         return function() {
-          $(_this.viewerElement.parentElement).css({
-            overflow: 'auto'
-          });
           _this.unsubscribe('annotationEditorHidden', cancel);
           return _this.unsubscribe('annotationEditorSubmit', save);
         };
       })(this);
-      $(this.viewerElement.parentElement).css({
-        overflow: 'hidden'
-      });
       ref = $newAnnotationElement[0].getBoundingClientRect(), top = ref.top, left = ref.left, bottom = ref.bottom, right = ref.right;
       editorLocation = {
         top: (top + bottom) / 2,
@@ -265,7 +279,7 @@
     PDF.prototype.onPdfHighlightMouseover = function(event) {
       var annotation, location;
       this.annotator.clearViewerHideTimer();
-      if (this.creatingPdfAnnotation) {
+      if (this.dragging || this.editing) {
         return false;
       }
       if (this.annotator.viewer.isShown()) {
