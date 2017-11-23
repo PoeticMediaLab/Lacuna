@@ -6,13 +6,20 @@
 
 $ = jQuery
 
+# Markup for the annotation layer of a PDF page
+ANNOTATION_LAYER_CLASS = 'pdf-annotation-layer'
+ANNOTATION_LAYER_MARKUP = '<div class="' + ANNOTATION_LAYER_CLASS + '"></div>'
+
+# Markup for a PDF annotation
+ANNOTATION_CLASS = 'annotation-hl'
+ANNOTATION_ID_CLASS_PREFIX = 'annotation-'
+NEW_ANNOTATION_CLASS = 'new-annotation'
+ANNOTATION_MARKUP = '<div class="' + ANNOTATION_CLASS + '"></div>'
+
+# jQuery data key for saving annotation data to annotation element
+ANNOTATION_DATA_KEY = 'annotation'
+
 class Annotator.Plugin.PDF extends Annotator.Plugin
-
-  # Markup for the annotation layer of a PDF page
-  ANNOTATION_LAYER_MARKUP: '<div class="pdf-annotation-layer"></div>'
-
-  # Markup for a PDF annotation
-  ANNOTATION_MARKUP: '<div class="pdf-annotation annotator-hl"></div>'
 
   # Pixels from mousedown for a mouseup to qualify as a dragend
   DRAG_THRESHOLD: 5
@@ -106,7 +113,7 @@ class Annotator.Plugin.PDF extends Annotator.Plugin
   # Creates an annotation layer for rendering existing annotations
   # and capturing interaction events.
   createAnnotationLayer: (pageView) ->
-    annotationLayer = $(@ANNOTATION_LAYER_MARKUP)[0]
+    annotationLayer = $(ANNOTATION_LAYER_MARKUP)[0]
     pageView.div.appendChild(annotationLayer)
     return annotationLayer
 
@@ -120,7 +127,7 @@ class Annotator.Plugin.PDF extends Annotator.Plugin
       if annotation.pdfRange and annotation.pdfRange.pageNumber is pageNumber
 
         # Creates annotation element
-        $annotationElement = $(@ANNOTATION_MARKUP)
+        $annotationElement = $(ANNOTATION_MARKUP)
         
         # Calculates coordinates for rendering annotation and sets
         # CSS properties to position.
@@ -131,7 +138,7 @@ class Annotator.Plugin.PDF extends Annotator.Plugin
         $annotationElement.css({ left: x1, top: y1, width, height })
 
         # Links annotation element to annotation object.
-        @linkAnnotationElement($annotationElement, annotation)
+        @linkAnnotationToElement($annotationElement, annotation)
 
         # Renders annotation to DOM.
         $(annotationLayer).append($annotationElement)
@@ -141,12 +148,14 @@ class Annotator.Plugin.PDF extends Annotator.Plugin
 
   # Links an annotation element to an annotation object, creating
   # the necessary references and attaching the necessary listeners.
-  linkAnnotationElement: ($annotationElement, annotation) ->
+  linkAnnotationToElement: ($annotationElement, annotation) ->
 
     # Saves new element as property of annotation object and
-    # saves annotation object as data member of annotation element
+    # saves annotation object as data member of annotation element.
+    # Also adds a class for the annotation's ID.
     annotation.$element = $annotationElement
-    $annotationElement.data('annotation', annotation)
+    $annotationElement.data(ANNOTATION_DATA_KEY, annotation)
+    $annotationElement.addClass(ANNOTATION_ID_CLASS_PREFIX + annotation.id)
 
     # Attaches handlers to show editor on annotation element mouseover,
     # throttling event handler execution.
@@ -226,7 +235,7 @@ class Annotator.Plugin.PDF extends Annotator.Plugin
     @subscribe('pdf-dragstart', (eventParameters) =>
       pageNumber = eventParameters.pageNumber
       startCoordinates = eventParameters.coordinates
-      $newAnnotationElement = $(@ANNOTATION_MARKUP).addClass('new-annotation')
+      $newAnnotationElement = $(ANNOTATION_MARKUP).addClass(NEW_ANNOTATION_CLASS)
       $newAnnotationElement.css({ left: eventParameters.coordinates.x, top: eventParameters.coordinates.y })
       $(eventParameters.annotationLayer).append($newAnnotationElement)
     )
@@ -274,8 +283,8 @@ class Annotator.Plugin.PDF extends Annotator.Plugin
 
     save = =>
       @publish('annotationCreated', [ annotation ])
-      $newAnnotationElement.removeClass('new-annotation')
-      @linkAnnotationElement($newAnnotationElement, annotation)
+      $newAnnotationElement.removeClass(NEW_ANNOTATION_CLASS)
+      @linkAnnotationToElement($newAnnotationElement, annotation)
       @annotations.push(annotation)
       cleanup()
 
@@ -325,10 +334,10 @@ class Annotator.Plugin.PDF extends Annotator.Plugin
     annotations = []
     while true
       element = parentDocument.elementFromPoint(clientX, clientY)
-      break if element.classList.contains('pdf-annotation-layer')
+      break if element.classList.contains(ANNOTATION_LAYER_CLASS)
       element.classList.add(CHECKED_CLASS)
       checked.push(element)
-      annotations.push(element) if element.classList.contains('pdf-annotation')
+      annotations.push(element) if element.classList.contains(ANNOTATION_CLASS)
 
     Array.prototype.forEach.call(checked, ((element) -> element.classList.remove(CHECKED_CLASS)))
-    return Array.prototype.map.call(annotations, ((element) -> $(element).data('annotation')))
+    return Array.prototype.map.call(annotations, ((element) -> $(element).data(ANNOTATION_DATA_KEY)))
