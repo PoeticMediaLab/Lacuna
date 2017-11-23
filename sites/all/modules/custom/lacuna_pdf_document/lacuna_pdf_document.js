@@ -14,6 +14,11 @@
             .then(loadPDFViewer)
             .then(loadPDFInViewer)
 
+            Drupal.PDFDocumentView.pagesLoaded = Drupal.PDFDocumentView.loaded
+            .then(function() {
+                return Drupal.PDFDocumentView.PDFViewerApplication.pdfViewer.pagesPromise
+            })
+
         }
     }
 
@@ -39,6 +44,7 @@
                 viewer.contentDocument.head.appendChild(styleElement)
                 Drupal.PDFDocumentView.PDFJS = viewer.contentWindow.PDFJS
                 Drupal.PDFDocumentView.PDFViewerApplication = viewer.contentWindow.PDFViewerApplication
+                Drupal.PDFDocumentView.frameDocument = viewer.contentDocument
                 resolve()
             })
         

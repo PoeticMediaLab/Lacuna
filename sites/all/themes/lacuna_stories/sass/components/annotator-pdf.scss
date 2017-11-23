@@ -15,7 +15,7 @@
   z-index: 1;
   cursor: crosshair;
 
-  .pdf-annotation {
+  .annotation-hl {
     
     position: absolute;
     width: 0px;
@@ -35,6 +35,12 @@
     &.new-annotation {
       cursor: crosshair;
     }
+
+    &.af-annotation-hide {
+      background-color: transparent;
+      border: none;
+      pointer-events: none;
+    }
   
   }
 
@@ -44,7 +50,7 @@
   
   cursor: default;
 
-  .pdf-annotation {
+  .annotation-hl {
     
     cursor: default;
 

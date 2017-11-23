@@ -60,22 +60,49 @@ class Annotator.Plugin.PDF extends Annotator.Plugin
       # Saves a reference to the viewer's internal rendered page store
       pdfPages = app.pdfViewer._pages
 
+      # Defines a global function that scrolls to a page and returns
+      # a Promise for the page and all annotations finishing loading.
+      pageLoaded = null
+      Drupal.PDFDocumentView.scrollToPage = (pageNumber) =>
+        new Promise((resolve) ->
+          app.page = pageNumber
+          if pdfPages[pageNumber - 1].renderingState is 3
+            resolve()
+
+          else pageLoaded = (loadedPageNumber) ->
+            if loadedPageNumber is pageNumber
+              resolve()
+              pageLoaded = null
+
+        )
+
       # Creates an internal store of annotation layers
       @annotationLayers = []
 
-      # Listens for custom PDFApplicationViewer 'pagerendered' event
+      # Listens for custom PDFViewerApplication 'pagerendered' event
       # and enables annotation on each newly-rendered page.
       @viewerElement.addEventListener('pagerendered', (event) =>
         pageNumber = event.detail.pageNumber
         pageView = pdfPages[pageNumber - 1]
         @enableAnnotationsOnPage(pageNumber, pageView)
+        pageLoaded(pageNumber) if pageLoaded
       )
+
+      # Defines a global function that scrolls to a specific PDF
+      # page, returning a promise for after the page is 
 
     )
 
     # Listens for and handles custom PDF annotation creation events
     # from PDF annotation layers.
     @handlePDFAnnotationCreationEvents()
+
+    # Removes default Annotator selection listeners to prevent some
+    # console errors.
+    $(document).unbind({
+      "mouseup":   @annotator.checkForEndSelection
+      "mousedown": @annotator.checkForStartSelection
+    })
 
 
   # Listens for Annotator events for the opening and closing of

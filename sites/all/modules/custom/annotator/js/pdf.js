@@ -53,20 +53,43 @@
       this.listenForEditorEvents();
       Drupal.PDFDocumentView.loaded.then((function(_this) {
         return function() {
-          var app, pdfPages;
+          var app, pageLoaded, pdfPages;
           app = Drupal.PDFDocumentView.PDFViewerApplication;
           _this.viewerElement = app.pdfViewer.viewer;
           pdfPages = app.pdfViewer._pages;
+          pageLoaded = null;
+          Drupal.PDFDocumentView.scrollToPage = function(pageNumber) {
+            return new Promise(function(resolve) {
+              app.page = pageNumber;
+              if (pdfPages[pageNumber - 1].renderingState === 3) {
+                return resolve();
+              } else {
+                return pageLoaded = function(loadedPageNumber) {
+                  if (loadedPageNumber === pageNumber) {
+                    resolve();
+                    return pageLoaded = null;
+                  }
+                };
+              }
+            });
+          };
           _this.annotationLayers = [];
           return _this.viewerElement.addEventListener('pagerendered', function(event) {
             var pageNumber, pageView;
             pageNumber = event.detail.pageNumber;
             pageView = pdfPages[pageNumber - 1];
-            return _this.enableAnnotationsOnPage(pageNumber, pageView);
+            _this.enableAnnotationsOnPage(pageNumber, pageView);
+            if (pageLoaded) {
+              return pageLoaded(pageNumber);
+            }
           });
         };
       })(this));
-      return this.handlePDFAnnotationCreationEvents();
+      this.handlePDFAnnotationCreationEvents();
+      return $(document).unbind({
+        "mouseup": this.annotator.checkForEndSelection,
+        "mousedown": this.annotator.checkForStartSelection
+      });
     };
 
     PDF.prototype.listenForEditorEvents = function() {
