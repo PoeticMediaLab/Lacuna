@@ -11,10 +11,11 @@ ANNOTATION_LAYER_CLASS = 'pdf-annotation-layer'
 ANNOTATION_LAYER_MARKUP = '<div class="' + ANNOTATION_LAYER_CLASS + '"></div>'
 
 # Markup for a PDF annotation
-ANNOTATION_CLASS = 'annotation-hl'
-ANNOTATION_ID_CLASS_PREFIX = 'annotation-'
-NEW_ANNOTATION_CLASS = 'new-annotation'
-ANNOTATION_MARKUP = '<div class="' + ANNOTATION_CLASS + '"></div>'
+HIGHLIGHT_CLASS = 'annotation-hl'
+HIGHLIGHT_ID_CLASS_PREFIX = 'annotation-'
+HIGHLIGHT_HIDDEN_CLASS = 'af-annotation-hide'
+NEW_HIGHLIGHT_CLASS = 'new-annotation'
+HIGHLIGHT_MARKUP = '<div class="' + HIGHLIGHT_CLASS + '"></div>'
 
 # jQuery data key for saving annotation data to annotation element
 ANNOTATION_DATA_KEY = 'annotation'
@@ -38,7 +39,7 @@ class Annotator.Plugin.PDF extends Annotator.Plugin
     # Listens for annotations being deleted and removes element from
     # PDF annotation layer and in-memory annotation store.
     @subscribe('annotationDeleted', (annotation) =>
-      annotation.$element.remove()
+      annotation.$pdfHighlight.remove()
       index = @annotations.indexOf(annotation)
       @annotations.splice(index, 1)
     )
@@ -127,7 +128,7 @@ class Annotator.Plugin.PDF extends Annotator.Plugin
       if annotation.pdfRange and annotation.pdfRange.pageNumber is pageNumber
 
         # Creates annotation element
-        $annotationElement = $(ANNOTATION_MARKUP)
+        $highlightElement = $(HIGHLIGHT_MARKUP)
         
         # Calculates coordinates for rendering annotation and sets
         # CSS properties to position.
@@ -135,33 +136,34 @@ class Annotator.Plugin.PDF extends Annotator.Plugin
         v = pageView.viewport
         [ [ x1, y1 ], [ x2, y2 ] ] = [ [ x1Pdf, y1Pdf ], [ x2Pdf, y2Pdf ] ].map(([ x, y ]) -> v.convertToViewportPoint(x, y))
         [ width, height ] = [ x2 - x1, y2 - y1 ]
-        $annotationElement.css({ left: x1, top: y1, width, height })
+        $highlightElement.css({ left: x1, top: y1, width, height })
 
         # Links annotation element to annotation object.
-        @linkAnnotationToElement($annotationElement, annotation)
+        @setupHighlightElement($highlightElement, annotation)
 
         # Renders annotation to DOM.
-        $(annotationLayer).append($annotationElement)
+        $(annotationLayer).append($highlightElement)
 
     )
 
 
-  # Links an annotation element to an annotation object, creating
+  # Links an highlight element to an annotation object, creating
   # the necessary references and attaching the necessary listeners.
-  linkAnnotationToElement: ($annotationElement, annotation) ->
+  setupHighlightElement: ($highlightElement, annotation) ->
 
     # Saves new element as property of annotation object and
-    # saves annotation object as data member of annotation element.
+    # saves annotation object as data member of highlight element.
     # Also adds a class for the annotation's ID.
-    annotation.$element = $annotationElement
-    $annotationElement.data(ANNOTATION_DATA_KEY, annotation)
-    $annotationElement.addClass(ANNOTATION_ID_CLASS_PREFIX + annotation.id)
+    annotation.$pdfHighlight = $highlightElement
+    $highlightElement.data(ANNOTATION_DATA_KEY, annotation)
+    $highlightElement.addClass(HIGHLIGHT_ID_CLASS_PREFIX + annotation.id)
+    $highlightElement.addClass(HIGHLIGHT_HIDDEN_CLASS) if annotation._isHidden
 
-    # Attaches handlers to show editor on annotation element mouseover,
+    # Attaches handlers to show editor on highlight element mouseover,
     # throttling event handler execution.
     THROTTLE_MS = 250
     throttling = false
-    $annotationElement.on('mousemove', (event) =>
+    $highlightElement.on('mousemove', (event) =>
       if not throttling
         @onPDFHighlightMouseover(event)
         throttling = true
@@ -169,7 +171,7 @@ class Annotator.Plugin.PDF extends Annotator.Plugin
 
     )
       
-    $annotationElement.on('mouseout', @annotator.startViewerHideTimer)
+    $highlightElement.on('mouseout', @annotator.startViewerHideTimer)
 
 
   # Attaches listeners to the PDF document page annotation layers,
@@ -229,21 +231,21 @@ class Annotator.Plugin.PDF extends Annotator.Plugin
   # new annotation.
   handlePDFAnnotationCreationEvents: ->
 
-    $newAnnotationElement = null
+    $newHighlightElement = null
     pageNumber = null
     startCoordinates = null
     @subscribe('pdf-dragstart', (eventParameters) =>
       pageNumber = eventParameters.pageNumber
       startCoordinates = eventParameters.coordinates
-      $newAnnotationElement = $(ANNOTATION_MARKUP).addClass(NEW_ANNOTATION_CLASS)
-      $newAnnotationElement.css({ left: eventParameters.coordinates.x, top: eventParameters.coordinates.y })
-      $(eventParameters.annotationLayer).append($newAnnotationElement)
+      $newHighlightElement = $(HIGHLIGHT_MARKUP).addClass(NEW_HIGHLIGHT_CLASS)
+      $newHighlightElement.css({ left: eventParameters.coordinates.x, top: eventParameters.coordinates.y })
+      $(eventParameters.annotationLayer).append($newHighlightElement)
     )
 
     @subscribe('pdf-dragmove', (eventParameters) =>
       width = eventParameters.coordinates.x - startCoordinates.x
       height = eventParameters.coordinates.y - startCoordinates.y
-      $newAnnotationElement.css({ width: (if width > 0 then width else 0), height: (if height > 0 then height else 0) })
+      $newHighlightElement.css({ width: (if width > 0 then width else 0), height: (if height > 0 then height else 0) })
     )
 
     @subscribe('pdf-dragend', (eventParameters) =>
@@ -256,12 +258,12 @@ class Annotator.Plugin.PDF extends Annotator.Plugin
       [ widthPdf, heightPdf ] = [ x2Pdf - x1Pdf, y2Pdf - y1Pdf ]
       if widthPdf > 0 and heightPdf < 0
         pdfRange = { pageNumber, x1Pdf, y1Pdf, x2Pdf, y2Pdf }
-        @editNewAnnotation(pdfRange, $newAnnotationElement)
+        @editNewAnnotation(pdfRange, $newHighlightElement)
       
       else
-        $newAnnotationElement.remove()
+        $newHighlightElement.remove()
 
-      $newAnnotationElement = null
+      $newHighlightElement = null
       pageNumber = null
       startCoordinates = null
     
@@ -270,7 +272,7 @@ class Annotator.Plugin.PDF extends Annotator.Plugin
 
   # Creates a new annotation from the supplied range, then opens
   # the editor with it.
-  editNewAnnotation: (pdfRange, $newAnnotationElement) ->
+  editNewAnnotation: (pdfRange, $newHighlightElement) ->
 
     # Creates new annotation
     annotation = @annotator.createAnnotation()
@@ -283,13 +285,13 @@ class Annotator.Plugin.PDF extends Annotator.Plugin
 
     save = =>
       @publish('annotationCreated', [ annotation ])
-      $newAnnotationElement.removeClass(NEW_ANNOTATION_CLASS)
-      @linkAnnotationToElement($newAnnotationElement, annotation)
+      $newHighlightElement.removeClass(NEW_HIGHLIGHT_CLASS)
+      @setupHighlightElement($newHighlightElement, annotation)
       @annotations.push(annotation)
       cleanup()
 
     cancel = =>
-      $newAnnotationElement.remove()
+      $newHighlightElement.remove()
       cleanup()
 
     cleanup = =>
@@ -297,7 +299,7 @@ class Annotator.Plugin.PDF extends Annotator.Plugin
       @unsubscribe('annotationEditorSubmit', save)
 
     # Calculates editor location and opens editor with new annotation.
-    { top, left, bottom, right } = $newAnnotationElement[0].getBoundingClientRect()
+    { top, left, bottom, right } = $newHighlightElement[0].getBoundingClientRect()
     editorLocation = { top: (top + bottom) / 2, left: (left + right) / 2 }
     @subscribe('annotationEditorSubmit', save)
     @subscribe('annotationEditorHidden', cancel)
@@ -337,7 +339,7 @@ class Annotator.Plugin.PDF extends Annotator.Plugin
       break if element.classList.contains(ANNOTATION_LAYER_CLASS)
       element.classList.add(CHECKED_CLASS)
       checked.push(element)
-      annotations.push(element) if element.classList.contains(ANNOTATION_CLASS)
+      annotations.push(element) if element.classList.contains(HIGHLIGHT_CLASS)
 
     Array.prototype.forEach.call(checked, ((element) -> element.classList.remove(CHECKED_CLASS)))
     return Array.prototype.map.call(annotations, ((element) -> $(element).data(ANNOTATION_DATA_KEY)))
