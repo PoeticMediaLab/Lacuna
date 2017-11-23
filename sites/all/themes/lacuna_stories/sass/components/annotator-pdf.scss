@@ -20,25 +20,48 @@
     position: absolute;
     width: 0px;
     height: 0px;
+    border-style: solid;
+    border-width: 1px;
+    border-color: rgba(22, 147, 165, 0);
     background-color: rgba(22, 147, 165, .4);
-    border: 1px solid rgba(22, 147, 165, 0);
     border-radius: 2px;
     cursor: pointer;
     transition: background-color .25s, border .25s;
 
-    &.new-annotation,
     &:hover {
+      border-color: rgba(22, 147, 165, 1);
       background-color: rgba(22, 147, 165, .8);
-      border: 1px solid rgba(22, 147, 165, 1);
+    }
+
+    &.annotator-category-none {
+      
+      border-color: rgba(255, 255, 10, 0);
+      background-color: rgba(255, 255, 10, .4);
+
+      &:hover {
+        border-color: rgba(255, 255, 10, 1);
+        background-color: rgba(255, 255, 10, .8);
+      }
+    
     }
 
     &.new-annotation {
       cursor: crosshair;
+      border-color: rgba(22, 147, 165, 1);
+      background-color: rgba(22, 147, 165, .8);
     }
 
-    &.af-annotation-hide {
+    &.af-annotation-hide,
+    &.af-annotation-hide.annotator-category-none {
+      border-color: transparent;
       background-color: transparent;
-      border: none;
+      pointer-events: none;
+    }
+
+    &.af-annotation-hide,
+    &.af-annotation-hide.annotator-category-none {
+      border-color: transparent;
+      background-color: transparent;
       pointer-events: none;
     }
   
@@ -54,9 +77,16 @@
     
     cursor: default;
 
-    &:not(.new-annotation):hover {
+    &:hover {
+      border-color: rgba(22, 147, 165, 0);
       background-color: rgba(22, 147, 165, .4);
-      border: 1px solid rgba(22, 147, 165, 0);
+    }
+
+    &.annotator-category-none:hover {
+      
+      border-color: rgba(255, 255, 10, 0);
+      background-color: rgba(255, 255, 10, .4);
+    
     }
   
   }

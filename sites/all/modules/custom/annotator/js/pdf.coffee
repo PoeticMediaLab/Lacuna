@@ -15,6 +15,8 @@ HIGHLIGHT_CLASS = 'annotation-hl'
 HIGHLIGHT_ID_CLASS_PREFIX = 'annotation-'
 HIGHLIGHT_HIDDEN_CLASS = 'af-annotation-hide'
 NEW_HIGHLIGHT_CLASS = 'new-annotation'
+HIGHLIGHT_ONLY_CATEGORY = 'Highlight'
+HIGHLIGHT_ONLY_CLASS = 'annotator-category-none'
 HIGHLIGHT_MARKUP = '<div class="' + HIGHLIGHT_CLASS + '"></div>'
 
 # jQuery data key for saving annotation data to annotation element
@@ -185,6 +187,7 @@ class Annotator.Plugin.PDF extends Annotator.Plugin
     $highlightElement.data(ANNOTATION_DATA_KEY, annotation)
     $highlightElement.addClass(HIGHLIGHT_ID_CLASS_PREFIX + annotation.id)
     $highlightElement.addClass(HIGHLIGHT_HIDDEN_CLASS) if annotation._isHidden
+    $highlightElement.addClass(HIGHLIGHT_ONLY_CLASS) if annotation.category is HIGHLIGHT_ONLY_CATEGORY
 
     # Attaches handlers to show editor on highlight element mouseover,
     # throttling event handler execution.
