@@ -52,7 +52,7 @@ class Annotator.Plugin.PDF extends Annotator.Plugin
 
     # Enables annotation on each PDF page as it's loaded in the
     # viewer.
-    Drupal.PDFDocumentView.loaded.then(=>
+    @pdfAnnotationSetupDone = Drupal.PDFDocumentView.loaded.then(=>
 
       app = Drupal.PDFDocumentView.PDFViewerApplication
 
@@ -60,15 +60,18 @@ class Annotator.Plugin.PDF extends Annotator.Plugin
       @viewerElement = app.pdfViewer.viewer
 
       # Saves a reference to the viewer's internal rendered page store
-      pdfPages = app.pdfViewer._pages
+      @pdfPages = app.pdfViewer._pages
+
+      # Initializes internal store of annotation layers
+      @annotationLayers = []
 
       # Defines a global function that scrolls to a page and returns
       # a Promise for the page and all annotations finishing loading.
       pageLoaded = null
       Drupal.PDFDocumentView.scrollToPage = (pageNumber) =>
-        new Promise((resolve) ->
+        new Promise((resolve) =>
           app.page = pageNumber
-          if pdfPages[pageNumber - 1].renderingState is 3
+          if @pdfPages[pageNumber - 1].renderingState is 3
             resolve()
 
           else pageLoaded = (loadedPageNumber) ->
@@ -78,20 +81,14 @@ class Annotator.Plugin.PDF extends Annotator.Plugin
 
         )
 
-      # Creates an internal store of annotation layers
-      @annotationLayers = []
-
       # Listens for custom PDFViewerApplication 'pagerendered' event
       # and enables annotation on each newly-rendered page.
       @viewerElement.addEventListener('pagerendered', (event) =>
         pageNumber = event.detail.pageNumber
-        pageView = pdfPages[pageNumber - 1]
+        pageView = @pdfPages[pageNumber - 1]
         @enableAnnotationsOnPage(pageNumber, pageView)
         pageLoaded(pageNumber) if pageLoaded
       )
-
-      # Defines a global function that scrolls to a specific PDF
-      # page, returning a promise for after the page is 
 
     )
 
@@ -132,12 +129,13 @@ class Annotator.Plugin.PDF extends Annotator.Plugin
 
     # Adds a layer over the page <canvas> elements to hold annotations.
     annotationLayer = @createAnnotationLayer(pageView)
+    @annotationLayers[pageNumber - 1] = annotationLayer
 
     # Loads existing annotations on the layer
     @drawExistingAnnotations(pageNumber, pageView, annotationLayer)
 
     # Adds listeners to annotation layer for mouse events.
-    @listenForAnnotationCreation(pageNumber, pageView, annotationLayer)
+    @listenForPDFAnnotationCreation(pageNumber, pageView, annotationLayer)
 
 
   # Creates an annotation layer for rendering existing annotations
@@ -206,7 +204,7 @@ class Annotator.Plugin.PDF extends Annotator.Plugin
 
   # Attaches listeners to the PDF document page annotation layers,
   # publishing higher-level events to subscribed handlers.
-  listenForAnnotationCreation: (pageNumber, pageView, annotationLayer) ->
+  listenForPDFAnnotationCreation: (pageNumber, pageView, annotationLayer) ->
 
     mouseDown = false
     @dragging = false

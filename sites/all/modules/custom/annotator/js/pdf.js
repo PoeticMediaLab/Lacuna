@@ -55,17 +55,18 @@
         };
       })(this));
       this.listenForEditorEvents();
-      Drupal.PDFDocumentView.loaded.then((function(_this) {
+      this.pdfAnnotationSetupDone = Drupal.PDFDocumentView.loaded.then((function(_this) {
         return function() {
-          var app, pageLoaded, pdfPages;
+          var app, pageLoaded;
           app = Drupal.PDFDocumentView.PDFViewerApplication;
           _this.viewerElement = app.pdfViewer.viewer;
-          pdfPages = app.pdfViewer._pages;
+          _this.pdfPages = app.pdfViewer._pages;
+          _this.annotationLayers = [];
           pageLoaded = null;
           Drupal.PDFDocumentView.scrollToPage = function(pageNumber) {
             return new Promise(function(resolve) {
               app.page = pageNumber;
-              if (pdfPages[pageNumber - 1].renderingState === 3) {
+              if (_this.pdfPages[pageNumber - 1].renderingState === 3) {
                 return resolve();
               } else {
                 return pageLoaded = function(loadedPageNumber) {
@@ -77,11 +78,10 @@
               }
             });
           };
-          _this.annotationLayers = [];
           return _this.viewerElement.addEventListener('pagerendered', function(event) {
             var pageNumber, pageView;
             pageNumber = event.detail.pageNumber;
-            pageView = pdfPages[pageNumber - 1];
+            pageView = _this.pdfPages[pageNumber - 1];
             _this.enableAnnotationsOnPage(pageNumber, pageView);
             if (pageLoaded) {
               return pageLoaded(pageNumber);
@@ -121,8 +121,9 @@
     PDF.prototype.enableAnnotationsOnPage = function(pageNumber, pageView) {
       var annotationLayer;
       annotationLayer = this.createAnnotationLayer(pageView);
+      this.annotationLayers[pageNumber - 1] = annotationLayer;
       this.drawExistingAnnotations(pageNumber, pageView, annotationLayer);
-      return this.listenForAnnotationCreation(pageNumber, pageView, annotationLayer);
+      return this.listenForPDFAnnotationCreation(pageNumber, pageView, annotationLayer);
     };
 
     PDF.prototype.createAnnotationLayer = function(pageView) {
@@ -186,7 +187,7 @@
       return $highlightElement.on('mouseout', this.annotator.startViewerHideTimer);
     };
 
-    PDF.prototype.listenForAnnotationCreation = function(pageNumber, pageView, annotationLayer) {
+    PDF.prototype.listenForPDFAnnotationCreation = function(pageNumber, pageView, annotationLayer) {
       var mouseDown, mousedownCoordinates;
       mouseDown = false;
       this.dragging = false;

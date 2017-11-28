@@ -194,6 +194,10 @@ class Annotator.Plugin.Touch extends Annotator.Plugin
     # Wrap the interface elements with touch controls.
     @editor = new Touch.Editor(@annotator.editor)
     @viewer = new Touch.Viewer(@annotator.viewer)
+    if @annotator.plugins.PDF
+      @annotator.plugins.PDF.pdfAnnotationSetupDone.then(=>
+        new Touch.PDF(@annotator)
+      )
 
     # start with closed annotator tab
     @editor.element.addClass('tab-in')

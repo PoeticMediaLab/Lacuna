@@ -140,6 +140,13 @@
     Touch.prototype._setupAnnotatorEvents = function() {
       this.editor = new Touch.Editor(this.annotator.editor);
       this.viewer = new Touch.Viewer(this.annotator.viewer);
+      if (this.annotator.plugins.PDF) {
+        this.annotator.plugins.PDF.pdfAnnotationSetupDone.then((function(_this) {
+          return function() {
+            return new Touch.PDF(_this.annotator);
+          };
+        })(this));
+      }
       this.editor.element.addClass('tab-in');
       this.controls.addClass('tab-in');
       this.annotator.editor.on("show", (function(_this) {
