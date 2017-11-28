@@ -69,24 +69,27 @@ function lacuna_pdf_document_field_formatter_info() {
 *   the PDF viewer and injects the JS code that loads the PDF.
 */
 
-function lacuna_pdf_document_field_formatter_view($entity_type, $entity, $field, $instance, $langcode, $items, $display) {
+function lacuna_pdf_document_field_formatter_view( $entity_type, $entity, $field, $instance, $langcode, $items, $display ) {
     
-    $viewer_src_url = base_path() . 'sites/all/libraries/pdf.js/web/viewer.html';
-    $viewer_style_url = base_path() . drupal_get_path( 'theme', 'lacuna_stories' ) . '/css/components/annotator-pdf.css';
-    $js_url = drupal_get_path( 'module', 'lacuna_pdf_document' ) . '/lacuna_pdf_document.js';
-    $pdf_url = file_create_url( $items[0]['uri'] );
-    return array(
-        array(
-            '#markup' => '<iframe class="pdf" width="100%" height="100%"></iframe>',
-            '#attached' => array( 'js' => array(
-                array( 'type' => 'file', 'data' => $js_url, 'group' => JS_LIBRARY ),
-                array( 'type' => 'setting', 'data' => array( 'lacuna_pdf_document' => array(
-                    'viewer_src_url' => $viewer_src_url,
-                    'viewer_style_url' => $viewer_style_url,
-                    'pdf_url' => $pdf_url,
-                ) ) ),
-            ) ),
-        )
-    );
+    $is_pdf = $entity->field_doc_type[$langcode][0]['value'];
+    if ( $is_pdf ) {
+        $viewer_src_url = base_path() . 'sites/all/libraries/pdf.js/web/viewer.html';
+        $viewer_style_url = base_path() . drupal_get_path( 'theme', 'lacuna_stories' ) . '/css/components/annotator-pdf.css';
+        $js_url = drupal_get_path( 'module', 'lacuna_pdf_document' ) . '/lacuna_pdf_document.js';
+        $pdf_url = file_create_url( $items[0]['uri'] );
+        return array(
+            array(
+                '#markup' => '<iframe class="pdf" width="100%" height="100%"></iframe>',
+                '#attached' => array( 'js' => array(
+                    array( 'type' => 'file', 'data' => $js_url, 'group' => JS_LIBRARY ),
+                    array( 'type' => 'setting', 'data' => array( 'lacuna_pdf_document' => array(
+                        'viewer_src_url' => $viewer_src_url,
+                        'viewer_style_url' => $viewer_style_url,
+                        'pdf_url' => $pdf_url,
+                    ) ) ),
+                ) ),
+            )
+        );
+    }
 
 }
