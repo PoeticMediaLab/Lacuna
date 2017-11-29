@@ -6,7 +6,7 @@
 
   LONG_TAP_DELAY = 500;
 
-  INITIAL_ANNOTATION_SIZE = 50;
+  INITIAL_ANNOTATION_SIZE = 75;
 
   Annotator.Plugin.Touch.PDF = (function(superClass) {
     extend(PDF, superClass);
@@ -26,33 +26,46 @@
     }
 
     PDF.prototype.listenForPDFTouchAnnotationCreation = function(pageNumber, pageView, annotationLayer) {
-      var tapStart;
-      tapStart = null;
+      var timeout;
+      timeout = null;
       return $(annotationLayer).on('touchstart touchmove touchend', (function(_this) {
         return function(event) {
-          var coordinates, rect, touch;
           if (event.type === 'touchstart') {
-            tapStart = Date.now();
+            timeout = setTimeout(function() {
+              var coordinates, rect, touch;
+              timeout = null;
+              rect = annotationLayer.getBoundingClientRect();
+              touch = event.originalEvent.changedTouches[0];
+              coordinates = {
+                x: touch.clientX - rect.x,
+                y: touch.clientY - rect.y
+              };
+              return _this.createNewPDFTouchHighlight(pageNumber, pageView, annotationLayer, coordinates);
+            }, LONG_TAP_DELAY);
           }
           if (event.type === 'touchmove') {
-            tapStart = null;
+            clearTimeout(timeout);
           }
-          if (event.type === 'touchend' && tapStart && Date.now() - LONG_TAP_DELAY > tapStart) {
-            tapStart = null;
-            rect = annotationLayer.getBoundingClientRect();
-            touch = event.originalEvent.changedTouches[0];
-            coordinates = {
-              x: touch.clientX - rect.x,
-              y: touch.clientY - rect.y
-            };
-            return _this.createNewPDFTouchHighlight(pageNumber, pageView, annotationLayer, coordinates);
+          if (event.type === 'touchend' && timeout) {
+            return clearTimeout(timeout);
           }
         };
       })(this));
     };
 
     PDF.prototype.createNewPDFTouchHighlight = function(pageNumber, pageView, annotationLayer, coordinates) {
-      return console.log('creating new highlight at page ' + pageNumber + ', (' + coordinates.x + ', ' + coordinates.y + ')');
+      var initialLowerRight, initialUpperLeft;
+      console.log('creating new highlight at page ' + pageNumber + ', (' + coordinates.x + ', ' + coordinates.y + ')');
+      initialUpperLeft = {
+        x: coordinates.x - INITIAL_ANNOTATION_SIZE / 2,
+        y: coordinates.y - INITIAL_ANNOTATION_SIZE / 2
+      };
+      initialLowerRight = {
+        x: coordinates.x + INITIAL_ANNOTATION_SIZE / 2,
+        y: coordinates.y + INITIAL_ANNOTATION_SIZE / 2
+      };
+      this.pdfPlugin.createNewHighlight(annotationLayer, initialUpperLeft);
+      return this.pdfPlugin.updateHighlightDimensions(initialLowerRight, initialUpperLeft);
     };
 
     return PDF;

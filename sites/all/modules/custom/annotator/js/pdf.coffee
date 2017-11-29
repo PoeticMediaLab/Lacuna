@@ -92,10 +92,6 @@ class Annotator.Plugin.PDF extends Annotator.Plugin
 
     )
 
-    # Listens for and handles custom PDF annotation creation events
-    # from PDF annotation layers.
-    @handlePDFAnnotationCreationEvents()
-
     # Removes default Annotator selection listeners to prevent some
     # console errors.
     $(document).unbind({
@@ -219,29 +215,26 @@ class Annotator.Plugin.PDF extends Annotator.Plugin
           x: event.clientX - rect.x
           y: event.clientY - rect.y
 
-        eventParameters = { pageNumber, pageView, annotationLayer, coordinates }
         if event.type is 'mousedown'
           mouseDown = true
           mousedownCoordinates = coordinates
 
         if event.type is 'mouseup'
-          mouseDown = false
-          mousedownCoordinates = null
           if @dragging
             @dragging = false
-            @publish('pdf-dragend', eventParameters)
-          
-          else
-            @publish('pdf-click', eventParameters)
+            @finalizeHighlight(pageNumber, pageView, coordinates, mousedownCoordinates)
+
+          mouseDown = false
+          mousedownCoordinates = null
 
         if mouseDown and event.type is 'mousemove'
           if not @dragging
             if @checkDragThreshold(coordinates, mousedownCoordinates)
               @dragging = true
-              @publish('pdf-dragstart', eventParameters)
+              @createNewHighlight(annotationLayer, coordinates)
           
           else
-            @publish('pdf-dragmove', eventParameters)
+            @updateHighlightDimensions(coordinates, mousedownCoordinates)
 
     )
 
@@ -254,48 +247,37 @@ class Annotator.Plugin.PDF extends Annotator.Plugin
     return x or y
 
 
-  # Subscribes to PDF annotation layer drag events with handler
-  # that allows selection over an area and triggers creation of a
-  # new annotation.
-  handlePDFAnnotationCreationEvents: ->
+  # Creates a new annotation highlight element.
+  createNewHighlight: (annotationLayer, coordinates) =>
+    @$newHighlightElement = $(HIGHLIGHT_MARKUP).addClass(NEW_HIGHLIGHT_CLASS)
+    @$newHighlightElement.css({ left: coordinates.x, top: coordinates.y })
+    $(annotationLayer).append(@$newHighlightElement)
 
-    $newHighlightElement = null
-    pageNumber = null
-    startCoordinates = null
-    @subscribe('pdf-dragstart', (eventParameters) =>
-      pageNumber = eventParameters.pageNumber
-      startCoordinates = eventParameters.coordinates
-      $newHighlightElement = $(HIGHLIGHT_MARKUP).addClass(NEW_HIGHLIGHT_CLASS)
-      $newHighlightElement.css({ left: eventParameters.coordinates.x, top: eventParameters.coordinates.y })
-      $(eventParameters.annotationLayer).append($newHighlightElement)
-    )
 
-    @subscribe('pdf-dragmove', (eventParameters) =>
-      width = eventParameters.coordinates.x - startCoordinates.x
-      height = eventParameters.coordinates.y - startCoordinates.y
-      $newHighlightElement.css({ width: (if width > 0 then width else 0), height: (if height > 0 then height else 0) })
-    )
+  # Creates a new annotation highlight element.
+  updateHighlightDimensions: (coordinates, mousedownCoordinates) =>
+    width = coordinates.x - mousedownCoordinates.x
+    height = coordinates.y - mousedownCoordinates.y
+    @$newHighlightElement.css({ width: (if width > 0 then width else 0), height: (if height > 0 then height else 0) })
 
-    @subscribe('pdf-dragend', (eventParameters) =>
-      
-      # Converts native CSS coordinates to PDF-specific coordinates,
-      # for which the origin of each page is the lower-left corner
-      # instead of the upper-left corner.
-      v = eventParameters.pageView.viewport
-      [ [ x1Pdf, y1Pdf ], [ x2Pdf, y2Pdf ] ] = [ [ startCoordinates.x, startCoordinates.y ], [ eventParameters.coordinates.x, eventParameters.coordinates.y ] ].map(([ x, y ]) -> v.convertToPdfPoint(x, y))
-      [ widthPdf, heightPdf ] = [ x2Pdf - x1Pdf, y2Pdf - y1Pdf ]
-      if widthPdf > 0 and heightPdf < 0
-        pdfRange = { pageNumber, x1Pdf, y1Pdf, x2Pdf, y2Pdf }
-        @editNewAnnotation(pdfRange, $newHighlightElement)
-      
-      else
-        $newHighlightElement.remove()
 
-      $newHighlightElement = null
-      pageNumber = null
-      startCoordinates = null
+  # Creates a new annotation highlight element.
+  finalizeHighlight: (pageNumber, pageView, coordinates, mousedownCoordinates) =>
     
-    )
+    # Converts native CSS coordinates to PDF-specific coordinates,
+    # for which the origin of each page is the lower-left corner
+    # instead of the upper-left corner.
+    v = pageView.viewport
+    [ [ x1Pdf, y1Pdf ], [ x2Pdf, y2Pdf ] ] = [ [ mousedownCoordinates.x, mousedownCoordinates.y ], [ coordinates.x, coordinates.y ] ].map(([ x, y ]) -> v.convertToPdfPoint(x, y))
+    [ widthPdf, heightPdf ] = [ x2Pdf - x1Pdf, y2Pdf - y1Pdf ]
+    if widthPdf > 0 and heightPdf < 0
+      pdfRange = { pageNumber, x1Pdf, y1Pdf, x2Pdf, y2Pdf }
+      @editNewAnnotation(pdfRange, @$newHighlightElement)
+    
+    else
+      @$newHighlightElement.remove()
+
+    @$newHighlightElement = null
 
 
   # Creates a new annotation from the supplied range, then opens

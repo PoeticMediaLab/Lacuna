@@ -32,6 +32,9 @@
 
     function PDF() {
       this.onPDFHighlightMouseover = bind(this.onPDFHighlightMouseover, this);
+      this.finalizeHighlight = bind(this.finalizeHighlight, this);
+      this.updateHighlightDimensions = bind(this.updateHighlightDimensions, this);
+      this.createNewHighlight = bind(this.createNewHighlight, this);
       return PDF.__super__.constructor.apply(this, arguments);
     }
 
@@ -89,7 +92,6 @@
           });
         };
       })(this));
-      this.handlePDFAnnotationCreationEvents();
       return $(document).unbind({
         "mouseup": this.annotator.checkForEndSelection,
         "mousedown": this.annotator.checkForStartSelection
@@ -194,41 +196,33 @@
       mousedownCoordinates = null;
       return $(annotationLayer).on('mousedown mousemove mouseup', (function(_this) {
         return function(event) {
-          var coordinates, eventParameters, rect;
+          var coordinates, rect;
           if (!_this.editing) {
             rect = annotationLayer.getBoundingClientRect();
             coordinates = {
               x: event.clientX - rect.x,
               y: event.clientY - rect.y
             };
-            eventParameters = {
-              pageNumber: pageNumber,
-              pageView: pageView,
-              annotationLayer: annotationLayer,
-              coordinates: coordinates
-            };
             if (event.type === 'mousedown') {
               mouseDown = true;
               mousedownCoordinates = coordinates;
             }
             if (event.type === 'mouseup') {
-              mouseDown = false;
-              mousedownCoordinates = null;
               if (_this.dragging) {
                 _this.dragging = false;
-                _this.publish('pdf-dragend', eventParameters);
-              } else {
-                _this.publish('pdf-click', eventParameters);
+                _this.finalizeHighlight(pageNumber, pageView, coordinates, mousedownCoordinates);
               }
+              mouseDown = false;
+              mousedownCoordinates = null;
             }
             if (mouseDown && event.type === 'mousemove') {
               if (!_this.dragging) {
                 if (_this.checkDragThreshold(coordinates, mousedownCoordinates)) {
                   _this.dragging = true;
-                  return _this.publish('pdf-dragstart', eventParameters);
+                  return _this.createNewHighlight(annotationLayer, coordinates);
                 }
               } else {
-                return _this.publish('pdf-dragmove', eventParameters);
+                return _this.updateHighlightDimensions(coordinates, mousedownCoordinates);
               }
             }
           }
@@ -243,61 +237,47 @@
       return x || y;
     };
 
-    PDF.prototype.handlePDFAnnotationCreationEvents = function() {
-      var $newHighlightElement, pageNumber, startCoordinates;
-      $newHighlightElement = null;
-      pageNumber = null;
-      startCoordinates = null;
-      this.subscribe('pdf-dragstart', (function(_this) {
-        return function(eventParameters) {
-          pageNumber = eventParameters.pageNumber;
-          startCoordinates = eventParameters.coordinates;
-          $newHighlightElement = $(HIGHLIGHT_MARKUP).addClass(NEW_HIGHLIGHT_CLASS);
-          $newHighlightElement.css({
-            left: eventParameters.coordinates.x,
-            top: eventParameters.coordinates.y
-          });
-          return $(eventParameters.annotationLayer).append($newHighlightElement);
+    PDF.prototype.createNewHighlight = function(annotationLayer, coordinates) {
+      this.$newHighlightElement = $(HIGHLIGHT_MARKUP).addClass(NEW_HIGHLIGHT_CLASS);
+      this.$newHighlightElement.css({
+        left: coordinates.x,
+        top: coordinates.y
+      });
+      return $(annotationLayer).append(this.$newHighlightElement);
+    };
+
+    PDF.prototype.updateHighlightDimensions = function(coordinates, mousedownCoordinates) {
+      var height, width;
+      width = coordinates.x - mousedownCoordinates.x;
+      height = coordinates.y - mousedownCoordinates.y;
+      return this.$newHighlightElement.css({
+        width: (width > 0 ? width : 0),
+        height: (height > 0 ? height : 0)
+      });
+    };
+
+    PDF.prototype.finalizeHighlight = function(pageNumber, pageView, coordinates, mousedownCoordinates) {
+      var heightPdf, pdfRange, ref, ref1, ref2, ref3, v, widthPdf, x1Pdf, x2Pdf, y1Pdf, y2Pdf;
+      v = pageView.viewport;
+      ref = [[mousedownCoordinates.x, mousedownCoordinates.y], [coordinates.x, coordinates.y]].map(function(arg) {
+        var x, y;
+        x = arg[0], y = arg[1];
+        return v.convertToPdfPoint(x, y);
+      }), (ref1 = ref[0], x1Pdf = ref1[0], y1Pdf = ref1[1]), (ref2 = ref[1], x2Pdf = ref2[0], y2Pdf = ref2[1]);
+      ref3 = [x2Pdf - x1Pdf, y2Pdf - y1Pdf], widthPdf = ref3[0], heightPdf = ref3[1];
+      if (widthPdf > 0 && heightPdf < 0) {
+        pdfRange = {
+          pageNumber: pageNumber,
+          x1Pdf: x1Pdf,
+          y1Pdf: y1Pdf,
+          x2Pdf: x2Pdf,
+          y2Pdf: y2Pdf
         };
-      })(this));
-      this.subscribe('pdf-dragmove', (function(_this) {
-        return function(eventParameters) {
-          var height, width;
-          width = eventParameters.coordinates.x - startCoordinates.x;
-          height = eventParameters.coordinates.y - startCoordinates.y;
-          return $newHighlightElement.css({
-            width: (width > 0 ? width : 0),
-            height: (height > 0 ? height : 0)
-          });
-        };
-      })(this));
-      return this.subscribe('pdf-dragend', (function(_this) {
-        return function(eventParameters) {
-          var heightPdf, pdfRange, ref, ref1, ref2, ref3, v, widthPdf, x1Pdf, x2Pdf, y1Pdf, y2Pdf;
-          v = eventParameters.pageView.viewport;
-          ref = [[startCoordinates.x, startCoordinates.y], [eventParameters.coordinates.x, eventParameters.coordinates.y]].map(function(arg) {
-            var x, y;
-            x = arg[0], y = arg[1];
-            return v.convertToPdfPoint(x, y);
-          }), (ref1 = ref[0], x1Pdf = ref1[0], y1Pdf = ref1[1]), (ref2 = ref[1], x2Pdf = ref2[0], y2Pdf = ref2[1]);
-          ref3 = [x2Pdf - x1Pdf, y2Pdf - y1Pdf], widthPdf = ref3[0], heightPdf = ref3[1];
-          if (widthPdf > 0 && heightPdf < 0) {
-            pdfRange = {
-              pageNumber: pageNumber,
-              x1Pdf: x1Pdf,
-              y1Pdf: y1Pdf,
-              x2Pdf: x2Pdf,
-              y2Pdf: y2Pdf
-            };
-            _this.editNewAnnotation(pdfRange, $newHighlightElement);
-          } else {
-            $newHighlightElement.remove();
-          }
-          $newHighlightElement = null;
-          pageNumber = null;
-          return startCoordinates = null;
-        };
-      })(this));
+        this.editNewAnnotation(pdfRange, this.$newHighlightElement);
+      } else {
+        this.$newHighlightElement.remove();
+      }
+      return this.$newHighlightElement = null;
     };
 
     PDF.prototype.editNewAnnotation = function(pdfRange, $newHighlightElement) {
