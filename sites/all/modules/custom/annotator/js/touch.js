@@ -138,7 +138,9 @@
     };
 
     Touch.prototype._setupAnnotatorEvents = function() {
-      this.editor = new Touch.Editor(this.annotator.editor);
+      this.editor = new Touch.Editor(this.annotator.editor, {
+        pdf: this.annotator.plugins.PDF
+      });
       this.viewer = new Touch.Viewer(this.annotator.viewer);
       if (this.annotator.plugins.PDF) {
         this.annotator.plugins.PDF.pdfAnnotationSetupDone.then((function(_this) {

@@ -222,7 +222,7 @@ class Annotator.Plugin.PDF extends Annotator.Plugin
         if event.type is 'mouseup'
           if @dragging
             @dragging = false
-            @finalizeHighlight(pageNumber, pageView, coordinates, mousedownCoordinates)
+            @finalizeHighlight(pageNumber, pageView, mousedownCoordinates, coordinates)
 
           mouseDown = false
           mousedownCoordinates = null
@@ -234,7 +234,7 @@ class Annotator.Plugin.PDF extends Annotator.Plugin
               @createNewHighlight(annotationLayer, coordinates)
           
           else
-            @updateHighlightDimensions(coordinates, mousedownCoordinates)
+            @updateHighlight(mousedownCoordinates, coordinates)
 
     )
 
@@ -248,27 +248,34 @@ class Annotator.Plugin.PDF extends Annotator.Plugin
 
 
   # Creates a new annotation highlight element.
-  createNewHighlight: (annotationLayer, coordinates) =>
+  createNewHighlight: (annotationLayer, topLeft) ->
     @$newHighlightElement = $(HIGHLIGHT_MARKUP).addClass(NEW_HIGHLIGHT_CLASS)
-    @$newHighlightElement.css({ left: coordinates.x, top: coordinates.y })
+    @$newHighlightElement.css({ left: topLeft.x, top: topLeft.y })
     $(annotationLayer).append(@$newHighlightElement)
 
 
   # Creates a new annotation highlight element.
-  updateHighlightDimensions: (coordinates, mousedownCoordinates) =>
-    width = coordinates.x - mousedownCoordinates.x
-    height = coordinates.y - mousedownCoordinates.y
-    @$newHighlightElement.css({ width: (if width > 0 then width else 0), height: (if height > 0 then height else 0) })
+  updateHighlight: (topLeft, bottomRight) ->
+    width = bottomRight.x - topLeft.x
+    height = bottomRight.y - topLeft.y
+    @$newHighlightElement.css({
+      left: topLeft.x,
+      top: topLeft.y,
+      width: (if width > 0 then width else 0),
+      height: (if height > 0 then height else 0)
+    })
 
 
   # Creates a new annotation highlight element.
-  finalizeHighlight: (pageNumber, pageView, coordinates, mousedownCoordinates) =>
+  finalizeHighlight: (pageNumber, pageView, topLeft, bottomRight) ->
     
+    @updateHighlight(topLeft, bottomRight)
+
     # Converts native CSS coordinates to PDF-specific coordinates,
     # for which the origin of each page is the lower-left corner
     # instead of the upper-left corner.
     v = pageView.viewport
-    [ [ x1Pdf, y1Pdf ], [ x2Pdf, y2Pdf ] ] = [ [ mousedownCoordinates.x, mousedownCoordinates.y ], [ coordinates.x, coordinates.y ] ].map(([ x, y ]) -> v.convertToPdfPoint(x, y))
+    [ [ x1Pdf, y1Pdf ], [ x2Pdf, y2Pdf ] ] = [ [ topLeft.x, topLeft.y ], [ bottomRight.x, bottomRight.y ] ].map(([ x, y ]) -> v.convertToPdfPoint(x, y))
     [ widthPdf, heightPdf ] = [ x2Pdf - x1Pdf, y2Pdf - y1Pdf ]
     if widthPdf > 0 and heightPdf < 0
       pdfRange = { pageNumber, x1Pdf, y1Pdf, x2Pdf, y2Pdf }

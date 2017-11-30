@@ -48,7 +48,7 @@ class Annotator.Plugin.Touch.Editor extends Annotator.Delegator
     @element.undelegate("textarea", "keydown")
     @on "hide", => @element.find(":focus").blur()
 
-    @_setupQuoteField()
+    @_setupQuoteField() unless options.pdf
     @_setupAndroidRedrawHack()
 
   # Expands the quote field to display more than one line.

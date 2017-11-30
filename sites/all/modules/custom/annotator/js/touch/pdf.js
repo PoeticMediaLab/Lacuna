@@ -14,58 +14,69 @@
     function PDF(annotator) {
       this.annotator = annotator;
       this.pdfPlugin = this.annotator.plugins.PDF;
+      this.touchPlugin = this.annotator.plugins.Touch;
       this.pdfPlugin.viewerElement.addEventListener('pagerendered', (function(_this) {
         return function(event) {
           var annotationLayer, pageNumber, pageView;
           pageNumber = event.detail.pageNumber;
           pageView = _this.pdfPlugin.pdfPages[pageNumber - 1];
           annotationLayer = _this.pdfPlugin.annotationLayers[pageNumber - 1];
-          return _this.listenForPDFTouchAnnotationCreation(pageNumber, pageView, annotationLayer);
+          return _this.listenForLongTaps(pageNumber, pageView, annotationLayer);
         };
       })(this));
     }
 
-    PDF.prototype.listenForPDFTouchAnnotationCreation = function(pageNumber, pageView, annotationLayer) {
+    PDF.prototype.listenForLongTaps = function(pageNumber, pageView, annotationLayer) {
       var timeout;
       timeout = null;
       return $(annotationLayer).on('touchstart touchmove touchend', (function(_this) {
         return function(event) {
-          if (event.type === 'touchstart') {
-            timeout = setTimeout(function() {
-              var coordinates, rect, touch;
-              timeout = null;
-              rect = annotationLayer.getBoundingClientRect();
-              touch = event.originalEvent.changedTouches[0];
-              coordinates = {
-                x: touch.clientX - rect.x,
-                y: touch.clientY - rect.y
-              };
-              return _this.createNewPDFTouchHighlight(pageNumber, pageView, annotationLayer, coordinates);
-            }, LONG_TAP_DELAY);
-          }
-          if (event.type === 'touchmove') {
-            clearTimeout(timeout);
-          }
-          if (event.type === 'touchend' && timeout) {
-            return clearTimeout(timeout);
+          if (!_this.pdfPlugin.editing) {
+            if (event.type === 'touchstart') {
+              timeout = setTimeout(function() {
+                var coordinates, rect, touch;
+                timeout = null;
+                rect = annotationLayer.getBoundingClientRect();
+                touch = event.originalEvent.changedTouches[0];
+                coordinates = {
+                  x: touch.clientX - rect.x,
+                  y: touch.clientY - rect.y
+                };
+                return _this.createNewHighlight(pageNumber, pageView, annotationLayer, coordinates);
+              }, LONG_TAP_DELAY);
+            }
+            if (event.type === 'touchmove') {
+              clearTimeout(timeout);
+            }
+            if (event.type === 'touchend' && timeout) {
+              return clearTimeout(timeout);
+            }
           }
         };
       })(this));
     };
 
-    PDF.prototype.createNewPDFTouchHighlight = function(pageNumber, pageView, annotationLayer, coordinates) {
-      var initialLowerRight, initialUpperLeft;
-      console.log('creating new highlight at page ' + pageNumber + ', (' + coordinates.x + ', ' + coordinates.y + ')');
-      initialUpperLeft = {
+    PDF.prototype.createNewHighlight = function(pageNumber, pageView, annotationLayer, coordinates) {
+      var bottomRight, topLeft;
+      topLeft = {
         x: coordinates.x - INITIAL_ANNOTATION_SIZE / 2,
         y: coordinates.y - INITIAL_ANNOTATION_SIZE / 2
       };
-      initialLowerRight = {
+      bottomRight = {
         x: coordinates.x + INITIAL_ANNOTATION_SIZE / 2,
         y: coordinates.y + INITIAL_ANNOTATION_SIZE / 2
       };
-      this.pdfPlugin.createNewHighlight(annotationLayer, initialUpperLeft);
-      return this.pdfPlugin.updateHighlightDimensions(initialLowerRight, initialUpperLeft);
+      this.pdfPlugin.createNewHighlight(annotationLayer, topLeft);
+      this.pdfPlugin.updateHighlight(topLeft, bottomRight);
+      this.touchPlugin.adder.removeAttr('disabled');
+      return this.touchPlugin.adder.bind('tap', (function(event) {
+        return event.stopPropagation();
+      }), (function(_this) {
+        return function() {
+          _this.touchPlugin.adder.attr('disabled', '');
+          return _this.pdfPlugin.finalizeHighlight(pageNumber, pageView, topLeft, bottomRight);
+        };
+      })(this));
     };
 
     return PDF;

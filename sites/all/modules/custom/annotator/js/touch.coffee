@@ -192,7 +192,7 @@ class Annotator.Plugin.Touch extends Annotator.Plugin
   # Returns nothing.
   _setupAnnotatorEvents: ->
     # Wrap the interface elements with touch controls.
-    @editor = new Touch.Editor(@annotator.editor)
+    @editor = new Touch.Editor(@annotator.editor, { pdf: @annotator.plugins.PDF })
     @viewer = new Touch.Viewer(@annotator.viewer)
     if @annotator.plugins.PDF
       @annotator.plugins.PDF.pdfAnnotationSetupDone.then(=>

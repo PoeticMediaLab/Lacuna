@@ -49,7 +49,9 @@
           return _this.element.find(":focus").blur();
         };
       })(this));
-      this._setupQuoteField();
+      if (!options.pdf) {
+        this._setupQuoteField();
+      }
       this._setupAndroidRedrawHack();
     }
 

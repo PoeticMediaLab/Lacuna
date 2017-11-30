@@ -32,9 +32,6 @@
 
     function PDF() {
       this.onPDFHighlightMouseover = bind(this.onPDFHighlightMouseover, this);
-      this.finalizeHighlight = bind(this.finalizeHighlight, this);
-      this.updateHighlightDimensions = bind(this.updateHighlightDimensions, this);
-      this.createNewHighlight = bind(this.createNewHighlight, this);
       return PDF.__super__.constructor.apply(this, arguments);
     }
 
@@ -210,7 +207,7 @@
             if (event.type === 'mouseup') {
               if (_this.dragging) {
                 _this.dragging = false;
-                _this.finalizeHighlight(pageNumber, pageView, coordinates, mousedownCoordinates);
+                _this.finalizeHighlight(pageNumber, pageView, mousedownCoordinates, coordinates);
               }
               mouseDown = false;
               mousedownCoordinates = null;
@@ -222,7 +219,7 @@
                   return _this.createNewHighlight(annotationLayer, coordinates);
                 }
               } else {
-                return _this.updateHighlightDimensions(coordinates, mousedownCoordinates);
+                return _this.updateHighlight(mousedownCoordinates, coordinates);
               }
             }
           }
@@ -237,29 +234,32 @@
       return x || y;
     };
 
-    PDF.prototype.createNewHighlight = function(annotationLayer, coordinates) {
+    PDF.prototype.createNewHighlight = function(annotationLayer, topLeft) {
       this.$newHighlightElement = $(HIGHLIGHT_MARKUP).addClass(NEW_HIGHLIGHT_CLASS);
       this.$newHighlightElement.css({
-        left: coordinates.x,
-        top: coordinates.y
+        left: topLeft.x,
+        top: topLeft.y
       });
       return $(annotationLayer).append(this.$newHighlightElement);
     };
 
-    PDF.prototype.updateHighlightDimensions = function(coordinates, mousedownCoordinates) {
+    PDF.prototype.updateHighlight = function(topLeft, bottomRight) {
       var height, width;
-      width = coordinates.x - mousedownCoordinates.x;
-      height = coordinates.y - mousedownCoordinates.y;
+      width = bottomRight.x - topLeft.x;
+      height = bottomRight.y - topLeft.y;
       return this.$newHighlightElement.css({
+        left: topLeft.x,
+        top: topLeft.y,
         width: (width > 0 ? width : 0),
         height: (height > 0 ? height : 0)
       });
     };
 
-    PDF.prototype.finalizeHighlight = function(pageNumber, pageView, coordinates, mousedownCoordinates) {
+    PDF.prototype.finalizeHighlight = function(pageNumber, pageView, topLeft, bottomRight) {
       var heightPdf, pdfRange, ref, ref1, ref2, ref3, v, widthPdf, x1Pdf, x2Pdf, y1Pdf, y2Pdf;
+      this.updateHighlight(topLeft, bottomRight);
       v = pageView.viewport;
-      ref = [[mousedownCoordinates.x, mousedownCoordinates.y], [coordinates.x, coordinates.y]].map(function(arg) {
+      ref = [[topLeft.x, topLeft.y], [bottomRight.x, bottomRight.y]].map(function(arg) {
         var x, y;
         x = arg[0], y = arg[1];
         return v.convertToPdfPoint(x, y);
