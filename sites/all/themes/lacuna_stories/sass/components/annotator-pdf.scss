@@ -45,15 +45,47 @@
 
       &:hover {
         border-color: rgba(255, 255, 10, 1);
-        background-color: rgba(255, 255, 10, .8);
+        background-color: rgba(255, 255, 10, .7);
       }
     
     }
 
     &.new-annotation {
+      
       cursor: crosshair;
       border-color: rgba(22, 147, 165, 1);
-      background-color: rgba(22, 147, 165, .8);
+      background-color: rgba(22, 147, 165, .5);
+
+      .pdf-highlight-handle {
+
+        position: absolute;
+        width: 1.5em;
+        height: 1.5em;
+        background-color: rgba(22, 147, 165, 1);
+        border-radius: 1.5em;
+
+        &.top-left {
+          top: -.75em;
+          left: -.75em;
+        }
+
+        &.top-right {
+          top: -.75em;
+          right: -.75em;
+        }
+
+        &.bottom-left {
+          bottom: -.75em;
+          left: -.75em;
+        }
+
+        &.bottom-right {
+          bottom: -.75em;
+          right: -.75em;
+        }
+      
+      }
+    
     }
 
     &.af-annotation-hide,

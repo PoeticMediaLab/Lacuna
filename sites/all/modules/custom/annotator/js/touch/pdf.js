@@ -13,14 +13,14 @@
 
     function PDF(annotator) {
       this.annotator = annotator;
-      this.pdfPlugin = this.annotator.plugins.PDF;
-      this.touchPlugin = this.annotator.plugins.Touch;
-      this.pdfPlugin.viewerElement.addEventListener('pagerendered', (function(_this) {
+      this.PDF = this.annotator.plugins.PDF;
+      this.Touch = this.annotator.plugins.Touch;
+      this.PDF.viewerElement.addEventListener('pagerendered', (function(_this) {
         return function(event) {
           var annotationLayer, pageNumber, pageView;
           pageNumber = event.detail.pageNumber;
-          pageView = _this.pdfPlugin.pdfPages[pageNumber - 1];
-          annotationLayer = _this.pdfPlugin.annotationLayers[pageNumber - 1];
+          pageView = _this.PDF.pdfPages[pageNumber - 1];
+          annotationLayer = _this.PDF.annotationLayers[pageNumber - 1];
           return _this.listenForLongTaps(pageNumber, pageView, annotationLayer);
         };
       })(this));
@@ -31,7 +31,7 @@
       timeout = null;
       return $(annotationLayer).on('touchstart touchmove touchend', (function(_this) {
         return function(event) {
-          if (!_this.pdfPlugin.editing) {
+          if (!_this.PDF.editing && !_this.PDF.$newHighlightElement) {
             if (event.type === 'touchstart') {
               timeout = setTimeout(function() {
                 var coordinates, rect, touch;
@@ -57,7 +57,7 @@
     };
 
     PDF.prototype.createNewHighlight = function(pageNumber, pageView, annotationLayer, coordinates) {
-      var bottomRight, topLeft;
+      var $bottomLeftHandle, $bottomRightHandle, $topLeftHandle, $topRightHandle, bottomRight, getHandleDragHandler, topLeft;
       topLeft = {
         x: coordinates.x - INITIAL_ANNOTATION_SIZE / 2,
         y: coordinates.y - INITIAL_ANNOTATION_SIZE / 2
@@ -66,17 +66,45 @@
         x: coordinates.x + INITIAL_ANNOTATION_SIZE / 2,
         y: coordinates.y + INITIAL_ANNOTATION_SIZE / 2
       };
-      this.pdfPlugin.createNewHighlight(annotationLayer, topLeft);
-      this.pdfPlugin.updateHighlight(topLeft, bottomRight);
-      this.touchPlugin.adder.removeAttr('disabled');
-      return this.touchPlugin.adder.bind('tap', (function(event) {
+      this.PDF.createNewHighlight(annotationLayer, topLeft);
+      this.PDF.updateHighlight(topLeft, bottomRight);
+      this.Touch.adder.removeAttr('disabled');
+      this.Touch.adder.bind('tap', (function(event) {
         return event.stopPropagation();
       }), (function(_this) {
         return function() {
-          _this.touchPlugin.adder.attr('disabled', '');
-          return _this.pdfPlugin.finalizeHighlight(pageNumber, pageView, topLeft, bottomRight);
+          _this.Touch.adder.attr('disabled', '');
+          return _this.PDF.finalizeHighlight(pageNumber, pageView, topLeft, bottomRight);
         };
       })(this));
+      getHandleDragHandler = (function(_this) {
+        return function(top, left, bottom, right) {
+          return function(event) {
+            var rect, touch;
+            event.preventDefault();
+            rect = annotationLayer.getBoundingClientRect();
+            touch = event.originalEvent.changedTouches[0];
+            if (left) {
+              topLeft.x = touch.clientX - rect.x;
+            }
+            if (top) {
+              topLeft.y = touch.clientY - rect.y;
+            }
+            if (right) {
+              bottomRight.x = touch.clientX - rect.x;
+            }
+            if (bottom) {
+              bottomRight.y = touch.clientY - rect.y;
+            }
+            return _this.PDF.updateHighlight(topLeft, bottomRight);
+          };
+        };
+      })(this);
+      $topLeftHandle = $('<div class="pdf-highlight-handle top-left"></div>').on('touchmove', getHandleDragHandler(true, true, false, false));
+      $topRightHandle = $('<div class="pdf-highlight-handle top-right"></div>').on('touchmove', getHandleDragHandler(true, false, false, true));
+      $bottomLeftHandle = $('<div class="pdf-highlight-handle bottom-left"></div>').on('touchmove', getHandleDragHandler(false, true, true, false));
+      $bottomRightHandle = $('<div class="pdf-highlight-handle bottom-right"></div>').on('touchmove', getHandleDragHandler(false, false, true, true));
+      return this.PDF.$newHighlightElement.append($topLeftHandle, $topRightHandle, $bottomLeftHandle, $bottomRightHandle);
     };
 
     return PDF;
