@@ -48,7 +48,9 @@ article.node {
 article.node.pdf-document {
   padding-top: 0;
   padding-bottom: 0;
-  overflow: hidden;
+  @media (max-width: 540px) {
+    overflow: hidden;
+  }
   .field {
     margin-left: 0;
     margin-right: 0;
