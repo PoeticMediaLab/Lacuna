@@ -8,6 +8,7 @@ dependencies[] = entityreference
 dependencies[] = features
 dependencies[] = field_group
 dependencies[] = field_permissions
+dependencies[] = lacuna_pdf_document
 dependencies[] = lacuna_stories_biblio
 dependencies[] = lacuna_stories_media
 dependencies[] = lacuna_stories_menus

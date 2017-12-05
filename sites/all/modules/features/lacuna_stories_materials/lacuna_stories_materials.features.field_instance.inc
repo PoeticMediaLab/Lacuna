@@ -132,9 +132,9 @@ function lacuna_stories_materials_field_default_field_instances() {
     'display' => array(
       'default' => array(
         'label' => 'hidden',
-        'module' => 'file',
+        'module' => 'lacuna_pdf_document',
         'settings' => array(),
-        'type' => 'file_url_plain',
+        'type' => 'pdf_document_content',
         'weight' => 12,
       ),
       'teaser' => array(
