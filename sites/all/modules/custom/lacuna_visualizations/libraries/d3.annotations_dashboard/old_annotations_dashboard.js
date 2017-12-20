@@ -268,7 +268,7 @@ function main(data) {
 				column: {user: 100, doc: 450}	// X coords for the two columns
 				};
 
-	TODO: loop through settings; overwrite matching variables
+	// TODO: loop through settings; overwrite matching variables
 	for (var key in settings) {
 		// console.log(key, 'settings key');
 	}
