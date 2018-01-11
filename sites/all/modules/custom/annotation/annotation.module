@@ -574,3 +574,31 @@ function annotation_views_query_alter(&$view, &$query) {
     $query->add_where_expression(0, "field_data_field_annotation_reference.field_annotation_reference_target_id IN (SELECT etid FROM og_membership WHERE gid = " . $gid . " AND og_membership.entity_type = 'node')");
   }
 }
+
+
+/*
+* Implements hook_field_formatter_info().  Defines the Data URL
+* Image field that renders an image from a Data URL.
+*/
+
+function annotation_field_formatter_info() {
+  return array(
+    'data_url_image' => array(
+      'label' => 'Image from Data URL',
+      'field types' => array('text_long'),
+    ),
+  );
+}
+
+
+/*
+*   Implements hook_field_formatter_view().  Inserts an iframe for
+*   the PDF viewer and injects the JS code that loads the PDF.
+*/
+
+function annotation_field_formatter_view( $entity_type, $entity, $field, $instance, $langcode, $items, $display ) {
+  if ( isset( $items[0] ) ) {
+    return array( array( '#markup' => '<img alt="Annotation Excerpt" src="' . $items[0]['value'] . '">' ) );
+  }
+}
+

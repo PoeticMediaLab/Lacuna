@@ -215,6 +215,12 @@ function annotation_drupal_format($entity, $update = FALSE) {
         }
         break;
 
+      case 'pdfHighlight':
+        if (!$update) {
+          $annotation->field_annotation_pdf_quote[$annotation->language][0]['value'] = $val;
+        }
+        break;
+
       case 'reply':
         // Added by the Replies plugin
         if ($entity->reply['type'] == 'new') {
@@ -667,6 +673,11 @@ function annotation_api_entity_prepare($annotation, $op) {
       // Quote
       if (isset($annotation->field_annotation_quote[$annotation->language])) {
         $entity->quote = $annotation->field_annotation_quote[$annotation->language][0]['value'];
+      }
+
+      // PDF Image Quote
+      if (isset($annotation->field_annotation_pdf_quote[$annotation->language])) {
+        $entity->quote = $annotation->field_annotation_pdf_quote[$annotation->language][0]['value'];
       }
 
       // Category is for the Category plugin
