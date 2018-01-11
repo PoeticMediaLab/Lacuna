@@ -279,7 +279,8 @@ class Annotator.Plugin.PDF extends Annotator.Plugin
     [ widthPdf, heightPdf ] = [ x2Pdf - x1Pdf, y2Pdf - y1Pdf ]
     if widthPdf > 0 and heightPdf < 0
       pdfRange = { pageNumber, x1Pdf, y1Pdf, x2Pdf, y2Pdf }
-      @editNewAnnotation(pdfRange, @$newHighlightElement)
+      pdfHighlight = @getPDFHighlightContent(pageView, topLeft, bottomRight)
+      @editNewAnnotation(pdfRange, pdfHighlight, @$newHighlightElement)
     
     else
       @$newHighlightElement.remove()
@@ -287,14 +288,45 @@ class Annotator.Plugin.PDF extends Annotator.Plugin
     @$newHighlightElement = null
 
 
+  # Extracts an data URL of an image of the highlighted part of
+  # the PDF.
+  getPDFHighlightContent: (pageView, topLeft, bottomRight) ->
+
+    sourceX = topLeft.x * pageView.outputScale.sx
+    sourceY = topLeft.y * pageView.outputScale.sy
+    sourceWidth = bottomRight.x * pageView.outputScale.sx - sourceX
+    sourceHeight = bottomRight.y * pageView.outputScale.sy - sourceY
+
+    # Creates a hidden <canvas> for generating the highlight content image
+    highlightCanvas = document.createElement('canvas')
+    highlightCanvas.width = sourceWidth
+    highlightCanvas.height = sourceHeight
+
+    # Draws the pixels, then returns the data URL
+    highlightCanvas.getContext('2d').drawImage(
+      pageView.canvas,
+      sourceX,
+      sourceY,
+      sourceWidth,
+      sourceHeight,
+      0,
+      0,
+      sourceWidth,
+      sourceHeight
+    )
+    
+    return highlightCanvas.toDataURL()
+
+
   # Creates a new annotation from the supplied range, then opens
   # the editor with it.
-  editNewAnnotation: (pdfRange, $newHighlightElement) ->
+  editNewAnnotation: (pdfRange, pdfHighlight, $newHighlightElement) ->
 
     # Creates new annotation
     annotation = @annotator.createAnnotation()
     annotation.pdfRange = pdfRange
-    
+    annotation.pdfHighlight = pdfHighlight
+
     # Initializes required fields, otherwise core code throws errors
     annotation.quote = []
     annotation.ranges = []

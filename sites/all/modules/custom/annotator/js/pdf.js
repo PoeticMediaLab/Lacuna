@@ -256,7 +256,7 @@
     };
 
     PDF.prototype.finalizeHighlight = function(pageNumber, pageView, topLeft, bottomRight) {
-      var heightPdf, pdfRange, ref, ref1, ref2, ref3, v, widthPdf, x1Pdf, x2Pdf, y1Pdf, y2Pdf;
+      var heightPdf, pdfHighlight, pdfRange, ref, ref1, ref2, ref3, v, widthPdf, x1Pdf, x2Pdf, y1Pdf, y2Pdf;
       this.updateHighlight(topLeft, bottomRight);
       v = pageView.viewport;
       ref = [[topLeft.x, topLeft.y], [bottomRight.x, bottomRight.y]].map(function(arg) {
@@ -273,17 +273,32 @@
           x2Pdf: x2Pdf,
           y2Pdf: y2Pdf
         };
-        this.editNewAnnotation(pdfRange, this.$newHighlightElement);
+        pdfHighlight = this.getPDFHighlightContent(pageView, topLeft, bottomRight);
+        this.editNewAnnotation(pdfRange, pdfHighlight, this.$newHighlightElement);
       } else {
         this.$newHighlightElement.remove();
       }
       return this.$newHighlightElement = null;
     };
 
-    PDF.prototype.editNewAnnotation = function(pdfRange, $newHighlightElement) {
+    PDF.prototype.getPDFHighlightContent = function(pageView, topLeft, bottomRight) {
+      var highlightCanvas, sourceHeight, sourceWidth, sourceX, sourceY;
+      sourceX = topLeft.x * pageView.outputScale.sx;
+      sourceY = topLeft.y * pageView.outputScale.sy;
+      sourceWidth = bottomRight.x * pageView.outputScale.sx - sourceX;
+      sourceHeight = bottomRight.y * pageView.outputScale.sy - sourceY;
+      highlightCanvas = document.createElement('canvas');
+      highlightCanvas.width = sourceWidth;
+      highlightCanvas.height = sourceHeight;
+      highlightCanvas.getContext('2d').drawImage(pageView.canvas, sourceX, sourceY, sourceWidth, sourceHeight, 0, 0, sourceWidth, sourceHeight);
+      return highlightCanvas.toDataURL();
+    };
+
+    PDF.prototype.editNewAnnotation = function(pdfRange, pdfHighlight, $newHighlightElement) {
       var annotation, bottom, cancel, cleanup, editorLocation, left, ref, right, save, top;
       annotation = this.annotator.createAnnotation();
       annotation.pdfRange = pdfRange;
+      annotation.pdfHighlight = pdfHighlight;
       annotation.quote = [];
       annotation.ranges = [];
       annotation.highlights = [];
