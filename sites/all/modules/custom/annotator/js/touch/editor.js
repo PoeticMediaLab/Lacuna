@@ -74,7 +74,6 @@
         id: 'quote',
         load: (function(_this) {
           return function(field, annotation) {
-            console.log(annotation);
             _this.hideQuote();
             if (pdf) {
               _this.quote.find('span').html('<img src="' + annotation.pdfQuote + '">');

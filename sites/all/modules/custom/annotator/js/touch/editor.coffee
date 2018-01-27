@@ -89,7 +89,6 @@ class Annotator.Plugin.Touch.Editor extends Annotator.Delegator
     @quote = jQuery @editor.addField
       id: 'quote'
       load: (field, annotation) =>
-        console.log(annotation)
         @hideQuote()
         if (pdf)
           @quote.find('span').html '<img src="' + annotation.pdfQuote + '">'
