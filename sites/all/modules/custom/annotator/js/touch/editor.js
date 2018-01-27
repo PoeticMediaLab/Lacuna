@@ -49,9 +49,7 @@
           return _this.element.find(":focus").blur();
         };
       })(this));
-      if (!options.pdf) {
-        this._setupQuoteField();
-      }
+      this._setupQuoteField(options.pdf);
       this._setupAndroidRedrawHack();
     }
 
@@ -71,13 +69,18 @@
       return !this.quote.hasClass(this.classes.expand);
     };
 
-    Editor.prototype._setupQuoteField = function() {
+    Editor.prototype._setupQuoteField = function(pdf) {
       this.quote = jQuery(this.editor.addField({
         id: 'quote',
         load: (function(_this) {
           return function(field, annotation) {
+            console.log(annotation);
             _this.hideQuote();
-            _this.quote.find('span').html(Annotator.Util.escape(annotation.quote || ''));
+            if (pdf) {
+              _this.quote.find('span').html('<img src="' + annotation.pdfQuote + '">');
+            } else {
+              _this.quote.find('span').html(Annotator.Util.escape(annotation.quote || ''));
+            }
             return _this.quote.find("button").toggle(_this._isTruncated());
           };
         })(this)

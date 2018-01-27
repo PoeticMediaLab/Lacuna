@@ -677,7 +677,7 @@ function annotation_api_entity_prepare($annotation, $op) {
 
       // PDF Image Quote
       if (isset($annotation->field_annotation_pdf_quote[$annotation->language])) {
-        $entity->quote = $annotation->field_annotation_pdf_quote[$annotation->language][0]['value'];
+        $entity->pdfQuote = $annotation->field_annotation_pdf_quote[$annotation->language][0]['value'];
       }
 
       // Category is for the Category plugin

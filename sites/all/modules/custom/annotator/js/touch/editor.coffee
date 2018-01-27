@@ -48,7 +48,7 @@ class Annotator.Plugin.Touch.Editor extends Annotator.Delegator
     @element.undelegate("textarea", "keydown")
     @on "hide", => @element.find(":focus").blur()
 
-    @_setupQuoteField() unless options.pdf
+    @_setupQuoteField(options.pdf)
     @_setupAndroidRedrawHack()
 
   # Expands the quote field to display more than one line.
@@ -85,12 +85,18 @@ class Annotator.Plugin.Touch.Editor extends Annotator.Delegator
   # constructor.
   #
   # Returns nothing.
-  _setupQuoteField: ->
+  _setupQuoteField: (pdf) ->
     @quote = jQuery @editor.addField
       id: 'quote'
       load: (field, annotation) =>
+        console.log(annotation)
         @hideQuote()
-        @quote.find('span').html Annotator.Util.escape(annotation.quote || '')
+        if (pdf)
+          @quote.find('span').html '<img src="' + annotation.pdfQuote + '">'
+
+        else
+          @quote.find('span').html Annotator.Util.escape(annotation.quote || '')
+
         @quote.find("button").toggle(@_isTruncated())
 
     @quote.empty().addClass("annotator-item-quote")
