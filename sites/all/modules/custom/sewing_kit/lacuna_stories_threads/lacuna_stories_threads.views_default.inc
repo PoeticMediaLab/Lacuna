@@ -908,6 +908,11 @@ if (module_exists(\'course\')) {
   $handler->display->display_options['fields']['field_annotation_quote']['settings'] = array(
     'trim_length' => '600',
   );
+  /* Field: Content: PDF Excerpt */
+  $handler->display->display_options['fields']['field_annotation_pdf_quote']['id'] = 'field_annotation_pdf_quote';
+  $handler->display->display_options['fields']['field_annotation_pdf_quote']['table'] = 'field_data_field_annotation_pdf_quote';
+  $handler->display->display_options['fields']['field_annotation_pdf_quote']['field'] = 'field_annotation_pdf_quote';
+  $handler->display->display_options['fields']['field_annotation_pdf_quote']['type'] = 'data_url_image';
   /* Field: Content: Annotation Text */
   $handler->display->display_options['fields']['field_annotation_text']['id'] = 'field_annotation_text';
   $handler->display->display_options['fields']['field_annotation_text']['table'] = 'field_data_field_annotation_text';
