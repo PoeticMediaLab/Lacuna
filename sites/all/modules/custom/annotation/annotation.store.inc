@@ -215,7 +215,7 @@ function annotation_drupal_format($entity, $update = FALSE) {
         }
         break;
 
-      case 'pdfHighlight':
+      case 'pdfQuote':
         if (!$update) {
           $annotation->field_annotation_pdf_quote[$annotation->language][0]['value'] = $val;
         }

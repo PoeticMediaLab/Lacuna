@@ -279,8 +279,8 @@ class Annotator.Plugin.PDF extends Annotator.Plugin
     [ widthPdf, heightPdf ] = [ x2Pdf - x1Pdf, y2Pdf - y1Pdf ]
     if widthPdf > 0 and heightPdf < 0
       pdfRange = { pageNumber, x1Pdf, y1Pdf, x2Pdf, y2Pdf }
-      pdfHighlight = @getPDFHighlightContent(pageView, topLeft, bottomRight)
-      @editNewAnnotation(pdfRange, pdfHighlight, @$newHighlightElement)
+      pdfQuote = @getPDFQuote(pageView, topLeft, bottomRight)
+      @editNewAnnotation(pdfRange, pdfQuote, @$newHighlightElement)
     
     else
       @$newHighlightElement.remove()
@@ -290,7 +290,7 @@ class Annotator.Plugin.PDF extends Annotator.Plugin
 
   # Extracts an data URL of an image of the highlighted part of
   # the PDF.
-  getPDFHighlightContent: (pageView, topLeft, bottomRight) ->
+  getPDFQuote: (pageView, topLeft, bottomRight) ->
 
     sourceX = topLeft.x * pageView.outputScale.sx
     sourceY = topLeft.y * pageView.outputScale.sy
@@ -298,12 +298,12 @@ class Annotator.Plugin.PDF extends Annotator.Plugin
     sourceHeight = bottomRight.y * pageView.outputScale.sy - sourceY
 
     # Creates a hidden <canvas> for generating the highlight content image
-    highlightCanvas = document.createElement('canvas')
-    highlightCanvas.width = sourceWidth
-    highlightCanvas.height = sourceHeight
+    quoteCanvas = document.createElement('canvas')
+    quoteCanvas.width = sourceWidth
+    quoteCanvas.height = sourceHeight
 
     # Draws the pixels, then returns the data URL
-    highlightCanvas.getContext('2d').drawImage(
+    quoteCanvas.getContext('2d').drawImage(
       pageView.canvas,
       sourceX,
       sourceY,
@@ -315,17 +315,17 @@ class Annotator.Plugin.PDF extends Annotator.Plugin
       sourceHeight
     )
     
-    return highlightCanvas.toDataURL()
+    return quoteCanvas.toDataURL()
 
 
   # Creates a new annotation from the supplied range, then opens
   # the editor with it.
-  editNewAnnotation: (pdfRange, pdfHighlight, $newHighlightElement) ->
+  editNewAnnotation: (pdfRange, pdfQuote, $newHighlightElement) ->
 
     # Creates new annotation
     annotation = @annotator.createAnnotation()
     annotation.pdfRange = pdfRange
-    annotation.pdfHighlight = pdfHighlight
+    annotation.pdfQuote = pdfQuote
 
     # Initializes required fields, otherwise core code throws errors
     annotation.quote = []
