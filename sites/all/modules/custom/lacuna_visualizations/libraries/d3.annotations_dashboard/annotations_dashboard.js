@@ -309,7 +309,7 @@ function main(data) {
 			y_coords[d.type][d.id] = last_y + size.radius * 3;
 		}
 		return y_coords[d.type][d.id];
-	}
+	};
 
 	// Initialize data for the charts
 	// var graph = init_graph(annotations);
