@@ -154,11 +154,14 @@ interface WorkflowInterface {
   /**
    * Loads all allowed ConfigTransitions for this workflow.
    *
-   * @param array|NULL $ids
-   *   Array of Transitions IDs. If NULL, show all transitions.
+   * @param array|bool $tids
+   *   Array of Transitions IDs. If FALSE, show all transitions.
    * @param array $conditions
-   *   $conditions['from_sid'] : if provided, a 'from' State ID.
-   *   $conditions['to_sid'] : if provided, a 'to' state ID.
+   *   $conditions['sid'] : if provided, a 'from' State ID.
+   *   $conditions['target_sid'] : if provided, a 'to' state ID.
+   *   $conditions['roles'] : if provided, an array of roles, or 'ALL'.
+   * @param bool $reset
+   *   Indicator to reset the cache.
    *
    * @return \Drupal\workflow\Entity\WorkflowConfigTransition[]
    */

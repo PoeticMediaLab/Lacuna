@@ -5,17 +5,19 @@ About
 This module allows for integration of jQuery Superfish plug-in with Drupal CMS.
 
 
-Requirement
+Requirements
 -----------
-- Superfish library.
-  Link: http://drupal.org/project/superfish
+- Superfish library 1.x
+  https://github.com/mehrpadin/Superfish-for-Drupal/archive/1.x.zip
+- JQuery 1.6.1 or higher, if you are going to use the jQuery Easing plugin.
+  https://www.drupal.org/project/jquery_update
 
 
 Installation instructions
 -------------------------
 1. Download and extract the Superfish library into the libraries directory
    (usually "sites/all/libraries").
-   Link: https://github.com/mehrpadin/Superfish-for-Drupal/zipball/1.x
+   Link: https://github.com/mehrpadin/Superfish-for-Drupal/zipball/1.x.zip
 
 2. Download and extract the Superfish module into the modules directory (usually
    "sites/all/modules").
@@ -40,12 +42,12 @@ Did you change any part of the module or the library?
   with its original one (http://drupal.org/node/711944/release) find out what
   was changed and do the same to the version you are upgrading to.
   WARNING: This is for experts only!
-  
+
 - Please note that if you are upgrading from version 1.6 running update.php will
   cause error messages to appear. To resolve this go to
   "Administer" -> "Structure" -> "Blocks", click the "Configure" link for each
   Superfish block and click "Save block" button.
-  
+
 
 Configuring the module
 ----------------------
@@ -74,9 +76,9 @@ C) If you are not using the built-in styles, set the "Style" option to "None".
 D) Utilise the "Simple" style as reference; add the newly-created CSS file
    either to your theme CSS or as a new CSS file under the styles directory in
    the Superfish library (probably "sites/all/libraries/superfish/style");
-   putting it in the styles folder will automatically add it to the styles list 
+   putting it in the styles folder will automatically add it to the styles list
    in the block configuration.
-   
+
 - More information in Superfish documentation at http://drupal.org/node/1125896
 
 

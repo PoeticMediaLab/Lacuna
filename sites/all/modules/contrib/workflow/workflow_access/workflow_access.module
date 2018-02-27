@@ -7,16 +7,14 @@
 
 /**
  * Implements hook_menu().
- *
- * Uses pattern of EntityWorkflowUIController::hook_menu().
  */
 function workflow_access_menu() {
   $items = array();
 
-  $path = 'admin/config/workflow/workflow';
-  $id_count = count(explode('/', $path));
+  $admin_path = WORKFLOW_ADMIN_UI_PATH;
+  $id_count = count(explode('/', $admin_path));
 
-  $items[$path . '/access'] = array(
+  $items["$admin_path/access"] = array(
     'title' => 'Access settings',
     'file' => 'workflow_access.pages.inc',
     'access arguments' => array('administer workflow'),
@@ -24,21 +22,50 @@ function workflow_access_menu() {
     'page arguments' => array('workflow_access_priority_form'),
     'type' => MENU_LOCAL_ACTION,
   );
-  $items[$path . '/manage/%workflow/access'] = array(
+  $items["$admin_path/manage/%workflow/access"] = array(
     'title' => 'Access',
     'file' => 'workflow_access.pages.inc',
     'access arguments' => array('administer workflow'),
     'page callback' => 'drupal_get_form',
-    'page arguments' => array(
-      'workflow_access_form',
-      $id_count + 1,
-      $id_count + 2,
-    ),
-    // 'type' => MENU_CALLBACK,
-    // 'type' => MENU_LOCAL_TASK,
+    'page arguments' => array('workflow_access_form', $id_count + 1),
+    'type' => MENU_CALLBACK,
   );
 
   return $items;
+}
+
+/**
+ * Implements hook_workflow_operations().
+ */
+function workflow_access_workflow_operations($op, $workflow = NULL, $state = NULL) {
+  $admin_path = WORKFLOW_ADMIN_UI_PATH;
+
+  switch ($op) {
+    case 'workflow':
+      $actions = array();
+      if ($workflow && $workflow->getStates()) {
+        $wid = $workflow->getWorkflowId();
+        $alt = t('Control content access for @wf', array('@wf' => $workflow->getName()));
+        $actions += array(
+          'workflow_access_form' => array(
+            'title' => t('Access'),
+            'href' => "$admin_path/manage/$wid/access",
+            'attributes' => array('alt' => $alt, 'title' => $alt),
+          ),
+        );
+      }
+      else {
+        // Generate a dummy, if no states exist.
+        $actions = array(
+          'workflow_access_form' => array(
+            'title' => '',
+            'href' => '',
+          ),
+        );
+      }
+
+      return $actions;
+  }
 }
 
 /**
@@ -46,12 +73,13 @@ function workflow_access_menu() {
  */
 function workflow_access_help($path, $arg) {
   $help = '';
+
   switch ($path) {
-    case 'admin/config/workflow/workflow/manage/%/access':
+    case WORKFLOW_ADMIN_UI_PATH . '/manage/%/access':
       $help = t("WARNING: Use of the 'Edit any', 'Edit own', and even 'View
         published content' permissions for the content type may override these
         access settings. You may need to <a href='!url'>alter the priority of
-        the Workflow access module</a>.", array('!url' => url('admin/config/workflow/workflow/access'))
+        the Workflow access module</a>.", array('!url' => url(WORKFLOW_ADMIN_UI_PATH . '/access'))
       );
 
       if (module_exists('og')) {
@@ -90,30 +118,6 @@ function workflow_access_features_api() {
 }
 
 /**
- * Implements hook_workflow_operations().
- *
- * Create action link for access form on EntityWorkflowUIController::overviewForm.
- */
-function workflow_access_workflow_operations($op, $workflow = NULL, $state = NULL) {
-  switch ($op) {
-    case 'workflow':
-      $actions = array();
-      $wid = $workflow->wid;
-
-      $alt = t('Control content access for @wf', array('@wf' => $workflow->getName()));
-      $actions += array(
-        'workflow_access_form' => array(
-          'title' => t('Access'),
-          'href' => "admin/config/workflow/workflow/manage/$wid/access",
-          'attributes' => array('alt' => $alt, 'title' => $alt),
-        ),
-      );
-
-      return $actions;
-  }
-}
-
-/**
  * Implements hook_node_grants().
  *
  * Supply the workflow access grants. We are simply using
@@ -134,6 +138,7 @@ function workflow_access_node_grants($account, $op) {
  */
 function workflow_access_node_access_records($node) {
   $grants = array();
+  $workflow_transitions_added = FALSE;
 
   // Only relevant for content with Workflow.
   if (!isset($node->workflow_transitions)) {
@@ -162,6 +167,7 @@ function workflow_access_node_access_records($node) {
         // Store in an array, to prepare for multiple workflow_fields per entity.
         // This is a.o. used in hook_entity_update to trigger 'transition post'.
         $node->workflow_transitions[$field_name] = $transition;
+        $workflow_transitions_added = TRUE;
       }
     }
   }
@@ -205,6 +211,11 @@ function workflow_access_node_access_records($node) {
       }
     }
   }
+
+  if ($workflow_transitions_added == TRUE) {
+    unset($node->workflow_transitions);
+  }
+
   return $grants;
 }
 

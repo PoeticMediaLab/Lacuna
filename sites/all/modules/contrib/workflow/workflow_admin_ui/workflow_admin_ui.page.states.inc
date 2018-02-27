@@ -305,7 +305,7 @@ function workflow_admin_ui_states_form_submit($form, &$form_state) {
   }
 
   drupal_set_message(t('The workflow was updated.'));
-  // $form_state['redirect'] = 'admin/config/workflow/workflow';
+  // $form_state['redirect'] = WORKFLOW_ADMIN_UI_PATH;
 }
 
 /**

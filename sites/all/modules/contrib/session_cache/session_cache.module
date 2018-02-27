@@ -48,7 +48,7 @@ function session_cache_set($bin, $data) {
   switch ($method) {
 
     case SESSION_CACHE_STORAGE_COOKIE:
-      $serialized_data = ($data == NULL) ? NULL : serialize($data);
+      $serialized_data = ($data == NULL) ? NULL : json_encode($data);
 
       // For $cookie_domain see also: drupal_settings_initialize()
       global $cookie_domain;
@@ -103,7 +103,7 @@ function session_cache_get($bin) {
 
     case SESSION_CACHE_STORAGE_COOKIE:
       // Note that in array indices '.' are converted to '_'
-      return isset($_COOKIE["Drupal_session_cache_$bin"]) ? unserialize($_COOKIE["Drupal_session_cache_$bin"]) : NULL;
+      return isset($_COOKIE["Drupal_session_cache_$bin"]) ? json_decode($_COOKIE["Drupal_session_cache_$bin"], TRUE) : NULL;
 
     case SESSION_CACHE_STORAGE_DB_CORE:
       $sid = session_cache_get_sid();

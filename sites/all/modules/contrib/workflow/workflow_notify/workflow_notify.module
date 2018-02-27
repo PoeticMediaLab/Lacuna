@@ -1,8 +1,64 @@
 <?php
+
 /**
  * @file
  * Notify roles for Workflow state transitions.
  */
+
+/**
+ * Implements hook_menu().
+ */
+function workflow_notify_menu() {
+  $items = array();
+
+  $admin_path = WORKFLOW_ADMIN_UI_PATH;
+  $id_count = count(explode('/', $admin_path));
+
+  $items["$admin_path/manage/%workflow/notify"] = array(
+    'title' => 'Notifications',
+    'file' => 'workflow_notify.pages.inc',
+    'access arguments' => array('administer workflow'),
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('workflow_notify_settings_form', $id_count + 1),
+    'type' => MENU_CALLBACK,
+  );
+
+  return $items;
+}
+
+/**
+ * Implements hook_workflow_operations().
+ */
+function workflow_notify_workflow_operations($op, Workflow $workflow = NULL) {
+  $admin_path = WORKFLOW_ADMIN_UI_PATH;
+
+  switch ($op) {
+    case 'workflow':
+      $actions = array();
+      if ($workflow && $workflow->getStates()) {
+        $wid = $workflow->getWorkflowId();
+        $alt = t('Notify users about state changes.');
+        $actions = array(
+          'workflow_notify_settings' => array(
+            'title' => t('Notifications'),
+            'href' => "$admin_path/manage/$wid/notify",
+            'attributes' => array('alt' => $alt, 'title' => $alt),
+          ),
+        );
+      }
+      else {
+        // Generate a dummy, if no states exist.
+        $actions = array(
+          'workflow_notify_settings' => array(
+            'title' => '',
+            'href' => '',
+          ),
+        );
+      }
+
+      return $actions;
+  }
+}
 
 /**
  * Implements hook_permission().
@@ -21,27 +77,9 @@ function workflow_notify_permission() {
  */
 function workflow_notify_help($path, $arg) {
   switch ($path) {
-    case 'admin/config/workflow/workflow/notify/%':
+    case WORKFLOW_ADMIN_UI_PATH . '/notify/%':
       return '<p>' . t('The selected roles will be notified of each state change selected.') . '</p>';
   }
-}
-
-/**
- * Implements hook_menu().
- */
-function workflow_notify_menu() {
-  $items = array();
-
-  $items['admin/config/workflow/workflow/notify/%workflow'] = array(
-    'title' => 'Notifications',
-    'access arguments' => array('administer workflow'),
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('workflow_notify_settings_form', 5),
-    'type' => MENU_CALLBACK,
-    'file' => 'workflow_notify.admin.inc',
-  );
-
-  return $items;
 }
 
 /**
@@ -51,7 +89,7 @@ function workflow_notify_theme() {
   return array(
     'workflow_notify_settings_form' => array(
       'render element' => 'form',
-      'file' => 'workflow_notify.admin.inc',
+      'file' => 'workflow_notify.pages.inc',
     ),
   );
 }
@@ -64,30 +102,6 @@ function workflow_notify_hook_info() {
     'group' => 'workflow',
   );
   return $hooks;
-}
-
-/**
- * Implements hook_workflow_operations().
- * Add an action link to this module.
- */
-function workflow_notify_workflow_operations($op, $workflow = NULL) {
-  switch ($op) {
-    case 'workflow':
-      $wid = $workflow->getWorkflowId();
-
-      $actions = array(
-        'workflow_notify_settings' => array(
-          'title' => t('Notifications'),
-          'href' => "admin/config/workflow/workflow/notify/$wid",
-          'attributes' => array('alt' => t('Notify users about state changes.')),
-        ),
-      );
-
-      $actions['workflow_notify_settings']['attributes']['title'] =
-        $actions['workflow_notify_settings']['attributes']['alt'];
-
-      return $actions;
-  }
 }
 
 /**
@@ -126,12 +140,13 @@ function workflow_notify_workflow($op, $old_state, $new_state, $entity, $force, 
  * @param $entity_type
  */
 function workflow_notify_entity_update($entity, $entity_type) {
-  $field_name = NULL;
-
-  $new_state = workflow_node_current_state($entity, $entity_type, $field_name);
-  $transition = $entity->workflow_transitions[$field_name];
-
-  _workflow_notify($new_state, $entity, $entity_type, $field_name, $transition, $user = NULL);
+  if (isset($entity->workflow_transitions)) {
+    $new_state = workflow_node_current_state($entity, $entity_type, $field_name);
+    foreach ($entity->workflow_transitions as $field_name => &$transition) {
+      $new_state = workflow_node_current_state($entity, $entity_type, $field_name);
+      _workflow_notify($new_state, $entity, $entity_type, $field_name, $transition, $user = NULL);
+    }
+  }
   return;
 }
 
@@ -145,6 +160,11 @@ function workflow_notify_mail($key, &$message, $params) {
       $filter = $params['filter'];
       $message['send'] = TRUE;
 
+      $entity_type = $params['data']['entity_type'];
+      $entity = isset($params['data']['entity']) ? $params['data']['entity'] : $params['data']['node'];
+      $entity_uri = entity_uri($entity_type, $entity);
+      list($entity_id, , $entity_bundle) = entity_extract_ids($entity_type, $entity);
+
       $message['subject'] = filter_xss(token_replace($params['context']['subject'], $params['data'], $params));
       $message['body'][] = check_markup(token_replace($params['context']['body'], $params['data'], $params), $filter);
 
@@ -155,11 +175,10 @@ function workflow_notify_mail($key, &$message, $params) {
           '@to' => $message['to'],
           '@from' => $message['from'],
         ),
-        WATCHDOG_INFO, l(t('view'), 'node/' . $params['data']['node']->nid));
+        WATCHDOG_INFO, l(t('view'), $entity_uri['path']));
       return;
   }
 }
-
 
 /**
  * Calls drupal_mail() to notify users.
@@ -187,12 +206,13 @@ function _workflow_notify($new_state, $entity, $entity_type = '', $field_name = 
 
   // Okay, we are notifying someone of this change.
   // So let's get the workflow object.
+  $entity_uri = entity_uri($entity_type, $entity);
   list($entity_id, , $entity_bundle) = entity_extract_ids($entity_type, $entity);
   /* @var $workflow Workflow */
   $workflow = workflow_get_workflows_by_type($entity_bundle, $entity_type);
   $wid = $workflow->getWorkflowId();
 
-    // And all the states.
+  // And all the states.
   $states = $workflow->getStates(TRUE);
 
   // Get the specific roles to notify.
@@ -211,7 +231,8 @@ function _workflow_notify($new_state, $entity, $entity_type = '', $field_name = 
       . "WHERE ur.rid IN (:rids) "
       . "AND u.status = 1 ";
     $users = db_query($query, array(':rids' => $notify))->fetchCol();
-  } else {
+  }
+  else {
     $users = array();
   }
 
@@ -226,13 +247,13 @@ function _workflow_notify($new_state, $entity, $entity_type = '', $field_name = 
   // Call all modules that want to limit the list.
   $args = array(
     'users' => $accounts,
-    'node' => $entity,
-    'entity' => $entity, // Preparing for entities, keeping backward compatibility.
     'entity_type' => $entity_type,
     'state' => $new_state,
     'roles' => $notify,
     'workflow' => $workflow,
   );
+  // Preparing for entities, keeping backward compatibility.
+  $args += $entity_type == 'node' ? array('node' => $entity) : array('entity' => $entity);
   foreach (module_implements('workflow_notify') as $module) {
     $function = $module . '_workflow_notify';
     $function('users', $args);
@@ -240,40 +261,42 @@ function _workflow_notify($new_state, $entity, $entity_type = '', $field_name = 
 
   // Retrieve the remaining list without duplicates.
   $accounts = $args['users'];
-  $addr_list = array();
-
   // Just quit if there are no users.
   if (empty($accounts)) {
     watchdog('workflow_notify', 'No recipients - email skipped.', array(),
-      WATCHDOG_DEBUG, l(t('view'), 'node/' . $entity_id)); // @todo: other entity types.
+      WATCHDOG_DEBUG, l(t('view'), $entity_uri['path']));
     return;
   }
-
+  $addr_list = array();
   foreach ($accounts as $uid => $account) {
-    $addr_list[] = format_username($account) . '<' . $account->mail . '>';
+    $addr_list[] = format_username($account) . ' <' . $account->mail . '>';
   }
+  // The to-parameter to drupal_mail is a string, not an array, separated by commas.
+  $to = implode(', ', $addr_list);
 
+  // Retrieve the params parameter for drupal_mail.
   $params = array(
     'clear' => TRUE,
     'sanitize' => FALSE,
     'data' => array(
-      'node' => $entity,
-      'entity' => $entity, // Preparing for entities, keeping backward compatibility.
-      'entity_type' => $entity_type,
       'user' => $user,
+      'entity_type' => $entity_type,
     ),
     'filter' => variable_get('workflow_notify_filter_format_' . $wid, 'filtered_html'),
   );
+  // Preparing for entities, keeping backward compatibility.
+  $params['data'] += $entity_type == 'node' ? array('node' => $entity) : array('entity' => $entity);
 
   // Build the subject and body of the mail.
   // Token replacement occurs in hook_mail().
-  // @TODO: Currently no translation occurs.
+  // @todo: Currently no translation occurs.
   $params['context']['subject'] = variable_get("workflow_notify_subject_$new_state",
     '[node:title] is now "[workflow:workflow-current-state-name]"');
 
   $params['context']['body'] = variable_get("workflow_notify_body_$new_state",
     '<a href="[node:url:absolute]">[node:title]</a> is now "@state".');
 
+  // Retrieve the from-address.
   switch (variable_get('workflow_notify_from_address_' . $wid, 'site')) {
     case 'site':
       $from = variable_get('site_mail', ini_get('sendmail_from'));
@@ -284,13 +307,21 @@ function _workflow_notify($new_state, $entity, $entity_type = '', $field_name = 
       break;
   }
 
-  // Send the email.
-  drupal_mail('workflow_notify',
-    'workflow_notify',
-    implode(';', $addr_list),
-    language_default(),
-    $params,
-    $from);
+  // Send the mail, and check for success. Note that this does not guarantee
+  // message delivery; only that there were no PHP-related issues encountered
+  // while sending.
+  $module = 'workflow_notify';
+  $key = 'workflow_notify';
+  $language = language_default();
+  // https://api.drupal.org/api/drupal/includes!mail.inc/function/drupal_mail/7.x
+  $result = drupal_mail($module, $key, $to, $language, $params, $from);
+  /*
+  if ($result['result'] == TRUE) {
+    drupal_set_message(t('Your message has been sent.'));
+  }
+  else {
+    drupal_set_message(t('There was a problem sending your message and it was not sent.'), 'error');
+  }
+   */
 
-  return;
 }

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file
  * Enables actions to be fired upon a Workflow State change.
@@ -13,17 +14,31 @@
 
 /**
  * Implements hook_workflow_operations().
- *
- * Menu callback, called in workflow.admin.inc to add actions for states.
  */
-function workflow_actions_workflow_operations($level, $workflow = NULL, $state = NULL) {
-  if ($workflow) {
-    return array(
-      'workflow_overview_actions' => array(
-        'title' => t('Actions'),
-        'href' => 'admin/structure/trigger/workflow/' . $workflow->wid,
-      ),
-    );
+function workflow_actions_workflow_operations($op, $workflow = NULL, $state = NULL) {
+  switch ($op) {
+    case 'workflow':
+      $actions = array();
+      if ($workflow && $workflow->getStates()) {
+        $wid = $workflow->getWorkflowId();
+        $actions = array(
+          'workflow_overview_actions' => array(
+            'title' => t('Actions'),
+            'href' => "admin/structure/trigger/workflow/$wid",
+          ),
+        );
+      }
+      else {
+        // Generate a dummy, if no states exist.
+        $actions = array(
+          'workflow_overview_actions' => array(
+            'title' => '',
+            'href' => '',
+          ),
+        );
+      }
+
+      return $actions;
   }
 }
 
@@ -76,7 +91,7 @@ function workflow_actions_entity_update($entity, $entity_type) {
   // P.S. You should not mix workflow field and workflow node!!
   if (module_exists('workflowfield') && !module_exists('workflownode')) {
     if (isset($entity->workflow_transitions)) {
-      foreach ($entity->workflow_transitions as $transition) {
+      foreach ($entity->workflow_transitions as &$transition) {
         // $transition->post_execute(); // equivalent with hook_entity_save().
         _workflow_actions_do($transition);
       }
@@ -224,7 +239,7 @@ function workflow_actions_action_info_alter(&$info) {
  * @param $transition.
  *   A Workflow Transition object.
  */
-function _workflow_actions_do($transition) {
+function _workflow_actions_do(&$transition) {
   $entity_type = $transition->entity_type;
   $entity = $transition->getEntity();
   $old_sid = $transition->old_sid;
@@ -245,7 +260,10 @@ function _workflow_actions_do($transition) {
       $aids = trigger_get_assigned_actions($hook);
     }
 
-    if ($aids) {
+    if ($aids && !isset($transition->workflow_actions_done[$hook])) {
+      // Avoid multiple executions if the entity_save is repeated in an action.
+      $transition->workflow_actions_done[$hook] = TRUE;
+
       $context = array(
         'hook' => $hook,
         'entity_type' => $entity_type,

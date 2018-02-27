@@ -43,6 +43,7 @@ function workflow_views_views_data_alter(&$data) {
     'base field' => 'uid',
     'label' => t('User'),
   );
+
   $data['workflow_node_history']['comment']['field']['handler'] = 'views_handler_field_xss';
   $data['workflow_node_history']['comment']['filter']['handler'] = 'views_handler_filter_string';
   $data['workflow_node_history']['stamp']['field']['handler'] = 'views_handler_field_date';
@@ -72,6 +73,26 @@ function workflow_views_views_data_alter(&$data) {
       'handler' => 'workflow_views_handler_field_comment_link_edit',
     ),
   );
+
+  $lastHid = db_select('workflow_node_history', 'lh_wnh');
+  $lastHid->addExpression('MAX(hid)', 'hid');
+  $lastHid->addField('lh_wnh', 'nid');
+  $lastHid->groupBy('nid');
+  $lastHid->groupBy('field_name');
+
+  $rightTable = db_select('workflow_node_history', 'wnh');
+  $rightTable->innerJoin($lastHid, 'last_hid', 'wnh.hid = last_hid.hid AND wnh.nid = last_hid.nid');
+  $rightTable->fields('wnh');
+
+  $lastHidRevision = db_select('workflow_node_history', 'lh_wnh');
+  $lastHidRevision->addExpression('MAX(hid)', 'hid');
+  $lastHidRevision->addField('lh_wnh', 'revision_id');
+  $lastHidRevision->groupBy('revision_id');
+  $lastHidRevision->groupBy('field_name');
+
+  $rightTableRevision = db_select('workflow_node_history', 'wnh');
+  $rightTableRevision->innerJoin($lastHidRevision, 'last_hid', 'wnh.hid = last_hid.hid AND wnh.revision_id = last_hid.revision_id');
+  $rightTableRevision->fields('wnh');
 
   // WorkflowCurrentTransition data.
   $data['workflow_node_current'] = $data['workflow_node_history'];
@@ -134,6 +155,7 @@ function workflow_views_views_data_alter(&$data) {
             ),
           ),
         );
+
       $data['workflow_scheduled_transition']['table']['join'][$base_table] = array(
         'table' => 'workflow_scheduled_transition',
         'field' => 'nid',
@@ -148,17 +170,18 @@ function workflow_views_views_data_alter(&$data) {
         ),
       );
       $data['workflow_node_current']['table']['join'][$base_table] = array(
-        'table' => 'workflow_node_history',
-        'field' => 'hid',
+        'table formula' => $rightTable,
+        'field' => 'nid',
         'left_table' => $base_table,
         'left_field' => $entity_id_key,
-        // Do not use the default 'views_join', but add a subquery.
-        'handler' => 'views_join_subquery',
-        // @todo: add "and   entity_type = {$entity_type}".
-        'left_query' => " SELECT max(hid) FROM {workflow_node_history}
-                            where nid = {$base_table}.{$entity_id_key}
-                            and   sid != old_sid ",
-        );
+      );
+
+      $data['workflow_node_current']['table']['join']['node_revision'] = array(
+          'table' => $rightTableRevision,
+          'field' => 'revision_id',
+          'left_table' => 'node_revision',
+          'left_field' => 'vid',
+      );
     }
   }
 

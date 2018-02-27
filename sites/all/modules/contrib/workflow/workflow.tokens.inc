@@ -184,7 +184,7 @@ function workflow_tokens($type, $tokens, array $data = array(), array $options =
         switch (end($name_parts)) {
           case 'comment':
             if (isset($entity->workflow_transitions) && isset($entity->workflow_transitions[$name_parts[0]])) {
-              $replacements[$original] = $entity->workflow_transitions[$name_parts[0]]->$name_parts[1];
+              $replacements[$original] = $entity->workflow_transitions[$name_parts[0]]->{$name_parts[1]};
             }
             break;
         }

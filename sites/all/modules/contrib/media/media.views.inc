@@ -33,6 +33,7 @@ function media_views_plugins() {
     'help' => t('Display as a tab in the media browser.'),
     'handler' => 'media_views_plugin_display_media_browser',
     'theme' => 'views_view',
+    'theme path' => drupal_get_path('module', 'views') . '/theme',
     'base' => $base,
     'use ajax' => TRUE,
     'use pager' => TRUE,
@@ -97,6 +98,7 @@ function template_preprocess_media_views_view_media_browser(&$vars) {
   drupal_add_js(array('media' => array('files' => array_values($files))), 'setting');
 
   // Add the browser parameters to the settings and that this display exists.
+  $params = media_get_browser_params();
   drupal_add_js(array(
     'media' => array(
       'browser' => array(
@@ -125,6 +127,7 @@ function template_preprocess_media_views_view_media_browser(&$vars) {
   $vars['wrapper_suffix'] = '</div>';
   $vars['list_type_prefix'] = '<' . $handler->options['type'] . ' id="media-browser-library-list" class="' . implode(' ', $class) . '">';
   $vars['list_type_suffix'] = '</' . $handler->options['type'] . '>';
+  $vars['aria_role'] = $params['multiselect'] ? 'checkbox' : 'radio';
 
   // Run theming variables through a standard Views preprocess function.
   template_preprocess_views_view_unformatted($vars);

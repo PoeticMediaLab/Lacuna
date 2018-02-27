@@ -51,11 +51,12 @@ class WorkflowConfigTransition extends Entity {
   }
 
   protected function defaultLabel() {
-    return $this->label;
+    return isset($this->label) ? $this->label : '';
   }
 
   protected function defaultUri() {
-    return array('path' => 'admin/config/workflow/workflow/manage/' . $this->wid . '/transitions/');
+    $wid = $this->wid;
+    return array('path' => WORKFLOW_ADMIN_UI_PATH . "/manage/$wid/transitions/");
   }
 
   /**
@@ -96,11 +97,16 @@ class WorkflowConfigTransition extends Entity {
    * - In permissions;
    * - By permission hooks, implemented by other modules.
    *
+   * @param string|array $user_roles
+   *   The string 'ALL' to force allowing the transition, or an array of role
+   *   IDs to compare against the roles allowed for the transition.
+   *
    * @return bool
-   *   TRUE if OK, else FALSE.
+   *   If the transition is allowed, this function returns TRUE. Otherwise, it
+   *   returns FALSE.
    */
   public function isAllowed($user_roles) {
-    if ($user_roles == 'ALL') {
+    if ($user_roles === 'ALL') {
       // Superuser.
       return TRUE;
     }
@@ -109,6 +115,47 @@ class WorkflowConfigTransition extends Entity {
     }
     return TRUE;
   }
+
+  /**
+   * Generate a machine name for a transition.
+   */
+  public static function machineName($start_name, $end_name) {
+    $new_name   = sprintf("%s_to_%s", $start_name, $end_name);
+
+    // Special case: replace parens in creation state transition names.
+    $new_name   = str_replace("(creation)", "_creation", $new_name);
+
+    return $new_name;
+  }
+
+  public function save() {
+    parent::save();
+
+    // Ensure Workflow is marked overridden.
+    $workflow = $this->getWorkflow();
+    if ($workflow->status == ENTITY_IN_CODE) {
+      $workflow->status = ENTITY_OVERRIDDEN;
+      $workflow->save();
+    }
+  }
+
+  /**
+   * Helper debugging function to easily show the contents of a transition.
+   */
+  public function dpm($function = 'not_specified') {
+    $transition = $this;
+    $time = NULL;
+
+    // Do this extensive $user_name lines, for some troubles with Action.
+    $t_string = get_class($this) . ' ' . $this->identifier() . " in function '$function'";
+    //$output[] = 'Entity  = ' . ((!$entity) ? 'NULL' : ($entity_type . '/' . $entity_bundle . '/' . $entity_id));
+    //$output[] = 'Field   = ' . $transition->getFieldName();
+    $output[] = 'From/To = ' . $transition->sid . ' > ' . $transition->target_sid . ' @ ' . $time;
+    //$output[] = 'Comment = ' . $user_name . ' says: ' . $transition->getComment();
+    //$output[] = 'Forced  = ' . ($transition->isForced() ? 'yes' : 'no');
+    if (function_exists('dpm')) { dpm($output, $t_string); }
+  }
+
 
 }
 

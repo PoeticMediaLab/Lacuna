@@ -949,7 +949,7 @@ function superfish_block_view($delta = 0) {
       case 2:
         $sfplugins['touchscreen']['mode'] = 'window_width';
         $tsbp = variable_get('superfish_touchbp_' . $delta, 768);
-        $sfplugins['touchscreen']['breakpoint'] = ($tsbp != 768) ? (int) $tsbp : '';
+        $sfplugins['touchscreen']['breakpoint'] = ($tsbp != 768) ? (float) $tsbp : '';
         $tsbpu = variable_get('superfish_touchbpu_' . $delta, 'px');
         $sfplugins['touchscreen']['breakpointUnit'] = $tsbpu;
         break;
@@ -1041,7 +1041,7 @@ function superfish_block_view($delta = 0) {
       case 2:
         $sfplugins['smallscreen']['mode'] = 'window_width';
         $ssbp = variable_get('superfish_smallbp_' . $delta, 768);
-        $sfplugins['smallscreen']['breakpoint'] = ($ssbp != 768) ? (int) $ssbp : '';
+        $sfplugins['smallscreen']['breakpoint'] = ($ssbp != 768) ? (float) $ssbp : '';
         $ssbpu = variable_get('superfish_smallbpu_' . $delta, 'px');
         $sfplugins['smallscreen']['breakpointUnit'] = $ssbpu;
         break;

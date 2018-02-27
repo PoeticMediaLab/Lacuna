@@ -36,7 +36,7 @@ function workflow_access_priority_form($form, $form_state) {
  */
 function workflow_access_priority_form_submit($form, &$form_state) {
   variable_set('workflow_access_priority', $form_state['values']['workflow_access']['workflow_access_priority']);
-  $form_state['redirect'] = 'admin/config/workflow/workflow';
+  $form_state['redirect'] = WORKFLOW_ADMIN_UI_PATH;
 }
 
 
@@ -46,18 +46,18 @@ function workflow_access_priority_form_submit($form, &$form_state) {
  * Add a "three dimensional" (state, role, permission type) configuration
  * interface to the workflow edit form.
  */
-function workflow_access_form($form, $form_state, $workflow, $op) {
-  if (!$workflow) {
-    // Leave this page immediately.
-    drupal_set_message(t('Unknown workflow'));
-    drupal_goto('admin/config/workflow/workflow');
+function workflow_access_form($form, $form_state, Workflow $workflow) {
+  // If we don't have a workflow that goes with this, return to the admin pg.
+  if (!is_object($workflow)) {
+    drupal_set_message(t('Improper worklow ID provided.'), 'error');
+    drupal_goto(WORKFLOW_ADMIN_UI_PATH);
   }
 
-  drupal_set_title(t('@name Access', array('@name' => $workflow->label()))); // No t() for Settings page.
+  // @todo: Let's get a better page title.
+  drupal_set_title(t('@name Access', array('@name' => $workflow->label())));
 
-  $form = array('#tree' => TRUE);
-
-  $form['#wid'] = $workflow->wid;
+  $form['#tree'] = TRUE;
+  $form['#wid'] = $wid = $workflow->getWorkflowId();
 
   // A list of role names keyed by role ID, including the 'author' role.
   $roles = workflow_get_roles('participate in workflow');
@@ -131,6 +131,8 @@ function workflow_access_form($form, $form_state, $workflow, $op) {
  * Stores permission settings for workflow states.
  */
 function workflow_access_form_submit($form, &$form_state) {
+  $wid = $form['#wid'];
+
   foreach ($form_state['values'] as $sid => $access) {
     // Ignore irrelevant keys.
     if (!is_numeric($sid)) {
@@ -148,10 +150,10 @@ function workflow_access_form_submit($form, &$form_state) {
     }
 
     // Update all nodes having same workflow state to reflect new settings.
-    // just set a flag, which is working for both Workflow Field ánd Workflow Node.
+    // just set a flag, which is working for both Workflow Field Ã¡nd Workflow Node.
     node_access_needs_rebuild(TRUE);
   }
 
   drupal_set_message(t('Workflow access permissions updated.'));
-  $form_state['redirect'] = 'admin/config/workflow/workflow/' . $form['#wid'];
+  $form_state['redirect'] = WORKFLOW_ADMIN_UI_PATH;
 }

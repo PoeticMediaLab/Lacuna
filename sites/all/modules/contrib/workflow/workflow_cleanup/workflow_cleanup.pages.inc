@@ -1,13 +1,13 @@
 <?php
 /**
  * @file
- * Contains admin/config/workflow/workflow/cleanup page.
+ * Contains an Admin page to delete obsolete states and transitions.
  */
 
 /**
  * The main cleanup page.
  */
-function workflow_cleanup_form($form, $form_state) {
+function workflow_cleanup_form($form, &$form_state) {
   $form = array();
 
   // Get all of the states, indexed by sid.

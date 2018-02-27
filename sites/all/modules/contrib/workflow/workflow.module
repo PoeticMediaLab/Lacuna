@@ -13,21 +13,24 @@ define('WORKFLOW_CREATION_STATE_NAME', '(' . t('creation') . ')');
 // #2657072 brackets are added later to indicate a special role, and distinguish from frequently used 'author' role.
 define('WORKFLOW_ROLE_AUTHOR_NAME', 'author');
 define('WORKFLOW_ROLE_AUTHOR_RID', '-1');
+// The definition of the Admin UI pages.
+define('WORKFLOW_ADMIN_UI_PATH', 'admin/config/workflow/workflow');
 
 // The definition of the Field_info property type. Shared between 'workflow_field' and 'workflow_rules'.
 define('WORKFLOWFIELD_PROPERTY_TYPE', 'text'); // @todo: 'list', 'text' or 'workflow'?
 
 // Add entity support file.
-module_load_include('inc', 'workflow', 'workflow.entity');
+require_once dirname(__FILE__) . '/workflow.entity.inc';
+
 // Add workflow block (credits to workflow_extensions module).
-module_load_include('inc', 'workflow', 'workflow.block');
+require_once dirname(__FILE__) . '/workflow.block.inc';
 
 // The type_map is only needed for workflow_node, but the API is used by
 // several third-party add-on modules. It's a small file, so just add it.
-module_load_include('inc', 'workflow', 'workflow.node.type_map');
+require_once dirname(__FILE__) . '/workflow.node.type_map.inc';
 
 // Split the rather long list of hooks for the form with action buttons.
-module_load_include('inc', 'workflow', 'workflow.form');
+require_once dirname(__FILE__) . '/workflow.form.inc';
 
 /**
  * Implements hook_help().
@@ -132,9 +135,10 @@ function workflow_menu_alter(&$items) {
 
         // Add the workflow tab in the Entity Admin UI.
         if (!empty($entity_info['admin ui']['path'])) {
-          $entity_position = substr_count($entity_info['admin ui']['path'], '/') + 2;
+          $admin_path = $entity_info['admin ui']['path'];
+          $entity_position = substr_count($admin_path, '/') + 2;
           $wildcard = (isset($entity_info['admin ui']['menu wildcard']) ? $entity_info['admin ui']['menu wildcard'] : '%entity_object');
-          $items[$entity_info['admin ui']['path'] . '/manage/' . $wildcard . '/workflow'] = $menu_item + array(
+          $items["$admin_path/manage/$wildcard/workflow"] = $menu_item + array(
               'page arguments' => array($type, $entity_position),
               'access arguments' => array($type, $entity_position),
               'load arguments' => array($type),
@@ -608,7 +612,11 @@ function workflow_get_workflow_state_names($wid = 0, $grouped = FALSE, $all = FA
   // Since this function is only used in UI, it is save to use the global $user.
   global $user;
 
-  foreach (workflow_load_multiple($wid ? array($wid) : FALSE) as $workflow) {
+  /* @var $workflows Workflow[] */
+  $workflows = workflow_load_multiple($wid ? array($wid) : FALSE);
+  // Do not group if only 1 Workflow is configured or selected.
+  $grouped = count($workflows) == 1 ? FALSE : $grouped;
+  foreach ($workflows as $workflow) {
     $state = new WorkflowState(array('wid' => $workflow->wid));
     $workflow_options = $state->getOptions('', NULL, '', $user, FALSE);
 
@@ -1163,6 +1171,29 @@ function _workflow_info_field($field_name, $workflow = NULL) {
   }
 
   return $field;
+}
+
+/**
+ * Get features defaults for workflows.
+ */
+function workflow_get_defaults($module) {
+  $funcname = $module . '_default_Workflow';
+  return $funcname();
+}
+
+/**
+ * Revert a single workflow.
+ */
+function workflow_revert($defaults, $name) {
+  $workflow = $defaults[$name];
+  $old = workflow_load_by_name($name);
+  if ($old) {
+    $workflow->wid = $old->wid;
+    $workflow->is_new = FALSE;
+    $workflow->is_reverted = TRUE;
+  }
+
+  $workflow->save();
 }
 
 /**

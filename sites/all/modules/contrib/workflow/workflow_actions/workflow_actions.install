@@ -9,6 +9,6 @@
  */
 function workflow_actions_uninstall() {
   return db_delete('trigger_assignments')
-    ->condition('hook', 'workflow-%', 'like')
+    ->condition('hook', 'workflow-%', 'LIKE')
     ->execute();
 }

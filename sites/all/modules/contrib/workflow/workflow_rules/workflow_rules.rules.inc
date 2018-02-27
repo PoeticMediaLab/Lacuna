@@ -13,8 +13,8 @@
  * They contain separate logic for the 'conventional' Workflow Node API
  * and the 'new' Workfow Field API.
  */
-module_load_include('inc', 'workflow_rules', 'workflow_rules.node');
-module_load_include('inc', 'workflow_rules', 'workflow_rules.field');
+require_once dirname(__FILE__) . '/workflow_rules.node.inc';
+require_once dirname(__FILE__) . '/workflow_rules.field.inc';
 
 /**
  * Implements hook_rules_event_info().

@@ -95,10 +95,16 @@ function menu_views_menu_link(array $variables) {
  * Overrides default theming function to intercept views.
  */
 function menu_views_superfish_menu_item_link(array $variables) {
-  // Only intercept if this menu item link is a view.
-  if (isset($variables['menu_item']['link']) && $view = _menu_views_replace_menu_item($variables['menu_item']['link'])) {
-    $item = _menu_views_get_item($variables['menu_item']['link']);
-    return '<div' . drupal_attributes(array('class' => explode(' ', $item['view']['settings']['wrapper_classes']))) . '>' . $view . '</div>';
+  if (isset($variables['menu_item']['link'])) {
+    // Only intercept if this menu item link is a view.
+    if ($view = _menu_views_replace_menu_item($variables['menu_item']['link'])) {
+      $item = _menu_views_get_item($variables['menu_item']['link']);
+      return '<div' . drupal_attributes(array('class' => explode(' ', $item['view']['settings']['wrapper_classes']))) . '>' . $view . '</div>';
+    }
+    // If no view, yet link path is '<view>', return an empty value.
+    elseif ($variables['menu_item']['link']['link_path'] == '<view>') {
+      return '';
+    }
   }
   // Otherwise, use the default theming function.
   return theme('menu_views_superfish_menu_item_link_default', $variables);
@@ -109,10 +115,16 @@ function menu_views_superfish_menu_item_link(array $variables) {
  * Overrides default theming function to intercept views.
  */
 function menu_views_responsive_dropdown_menus_item_link(array $variables) {
-  // Only intercept if this menu item link is a view.
-  if (isset($variables['menu_item']['link']) && $view = _menu_views_replace_menu_item($variables['menu_item']['link'])) {
-    $item = _menu_views_get_item($variables['menu_item']['link']);
-    return '<div' . drupal_attributes(array('class' => explode(' ', $item['view']['settings']['wrapper_classes']))) . '>' . $view . '</div>';
+  if (isset($variables['menu_item']['link'])) {
+    // Only intercept if this menu item link is a view.
+    if ($view = _menu_views_replace_menu_item($variables['menu_item']['link'])) {
+      $item = _menu_views_get_item($variables['menu_item']['link']);
+      return '<div' . drupal_attributes(array('class' => explode(' ', $item['view']['settings']['wrapper_classes']))) . '>' . $view . '</div>';
+    }
+    // If no view, yet link path is '<view>', return an empty value.
+    elseif ($variables['menu_item']['link']['link_path'] == '<view>') {
+      return '';
+    }
   }
   // Otherwise, use the default theming function.
   return theme('menu_views_responsive_dropdown_menus_item_link_default', $variables);
@@ -380,6 +392,7 @@ function menu_views_menu_link_alter(&$link) {
       $item['original_path'] = $link['link_path'];
     }
     $link['link_path'] = '<view>';
+    $link['options']['alter'] = TRUE;
   }
 }
 
@@ -661,20 +674,20 @@ function _menu_views_tokenize_callback(&$replacements, $data, $options) {
  * keys to arrays rather than overwriting the value in the first array with the duplicate
  * value in the second array, as array_merge does. I.e., with array_merge_recursive,
  * this happens (documented behavior):
- * 
+ *
  * array_merge_recursive(array('key' => 'org value'), array('key' => 'new value'));
  *     => array('key' => array('org value', 'new value'));
- * 
+ *
  * array_merge_recursive_distinct does not change the datatypes of the values in the arrays.
  * Matching keys' values in the second array overwrite those in the first array, as is the
  * case with array_merge, i.e.:
- * 
+ *
  * array_merge_recursive_distinct(array('key' => 'org value'), array('key' => 'new value'));
  *     => array('key' => 'new value');
- * 
+ *
  * Parameters are passed by reference, though only for performance reasons. They're not
  * altered by this function.
- * 
+ *
  * @param array $array1
  * @param mixed $array2
  * @author daniel@danielsmedegaardbuus.dk
@@ -686,7 +699,7 @@ function &_menu_views_array_merge_recursive(array &$array1, &$array2 = NULL) {
     foreach ($array2 as $key => $val) {
       if (is_array($array2[$key])) {
         $merged[$key] = isset($merged[$key]) && is_array($merged[$key]) ? _menu_views_array_merge_recursive($merged[$key], $array2[$key]) : $array2[$key];
-      }        
+      }
       else {
         $merged[$key] = $val;
       }

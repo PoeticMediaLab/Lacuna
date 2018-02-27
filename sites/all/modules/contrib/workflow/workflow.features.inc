@@ -12,7 +12,7 @@
 define('WORKFLOW_FEATURES_AUTHOR_NAME', 'workflow_features_author_name');
 
 // Even if workflow Node is not enabled, Features may use Node API's type_maps.
-module_load_include('inc', 'workflow', 'workflow.node.type_map');
+require_once dirname(__FILE__) . '/workflow.node.type_map.inc';
 
 /**
  * Default controller handling features integration.
@@ -31,10 +31,9 @@ class WorkflowFeaturesController extends EntityDefaultFeaturesController {
         if (count($workflow->getTypeMap())) {
           $export['dependencies']['workflownode'] = 'workflownode';
         }
-        // Add dependency on workflow_field.
-        $export['features']['Workflow'][$workflow_name] = $workflow_name;
       }
     }
+
     return $pipe;
   }
 
@@ -48,31 +47,14 @@ class WorkflowFeaturesController extends EntityDefaultFeaturesController {
     $translatables = $code = array();
     $code[] = '  $workflows = array();';
     $code[] = '';
+
     foreach ($data as $identifier) {
       // Clone workflow to make sure changes are not propagated to original.
       if ($workflow = entity_load_single($this->type, $identifier)) {
-        // Make sure data is not copied to the database.
-        $workflow = clone $workflow;
-        // Modification for the Workflow object:
-        // For mapping workflow_field, add original wid in case target system
-        // already contains workflows.
-        $workflow->wid_original = $workflow->wid;
-        // Add roles to translate role IDs on target system.
-        $permission = NULL;
-        $workflow->system_roles = workflow_get_roles($permission);
-        // >> Now resume with normal flow.
-
-        // Make sure to escape the characters \ and '.
-        // The following method has the advantage, that you can export with
-        // features,
-        // and later import without enabling Features in the target system.
-        $workflow_export = addcslashes(entity_export($this->type, $workflow, '  '), '\\\'');
-        $workflow_identifier = features_var_export($identifier);
-        $code[] = "  // Exported workflow: {$workflow_identifier}";
-        $code[] = "  \$workflows[{$workflow_identifier}] = entity_import('{$this->type}', '" . $workflow_export . "');";
-        $code[] = "";
+        $this->export_render_workflow($workflow, $identifier, $code);
       }
     }
+
     $code[] = '  return $workflows;';
     $code = implode("\n", $code);
 
@@ -82,19 +64,158 @@ class WorkflowFeaturesController extends EntityDefaultFeaturesController {
   }
 
   /**
-   * Overridden to not delete upon revert.
+   * Renders the provided workflow into export code.
+   *
+   * @param Workflow $workflow
+   *   The workflow to export.
+   * @param string $identifier
+   *   The unique machine name for the workflow in the export.
+   * @param array $code
+   *   A reference to the export code array that will receive the output.
    */
-  /*
+  protected function export_render_workflow(Workflow $workflow, $identifier, array &$code) {
+    // Make sure data is not copied to the database.
+    $workflow = clone $workflow;
+
+    $this->sanitize_workflow_for_export($workflow);
+
+    // Make sure to escape the characters \ and '.
+    // The following method has the advantage, that you can export with
+    // features,
+    // and later import without enabling Features in the target system.
+    $workflow_export = addcslashes(entity_export($this->type, $workflow, '  '), '\\\'');
+    $workflow_identifier = features_var_export($identifier);
+
+    $code[] = "  // Exported workflow: {$workflow_identifier}";
+    $code[] = "  \$workflows[{$workflow_identifier}] = entity_import('{$this->type}', '" . $workflow_export . "');";
+    $code[] = ''; // Blank line
+  }
+
+  /**
+   * Prepares the provided workflow for export.
+   *
+   * Removes serial IDs and replaces them with machine names.
+   *
+   * @param Workflow $workflow
+   *   The workflow to sanitize. The contents of this object are modified directly.
+   */
+  protected function sanitize_workflow_for_export(Workflow $workflow) {
+    // Eliminate serial IDs in exports to prevent "Overridden" status.
+    // We use machine names instead.
+    unset($workflow->wid);
+
+    // Add roles to translate role IDs on target system.
+    $permission = NULL;
+
+    // Get system roles.
+    $workflow->system_roles = workflow_get_roles($permission);
+    // Only export system roles for roles used by this workflow.
+    $roles = array();
+    foreach ($workflow->transitions as $id => $transition) {
+      foreach ($transition->roles as $rid) {
+        $roles[] = $rid;
+      }
+    }
+    $roles = array_unique($roles);
+    foreach ($workflow->system_roles as $id => $system_role) {
+      if (!in_array($id, $roles)) {
+        unset($workflow->system_roles[$id]);
+      }
+    }
+
+    $sid_to_name_map = $this->pack_states($workflow);
+    $this->pack_transitions($workflow, $sid_to_name_map);
+  }
+
+  /**
+   * "Packs" the states in the provided workflow into an export-friendly format.
+   *
+   * @param Workflow $workflow
+   *   The workflow to pack. The contents of this object are modified directly.
+   *
+   * @return array
+   *   A map of the old state IDs to their new machine names.
+   */
+  protected function pack_states(Workflow $workflow) {
+    $named_states    = array();
+    $sid_to_name_map = array();
+
+    foreach ($workflow->states as $state) {
+      /* @var WorkflowState $state */
+      $name = $state->getName();
+
+      $sid_to_name_map[$state->sid] = $name;
+
+      // Eliminate serial IDs in exports to prevent "Overridden" status.
+      // We use machine names instead.
+      unset($state->sid);
+      unset($state->wid);
+
+      $named_states[$name] = $state;
+    }
+    ksort($named_states);
+
+    // Identify states by machine name.
+    $workflow->states = $named_states;
+
+    return $sid_to_name_map;
+  }
+
+  /**
+   * "Packs" the transitions in the provided workflow into an export-friendly format.
+   *
+   * @param Workflow $workflow
+   *   The workflow to pack. The contents of this object are modified directly.
+   *
+   * @param array $sid_to_name_map
+   *   The map of numeric state IDs to their machine names, for remapping sid
+   *   references.
+   */
+  protected function pack_transitions(Workflow $workflow, array $sid_to_name_map) {
+    $named_transitions = array();
+
+    foreach ($workflow->transitions as $transition) {
+      /* @var WorkflowTransition $transition */
+      $start_name = $sid_to_name_map[$transition->sid];
+      $end_name   = $sid_to_name_map[$transition->target_sid];
+      $new_name = WorkflowConfigTransition::machineName($start_name, $end_name);
+
+      $transition->name        = $new_name;
+      $transition->start_state = $start_name;
+      $transition->end_state   = $end_name;
+
+      // Eliminate serial IDs in exports to prevent "Overridden" status.
+      // We use machine names instead.
+      unset($transition->wid);
+      unset($transition->tid);
+      unset($transition->sid);
+      unset($transition->target_sid);
+
+      $named_transitions[$new_name] = $transition;
+    }
+    ksort($named_transitions);
+
+    // Identify transitions by new machine name.
+    $workflow->transitions = $named_transitions;
+  }
+
+  /**
+   * Revert this workflow, either creating the workflow new (if one with the
+   * same machine name is not present), or updating the existing workflow.
+   *
+   * @param string $module
+   *   The name of the feature module whose components should be reverted.
+   */
   function revert($module = NULL) {
     // Loads defaults from feature code.
-    $defaults = features_get_default($entity_type, $module);
-    if ($defaults = features_get_default($this->type, $module)) {
-      foreach ($defaults as $name => $entity) {
-        entity_delete($this->type, $name);
+    $defaults = workflow_get_defaults($module);
+
+    if (!empty($defaults)) {
+      foreach ($defaults as $machine_name => $entity) {
+        workflow_revert($defaults, $machine_name);
       }
     }
   }
-   */
 }
 
 /**
@@ -107,80 +228,33 @@ function workflow_features_pipe_field_base_alter(&$pipe, $data, $export) {
     foreach ($data as $field_name) {
       // $info = field_info_field($field_name);
       $field = _workflow_info_field($field_name);
+
       if ($field['type'] == 'workflow') {
         // $field['settings']['wid'] can be numeric or named.
         $workflow = workflow_load_single($field['settings']['wid']);
-        $pipe['Workflow'][] = $workflow->name;
+
+        // Fields might reference missing workflows.
+        if (!empty($workflow)) {
+          $pipe['Workflow'][] = $workflow->name;
+        }
       }
     }
   }
 }
 
 /**
- * Implements hook_features_rebuild().
- */
-function workflow_features_rebuild($module) {
-  // workflow_features_revert($module);
-  // $entity_type = 'Workflow';
-
-  // Do not delete the previous workflow. It will break the installation due to
-  // the new $wid that is created.
-  // return entity_features_get_controller($entity_type)->revert($module);
-
-  // $info = entity_get_info($entity_type);
-  // if (in_array('EntityAPIControllerInterface', class_implements($info['controller class']))) {
-  //   return entity_get_controller($entity_type)->import($export);
-  // }
-}
-
-/**
- * CRUD style helper functions below.
- */
-
-/**
- * Translates a role string to RIDs for importing.
+ * Implements hook_features_api_alter().
  *
- * @param string $role_string
- *   A string of roles or fake 'author' role.
- *
- * @return array
- *   An array of RIDs.
+ * Ensures Workflow always fires last during rebuild, to ensure that roles
+ * referenced by workflows to be loaded-in when features contain roles.
  */
-function _workflow_roles_to_rids($role_string) {
-  // Get all roles, including 'author'.
-  $permission = NULL;
-  $roles = workflow_get_roles($permission);
+function workflow_features_api_alter(array &$components) {
+  // FIXME: Why is Workflow the only features provider with an uppercase component name?
+  $component_name = 'Workflow';
 
-  $rid_array = array();
-  foreach (explode(',', $role_string) as $role_name) {
-    if ($role_name === WORKFLOW_FEATURES_AUTHOR_NAME) {
-      $rid_array[WORKFLOW_ROLE_AUTHOR_RID] = WORKFLOW_ROLE_AUTHOR_RID;
-    }
-    elseif ($role_name && in_array($role_name, $roles)) {
-      $rid = array_search($role_name, $roles);
-      $rid_array[$rid] = $rid;
-    }
+  if (isset($components[$component_name])) {
+    $setting = $components[$component_name];
+    unset($components[$component_name]);
+    $components[$component_name] = $setting;
   }
-  return $rid_array;
-}
-
-/**
- * Translates a string of rids to role names for exporting.
- *
- * @param array $rid_array
- *   An array of rids or fake 'author' role.
- *
- * @return string
- *   A string of role names separated by commas.
- */
-function _workflow_rids_to_roles(array $rid_array) {
-  // Get all roles, including 'author'.
-  $permission = NULL;
-  $roles = workflow_get_roles($permission);
-  // There may be a role named 'author', so make 'author' distinct.
-  $roles[WORKFLOW_ROLE_AUTHOR_RID] = WORKFLOW_FEATURES_AUTHOR_NAME;
-
-  // Translate RIDs to rolenames.
-  $return = implode(',', array_intersect_key($roles, array_flip($rid_array)));
-  return trim($return, ',');
 }

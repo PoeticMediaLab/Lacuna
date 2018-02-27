@@ -36,7 +36,7 @@ function workflow_entity_info() {
     /*
     // 'access callback' => 'workflow_access',
     // 'admin ui' => array(
-    //   'path' => 'admin/config/workflow/workflow',
+    //   'path' => WORKFLOW_ADMIN_UI_PATH,
     //   'file' => 'workflow_admin_ui/workflow_admin_ui.pages.inc',
     //   'controller class' => 'EntityWorkflowUIController',
     //   'menu wildcard' => '%workflow',
@@ -110,7 +110,7 @@ function workflow_entity_info() {
     ),
 
 //    'admin ui' => array(
-//      'path' => 'admin/config/workflow/workflow/manage/%workflow_transition/fields2',
+//      'path' => WORKFLOW_ADMIN_UI_PATH . '/manage/%workflow_transition/fields2',
 //      'menu wildcard' => '%workflow_transition',
 //      'controller class' => 'EntityDefaultUIController',
 //    ),
@@ -147,12 +147,12 @@ function workflow_entity_info() {
   }
 
   // Build an array of bundles.
-  foreach ($types as $type => $info) {
-    $entities['WorkflowTransition']['bundles'][$type] = array(
+  foreach ($types as $wid => $info) {
+    $entities['WorkflowTransition']['bundles'][$wid] = array(
       'label' => $info->label,
       'admin' => array(
-        'path' => 'admin/config/workflow/workflow/manage/%workflow',
-        'real path' => 'admin/config/workflow/workflow/manage/' . $type,
+        'path' => WORKFLOW_ADMIN_UI_PATH . '/manage/%workflow',
+        'real path' => WORKFLOW_ADMIN_UI_PATH . "/manage/$wid",
         'bundle argument' => 5,
 //        'access callback' => 'workflow_access',
       ),

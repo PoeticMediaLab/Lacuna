@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file
  * Cleans up Workflow cruft that may build up over time.
@@ -10,7 +11,9 @@
 function workflow_cleanup_menu() {
   $items = array();
 
-  $items['admin/config/workflow/workflow/cleanup'] = array(
+  $admin_path = WORKFLOW_ADMIN_UI_PATH;
+
+  $items["$admin_path/cleanup"] = array(
     'title' => 'Clean up workflow',
     'file' => 'workflow_cleanup.pages.inc',
     'access arguments' => array('administer workflow'),
@@ -27,7 +30,7 @@ function workflow_cleanup_menu() {
  */
 function workflow_cleanup_help($path, $arg) {
   switch ($path) {
-    case 'admin/config/workflow/workflow/cleanup':
+    case WORKFLOW_ADMIN_UI_PATH . '/cleanup':
       return t('This page allows you to delete orphaned and inactive states.
         States can be deleted freely in a development environment, but be
         careful if you have used a State in a production environment. The

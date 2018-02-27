@@ -1,13 +1,16 @@
 name = Workflow Notify
 description = Notify roles of Workflow transitions.
-dependencies[] = workflow
-configure = admin/config/workflow/workflow
-core = 7.x
 package = Workflow
+core = 7.x
 
-; Information added by Drupal.org packaging script on 2016-11-06
-version = "7.x-2.9"
+dependencies[] = token
+dependencies[] = workflow
+
+configure = admin/config/workflow/workflow
+
+; Information added by Drupal.org packaging script on 2017-10-26
+version = "7.x-2.11"
 core = "7.x"
 project = "workflow"
-datestamp = "1478455741"
+datestamp = "1509025748"
 

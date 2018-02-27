@@ -19,10 +19,12 @@ define('WORKFLOW_ADMIN_UI_ARROW', '&#8594;');
  * Adds Admin UI to entities, using EntityWorkflowUIController.
  */
 function workflow_admin_ui_entity_info_alter(&$entity_info) {
+  $admin_path = WORKFLOW_ADMIN_UI_PATH;
+
   $entity_info['Workflow'] += array(
     'access callback' => 'workflow_access',
     'admin ui' => array(
-      'path' => 'admin/config/workflow/workflow',
+      'path' => $admin_path,
       // Do not add 'file', since each page has its own file.
       // 'file' => 'workflow_admin_ui/workflow_admin_ui.pages.inc',
       'controller class' => 'EntityWorkflowUIController',
@@ -38,8 +40,7 @@ function workflow_admin_ui_help($path, $arg) {
   switch ($path) {
 
     case 'admin/modules':
-    case 'admin/config/workflow/workflow':
-    // case 'admin/config/workflow/workflow/manage/%/states': // Already has its own text.
+    case WORKFLOW_ADMIN_UI_PATH:
       if (module_exists('workflownode') && module_exists('workflowfield')) {
         $m = t('Do not enable Workfow Node and Workflow Field submodules at the
           same time (unless you are in a migration phase). Visit the <a href=
@@ -49,12 +50,12 @@ function workflow_admin_ui_help($path, $arg) {
       }
       return;
 
-    case 'admin/config/workflow/workflow/add':
+    case WORKFLOW_ADMIN_UI_PATH . '/add':
       return t('To get started, provide a name for your workflow. This name
         will be used as a label when the workflow status is shown during node
         editing.');
 
-    case 'admin/config/workflow/workflow/manage/%/states':
+    case WORKFLOW_ADMIN_UI_PATH . '/manage/%/states':
       return t("To create a new state, enter its name in the last row of the
         'State' column. Check the 'Active' box to make it effective. You may
         also drag it to the appropriate position.") . '<br />'
@@ -64,7 +65,7 @@ function workflow_admin_ui_help($path, $arg) {
         not zero), then you need to select a state to which to reassign that
         content.");
 
-    case 'admin/config/workflow/workflow/manage/%/transitions':
+    case WORKFLOW_ADMIN_UI_PATH . '/manage/%/transitions':
       return t('You are currently viewing the possible transitions to and from
         workflow states. The state is shown in the left column; the state to be
         moved to is to the right. For each transition, check the box next to
@@ -79,7 +80,7 @@ function workflow_admin_ui_help($path, $arg) {
         array('!url' => url('admin/people/permissions', array(
           'fragment' => 'module-workflow'))));
 
-    case 'admin/config/workflow/workflow/manage/%/labels':
+    case WORKFLOW_ADMIN_UI_PATH . '/manage/%/labels':
       return t('You can add labels to transitions if you don\'t like the
         standard state labels. They will modify the Workflow form options, so
         specific workflow transitions can have their own labels, relative to
@@ -161,9 +162,9 @@ function workflow_admin_ui_breadcrumbs($workflow, $extra = NULL) {
   $bc = array(l(t('Home'), '<front>'));
   $bc[] = l(t('Configuration'), 'admin/config');
   $bc[] = l(t('Workflow'), 'admin/config/workflow');
-  $bc[] = l(t('Workflow'), 'admin/config/workflow/workflow');
+  $bc[] = l(t('Workflow'), WORKFLOW_ADMIN_UI_PATH);
   if ($workflow) {
-    $bc[] = l($workflow->label(), "admin/config/workflow/workflow/$workflow->wid");
+    $bc[] = l($workflow->label(), WORKFLOW_ADMIN_UI_PATH . "/$workflow->wid");
   }
   if ($extra) {
     $bc[] = $extra;

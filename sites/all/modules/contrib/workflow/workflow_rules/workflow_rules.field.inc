@@ -5,7 +5,7 @@
  */
 
 if (module_exists('rules')) {
-  module_load_include('inc', 'workflow', 'workflow_rules.rules-callback');
+  require_once dirname(__FILE__) . '/workflow_rules.rules-callback.inc';
 }
 
 /**
