@@ -116,7 +116,7 @@ Next, you must add an LTI Tool Consumer by visiting '/admin/config/lti-tool-prov
 will use Lacuna as an LTI app.
 
 ### Add Lacuna as a Canvas app
-Lacuna provides a URL that makes it easy to add it as an app to Canvas. The path is SITE_URL/lti/canvas.xml. See [How do I configure an external app for an account using a URL](https://guides.instructure.com/m/4214/l/74559-how-do-i-configure-an-external-app-for-an-account-using-a-url) for details about how to configure Canvas with this URL. Be sure to set the "Privacy" option for Lacuna to "Public". This ensures that students' names and correct email addresses will be used in Lacuna; it will *not* expose their information to the public or to members of other courses.
+Lacuna provides a URL that makes it easy to add it as an app to Canvas. The path is SITE_URL/lti/canvas.xml. See [How do I configure an external app for an account using a URL](https://guides.instructure.com/m/4214/l/74559-how-do-i-configure-an-external-app-for-an-account-using-a-url) for details about how to configure Canvas with this URL.
 
 Courses should *not* already be created in Lacuna. Instead, if you want to use Canvas with Lacuna, create the course through Canvas via the "Manage Lacuna" menu item.
 
