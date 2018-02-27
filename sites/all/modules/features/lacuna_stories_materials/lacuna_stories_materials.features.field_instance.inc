@@ -124,6 +124,65 @@ function lacuna_stories_materials_field_default_field_instances() {
     ),
   );
 
+  // Exported field_instance: 'node-document-field_doc_pdf'.
+  $field_instances['node-document-field_doc_pdf'] = array(
+    'bundle' => 'document',
+    'deleted' => 0,
+    'description' => 'The content of the document in PDF form.',
+    'display' => array(
+      'default' => array(
+        'label' => 'hidden',
+        'module' => 'lacuna_pdf_document',
+        'settings' => array(),
+        'type' => 'pdf_document_content',
+        'weight' => 12,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_doc_pdf',
+    'label' => 'PDF',
+    'required' => 0,
+    'settings' => array(
+      'description_field' => 0,
+      'file_directory' => '',
+      'file_extensions' => 'pdf',
+      'max_filesize' => '',
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'media',
+      'settings' => array(
+        'allowed_schemes' => array(
+          'private' => 0,
+          'public' => 'public',
+          'vimeo' => 0,
+          'youtube' => 0,
+        ),
+        'allowed_types' => array(
+          'audio' => 0,
+          'document' => 'document',
+          'image' => 0,
+          'video' => 0,
+        ),
+        'browser_plugins' => array(
+          'media_default--media_browser_1' => 0,
+          'media_default--media_browser_my_files' => 0,
+          'media_internet' => 0,
+          'upload' => 0,
+        ),
+      ),
+      'type' => 'media_generic',
+      'weight' => 7,
+    ),
+  );
+
   // Exported field_instance: 'node-document-field_doc_text'.
   $field_instances['node-document-field_doc_text'] = array(
     'bundle' => 'document',
@@ -164,6 +223,46 @@ function lacuna_stories_materials_field_default_field_instances() {
         'rows' => 5,
       ),
       'type' => 'text_textarea',
+      'weight' => 6,
+    ),
+  );
+
+  // Exported field_instance: 'node-document-field_doc_type'.
+  $field_instances['node-document-field_doc_type'] = array(
+    'bundle' => 'document',
+    'default_value' => array(
+      0 => array(
+        'value' => 0,
+      ),
+    ),
+    'deleted' => 0,
+    'description' => 'The format of the document content.',
+    'display' => array(
+      'default' => array(
+        'label' => 'hidden',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 13,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_doc_type',
+    'label' => 'Document Type',
+    'required' => 1,
+    'settings' => array(
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'options',
+      'settings' => array(),
+      'type' => 'options_buttons',
       'weight' => 5,
     ),
   );
@@ -281,7 +380,7 @@ function lacuna_stories_materials_field_default_field_instances() {
         'progress_indicator' => 'throbber',
       ),
       'type' => 'media_generic',
-      'weight' => 6,
+      'weight' => 8,
     ),
   );
 
@@ -653,15 +752,19 @@ function lacuna_stories_materials_field_default_field_instances() {
   t('Copyright');
   t('Course');
   t('Cover Image');
+  t('Document Type');
   t('Genre');
   t('Keep this document in <strong>Draft</strong> state if you want to continue to make changes to it. Once a document is set to <strong>Ready to Annotate</strong>, it will be available to annotate, and <em>further changes to the document are likely to cause existing annotations to display incorrectly, or not at all.</em>');
   t('Media');
   t('Medium');
+  t('PDF');
   t('Priority');
   t('Status');
   t('Tags');
   t('Text');
   t('The actual text of the document.');
+  t('The content of the document in PDF form.');
+  t('The format of the document content.');
   t('The medium or media of this document.');
   t('To which course(s) is this document assigned?');
   t('Unit');

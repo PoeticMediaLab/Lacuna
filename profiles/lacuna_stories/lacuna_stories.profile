@@ -339,6 +339,7 @@ function lacuna_stories_set_annotator_settings() {
 		'Author' => 'Author',
     'Controls' => 'Controls',
     'Loading' => 'Loading',
+    'PDF' => 'PDF',
   ));
 }
 

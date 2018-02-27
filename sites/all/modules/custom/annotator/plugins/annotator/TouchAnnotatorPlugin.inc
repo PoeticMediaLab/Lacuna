@@ -7,4 +7,5 @@ $plugin = array(
   'handler' => array(
     'class' => 'TouchAnnotatorPlugin',
   ),
+  'weight' => 5,
 );

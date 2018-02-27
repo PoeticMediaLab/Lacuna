@@ -44,6 +44,15 @@ function lacuna_stories_annotations_user_default_permissions() {
     'module' => 'annotator',
   );
 
+  // Exported permission: 'create field_annotation_pdf_range'.
+  $permissions['create field_annotation_pdf_range'] = array(
+    'name' => 'create field_annotation_pdf_range',
+    'roles' => array(
+      'Site Administrator' => 'Site Administrator',
+    ),
+    'module' => 'field_permissions',
+  );
+
   // Exported permission: 'delete any annotation content'.
   $permissions['delete any annotation content'] = array(
     'name' => 'delete any annotation content',
@@ -95,6 +104,15 @@ function lacuna_stories_annotations_user_default_permissions() {
     'module' => 'annotator',
   );
 
+  // Exported permission: 'edit field_annotation_pdf_range'.
+  $permissions['edit field_annotation_pdf_range'] = array(
+    'name' => 'edit field_annotation_pdf_range',
+    'roles' => array(
+      'Site Administrator' => 'Site Administrator',
+    ),
+    'module' => 'field_permissions',
+  );
+
   // Exported permission: 'edit own annotation content'.
   $permissions['edit own annotation content'] = array(
     'name' => 'edit own annotation content',
@@ -116,6 +134,15 @@ function lacuna_stories_annotations_user_default_permissions() {
       'Student' => 'Student',
     ),
     'module' => 'annotator',
+  );
+
+  // Exported permission: 'edit own field_annotation_pdf_range'.
+  $permissions['edit own field_annotation_pdf_range'] = array(
+    'name' => 'edit own field_annotation_pdf_range',
+    'roles' => array(
+      'Site Administrator' => 'Site Administrator',
+    ),
+    'module' => 'field_permissions',
   );
 
   // Exported permission: 'edit terms in annotation_categories'.
@@ -198,6 +225,24 @@ function lacuna_stories_annotations_user_default_permissions() {
       'Student' => 'Student',
     ),
     'module' => 'annotator',
+  );
+
+  // Exported permission: 'view field_annotation_pdf_range'.
+  $permissions['view field_annotation_pdf_range'] = array(
+    'name' => 'view field_annotation_pdf_range',
+    'roles' => array(
+      'Site Administrator' => 'Site Administrator',
+    ),
+    'module' => 'field_permissions',
+  );
+
+  // Exported permission: 'view own field_annotation_pdf_range'.
+  $permissions['view own field_annotation_pdf_range'] = array(
+    'name' => 'view own field_annotation_pdf_range',
+    'roles' => array(
+      'Site Administrator' => 'Site Administrator',
+    ),
+    'module' => 'field_permissions',
   );
 
   return $permissions;

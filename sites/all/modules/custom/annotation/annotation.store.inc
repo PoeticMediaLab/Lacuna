@@ -209,6 +209,18 @@ function annotation_drupal_format($entity, $update = FALSE) {
         }
         break;
 
+      case 'pdfRange':
+        if (!$update) {
+          $annotation->field_annotation_pdf_range[$annotation->language][0]['value'] = json_encode($val);
+        }
+        break;
+
+      case 'pdfQuote':
+        if (!$update) {
+          $annotation->field_annotation_pdf_quote[$annotation->language][0]['value'] = $val;
+        }
+        break;
+
       case 'reply':
         // Added by the Replies plugin
         if ($entity->reply['type'] == 'new') {
@@ -644,10 +656,12 @@ function annotation_api_entity_prepare($annotation, $op) {
 
       // Ranges
       // If for some reason an annotation gets saved without a range (this can happen on if an annotation is not created correctly), then we need to fail out here with NULL. Otherwise any subsequent good annotations (that have a range) on the page will not load either.
-      if (!isset($annotation->field_annotation_ranges[$annotation->language][0]['value'])) {
+      if (!isset($annotation->field_annotation_ranges[$annotation->language][0]['value']) &&
+          !isset($annotation->field_annotation_pdf_range[$annotation->language][0]['value'])) {
         return;
       }
       $entity->ranges = drupal_json_decode($annotation->field_annotation_ranges[$annotation->language][0]['value']);
+      $entity->pdfRange = drupal_json_decode($annotation->field_annotation_pdf_range[$annotation->language][0]['value']);
 
       // Text
       if (isset($annotation->field_annotation_text[$annotation->language]) && count($annotation->field_annotation_text[$annotation->language])) {
@@ -659,6 +673,11 @@ function annotation_api_entity_prepare($annotation, $op) {
       // Quote
       if (isset($annotation->field_annotation_quote[$annotation->language])) {
         $entity->quote = $annotation->field_annotation_quote[$annotation->language][0]['value'];
+      }
+
+      // PDF Image Quote
+      if (isset($annotation->field_annotation_pdf_quote[$annotation->language])) {
+        $entity->pdfQuote = $annotation->field_annotation_pdf_quote[$annotation->language][0]['value'];
       }
 
       // Category is for the Category plugin

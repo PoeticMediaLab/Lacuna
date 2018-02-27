@@ -1,0 +1,7 @@
+name = Lacuna PDF Document
+description = Adds support for PDF documents.
+core = 7.x
+package = Lacuna Stories
+version = 7.x-1.0
+dependencies[] = course
+dependencies[] = lacuna_stories_materials
