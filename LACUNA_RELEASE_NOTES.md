@@ -1,7 +1,7 @@
 Lacuna Release Notes
 ====================
 
-Version 2.3
+Version 2.3: PDF Annotation and New Notifications System
 -------------
 February 28, 2018
 
@@ -25,7 +25,8 @@ A minor version release that adds a new "Latest Conversation" page, adds PDF and
  * Fixed default privacy settings when using Lacuna as an LTI external tool provider (i.e., for LMSes like Canvas).
  
 ### Changes
- * Updated Views, Views Bulk Operations, d3, Webform, Media, WYWISYG, Diff, and Token modules
+ * Updated Drupal core to 7.57.
+ * Updated Backup and Migrate, Chaos tools, Entity reference, Chosen, Entity API, Field group, File Entity, Honeypot, Media, Media: YouTube, Menu Badges, Menu Views, Module Filter, Rules, Session Cache API, Superfish, Views, Views data export, Views Bulk Operations, d3, Webform, WYWISYG, Diff, Workflow, and Token modules.
  * Installation profile uses Lacuna logo
  * Improved responsive design of annotation dashboard
  * Major improvements to Peer Group UI: Easier to join and leave groups, better theming.

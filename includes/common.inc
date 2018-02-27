@@ -487,7 +487,7 @@ function drupal_http_build_query(array $query, $parent = '') {
   $params = array();
 
   foreach ($query as $key => $value) {
-    $key = ($parent ? $parent . '[' . rawurlencode($key) . ']' : rawurlencode($key));
+    $key = $parent ? $parent . rawurlencode('[' . $key . ']') : rawurlencode($key);
 
     // Recurse into children.
     if (is_array($value)) {
@@ -2236,8 +2236,11 @@ function url($path = NULL, array $options = array()) {
     'prefix' => ''
   );
 
+  // Determine whether this is an external link, but ensure that the current
+  // path is always treated as internal by default (to prevent external link
+  // injection vulnerabilities).
   if (!isset($options['external'])) {
-    $options['external'] = url_is_external($path);
+    $options['external'] = $path === $_GET['q'] ? FALSE : url_is_external($path);
   }
 
   // Preserve the original path before altering or aliasing.

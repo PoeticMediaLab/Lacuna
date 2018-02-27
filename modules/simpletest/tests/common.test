@@ -76,7 +76,7 @@ class DrupalAlterTestCase extends DrupalWebTestCase {
 class CommonURLUnitTest extends DrupalWebTestCase {
   public static function getInfo() {
     return array(
-      'name' => 'URL generation tests',
+      'name' => 'URL generation unit tests',
       'description' => 'Confirm that url(), drupal_get_query_parameters(), drupal_http_build_query(), and l() work correctly with various input.',
       'group' => 'System',
     );
@@ -169,7 +169,7 @@ class CommonURLUnitTest extends DrupalWebTestCase {
     $this->assertEqual(drupal_http_build_query(array('a' => ' &#//+%20@۞')), 'a=%20%26%23//%2B%2520%40%DB%9E', 'Value was properly encoded.');
     $this->assertEqual(drupal_http_build_query(array(' &#//+%20@۞' => 'a')), '%20%26%23%2F%2F%2B%2520%40%DB%9E=a', 'Key was properly encoded.');
     $this->assertEqual(drupal_http_build_query(array('a' => '1', 'b' => '2', 'c' => '3')), 'a=1&b=2&c=3', 'Multiple values were properly concatenated.');
-    $this->assertEqual(drupal_http_build_query(array('a' => array('b' => '2', 'c' => '3'), 'd' => 'foo')), 'a[b]=2&a[c]=3&d=foo', 'Nested array was properly encoded.');
+    $this->assertEqual(drupal_http_build_query(array('a' => array('b' => '2', 'c' => '3'), 'd' => 'foo')), 'a%5Bb%5D=2&a%5Bc%5D=3&d=foo', 'Nested array was properly encoded.');
   }
 
   /**
@@ -369,6 +369,38 @@ class CommonURLUnitTest extends DrupalWebTestCase {
     $url = '//drupal.org';
     $result = url($url);
     $this->assertEqual($url, $result, 'External URL without protocol is not altered.');
+  }
+}
+
+/**
+ * Web tests for URL generation functions.
+ */
+class CommonURLWebTest extends DrupalWebTestCase {
+  public static function getInfo() {
+    return array(
+      'name' => 'URL generation web tests',
+      'description' => 'Confirm that URL-generating functions work correctly on specific site paths.',
+      'group' => 'System',
+    );
+  }
+
+  function setUp() {
+    parent::setUp('common_test');
+  }
+
+  /**
+   * Tests the url() function on internal paths which mimic external URLs.
+   */
+  function testInternalPathMimicsExternal() {
+    // Ensure that calling url(current_path()) on "/http://example.com" (an
+    // internal path which mimics an external URL) always links to the internal
+    // path, not the external URL. This helps protect against external URL link
+    // injection vulnerabilities.
+    variable_set('common_test_link_to_current_path', TRUE);
+    $this->drupalGet('/http://example.com');
+    $this->clickLink('link which should point to the current path');
+    $this->assertUrl('/http://example.com');
+    $this->assertText('link which should point to the current path');
   }
 }
 
