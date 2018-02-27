@@ -111,3 +111,8 @@ function lacuna_updates_update_7103() {
   $removed = array('htmlpurifier', 'ckeditor');
   module_disable($removed);
 }
+
+
+function lacuna_updates_update_7104() {
+  module_enable(array('lacuna_notifications_configuration'));
+}

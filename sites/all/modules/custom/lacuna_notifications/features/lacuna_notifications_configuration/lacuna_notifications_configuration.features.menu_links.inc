@@ -25,9 +25,7 @@ function lacuna_notifications_configuration_menu_default_menu_links() {
         ),
         'key' => 'views_total_notifications_view_menu_badge_1',
       ),
-      'attributes' => array(
-        'title' => '',
-      ),
+      'attributes' => array(),
       'identifier' => 'main-menu_latest-conversations:latest-conversations',
     ),
     'module' => 'menu',

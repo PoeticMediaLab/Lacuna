@@ -1,0 +1,156 @@
+<?php
+
+/**
+ * @file
+ * Install and update functions for the menu_views module.
+ */
+
+/**
+ * Implements hook_install().
+ */
+function menu_views_install() {
+  db_update('system')
+    ->fields(array(
+      'weight' => 100,
+    ))
+    ->condition('type', 'module')
+    ->condition('name', 'menu_views')
+    ->execute();
+}
+
+/**
+ * Updates module weight in system table.
+ * Grants the "administer menu views" permission to roles that currently have the "administer menu" permission.
+ */
+function menu_views_update_7100() {
+  db_update('system')
+    ->fields(array(
+      'weight' => 100,
+    ))
+    ->condition('type', 'module')
+    ->condition('name', 'menu_views')
+    ->execute();
+  $roles = user_roles(FALSE, 'administer menu');
+  foreach ($roles as $rid => $role) {
+    user_role_grant_permissions($rid, array('administer menu views'));
+  }
+  return t("Every role with the 'administer menu' permission has also received the 'administer menu views' permission.");
+}
+
+/**
+ * FIXED UPDATE: Replaces attached view arguments (%N and %P) of menu link items with Token API equivalents.
+ */
+function menu_views_update_7102(&$sandbox) {
+  if (!isset($sandbox['progress'])) {
+    $sandbox['progress'] = 0;
+    $sandbox['current_mlid'] = 0;
+    // Only count links that possibly have a key class with a string value in
+    // its serialized options array.
+    $sandbox['max'] = db_query("SELECT COUNT(DISTINCT mlid) FROM {menu_links}")->fetchField();
+  }
+  // Process twenty links at a time.
+  $limit = 20;
+  // Fetch links
+  $links = db_query_range("SELECT mlid, options FROM {menu_links} WHERE mlid > :mlid ORDER BY mlid", 0, $limit, array(':mlid' => $sandbox['current_mlid']))->fetchAll();
+  foreach ($links as $link) {
+    $options = unserialize($link->options);
+    if (isset($options['menu_views'])) {
+      $arguments = array();
+      if (isset($options['menu_views']['arguments'])) {
+        $arguments = $options['menu_views']['arguments'];
+      }
+      $options['menu_views']['arguments'] = str_replace(array('%N', '%P'), array('[menu-link:node:nid]', '[menu-link:parent:node:nid]'), $arguments);
+      db_update('menu_links')
+        ->fields(array(
+          'options' => serialize($options),
+        ))
+        ->condition('mlid', $link->mlid)
+        ->execute();
+    }
+    $sandbox['progress']++;
+    $sandbox['current_mlid'] = $link->mlid;
+  }
+  $sandbox['#finished'] = empty($sandbox['max']) ? 1 : ($sandbox['progress'] / $sandbox['max']);
+  // To display a message to the user when the update is completed, return it.
+  // If you do not want to display a completion message, simply return nothing.
+  return t('All menu link items with attached views have had their arguments converted for use with Drupal tokens.');
+}
+
+/**
+ * Updates existing menu views to reference the proper mlid. When creating a new menu item, even if the attach view form was present, caused menu views to not save the mlid as it didn't yet exist. This update converts all existing menu views that have a referenced mlid of 0.
+ */
+function menu_views_update_7103(&$sandbox) {
+  if (!isset($sandbox['progress'])) {
+    $sandbox['progress'] = 0;
+    $sandbox['current_mlid'] = 0;
+    // Only count links that possibly have a key class with a string value in
+    // its serialized options array.
+    $sandbox['max'] = db_query("SELECT COUNT(DISTINCT mlid) FROM {menu_links}")->fetchField();
+  }
+  // Process twenty links at a time.
+  $limit = 20;
+  // Fetch links
+  $links = db_query_range("SELECT mlid, options FROM {menu_links} WHERE mlid > :mlid ORDER BY mlid", 0, $limit, array(':mlid' => $sandbox['current_mlid']))->fetchAll();
+  foreach ($links as $link) {
+    $options = unserialize($link->options);
+    if (isset($options['menu_views'])) {
+      $options['menu_views']['mlid'] = $link->mlid;
+      db_update('menu_links')
+        ->fields(array(
+          'options' => serialize($options),
+        ))
+        ->condition('mlid', $link->mlid)
+        ->execute();
+    }
+    $sandbox['progress']++;
+    $sandbox['current_mlid'] = $link->mlid;
+  }
+  $sandbox['#finished'] = empty($sandbox['max']) ? 1 : ($sandbox['progress'] / $sandbox['max']);
+  // To display a message to the user when the update is completed, return it.
+  // If you do not want to display a completion message, simply return nothing.
+  return t('All menu link items with attached views have had their arguments converted for use with Drupal tokens.');
+}
+
+/**
+ * Upgrades existing menu items that have attached views. This is a major update for the 7.x-2.x branch.
+ */
+function menu_views_update_7200(&$sandbox) {
+  if (!isset($sandbox['progress'])) {
+    $sandbox['progress'] = 0;
+    $sandbox['current_mlid'] = 0;
+    // Only count links that possibly have a key class with a string value in
+    // its serialized options array.
+    $sandbox['max'] = db_query("SELECT COUNT(DISTINCT mlid) FROM {menu_links}")->fetchField();
+  }
+  // Process twenty links at a time.
+  $limit = 20;
+  // Fetch links
+  $links = db_query_range("SELECT * FROM {menu_links} WHERE mlid > :mlid ORDER BY mlid", 0, $limit, array(':mlid' => $sandbox['current_mlid']))->fetchAll();
+  foreach ($links as $link) {
+    $options = unserialize($link->options);
+    if (isset($options['menu_views'])) {
+      $item = _menu_views_default_values();
+      $item['mlid'] = $link->mlid;
+      $item['type'] = (isset($options['menu_views']['name']) && !empty($options['menu_views']['name']))
+                      && (isset($options['menu_views']['display']) && !empty($options['menu_views']['display'])) ? 'view' : 'link';
+      $item['original_path'] = $link->link_path != '<view>' ? $link->link_path : '';
+      $item['view']['name'] = isset($options['menu_views']['name']) ? $options['menu_views']['name'] : '';;
+      $item['view']['display'] = isset($options['menu_views']['display']) ? $options['menu_views']['display'] : '';
+      $item['view']['arguments'] = isset($options['menu_views']['arguments']) ? $options['menu_views']['arguments'] : '';
+      $options['menu_views'] = $item;
+      db_update('menu_links')
+        ->fields(array(
+          'options' => serialize($options),
+        ))
+        ->condition('mlid', $link->mlid)
+        ->execute();
+    }
+    $sandbox['progress']++;
+    $sandbox['current_mlid'] = $link->mlid;
+  }
+  $sandbox['#finished'] = empty($sandbox['max']) ? 1 : ($sandbox['progress'] / $sandbox['max']);
+  // To display a message to the user when the update is completed, return it.
+  // If you do not want to display a completion message, simply return nothing.
+  return t('All menu items that have attached views have been upgraded. This is a major update for the 7.x-2.x branch.');
+}
+

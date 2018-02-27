@@ -522,48 +522,25 @@ body.not-logged-in div.field-name-group-group a {
   padding: 5px;
 }
 
-/*styling for menu badges*/
-/*this adds in the blue dot in lieu of the view associated with the menu badge*/
-#superfish-1 {
-  a.link-badge-wrapper:hover span.link-badge-text {
-    background: #e9e9e9 !important;
-  }
-  span.link-badge-text {
-    background: #ffffff !important;
-    line-height: 1.2em;
-  }
-  span.link-badge-text:hover {
-    background: #e9e9e9 !important;
-  }
-  span.link-badge-text:focus {
-    background: #e9e9e9 !important;
-  }
-  span.link-badge-badge-wrapper {
-    height: 15px;
-    width: 15px;
-    border-radius: 50%;
-    background: rgb(21, 136, 186) none repeat scroll 0% 0% !important;
-    text-align: center;
-    margin-left: 10px;
-    float: right;
-    position: relative;
-    top: 50%;
-    -webkit-transform: translateY(-50%);
-    -moz-transform: translateY(-180%);
-    -o-transform: translateY(-50%);
-    transform: translateY(-50%);
-    left: 13px;
-    span.link-badge.link-badge-menu_badges_execute_view {
-        background: rgb(21, 136, 186) none repeat scroll 0% 0% !important;
-        border: medium none !important;
-        box-shadow: none !important;
-        font-family: "Source Sans Pro", sans-serif;
-        text-shadow: none;
-        color: rgb(21, 136, 186);
-        font-size: 0em;
-    }
-  }
+
+/*styling for the notifications menu item, font awesome bell icon produced by the menu notifications view --DMB 5/2/17*/
+
+.view-notifications-view i.fa.fa-bell.active {
+  color: #1588ba;
 }
+
+.view-notifications-view i.fa.fa-bell.active:hover {
+  color: #094762;
+}
+
+div#block-superfish-1 div.view-notifications-view a:hover {
+  color: #555555 !important;
+}
+
+div#block-superfish-1 div.view-notifications-view a {
+  color: #9e9e9e !important;
+}
+
 
 
 /*theming for Peer Groups pages --DMB 12/13/2016*/
