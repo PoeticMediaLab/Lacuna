@@ -89,7 +89,7 @@ class Workflow extends Entity implements WorkflowInterface {
   protected function preRebuild() {
     // Remap roles. They can come from another system with shifted role IDs.
     // See also https://drupal.org/node/1702626 .
-    $this->rebuildRoles($this->tab_roles);
+    $this->tab_roles = $this->rebuildRoles($this->tab_roles);
 
     // After update.php or import feature, label might be empty. @todo: remove in D8.
     if (empty($this->label)) {
@@ -160,30 +160,32 @@ class Workflow extends Entity implements WorkflowInterface {
       $data = (array)$data;
 
       if (is_numeric($name)) {
-        $start_state = $saved_states[$saved_state_names[$data['sid']]];
-        $end_state = $saved_states[$saved_state_names[$data['target_sid']]];
-        $name = WorkflowConfigTransition::machineName($start_state->getName(),
-          $end_state->getName());
+        if (isset($saved_states[$data['sid']]) && isset($saved_states[$data['target_sid']])) {
+          $start_state = $saved_states[$data['sid']];      // #2876303
+          $end_state = $saved_states[$data['target_sid']]; // #2876303
+        }
+        else {
+          $start_state = $this->getState($data['sid']);
+          $end_state = $this->getState($data['target_sid']);
+        }
       }
       else {
         $start_state = $saved_states[$data['start_state']];
         $end_state = $saved_states[$data['end_state']];
       }
-
+      $name = WorkflowConfigTransition::machineName($start_state->getName(), $end_state->getName());
       if (isset($db_transitions[$name])) {
         $transition = $db_transitions[$name];
       }
       else {
-        $transition = $this->createTransition($start_state->sid,
-          $end_state->sid);
+        $transition = $this->createTransition($start_state->sid, $end_state->sid);
       }
 
       $transition->wid = $this->wid;
       $transition->sid = $start_state->sid;
       $transition->target_sid = $end_state->sid;
       $transition->label = $data['label'];
-      $transition->roles = $data['roles'];
-      $this->rebuildRoles($transition->roles);
+      $transition->roles = $this->rebuildRoles($data['roles']);
       $transition->save();
 
       unset($db_transitions[$name]);
@@ -251,12 +253,14 @@ class Workflow extends Entity implements WorkflowInterface {
   public function isValid() {
     $is_valid = TRUE;
 
+    $workflow_name = $this->getName();
+    $wid = $this->getWorkflowId();
     // Don't allow workflows with no states. There should always be a creation state.
     $states = $this->getStates($all = FALSE);
     if (count($states) < 1) {
       // That's all, so let's remind them to create some states.
       $message = t('Workflow %workflow has no states defined, so it cannot be assigned to content yet.',
-        array('%workflow' => $this->getName()));
+        array('%workflow' => $workflow_name));
       drupal_set_message($message, 'warning');
 
       // Skip allowing this workflow.
@@ -268,7 +272,7 @@ class Workflow extends Entity implements WorkflowInterface {
     if (count($transitions) < 1) {
       // That's all, so let's remind them to create some transitions.
       $message = t('Workflow %workflow has no transitions defined, so it cannot be assigned to content yet.',
-        array('%workflow' => $this->getName()));
+        array('%workflow' => $workflow_name));
       drupal_set_message($message, 'warning');
 
       // Skip allowing this workflow.
@@ -281,7 +285,7 @@ class Workflow extends Entity implements WorkflowInterface {
       $message = t('Please maintain Workflow %workflow on its <a href="@url">settings</a> page.',
         array(
           '%workflow' => $this->getName(),
-          '@url' => url('admin/config/workflow/workflow/manage/' . $this->wid),
+          '@url' => url(WORKFLOW_ADMIN_UI_PATH . "/manage/$wid"),
         )
       );
       drupal_set_message($message, 'warning');
@@ -539,19 +543,7 @@ class Workflow extends Entity implements WorkflowInterface {
   }
 
   /**
-   * Loads all allowed ConfigTransitions for this workflow.
-   *
-   * @param mixed $tids
-   *   Array of Transitions IDs. If FALSE, show all transitions.
-   * @param array $conditions
-   *   $conditions['sid'] : if provided, a 'from' State ID.
-   *   $conditions['target_sid'] : if provided, a 'to' state ID.
-   *   $conditions['roles'] : if provided, an array of roles, or 'ALL'.
-   * @param bool $reset
-   *   Indicator to reset the cache.
-   *
-   * @return array
-   *   An array of keyed transitions.
+   * @inheritdoc
    */
   public function getTransitions($tids = FALSE, array $conditions = array(), $reset = FALSE) {
     $config_transitions = array();
@@ -694,17 +686,18 @@ class Workflow extends Entity implements WorkflowInterface {
   }
 
   protected function defaultUri() {
-    return array('path' => 'admin/config/workflow/workflow/manage/' . $this->wid);
+    $wid = $this->wid;
+    return array('path' => WORKFLOW_ADMIN_UI_PATH . "/manage/$wid");
   }
 
-  protected function rebuildRoles(array &$roles) {
-    $role_map = isset($this->system_roles) ? $this->system_roles : array();
-    if (!$role_map) {
-      return;
-    }
+  protected function rebuildRoles(array $roles) {
+    $new_roles = array();
+
+    // @todo: importing Roles is incomplete when user language is not English.
+    // function user_roles() translates DRUPAL_ANONYMOUS_RID, DRUPAL_AUTHENTICATED_RID
+    $role_map = workflow_get_roles(NULL);
 
     // See also https://drupal.org/node/1702626 .
-    $new_roles = array();
     foreach ($roles as $key => $rid) {
       if ($rid == WORKFLOW_ROLE_AUTHOR_RID) {
         $new_roles[$rid] = $rid;
@@ -715,7 +708,7 @@ class Workflow extends Entity implements WorkflowInterface {
         }
       }
     }
-    $roles = $new_roles;
+    return $new_roles;
   }
 
 }

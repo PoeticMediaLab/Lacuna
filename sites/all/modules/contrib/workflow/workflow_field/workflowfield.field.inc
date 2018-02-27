@@ -143,6 +143,9 @@ function _workflowfield_metadata_property_set($entity, $name, $value, $langcode,
  */
 function workflowfield_field_formatter_info_alter(&$info) {
   $info['list_default']['field types'][] = 'workflow';
+  if (isset($info['i18n_list_default'])) {
+    $info['i18n_list_default']['field types'][] = 'workflow';
+  }
 }
 
 /**
@@ -311,4 +314,38 @@ function workflowfield_options_list($field, $instance, $entity_type, $entity) {
     }
   }
   return $options;
+}
+
+/**
+ * Implements hook_i18n_field_info().
+ */
+function workflowfield_i18n_field_info() {
+  $info['workflow'] = array(
+    'translate_options' => 'workflowfield_i18n_field_translate_allowed_values',
+  );
+  return $info;
+}
+
+/**
+ * Returns the array of translated allowed values for a workflow (list) field.
+ *
+ * The strings are not safe for output. Keys and values of the array should be
+ * sanitized through field_filter_xss() before being displayed.
+ *
+ * @param $field
+ *   The field definition.
+ *
+ * @return
+ *   The array of allowed values. Keys of the array are the raw stored values
+ *   (number or text), values of the array are the display labels.
+ */
+function workflowfield_i18n_field_translate_allowed_values($field) {
+  $allowed_values = array();
+
+  $workflow_states = workflow_get_workflow_state_names($field['settings']['wid'], $grouped = FALSE, $all = TRUE);
+  foreach ($workflow_states as $sid => $state_name) {
+    $allowed_values[$sid] = t($state_name);
+  }
+
+  return $allowed_values;
 }

@@ -67,7 +67,7 @@ function backup_migrate_schedules_run() {
  */
 function backup_migrate_schedule_run($schedule_id) {
   backup_migrate_include('profiles');
-  if ($schedule = backup_migrate_get_schedule($schedule_id)) {
+  if (($schedule = backup_migrate_get_schedule($schedule_id)) && $schedule->is_enabled()) {
     $schedule->run();
   }
   backup_migrate_cleanup();
@@ -474,7 +474,7 @@ class backup_migrate_schedule extends backup_migrate_item {
       "#default_value" => $cron ? $cron : BACKUP_MIGRATE_CRON_BUILTIN,
       '#parents' => array('cron'),
     );
-    if (!module_exists('elysia_cron')) {
+    if (!module_exists('elysia_cron') && !module_exists('ultimate_cron')) {
       $form['cron_settings']['cron_elysia']['#disabled'] = TRUE;
       $form['cron_settings']['cron_elysia']['#description'] .= ' ' . t('Install !elysia to enable this option.', array('!elysia' => l(t('Elysia Cron'), 'http://drupal.org/project/elysia_cron')));
     }

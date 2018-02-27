@@ -16,19 +16,30 @@
  */
 function wysiwyg_filter_get_advanced_rules() {
   global $base_url, $base_path;
+  // CSS identifiers: https://www.w3.org/TR/CSS2/syndata.html#value-def-identifier
+  //  In CSS, identifiers (including element names, classes, and IDs in
+  //  selectors) can contain only the characters [a-zA-Z0-9] and ISO 10646
+  //  characters U+00A0 and higher, plus the hyphen (-) and the underscore (_);
+  //  they cannot start with a digit, two hyphens, or a hyphen followed by a
+  //  digit. Identifiers can also contain escaped characters and any ISO 10646
+  //  character as a numeric code (see next item). For instance, the identifier
+  //  "B&W?" may be written as "B\&W\?" or "B\26 W\3F".
+  // We voluntarily do not add non-ascii characters to the rule, neither do
+  // we implement the exceptions "two hyphens, or a hyphen followed by a
+  // digit".
   return array(
     'valid_classes' => array(
       'title' => t('Rules for Class Names'),
-      'description' => t('Enter a comma separated list of rules for <em>Class Names</em>. Whitespaces and line-breaks are ignored. <em>Class Names</em> should start with an upper or lower case letter &quot;a to z&quot; and can be followed by one or more upper or lower case letters &quot;a to z&quot;, digits &quot;0 to 9&quot;, hyphens &quot;-&quot; and/or underscores &quot;_&quot;. The asterisk character &quot;*&quot; can be used in rules to represent any number of characters from the second position of the rule. Example: &quot;userclass*, my-font-*&quot; are valid rules for <em>Class Names</em>, whereas &quot;*class&quot; is invalid.'),
-      'validate_regexp' => '`^[a-zA-Z][-_a-zA-Z0-9?*]*$`',
+      'description' => t('Enter a comma separated list of rules for <em>Class Names</em>. Whitespaces and line-breaks are ignored. <em>Class Names</em> should start with an upper or lower case letter &quot;a to z&quot;, hyphens &quot;-&quot; and/or underscores &quot;_&quot;, and can be followed by one or more upper or lower case letters &quot;a to z&quot;, digits &quot;0 to 9&quot;, hyphens &quot;-&quot; and/or underscores &quot;_&quot;. The asterisk character &quot;*&quot; can be used in rules to represent any number of characters from the second position of the rule. Example: &quot;userclass*, my-font-*&quot; are valid rules for <em>Class Names</em>, whereas &quot;*class&quot; is invalid.'),
+      'validate_regexp' => '`^[-_a-zA-Z][-_a-zA-Z0-9?*]*$`',
       'asterisk_expansion' => '[-_a-zA-Z0-9]*',
       'required_by' => 'class',
       'required_by_message' => t('The <strong>class</strong> attribute is used in your <em>HTML elements and attributes</em> rules. You should specify the <em>Rules for Class Names</em> field in the &quot;Advanced rules&quot; section below. Leaving it unspecified will result in all class attributes filtered out.'),
     ),
     'valid_ids' => array(
       'title' => t('Rules for Element IDs'),
-      'description' => t('Enter a comma separated list of rules for <em>Element IDs</em>. Whitespaces and line-breaks are ignored. <em>Element IDs</em> should start with an upper or lower case letter &quot;a to z&quot; and can be followed by one or more upper or lower case letters &quot;a to z&quot;, digits &quot;0 to 9&quot;, hyphens &quot;-&quot; and/or underscores &quot;_&quot;. The asterisk character &quot;*&quot; can be used in rules to represent any number of characters from the second position of the rule. Example: &quot;foo*&quot; is a valid rule for <em>Element IDs</em>, whereas &quot;*bar&quot; is invalid.'),
-      'validate_regexp' => '`^[a-zA-Z][-_a-zA-Z0-9?*]*$`',
+      'description' => t('Enter a comma separated list of rules for <em>Element IDs</em>. Whitespaces and line-breaks are ignored. <em>Element IDs</em> should start with an upper or lower case letter &quot;a to z&quot;, hyphens &quot;-&quot; and/or underscores &quot;_&quot;, and can be followed by one or more upper or lower case letters &quot;a to z&quot;, digits &quot;0 to 9&quot;, hyphens &quot;-&quot; and/or underscores &quot;_&quot;. The asterisk character &quot;*&quot; can be used in rules to represent any number of characters from the second position of the rule. Example: &quot;foo*&quot; is a valid rule for <em>Element IDs</em>, whereas &quot;*bar&quot; is invalid.'),
+      'validate_regexp' => '`^[-_a-zA-Z][-_a-zA-Z0-9?*]*$`',
       'asterisk_expansion' => '[-_a-zA-Z0-9]*',
       'required_by' => 'id',
       'required_by_message' => t('The <strong>id</strong> attribute is used in your <em>HTML elements and attributes</em> rules. You should specify the <em>Rules for Element IDs</em> field in the &quot;Advanced rules&quot; section below. Leaving it unspecified will result in all id attributes filtered out.'),
@@ -201,9 +212,9 @@ function wysiwyg_filter_parse_valid_elements($valid_elements) {
         }
       }
 
-      // Obtain list of element names/synonyms (separated by /).
-      // Consider synonyms as different elements with same exact attributes.
-      foreach ($elements as $element) {
+      // Get the element name.
+      // If it has synonyms (separated by /), these are handled below.
+      $element = array_shift($elements);
         if ($element == '@') {
           // These attributes should be enabled for all elements.
           foreach ($attributes as $attribute => $attribute_options) {
@@ -240,6 +251,10 @@ function wysiwyg_filter_parse_valid_elements($valid_elements) {
             }
           }
         }
+      // For each synonym, instead of an attribute list, provide the name of the
+      // element it is converted to.
+      foreach ($elements as $synonym) {
+        $parsed_elements[$synonym] = $element;
       }
     }
   }
@@ -247,6 +262,10 @@ function wysiwyg_filter_parse_valid_elements($valid_elements) {
   // Append commonly allowed attributes to each allowed element.
   if (!empty($common_attributes)) {
     foreach ($parsed_elements as $element => &$attributes) {
+      // Skip synonyms.
+      if (!is_array($parsed_elements[$element])) {
+        continue;
+      }
       // Do not append common attributes when all are allowed.
       if (isset($parsed_elements[$element]['*'])) {
         continue;
@@ -295,9 +314,10 @@ function wysiwyg_filter_parse_valid_elements($valid_elements) {
  * @see wysiwyg_filter_settings_filter()
  */
 function wysiwyg_filter_get_style_property_groups() {
-  $regexp_integer = '[-]?[0-9]{1,3}';
-  $regexp_number = '[-]?(?:[0-9]{0,3}|[0-9]{0,3}\.[0-9]{1,4})';
-  $regexp_length = $regexp_number . '(?:px|pt|em|ex|in|cm|mm|pc)?';
+  $regexp_integer = '[-]?[0-9]+';
+  $regexp_number = '[-]?(?:[0-9]+|[0-9]*\.[0-9]+)';
+  // https://www.w3.org/TR/css3-values/#lengths
+  $regexp_length = $regexp_number . '(?:px|pt|em|ex|in|cm|mm|pc|q|ch|rem|vw|vh|vmin|vmax)?';
   $regexp_percent = '[-]?[0-9]*[.]?[0-9]*%';
   $regexp_color = '#[a-fA-F0-9]{3}|#[a-fA-F0-9]{6}|rgb\(\s*[0-9]{0,3}%?(?:\s*,\s*[0-9]{0,3}%?){2}\s*\)|[a-zA-Z]+';
   $regexp_bgcolor = $regexp_color . '|transparent';
@@ -469,7 +489,7 @@ function wysiwyg_filter_get_style_property_groups() {
     $groups['color']['properties']['background-repeat'] . '|' .
     $groups['color']['properties']['background-attachment'] . '|' .
     $groups['color']['properties']['background-position'] . ')';
-  $groups['color']['properties']['background'] = '(?:' . $regexp . ')(?:(?:\s+' . $regexp . ')+)';
+  $groups['color']['properties']['background'] = '(?:' . $regexp . ')(?:(?:\s*' . $regexp . ')+)';
 
   // 'font' property.
   $regexp = '(?:' .
@@ -478,7 +498,7 @@ function wysiwyg_filter_get_style_property_groups() {
     $groups['font']['properties']['font-weight'] . '|' .
     '(?:' . $groups['font']['properties']['font-size'] . ')(?:\s*/\s*' . $groups['dimension']['properties']['line-height'] . ')?|' .
     $groups['font']['properties']['font-family'] . ')';
-  $groups['font']['properties']['font'] = '(?:' . $regexp . ')(?:(?:\s+' . $regexp . ')+)';
+  $groups['font']['properties']['font'] = '(?:' . $regexp . ')(?:(?:\s*' . $regexp . ')+)';
 
   // Allow other modules to alter groups
   drupal_alter('wysiwyg_filter_style_property_groups', $groups);

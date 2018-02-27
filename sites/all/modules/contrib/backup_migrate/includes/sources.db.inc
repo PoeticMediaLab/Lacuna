@@ -108,7 +108,7 @@ class backup_migrate_source_db extends backup_migrate_source_remote {
     }
 
     return array(
-      'nodata_tables' => array_merge($basic, $cache, module_invoke_all('devel_caches')),
+      'nodata_tables' => drupal_map_assoc(array_merge($basic, $cache, module_invoke_all('devel_caches'))),
       'exclude_tables' => $simpletest,
       'utils_lock_tables' => FALSE,
     );

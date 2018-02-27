@@ -13,7 +13,8 @@ class EntityWorkflowUIController extends EntityDefaultUIController {
     $items = parent::hook_menu();
 
     // Set this on the object so classes that extend hook_menu() can use it.
-    $id_count = count(explode('/', $this->path));
+    $admin_path = $this->path;
+    $id_count = count(explode('/', $admin_path));
     $wildcard = isset($this->entityInfo['admin ui']['menu wildcard']) ? $this->entityInfo['admin ui']['menu wildcard'] : '%entity_object';
     $plural_label = isset($this->entityInfo['plural label']) ? $this->entityInfo['plural label'] : $this->entityInfo['label'] . 's';
     $entityType = $this->entityInfo['entity class'];
@@ -27,7 +28,7 @@ class EntityWorkflowUIController extends EntityDefaultUIController {
       'type' => MENU_LOCAL_TASK,
     );
 
-    $items[$this->path . '/manage/' . $wildcard . '/states'] = $item + array(
+    $items["$admin_path/manage/$wildcard/states"] = $item + array(
       'file' => 'workflow_admin_ui/workflow_admin_ui.page.states.inc',
       'title' => 'States',
       'weight' => '11',
@@ -35,7 +36,7 @@ class EntityWorkflowUIController extends EntityDefaultUIController {
       'page arguments' => array('workflow_admin_ui_states_form', $id_count + 1, $id_count + 2),
     );
 
-    $items[$this->path . '/manage/' . $wildcard . '/transitions'] = $item + array(
+    $items["$admin_path/manage/$wildcard/transitions"] = $item + array(
       'file' => 'workflow_admin_ui/workflow_admin_ui.page.transitions.inc',
       'title' => 'Transitions',
       'weight' => '12',
@@ -43,7 +44,7 @@ class EntityWorkflowUIController extends EntityDefaultUIController {
       'page arguments' => array('workflow_admin_ui_transitions_form', $id_count + 1, $id_count + 2),
     );
 
-    $items[$this->path . '/manage/' . $wildcard . '/labels'] = $item + array(
+    $items["$admin_path/manage/$wildcard/labels"] = $item + array(
       'file' => 'workflow_admin_ui/workflow_admin_ui.page.labels.inc',
       'title' => 'Labels',
       'weight' => '13',
@@ -51,7 +52,7 @@ class EntityWorkflowUIController extends EntityDefaultUIController {
       'page arguments' => array('workflow_admin_ui_labels_form', $id_count + 1, $id_count + 2),
     );
 
-    $items[$this->path . '/manage/' . $wildcard . '/permissions'] = $item + array(
+    $items["$admin_path/manage/$wildcard/permissions"] = $item + array(
       'file' => 'workflow_admin_ui/workflow_admin_ui.page.permissions.inc',
       'title' => 'Permission summary',
       'weight' => '14',
@@ -146,10 +147,11 @@ class EntityWorkflowUIController extends EntityDefaultUIController {
    * @see https://www.drupal.org/node/1043634
    */
   public function applyOperation($op, $entity) {
+    $admin_path = $this->path;
     $label = entity_label($this->entityType, $entity);
     $vars = array('%entity' => $this->entityInfo['label'], '%label' => $label);
-    $id = entity_id($this->entityType, $entity);
-    $edit_link = l(t('edit'), $this->path . '/manage/' . $id . '/edit');
+    $wid = entity_id($this->entityType, $entity);
+    $edit_link = l(t('edit'), "$admin_path/manage/$wid/edit");
 
     switch ($op) {
       case 'revert':

@@ -210,8 +210,10 @@ class WorkflowFeaturesController extends EntityDefaultFeaturesController {
     // Loads defaults from feature code.
     $defaults = workflow_get_defaults($module);
 
-    foreach ($defaults as $machine_name => $entity) {
-      workflow_revert($defaults, $machine_name);
+    if (!empty($defaults)) {
+      foreach ($defaults as $machine_name => $entity) {
+        workflow_revert($defaults, $machine_name);
+      }
     }
   }
 }

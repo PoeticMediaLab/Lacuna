@@ -108,6 +108,13 @@ function backup_migrate_nodesquirrel_credentials_settings_form($key = '', $statu
     $form['nodesquirrel_credentials']['secret_key_help'] = backup_migrate_nodesquirrel_get_activate_help_text();
   }
 
+  $form['nodesquirrel_credentials']['nodesquirrel_failover'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Connection failover by disabling SSL certification validation'),
+    '#description' => t("If normal connections to NodeSquirrel fail due incompatibility between this server's PHP installation and the destination server, use this option to disable validating the destination's SSL certificate.<br />Note: <em>this has security implications</em> and should be the last option taken; it probably would be safer to update the server's PHP."),
+    '#default_value' => variable_get('nodesquirrel_failover', FALSE),
+  );
+
   return $form;
 }
 
@@ -320,15 +327,8 @@ class backup_migrate_destination_nodesquirrel extends backup_migrate_destination
   var $cache_files = TRUE;
   // Don't generate a metadata file as NodeSquirrel can save metadata natively.
   var $save_metadata = FALSE;
-
-  /**
-   * Get the destination name. Provide a default.
-   */
-  function get_name() {
-    if (empty($this->name)) {
-      return t('NodeSquirrel');
-    }
-    return $this->name;
+  function __construct($params = array()) {
+    parent::__construct($params + array('name' => t('NodeSquirrel')));
   }
 
   /**
@@ -672,7 +672,24 @@ class backup_migrate_destination_nodesquirrel extends backup_migrate_destination
   
           $url = $this->add_scheme($url);
 
-          $out = xmlrpc($url, array($method => $args));
+          $options = array();
+          // Optionally disable SSL certification validation. This may be
+          // necessary if the server's SSL certificates are out of date because
+          // and might be incompatible with PHP 5.6's OpenSSL implementation.
+          // @see http://php.net/manual/en/migration56.openssl.php
+          // @see http://php.net/manual/en/context.ssl.php#context.ssl.verify-peer
+          if (variable_get('nodesquirrel_failover', FALSE)) {
+            $opts = array(
+              'ssl' => array(
+                'verify_peer' => FALSE,
+              ),
+            );
+            $options = array(
+              'context' => stream_context_create($opts),
+            );
+          }
+
+          $out = xmlrpc($url, array($method => $args), $options);
   
           // Check for errors.
           $err = xmlrpc_error();
@@ -798,6 +815,9 @@ class backup_migrate_destination_nodesquirrel extends backup_migrate_destination
       return $result;
     }
   
+    // Avoid some "undefined variable" errors.
+    $errno = $errstr = NULL;
+
     switch ($uri['scheme']) {
       case 'http':
       case 'feed':
@@ -806,17 +826,33 @@ class backup_migrate_destination_nodesquirrel extends backup_migrate_destination
         $fp = @fsockopen($uri['host'], $port, $errno, $errstr, 15);
         break;
       case 'https':
-        // Note: Only works for PHP 4.3 compiled with OpenSSL.
+        // Note: Only works for PHP 4.3+ compiled with OpenSSL.
         $port = isset($uri['port']) ? $uri['port'] : 443;
         $host = $uri['host'] . ($port != 443 ? ':'. $port : '');
         $fp = @fsockopen('ssl://'. $uri['host'], $port, $errno, $errstr, 20);
+
+        // If fsockopen() doesn't work, try again after disabling SSL.
+        // Optionally disable SSL certification validation. This may be
+        // necessary if the server's SSL certificates are out of date and/or
+        // might be incompatible with PHP 5.6's OpenSSL implementation.
+        // @see http://php.net/manual/en/migration56.openssl.php
+        // @see http://php.net/manual/en/context.ssl.php#context.ssl.verify-peer
+        if (!$fp && variable_get('nodesquirrel_failover', FALSE)) {
+          $opts = array(
+            'ssl' => array(
+              'verify_peer' => FALSE,
+            ),
+          );
+          $context = stream_context_create($opts);
+          $fp = stream_socket_client('ssl://'. $uri['host'] . ':' . $port, $errno, $errstr, 20, STREAM_CLIENT_CONNECT, $context);
+        }
         break;
       default:
         $result->error = 'invalid schema '. $uri['scheme'];
         $result->code = -1003;
         return $result;
     }
-  
+
     // Make sure the socket opened properly.
     if (!$fp) {
       // When a network error occurs, we use a negative number so it does not

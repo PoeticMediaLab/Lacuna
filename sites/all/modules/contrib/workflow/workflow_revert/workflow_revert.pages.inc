@@ -9,7 +9,7 @@
  *
  * @todo: add support for Field in workflow_revert.
  */
-function workflow_revert_form($form, $form_state, $entity_type, $id, $field_name, $previous_sid = NULL) {
+function workflow_revert_form($form, &$form_state, $entity_type, $id, $field_name, $previous_sid = NULL) {
   $entity = entity_load_single($entity_type, $id);
   $uri = entity_uri($entity_type, $entity);
   $return_uri = $uri['path'] . '/workflow';
@@ -45,7 +45,7 @@ function workflow_revert_form($form, $form_state, $entity_type, $id, $field_name
  *
  * The function is magically called, due to its name <form>_submit.
  */
-function workflow_revert_form_submit($form, $form_state) {
+function workflow_revert_form_submit($form, &$form_state) {
   global $user;
 
   $previous_sid = $form['#previous_sid'];

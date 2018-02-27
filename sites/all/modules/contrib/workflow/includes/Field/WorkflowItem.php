@@ -111,7 +111,7 @@ class WorkflowItem extends WorkflowD7Base {// D8: extends ConfigFieldItemBase im
       '#default_value' => $wid,
       '#required' => TRUE,
       '#disabled' => $has_data,
-      '#description' => t('Choose the Workflow type. Maintain workflows !url.', array('!url' => l(t('here'), 'admin/config/workflow/workflow'))),
+      '#description' => t('Choose the Workflow type. Maintain workflows !url.', array('!url' => l(t('here'), WORKFLOW_ADMIN_UI_PATH))),
     );
 
     // Inform the user of possible states.
@@ -317,12 +317,13 @@ class WorkflowItem extends WorkflowD7Base {// D8: extends ConfigFieldItemBase im
    * @return array
    *   The array of allowed values. Keys of the array are the raw stored values
    *   (number or text), values of the array are the display labels.
-   *   It contains all possible values, beause the result is cached,
-   *   and used for all nodes on a page.
+   *   It contains all possible values for the field, because the result is
+   *   cached on a field basis, and used for all nodes on a page.
    */
   public function getAllowedValues() {
     // Get all state names, including inactive states.
-    $options = workflow_get_workflow_state_names(0, $grouped = FALSE, $all = TRUE);
+    $wid = isset($this->field['settings']['wid']) ? $this->field['settings']['wid'] : 0;
+    $options = workflow_get_workflow_state_names($wid, $grouped = FALSE, $all = TRUE);
     return $options;
   }
 

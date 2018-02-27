@@ -30,11 +30,11 @@
  * @return array
  *   Array of form items for editing labels on transitions.
  */
-function workflow_admin_ui_labels_form($form, $form_state, $workflow, $op) {
+function workflow_admin_ui_labels_form($form, &$form_state, $workflow, $op) {
   if (!is_object($workflow)) {
     drupal_set_message(t('Improper worklow ID provided.'), 'error');
     watchdog('workflow_named_transitions', 'Improper worklow ID provided.');
-    drupal_goto('admin/config/workflow/workflow');
+    drupal_goto(WORKFLOW_ADMIN_UI_PATH);
   }
 
   $headers = array(

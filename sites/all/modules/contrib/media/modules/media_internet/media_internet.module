@@ -321,3 +321,47 @@ function media_internet_add_submit($form, &$form_state) {
     $form_state['storage']['upload'] = $file->fid;
   }
 }
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function media_internet_form_file_entity_edit_alter(&$form, &$form_state) {
+  if (!empty($form['#entity'])) {
+    $embed_code = file_create_url($form['#entity']->uri);
+
+    try {
+      $provider = get_class(media_internet_get_provider($embed_code));
+    }
+    catch (Exception $e) {
+      form_set_error('embed_code', $e->getMessage());
+      $provider = NULL;
+    }
+    if (!empty($provider) && $provider != 'MediaInternetFileHandler') {
+      $form['embed_code'] = array(
+        '#type' => 'textfield',
+        '#title' => t('File URL'),
+        '#description' => t('Enter the URL of this file.'),
+        '#attributes' => array('class' => array('media-add-from-url')),
+        '#maxlength' => 2083,
+        '#required' => TRUE,
+        '#default_value' => $embed_code,
+      );
+
+      $form['#validators'] = array();
+
+      array_unshift($form['actions']['submit']['#validate'], 'media_internet_add_validate');
+      array_unshift($form['actions']['submit']['#submit'], 'media_internet_edit_submit');
+    }
+  }
+}
+
+/**
+ *  Submit callback that updates managed file URI.
+ */
+function media_internet_edit_submit($form, &$form_state) {
+  $embed_code = $form_state['values']['embed_code'];
+  $provider = get_class(media_internet_get_provider($embed_code));
+  $handler = new $provider($embed_code);
+
+  $form_state['values']['uri'] = $handler->parse($embed_code);
+}

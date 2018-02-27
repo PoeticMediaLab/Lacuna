@@ -16,7 +16,7 @@ require_once dirname(__FILE__) . '/workflowfield.formatter.inc';
  */
 function workflowfield_help($path, $arg) {
   switch ($path) {
-    case 'admin/config/workflow/workflow':
+    case WORKFLOW_ADMIN_UI_PATH:
       return t('This page allows you to maintain Workflows. Once a workflow is
         created, you can maintain your entity type and add a Field of type
         \'Workflow\'.');

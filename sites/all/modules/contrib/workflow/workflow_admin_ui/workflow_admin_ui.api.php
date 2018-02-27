@@ -7,6 +7,8 @@
 /**
  * Implements hook_workflow_operations().
  *
+ * Menu callback; adds links on EntityWorkflowUIController::overviewForm.
+ *
  * @param string $op
  *   'top_actions': Allow modules to insert their own front page action links.
  *   'operations': Allow modules to insert their own workflow operations.

@@ -69,7 +69,7 @@ class backup_migrate_destination_filesource extends backup_migrate_source {
    */
   function backup_settings_default() {
      return array(
-      'exclude_filepaths' => "backup_migrate\nstyles\ncss\njs\nctools\nless",
+      'exclude_filepaths' => "backup_migrate\nstyles\ncss\njs\nctools\nless\nlanguages",
     );
   }
 

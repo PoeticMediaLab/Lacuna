@@ -154,7 +154,7 @@ function _backup_migrate_construct_filename($settings) {
 
   // Generate a timestamp if needed.
   $timestamp = '';
-  if ($settings->append_timestamp && $settings->timestamp_format) {
+  if ($settings->append_timestamp == 1 && $settings->timestamp_format) {
     $timestamp = format_date(time(), 'custom', $settings->timestamp_format);
   }
 

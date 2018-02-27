@@ -32,9 +32,9 @@ configure = admin/config/media/file-settings
 ; We have to add a fake version so Git checkouts do not fail Media dependencies
 version = 7.x-2.x-dev
 
-; Information added by Drupal.org packaging script on 2017-09-29
-version = "7.x-2.5"
+; Information added by Drupal.org packaging script on 2018-02-11
+version = "7.x-2.16"
 core = "7.x"
 project = "file_entity"
-datestamp = "1506722346"
+datestamp = "1518385686"
 

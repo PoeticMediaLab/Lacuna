@@ -17,8 +17,9 @@
 function workflow_admin_ui_view_permissions_form($workflow, $op) {
   // If we don't have a workflow at this point, go back to admin page.
   if (!$workflow) {
-    drupal_goto('admin/config/workflow/workflow');
+    drupal_goto(WORKFLOW_ADMIN_UI_PATH);
   }
+
 
   $all = array();
   $roles = workflow_get_roles();

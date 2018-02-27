@@ -790,7 +790,7 @@ function workflow_update_7016() {
 }
 
 /**
- * Add a primary key to {workflow_scheduled_transition}.
+ * Add/correct a primary key to {workflow_scheduled_transition}.
  */
 function workflow_update_7017() {
   // Drop existing primary key.
@@ -799,11 +799,18 @@ function workflow_update_7017() {
   // Add new primary key.
   $spec = array(
     'type' => 'serial',
+    'not null' => TRUE,
   );
   $keys_new =  array(
     'primary key' => array('tid'),
   );
-  db_add_field('workflow_scheduled_transition', 'tid', $spec, $keys_new);
+
+  if (!db_field_exists('workflow_scheduled_transition', 'tid') ) {
+    db_add_field('workflow_scheduled_transition', 'tid', $spec, $keys_new);
+  }
+  else {
+    db_change_field('workflow_scheduled_transition', 'tid', 'tid', $spec, $keys_new);
+  }
 
   return t('Added tid primary key to {workflow_scheduled_transition}');
 }

@@ -176,7 +176,10 @@ function file_entity_file_load($files) {
   // Add alt and title text to images.
   file_entity_set_title_alt_properties($files);
 
-  // Load and unserialize metadata.
+  // Add metadata to each file.
+  foreach ($files as $file) {
+    $file->metadata = array();
+  }
   $results = db_query("SELECT * FROM {file_metadata} WHERE fid IN (:fids)", array(':fids' => array_keys($files)));
 
   foreach ($results as $result) {
@@ -201,39 +204,105 @@ function file_entitycache_file_load($files) {
 }
 
 /**
+ * Implements hook_entity_load().
+ */
+function file_entity_entity_load($entities, $entity_type) {
+  file_entity_set_title_alt_properties_on_file_fields($entities, $entity_type);
+}
+
+/**
+ * Implements hook_entitycache_load().
+ */
+function file_entity_entitycache_load($entities, $entity_type) {
+  file_entity_set_title_alt_properties_on_file_fields($entities, $entity_type);
+}
+
+/**
+ * Sets the title / alt properties on file fields attached to entities.
+ *
+ * Files attached to a file or image field can be stored in the field cache or
+ * entity cache for whichever entity that the field is attached to. Because
+ * $file->alt and $file->title are set in file_entity_file_load() based on the
+ * current page language, they will go into the cache with that language as
+ * well. To ensure that the correct language is used when the entity is later
+ * loaded and displayed in a different language, the alt and title properties
+ * can be set again using this function.
+ *
+ * @param array $entities
+ *   An array of entity objects of the same type.
+ * @param string $entity_type
+ *   The type of entity.
+ *
+ * @see file_entity_entity_load()
+ * @see file_entity_entitycache_load()
+ */
+function file_entity_set_title_alt_properties_on_file_fields($entities, $entity_type) {
+  foreach ($entities as $entity) {
+    list(, , $bundle) = entity_extract_ids($entity_type, $entity);
+    foreach (field_info_instances($entity_type, $bundle) as $instance) {
+      if (!empty($entity->{$instance['field_name']})) {
+        foreach ($entity->{$instance['field_name']} as &$items) {
+          foreach ($items as &$item) {
+            // We need to detect any field items that passed through
+            // file_field_load(), whether they are files, images, or something
+            // else. There is no direct way to do that, but checking for a few
+            // expected file properties on the field item should be sufficient.
+            if (is_array($item) && !empty($item['fid']) && isset($item['uri']) && isset($item['filename'])) {
+              $file = (object) $item;
+              file_entity_set_title_alt_properties(array($file));
+              $item = (array) $file;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+/**
  * Set the title / alt properties of file objects.
  *
- * @param array $files List of file entities.
+ * @param array $files
+ *   List of file entities.
+ * @param stdClass $language
+ *   (optional) A language object to use for translating the title and alt
+ *   properties. Defaults to the language of the current request.
  */
-function file_entity_set_title_alt_properties($files) {
+function file_entity_set_title_alt_properties($files, $language = NULL) {
+  if (!isset($language)) {
+    $language = $GLOBALS['language'];
+  }
+
   $alt = variable_get('file_entity_alt', '[file:field_file_image_alt_text]');
   $title = variable_get('file_entity_title', '[file:field_file_image_title_text]');
 
   $replace_options = array(
     'clear' => TRUE,
     'sanitize' => FALSE,
-    'language' => $GLOBALS['language'],
+    'language' => $language,
   );
 
   foreach ($files as $file) {
-    $file->metadata = array();
-
     // Load alt and title text from fields.
     if (!empty($alt)) {
       $output = token_replace($alt, array('file' => $file), $replace_options);
 
-      // @todo Remove once https://www.drupal.org/node/1713164 is fixed.
-      // There is currently no way to get the raw alt text returned from the
-      // token so we revert the encoding done during tokenization.
-      $file->alt = decode_entities($output);
+      if (!empty($output)) {
+        // @todo Remove once https://www.drupal.org/node/1713164 is fixed.
+        // There is currently no way to get the raw alt text returned from the
+        // token so we revert the encoding done during tokenization.
+        $file->alt = decode_entities($output);
+      }
     }
     if (!empty($title)) {
       $output = token_replace($title, array('file' => $file), $replace_options);
 
-      // @todo Remove once https://www.drupal.org/node/1713164 is fixed.
-      // There is currently no way to get the raw title text returned from the
-      // token so we revert the encoding done during tokenization.
-      $file->title = decode_entities($output);
+      if (!empty($output)) {
+        // @todo Remove once https://www.drupal.org/node/1713164 is fixed.
+        // There is currently no way to get the raw title text returned from the
+        // token so we revert the encoding done during tokenization.
+        $file->title = decode_entities($output);
+      }
     }
   }
 }

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file
  * Notify roles by OG Groups for Workflow state transitions.
@@ -6,6 +7,7 @@
 
 /**
  * Implements hook_workflow_notify().
+ *
  * @param $op - The operation (columns, users).
  * @param $args - The arguments for this call.
  *    - may be:
@@ -73,25 +75,26 @@ function workflow_notify_og_workflow_notify($op, &$args) {
 
 /**
  * Implements hook_form_alter().
+ *
  * Add a column for limiting user groups by OG group.
  */
 function workflow_notify_og_form_alter(&$form, &$form_state, $form_id) {
   switch($form_id) {
     case 'workflow_notify_settings_form':
       $limit = variable_get('workflow_notify_og', array());
-
-      // Add a group limit flag to each state.
-      foreach ($form['states'] as $sid => $element) {
-        $form['states'][$sid]['limit_by_group'] = array(
-          '#type' => 'radios',
-          '#options' => array(t('No'), t('Yes')),
-          '#attributes' => array('class' => array('limit-by-group')),
-          '#default_value' => (isset($limit[$sid]) ? $limit[$sid] : 0),
+      if (!empty($form['states'])) {
+        // Add a group limit flag to each state.
+        foreach ($form['states'] as $sid => $element) {
+          $form['states'][$sid]['limit_by_group'] = array(
+            '#type' => 'radios',
+            '#options' => array(t('No'), t('Yes')),
+            '#attributes' => array('class' => array('limit-by-group')),
+            '#default_value' => (isset($limit[$sid]) ? $limit[$sid] : 0),
           );
+        }
+        // Add our submission handler.
+        $form['#submit'][] = 'workflow_notify_og_form_submit';
       }
-
-      // Add our submission handler.
-      $form['#submit'][] = 'workflow_notify_og_form_submit';
   }
 }
 
@@ -109,6 +112,4 @@ function workflow_notify_og_form_submit(&$form, &$form_state) {
 
   // Save the new limit flags.
   variable_set('workflow_notify_og', $limit);
-
-  $form_state['redirect'] = "admin/config/workflow/workflow/$workflow->wid";
 }

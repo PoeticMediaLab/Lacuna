@@ -89,6 +89,8 @@ function media_wysiwyg_update_dependencies() {
   $dependencies['media_wysiwyg'][7201] = array(
     'media' => 7226,
   );
+
+  return $dependencies;
 }
 
 /**

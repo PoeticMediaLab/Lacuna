@@ -61,7 +61,15 @@ function wysiwyg_filter_filter_wysiwyg_process($text, $filter, $format, $langcod
     |                 # or
     <!--.*?-->        # a comment
     |                 # or
-    <[^>]*(>|$)       # a string that starts with a <, up until the > or the end of the string
+    <                 # a string that starts with a <
+    (                 # ...and contains any number of
+      "[^"]*"          # double-quoted strings
+      |
+      \'[^\']*\'       # single-quoted strings
+      |
+      [^"\'>]          # any other char
+    )*
+    (>|$)             # up until the > or the end of the string
     |                 # or
     >                 # just a >
     )%xsmu', '_wysiwyg_filter_xss_split', $text);
@@ -108,6 +116,11 @@ function _wysiwyg_filter_xss_split($m, $store = FALSE) {
   $elem = strtolower($matches[2]);
   $attrlist = &$matches[3];
   $comment = &$matches[4];
+
+  // Convert synonyms to the element they get converted to.
+  if (!empty($filter_options['valid_elements'][$elem]) && is_string($filter_options['valid_elements'][$elem])) {
+    $elem = $filter_options['valid_elements'][$elem];
+  }
 
   if (!empty($comment)) {
     // Allow or disallow HTML comments.
@@ -282,7 +295,8 @@ function _wysiwyg_filter_xss_attributes($attr, $element = '') {
   }
 
   // The attribute list ends with a valueless attribute like "selected".
-  if ($mode == 1 && !$skip) {
+  // is_array() ensures this isn't run for synonyms.
+  if ($mode == 1 && !$skip && is_array($attrarr[$attrname])) {
     $attrarr[$attrname] = array();
   }
 
@@ -478,7 +492,8 @@ function _wysiwyg_filter_xss_attributes($attr, $element = '') {
               break;
             }
           }
-          if (($nofollow_policy == 'blacklist' && $domain_found) || ($nofollow_policy == 'whitelist' && !$domain_found) || ($nofollow_policy == 'whitelist_current' && !$domain_found)) {
+          $link_is_relative = !parse_url($attrinfo['value'], PHP_URL_HOST);
+          if (($nofollow_policy == 'blacklist' && $domain_found) || (($nofollow_policy == 'whitelist' || $nofollow_policy == 'whitelist_current') && !$domain_found && !$link_is_relative)) {
             $add_nofollow = TRUE;
           }
         }

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file
  * Enables actions to be fired upon a Workflow State change.
@@ -13,17 +14,31 @@
 
 /**
  * Implements hook_workflow_operations().
- *
- * Menu callback, called in workflow.admin.inc to add actions for states.
  */
-function workflow_actions_workflow_operations($level, $workflow = NULL, $state = NULL) {
-  if ($workflow) {
-    return array(
-      'workflow_overview_actions' => array(
-        'title' => t('Actions'),
-        'href' => 'admin/structure/trigger/workflow/' . $workflow->wid,
-      ),
-    );
+function workflow_actions_workflow_operations($op, $workflow = NULL, $state = NULL) {
+  switch ($op) {
+    case 'workflow':
+      $actions = array();
+      if ($workflow && $workflow->getStates()) {
+        $wid = $workflow->getWorkflowId();
+        $actions = array(
+          'workflow_overview_actions' => array(
+            'title' => t('Actions'),
+            'href' => "admin/structure/trigger/workflow/$wid",
+          ),
+        );
+      }
+      else {
+        // Generate a dummy, if no states exist.
+        $actions = array(
+          'workflow_overview_actions' => array(
+            'title' => '',
+            'href' => '',
+          ),
+        );
+      }
+
+      return $actions;
   }
 }
 
