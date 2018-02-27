@@ -288,7 +288,7 @@ function lacuna_stories_set_basic_pages_permissions()
     ->range(0,1)
     ->execute();
 
-  $keys = array_keys($entities['node']); // 2 steps so older PHP can handle this
+  $keys = array_keys($entities['node']); // to support PHP <5.4
   $nid = $keys[0];
   $node = node_load($nid);
 
@@ -339,6 +339,7 @@ function lacuna_stories_set_annotator_settings() {
 		'Author' => 'Author',
     'Controls' => 'Controls',
     'Loading' => 'Loading',
+    'PDF' => 'PDF',
   ));
 }
 

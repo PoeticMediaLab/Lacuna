@@ -182,6 +182,11 @@ function lacuna_stories_threads_views_default_views() {
   $handler->display->display_options['fields']['field_annotation_reference']['settings'] = array(
     'link' => 1,
   );
+  /* Field: Content: PDF Excerpt */
+  $handler->display->display_options['fields']['field_annotation_pdf_quote']['id'] = 'field_annotation_pdf_quote';
+  $handler->display->display_options['fields']['field_annotation_pdf_quote']['table'] = 'field_data_field_annotation_pdf_quote';
+  $handler->display->display_options['fields']['field_annotation_pdf_quote']['field'] = 'field_annotation_pdf_quote';
+  $handler->display->display_options['fields']['field_annotation_pdf_quote']['type'] = 'data_url_image';
   /* Field: Content: Excerpt */
   $handler->display->display_options['fields']['field_annotation_quote']['id'] = 'field_annotation_quote';
   $handler->display->display_options['fields']['field_annotation_quote']['table'] = 'field_data_field_annotation_quote';
@@ -432,6 +437,7 @@ if (module_exists(\'course\')) {
   $handler->display->display_options['filters']['created_1']['field'] = 'created';
   $handler->display->display_options['filters']['created_1']['ui_name'] = 'Before';
   $handler->display->display_options['filters']['created_1']['operator'] = '<=';
+  $handler->display->display_options['filters']['created_1']['group'] = 1;
   $handler->display->display_options['filters']['created_1']['exposed'] = TRUE;
   $handler->display->display_options['filters']['created_1']['expose']['operator_id'] = 'created_1_op';
   $handler->display->display_options['filters']['created_1']['expose']['label'] = 'Before';
@@ -902,6 +908,11 @@ if (module_exists(\'course\')) {
   $handler->display->display_options['fields']['field_annotation_quote']['settings'] = array(
     'trim_length' => '600',
   );
+  /* Field: Content: PDF Excerpt */
+  $handler->display->display_options['fields']['field_annotation_pdf_quote']['id'] = 'field_annotation_pdf_quote';
+  $handler->display->display_options['fields']['field_annotation_pdf_quote']['table'] = 'field_data_field_annotation_pdf_quote';
+  $handler->display->display_options['fields']['field_annotation_pdf_quote']['field'] = 'field_annotation_pdf_quote';
+  $handler->display->display_options['fields']['field_annotation_pdf_quote']['type'] = 'data_url_image';
   /* Field: Content: Annotation Text */
   $handler->display->display_options['fields']['field_annotation_text']['id'] = 'field_annotation_text';
   $handler->display->display_options['fields']['field_annotation_text']['table'] = 'field_data_field_annotation_text';

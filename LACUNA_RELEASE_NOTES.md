@@ -1,16 +1,17 @@
 Lacuna Release Notes
 ====================
 
-Version 2.3
+Version 2.3: PDF Annotation and New Notifications System
 -------------
-March XX, 2017
+February 28, 2018
 
-A minor version release that adds a new "Latest Conversation" page, fixes several bugs, provides updated contributed and core modules, and improves the installation experience. Most work on this release done by Cody Leff and Daniel Bush.
+A minor version release that adds a new "Latest Conversation" page, adds PDF and image annotation, fixes several bugs, provides updated contributed and core modules, and improves the installation experience. Most work on this release done by Cody Leff and Daniel Bush.
 
 ### Additions
  * Added a "Latest Conversations" page that shows user-relevant updates. NOTE: To enable this new feature, go to Structure -> Features -> Lacuna Stories (admin/structure/features) and enable the "Notifications" feature. With drush, enable the feature through:
     `drush en -y lacuna_notifications_configuration`
  followed by `drush fra -y`
+ * Added ability to annotate PDFs. To enable this feature, go to Administration -> Configuration -> Content authoring -> Annotation (admin/config/content/annotator) and enable the "PDF" Annotator plugin. Then, revert affected features either with `drush fra -y` or at Administration -> Structure -> Features -> Lacuna Stories. 
     
 
 ### Fixes
@@ -21,9 +22,11 @@ A minor version release that adds a new "Latest Conversation" page, fixes severa
  * Sharing options sometimes didn't show up correctly
  * Adding some backend error checking to get rid of a PHP warning when loading highlights (i.e., annotations without text)
  * Fixed link to add tags in "Curate Tags" menu item when Lacuna is not installed in the webserver's root directory
+ * Fixed default privacy settings when using Lacuna as an LTI external tool provider (i.e., for LMSes like Canvas).
  
 ### Changes
- * Updated Views, Views Bulk Operations, d3, Webform, Media, WYWISYG, Diff, and Token modules
+ * Updated Drupal core to 7.57.
+ * Updated Backup and Migrate, Chaos tools, Entity reference, Chosen, Entity API, Field group, File Entity, Honeypot, Media, Media: YouTube, Menu Badges, Menu Views, Module Filter, Rules, Session Cache API, Superfish, Views, Views data export, Views Bulk Operations, d3, Webform, WYWISYG, Diff, Workflow, and Token modules.
  * Installation profile uses Lacuna logo
  * Improved responsive design of annotation dashboard
  * Major improvements to Peer Group UI: Easier to join and leave groups, better theming.

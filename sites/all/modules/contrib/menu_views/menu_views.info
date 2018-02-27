@@ -1,0 +1,13 @@
+name = Menu Views
+description = "Allows menu items to render views instead of links. This is useful for creating mega menus."
+core = 7.x
+package = "Views"
+dependencies[] = menu
+dependencies[] = views
+
+; Information added by Drupal.org packaging script on 2018-01-25
+version = "7.x-2.5"
+core = "7.x"
+project = "menu_views"
+datestamp = "1516923487"
+

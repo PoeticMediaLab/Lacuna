@@ -13,5 +13,6 @@ class TouchAnnotatorPlugin extends AnnotatorPlugin {
     drupal_add_js(drupal_get_path('module', 'annotator') . '/js/touch/utils.js');
     drupal_add_js(drupal_get_path('module', 'annotator') . '/js/touch/editor.js');
     drupal_add_js(drupal_get_path('module', 'annotator') . '/js/touch/viewer.js');
+    drupal_add_js(drupal_get_path('module', 'annotator') . '/js/touch/pdf.js');
   }
 }

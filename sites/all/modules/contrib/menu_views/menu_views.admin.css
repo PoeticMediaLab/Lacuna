@@ -1,0 +1,60 @@
+#menu-item-type {
+  background: #eee;
+  border: 1px solid #ddd;
+  color: #777;
+  margin: 10px 0;
+  padding: 5px 10px;
+  position: relative;
+}
+#menu-item-type .form-item {
+  position: static;
+}
+#menu-item-type .form-type-radios > label {
+  float: left;
+  margin-right: 10px;
+}
+#menu-item-type .form-type-radios .form-item {
+  margin-right: 10px;
+}
+#menu-item-type .progress-disabled {
+  float: none;
+}
+#menu-item-type .ajax-progress {
+  float: right;
+}
+#menu-item-type .ajax-progress .message {
+  padding: 0;
+}
+
+#menu-overview div.view {
+  background: #eee;
+  border: 1px solid #ccc;
+  -ms-border-radius: 3px;
+  -o-border-radius: 3px;
+  -moz-border-radius: 3px;
+  -webkit-border-radius: 3px;
+  border-radius: 3px;
+  color: #555;
+  cursor: default;
+  display: inline-block;
+  *display: inline;
+  *zoom: 1;
+  font-size: smaller;
+  line-height: 1em;
+  margin: 0;
+  padding: 4px 6px 2px;
+  text-shadow: 0 1px 0 #fff;
+}
+#menu-overview div.view strong {
+  background: #ddd;
+  margin-left: -6px;
+  padding: 2px 5px 1px;
+}
+
+/* Fix fieldset legends for Rubik and Vertical Tabs */
+.vertical-tabs .vertical-tabs-panes .vertical-tabs-pane legend {
+  display: block;
+}
+.vertical-tabs > .vertical-tabs-panes > .vertical-tabs-pane > legend {
+  display: none;
+}

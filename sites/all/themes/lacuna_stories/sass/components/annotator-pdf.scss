@@ -1,0 +1,139 @@
+/*
+* PDF annotation styles.  Since iframes aren't affected by CSS rules
+* applied to their parent document, the resultant CSS file must be
+* manually imported into the PDF viewer iframe.
+*/
+
+#mainContainer {
+  min-width: 0;
+}
+
+.pdf-annotation-layer {
+  
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  opacity: .5;
+  z-index: 1;
+  cursor: crosshair;
+  -webkit-user-select: none;
+
+  .annotation-hl {
+    
+    position: absolute;
+    width: 0px;
+    height: 0px;
+    border-style: solid;
+    border-width: 1px;
+    border-color: rgba(22, 147, 165, 0);
+    background-color: rgba(22, 147, 165, .4);
+    border-radius: 2px;
+    cursor: pointer;
+    transition: background-color .25s, border .25s;
+
+    &:hover {
+      border-color: rgba(22, 147, 165, 1);
+      background-color: rgba(22, 147, 165, .8);
+    }
+
+    &.annotator-category-none {
+      
+      border-color: rgba(255, 255, 10, 0);
+      background-color: rgba(255, 255, 10, .4);
+
+      &:hover {
+        border-color: rgba(255, 255, 10, 1);
+        background-color: rgba(255, 255, 10, .7);
+      }
+    
+    }
+
+    &.new-annotation {
+      
+      cursor: crosshair;
+      border-color: rgba(22, 147, 165, 1);
+      background-color: rgba(22, 147, 165, .5);
+
+      .pdf-highlight-handle {
+
+        position: absolute;
+        width: 1.5em;
+        height: 1.5em;
+        background-color: rgba(22, 147, 165, 1);
+        border-radius: 1.5em;
+
+        &.top-left {
+          top: -.75em;
+          left: -.75em;
+        }
+
+        &.top-right {
+          top: -.75em;
+          right: -.75em;
+        }
+
+        &.bottom-left {
+          bottom: -.75em;
+          left: -.75em;
+        }
+
+        &.bottom-right {
+          bottom: -.75em;
+          right: -.75em;
+        }
+      
+      }
+    
+    }
+
+    &.af-annotation-hide,
+    &.af-annotation-hide.annotator-category-none {
+      border-color: transparent;
+      background-color: transparent;
+      pointer-events: none;
+    }
+
+    &.af-annotation-hide,
+    &.af-annotation-hide.annotator-category-none {
+      border-color: transparent;
+      background-color: transparent;
+      pointer-events: none;
+    }
+  
+  }
+
+}
+
+.editor-open .pdf-annotation-layer {
+  
+  cursor: default;
+
+  .annotation-hl {
+    
+    cursor: default;
+
+    &:hover {
+      border-color: rgba(22, 147, 165, 0);
+      background-color: rgba(22, 147, 165, .4);
+    }
+
+    &.annotator-category-none:hover {
+      
+      border-color: rgba(255, 255, 10, 0);
+      background-color: rgba(255, 255, 10, .4);
+    
+    }
+  
+  }
+
+}
+
+.under-mouse-position-checked {
+  pointer-events: none;
+}
+
+.field-name-field-annotation-pdf-quote img {
+  max-height: 5em;
+}

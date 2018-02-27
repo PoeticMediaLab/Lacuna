@@ -225,13 +225,19 @@ class Model
     @state.total = annotations.length
     annotations.sort (a,b) ->
       # Order annotations by location in text, not creation time
-      rangeA = document.createRange()
-      if a.highlights[0]?
-        rangeA.selectNodeContents(a.highlights[0])
-      rangeB = document.createRange()
-      if b.highlights[0]?
-        rangeB.selectNodeContents(b.highlights[0])
-      return rangeA.compareBoundaryPoints(Range.START_TO_START, rangeB)
+      if a.pdfRange
+        dPage = a.pdfRange.pageNumber - b.pdfRange.pageNumber
+        return dPage unless dPage is 0
+        return b.pdfRange.y1Pdf - a.pdfRange.y1Pdf
+
+      else
+        rangeA = document.createRange()
+        if a.highlights[0]?
+          rangeA.selectNodeContents(a.highlights[0])
+        rangeB = document.createRange()
+        if b.highlights[0]?
+          rangeB.selectNodeContents(b.highlights[0])
+        return rangeA.compareBoundaryPoints(Range.START_TO_START, rangeB)
 
     if @state.total then @state.index = 1
     for annotation in annotations
@@ -450,6 +456,14 @@ class View
     @Controller = Controller
     @Model = Model
 
+    # Save a reference to the parent HTML document for the annotations
+    if Drupal.PDFDocumentView
+      Drupal.PDFDocumentView.loaded.then(=>
+        @document = Drupal.PDFDocumentView.frameDocument
+      )
+
+    else @document = document
+
     # Toggle a class on title click to show or hide the filters
     # for small screens.
     @i.addClass('hidden')
@@ -567,12 +581,14 @@ class View
 
   showAnnotations: (ids) ->
     for id in ids
-      $('.' + select.annotation + id).removeClass(select.hide)
+      $('.' + select.annotation + id, @document).removeClass(select.hide)
+      @Model.annotation(id)._isHidden = false
     $(document).trigger('annotation-filters-changed') # fire after DOM changed
 
   hideAnnotations: (ids) ->
     for id in ids
-      $('.' + select.annotation + id).addClass(select.hide)
+      $('.' + select.annotation + id, @document).addClass(select.hide)
+      @Model.annotation(id)._isHidden = true
     $(document).trigger('annotation-filters-changed') # fire after DOM changed
 
   drawAnnotations: () ->
@@ -602,8 +618,23 @@ class View
     # Load annotation viewer
     return if not annotation
     $(document).trigger('annotation-filters-paged', annotation)
+    if annotation.pdfRange
+      Drupal.PDFDocumentView.pagesLoaded.then(=> @scrollToPDFHighlight(annotation))
+      return
+    
     highlight = $(annotation.highlights[0])
     $("html, body").animate({
       scrollTop: highlight.offset().top - 500
     }, 150)
     $(@element).annotator().annotator('showViewer', [annotation], @getViewerPosition(annotation));
+
+  # PDF-specific code that loads a page 
+  scrollToPDFHighlight: (annotation) ->
+    pageNumber = annotation.pdfRange.pageNumber
+    Drupal.PDFDocumentView.scrollToPage(pageNumber).then(=>
+      $highlight = annotation.$pdfHighlight
+      { top, left, bottom, right } = $highlight[0].getBoundingClientRect()
+      top = (top + bottom) / 2
+      left = (left + right) / 2
+      $(@element).annotator().annotator('showViewer', [ annotation ], { top, left });
+    )

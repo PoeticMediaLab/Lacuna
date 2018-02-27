@@ -1,0 +1,709 @@
+<?php
+
+/**
+ * @file
+ * Module to allow Views to be attached as menu items.
+ *
+ * This module is a utility module and allows an admin to select a view for a menu item instead of a title and link. When
+ * the link is rendered, the view is inserted instead of the link. In addition, if the
+ * parent item of the menu is a node page, the node id can be passed to the view as an argument using tokens.
+ *
+ * Original concept by Randall Knutson - LevelTen Interactive.
+ * Written and maintained by Mark Carver - LevelTen Interactive.
+ * http://www.leveltendesign.com
+ */
+
+// Include admin form alter hooks.
+include_once('menu_views.admin.inc');
+
+/**
+ * Implements hook_menu().
+ */
+function menu_views_menu() {
+  // Fake callback, needed for menu item add/edit validation.
+  $items['<view>'] = array(
+    'page callback' => 'drupal_not_found',
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+  );
+  return $items;
+}
+
+/**
+ * Implements hook_permission().
+ */
+function menu_views_permission() {
+  return array(
+    'administer menu views' => array(
+      'title' => t('Administer menu views'),
+      'description' => t('Allows administrators to attach views to individual menu items and alter the view\'s configuration.'),
+    ),
+  );
+}
+
+/**
+ * Implements hook_theme_registry_alter().
+ * Intercepts theme_menu_link().
+ */
+function menu_views_theme_registry_alter(&$registry) {
+  // Save previous value from registry in case another module/theme overwrites theme_menu_link() as well.
+  $registry['menu_views_menu_link_default'] = $registry['menu_link'];
+  $registry['menu_link']['function'] = 'menu_views_menu_link';
+  // Provide Superfish support.
+  if (isset($registry['superfish_menu_item_link'])) {
+    $registry['menu_views_superfish_menu_item_link_default'] = $registry['superfish_menu_item_link'];
+    $registry['superfish_menu_item_link']['function'] = 'menu_views_superfish_menu_item_link';
+  }
+  // Provide Responsive Dropdown Menus support.
+  if (isset($registry['responsive_dropdown_menus_item_link'])) {
+    $registry['menu_views_responsive_dropdown_menus_item_link_default'] = $registry['responsive_dropdown_menus_item_link'];
+    $registry['responsive_dropdown_menus_item_link']['function'] = 'menu_views_responsive_dropdown_menus_item_link';
+  }
+}
+
+/**
+ * Implements theme_menu_link().
+ * Overrides default theming function to intercept views.
+ */
+function menu_views_menu_link(array $variables) {
+  // Only intercept if this menu link is a view.
+  $view = _menu_views_replace_menu_item($variables['element']);
+  if ($view !== FALSE) {
+    if (!empty($view)) {
+      $sub_menu = '';
+      $classes = isset($variables['element']['#attributes']['class']) ? $variables['element']['#attributes']['class'] : array();
+      $item = _menu_views_get_item($variables['element']);
+      foreach (explode(' ', $item['view']['settings']['wrapper_classes']) as $class) {
+        if (!in_array($class, $classes)) {
+          $classes[] = $class;
+        }
+      }
+      $variables['element']['#attributes']['class'] = $classes;
+      if ($variables['element']['#below']) {
+        $sub_menu = drupal_render($variables['element']['#below']);
+      }
+      return '<li' . drupal_attributes($variables['element']['#attributes']) . '>' . $view . $sub_menu . "</li>\n";
+    }
+    return '';
+  }
+  // Otherwise, use the default theming function.
+  return theme('menu_views_menu_link_default', $variables);
+}
+
+/**
+ * Implements theme_superfish_menu_item_link().
+ * Overrides default theming function to intercept views.
+ */
+function menu_views_superfish_menu_item_link(array $variables) {
+  if (isset($variables['menu_item']['link'])) {
+    // Only intercept if this menu item link is a view.
+    if ($view = _menu_views_replace_menu_item($variables['menu_item']['link'])) {
+      $item = _menu_views_get_item($variables['menu_item']['link']);
+      return '<div' . drupal_attributes(array('class' => explode(' ', $item['view']['settings']['wrapper_classes']))) . '>' . $view . '</div>';
+    }
+    // If no view, yet link path is '<view>', return an empty value.
+    elseif ($variables['menu_item']['link']['link_path'] == '<view>') {
+      return '';
+    }
+  }
+  // Otherwise, use the default theming function.
+  return theme('menu_views_superfish_menu_item_link_default', $variables);
+}
+
+/**
+ * Implements theme_responsive_dropdown_menus_item_link().
+ * Overrides default theming function to intercept views.
+ */
+function menu_views_responsive_dropdown_menus_item_link(array $variables) {
+  if (isset($variables['menu_item']['link'])) {
+    // Only intercept if this menu item link is a view.
+    if ($view = _menu_views_replace_menu_item($variables['menu_item']['link'])) {
+      $item = _menu_views_get_item($variables['menu_item']['link']);
+      return '<div' . drupal_attributes(array('class' => explode(' ', $item['view']['settings']['wrapper_classes']))) . '>' . $view . '</div>';
+    }
+    // If no view, yet link path is '<view>', return an empty value.
+    elseif ($variables['menu_item']['link']['link_path'] == '<view>') {
+      return '';
+    }
+  }
+  // Otherwise, use the default theming function.
+  return theme('menu_views_responsive_dropdown_menus_item_link_default', $variables);
+}
+
+/**
+ * Implements hook_menu_breadcrumb_alter().
+ */
+function menu_views_menu_breadcrumb_alter(&$active_trail, $item) {
+  foreach ($active_trail as $key => $parent) {
+    if (isset($parent['link_path']) && $parent['link_path'] == '<view>') {
+      $menu_view = _menu_views_get_item($parent);
+      _menu_views_tokenize($menu_view);
+      // Remove this breadcrumb if the menu item view wants it hidden.
+      if (!(bool)$menu_view['view']['settings']['breadcrumb']) {
+        unset($active_trail[$key]);
+      }
+      else {
+        // Use overridden title if provided.
+        $title = filter_xss_admin($menu_view['view']['settings']['breadcrumb_title']);
+        // Use title provided by view next.
+        if (empty($title)) {
+          $view = views_get_view($menu_view['view']['name']);
+          if ($view && $view->access($menu_view['view']['display']) && $view->set_display($menu_view['view']['display'])) {
+            $title = filter_xss_admin($view->get_title());
+            $view->destroy();
+          }
+        }
+        // If title is still empty, just remove it from the breadcrumb.
+        if (empty($title)) {
+          unset($active_trail[$key]);
+        }
+        else {
+          $active_trail[$key]['title'] = $title;
+          $active_trail[$key]['href'] = $menu_view['view']['settings']['breadcrumb_path'];
+        }
+      }
+    }
+  }
+}
+
+function _menu_views_replace_menu_item($element) {
+  $build = array();
+  $item = _menu_views_get_item($element);
+  _menu_views_tokenize($item);
+  if ($item['type'] == 'view' && $item['view']['name'] && $item['view']['display']) {
+    $element['#attributes']['class'][] = 'menu-views';
+    if ($view = views_get_view($item['view']['name'])) {
+      if ($view->access($item['view']['display']) && $view->set_display($item['view']['display'])) {
+        $arguments = explode('/', $item['view']['arguments']);
+        // Need to replace empty arguments with NULL values for views.
+        foreach ($arguments as $key => $value) {
+          if (empty($value)) {
+            $arguments[$key] = NULL;
+          }
+        }
+        $view->set_arguments($arguments);
+        $build['view'] = array(
+          '#markup' => $view->preview(),
+          '#weight' => 10,
+        );
+
+        // Provide title options for the view.
+        if ((bool)$item['view']['settings']['title']) {
+          $title = filter_xss_admin($item['view']['settings']['title_override']);
+          if (empty($title)) {
+            $title = filter_xss_admin($view->get_title());
+          }
+          if (!empty($title)) {
+            $tag = $item['view']['settings']['title_wrapper'];
+            if ($tag === '0') {
+              $tag = FALSE;
+            }
+            elseif ($tag === '') {
+              $tag = 'h3';
+            }
+            if ($tag) {
+              $title_attributes = array();
+              if (!empty($item['view']['settings']['title_classes'])) {
+                $title_attributes['class'] = array_filter(explode(' ', $item['view']['settings']['title_classes']));
+                foreach ($title_attributes['class'] as $key => $class) {
+                  $title_attributes['class'][$key] = drupal_html_class($class);
+                }
+              }
+              $build['title'] = array(
+                '#theme' => 'html_tag__menu_views__title',
+                '#tag' => $tag,
+                '#attributes' => $title_attributes,
+                '#value' => filter_xss_admin($title),
+              );
+            }
+            else {
+              $build['title'] = array(
+                '#markup' => $title,
+              );
+            }
+          }
+        }
+
+        // Add contextual links if allowed and if views_ui module is enabled.
+        if (module_exists('contextual_links') && user_access('access contextual links') && module_exists('views_ui')) {
+          views_add_contextual_links($build, 'special_block_-exp', $view, $item['view']['display']);
+          if (!empty($build['#contextual_links'])) {
+            $build['#prefix'] = '<div class="contextual-links-region">';
+            $build['#suffix'] = '</div>';
+            $build['contextual_links'] = array(
+              '#type' => 'contextual_links',
+              '#contextual_links' => $build['#contextual_links'],
+              '#element' => $build,
+              '#weight' => -1,
+            );
+          }
+        }
+
+        $view->destroy();
+      }
+    }
+    return drupal_render($build);
+  }
+  return FALSE;
+}
+
+function _menu_views_default_values() {
+  return array(
+    'mlid' => 0,
+    'type' => 'link',
+    'original_path' => '',
+    'view' => array(
+      'name' => FALSE,
+      'display' => FALSE,
+      'arguments' => '',
+      'settings' => array(
+        'wrapper_classes' => 'menu-views',
+        'breadcrumb' => TRUE,
+        'breadcrumb_title' => '',
+        'breadcrumb_path' => '<front>',
+        'title' => FALSE,
+        'title_wrapper' => '',
+        'title_classes' => '',
+        'title_override' => '',
+      ),
+    ),
+  );
+}
+
+/**
+ * Helper function to determine whether the form menu item options are a tree.
+ */
+function _menu_views_options_tree($form) {
+  return ((isset($form['#node']) && isset($form['menu']['link']['options']['#tree']) && $form['menu']['link']['options']['#tree']) || (isset($form['options']['#tree']) && $form['options']['#tree']));
+}
+
+/**
+ * Helper function to return the menu view array from a menu item array or form array.
+ */
+function _menu_views_get_item(array &$element = array(), array &$form_state = array()) {
+  // Default values.
+  $item = $default = _menu_views_default_values();
+  // Remove the type of menu item, will get set afterwards.
+  unset($item['type']);
+  $provided = FALSE;
+  $ajax_type = FALSE;
+  // If $form_state is empty, this is a menu item.
+  if (empty($form_state)) {
+    if (isset($element['menu_views'])) {
+      $provided = &$element['menu_views'];
+    }
+    elseif (isset($element['localized_options']['menu_views'])) {
+      $provided = &$element['localized_options']['menu_views'];
+    }
+    elseif (isset($element['#localized_options']['menu_views'])) {
+      $provided = &$element['#localized_options']['menu_views'];
+    }
+    elseif (isset($element['options']['menu_views'])) {
+      $provided = &$element['options']['menu_views'];
+    }
+  }
+  // $form_state should be set when used in forms, otherwise this function will not work.
+  else {
+    $original_element = $element;
+    $values = &$form_state['values'];
+    // Determine if this is a node form.
+    if (isset($element['#node'])) {
+      $element = &$element['menu']['link'];
+      $values = &$values['menu'];
+    }
+    // Save the menu item type before proceeding.
+    if (isset($values['menu_item_type'])) {
+      $ajax_type = $values['menu_item_type'];
+    }
+    elseif (isset($values['menu']['menu_views']['menu_item_type'])) {
+      $ajax_type = $values['menu']['menu_views']['menu_item_type'];
+    }
+    // Save the menu item provided for initial form population.
+    if (isset($element['original_item']['#value']['options']['menu_views'])) {
+      $provided = &$element['original_item']['#value']['options']['menu_views'];
+      if (isset($provided['type'])) {
+        $item['type'] = $provided['type'];
+      }
+    }
+    elseif (isset($original_element['#node']->menu['options']['menu_views'])) {
+      $provided = &$original_element['#node']->menu['options']['menu_views'];
+      if (isset($provided['type'])) {
+        $item['type'] = $provided['type'];
+      }
+    }
+    // Determine if the options has a tree value.
+    if (_menu_views_options_tree($original_element)) {
+      $element = &$element['options'];
+      $values = &$values['options'];
+    }
+    if (!$provided && isset($element['menu_views'])) {
+      if (isset($element['menu_views']['#value'])) {
+        $provided = $element['menu_views']['#value'];
+      }
+      elseif (isset($element['menu_views'])) {
+        $provided = $element['menu_views'];
+      }
+    }
+    // Allow submitted values to override form values.
+    if (isset($values['menu_views'])) {
+      $provided = $values['menu_views'];
+    }
+    if (isset($provided['type']) && isset($item['type'])) {
+      $provided['type'] = $item['type'];
+    }
+  }
+  // If the menu view element were not set, attempt to determine if this is a form.
+  // By default, the menu view returns default values (no view). If settings were provided by an element or form item, then use those.
+  if ($provided) {
+    // Extract available element settings to use for this menu view.
+    foreach (array('mlid', 'original_path', 'view') as $property) {
+      if (isset($provided[$property])) {
+        if (isset($item[$property]) && is_array($item[$property])) {
+          $item[$property] = _menu_views_array_merge_recursive($item[$property], $provided[$property]);
+        }
+        else {
+          $item[$property] = $provided[$property];
+        }
+      }
+    }
+  }
+  // Set the type of menu item.
+  if ($ajax_type) {
+    $item['type'] = $ajax_type;
+  }
+  elseif (isset($provided['type'])) {
+    $item['type'] = $provided['type'];
+  }
+  else {
+    $item['type'] = $default['type'];
+  }
+  // Filter out any disabled views.
+  $views = array_keys(views_get_enabled_views());
+  if (!in_array($item['view']['name'], $views)) {
+    $item['view'] = $default['view'];
+  }
+  return $item;
+}
+
+function menu_views_menu_link_alter(&$link) {
+  $item = _menu_views_get_item($link);
+  if ($item['type'] == 'view') {
+    if (isset($link['link_path']) && $link['link_path'] != '<view>') {
+      $item['original_path'] = $link['link_path'];
+    }
+    $link['link_path'] = '<view>';
+    $link['options']['alter'] = TRUE;
+  }
+}
+
+/**
+ * Helper function to return the menu link item based on it's original path.
+ *
+ * @param (string) $original_path
+ *   The [node] path for which to search for in menu views.
+ * @param (string)|(array) $menu_name
+ *   Limit the search of menu view items to the specified menu names.
+ * @return
+ *   (array) $mlids
+ *   A keyed array containing the identification integers matching the original path of menu items in the {menu_links} table,
+ *   or an empty array if no menu items were found.
+ *
+ * @see: menu_views_node_prepare() and menu_views_node_delete().
+ */
+function _menu_views_items_from_original_path($original_path, $menu_name = NULL) {
+  $mlids = array();
+  // Build the query.
+  $query = db_select('menu_links', 'm')
+            ->fields('m', array('mlid', 'options'))
+            ->condition('module', 'menu')
+            ->condition('link_path', '<view>');
+  // Set the menu_name condition if present.
+  if (!empty($menu_name)) {
+    $query = $query->condition('menu_name', $menu_name);
+  }
+  // Execute the query.
+  $query = $query->execute();
+  // Iterate through all available menu items that are views to match against the original path.
+  while($link = $query->fetchObject()) {
+    if ($options = unserialize($link->options)) {
+      $item = _menu_views_get_item($options);
+      if ($item['original_path'] == $original_path) {
+        $mlids[] = $link->mlid;
+        break;
+      }
+    }
+  }
+  return $mlids;
+}
+
+/**
+ * Implements hook_node_prepare().
+ */
+function menu_views_node_prepare($node) {
+  // Manually call menu's hook_node_prepare() if $node->menu doesn't exist.
+  // @see: drupal.org/node/1878968
+  if (!isset($node->menu) || empty($node->menu)) {
+    menu_node_prepare($node);
+  }
+  if (isset($node->nid) && !$node->menu['mlid']) {
+    // Prepare the node for the edit form so that $node->menu always exists.
+    $menu_name = strtok(variable_get('menu_parent_' . $node->type, 'main-menu:0'), ':');
+    $item = array();
+    $mlids = array();
+    // Give priority to the default menu.
+    $type_menus = variable_get('menu_options_' . $node->type, array('main-menu' => 'main-menu'));
+    if (in_array($menu_name, $type_menus)) {
+      $mlids = _menu_views_items_from_original_path('node/' . $node->nid, $menu_name);
+    }
+    // Check all allowed menus if a link does not exist in the default menu.
+    if (empty($mlid) && !empty($type_menus)) {
+      $mlids = _menu_views_items_from_original_path('node/' . $node->nid, array_values($type_menus));
+    }
+    // Load the menu link if one was found.
+    $item = empty($mlids) ? array() : menu_link_load(reset($mlids));
+    // Set default values.
+    $default = array(
+      'link_title' => '',
+      'mlid' => 0,
+      'plid' => 0,
+      'menu_name' => $menu_name,
+      'weight' => 0,
+      'options' => array(),
+      'module' => 'menu',
+      'expanded' => 0,
+      'hidden' => 0,
+      'has_children' => 0,
+      'customized' => 0,
+    );
+    // Set the menu item.
+    $node->menu = _menu_views_array_merge_recursive($default, $item);
+    // Find the depth limit for the parent select.
+    if (!isset($node->menu['parent_depth_limit'])) {
+      $node->menu['parent_depth_limit'] = _menu_parent_depth_limit($node->menu);
+    }
+  }
+}
+
+/**
+ * Implements hook_node_delete().
+ */
+function menu_views_node_delete($node) {
+  $mlids = _menu_views_items_from_original_path('node/' . $node->nid);
+  foreach ($mlids as $mlid) {
+    menu_link_delete($mlid);
+  }
+}
+
+/**
+ * Implements hook_node_insert().
+ */
+function menu_views_node_insert($node) {
+  menu_views_node_save($node);
+}
+
+/**
+ * Implements hook_node_presave().
+ */
+function menu_views_node_presave($node) {
+  if (isset($node->menu)) {
+    $link = &$node->menu;
+    $item = _menu_views_get_item($link);
+    // Ensure the enabled property is set.
+    if (!isset($link['enabled'])) {
+      $link['enabled'] = !(bool) $link['hidden'];
+    }
+    // If this is a menu view item, override properties on the link so this module handles the save.
+    if ($link['enabled'] && $item['type'] == 'view') {
+      // Save the mlid in the menu_views array so the menu module doesn't delete the link when it detects the mlid.
+      if (!empty($link['mlid'])) {
+        $link['options']['menu_views']['mlid'] = $link['mlid'];
+        $link['mlid'] = 0;
+      }
+      // Ensure there is no title so the menu module doesn't try to save this menu item.
+      $link['link_title'] = '';
+    }
+  }
+}
+
+/**
+ * Implements hook_node_update().
+ */
+function menu_views_node_update($node) {
+  menu_views_node_save($node);
+}
+
+/**
+ * Helper for hook_node_insert() and hook_node_update().
+ */
+function menu_views_node_save($node) {
+  if (isset($node->menu)) {
+    $link = &$node->menu;
+    $item = _menu_views_get_item($link);
+    // Check to see if Menu Views should handle the menu item save.
+    if (!empty($link['enabled']) && $item['type'] == 'view') {
+      // If this an existing menu item, check to see if the mlid was saved in the menu view options array.
+      if (!empty($item['mlid']) && empty($link['mlid'])) {
+        $link['mlid'] = $item['mlid'];
+      }
+      // This is a new menu link, create one so we can get the mlid.
+      // Note: This will save the menu link twice on new nodes, which is unavoidable since
+      // we need the mlid to be saved in the menu views options array.
+      elseif (empty($link['mlid'])) {
+        if (!menu_link_save($link)) {
+          drupal_set_message(t('There was an error saving the menu link.'), 'error');
+          return;
+        }
+      }
+      // Ensure mlid is properly set.
+      $item['mlid'] = $link['mlid'];
+      // Ensure link_path is properly set.
+      $link['link_path'] = '<view>';
+      // Ensure original_path is properly set.
+      $item['original_path'] = 'node/' . $node->nid;
+      // Replace the menu view options in the link and save it.
+      $link['options']['menu_views'] = $item;
+      if (!menu_link_save($link)) {
+        drupal_set_message(t('There was an error saving the menu link.'), 'error');
+      }
+    }
+  }
+}
+
+
+/**
+ * Implements hook_token_info().
+ */
+function menu_views_token_info() {
+  $tokens['tokens']['menu-link']['node'] = array(
+    'name' => t('Node'),
+    'description' => t('The node of the menu link.'),
+    'type' => 'node',
+  );
+  $tokens['tokens']['menu-link']['parent']['node'] = array(
+    'name' => t('Node'),
+    'description' => t('The node of the menu link\'s parent.'),
+    'type' => 'node',
+  );
+  return $tokens;
+}
+
+/**
+ * Implements hook_tokens().
+ */
+function menu_views_tokens($type, $tokens, array $data = array(), array $options = array()) {
+  $url_options = array('absolute' => TRUE);
+  if (isset($options['language'])) {
+    $url_options['language'] = $options['language'];
+    $language_code = $options['language']->language;
+  }
+  else {
+    $language_code = NULL;
+  }
+  $sanitize = !empty($options['sanitize']);
+  $replacements = array();
+  // Menu link tokens.
+  if ($type == 'menu-link' && !empty($data['menu-link'])) {
+    $link = (array) $data['menu-link'];
+    // menu-link:node tokens.
+    if ($node_tokens = token_find_with_prefix($tokens, 'node')) {
+      $node = menu_get_object('node', 1, $link['link_path']);
+      if (!$node && '<view>' === $link['link_path'] && !empty($link['options']['menu_views']['original_path'])) {
+        $node = menu_get_object('node', 1, $link['options']['menu_views']['original_path']);
+      }
+      if ($node) {
+        $replacements += token_generate('node', $node_tokens, array('node' => $node), $options);
+      }
+      else {
+        $replacements += token_generate('node', $node_tokens, array('node' => NULL), $options);
+      }
+    }
+    // menu-link:parent tokens.
+    elseif (($parent_tokens = token_find_with_prefix($tokens, 'parent')) && !empty($link['plid']) && ($parent = menu_link_load($link['plid']))) {
+      $node = menu_get_object('node', 1, $parent['link_path']);
+      if (!$node && '<view>' === $parent['link_path'] && !empty($parent['options']['menu_views']['original_path'])) {
+        $node = menu_get_object('node', 1, $parent['options']['menu_views']['original_path']);
+      }
+      if ($node) {
+        $replacements += token_generate('node', $parent_tokens, array('node' => $node), $options);
+      }
+      else {
+        $replacements += token_generate('node', $parent_tokens, array('node' => NULL), $options);
+      }
+    }
+  }
+  return $replacements;
+}
+
+/**
+ * Helper function to tokenize a menu item view arguments and settings.
+ * Alters the menu view item array and the original values are replaced.
+ */
+function _menu_views_tokenize(&$item) {
+  if (isset($item['mlid']) && $item['mlid'] > 0) {
+    $context['menu-link'] = menu_link_load($item['mlid']);
+    $options = array(
+      'callback' => '_menu_views_tokenize_callback',
+    );
+    if (isset($item['view']['arguments']) && !empty($item['view']['arguments'])) {
+      $item['view']['arguments'] = token_replace($item['view']['arguments'], $context, array_merge($options, array('urlencode' => TRUE, 'clear' => TRUE)));
+    }
+    $tokenizable_settings = array('breadcrumb_title', 'breadcrumb_path', 'title_override');
+    if (isset($item['view']['settings'])) {
+      foreach ($item['view']['settings'] as $key => $value) {
+        if (in_array($key, $tokenizable_settings)) {
+          $item['view']['settings'][$key] = token_replace($value, $context, $options);
+        }
+      }
+    }
+  }
+}
+
+/**
+ * Callback for human-readable token value replacements.
+ */
+function _menu_views_tokenize_callback(&$replacements, $data, $options) {
+  foreach ($replacements as $token => $value) {
+    if (isset($options['urlencode']) && $options['urlencode']) {
+      $replacements[$token] = urlencode($value);
+    }
+  }
+}
+
+/**
+ * array_merge_recursive does indeed merge arrays, but it converts values with duplicate
+ * keys to arrays rather than overwriting the value in the first array with the duplicate
+ * value in the second array, as array_merge does. I.e., with array_merge_recursive,
+ * this happens (documented behavior):
+ *
+ * array_merge_recursive(array('key' => 'org value'), array('key' => 'new value'));
+ *     => array('key' => array('org value', 'new value'));
+ *
+ * array_merge_recursive_distinct does not change the datatypes of the values in the arrays.
+ * Matching keys' values in the second array overwrite those in the first array, as is the
+ * case with array_merge, i.e.:
+ *
+ * array_merge_recursive_distinct(array('key' => 'org value'), array('key' => 'new value'));
+ *     => array('key' => 'new value');
+ *
+ * Parameters are passed by reference, though only for performance reasons. They're not
+ * altered by this function.
+ *
+ * @param array $array1
+ * @param mixed $array2
+ * @author daniel@danielsmedegaardbuus.dk
+ * @return array
+ */
+function &_menu_views_array_merge_recursive(array &$array1, &$array2 = NULL) {
+  $merged = $array1;
+  if (is_array($array2)) {
+    foreach ($array2 as $key => $val) {
+      if (is_array($array2[$key])) {
+        $merged[$key] = isset($merged[$key]) && is_array($merged[$key]) ? _menu_views_array_merge_recursive($merged[$key], $array2[$key]) : $array2[$key];
+      }
+      else {
+        $merged[$key] = $val;
+      }
+    }
+  }
+  return $merged;
+}

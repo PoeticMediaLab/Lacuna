@@ -19,6 +19,7 @@ files[] = plugins/annotator/RichtextAnnotatorPlugin.class.inc
 files[] = plugins/annotator/HistogramAnnotatorPlugin.class.inc
 files[] = plugins/annotator/ControlsAnnotatorPlugin.class.inc
 files[] = plugins/annotator/LoadingAnnotatorPlugin.class.inc
+files[] = plugins/annotator/PDFAnnotatorPlugin.class.inc
 
 dependencies[] = ctools
 dependencies[] = jquery_update
