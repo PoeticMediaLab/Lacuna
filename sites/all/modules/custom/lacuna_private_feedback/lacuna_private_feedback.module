@@ -8,25 +8,29 @@
  */
 function lacuna_private_feedback_og_membership_insert($og_membership) {
   global $user;
+
+  $group = node_load($og_membership->gid);
   // Only trigger when somebody joins a course
-  if ($og_membership->entityType != 'course') {
+  if ($group->type != 'course') {
     return;
   }
 
-  $members = og_get_membership('course', $og_membership->gid,
-    $og_membership->entityType, $og_membership->idKey);
+  $members = og_get_group_members_properties($group, array(), 'members', 'node');
 
   $instructors = array(); // instructors are group admins
   $students = array();
-  foreach ($members as $member) {
-    if ($member->role == OG_ADMINISTRATOR_ROLE) {
+  foreach ($members as $uid) {
+    $member = user_load($uid);
+    $roles = og_get_user_roles('node', $group->nid, $uid = $member->uid);
+
+    if (in_array(OG_ADMINISTRATOR_ROLE, $roles)) {
       $instructors[] = $member;
     } else {
       $students[] = $member;
     }
   }
-  dpm($students, 'Students');
-  dpm($instructors, 'Instructors');
+  ddl($students, 'Students');
+  ddl($instructors, 'Instructors');
 
   $rid = array_search('instructor', user_roles());
 //  if (user_has_role($rid)) {
@@ -35,6 +39,14 @@ function lacuna_private_feedback_og_membership_insert($og_membership) {
 //    _lacuna_private_feedback_add_new_student($user, $instructors);
 //  }
 
+}
+
+/**
+ * @param $og_membership
+ *
+ * Also update private feedback groups if a user gets promoted to admin role
+ */
+function lacuna_private_feedback_og_membership_update($og_membership) {
 
 }
 
