@@ -1,0 +1,15 @@
+<?php
+
+/**
+ * @param $og_membership
+ *
+ * When a new student joins a course group, create a new private group
+ * that contains only the student and the instructor(s)
+ */
+function lacuna_private_feedback_og_membership_insert($og_membership) {
+  // Only trigger when somebody joins a course
+  if ($og_membership->entityType != 'course') {
+    return;
+  }
+  
+}
