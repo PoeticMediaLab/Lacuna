@@ -3,10 +3,12 @@
 /**
  * @param $og_membership
  *
- * When a new user joins a course group, create new private group(s)
+ * When a new user is approved in a course, create new private group(s)
  * for instructor->student private annotations
+ * No need to do this on membership_insert() because they're still pending
+ * and we don't know the correct permissions yet
  */
-function lacuna_private_feedback_og_membership_insert($og_membership) {
+function lacuna_private_feedback_og_membership_update($og_membership) {
   global $user;
 
   $group = node_load($og_membership->gid);
@@ -15,39 +17,36 @@ function lacuna_private_feedback_og_membership_insert($og_membership) {
     return;
   }
 
+  // Get all group members
   $members = og_get_group_members_properties($group, array(), 'members', 'node');
 
   $instructors = array(); // instructors are group admins
   $students = array();
   foreach ($members as $uid) {
     $member = user_load($uid);
-    $roles = og_get_user_roles('node', $group->nid, $uid = $member->uid);
 
-    if (in_array(OG_ADMINISTRATOR_ROLE, $roles)) {
+    // Check if they're an active member (i.e., not pending or blocked)
+    if (!og_is_member('node', $group->nid, 'user', $member, array
+    (OG_STATE_ACTIVE))) {
+      continue;
+    }
+
+    // If so, check if they have admin rights in the group
+    if (og_user_access('node', $group->nid, 'administer group', $member)) {
       $instructors[] = $member;
-    } else {
+    }
+    else {
       $students[] = $member;
     }
   }
   ddl($students, 'Students');
   ddl($instructors, 'Instructors');
 
-  $rid = array_search('instructor', user_roles());
-//  if (user_has_role($rid)) {
-//    _lacuna_private_feedback_add_new_instructor($user, $students);
-//  } else {
-//    _lacuna_private_feedback_add_new_student($user, $instructors);
-//  }
-
-}
-
-/**
- * @param $og_membership
- *
- * Also update private feedback groups if a user gets promoted to admin role
- */
-function lacuna_private_feedback_og_membership_update($og_membership) {
-
+  if (in_array($user, $students)) {
+    _lacuna_private_feedback_add_new_student($user, $instructors);
+  } elseif (in_array($user, $instructors)) {
+    _lacuna_private_feedback_add_new_instructor($user, $students);
+  }
 }
 
 
