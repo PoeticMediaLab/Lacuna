@@ -10,7 +10,7 @@ function lacuna_version_requirements($phase) {
   if ($phase == 'runtime') {
     $requirements['lacuna'] = array(
       'title' => t('Lacuna Version'),
-      'value' => '2.3.1',
+      'value' => '2.3',
       'severity' => REQUIREMENT_INFO,
       'weight' => -100,
     );
