@@ -1,0 +1,45 @@
+<?php
+
+/**
+ * Add a boolean to peer groups to mark as private feedback
+ */
+
+define('PRIVATE_FEEDBACK_FIELD', 'field_private_feedback');
+
+function lacuna_private_feedback_install() {
+  if (!field_info_field(PRIVATE_FEEDBACK_FIELD)) {
+    $field = array(
+      'field_name' => PRIVATE_FEEDBACK_FIELD,
+      'type' => 'list_boolean',
+      'cardinality' => 1,
+      'settings' => array(
+        'allowed_values' => array(0 => 0, 1 => 1)
+      ),
+    );
+
+    field_create_field($field);
+
+    $instance = array(
+      'field_name' => PRIVATE_FEEDBACK_FIELD,
+      'entity_type' => 'node',
+      'bundle' => 'peer_group',
+      'label' => 'Private Feedback',
+      'settings' => array(
+        'no_ui' => TRUE,
+      ),
+      'default_value' => 0,
+    );
+
+    field_create_instance($instance);
+  }
+}
+
+function lacuna_private_feedback_form_peer_group_node_form_alter(&$form,
+                                                            &$form_state,
+                                                $form_id) {
+  $form[PRIVATE_FEEDBACK_FIELD]['#access'] = FALSE;
+}
+
+function lacuna_private_feedback_uninstall() {
+  field_delete_field(PRIVATE_FEEDBACK_FIELD);
+}

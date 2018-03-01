@@ -7,3 +7,4 @@ version = "7.x-1.0"
 dependencies[] = course
 dependencies[] = annotator
 dependencies[] = annotation
+dependencies[] = lacuna_stories_peer_groups
