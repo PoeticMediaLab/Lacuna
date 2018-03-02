@@ -1,5 +1,7 @@
 <?php
 
+define('PRIVATE_FEEDBACK_FIELD', 'field_private_feedback');
+
 /**
  * @param $og_membership
  *
@@ -118,6 +120,7 @@ $instructors) {
 }
 
 /**
+ * @param $course
  * @param $instructor
  * @param $students
  *
@@ -126,32 +129,31 @@ $instructors) {
  */
 function _lacuna_private_feedback_add_new_instructor($course, $instructor,
   $students) {
-  ddl('add new instructor to groups');
   // Find existing private feedback peer groups with each student as member
   // Add this instructor to each group
   foreach ($students as $student) {
     $groups = og_get_entity_groups('user', $student);
-    foreach ($groups as $gid) {
-      continue;
+    foreach ($groups['node'] as $gid) {
       $group = node_load($gid);
-      $peer_group_wrapper = entity_metadata_wrapper('node', $group);
 
       if ($group->type != 'peer_group') {
         continue;
       }
 
-      if ($peer_group_wrapper->PRIVATE_FEEDBACK_FIELD->value() != 1) {
+      $peer_group_wrapper = entity_metadata_wrapper('node', $group);
+      if ($peer_group_wrapper->{PRIVATE_FEEDBACK_FIELD}->value() != 1) {
         // Not a private feedback group
         continue;
       }
 
-      if (!in_array($course, $peer_group_wrapper->og_membership->value())) {
+      if (!og_is_member('node', $course->nid, 'node', $group)) {
         // Found a feedback group, but it's not for this course
         continue;
       }
+
       // We found a private feedback group for this student in this course
       // Now add the new instructor
-      og_group('user', $peer_group_wrapper->nid, $instructor);
+      og_group('node', $group->nid, array('entity' => $instructor));
     }
   }
 }

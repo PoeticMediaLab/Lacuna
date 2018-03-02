@@ -4,8 +4,6 @@
  * Add a boolean to peer groups to mark as private feedback
  */
 
-define('PRIVATE_FEEDBACK_FIELD', 'field_private_feedback');
-
 function lacuna_private_feedback_install() {
   if (!field_info_field(PRIVATE_FEEDBACK_FIELD)) {
     $field = array(
