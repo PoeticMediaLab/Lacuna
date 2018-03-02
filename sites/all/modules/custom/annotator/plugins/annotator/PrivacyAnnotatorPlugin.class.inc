@@ -6,14 +6,7 @@
 class PrivacyAnnotatorPlugin extends AnnotatorPlugin {
 
   public function setup() {
-
-    /*
-    *   Removed code that retrieved saved annotation privacy defaults
-    *   for the node, changing behavior so it defaults to 'Everyone'
-    *   for every new annotation.
-    *
-    *   <codymleff@gmail.com> on 11/16/16
-    */
+    global $user;
 
     $audience = array(
       'private' => 0,
@@ -27,6 +20,11 @@ class PrivacyAnnotatorPlugin extends AnnotatorPlugin {
       'audience' => $audience,
       'groups' => $peer_groups,
     );
+
+    $role = user_role_load_by_name('instructor');
+    if (user_has_role($role->rid, $user)) {
+      $privacy_options['is_instructor'] = TRUE;
+    }
 
     drupal_add_js(array('privacy_options' => $privacy_options), 'setting');
     drupal_add_js(drupal_get_path('module', 'annotator') . '/js/annotator_privacy.js');
