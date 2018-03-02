@@ -8,7 +8,7 @@ define('PRIVATE_FEEDBACK_FIELD', 'field_private_feedback');
  * When a new user is approved in a course, create new private group(s)
  * for instructor->student private annotations
  */
-function _lacuna_private_fedback_process_new_member($og_membership) {
+function _lacuna_private_feedback_process_new_member($og_membership) {
   // Only process if new member is a user
   if ($og_membership->entity_type != 'user') {
     return;
@@ -60,7 +60,7 @@ function _lacuna_private_fedback_process_new_member($og_membership) {
  * May happen on insert if via group interface
  */
 function lacuna_private_feedback_og_membership_insert($og_membership) {
-  _lacuna_private_fedback_process_new_member($og_membership);
+  _lacuna_private_feedback_process_new_member($og_membership);
 }
 
 /**
@@ -69,7 +69,7 @@ function lacuna_private_feedback_og_membership_insert($og_membership) {
  * May happen via user management interface, too
  */
 function lacuna_private_feedback_og_membership_update($og_membership) {
-  _lacuna_private_fedback_process_new_member($og_membership);
+  _lacuna_private_feedback_process_new_member($og_membership);
 }
 
 /**
@@ -171,4 +171,22 @@ function lacuna_private_feedback_form_peer_group_node_form_alter(&$form,
                                                                  $form_id) {
   $form[PRIVATE_FEEDBACK_FIELD]['#access'] = FALSE;
   $form['group_access']['#access'] = FALSE;
+}
+
+/**
+ * @param $data
+ * @return mixed
+ *
+ * Filter private feedback groups from the peer groups listed by annotations
+ */
+function lacuna_private_feedback_annotation_filter_groups_alter(&$data) {
+  ddl($data, 'filtering');
+  $filtered_data = array();
+  foreach ($data as $group) {
+    ddl($group);
+    if ($group->{PRIVATE_FEEDBACK_FIELD} == FALSE) {
+      $filtered_data[] = $group;
+    }
+  }
+  $data = $filtered_data;
 }
