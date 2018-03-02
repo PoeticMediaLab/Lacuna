@@ -5,17 +5,20 @@
  *
  * When a new user is approved in a course, create new private group(s)
  * for instructor->student private annotations
- * No need to do this on membership_insert() because they're still pending
- * and we don't know the correct permissions yet
  */
-function lacuna_private_feedback_og_membership_update($og_membership) {
-  global $user;
+function _lacuna_private_fedback_process_new_member($og_membership) {
+  // Only process if new member is a user
+  if ($og_membership->entity_type != 'user') {
+    return;
+  }
 
+  // Only trigger if somebody joins a course
   $group = node_load($og_membership->gid);
-  // Only trigger when somebody joins a course
   if ($group->type != 'course') {
     return;
   }
+
+  $new_member = user_load($og_membership->etid);
 
   // Get all group members
   $members = og_get_group_members_properties($group, array(), 'members', 'node');
@@ -30,21 +33,41 @@ function lacuna_private_feedback_og_membership_update($og_membership) {
     (OG_STATE_ACTIVE))) {
       continue;
     }
-
-    // If so, check if they have admin rights in the group
-    if (og_user_access('node', $group->nid, 'administer group', $member)) {
+    
+    // Are they an approved instructor in this course?
+    $role = user_role_load_by_name('instructor');
+    if (user_has_role($role->rid, $member) ||
+        user_access('administer group', $member))
+    {
       $instructors[] = $member;
-    }
-    else {
+    } else {
       $students[] = $member;
     }
   }
 
-  if (in_array($user, $students)) {
-    _lacuna_private_feedback_add_new_student($group, $user, $instructors);
-  } elseif (in_array($user, $instructors)) {
-    _lacuna_private_feedback_add_new_instructor($group, $user, $students);
+  if (in_array($new_member, $students)) {
+    _lacuna_private_feedback_add_new_student($group, $new_member, $instructors);
+  } elseif (in_array($new_member, $instructors)) {
+    _lacuna_private_feedback_add_new_instructor($group, $new_member, $students);
   }
+}
+
+/**
+ * @param $og_membership
+ *
+ * May happen on insert if via group interface
+ */
+function lacuna_private_feedback_og_membership_insert($og_membership) {
+  _lacuna_private_fedback_process_new_member($og_membership);
+}
+
+/**
+ * @param $og_membership
+ *
+ * May happen via user management interface, too
+ */
+function lacuna_private_feedback_og_membership_update($og_membership) {
+  _lacuna_private_fedback_process_new_member($og_membership);
 }
 
 /**
@@ -87,6 +110,8 @@ function _lacuna_private_feedback_create_new_group($course) {
  */
 function _lacuna_private_feedback_add_new_student($course, $student,
 $instructors) {
+  ddl('create new group for student');
+  return;
   $group_wrapper = _lacuna_private_feedback_create_new_group($course);
   og_group('user', $group_wrapper->nid, $student);
   foreach ($instructors as $instructor) {
@@ -103,16 +128,32 @@ $instructors) {
  */
 function _lacuna_private_feedback_add_new_instructor($course, $instructor,
   $students) {
+  ddl('add new instructor to groups');
   // Find existing private feedback peer groups with each student as member
   // Add this instructor to each group
   foreach ($students as $student) {
     $groups = og_get_entity_groups('user', $student);
     foreach ($groups as $group) {
+      ddl($group, 'iterating groups');
+      continue;
+      $peer_group_wrapper = entity_metadata_wrapper('node', $group);
+
       if ($group->type != 'peer_group') {
         continue;
       }
-      $peer_group_wrapper = entity_metadata_wrapper('node', $group);
 
+      if ($peer_group_wrapper->PRIVATE_FEEDBACK_FIELD->value() != 1) {
+        // Not a private feedback group
+        continue;
+      }
+
+      if (!in_array($course, $peer_group_wrapper->og_membership->value())) {
+        // Found a feedback group, but it's not for this course
+        continue;
+      }
+      // We found a private feedback group for this student in this course
+      // Now add the new instructor
+      og_group('user', $peer_group_wrapper->nid, $instructor);
     }
   }
 }
