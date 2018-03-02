@@ -39,14 +39,19 @@ function lacuna_private_feedback_og_membership_update($og_membership) {
       $students[] = $member;
     }
   }
-  ddl($students, 'Students');
-  ddl($instructors, 'Instructors');
 
   if (in_array($user, $students)) {
     _lacuna_private_feedback_add_new_student($user, $instructors);
   } elseif (in_array($user, $instructors)) {
     _lacuna_private_feedback_add_new_instructor($user, $students);
   }
+}
+
+/**
+ * Remove user from private feedback groups when they leave the course
+ */
+function lacuna_private_feedback_og_membership_delete($og_membership) {
+
 }
 
 
@@ -69,21 +74,28 @@ function _lacuna_private_feedback_create_new_group() {
   return $wrapper;
 }
 
-
-function _lacuna_private_feedback_get_instructors($group) {
-
-}
-
-
-function _lacuna_private_feedback_add_new_student($student,
-                                                        $instructors) {
+/**
+ * @param $student
+ * @param $instructors
+ *
+ * Create a new private feedback group for the student
+ * Add all instructors to it
+ */
+function _lacuna_private_feedback_add_new_student($student, $instructors) {
   $group_wrapper = _lacuna_private_feedback_create_new_group();
-  og_group('peer_group', $group_wrapper->nid);
-
-
+  og_group('user', $group_wrapper->nid, $student);
+  foreach ($instructors as $instructor) {
+    og_group('user', $group_wrapper->nid, $instructor);
+  }
 }
 
-
+/**
+ * @param $instructor
+ * @param $students
+ *
+ * Find existing private feedback groups for each student
+ * Add instructor to each one
+ */
 function _lacuna_private_feedback_add_new_instructor($instructor,
   $students) {
   // Find existing private feedback peer groups with student as member
