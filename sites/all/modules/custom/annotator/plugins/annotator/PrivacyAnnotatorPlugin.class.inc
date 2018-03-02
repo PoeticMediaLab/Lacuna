@@ -23,7 +23,7 @@ class PrivacyAnnotatorPlugin extends AnnotatorPlugin {
       'response' => FALSE
     );
 
-    $node = get_menu_object();
+    $node = menu_get_object();
     if ($node->type == 'response') {
       $privacy_options['response'] = TRUE;
     }
