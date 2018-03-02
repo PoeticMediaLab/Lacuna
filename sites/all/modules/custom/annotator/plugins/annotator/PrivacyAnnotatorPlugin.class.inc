@@ -19,6 +19,7 @@ class PrivacyAnnotatorPlugin extends AnnotatorPlugin {
     $privacy_options = array(
       'audience' => $audience,
       'groups' => $peer_groups,
+      'is_instructor' => FALSE,
     );
 
     $role = user_role_load_by_name('instructor');
