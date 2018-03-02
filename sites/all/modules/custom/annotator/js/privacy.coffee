@@ -45,7 +45,14 @@ class Annotator.Plugin.Privacy extends Annotator.Plugin
 
     # NOTE: Listener and logic for selecting these spans is in annotator_privacy.js, not this file
     privacy_html += '<span class="' + @className.types.wrapper + '">'
+
+    # TODO: If instructor and content is student-authored (if possible), add "Private Feedback" option
+
     for privacy_type in ["Private", "Instructor", "Peer-Groups", "Everyone"]
+      if settings.is_instructor == true and privacy_type == "Instructor"
+        if settings.response == true
+          privacy_type = 'Private Feedback'
+        continue
       checked = if settings.audience[privacy_type.toLowerCase()] then 'checked' else ''
       if "Peer-Groups" == privacy_type && "checked" == checked
         show_groups = 'show-groups'

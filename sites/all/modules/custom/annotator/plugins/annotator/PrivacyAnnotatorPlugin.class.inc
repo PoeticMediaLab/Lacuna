@@ -20,7 +20,13 @@ class PrivacyAnnotatorPlugin extends AnnotatorPlugin {
       'audience' => $audience,
       'groups' => $peer_groups,
       'is_instructor' => FALSE,
+      'response' => FALSE
     );
+
+    $node = get_menu_object();
+    if ($node->type == 'response') {
+      $privacy_options['response'] = TRUE;
+    }
 
     $role = user_role_load_by_name('instructor');
     if (user_has_role($role->rid, $user)) {
