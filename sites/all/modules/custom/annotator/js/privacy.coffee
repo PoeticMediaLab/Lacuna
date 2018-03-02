@@ -51,8 +51,9 @@ class Annotator.Plugin.Privacy extends Annotator.Plugin
     for privacy_type in ["Private", "Instructor", "Peer-Groups", "Everyone"]
       if settings.is_instructor == true and privacy_type == "Instructor"
         if settings.response == true
-          privacy_type = 'Private Feedback'
-        continue
+          privacy_type = 'Feedback'
+        else
+          continue
       checked = if settings.audience[privacy_type.toLowerCase()] then 'checked' else ''
       if "Peer-Groups" == privacy_type && "checked" == checked
         show_groups = 'show-groups'
