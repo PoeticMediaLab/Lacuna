@@ -34,12 +34,6 @@ function lacuna_private_feedback_install() {
   }
 }
 
-function lacuna_private_feedback_form_peer_group_node_form_alter(&$form,
-                                                            &$form_state,
-                                                $form_id) {
-  $form[PRIVATE_FEEDBACK_FIELD]['#access'] = FALSE;
-}
-
 function lacuna_private_feedback_uninstall() {
   field_delete_field(PRIVATE_FEEDBACK_FIELD);
 }

@@ -33,7 +33,7 @@ function _lacuna_private_fedback_process_new_member($og_membership) {
     (OG_STATE_ACTIVE))) {
       continue;
     }
-    
+
     // Are they an approved instructor in this course?
     $role = user_role_load_by_name('instructor');
     if (user_has_role($role->rid, $member) ||
@@ -78,27 +78,27 @@ function lacuna_private_feedback_og_membership_delete($og_membership) {
 }
 
 
-function _lacuna_private_feedback_create_new_group($course) {
-  global $user;
+function _lacuna_private_feedback_create_new_group($member, $course) {
   $values = array(
     'type' => 'peer_group',
-    'uid' => $user->uid,
+    'uid' => $member->uid,
     'status' => 1,
     'comment' => 0,
     'promote' => 0,
-    'group_access' => 0, // make it a private group
-    'field_private_feedback' => 1 // mark it as a private feedback group
   );
 
+  var_dump(debug_backtrace());
   $entity = entity_create('node', $values);
   $wrapper = entity_metadata_wrapper('node', $entity);
-  $wrapper->title->set('Private Feedback Group for ' . $user->name);
+  $wrapper->group_access = FALSE;  // make it a private group
+  $wrapper->field_private_feedback = TRUE; // mark it as a private feedback group
+  $wrapper->title->set('Private Feedback Group for ' . $member->name);
   $wrapper->save();
 
   // Make feedback group a member of the course group
-  og_group('node', $wrapper->nid, array('entity_type' => 'node', 'entity' =>
-    $course));
-  return $wrapper;
+  og_group('node', $course->nid, array('entity_type' => 'node', 'entity' =>
+    $entity));
+  return $entity;
 }
 
 /**
@@ -110,12 +110,10 @@ function _lacuna_private_feedback_create_new_group($course) {
  */
 function _lacuna_private_feedback_add_new_student($course, $student,
 $instructors) {
-  ddl('create new group for student');
-  return;
-  $group_wrapper = _lacuna_private_feedback_create_new_group($course);
-  og_group('user', $group_wrapper->nid, $student);
+  $group = _lacuna_private_feedback_create_new_group($student, $course);
+  og_group('node', $group->nid, array('entity' => $student));
   foreach ($instructors as $instructor) {
-    og_group('user', $group_wrapper->nid, $instructor);
+    og_group('node', $group->nid, array('entity' => $instructor));
   }
 }
 
@@ -133,9 +131,9 @@ function _lacuna_private_feedback_add_new_instructor($course, $instructor,
   // Add this instructor to each group
   foreach ($students as $student) {
     $groups = og_get_entity_groups('user', $student);
-    foreach ($groups as $group) {
-      ddl($group, 'iterating groups');
+    foreach ($groups as $gid) {
       continue;
+      $group = node_load($gid);
       $peer_group_wrapper = entity_metadata_wrapper('node', $group);
 
       if ($group->type != 'peer_group') {
@@ -156,4 +154,11 @@ function _lacuna_private_feedback_add_new_instructor($course, $instructor,
       og_group('user', $peer_group_wrapper->nid, $instructor);
     }
   }
+}
+
+
+function lacuna_private_feedback_form_peer_group_node_form_alter(&$form,
+                                                                 &$form_state,
+                                                                 $form_id) {
+  $form[PRIVATE_FEEDBACK_FIELD]['#access'] = FALSE;
 }
