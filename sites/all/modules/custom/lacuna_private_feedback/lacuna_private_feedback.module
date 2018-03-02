@@ -95,7 +95,7 @@ function _lacuna_private_feedback_create_new_group($member, $course) {
   $wrapper = entity_metadata_wrapper('node', $entity);
   $wrapper->group_access = 1;  // make it a private group
   $wrapper->field_private_feedback = 1; // mark it as a private feedback group
-  $wrapper->title->set('Private Feedback Group for ' . $member->name);
+  $wrapper->title->set('Private feedback to ' . $member->name);
   $wrapper->save();
 
   // Make feedback group a member of the course group
