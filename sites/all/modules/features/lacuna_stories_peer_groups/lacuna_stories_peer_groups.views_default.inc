@@ -278,6 +278,21 @@ print lacuna_stories_peer_groups_member_links ($row, $view);
   $handler->display->display_options['filters']['type']['value'] = array(
     'peer_group' => 'peer_group',
   );
+  /* Filter criterion: Content: Course Visibility (group_access) */
+  $handler->display->display_options['filters']['group_access_value']['id'] = 'group_access_value';
+  $handler->display->display_options['filters']['group_access_value']['table'] = 'field_data_group_access';
+  $handler->display->display_options['filters']['group_access_value']['field'] = 'group_access_value';
+  $handler->display->display_options['filters']['group_access_value']['value'] = array(
+    0 => '0',
+  );
+  /* Filter criterion: Content: Private Feedback (field_private_feedback) */
+  $handler->display->display_options['filters']['field_private_feedback_value']['id'] = 'field_private_feedback_value';
+  $handler->display->display_options['filters']['field_private_feedback_value']['table'] = 'field_data_field_private_feedback';
+  $handler->display->display_options['filters']['field_private_feedback_value']['field'] = 'field_private_feedback_value';
+  $handler->display->display_options['filters']['field_private_feedback_value']['operator'] = 'not';
+  $handler->display->display_options['filters']['field_private_feedback_value']['value'] = array(
+    1 => '1',
+  );
 
   /* Display: Joined Peer Groups */
   $handler = $view->new_display('block', 'Joined Peer Groups', 'joined_peer_groups');
