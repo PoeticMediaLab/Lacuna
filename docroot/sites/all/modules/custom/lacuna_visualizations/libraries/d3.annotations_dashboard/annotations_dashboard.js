@@ -11,8 +11,7 @@ function DashboardModel(annotations){
 	self.annotations = Array.from(annotations);
 	self.all_annotations = Array.from(annotations);
 
-	console.log(self.annotations);
-	console.log(self.all_annotations);
+	console.log("Annotations: ", self.annotations);
 	
 	// self.annotations = Array();
 	// self.annotations.push(annotations);
@@ -66,9 +65,8 @@ DashboardModel.prototype = {
 
 	current: function (ignore_time_filter) {
 		console.log('ignore_time_filter: ', ignore_time_filter); //GOAL: show true
-		console.log('current time filter: ', this.timeFilter)
 		
-		if (!ignore_time_filter && this.timeFilter != null) {
+		if (!ignore_time_filter && this.timeFilter !== null) {
 			console.log('current return1:', this.timeFilter);
 			return this.timeFilter;
 		}
@@ -205,6 +203,7 @@ DashboardModel.prototype = {
 		  d.push({x: el.key, y: el.value});
 		  lastDate = proto.parseDate(el.key);
 		});
+		console.log("array being pushed to x-axis ticks: ", d)
 		return d;
 	},
 
@@ -766,8 +765,36 @@ DashboardView.prototype = {
 			// time stored as Unix epoch time
 			return proto.model.timeFormat(new Date(d.created));
 		});
-		var g = dim.group();
-		var data = this.model.fill_empty_dates(g.all());
+		/**var g = dim.group();
+		var data = this.model.fill_empty_dates(g.all());**/
+		var data = [];
+		function countNumOccurrences(dataset, someDate) {
+			var count = 0;
+			for (var index = 0; index < dataset.length; index++) {
+				var rawDate = proto.model.annotations[index].created;
+				var formattedDate = proto.model.timeFormat(new Date(rawDate));
+				if (formattedDate == someDate) {
+					count++;
+				}
+			}
+			return count;
+		}
+		for (var i = 0; i < proto.model.annotations.length; i++) {
+				var rawDate = proto.model.annotations[i].created;
+				var formattedDate = proto.model.timeFormat(new Date(rawDate));
+				var numOccurrences = countNumOccurrences(proto.model.annotations, formattedDate);
+				if (i === 0) {
+					data.push({date: formattedDate, occurrences: numOccurrences});
+				}
+				if (i >= 1) {
+					var prevRawDate = proto.model.annotations[i-1].created;
+					var prevForDate = proto.model.timeFormat(new Date(prevRawDate));
+					if (prevForDate != formattedDate) {
+						data.push({date: formattedDate, occurrences: numOccurrences});
+					}
+				}
+		}
+		console.log("data: ", data);
 
 		if (this.bar_chart === null) {
 			this.bar_chart = d3.select("div#time_brush").append("svg")
@@ -777,14 +804,15 @@ DashboardView.prototype = {
 		// Create x-axis, but only once
 		if (this.bar_x === null) { 
 			this.bar_x = d3.scale.ordinal()
-				.domain(data.map(function (d) { return d.x; }))
+				.domain(data.map(function (d) { return d.date; })) //previously returned d.x
 		    	.rangeBands([this.size.bar.padding.left, this.size.bar.width - this.size.bar.padding.right - this.size.bar.padding.left], 0.1);
 
 			//	Create ticks
-		    var factor = (data.length > 16 ? Math.floor(data.length / 8) : 1);
+		    //var factor = (data.length > 16 ? Math.floor(data.length / 8) : 1);
 		    var ticks = [];
-		    for (var i = 0; i < data.length; i += factor) {
-				ticks.push(data[i].x);
+		    for (var j = 0; j < data.length; j += 1) { //was j+=factor
+				//ticks.push(data[j].x);
+				ticks.push(data[j].date);
 			}
 			this.xAxisTicks = ticks;
 			console.log("ticks array: ", this.xAxisTicks),
@@ -806,8 +834,8 @@ DashboardView.prototype = {
     	var bar_width = this.bar_x.rangeBand() - 1;
 
 		var bar_y = d3.scale.linear()
-			.domain([0, d3.max(data, function (d) { return d.y; })])
-	    .range([this.size.bar.height, this.size.bar.padding.top]);
+			.domain([0, d3.max(data, function (d) { return d.occurrences; })]) //returned d.y
+			.range([this.size.bar.height, this.size.bar.padding.top]);
 
 		var yAxis = d3.svg.axis()
 				    .scale(bar_y)
@@ -838,9 +866,9 @@ DashboardView.prototype = {
 	    bars.exit().remove();
 
 	  	bars.attr("width", bar_width)
-	  		.attr("y", function (d) { return bar_y(d.y) })
-	  		.attr("x", function (d) { return proto.bar_x(d.x) })
-	  		.attr("height", function (d) { return proto.size.bar.height - bar_y(d.y) });
+	  		.attr("y", function (d) { return bar_y(d.occurrences); })
+	  		.attr("x", function (d) { return proto.bar_x(d.date); })
+	  		.attr("height", function (d) { return proto.size.bar.height - bar_y(d.occurrences); });
 
 	  	var bar_labels = this.bar_chart.selectAll("text.bar_label").data(data);
 	  	bar_labels.exit().remove();
@@ -900,15 +928,15 @@ DashboardView.prototype = {
 		
     	// Filter our annotations by selected dates
     	var filter = []; // MODEL
-		console.log("this.model.current(true): ", this.model.current(true));
-    	this.model.current(true).forEach(function (a) {
-    		var date = proto.model.timeFormat(new Date(a.created));
-    		if (dates.indexOf(date) != -1 && filter.indexOf(a) == -1) {
+    	//this.model.current(false).forEach(function (a) {
+		dates.forEach(function (a) {
+    		//var date = proto.model.timeFormat(new Date(a.created));
+    		if (dates.indexOf(a) != -1 && filter.indexOf(a) == -1) { //was dates.indexOf(date)
     			filter.push(a);
     		}
     	});
     	this.model.timeFilter = filter;
-		console.log("var filter: ", this.model.timeFilter);
+		console.log("filter: ", this.model.timeFilter);
 
     	// Update the other parts of the display
     	// Call these updates here because we don't want to update the bar chart, too
