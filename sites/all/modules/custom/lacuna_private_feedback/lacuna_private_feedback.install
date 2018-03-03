@@ -30,8 +30,21 @@ function lacuna_private_feedback_install() {
 
     field_create_instance($instance);
   }
+
+  // TODO: Create all needed groups for every course, if necessary
+  _lpf_install_groups();
 }
+
+
+function _lpf_install_groups() {
+  //TODO Load all course nodes
+  //TODO Check for existing feedback groups
+  //TODO If none, create them
+}
+
 
 function lacuna_private_feedback_uninstall() {
   field_delete_field(PRIVATE_FEEDBACK_FIELD);
+  // TODO: Delete all feedback groups? Then what to do with annotations?
+  // Maybe just give a warning and confirmation step before disabling?
 }
