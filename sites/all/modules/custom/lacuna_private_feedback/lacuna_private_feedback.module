@@ -25,7 +25,7 @@ function _lacuna_private_feedback_process_new_member($og_membership) {
   // Get all group members
   $members = og_get_group_members_properties($group, array(), 'members', 'node');
 
-  $instructors = array(); // instructors are group admins
+  $instructors = array();
   $students = array();
   foreach ($members as $uid) {
     $member = user_load($uid);
