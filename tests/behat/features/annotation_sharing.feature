@@ -80,8 +80,8 @@
 
 # NOTE: for some reason related to how tests creates content (I think), this scenario
 # fails, but not because the functionality isn't working properly on the actual site
-# So, I'm documenting the possibility here and the fact that it'll fail because it's a logical
-# test to run
+# So, I'm documenting the possibility here and the fact that it'll fail because it's a
+# logical test to run
 #    Scenario: Instructor B views sewing kit
 #      Given I am logged in as "Instructor B"
 #      And my currently selected course is "Course Beta"
@@ -93,3 +93,8 @@
 #      And I should not see "Document B private" in the "View Content" region
 #      And I should see "Document B for teacher" in the "View Content" region
 #      And I should see "Document B for everyone" in the "View Content" region
+
+  Scenario: Student joins course, gets private feedback group
+    Given I am logged in as "Student A"
+    And my currently selected course is "Course Alpha"
+    Then I should be a member of a peer feedback group

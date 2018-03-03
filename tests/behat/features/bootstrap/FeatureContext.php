@@ -321,5 +321,34 @@ class FeatureContext extends DrupalContext implements SnippetAcceptingContext {
 //    $vocab = taxonomy_vocabulary_machine_name_load('annotation_tags');
 //    $tree = taxonomy_get_tree($vocab->vid);
   }
-}
 
+  /**
+   * @param $option
+   * @param $field
+   * @throws \Exception
+   *
+   * @Then I should be a member of a peer feedback group
+   */
+  public function IAmMemberOfPeerFeedbackGroup() {
+    // TODO Get list of groups current user is member of
+    // TODO Check for private feedback type flag
+    $groups = og_get_entity_groups('user', $this->user);
+    $isMember = FALSE;
+    foreach ($groups['node'] as $gid) {
+      $group = node_load($gid);
+
+      if ($group->type != 'peer_group') {
+        continue;
+      }
+
+      $peer_group_wrapper = entity_metadata_wrapper('node', $group);
+      if ($peer_group_wrapper->{PRIVATE_FEEDBACK_FIELD}->value() == 1) {
+        // Not a private feedback group
+        $isMember = TRUE;
+      }
+    }
+    if (!$isMember) {
+      throw new \Exception(sprintf("User %s is not part of a private feedback group", $this->user->name));
+    }
+  }
+} // END Class
