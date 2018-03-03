@@ -65,7 +65,7 @@
         privacy_type = ref[j];
         if (settings.is_instructor === true && privacy_type === "Instructor") {
           if (settings.response === true) {
-            privacy_type = 'Feedback';
+            privacy_type = 'Student';
           } else {
             continue;
           }
