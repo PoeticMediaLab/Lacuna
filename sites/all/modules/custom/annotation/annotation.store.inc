@@ -738,10 +738,6 @@ function annotation_api_entity_prepare($annotation, $op) {
         }
       }
 
-      // Allow other modules to alter this list
-      // Primarily for lacuna_private_feedback
-      drupal_alter('annotation_filter_groups', $built_peer_groups);
-
       // Set the privacy options
       $entity->privacy_options = array(
         'audience' => $audience,

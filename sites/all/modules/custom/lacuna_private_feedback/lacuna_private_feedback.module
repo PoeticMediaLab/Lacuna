@@ -189,11 +189,23 @@ function lacuna_private_feedback_form_peer_group_node_form_alter(&$form,
  *
  * Filter private feedback groups from the peer groups listed by annotations
  */
-function lacuna_private_feedback_annotation_filter_groups_alter(&$data) {
+function lacuna_private_feedback_annotation_peer_groups_alter(&$data) {
+  $node = menu_get_object();
+  if ($node->type == 'response') {
+    $author = user_load($node->uid);
+  }
   foreach (array_keys($data['peer_groups']) as $gid) {
     $group = entity_metadata_wrapper('node', $gid);
+
     if ($group->{PRIVATE_FEEDBACK_FIELD}->value() == TRUE) {
-      $data['peer_groups'][$gid]['private_feedback'] = 1;
+      if (($node->type == 'response') &&
+          og_is_member('node', $gid, 'user', $author))
+      {
+        // Mark the correct group to use for private feedback
+        $data['peer_groups'][$gid]['private_feedback'] = 1;
+      }
+      // Irrelevant feedback group for this case
+      unset($data['peer_groups'][$gid]);
     }
   }
 }

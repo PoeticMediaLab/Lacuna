@@ -343,6 +343,10 @@ function annotation_build_peer_groups() {
     }
     $groups['peer_groups'] = $peer_groups;
   }
+
+  // Allow other modules to alter this list
+  // Primarily for lacuna_private_feedback
+  drupal_alter('annotation_peer_groups', $groups);
   return $groups;
 }
 

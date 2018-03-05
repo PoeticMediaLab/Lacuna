@@ -88,6 +88,10 @@
         group_object = groups[group_type];
         for (gid in group_object) {
           group = group_object[gid];
+          console.log(gid, group);
+          if (group.private_feedback) {
+            continue;
+          }
           groups_html += '<label class="' + this.className.groups.wrapper + ' ' + show_groups + '">';
           checked = group.selected ? 'checked="checked"' : '';
           groups_html += '<input type="checkbox" class="' + this.className.groups["default"] + ' ' + group_type + '" value="' + gid + '" ' + checked + ' />';

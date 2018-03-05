@@ -66,6 +66,9 @@ class Annotator.Plugin.Privacy extends Annotator.Plugin
     groups = settings.groups
     for group_type, group_object of groups
       for gid, group of group_object
+        if group.private_feedback
+          continue # Skip private feedback groups as peer group option
+
         groups_html += '<label class="' + @className.groups.wrapper + ' ' + show_groups + '">'
         checked = if group.selected then 'checked="checked"' else ''
         groups_html += '<input type="checkbox" class="' + @className.groups.default + ' ' + group_type + '" value="' + gid + '" ' + checked + ' />'
