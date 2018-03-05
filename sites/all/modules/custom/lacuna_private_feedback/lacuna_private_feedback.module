@@ -81,7 +81,19 @@ function lacuna_private_feedback_og_membership_delete($og_membership) {
 }
 
 
-function _lacuna_private_feedback_create_new_group($member, $course) {
+/**
+ * @param $gid
+ * @return bool
+ *
+ * Check if a group ID refers to a private feedback group
+ */
+function _lpf_is_feedback_group($gid) {
+  $wrapper = entity_metadata_wrapper('node', $gid);
+  return $wrapper->{PRIVATE_FEEDBACK_FIELD} == 1;
+}
+
+
+function _lpf_create_new_group($member, $course) {
   $values = array(
     'type' => 'peer_group',
     'uid' => $member->uid,
@@ -90,11 +102,10 @@ function _lacuna_private_feedback_create_new_group($member, $course) {
     'promote' => 0,
   );
 
-  var_dump(debug_backtrace());
   $entity = entity_create('node', $values);
   $wrapper = entity_metadata_wrapper('node', $entity);
   $wrapper->group_access = 1;  // make it a private group
-  $wrapper->field_private_feedback = 1; // mark it as a private feedback group
+  $wrapper->{PRIVATE_FEEDBACK_FIELD} = 1; // mark it as a private feedback group
   $wrapper->title->set('Private feedback to ' . $member->name);
   $wrapper->save();
 
@@ -113,7 +124,7 @@ function _lacuna_private_feedback_create_new_group($member, $course) {
  */
 function _lacuna_private_feedback_add_new_student($course, $student,
 $instructors) {
-  $group = _lacuna_private_feedback_create_new_group($student, $course);
+  $group = _lpf_create_new_group($student, $course);
   og_group('node', $group->nid, array('entity' => $student));
   foreach ($instructors as $instructor) {
     og_group('node', $group->nid, array('entity' => $instructor));
