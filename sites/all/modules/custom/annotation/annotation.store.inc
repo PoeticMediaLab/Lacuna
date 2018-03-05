@@ -292,9 +292,6 @@ function annotation_drupal_format($entity, $update = FALSE) {
           $all_peer_groups = array_keys($result['node']);
           $users_groups = og_get_groups_by_user();
           $possible_groups =  $val['groups']['peer_groups'];
-          // Allow other modules to alter this list
-          // Put in place for private feedback groups to filter themselves out
-          drupal_alter('annotation_filter_groups', $possible_groups);
           $groups_to_set = array();
           foreach ($possible_groups as $possible_group_nid => $possible_group_properties) {
             if ($possible_group_properties['selected'] == 1) {
@@ -732,6 +729,7 @@ function annotation_api_entity_prepare($annotation, $op) {
       // Get built peer groups, and mark those that are selected for this annotation
       // TODO: Refactor for performance
       $built_peer_groups = annotation_build_peer_groups();
+
       foreach ($built_peer_groups as $group_type => $group_type_possible_groups) {
         foreach ($group_type_possible_groups as $group_nid => $group_properties) {
           if (in_array($group_nid, $selected_groups)) {
@@ -739,6 +737,10 @@ function annotation_api_entity_prepare($annotation, $op) {
           }
         }
       }
+
+      // Allow other modules to alter this list
+      // Primarily for lacuna_private_feedback
+      drupal_alter('annotation_filter_groups', $built_peer_groups);
 
       // Set the privacy options
       $entity->privacy_options = array(
