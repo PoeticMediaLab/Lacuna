@@ -186,7 +186,6 @@ function lacuna_private_feedback_form_peer_group_node_form_alter(&$form,
 
 /**
  * @param $data
- * @return mixed
  *
  * Filter private feedback groups from the peer groups listed by annotations
  */
@@ -194,8 +193,7 @@ function lacuna_private_feedback_annotation_filter_groups_alter(&$data) {
   ddl($data, 'filtering');
   $filtered_data = array();
   foreach ($data as $group) {
-    ddl($group);
-    if ($group->{PRIVATE_FEEDBACK_FIELD} == FALSE) {
+    if ($group->{PRIVATE_FEEDBACK_FIELD} != TRUE) {
       $filtered_data[] = $group;
     }
   }
