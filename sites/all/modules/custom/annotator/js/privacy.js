@@ -65,7 +65,7 @@
       for (j = 0, len = ref.length; j < len; j++) {
         privacy_type = ref[j];
         if (settings.is_instructor === true && privacy_type === "Instructor") {
-          if (settings.response === true) {
+          if (settings.response != null) {
             privacy_type = 'Student';
           } else {
             continue;
@@ -90,7 +90,6 @@
         for (gid in group_object) {
           group = group_object[gid];
           if (group.private_feedback) {
-            settings.privacy_options.private_feedback = gid;
             continue;
           }
           groups_html += '<label class="' + this.className.groups.wrapper + ' ' + show_groups + '">';
@@ -105,7 +104,7 @@
     };
 
     Privacy.prototype.savePrivacy = function(Editor, annotation) {
-      var audience, feedback, group, no_peer_groups_selected, peer_groups;
+      var audience, group, no_peer_groups_selected, peer_groups;
       annotation.privacy_options = {};
       peer_groups = {};
       audience = {};
@@ -131,8 +130,7 @@
           });
         };
       })(this));
-      feedback = $('.' + this.className.types.wrapper + ' #Student');
-      if (feedback.hasClass("checked")) {
+      if ($('.' + this.className.types.wrapper + ' #Student').hasClass("checked")) {
         annotation.privacy_options.private_feedback = Drupal.settings.privacy_options.private_feedback;
       }
       if (audience['peer-groups']) {

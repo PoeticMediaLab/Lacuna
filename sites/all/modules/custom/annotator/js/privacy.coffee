@@ -49,7 +49,7 @@ class Annotator.Plugin.Privacy extends Annotator.Plugin
 
     for privacy_type in ["Private", "Instructor", "Peer-Groups", "Everyone"]
       if settings.is_instructor == true and privacy_type == "Instructor"
-        if settings.response == true
+        if settings.response?
           privacy_type = 'Student'
         else
           continue
@@ -66,7 +66,6 @@ class Annotator.Plugin.Privacy extends Annotator.Plugin
     for group_type, group_object of groups
       for gid, group of group_object
         if group.private_feedback
-          settings.privacy_options.private_feedback = gid
           continue # Skip private feedback groups as peer group option
 
         groups_html += '<label class="' + @className.groups.wrapper + ' ' + show_groups + '">'
@@ -96,8 +95,7 @@ class Annotator.Plugin.Privacy extends Annotator.Plugin
         peer_groups[gid] = 0: group_name, selected: checked
 
     # If not private feedback, clear the GID from that option
-    feedback = $('.' + @className.types.wrapper + ' #Student')
-    if feedback.hasClass("checked")
+    if $('.' + @className.types.wrapper + ' #Student').hasClass("checked")
       annotation.privacy_options.private_feedback = Drupal.settings.privacy_options.private_feedback
 
     # Added by <codymleff@gmail.com> on 11/14/16 to prevent setting
