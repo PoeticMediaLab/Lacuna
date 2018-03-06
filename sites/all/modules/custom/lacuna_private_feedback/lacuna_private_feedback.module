@@ -190,20 +190,31 @@ function lacuna_private_feedback_form_peer_group_node_form_alter(&$form,
  *
  * Filter private feedback groups from the peer groups listed by annotations
  */
-function lacuna_private_feedback_annotation_store_load_privacy_options_alter(&$data) {
-  $node = menu_get_object();
-  $author = user_load($node->uid);
+function lacuna_private_feedback_annotation_store_load_privacy_options_alter
+(&$data, $annotation = NULL) {
+  if (isset($annotation)) {
+    $nid = $annotation->field_annotation_reference[$annotation->language][0]['target_id'];
+  } elseif ($data['response']) {
+    $nid = $data['response'];
+  }
+  if ($nid) {
+    $node = node_load($nid);
+    $author = user_load($node->uid);
+  }
 
   foreach (array_keys($data['groups']['peer_groups']) as $gid) {
     $group = entity_metadata_wrapper('node', $gid);
 
+    // BUG When loading annotations from API, there's no node object to test
+    // or to get the nid, so have to get it from the annotation data instead
+    // target_id for annotation
     if ($group->{PRIVATE_FEEDBACK_FIELD}->value() == TRUE) {
-      if (isset($node) && ($node->type == 'response') &&
-          og_is_member('node', $gid, 'user', $author))
-      {
+      if ($nid && og_is_member('node', $gid, 'user', $author)) {
+        $data['private_feedback'] = _lpf_get_feedback_gid($author->uid);
         // If annotation privacy is student feedback, mark as such
         if ($data['groups']['peer_groups'][$gid]['selected'] == 1) {
           $data['audience']['student'] = 1;
+          $data['audience']['peer-groups'] = 0;
         }
       }
 
@@ -231,7 +242,8 @@ function lacuna_private_feedback_annotation_store_save_alter(&$json) {
   $json->privacy_options['groups']['peer_groups'][$gid] = array('selected' =>
     1);
   $json->privacy_options['audience']['instructor'] = 0; // replace this value
-  $json->privacy_options['audience']['student'] = 1; // For when we load
+
+  ddl($json, 'lacuna_private_feedback_annotation_store_save_alter()');
 }
 
 /**
@@ -262,15 +274,7 @@ function _lpf_get_feedback_gid($uid) {
  * plugin
  */
 function lacuna_private_feedback_annotator_privacy_options_alter(&$privacy_options) {
-  $node = menu_get_object();
-  if ($node && $node->type == 'response') {
-    $privacy_options['response'] = TRUE;
-  } else {
-    $privacy_options['response'] = FALSE;
-  }
-
-  $privacy_options['private_feedback'] = _lpf_get_feedback_gid($node->uid);
-  // Now check for feedback groups
-  lacuna_private_feedback_annotation_store_load_privacy_options_alter
-  ($privacy_options);
+  // Just a wrapper for what we do when we load an annotation
+  // But also need to run it when initializing the Annotator
+   lacuna_private_feedback_annotation_store_load_privacy_options_alter($privacy_options);
 }
