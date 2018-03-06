@@ -192,6 +192,7 @@ function lacuna_private_feedback_form_peer_group_node_form_alter(&$form,
  */
 function lacuna_private_feedback_annotation_store_load_privacy_options_alter
 (&$data, $annotation = NULL) {
+  $nid = FALSE;
   if (isset($annotation)) {
     $nid = $annotation->field_annotation_reference[$annotation->language][0]['target_id'];
     $data['response'] = $nid;
