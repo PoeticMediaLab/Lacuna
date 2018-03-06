@@ -89,7 +89,7 @@ function lacuna_private_feedback_og_membership_delete($og_membership) {
  */
 function _lpf_is_feedback_group($gid) {
   $wrapper = entity_metadata_wrapper('node', $gid);
-  return $wrapper->{PRIVATE_FEEDBACK_FIELD} == 1;
+  return $wrapper->{PRIVATE_FEEDBACK_FIELD}->value() == TRUE;
 }
 
 
@@ -192,9 +192,12 @@ function lacuna_private_feedback_form_peer_group_node_form_alter(&$form,
  */
 function lacuna_private_feedback_annotation_peer_groups_alter(&$data) {
   $node = menu_get_object();
-  if ($node->type == 'response') {
-    $author = user_load($node->uid);
+  if (!$node) {
+    return;
   }
+
+  $author = user_load($node->uid);
+
   foreach (array_keys($data['peer_groups']) as $gid) {
     $group = entity_metadata_wrapper('node', $gid);
 
@@ -218,17 +221,20 @@ function lacuna_private_feedback_annotation_peer_groups_alter(&$data) {
  * into correct group permission.
  * $json is the original json POST from Annotator.js
  */
-function lacuna_private_feedback_annotation_store_save_alter(&$json) {
+function lacuna_private_feedback_annotation_store_save_privacy_options_alter
+(&$json) {
 
   ddl($json);
-  if (!isset($json['privacy_options']['private_feedback'])) {
+  if (!isset($json->privacy_options['private_feedback'])) {
     return;
   }
-  $gid = $json['privacy_options']['private_feedback'];
+  $gid = $json->privacy_options['private_feedback'];
   // piggy-back on peer groups
-  $json['privacy_options']['audience']['peer-groups'] = 1;
+  $json->privacy_options['audience']['peer-groups'] = 1;
   // Tell annotation store to use this value
-  $json['groups']['peer_groups'][$gid] = array('selected' => 1);
+  $json->privacy_options['groups']['peer_groups'][$gid] = array('selected' =>
+    1);
+  $json->privacy_options['audience']['instructor'] = 0; // replace this value
   ddl($json);
 }
 
@@ -249,7 +255,6 @@ function _lpf_get_feedback_gid($uid) {
       return $gid;
     }
   }
-
   return FALSE; // None found! Uh-oh!
 }
 
@@ -260,8 +265,8 @@ function _lpf_get_feedback_gid($uid) {
  * Alter the privacy options before they get sent to the annotator privacy
  * plugin
  */
-function lacuna_private_feedback_annotator_privacy_options_alter(&$options) {
-  global $user;
+function lacuna_private_feedback_annotator_privacy_options_alter
+(&$privacy_options) {
   $node = menu_get_object();
   if ($node->type == 'response') {
     $privacy_options['response'] = TRUE;
