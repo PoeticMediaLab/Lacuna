@@ -59,13 +59,14 @@
     Privacy.prototype.addPrivacy = function(event, annotation) {
       var checked, gid, group, group_object, group_type, groups, groups_html, j, len, peer_groups, peer_groups_disabled, privacy_html, privacy_type, ref, settings, show_groups;
       settings = annotation.privacy_options ? annotation.privacy_options : Drupal.settings.privacy_options;
+      console.log(settings);
       groups_html = privacy_html = show_groups = '';
       privacy_html += '<span class="' + this.className.types.wrapper + '">';
       ref = ["Private", "Instructor", "Peer-Groups", "Everyone"];
       for (j = 0, len = ref.length; j < len; j++) {
         privacy_type = ref[j];
         if (settings.is_instructor === true && privacy_type === "Instructor") {
-          if (settings.response != null) {
+          if (settings.response) {
             privacy_type = 'Student';
           } else {
             continue;
