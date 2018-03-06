@@ -19,19 +19,26 @@
         | Document B  | Instructor B | I'm the cool professor.             |
       And document "Document A" is content for course "Course Alpha"
       And document "Document B" is content for course "Course Beta"
+      And "response" content:
+        | title        | author      | body                                 |
+        | Response A   | Student A   | This is my response.                 |
+      And response "Response A" is content for course "Course Alpha"
       And a "Student" user named "Student A" exists
       And "Student A" is enrolled in the "Course Alpha" course
-      And annotations on "Document A":
+      And annotations on document "Document A":
         | audience     | text                          | author     |
         | Private      | This is a private annotation  | Student A  |
         | Instructor   | This is for teacher           | Student A  |
         | Everyone     | This is for everyone          | Student A  |
       And "Student A" is enrolled in the "Course Beta" course
-      And annotations on "Document B":
+      And annotations on document "Document B":
         | audience     | text                          | author     |
         | Private      | Document B private            | Student A  |
         | Instructor   | Document B for teacher        | Student A  |
         | Everyone     | Document B for everyone       | Student A  |
+      And annotations on response "Response A":
+        | audience     | text                          | author     |
+        | Student      | Student feedback              | Instructor A  |
 
     Scenario: Other student in the course
       Given I am logged in as a user with the "Student" role
@@ -98,3 +105,14 @@
     Given I am logged in as "Student A"
     And my currently selected course is "Course Alpha"
     Then I should be a member of a peer feedback group
+
+  Scenario: Student A attempts to see private feedback
+    Given I am logged in as "Student A"
+    And My currently selected course is "Course Alpha"
+    When I go to the "annotation" node named "Annotation of Response A"
+    Then I should see "Annotation of Response A" in the "Page Title"
+
+  Scenario: Instructor B attempts to see private feedback
+    Given I am logged in as "Instructor B"
+    When I go to the "annotation" node named "Annotation of Response A"
+    Then I should see "Access denied" in the "Page Title"

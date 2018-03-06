@@ -223,14 +223,16 @@ class FeatureContext extends DrupalContext implements SnippetAcceptingContext {
    *
    * Creates an annotation by current user with values set:
    * | audience     | category      | tags       | text             |
-   * | private, peer-groups, instructor, everyone|
-   * @Given annotations on :document:
+   * | private, peer-groups, instructor, everyone, student|
+   *
+   * @Given annotations on :type :title:
    */
-  public function createAnnotations($document_title, TableNode $annotationsTable) {
+  public function annotationsOnType($type, $title, TableNode
+$annotationsTable) {
     global $user;
     // Need to load the user from the Author field in this case
     $user = $this->user;  // Needed for module's routines
-    $document = $this->findNodeByTitle('document', $document_title);
+    $document = $this->findNodeByTitle($type, $title);
     // Access the Annotation Store functions
     include_once(DRUPAL_ROOT . '/sites/all/modules/custom/annotation/annotation.store.inc');
     foreach ($annotationsTable->getHash() as $data) {
