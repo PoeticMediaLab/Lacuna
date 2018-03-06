@@ -97,8 +97,8 @@ class Annotator.Plugin.Privacy extends Annotator.Plugin
 
     # If not private feedback, clear the GID from that option
     feedback = $('.' + @className.types.wrapper + ' #Student')
-    if not feedback.is(":checked")
-      annotation.privacy_options.private_feedback = null
+    if feedback.hasClass("checked")
+      annotation.privacy_options.private_feedback = Drupal.settings.privacy_options.private_feedback
 
     # Added by <codymleff@gmail.com> on 11/14/16 to prevent setting
     # Peer-Groups as the audience without having any peer groups

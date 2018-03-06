@@ -105,7 +105,7 @@
     };
 
     Privacy.prototype.savePrivacy = function(Editor, annotation) {
-      var audience, group, no_peer_groups_selected, peer_groups;
+      var audience, feedback, group, no_peer_groups_selected, peer_groups;
       annotation.privacy_options = {};
       peer_groups = {};
       audience = {};
@@ -131,9 +131,9 @@
           });
         };
       })(this));
-      if (!$('.' + this.className.types.wrapper + ' #Student').is(":checked")) {
-        console.log($('.' + this.className.types.wrapper + ' #Student'));
-        annotation.privacy_options.private_feedback = null;
+      feedback = $('.' + this.className.types.wrapper + ' #Student');
+      if (feedback.hasClass("checked")) {
+        annotation.privacy_options.private_feedback = Drupal.settings.privacy_options.private_feedback;
       }
       if (audience['peer-groups']) {
         no_peer_groups_selected = true;
