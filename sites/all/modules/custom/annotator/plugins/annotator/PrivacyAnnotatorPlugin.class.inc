@@ -6,7 +6,6 @@
 class PrivacyAnnotatorPlugin extends AnnotatorPlugin {
 
   public function setup() {
-    global $user;
     $audience = array(
       'private' => 0,
       'instructor' => 0,
@@ -20,11 +19,12 @@ class PrivacyAnnotatorPlugin extends AnnotatorPlugin {
       'groups' => $peer_groups,
     );
 
-    $role = user_role_load_by_name('instructor');
-    if (user_has_role($role->rid, $user)) {
-      $privacy_options['is_instructor'] = TRUE;
+    $node = menu_get_object();
+
+    if (isset($node) && $node->type == 'response') {
+      $privacy_options['response'] = $node->nid;
     } else {
-      $privacy_options['is_instructor'] = FALSE;
+      $privacy_options['response'] = FALSE;
     }
 
     drupal_alter('annotator_privacy_options', $privacy_options);
