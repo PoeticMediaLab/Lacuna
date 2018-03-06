@@ -194,6 +194,7 @@ function lacuna_private_feedback_annotation_store_load_privacy_options_alter
 (&$data, $annotation = NULL) {
   if (isset($annotation)) {
     $nid = $annotation->field_annotation_reference[$annotation->language][0]['target_id'];
+    $data['response'] = $nid;
   } elseif ($data['response']) {
     $nid = $data['response'];
   }
@@ -242,8 +243,6 @@ function lacuna_private_feedback_annotation_store_save_alter(&$json) {
   $json->privacy_options['groups']['peer_groups'][$gid] = array('selected' =>
     1);
   $json->privacy_options['audience']['instructor'] = 0; // replace this value
-
-  ddl($json, 'lacuna_private_feedback_annotation_store_save_alter()');
 }
 
 /**
