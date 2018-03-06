@@ -606,3 +606,14 @@ function annotation_field_formatter_view( $entity_type, $entity, $field, $instan
   }
 }
 
+
+function _annotation_is_instructor() {
+  global $user;
+  $role = user_role_load_by_name('instructor');
+  return user_has_role($role->rid, $user);
+}
+
+function annotation_annotator_privacy_options_alter(&$options) {
+  $options['is_instructor'] = _annotation_is_instructor();
+}
+
