@@ -665,8 +665,12 @@ function annotation_api_entity_prepare($annotation, $op) {
           !isset($annotation->field_annotation_pdf_range[$annotation->language][0]['value'])) {
         return;
       }
-      $entity->ranges = drupal_json_decode($annotation->field_annotation_ranges[$annotation->language][0]['value']);
-      $entity->pdfRange = drupal_json_decode($annotation->field_annotation_pdf_range[$annotation->language][0]['value']);
+      if (isset($annotation->field_annotation_ranges)) {
+        $entity->ranges = drupal_json_decode($annotation->field_annotation_ranges[$annotation->language][0]['value']);
+      }
+      if (isset($annotation->field_annotation_pdf_range)) {
+        $entity->pdfRange = drupal_json_decode($annotation->field_annotation_pdf_range[$annotation->language][0]['value']);
+      }
 
       // Text
       if (isset($annotation->field_annotation_text[$annotation->language]) && count($annotation->field_annotation_text[$annotation->language])) {
