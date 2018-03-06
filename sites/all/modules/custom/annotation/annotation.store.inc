@@ -152,6 +152,8 @@ function annotation_format_tags(&$entity, $tags) {
 function annotation_drupal_format($entity, $update = FALSE) {
   global $user;
 
+  drupal_alter('annotation_store_save', $entity);
+
   if (!$update) {
     // Not an update; initialize the annotation object
     $annotation = new stdClass();
@@ -234,6 +236,9 @@ function annotation_drupal_format($entity, $update = FALSE) {
         break;
 
       case 'privacy_options':
+
+        // Let other modules make changes first
+        drupal_alter('annotation_store_save_privacy_options', $entity);
         // Save these privacy options as the default for this user for new annotations on this document
         $privacy_defaults = array();
         if (isset ($user->data['annotation_privacy_defaults'])) {
