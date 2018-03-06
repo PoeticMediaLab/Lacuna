@@ -639,13 +639,14 @@ function annotation_entity_permissions($entity, $user) {
   return $permissions;
 }
 
+
 /**
  * Prepare entity for api usage
  */
 function annotation_api_entity_prepare($annotation, $op) {
   $entity = new stdClass();
   $entity->id = $annotation->nid; // Annotator wants our nid in the id field
-  $annotation_wrapper = entity_metadata_wrapper ('node', $annotation);
+  $annotation_wrapper = entity_metadata_wrapper('node', $annotation);
   global $user;
   switch($op) {
     case 'read':
@@ -752,9 +753,13 @@ function annotation_api_entity_prepare($annotation, $op) {
         'groups' => $built_peer_groups,
       );
 
+      // To allow hiding of "Instructor" option if already an instructor
+      $entity->privacy_options['is_instructor'] = _annotation_is_instructor();
+
       // Allow other modules to alter the privacy options
       // Put in place for the Private Feedback module
-      drupal_alter('annotation_store_load_privacy_options', $entity->privacy_options);
+      drupal_alter('annotation_store_load_privacy_options',
+        $entity->privacy_options, $annotation);
 
       // Set permissions for edit and delete controls
       $entity->permissions = annotation_entity_permissions($annotation, $user);
