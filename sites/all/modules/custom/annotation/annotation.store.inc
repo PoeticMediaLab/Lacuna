@@ -668,7 +668,7 @@ function annotation_api_entity_prepare($annotation, $op) {
       if (isset($annotation->field_annotation_ranges)) {
         $entity->ranges = drupal_json_decode($annotation->field_annotation_ranges[$annotation->language][0]['value']);
       }
-      if (isset($annotation->field_annotation_pdf_range)) {
+      if (isset($annotation->field_annotation_pdf_range[$annotation->language])) {
         $entity->pdfRange = drupal_json_decode($annotation->field_annotation_pdf_range[$annotation->language][0]['value']);
       }
 
