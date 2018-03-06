@@ -269,12 +269,5 @@ function lacuna_private_feedback_annotator_privacy_options_alter(&$options) {
     $privacy_options['response'] = FALSE;
   }
 
-  $role = user_role_load_by_name('instructor');
-  if (user_has_role($role->rid, $user)) {
-    $privacy_options['is_instructor'] = TRUE;
-  } else {
-    $privacy_options['is_instructor'] = FALSE;
-  }
-
   $privacy_options['private_feedback'] = _lpf_get_feedback_gid($node->uid);
 }
