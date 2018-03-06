@@ -233,14 +233,24 @@ function lacuna_private_feedback_annotation_store_save_alter(&$json) {
 }
 
 /**
- * @param $node
+ * @param $uid
  * @return int
  *
  * Returns the GID for the correct feedback group for a given student
  */
-function _lpf_get_feedback_gid($node) {
-  
-  return $gid;
+function _lpf_get_feedback_gid($uid) {
+  $student = user_load($uid);
+  $gids = og_get_groups_by_user($student, 'node');
+  $course_id = course_get_selected_course();
+  foreach ($gids as $gid) {
+    $group = node_load($gid);
+    if (og_is_member('node', $course_id, 'node', $group) &&
+      _lpf_is_feedback_group($gid)) {
+      return $gid;
+    }
+  }
+
+  return FALSE; // None found! Uh-oh!
 }
 
 
@@ -266,5 +276,5 @@ function lacuna_private_feedback_annotator_privacy_options_alter(&$options) {
     $privacy_options['is_instructor'] = FALSE;
   }
 
-  $privacy_options['private_feedback'] = _lpf_get_feedback_gid($node);
+  $privacy_options['private_feedback'] = _lpf_get_feedback_gid($node->uid);
 }
