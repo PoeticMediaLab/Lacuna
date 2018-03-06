@@ -122,7 +122,7 @@ class Annotator.Plugin.Privacy extends Annotator.Plugin
     for audience_type, checked of annotation.privacy_options.audience
       if checked
         audience += '<span class="' + @className.types.default + ' ' + @className.types[audience_type]
-        if audience_type == 'private'
+        if audience_type == 'private' or audience_type == 'student'
           audience += ' fa fa-lock'
         if audience_type == 'everyone'
           audience += ' fa fa-unlock'

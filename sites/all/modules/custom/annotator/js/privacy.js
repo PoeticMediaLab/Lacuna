@@ -165,7 +165,7 @@
         checked = ref[audience_type];
         if (checked) {
           audience += '<span class="' + this.className.types["default"] + ' ' + this.className.types[audience_type];
-          if (audience_type === 'private') {
+          if (audience_type === 'private' || audience_type === 'student') {
             audience += ' fa fa-lock';
           }
           if (audience_type === 'everyone') {
