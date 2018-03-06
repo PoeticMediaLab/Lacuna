@@ -152,6 +152,7 @@ function annotation_format_tags(&$entity, $tags) {
 function annotation_drupal_format($entity, $update = FALSE) {
   global $user;
 
+  // Let other modules make changes first
   drupal_alter('annotation_store_save', $entity);
 
   if (!$update) {
@@ -237,8 +238,6 @@ function annotation_drupal_format($entity, $update = FALSE) {
 
       case 'privacy_options':
 
-        // Let other modules make changes first
-        drupal_alter('annotation_store_save_privacy_options', $entity);
         // Save these privacy options as the default for this user for new annotations on this document
         $privacy_defaults = array();
         if (isset ($user->data['annotation_privacy_defaults'])) {
@@ -251,7 +250,7 @@ function annotation_drupal_format($entity, $update = FALSE) {
 
 
         // Set the audience field to empty, to be set below
-        $annotation->field_annotation_audience[$annotation->language] = array ();
+        $annotation->field_annotation_audience[$annotation->language] = array();
 
         // Restrict any permission-granting fields, then set otherwise below depending on audience (ie. here we restrict, below we open up)
         $annotation->group_content_access[$annotation->language][0]['value'] = 2; // group membership required
@@ -752,6 +751,10 @@ function annotation_api_entity_prepare($annotation, $op) {
         'audience' => $audience,
         'groups' => $built_peer_groups,
       );
+
+      // Allow other modules to alter the privacy options
+      // Put in place for the Private Feedback module
+      drupal_alter('annotation_store_load_privacy_options', $entity->privacy_options);
 
       // Set permissions for edit and delete controls
       $entity->permissions = annotation_entity_permissions($annotation, $user);
