@@ -32,6 +32,7 @@
         wrapper: 'annotator-privacy-types',
         "default": 'annotator-privacy-type',
         "private": 'annotator-privacy-private',
+        student: 'annotator-privacy-student',
         instructor: 'annotator-privacy-instructor',
         'peer-groups': 'annotator-privacy-peer-groups',
         everyone: 'annotator-privacy-everyone'
@@ -88,8 +89,8 @@
         group_object = groups[group_type];
         for (gid in group_object) {
           group = group_object[gid];
-          console.log(gid, group);
           if (group.private_feedback) {
+            settings.privacy_options.private_feedback = gid;
             continue;
           }
           groups_html += '<label class="' + this.className.groups.wrapper + ' ' + show_groups + '">';
@@ -130,6 +131,10 @@
           });
         };
       })(this));
+      if (!$('.' + this.className.types.wrapper + ' #Student').is(":checked")) {
+        console.log($('.' + this.className.types.wrapper + ' #Student'));
+        annotation.privacy_options.private_feedback = null;
+      }
       if (audience['peer-groups']) {
         no_peer_groups_selected = true;
         for (group in peer_groups) {
