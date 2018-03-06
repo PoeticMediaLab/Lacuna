@@ -131,6 +131,7 @@ $instructors) {
   }
 }
 
+
 /**
  * @param $course
  * @param $instructor
@@ -208,4 +209,62 @@ function lacuna_private_feedback_annotation_peer_groups_alter(&$data) {
       unset($data['peer_groups'][$gid]);
     }
   }
+}
+
+/**
+ * @param $json
+ *
+ * Update the annotation object before saving to convert private feedback
+ * into correct group permission.
+ * $json is the original json POST from Annotator.js
+ */
+function lacuna_private_feedback_annotation_store_save_alter(&$json) {
+
+  ddl($json);
+  if (!isset($json['privacy_options']['private_feedback'])) {
+    return;
+  }
+  $gid = $json['privacy_options']['private_feedback'];
+  // piggy-back on peer groups
+  $json['privacy_options']['audience']['peer-groups'] = 1;
+  // Tell annotation store to use this value
+  $json['groups']['peer_groups'][$gid] = array('selected' => 1);
+  ddl($json);
+}
+
+/**
+ * @param $node
+ * @return int
+ *
+ * Returns the GID for the correct feedback group for a given student
+ */
+function _lpf_get_feedback_gid($node) {
+  
+  return $gid;
+}
+
+
+/**
+ * @param $options
+ *
+ * Alter the privacy options before they get sent to the annotator privacy
+ * plugin
+ */
+function lacuna_private_feedback_annotator_privacy_options_alter(&$options) {
+  global $user;
+  $node = menu_get_object();
+  if ($node->type == 'response') {
+    $privacy_options['response'] = TRUE;
+  } else {
+    $privacy_options['response'] = FALSE;
+  }
+
+  $role = user_role_load_by_name('instructor');
+  if (user_has_role($role->rid, $user)) {
+    $privacy_options['is_instructor'] = TRUE;
+  } else {
+    $privacy_options['is_instructor'] = FALSE;
+  }
+
+  $privacy_options['private_feedback'] = _lpf_get_feedback_gid($node);
 }
