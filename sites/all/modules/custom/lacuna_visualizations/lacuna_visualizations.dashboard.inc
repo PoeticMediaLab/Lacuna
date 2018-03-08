@@ -123,6 +123,7 @@ function lacuna_visualizations_annotation_dashboard_build_data($course_id) {
     $data->username = $userNames[$annotation->uid];
     array_push($results, $data);
   }
+  drupal_alter('lacuna_visualizations_dashboard_build_data', $results);
   return $results;
 }
 

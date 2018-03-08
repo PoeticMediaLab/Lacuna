@@ -278,3 +278,28 @@ function lacuna_private_feedback_annotator_privacy_options_alter(&$privacy_optio
   // But also need to run it when initializing the Annotator
    lacuna_private_feedback_annotation_store_load_privacy_options_alter($privacy_options);
 }
+
+/**
+ * @param $data
+ *
+ * Alter the dashboard data to change sharing from "peer groups" to "student"
+ * where appropriate
+ */
+function
+lacuna_private_feedback_lacuna_visualizations_dashboard_build_data_alter
+(&$data) {
+  ddl($data);
+  foreach ($data as $annotation) {
+    if (strtolower($annotation->audience) == 'peer-groups') {
+      $groups = og_get_entity_groups('node', $annotation->id);
+      if (!isset($groups['node'])) {
+        continue;
+      }
+      foreach ($groups['node'] as $gid) {
+        if (_lpf_is_feedback_group($gid)) {
+          $annotation->audience = 'Student';
+        }
+      }
+    }
+  }
+}
