@@ -59,7 +59,6 @@
     Privacy.prototype.addPrivacy = function(event, annotation) {
       var checked, gid, group, group_object, group_type, groups, groups_html, j, len, peer_groups, peer_groups_disabled, privacy_html, privacy_type, ref, settings, show_groups;
       settings = annotation.privacy_options ? annotation.privacy_options : Drupal.settings.privacy_options;
-      console.log(settings);
       groups_html = privacy_html = show_groups = '';
       privacy_html += '<span class="' + this.className.types.wrapper + '">';
       ref = ["Private", "Instructor", "Peer-Groups", "Everyone"];
@@ -166,7 +165,7 @@
         checked = ref[audience_type];
         if (checked) {
           audience += '<span class="' + this.className.types["default"] + ' ' + this.className.types[audience_type];
-          if (audience_type === 'private' || audience_type === 'student') {
+          if (audience_type === 'private' || audience_type === 'student' || audience_type === 'instructor') {
             audience += ' fa fa-lock';
           }
           if (audience_type === 'everyone') {
