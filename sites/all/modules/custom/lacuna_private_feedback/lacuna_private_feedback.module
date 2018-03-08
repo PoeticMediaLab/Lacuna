@@ -8,7 +8,7 @@ define('PRIVATE_FEEDBACK_FIELD', 'field_private_feedback');
  * When a new user is approved in a course, create new private group(s)
  * for instructor->student private annotations
  */
-function _lacuna_private_feedback_process_new_member($og_membership) {
+function _lpf_process_new_member($og_membership) {
   // Only process if new member is a user
   if ($og_membership->entity_type != 'user') {
     return;
@@ -48,9 +48,9 @@ function _lacuna_private_feedback_process_new_member($og_membership) {
   }
 
   if (in_array($new_member, $students)) {
-    _lacuna_private_feedback_add_new_student($group, $new_member, $instructors);
+    _lpf_add_new_student($group, $new_member, $instructors);
   } elseif (in_array($new_member, $instructors)) {
-    _lacuna_private_feedback_add_new_instructor($group, $new_member, $students);
+    _lpf_add_new_instructor($group, $new_member, $students);
   }
 }
 
@@ -60,7 +60,7 @@ function _lacuna_private_feedback_process_new_member($og_membership) {
  * May happen on insert if via group interface
  */
 function lacuna_private_feedback_og_membership_insert($og_membership) {
-  _lacuna_private_feedback_process_new_member($og_membership);
+  _lpf_process_new_member($og_membership);
 }
 
 /**
@@ -69,7 +69,7 @@ function lacuna_private_feedback_og_membership_insert($og_membership) {
  * May happen via user management interface, too
  */
 function lacuna_private_feedback_og_membership_update($og_membership) {
-  _lacuna_private_feedback_process_new_member($og_membership);
+  _lpf_process_new_member($og_membership);
 }
 
 /**
@@ -106,7 +106,8 @@ function _lpf_create_new_group($member, $course) {
   $wrapper = entity_metadata_wrapper('node', $entity);
   $wrapper->group_access = 1;  // make it a private group
   $wrapper->{PRIVATE_FEEDBACK_FIELD} = 1; // mark it as a private feedback group
-  $wrapper->title->set('Private feedback to ' . $member->name);
+  $wrapper->title->set('Private feedback to ' . $member->name . ' for course: ' .
+    $course->title);
   $wrapper->save();
 
   // Make feedback group a member of the course group
@@ -122,8 +123,8 @@ function _lpf_create_new_group($member, $course) {
  * Create a new private feedback group for the student
  * Add all instructors to it
  */
-function _lacuna_private_feedback_add_new_student($course, $student,
-$instructors) {
+function _lpf_add_new_student($course, $student,
+                              $instructors) {
   $group = _lpf_create_new_group($student, $course);
   og_group('node', $group->nid, array('entity' => $student));
   foreach ($instructors as $instructor) {
@@ -140,8 +141,8 @@ $instructors) {
  * Find existing private feedback groups for each student
  * Add instructor to each one
  */
-function _lacuna_private_feedback_add_new_instructor($course, $instructor,
-  $students) {
+function _lpf_add_new_instructor($course, $instructor,
+                                 $students) {
   // Find existing private feedback peer groups with each student as member
   // Add this instructor to each group
   foreach ($students as $student) {
@@ -288,7 +289,6 @@ function lacuna_private_feedback_annotator_privacy_options_alter(&$privacy_optio
 function
 lacuna_private_feedback_lacuna_visualizations_dashboard_build_data_alter
 (&$data) {
-  ddl($data);
   foreach ($data as $annotation) {
     if (strtolower($annotation->audience) == 'peer-groups') {
       $groups = og_get_entity_groups('node', $annotation->id);
