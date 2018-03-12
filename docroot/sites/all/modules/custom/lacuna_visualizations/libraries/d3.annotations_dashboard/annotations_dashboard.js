@@ -37,8 +37,9 @@ function DashboardModel(annotations){
 	self.pie_labels = {'category': 'Category', 'text_length': 'Length', 'audience': 'Sharing', 'annotation_tags': 'Tags'};	// yeah, yeah; see? it's already ugly code
 	self.pie_defaults = {'category': 'Highlight', 'length': 'Zero', 'audience': 'Everyone', 'annotation_tags': 'None'}; //no value given, give these
 
-	self.pie_types = ['category', 'text_length', 'audience'];	
+	self.pie_types = ['category', 'text_length', 'audience'];
 	self.pie_current = self.pie_types[0]; // Set the current pie-type selection
+	console.log("pie_types: ", self.pie_types);
 	
 	self.pie_slices = {};
 	self.pie_types.forEach(function(pie_type) {
@@ -135,9 +136,9 @@ DashboardModel.prototype = {
 		// Initialize groups object and reduce into counts
 		attrib = attrib.toLowerCase();
 		var proto = this;
-		this.current().forEach(function (a) {
+		proto.current(true).forEach(function (a) { //Bug: a is being converted to a string...
 			if (typeof a[attrib] === "undefined") {
-				a[attrib] = this.pie_defaults[attrib];
+				a[attrib] = proto.pie_defaults.category;
 			}
 			if (typeof a.documentTitle === "undefined") {
 				a.documentTitle = a.uri;
@@ -203,7 +204,7 @@ DashboardModel.prototype = {
 		  d.push({x: el.key, y: el.value});
 		  lastDate = proto.parseDate(el.key);
 		});
-		console.log("array being pushed to x-axis ticks: ", d)
+		console.log("array being pushed to x-axis ticks: ", d);
 		return d;
 	},
 
@@ -294,7 +295,7 @@ DashboardModel.prototype = {
         sewing_kit.attr('href', href + '?' + query.join('&'));
 	},
 
-	count_pie_data: function(pie_type, ignore_time_filter=false) {
+	count_pie_data: function(pie_type) {
 		var count = Array();
 		if (typeof this.pie_slice_keys[pie_type] === "undefined") {
 			this.pie_slice_keys[pie_type] = Array();	// don't clobber; set once then leave alone
@@ -302,8 +303,7 @@ DashboardModel.prototype = {
 		var proto = this;
 		// Relies on fields in annotation data that match pie types
 		// Those fields are added in pre-processing
-		this.current(ignore_time_filter).forEach(function (a) {
-			console.log("count_pie_data: inside current");
+		this.current().forEach(function (a) {
 			if (typeof count[a[pie_type]] === "undefined") {
 				count[a[pie_type]] = 0;
 				// BUG: This doesn't work right
@@ -328,36 +328,6 @@ DashboardModel.prototype = {
 		});
 		return (count);
 	},
-	
-	update_summary_pies: function(ignore_time_filter=false) {
-		var x = 0;	// to keep track of order; drawing doesn't know how many it has done
-		this.pie_data_aggregate = Array();	// reset data counts  
-		var proto = this;
-
-		proto.pie_types.forEach(function(pie_type) {              
-			var count = proto.count_pie_data(pie_type, ignore_time_filter);
-
-			console.log("count: ", count);
-			
-			for (var key in count) {
-				if (typeof proto.pie_data_aggregate[pie_type] === "undefined") {
-					proto.pie_data_aggregate[pie_type] = Array();
-					console.log('count is working');	
-				}
-				proto.pie_data_aggregate[pie_type].push({key: key, value: count[key]});
-			}
-			// Must sort to keep colors consistent
-			// TODO: refactor into a single sort function called by all pies
-			
-			proto.pie_data_aggregate[pie_type].sort(function (a,b) {
-				if (a.key < b.key) { return -1; }
-				else if (a.key > b.key ) { return 1;}
-				return 0;
-			});
-			proto.draw_summary_pie(pie_type, x);
-			++x;
-		});
-	},
 }; // END: DashboardModel
 
 
@@ -368,13 +338,8 @@ DashboardModel.prototype = {
 function DashboardView(model, settings){
 	var self = this;
 	self.model = model;
-
-	self.size = {
-		graph: {
-			width: 700,
-			height: 5000,
-			padding: 50
-		},
+	
+	self.size = { //moved from DashboardView
 		summary_pie: {
 			padding: 15,
 			height: 150,
@@ -403,6 +368,11 @@ function DashboardView(model, settings){
 				min: .1 },
 		string: { length: 38 },
 		radius: 25,
+		graph: {
+			width: 700,
+			height: 5000,
+			padding: 50
+		},
 		column: {user: 100, doc: 450}	// X coords for the two columns
 	};
 
@@ -438,7 +408,7 @@ function DashboardView(model, settings){
 		}
 		return self.y_coords[d.type][d.id];
 	}
-
+	
 	if (settings.config.size.graph.width) {
 		self.size.graph.width = settings.config.size.graph.width;
 	}
@@ -640,39 +610,6 @@ DashboardView.prototype = {
 			.select('.help_text')
 			.style("visibility", "hidden");
 	},
-	
-	draw_summary_pie: function (pie_type, x) {
-		var arc = d3.svg.arc()
-			.outerRadius(this.size.summary_pie.radius)
-			.innerRadius(0);
-
-		var my_pie = d3.select('g#' + pie_type).selectAll("path")
-						.data(pie(this.pie_data_aggregate[pie_type])); //Where's the data coming from?
-	    my_pie.enter()
-				.append("svg:path")
-				.attr("class", "pie_total")
-				.attr("transform", function (d) {
-					var str = "translate(";
-					var pie_x = this.size.summary_pie.radius * 2 * x + 55;
-					pie_x += this.size.summary_pie.padding * (x + 1) * 2;
-					str += pie_x + "," + this.size.summary_pie.radius + ")";
-					return str;
-					})
-				.on("mouseover", this.tooltip_on)  // !!!!!!CONTROLLER...!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-				.on("mouseout", this.tooltip_off)
-				.on("click", this.select_pie);
-
-		my_pie.attr("d", arc)
-	  		.style("fill", function(d, i) { return this.color_scale(i); })
-			.style("opacity", 1);
-
-	  	if (pie_type !== this.pie_current) {
-	  		var color = my_pie.style("fill");
-	  		my_pie.style("fill", function (d,i) {
-	  			return d3.rgb(this.color_scale(i)).darker();
-	  		}).style("opacity", .5);
-	  	}
-	},
 
 	label_pie_charts: function () {
 		for (var i = 0; i < this.pie_types.length; i++) {
@@ -765,6 +702,8 @@ DashboardView.prototype = {
 			// time stored as Unix epoch time
 			return proto.model.timeFormat(new Date(d.created));
 		});
+		
+		//Creates array of date information plus number of annotations per date.
 		/**var g = dim.group();
 		var data = this.model.fill_empty_dates(g.all());**/
 		var data = [];
@@ -941,7 +880,7 @@ DashboardView.prototype = {
     	// Update the other parts of the display
     	// Call these updates here because we don't want to update the bar chart, too
     	this.update_graph();
-    	this.model.update_summary_pies();
+    	this.update_summary_pies();
     	this.model.update_view_all();
     	// Are we focused on a node? If so, update the edge labels
     	if (this.model.focused_on !== null) {
@@ -971,6 +910,71 @@ DashboardView.prototype = {
 			.attr("dy", ".35em")
 			.style("text-anchor", "start")
 			.text(function(d) { return d.key; });
+	},
+	
+	update_summary_pies: function() { //moved from DashboardModel
+		var x = 0;	// to keep track of order; drawing doesn't know how many it has done
+		this.pie_data_aggregate = Array();	// reset data counts  
+		var proto = this;
+
+		proto.model.pie_types.forEach(function(pie_type) { //Problem: pie_types is undefined
+			var count = proto.model.count_pie_data(pie_type);
+
+			console.log("count: ", count);
+			
+			for (var key in count) {
+				if (typeof proto.pie_data_aggregate[pie_type] === "undefined") {
+					proto.pie_data_aggregate[pie_type] = Array();
+					console.log('count is working');	
+				}
+				proto.pie_data_aggregate[pie_type].push({key: key, value: count[key]});
+			}
+			// Must sort to keep colors consistent
+			// TODO: refactor into a single sort function called by all pies
+			
+			proto.pie_data_aggregate[pie_type].sort(function (a,b) {
+				if (a.key < b.key) { return -1; }
+				else if (a.key > b.key ) { return 1;}
+				return 0;
+			});
+			proto.draw_summary_pie(pie_type, x);
+			++x;
+		});
+	},
+	
+	draw_summary_pie: function (pie_type, x) {
+		var proto = this;
+		
+		var arc = d3.svg.arc()
+			.outerRadius(this.size.summary_pie.radius)
+			.innerRadius(0);
+
+		var my_pie = d3.select('g#' + pie_type).selectAll("path")
+						.data(this.pie(this.pie_data_aggregate[pie_type])); //pie() is not defined...
+	    my_pie.enter()
+				.append("svg:path")
+				.attr("class", "pie_total")
+				.attr("transform", function (d) {
+					var str = "translate(";
+					var pie_x = proto.size.summary_pie.radius * 2 * x + 55;
+					pie_x += proto.size.summary_pie.padding * (x + 1) * 2;
+					str += pie_x + "," + proto.size.summary_pie.radius + ")";
+					return str;
+					})
+				.on("mouseover", this.tooltip_on)  // !!!!!!CONTROLLER...!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+				.on("mouseout", this.tooltip_off)
+				.on("click", this.select_pie);
+
+		my_pie.attr("d", arc)
+	  		.style("fill", function(d, i) { return proto.color_scale(i); })
+			.style("opacity", 1);
+
+	  	if (pie_type !== this.pie_current) {
+	  		var color = my_pie.style("fill");
+	  		my_pie.style("fill", function (d,i) {
+	  			return d3.rgb(proto.color_scale(i)).darker();
+	  		}).style("opacity", .5);
+	  	}
 	},
 }; // END: DashboardView
 
@@ -1022,8 +1026,8 @@ DashboardController.prototype = {
 	update: function(ignore_time_filter = false) {
 	  	this.model.update_view_all();
 	  	this.view.update_graph();
-	  	this.view.update_timebrush();
-	  	this.model.update_summary_pies(ignore_time_filter);
+		this.view.update_timebrush();
+		this.model.update_summary_pies(ignore_time_filter);
 	  	this.view.update_legend();
   	},
 
