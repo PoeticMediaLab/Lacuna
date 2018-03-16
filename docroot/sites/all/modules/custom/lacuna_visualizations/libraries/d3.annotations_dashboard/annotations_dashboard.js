@@ -136,7 +136,7 @@ DashboardModel.prototype = {
 		// Initialize groups object and reduce into counts
 		attrib = attrib.toLowerCase();
 		var proto = this;
-		proto.current(true).forEach(function (a) { //Bug: a is being converted to a string...
+		proto.current(true).forEach(function (a) {
 			if (typeof a[attrib] === "undefined") {
 				a[attrib] = proto.pie_defaults.category;
 			}
@@ -253,7 +253,7 @@ DashboardModel.prototype = {
 	update_view_all: function () {
     	var sewing_kit = $('a#view_annotations');
     	var href = sewing_kit.attr('href');
-        var current = this.current();
+        var current = this.current(); //current isn't what it used to be. REVISIT REDEFINED CURRENT
         var doc_ids,
             users,
             dates,
@@ -703,10 +703,10 @@ DashboardView.prototype = {
 			return proto.model.timeFormat(new Date(d.created));
 		});
 		
-		//Creates array of date information plus number of annotations per date.
-		/**var g = dim.group();
-		var data = this.model.fill_empty_dates(g.all());**/
-		var data = [];
+		//Commented code creates array of date information plus number of annotations per date.
+		var g = dim.group();
+		var data = this.model.fill_empty_dates(g.all());
+		/**var data = [];
 		function countNumOccurrences(dataset, someDate) {
 			var count = 0;
 			for (var index = 0; index < dataset.length; index++) {
@@ -732,7 +732,7 @@ DashboardView.prototype = {
 						data.push({date: formattedDate, occurrences: numOccurrences});
 					}
 				}
-		}
+		}**/
 		console.log("data: ", data);
 
 		if (this.bar_chart === null) {
@@ -743,15 +743,15 @@ DashboardView.prototype = {
 		// Create x-axis, but only once
 		if (this.bar_x === null) { 
 			this.bar_x = d3.scale.ordinal()
-				.domain(data.map(function (d) { return d.date; })) //previously returned d.x
+				.domain(data.map(function (d) { return d.x; })) //previously returned d.date
 		    	.rangeBands([this.size.bar.padding.left, this.size.bar.width - this.size.bar.padding.right - this.size.bar.padding.left], 0.1);
 
 			//	Create ticks
-		    //var factor = (data.length > 16 ? Math.floor(data.length / 8) : 1);
+		    var factor = (data.length > 16 ? Math.floor(data.length / 8) : 1);
 		    var ticks = [];
-		    for (var j = 0; j < data.length; j += 1) { //was j+=factor
-				//ticks.push(data[j].x);
-				ticks.push(data[j].date);
+		    for (var j = 0; j < data.length; j += factor) { //was j+=1
+				ticks.push(data[j].x);
+				//ticks.push(data[j].date);
 			}
 			this.xAxisTicks = ticks;
 			console.log("ticks array: ", this.xAxisTicks),
@@ -773,7 +773,7 @@ DashboardView.prototype = {
     	var bar_width = this.bar_x.rangeBand() - 1;
 
 		var bar_y = d3.scale.linear()
-			.domain([0, d3.max(data, function (d) { return d.occurrences; })]) //returned d.y
+			.domain([0, d3.max(data, function (d) { return d.y; })]) //returned d.y
 			.range([this.size.bar.height, this.size.bar.padding.top]);
 
 		var yAxis = d3.svg.axis()
@@ -805,9 +805,9 @@ DashboardView.prototype = {
 	    bars.exit().remove();
 
 	  	bars.attr("width", bar_width)
-	  		.attr("y", function (d) { return bar_y(d.occurrences); })
-	  		.attr("x", function (d) { return proto.bar_x(d.date); })
-	  		.attr("height", function (d) { return proto.size.bar.height - bar_y(d.occurrences); });
+	  		.attr("y", function (d) { return bar_y(d.y); })
+	  		.attr("x", function (d) { return proto.bar_x(d.x); })
+	  		.attr("height", function (d) { return proto.size.bar.height - bar_y(d.y); });
 
 	  	var bar_labels = this.bar_chart.selectAll("text.bar_label").data(data);
 	  	bar_labels.exit().remove();
@@ -844,33 +844,41 @@ DashboardView.prototype = {
 	brushed: function() {
 		d3.select("a.dashboard-button#reset_brush").style("visibility", "visible"); // CONTROLLER
     	var extent = this.brush.extent();
+		console.log("extent", extent);
     	var start = extent[0];
     	var end = extent[1];
+		if (end === 0) {
+			end = 1000;
+		}
     	var bar_width = this.bar_x.rangeBand() - 1;
-    	var dates = this.xAxisTicks;
+		console.log("bar_width", bar_width); //this returns 342.63! Wow.
+    	//var dates = this.xAxisTicks; //Old code.
+		var dates = [];
     	var proto = this;
 		
-		//Populates dates array with dates on x-axis tickmarks.
-//    	d3.selectAll("rect.bar").each(function (d) {
-//    		var x = proto.bar_x(d.x);
-//    		if ((x + bar_width) >= start && x <= end) {
-//    			dates.push(d.x);
-//	    	}
-//    	});
-//		d3.selectAll(".x axis").each(function (d) {
-//    		var x = proto.bar_x(d.x); //??
-//    		if ((x + bar_width) >= start && x <= end) {
-//    			dates.push(d.x);
-//	    	}
-//    	});
+		//Populates dates array with dates within the brush
+    	d3.selectAll("rect.bar").each(function (d) {
+    		var x = proto.bar_x(d.x); //this is undefined.
+			console.log("x", x);
+    		if ((x + bar_width) >= start && x <= end) {
+				console.log("d.x", d.x);
+    			dates.push(d.x);
+	    	}
+    	});
+		/**d3.selectAll(".x axis").each(function (d) {
+    		var x = proto.bar_x(d.x); //??
+    		if ((x + bar_width) >= start && x <= end) {
+    			dates.push(d.x);
+	    	}
+    	});**/
 		console.log("dates array:", dates);
 		
     	// Filter our annotations by selected dates
     	var filter = []; // MODEL
-    	//this.model.current(false).forEach(function (a) {
-		dates.forEach(function (a) {
-    		//var date = proto.model.timeFormat(new Date(a.created));
-    		if (dates.indexOf(a) != -1 && filter.indexOf(a) == -1) { //was dates.indexOf(date)
+    	this.model.current(true).forEach(function (a) {
+		//dates.forEach(function (a) {
+    		var date = proto.model.timeFormat(new Date(a.created));
+    		if (dates.indexOf(date) != -1 && filter.indexOf(a) == -1) {
     			filter.push(a);
     		}
     	});
@@ -891,22 +899,23 @@ DashboardView.prototype = {
 	update_legend: function() {
 		var item = this.legend.selectAll("g.legend_item")
 			.data(this.model.pie_data_aggregate[this.model.pie_current]); 
-
+		
+		var proto = this;
 		item.exit().remove();
 		item.selectAll("text").remove();
 		item.enter()
 			.append("g")
 			.attr("class", "legend_item")
-			.attr("transform", function(d, i) { return "translate(0," + i * (this.size.legend.square.height + 2) + ")"; })
+			.attr("transform", function(d, i) { return "translate(0," + i * (proto.size.legend.square.height + 2) + ")"; })
 			.append("rect")
 			.attr("x", 0)
-			.attr("width", this.size.legend.square.width)
-			.attr("height", this.size.legend.square.height)
-			.style("fill", function(d,i) { return color_scale(i) });
+			.attr("width", proto.size.legend.square.width)
+			.attr("height", proto.size.legend.square.height)
+			.style("fill", function(d,i) { return proto.color_scale(i); });
 
 		item.append("text")
-			.attr("x", this.size.legend.square.width + 10)
-			.attr("y", this.size.legend.square.height / 2)
+			.attr("x", proto.size.legend.square.width + 10)
+			.attr("y", proto.size.legend.square.height / 2)
 			.attr("dy", ".35em")
 			.style("text-anchor", "start")
 			.text(function(d) { return d.key; });
@@ -914,7 +923,7 @@ DashboardView.prototype = {
 	
 	update_summary_pies: function() { //moved from DashboardModel
 		var x = 0;	// to keep track of order; drawing doesn't know how many it has done
-		this.pie_data_aggregate = Array();	// reset data counts  
+		this.model.pie_data_aggregate = Array();	// reset data counts  
 		var proto = this;
 
 		proto.model.pie_types.forEach(function(pie_type) { //Problem: pie_types is undefined
@@ -923,16 +932,16 @@ DashboardView.prototype = {
 			console.log("count: ", count);
 			
 			for (var key in count) {
-				if (typeof proto.pie_data_aggregate[pie_type] === "undefined") {
-					proto.pie_data_aggregate[pie_type] = Array();
+				if (typeof proto.model.pie_data_aggregate[pie_type] === "undefined") {
+					proto.model.pie_data_aggregate[pie_type] = Array();
 					console.log('count is working');	
 				}
-				proto.pie_data_aggregate[pie_type].push({key: key, value: count[key]});
+				proto.model.pie_data_aggregate[pie_type].push({key: key, value: count[key]});
 			}
 			// Must sort to keep colors consistent
 			// TODO: refactor into a single sort function called by all pies
 			
-			proto.pie_data_aggregate[pie_type].sort(function (a,b) {
+			proto.model.pie_data_aggregate[pie_type].sort(function (a,b) {
 				if (a.key < b.key) { return -1; }
 				else if (a.key > b.key ) { return 1;}
 				return 0;
@@ -940,6 +949,7 @@ DashboardView.prototype = {
 			proto.draw_summary_pie(pie_type, x);
 			++x;
 		});
+		console.log("pie_data_aggregate in model", proto.model.pie_data_aggregate);
 	},
 	
 	draw_summary_pie: function (pie_type, x) {
@@ -950,7 +960,7 @@ DashboardView.prototype = {
 			.innerRadius(0);
 
 		var my_pie = d3.select('g#' + pie_type).selectAll("path")
-						.data(this.pie(this.pie_data_aggregate[pie_type])); //pie() is not defined...
+						.data(this.pie(this.model.pie_data_aggregate[pie_type])); //pie() is not defined...
 	    my_pie.enter()
 				.append("svg:path")
 				.attr("class", "pie_total")
@@ -1023,11 +1033,11 @@ function DashboardController(model, view){
 }
 
 DashboardController.prototype = {
-	update: function(ignore_time_filter = false) {
+	update: function() {
 	  	this.model.update_view_all();
 	  	this.view.update_graph();
 		this.view.update_timebrush();
-		this.model.update_summary_pies(ignore_time_filter);
+		this.view.update_summary_pies();
 	  	this.view.update_legend();
   	},
 
@@ -1038,7 +1048,7 @@ DashboardController.prototype = {
 		if (this.model.pie_current != pid) {
 			this.model.pie_current = pid;
 			this.view.update_graph();
-			this.model.update_summary_pies();
+			this.view.update_summary_pies();
 			this.view.update_legend();
 			// window.scrollTo(0,400);
 		}
