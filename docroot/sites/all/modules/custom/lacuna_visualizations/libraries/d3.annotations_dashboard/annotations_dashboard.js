@@ -11,7 +11,7 @@ function DashboardModel(annotations){
 	//self.annotations = Array.from(annotations);
 	self.all_annotations = Array.from(annotations);
 	
-	self.annotation_stack = Array();
+	self.annotation_stack = [];
 	self.annotation_stack.push(annotations); //change all references to self.annotations to filters
 	// self.all_annotations = Array();
 	// self.all_annotations.push(annotations);
@@ -702,36 +702,8 @@ DashboardView.prototype = {
 			return proto.model.timeFormat(new Date(d.created));
 		});
 		
-		//Commented code creates array of date information plus number of annotations per date.
 		var g = dim.group();
 		var data = this.model.fill_empty_dates(g.all());
-		/**var data = [];
-		function countNumOccurrences(dataset, someDate) {
-			var count = 0;
-			for (var index = 0; index < dataset.length; index++) {
-				var rawDate = proto.model.annotations[index].created;
-				var formattedDate = proto.model.timeFormat(new Date(rawDate));
-				if (formattedDate == someDate) {
-					count++;
-				}
-			}
-			return count;
-		}
-		for (var i = 0; i < proto.model.annotations.length; i++) {
-				var rawDate = proto.model.annotations[i].created;
-				var formattedDate = proto.model.timeFormat(new Date(rawDate));
-				var numOccurrences = countNumOccurrences(proto.model.annotations, formattedDate);
-				if (i === 0) {
-					data.push({date: formattedDate, occurrences: numOccurrences});
-				}
-				if (i >= 1) {
-					var prevRawDate = proto.model.annotations[i-1].created;
-					var prevForDate = proto.model.timeFormat(new Date(prevRawDate));
-					if (prevForDate != formattedDate) {
-						data.push({date: formattedDate, occurrences: numOccurrences});
-					}
-				}
-		}**/
 
 		if (this.bar_chart === null) {
 			this.bar_chart = d3.select("div#time_brush").append("svg")
@@ -749,7 +721,6 @@ DashboardView.prototype = {
 		    var ticks = [];
 		    for (var j = 0; j < data.length; j += factor) { //was j+=1
 				ticks.push(data[j].x);
-				//ticks.push(data[j].date);
 			}
 			this.xAxisTicks = ticks;
 
@@ -767,10 +738,10 @@ DashboardView.prototype = {
 					.attr("transform", "rotate(-65)");
 	    }
 
-    	var bar_width = this.bar_x.rangeBand() - 1;
+    	var bar_width = this.bar_x.rangeBand() + 1; // previously this.bar_x.rangeBand() - 1
 
 		var bar_y = d3.scale.linear()
-			.domain([0, d3.max(data, function (d) { return d.y; })]) //returned d.y
+			.domain([0, d3.max(data, function (d) { return d.y; })])
 			.range([this.size.bar.height, this.size.bar.padding.top]);
 
 		var yAxis = d3.svg.axis()
@@ -847,14 +818,13 @@ DashboardView.prototype = {
 		if (end === 0) {
 			end = 1000;
 		}
-    	var bar_width = this.bar_x.rangeBand() - 1;
-    	//var dates = this.xAxisTicks; //Old code.
+    	var bar_width = this.bar_x.rangeBand() + 1; //previously this.bar_x.rangeBand() - 1
 		var dates = [];
     	var proto = this;
 		
 		//Populates dates array with dates within the brush
     	d3.selectAll("rect.bar").each(function (d) {
-    		var x = proto.bar_x(d.x); //this is undefined.
+    		var x = proto.bar_x(d.x);
     		if ((x + bar_width) >= start && x <= end) {
     			dates.push(d.x);
 	    	}
@@ -916,15 +886,15 @@ DashboardView.prototype = {
 	
 	update_summary_pies: function() { //moved from DashboardModel
 		var x = 0;	// to keep track of order; drawing doesn't know how many it has done
-		this.model.pie_data_aggregate = Array();	// reset data counts  
+		this.model.pie_data_aggregate = [];	// reset data counts  
 		var proto = this;
 
-		proto.model.pie_types.forEach(function(pie_type) { //Problem: pie_types is undefined
+		proto.model.pie_types.forEach(function(pie_type) {
 			var count = proto.model.count_pie_data(pie_type);
 			
 			for (var key in count) {
 				if (typeof proto.model.pie_data_aggregate[pie_type] === "undefined") {
-					proto.model.pie_data_aggregate[pie_type] = Array();
+					proto.model.pie_data_aggregate[pie_type] = [];
 				}
 				proto.model.pie_data_aggregate[pie_type].push({key: key, value: count[key]});
 			}
