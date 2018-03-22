@@ -1,0 +1,10 @@
+name = Private Feedback
+description = Allows instructors to create annotations visible only to the student
+package = Lacuna Stories
+core = 7.x
+version = "7.x-1.0"
+
+dependencies[] = course
+dependencies[] = annotator
+dependencies[] = annotation
+dependencies[] = lacuna_stories_peer_groups

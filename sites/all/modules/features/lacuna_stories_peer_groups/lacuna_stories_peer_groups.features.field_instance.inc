@@ -246,6 +246,43 @@ function lacuna_stories_peer_groups_field_default_field_instances() {
     ),
   );
 
+  // Exported field_instance: 'node-peer_group-field_private_feedback'.
+  $field_instances['node-peer_group-field_private_feedback'] = array(
+    'bundle' => 'peer_group',
+    'default_value' => 0,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'list',
+        'settings' => array(),
+        'type' => 'list_default',
+        'weight' => 17,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_private_feedback',
+    'label' => 'Private Feedback',
+    'required' => FALSE,
+    'settings' => array(
+      'no_ui' => TRUE,
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'module' => 'options',
+      'settings' => array(),
+      'type' => 'options_buttons',
+      'weight' => 9,
+    ),
+  );
+
   // Exported field_instance: 'node-peer_group-group_access'.
   $field_instances['node-peer_group-group_access'] = array(
     'bundle' => 'peer_group',
@@ -388,6 +425,7 @@ This setting can be changed at any time.',
         'label' => 'above',
         'module' => 'entityreference',
         'settings' => array(
+          'bypass_access' => FALSE,
           'link' => FALSE,
         ),
         'type' => 'entityreference_label',
@@ -515,6 +553,7 @@ This setting can be changed at any time.');
   t('Leave Group');
   t('Peer Group Image');
   t('Peer Group(s)');
+  t('Private Feedback');
   t('Upload an image to represent your peer group.');
 
   return $field_instances;

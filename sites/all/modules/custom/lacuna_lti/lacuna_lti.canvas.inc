@@ -122,7 +122,7 @@ function lacuna_lti_canvas_xml_admin_values($iconUrl) {
   return array(
     'tool_id' => 'lacuna',
     'icon_url' => $iconUrl,
-    'privacy_level' => 'admins',
+    'privacy_level' => 'public',
     'options' => array(
       array(
         'name' => 'resource_selection',

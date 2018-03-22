@@ -343,6 +343,10 @@ function annotation_build_peer_groups() {
     }
     $groups['peer_groups'] = $peer_groups;
   }
+
+  // Allow other modules to alter this list
+  // Primarily for lacuna_private_feedback
+  drupal_alter('annotation_peer_groups', $groups);
   return $groups;
 }
 
@@ -600,5 +604,16 @@ function annotation_field_formatter_view( $entity_type, $entity, $field, $instan
   if ( isset( $items[0] ) ) {
     return array( array( '#markup' => '<img alt="Annotation Excerpt" src="' . $items[0]['value'] . '">' ) );
   }
+}
+
+
+function _annotation_is_instructor() {
+  global $user;
+  $role = user_role_load_by_name('instructor');
+  return user_has_role($role->rid, $user);
+}
+
+function annotation_annotator_privacy_options_alter(&$options) {
+  $options['is_instructor'] = _annotation_is_instructor();
 }
 
