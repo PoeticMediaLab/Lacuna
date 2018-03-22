@@ -252,6 +252,7 @@ $annotationsTable) {
         }
         unset($annotation->audience);
       }
+      // TODO set student feedback annotations privacy options
       // Annotator.js formats the URI this way
       global $base_root;
       $uri = entity_uri('node', $document);
@@ -332,8 +333,6 @@ $annotationsTable) {
    * @Then I should be a member of a peer feedback group
    */
   public function IAmMemberOfPeerFeedbackGroup() {
-    // TODO Get list of groups current user is member of
-    // TODO Check for private feedback type flag
     $groups = og_get_entity_groups('user', $this->user);
     $isMember = FALSE;
     foreach ($groups['node'] as $gid) {
@@ -345,8 +344,8 @@ $annotationsTable) {
 
       $peer_group_wrapper = entity_metadata_wrapper('node', $group);
       if ($peer_group_wrapper->{PRIVATE_FEEDBACK_FIELD}->value() == 1) {
-        // Not a private feedback group
         $isMember = TRUE;
+        break;
       }
     }
     if (!$isMember) {

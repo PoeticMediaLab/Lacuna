@@ -19,12 +19,12 @@
         | Document B  | Instructor B | I'm the cool professor.             |
       And document "Document A" is content for course "Course Alpha"
       And document "Document B" is content for course "Course Beta"
+      And a "Student" user named "Student A" exists
+      And "Student A" is enrolled in the "Course Alpha" course
       And "response" content:
         | title        | author      | body                                 |
         | Response A   | Student A   | This is my response.                 |
       And response "Response A" is content for course "Course Alpha"
-      And a "Student" user named "Student A" exists
-      And "Student A" is enrolled in the "Course Alpha" course
       And annotations on document "Document A":
         | audience     | text                          | author     |
         | Private      | This is a private annotation  | Student A  |
@@ -116,3 +116,8 @@
     Given I am logged in as "Instructor B"
     When I go to the "annotation" node named "Annotation of Response A"
     Then I should see "Access denied" in the "Page Title"
+
+  Scenario: Instructor A attempts to see private feedback
+    Given I am logged in as "Instructor A"
+    When I go to the "annotation" node named "Annotation of Response A"
+    Then I should see "Annotation of Response A" in the "Page Title"
