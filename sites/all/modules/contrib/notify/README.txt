@@ -9,28 +9,33 @@ CONTENTS OF THIS FILE
 * Requirements
 * Recommended modules
 * Installation
+* Permissions
 * Configuration
   - Administration form
   - User's settings
 * Troubleshooting
 * Testing
+* Related projects & alternatives
 * Maintainers
 
 
 INTRODUCTION
 ------------
 
-Notify is a simple, lightweight notification module. It provides
-e-mail notifications to subscribers about updates and changes to the
-Drupal web site.
+Notify is a simple, lightweight module for sending e-mail
+notifications about new content and comments posted on a Drupal web
+site.
 
 * For a full description of the module, visit the project page:
   https://drupal.org/project/notify
 
+* For more documentation about its use, visit the documentation page:
+  https://www.drupal.org/documentation/modules/notify
+
 * To submit bug reports and feature suggestions, or to track changes:
   https://drupal.org/project/issues/notify
 
-If you enable node revisions (http://drupal.org/node/320614), the
+If you enable node revisions (https://www.drupal.org/node/320614), the
 notification e-mail will also mention the name of the last person to
 edit the node.
 
@@ -41,31 +46,35 @@ REQUIREMENTS
 This module requires a supported version of Drupal and cron to be
 running.
 
+
 RECOMMENDED MODULES
 -------------------
 
+* Advanced help hint (https://www.drupal.org/project/advanced_help_hint)
+  Will link standard help text to online help and advanced help.
+
 * Advanced help (https://www.drupal.org/project/advanced_help)
   When this module is enabled the administrator will have access to
-  more online help.
+  more extensive help.
 
 
 INSTALLATION
 ------------
 
-1. Extract the notify project directory into the directory where you
-   keep contributed modules (e.g. sites/all/modules/).
+1. Install as you would normally install a contributed drupal
+   module. See: Installing modules
+   (https://www.drupal.org/documentation/install/modules-themes/modules-7)
+   for further information.
 
-2. Enable the notify module on the Modules list page.  The database
-   tables will be created automagically for you at this point.
+2. Check if you need to run the update script by visting the Status
+   Report.
 
-3. Run the update script if you're upgrading from 7.x-1.0-alpha1.
+3. Modify permissions on the People » Permissions page.
 
-4. Modify permissions on the People » Permissions page.
+   To adminster the notify general settings, default settings and
+   users grant the permission "administer notify".
 
-   To adminster the notify main settings and user notfification
-   settings, grant the permission "administer notify".
-
-   To adminster the notificaton queue (flush and truncate), grant the
+   To adminster the queue (flush, truncate and skip flags), grant the
    permission "administer notify queue".
 
    To set the notification checkbox default on new user registration
@@ -75,7 +84,7 @@ INSTALLATION
    settings (recommended) you must also grant authenticated users the
    right to "access notify".
 
-5. Configure the other general notification settings.
+4. Configure the other general notification settings.
 
    See the "Administration form" section below for details.
 
@@ -84,13 +93,28 @@ installation.  Before anyone is subscribed, no notifications will be
 sent.
 
 
+PERMISSIONS
+-----------
+
+To set up permissions for Notify navigate to: Administration » People
+» Permissions.
+
+There are four permissions:
+
+1. access notify: to subscribe to and receive notifications when there is new content
+2. administer notify: to administer general notify settings, default settings, and users
+3. administer notify queue: to administer the notify queue operations
+4. administer notify skip flags: to administer the notify skip flags
+
+
+
 CONFIGURATION
 -------------
 
 Administration form
 -------------------
 
-The administrative interface is at: Administer » Configuration »
+The administrative interface is at: Administration » Configuration »
 People » Notification settings.
 
 There are five tabs:
@@ -109,7 +133,7 @@ The Settings tab allow you to configure how the module shall work.
 You can specify how often notifications are sent, the hour to send
 them (if the frequency is one day or greater), the number of failed
 sends after which notifications are disabled, and the maximum number
-of notifications to send out per cron run.
+of users to process out per cron run.
 
 When setting how often notifications are sent, note that e-mail
 updates can only happen as frequently as the cron is set to run.
@@ -151,21 +175,23 @@ If you've set up a multilingual site, there should also be three radio
 buttons that allow you to filter notifications about new nodes against
 the user's language setting (it may be set by editing the user
 profile).  The first setting ("All contents") will notify a user about
-all new content on the site. If a piece of contents exists in more
-than one language, all versions will be notified about.  The setting
-"Contents in the user's preferred language + contents not yet
+all new content on the site. If a piece of subscribed contents exists
+in more than one language, all versions will be notified about.  The
+setting "Contents in the user's preferred language + contents not yet
 translated" will notify about content in the user's preferred language
 and also about content that is in some other language if no
 translation of it exists. The last setting, "Only contents in the
-user's preferred language", will only notify about new contents in
-the user's preferred language.  However, please note that new contents
-that are marked as "language neutral" will always be included in
-notifications.  The multilingual settings do not apply to
-administrators.  Administrators will always be notified about all new
-contents.  Note that if you use the second setting, contents that is
-not in the user's preferred language will be excluded from the
+user's preferred language", will only notify about subscribed contents
+in the user's preferred language.  However, please note that
+subscribed contents that are marked as "language neutral" will always
+be included in notifications.  The multilingual settings do not apply
+to administrators.  Administrators will always be notified about all
+new contents.  Note that if you use the second setting, contents that
+is not in the user's preferred language will be excluded from the
 notification if some translation of exists, even if that translation
-is not to the user's preferred language.
+is not to the user's preferred language.  To avoid this having
+unexpected effects, when you provide translation of a node, you should
+translate it to all langauages the site supports.
 
 The "Watchdog log level" setting lets you specify how much to log.
 The setting "All" will make a log record of every notification mail
@@ -194,10 +220,10 @@ has the following meanings:
 
  - Send batch now: Force sending a notification batch without waiting
    for the next cron run.  Note that if the number of notifications
-   queue exceeds the maximum number of notifications to send out per
-   cron run, only the maximum number is sent.  The rest will be queued
-   for the next cron run or the next manual send batch (whatever
-   happens first).
+   queue exceeds the maximum number of users to process out per cron
+   run, only the maximum number of users are processed.  The rest will
+   be queued for the next cron run or the next manual send batch
+   (whatever happens first).
 
  - Truncate queue: Truncate the queue of pending notifications without
    sending out any notifications.
@@ -211,8 +237,9 @@ the value of the last notification timestamp.  This value is only used
 to override of the operation "Override timestamp" is selected.
 
 The status panel at the bottom of the page gives the administrator a
-rough overview of the current state of the notification queue. Its
-main use is for debugging.
+rough overview of the current state of the notification queue, as well
+as the Default MailSystem. The main use of the status panel is to
+provide information useful for debugging.
 
 
 Skip flags
@@ -278,15 +305,23 @@ non-administrators.
 TROUBLESHOOTING
 ---------------
 
-* If Notify does not send out <em>any</em> notification emails, first
-  check that Drupal can send email otherwise (e.g. request a password
-  reset email).  If this does not work, the problem is with your
-  site's email configuration, not Notify.
+* If Notify does not send out any notification emails, first check
+  that Drupal can send email otherwise (e.g. request a password reset
+  email).  If this does not work, the problem is with your site's
+  email configuration, not Notify.
 
 * If inbound links in the notification e-mail is rendered as
   http://default, you may need to set the $base_url in your
   settings.php file. Examples for how to do this are provided in
   settings.php.
+
+* If your site is multilingual, and your problem is that Notify is not
+  sending all notifications to all subscribed users, the first thing
+  to try is to visit the multilingual settings and turn off any
+  language filter (i.e. set Notify to notify about "All contents").
+  If changing this setting makes a difference, you need to review your
+  multiligual settings for nodes, users and Notify and make sure that
+  they match.
 
 * If Notify makes the site crash, and you have the core PHP Filter
   module enabled, nodes which include bad PHP code will break your
@@ -301,9 +336,16 @@ queue linked to from the Notify project page.
 TESTING
 -------
 
-The file notify.test contains a test suite for Notify that make use of
-the core Testing module.  See comments inside the file for details
-about the individual tests.
+The test suite is removed in this release for help with debugging.
+
+
+RELATED PROJECTS & ALTERNATIVES
+-------------------------------
+
+See the pages:
+- https://drupal.org/node/645108
+- http://groups.drupal.org/node/15928
+for overviews of modules providing similar functionality.
 
 
 MAINTAINERS
@@ -321,3 +363,5 @@ Ward Poelmans <wpoely86@gmail.com>,
 Ishmael Sanchez (http://ishmaelsanchez.com), and
 Ajit Shinde (https://www.facebook.com/shinde.ajit)
 contributed to the Drupal 7 port.
+Vincent Rommelaars <vincent@hostplek.nl> contributed to the Drupal 8
+port.

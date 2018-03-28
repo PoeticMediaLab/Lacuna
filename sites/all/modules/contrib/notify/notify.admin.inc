@@ -90,8 +90,8 @@ function notify_admin_settings($form, &$form_state) {
 
   $form['notify_settings']['notify_batchsize'] = array(
     '#type' => 'select',
-    '#title' => t('Maximum number of notifications to send out per cron run'),
-    '#description' => t('The maximum number of notification e-mails to send in each pass of  a <a href="@cron">cron maintenance task</a>. If necessary, reduce the number of items to prevent resource limit conflicts.', array('@cron' => url('admin/reports/status'))),
+    '#title' => t('Maximum number of users to process out per cron run'),
+    '#description' => t('The maximum number of users to process in each pass of  a <a href="@cron">cron maintenance task</a>. If necessary, reduce the number of users to prevent resource limit conflicts.', array('@cron' => url('admin/reports/status'))),
     '#default_value' => variable_get('notify_batchsize', 100),
     '#options' => $batch,
   );
@@ -123,7 +123,7 @@ function notify_admin_settings($form, &$form_state) {
       '#title' => t('Multilingual setting &ndash; new contents to include:'),
       '#default_value' => variable_get('notify_multilingual', 1),
       '#options' => array(t('All contents'), t("Contents in the user's preferred language + contents not yet translated"), t("Only contents in the user's preferred language")),
-      '#description' => t('This setting lets you specfy what to include in user notifications on a multilingual site.  (Please note that new contents that are marked as "language neutral" will always be included, and that administrators will always be notified about all new contents.)'),
+      '#description' => t('This setting lets you specfy what subscribed contents to include in user notifications on a multilingual site.  (Please note that new contents that are marked as "language neutral" will always be included, and that administrators will always be notified about all new contents.)'),
     );
   }
 
@@ -266,9 +266,10 @@ function notify_admin_queue($form, &$form_state) {
   $fail = variable_get('notify_num_failed', 0);
   $batch_remain = count(variable_get('notify_users', array()));
 
-  $creat_msg = t('There are !nodes and !comms created', array(
+  $creat_msg = t('There are !nodes and !comms !created', array(
     '!nodes' => format_plural($np, '1 node', '@count nodes'),
     '!comms' => format_plural($cp, '1 comment', '@count comments'),
+    '!created' =>   variable_get('notify_include_updates', 0) ? t('updated') : t('created'),
   ));
   if ($nn + $cn) {
     $publ_msg = t(', and in addition !noderp and !commrp published,', array(
@@ -312,6 +313,7 @@ function notify_admin_queue($form, &$form_state) {
       $sent_msg .= ', ' . t('no failures');
     }
   }
+
   $mailsystem = variable_get('mail_system', NULL);
   $ms = isset($mailsystem['default-system']) ? $mailsystem['default-system'] : t('system default');
   $form['batch']['schedule'] = array(
@@ -321,7 +323,7 @@ function notify_admin_queue($form, &$form_state) {
     . $skip_msg . '.<br>'
     . $sent_msg . '.<br>'
     . $batch_msg . '.<br>'
-    . t('Default MailSystem: ') . $ms . '.'
+    . t('Default MailSystem: !mailsystem.', array('!mailsystem' => $ms)),
   );
   return $form;
 }
@@ -596,7 +598,7 @@ function theme_notify_admin_skip($variables) {
   if (!$rows) {
     $rows[] = array(array(
         'data' => t('No notifications are scheduled.'),
-        'colspan' => 5,
+        'colspan' => 6,
       ));
   }
   $output .= theme('table', array('header' => $header, 'rows' => $rows));

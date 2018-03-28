@@ -2,4 +2,4 @@ name = Lacuna Version
 description = Display the current version of Lacuna
 package = Lacuna Stories
 core = 7.x
-version = "7.x-2.4"
+version = "7.x-2.4.1"
