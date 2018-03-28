@@ -17,11 +17,15 @@
           $(this).toggleClass("checked");
           if ($(this).hasClass("checked")) {
             if ("Private" == $(this).attr("id")) {
-              $(".annotator-privacy-types #Instructor, .annotator-privacy-types #Peer-Groups, .annotator-privacy-types #Everyone").removeClass('checked');
+              $(".annotator-privacy-types #Instructor, .annotator-privacy-types #Student, .annotator-privacy-types #Peer-Groups, .annotator-privacy-types #Everyone").removeClass('checked');
               $(".annotator-widget .annotator-privacy-groups").removeClass("show-groups");
             }
+            if ("Student" == $(this).attr("id")) {
+                $(".annotator-privacy-types #Instructor, .annotator-privacy-types #Private, .annotator-privacy-types #Peer-Groups, .annotator-privacy-types #Everyone").removeClass('checked');
+                $(".annotator-widget .annotator-privacy-groups").removeClass("show-groups");
+            }
             if ("Everyone" == $(this).attr("id")) {
-              $(".annotator-privacy-types #Instructor, .annotator-privacy-types #Peer-Groups, .annotator-privacy-types #Private").removeClass('checked');
+              $(".annotator-privacy-types #Instructor, .annotator-privacy-types #Peer-Groups, .annotator-privacy-types #Private, .annotator-privacy-types #Student").removeClass('checked');
               $(".annotator-widget .annotator-privacy-groups").removeClass("show-groups");
             }
             if ("Instructor" == $(this).attr("id") || "Peer-Groups" == $(this).attr("id")) {

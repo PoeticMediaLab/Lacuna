@@ -223,14 +223,16 @@ class FeatureContext extends DrupalContext implements SnippetAcceptingContext {
    *
    * Creates an annotation by current user with values set:
    * | audience     | category      | tags       | text             |
-   * | private, peer-groups, instructor, everyone|
-   * @Given annotations on :document:
+   * | private, peer-groups, instructor, everyone, student|
+   *
+   * @Given annotations on :type :title:
    */
-  public function createAnnotations($document_title, TableNode $annotationsTable) {
+  public function annotationsOnType($type, $title, TableNode
+$annotationsTable) {
     global $user;
     // Need to load the user from the Author field in this case
     $user = $this->user;  // Needed for module's routines
-    $document = $this->findNodeByTitle('document', $document_title);
+    $document = $this->findNodeByTitle($type, $title);
     // Access the Annotation Store functions
     include_once(DRUPAL_ROOT . '/sites/all/modules/custom/annotation/annotation.store.inc');
     foreach ($annotationsTable->getHash() as $data) {
@@ -250,6 +252,7 @@ class FeatureContext extends DrupalContext implements SnippetAcceptingContext {
         }
         unset($annotation->audience);
       }
+      // TODO set student feedback annotations privacy options
       // Annotator.js formats the URI this way
       global $base_root;
       $uri = entity_uri('node', $document);
@@ -321,5 +324,32 @@ class FeatureContext extends DrupalContext implements SnippetAcceptingContext {
 //    $vocab = taxonomy_vocabulary_machine_name_load('annotation_tags');
 //    $tree = taxonomy_get_tree($vocab->vid);
   }
-}
 
+  /**
+   * @param $option
+   * @param $field
+   * @throws \Exception
+   *
+   * @Then I should be a member of a peer feedback group
+   */
+  public function IAmMemberOfPeerFeedbackGroup() {
+    $groups = og_get_entity_groups('user', $this->user);
+    $isMember = FALSE;
+    foreach ($groups['node'] as $gid) {
+      $group = node_load($gid);
+
+      if ($group->type != 'peer_group') {
+        continue;
+      }
+
+      $peer_group_wrapper = entity_metadata_wrapper('node', $group);
+      if ($peer_group_wrapper->{PRIVATE_FEEDBACK_FIELD}->value() == 1) {
+        $isMember = TRUE;
+        break;
+      }
+    }
+    if (!$isMember) {
+      throw new \Exception(sprintf("User %s is not part of a private feedback group", $this->user->name));
+    }
+  }
+} // END Class

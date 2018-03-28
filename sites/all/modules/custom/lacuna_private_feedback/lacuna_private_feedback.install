@@ -1,0 +1,108 @@
+<?php
+
+/**
+ * Add a boolean to peer groups to mark as private feedback
+ */
+
+function lacuna_private_feedback_install() {
+  if (!field_info_field(PRIVATE_FEEDBACK_FIELD)) {
+    $field = array(
+      'field_name' => PRIVATE_FEEDBACK_FIELD,
+      'type' => 'list_boolean',
+      'cardinality' => 1,
+      'settings' => array(
+        'allowed_values' => array(0 => 0, 1 => 1)
+      ),
+    );
+
+    field_create_field($field);
+
+    $instance = array(
+      'field_name' => PRIVATE_FEEDBACK_FIELD,
+      'entity_type' => 'node',
+      'bundle' => 'peer_group',
+      'label' => 'Private Feedback',
+      'settings' => array(
+        'no_ui' => TRUE,
+      ),
+      'default_value' => 0,
+    );
+
+    field_create_instance($instance);
+  }
+
+  // Create all needed groups
+  _lpf_install_groups();
+}
+
+/**
+ * @param $gids
+ * @return int
+ *
+ * Returns courses a student is enrolled in, based on all group memberships
+ */
+function _lpf_courses_enrolled($gids) {
+  $courses_enrolled = array();
+  $query = new EntityFieldQuery;
+  $query->entityCondition('entity_type', 'node')
+    ->entityCondition('bundle', 'course')
+    ->entityCondition('entity_id', $gids, 'IN');
+  $result = $query->execute();
+  if (isset($result['node'])) {
+    $courses_enrolled = array_keys($result['node']);
+  }
+  return $courses_enrolled;
+}
+
+
+function _lpf_install_groups() {
+  $student_role = user_role_load_by_name('student');
+
+  $query = db_select('users', 'u');
+  $query->fields('u', array('uid'));
+  $query->innerJoin('users_roles', 'r', 'r.uid = u.uid');
+  $query->condition('r.rid', $student_role->rid);
+  $results = $query->execute();
+
+  foreach ($results as $result) {
+    $account = user_load($result->uid);
+    $gids = og_get_groups_by_user($account, 'node');
+    $courses = _lpf_courses_enrolled($gids);
+    $groups = array_diff($gids, $courses);
+    foreach ($courses as $course_id) {
+      $needs_pfg = TRUE;
+      foreach ($groups as $gid) {
+        $group = node_load($gid);
+        if (og_is_member('node', $course_id, 'node', $group) &&
+          _lpf_is_feedback_group($gid))
+        {
+          $needs_pfg = FALSE;
+        }
+      }
+      if ($needs_pfg) {
+        $course = node_load($course_id);
+        // Create a new feedback group for the student
+        $group = _lpf_create_new_group($account, $course);
+        // Now add all the course's instructors to this new group
+        $uids = og_get_group_members_properties($course, array(), 'members',
+          'node');
+        $role = user_role_load_by_name('instructor');
+        foreach ($uids as $uid) {
+          $member = user_load($uid);
+          if (user_has_role($role->rid, $member) ||
+            user_access('administer group', $member))
+          {
+            og_group('node', $group->nid, array('entity' => $member));
+          }
+        }
+      }
+    }
+  }
+}
+
+
+function lacuna_private_feedback_uninstall() {
+  field_delete_field(PRIVATE_FEEDBACK_FIELD);
+  // TODO: Delete all feedback groups? Then what to do with annotations?
+  // Maybe just give a warning and confirmation step before disabling?
+}

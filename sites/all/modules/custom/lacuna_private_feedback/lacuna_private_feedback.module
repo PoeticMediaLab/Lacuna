@@ -1,0 +1,305 @@
+<?php
+
+define('PRIVATE_FEEDBACK_FIELD', 'field_private_feedback');
+
+/**
+ * @param $og_membership
+ *
+ * When a new user is approved in a course, create new private group(s)
+ * for instructor->student private annotations
+ */
+function _lpf_process_new_member($og_membership) {
+  // Only process if new member is a user
+  if ($og_membership->entity_type != 'user') {
+    return;
+  }
+
+  // Only trigger if somebody joins a course
+  $group = node_load($og_membership->gid);
+  if ($group->type != 'course') {
+    return;
+  }
+
+  $new_member = user_load($og_membership->etid);
+
+  // Get all group members
+  $members = og_get_group_members_properties($group, array(), 'members', 'node');
+
+  $instructors = array();
+  $students = array();
+  foreach ($members as $uid) {
+    $member = user_load($uid);
+
+    // Check if they're an active member (i.e., not pending or blocked)
+    if (!og_is_member('node', $group->nid, 'user', $member, array
+    (OG_STATE_ACTIVE))) {
+      continue;
+    }
+
+    // Are they an approved instructor in this course?
+    $role = user_role_load_by_name('instructor');
+    if (user_has_role($role->rid, $member) ||
+        user_access('administer group', $member))
+    {
+      $instructors[] = $member;
+    } else {
+      $students[] = $member;
+    }
+  }
+
+  if (in_array($new_member, $students)) {
+    _lpf_add_new_student($group, $new_member, $instructors);
+  } elseif (in_array($new_member, $instructors)) {
+    _lpf_add_new_instructor($group, $new_member, $students);
+  }
+}
+
+/**
+ * @param $og_membership
+ *
+ * May happen on insert if via group interface
+ */
+function lacuna_private_feedback_og_membership_insert($og_membership) {
+  _lpf_process_new_member($og_membership);
+}
+
+/**
+ * @param $og_membership
+ *
+ * May happen via user management interface, too
+ */
+function lacuna_private_feedback_og_membership_update($og_membership) {
+  _lpf_process_new_member($og_membership);
+}
+
+/**
+ * Remove user from private feedback groups when they leave the course
+ */
+function lacuna_private_feedback_og_membership_delete($og_membership) {
+  // TODO: If instructor, remove from feedback group
+  // can leave students and groups in place to not lose annotations
+}
+
+
+/**
+ * @param $gid
+ * @return bool
+ *
+ * Check if a group ID refers to a private feedback group
+ */
+function _lpf_is_feedback_group($gid) {
+  $wrapper = entity_metadata_wrapper('node', $gid);
+  return $wrapper->{PRIVATE_FEEDBACK_FIELD}->value() == TRUE;
+}
+
+
+function _lpf_create_new_group($member, $course) {
+  $values = array(
+    'type' => 'peer_group',
+    'uid' => $member->uid,
+    'status' => 1,
+    'comment' => 0,
+    'promote' => 0,
+  );
+
+  $entity = entity_create('node', $values);
+  $wrapper = entity_metadata_wrapper('node', $entity);
+  $wrapper->group_access = 1;  // make it a private group
+  $wrapper->{PRIVATE_FEEDBACK_FIELD} = 1; // mark it as a private feedback group
+  $wrapper->title->set('Private feedback to ' . $member->name . ' for course: ' .
+    $course->title);
+  $wrapper->save();
+
+  // Make feedback group a member of the course group
+  og_group('node', $course->nid, array('entity_type' => 'node', 'entity' =>
+    $entity));
+  return $entity;
+}
+
+/**
+ * @param $student
+ * @param $instructors
+ *
+ * Create a new private feedback group for the student
+ * Add all instructors to it
+ */
+function _lpf_add_new_student($course, $student,
+                              $instructors) {
+  $group = _lpf_create_new_group($student, $course);
+  og_group('node', $group->nid, array('entity' => $student));
+  foreach ($instructors as $instructor) {
+    og_group('node', $group->nid, array('entity' => $instructor));
+  }
+}
+
+
+/**
+ * @param $course
+ * @param $instructor
+ * @param $students
+ *
+ * Find existing private feedback groups for each student
+ * Add instructor to each one
+ */
+function _lpf_add_new_instructor($course, $instructor,
+                                 $students) {
+  // Find existing private feedback peer groups with each student as member
+  // Add this instructor to each group
+  foreach ($students as $student) {
+    $groups = og_get_entity_groups('user', $student);
+    foreach ($groups['node'] as $gid) {
+      $group = node_load($gid);
+
+      if ($group->type != 'peer_group') {
+        continue;
+      }
+
+      $peer_group_wrapper = entity_metadata_wrapper('node', $group);
+      if ($peer_group_wrapper->{PRIVATE_FEEDBACK_FIELD}->value() != 1) {
+        // Not a private feedback group
+        continue;
+      }
+
+      if (!og_is_member('node', $course->nid, 'node', $group)) {
+        // Found a feedback group, but it's not for this course
+        continue;
+      }
+
+      // We found a private feedback group for this student in this course
+      // Now add the new instructor
+      og_group('node', $group->nid, array('entity' => $instructor));
+    }
+  }
+}
+
+/**
+ * @param $form
+ * @param $form_state
+ * @param $form_id
+ *
+ * Hook to hide some fields nobody should be able to edit
+ */
+function lacuna_private_feedback_form_peer_group_node_form_alter(&$form,
+                                                                 &$form_state,
+                                                                 $form_id) {
+  $form[PRIVATE_FEEDBACK_FIELD]['#access'] = FALSE;
+  $form['group_access']['#access'] = FALSE;
+}
+
+/**
+ * @param $data
+ *
+ * Filter private feedback groups from the peer groups listed by annotations
+ */
+function lacuna_private_feedback_annotation_store_load_privacy_options_alter
+(&$data, $annotation = NULL) {
+  $nid = FALSE;
+  if (isset($annotation)) {
+    $nid = $annotation->field_annotation_reference[$annotation->language][0]['target_id'];
+    $data['response'] = $nid;
+  } elseif ($data['response']) {
+    $nid = $data['response'];
+  }
+  if ($nid) {
+    $node = node_load($nid);
+    $author = user_load($node->uid);
+  }
+
+  foreach (array_keys($data['groups']['peer_groups']) as $gid) {
+    $group = entity_metadata_wrapper('node', $gid);
+
+    // BUG When loading annotations from API, there's no node object to test
+    // or to get the nid, so have to get it from the annotation data instead
+    // target_id for annotation
+    if ($group->{PRIVATE_FEEDBACK_FIELD}->value() == TRUE) {
+      if ($nid && og_is_member('node', $gid, 'user', $author)) {
+        $data['private_feedback'] = _lpf_get_feedback_gid($author->uid);
+        // If annotation privacy is student feedback, mark as such
+        if ($data['groups']['peer_groups'][$gid]['selected'] == 1) {
+          $data['audience']['student'] = 1;
+          $data['audience']['peer-groups'] = 0;
+        }
+      }
+
+      // Now remove all feedback groups from peer-groups option
+      unset($data['groups']['peer_groups'][$gid]);
+    }
+  }
+}
+
+/**
+ * @param $json
+ *
+ * Update the annotation object before saving to convert private feedback
+ * into correct group permission.
+ * $json is the original json POST from Annotator.js
+ */
+function lacuna_private_feedback_annotation_store_save_alter(&$json) {
+  if (!isset($json->privacy_options['private_feedback'])) {
+    return;
+  }
+  $gid = $json->privacy_options['private_feedback'];
+  // piggy-back on peer groups
+  $json->privacy_options['audience']['peer-groups'] = 1;
+  // Tell annotation store to use this value
+  $json->privacy_options['groups']['peer_groups'][$gid] = array('selected' =>
+    1);
+  $json->privacy_options['audience']['instructor'] = 0; // replace this value
+}
+
+/**
+ * @param $uid
+ * @return int
+ *
+ * Returns the GID for the correct feedback group for a given student
+ */
+function _lpf_get_feedback_gid($uid) {
+  $student = user_load($uid);
+  $gids = og_get_groups_by_user($student, 'node');
+  $course_id = course_get_selected_course();
+  foreach ($gids as $gid) {
+    $group = node_load($gid);
+    if (og_is_member('node', $course_id, 'node', $group) &&
+      _lpf_is_feedback_group($gid)) {
+      return $gid;
+    }
+  }
+  return FALSE; // None found! Uh-oh!
+}
+
+
+/**
+ * @param $options
+ *
+ * Alter the privacy options before they get sent to the annotator privacy
+ * plugin
+ */
+function lacuna_private_feedback_annotator_privacy_options_alter(&$privacy_options) {
+  // Just a wrapper for what we do when we load an annotation
+  // But also need to run it when initializing the Annotator
+   lacuna_private_feedback_annotation_store_load_privacy_options_alter($privacy_options);
+}
+
+/**
+ * @param $data
+ *
+ * Alter the dashboard data to change sharing from "peer groups" to "student"
+ * where appropriate
+ */
+function
+lacuna_private_feedback_lacuna_visualizations_dashboard_build_data_alter
+(&$data) {
+  foreach ($data as $annotation) {
+    if (strtolower($annotation->audience) == 'peer-groups') {
+      $groups = og_get_entity_groups('node', $annotation->id);
+      if (!isset($groups['node'])) {
+        continue;
+      }
+      foreach ($groups['node'] as $gid) {
+        if (_lpf_is_feedback_group($gid)) {
+          $annotation->audience = 'Student';
+        }
+      }
+    }
+  }
+}

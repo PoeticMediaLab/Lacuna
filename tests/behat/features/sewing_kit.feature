@@ -16,7 +16,7 @@
       And document "Document A" is content for course "Course Alpha"
       And a "Student" user named "Student A" exists
       And "Student A" is enrolled in the "Course Alpha" course
-      And annotations on "Document A":
+      And annotations on document "Document A":
         | audience     | text                          | author     |
         | Private      | This is a private annotation  | Student A  |
         | Instructor   | This is for teacher           | Student A  |

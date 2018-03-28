@@ -18,6 +18,7 @@ class Annotator.Plugin.Privacy extends Annotator.Plugin
       wrapper: 'annotator-privacy-types'
       default: 'annotator-privacy-type'
       private: 'annotator-privacy-private'
+      student: 'annotator-privacy-student'
       instructor: 'annotator-privacy-instructor'
       'peer-groups': 'annotator-privacy-peer-groups'
       everyone: 'annotator-privacy-everyone'
@@ -45,7 +46,13 @@ class Annotator.Plugin.Privacy extends Annotator.Plugin
 
     # NOTE: Listener and logic for selecting these spans is in annotator_privacy.js, not this file
     privacy_html += '<span class="' + @className.types.wrapper + '">'
+
     for privacy_type in ["Private", "Instructor", "Peer-Groups", "Everyone"]
+      if settings.is_instructor == true and privacy_type == "Instructor"
+        if settings.response
+          privacy_type = 'Student'
+        else
+          continue
       checked = if settings.audience[privacy_type.toLowerCase()] then 'checked' else ''
       if "Peer-Groups" == privacy_type && "checked" == checked
         show_groups = 'show-groups'
@@ -58,6 +65,9 @@ class Annotator.Plugin.Privacy extends Annotator.Plugin
     groups = settings.groups
     for group_type, group_object of groups
       for gid, group of group_object
+        if group.private_feedback
+          continue # Skip private feedback groups as peer group option
+
         groups_html += '<label class="' + @className.groups.wrapper + ' ' + show_groups + '">'
         checked = if group.selected then 'checked="checked"' else ''
         groups_html += '<input type="checkbox" class="' + @className.groups.default + ' ' + group_type + '" value="' + gid + '" ' + checked + ' />'
@@ -76,12 +86,17 @@ class Annotator.Plugin.Privacy extends Annotator.Plugin
         audience[type] = 1
       else
         audience[type] = 0
+
       $('.annotator-editor input.' + @className.groups.default + '[type=checkbox]').each ->
         checked = if $(this).is(":checked") then 1 else 0
         gid = $(this).val()
         parent = $(this).parent()
         group_name = parent[0].textContent
         peer_groups[gid] = 0: group_name, selected: checked
+
+    # If not private feedback, clear the GID from that option
+    if $('.' + @className.types.wrapper + ' #Student').hasClass("checked")
+      annotation.privacy_options.private_feedback = Drupal.settings.privacy_options.private_feedback
 
     # Added by <codymleff@gmail.com> on 11/14/16 to prevent setting
     # Peer-Groups as the audience without having any peer groups
@@ -107,7 +122,7 @@ class Annotator.Plugin.Privacy extends Annotator.Plugin
     for audience_type, checked of annotation.privacy_options.audience
       if checked
         audience += '<span class="' + @className.types.default + ' ' + @className.types[audience_type]
-        if audience_type == 'private'
+        if audience_type == 'private' or audience_type == 'student' or audience_type == 'instructor'
           audience += ' fa fa-lock'
         if audience_type == 'everyone'
           audience += ' fa fa-unlock'

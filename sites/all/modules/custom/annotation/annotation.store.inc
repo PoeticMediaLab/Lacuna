@@ -152,6 +152,9 @@ function annotation_format_tags(&$entity, $tags) {
 function annotation_drupal_format($entity, $update = FALSE) {
   global $user;
 
+  // Let other modules make changes first
+  drupal_alter('annotation_store_save', $entity);
+
   if (!$update) {
     // Not an update; initialize the annotation object
     $annotation = new stdClass();
@@ -234,6 +237,7 @@ function annotation_drupal_format($entity, $update = FALSE) {
         break;
 
       case 'privacy_options':
+
         // Save these privacy options as the default for this user for new annotations on this document
         $privacy_defaults = array();
         if (isset ($user->data['annotation_privacy_defaults'])) {
@@ -246,7 +250,7 @@ function annotation_drupal_format($entity, $update = FALSE) {
 
 
         // Set the audience field to empty, to be set below
-        $annotation->field_annotation_audience[$annotation->language] = array ();
+        $annotation->field_annotation_audience[$annotation->language] = array();
 
         // Restrict any permission-granting fields, then set otherwise below depending on audience (ie. here we restrict, below we open up)
         $annotation->group_content_access[$annotation->language][0]['value'] = 2; // group membership required
@@ -635,13 +639,14 @@ function annotation_entity_permissions($entity, $user) {
   return $permissions;
 }
 
+
 /**
  * Prepare entity for api usage
  */
 function annotation_api_entity_prepare($annotation, $op) {
   $entity = new stdClass();
   $entity->id = $annotation->nid; // Annotator wants our nid in the id field
-  $annotation_wrapper = entity_metadata_wrapper ('node', $annotation);
+  $annotation_wrapper = entity_metadata_wrapper('node', $annotation);
   global $user;
   switch($op) {
     case 'read':
@@ -660,8 +665,12 @@ function annotation_api_entity_prepare($annotation, $op) {
           !isset($annotation->field_annotation_pdf_range[$annotation->language][0]['value'])) {
         return;
       }
-      $entity->ranges = drupal_json_decode($annotation->field_annotation_ranges[$annotation->language][0]['value']);
-      $entity->pdfRange = drupal_json_decode($annotation->field_annotation_pdf_range[$annotation->language][0]['value']);
+      if (isset($annotation->field_annotation_ranges)) {
+        $entity->ranges = drupal_json_decode($annotation->field_annotation_ranges[$annotation->language][0]['value']);
+      }
+      if (isset($annotation->field_annotation_pdf_range[$annotation->language])) {
+        $entity->pdfRange = drupal_json_decode($annotation->field_annotation_pdf_range[$annotation->language][0]['value']);
+      }
 
       // Text
       if (isset($annotation->field_annotation_text[$annotation->language]) && count($annotation->field_annotation_text[$annotation->language])) {
@@ -729,6 +738,7 @@ function annotation_api_entity_prepare($annotation, $op) {
       // Get built peer groups, and mark those that are selected for this annotation
       // TODO: Refactor for performance
       $built_peer_groups = annotation_build_peer_groups();
+
       foreach ($built_peer_groups as $group_type => $group_type_possible_groups) {
         foreach ($group_type_possible_groups as $group_nid => $group_properties) {
           if (in_array($group_nid, $selected_groups)) {
@@ -742,6 +752,14 @@ function annotation_api_entity_prepare($annotation, $op) {
         'audience' => $audience,
         'groups' => $built_peer_groups,
       );
+
+      // To allow hiding of "Instructor" option if already an instructor
+      $entity->privacy_options['is_instructor'] = _annotation_is_instructor();
+
+      // Allow other modules to alter the privacy options
+      // Put in place for the Private Feedback module
+      drupal_alter('annotation_store_load_privacy_options',
+        $entity->privacy_options, $annotation);
 
       // Set permissions for edit and delete controls
       $entity->permissions = annotation_entity_permissions($annotation, $user);
