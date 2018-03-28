@@ -1,6 +1,12 @@
 Lacuna Release Notes
 ====================
 
+Version 2.4.1: Private Student Feedback
+-------------
+March 28, 2018
+
+This release adds the ability for instructors to use annotations on student writing as a form of private feedback. It also includes core updates to Drupal 7.58 to address SA-CORE-2018-002. 
+
 Version 2.3: PDF Annotation and New Notifications System
 -------------
 February 28, 2018
