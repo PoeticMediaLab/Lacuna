@@ -83,8 +83,12 @@ li.views-fluid-grid-inline.views-fluid-grid-item.views-row:hover {
     /*width: 100%;*/
     background-color: #8FA3B6;
     background-image: linear-gradient(to right, #8FA3B6, #FCFCFC 40%);
-    width: 600%;
-    margin-left: -85.5%;
+    width: 100vw;
+    position: relative;
+    left: 50%;
+    right: 50%;
+    margin-left: -50vw;
+    margin-right: -50vw;
 
 }
 
@@ -95,8 +99,8 @@ li.views-fluid-grid-inline.views-fluid-grid-item.views-row:hover {
     position: relative;
     top: 0;
     left: 0;
-    transform: translate(47%, 20%);
-    -webkit-transform: translate(47%, 20%);
+    transform: translate(30%, 20%);
+    -webkit-transform: translate(30%, 20%);
     float: left;
     vertical-align: baseline;
 }
@@ -109,9 +113,6 @@ li.views-fluid-grid-inline.views-fluid-grid-item.views-row:hover {
     line-height: 58px;
 }
 
-.annotating {
-    /*padding-bottom: 20px;*/
-}
 
 .ls-button {
     padding: 18px 20px;
@@ -132,11 +133,10 @@ li.views-fluid-grid-inline.views-fluid-grid-item.views-row:hover {
     background-size: cover;
     background-position: center;
     position: relative;
-    right: 0;
-    transform: translatex(-1230%);
-    -webkit-transform: translatex(-1230%);
+    right: 10%;
     box-shadow: 3px 0px 5px 0 #666464;
 }
+
 body {
 	overflow-x: hidden;
 }
