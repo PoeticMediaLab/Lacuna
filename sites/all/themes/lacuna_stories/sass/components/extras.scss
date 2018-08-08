@@ -195,26 +195,26 @@ body {
   .lacuna-stories-image {
     float: right;
     height: 400px;
-    width: 400px;
-    border: 1px solid black;
+    width: 50%;
     background-image: url(/sites/all/themes/lacuna_stories/images/bannerimage.png);
     background-size: cover;
     background-position: center;
     position: relative;
-    right: 5%;
-    /*transform: translatex(-35%);*/
-    box-shadow: 0px 0px 5px 0 black;
+    clip-path: polygon(40% 0, 100% 0, 100% 100%, 0 100%);
   }
 }
 
 @media (max-width: 965px) and (min-width: 541px) {
-	.banner-wrapper {
+  .banner-wrapper {
     height: 400px;
-    width: 100%;
+    width: 100vw;
+    position: relative;
+    left: 50%;
+    right: 50%;
+    margin-left: -50vw;
+    margin-right: -50vw;
     background-color: #8FA3B6;
-    background-image: linear-gradient(to right, #8FA3B6, #FCFCFC 50%);
-
-}
+  }
 
 .lacuna-stories-about {
     /*border: 1px solid black;*/
@@ -223,10 +223,8 @@ body {
     position: relative;
     top: 0;
     left: 0;
-    transform: translate(25%, 15%);
-    -webkit-transform: translate(25%, 15%);
-    float: left;
-    vertical-align: baseline;
+    transform: translate(25%, 25%);
+    -webkit-transform: translate(25%, 25%);
 }
 
 .annotating span {
@@ -270,19 +268,23 @@ body {
 @media (max-width: 540px) {
 .banner-wrapper {
     height: 250px;
-    width: 100%;
+    width: 100vw;
+    position: relative;
+    left: 50%;
+    right: 50%;
+    margin-left: -50vw;
+    margin-right: -50vw;
     background-color: #8FA3B6;
-    background-image: linear-gradient(to right, #8FA3B6, #FCFCFC 90%);
 }
 
 .lacuna-stories-about {
     font-family: "Source Sans Pro", sans-serif;
     color: black;
-    width: 80%;
+    width: 100%;
     text-align: center;
     margin: auto;
     position: relative;
-    top: 3.25em;
+    top: 4.5em;
     left: 0;
     transform: none;
     -webkit-transform: none;
