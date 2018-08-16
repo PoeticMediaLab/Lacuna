@@ -260,6 +260,7 @@ h2.annotating {
     background-position: center;
     position: relative;
     clip-path: polygon(40% 0, 100% 0, 100% 100%, 0 100%);
+    -webkit-clip-path: polygon(40% 0, 100% 0, 100% 100%, 0 100%);
   }
 }
 
