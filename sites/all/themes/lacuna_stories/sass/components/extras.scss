@@ -78,7 +78,7 @@ li.views-fluid-grid-inline.views-fluid-grid-item.views-row:hover {
 }
 
 /*styling for front page banner*/
-@media (min-width:1200px) { .banner-wrapper {
+@media (min-width:850px) { .banner-wrapper {
     height: 400px;
     /*width: 100%;*/
     background-color: #8FA3B6;
@@ -133,6 +133,7 @@ li.views-fluid-grid-inline.views-fluid-grid-item.views-row:hover {
     background-position: center;
     position: relative;
     clip-path: polygon(40% 0, 100% 0, 100% 100%, 0 100%);
+    -webkit-clip-path: polygon(40% 0, 100% 0, 100% 100%, 0 100%);
 }
 
 body {
@@ -147,7 +148,7 @@ body {
 
 }
 
-@media (max-width: 1199px) and (min-width: 965px) {
+/*@media (max-width: 1199px) and (min-width: 965px) {
 	.banner-wrapper {
     height: 400px;
     width: 100vw;
@@ -161,7 +162,7 @@ body {
   }
 
   .lacuna-stories-about {
-    /*border: 1px solid black;*/
+    /*border: 1px solid black;
     width: 30%;
     min-width: 400px;
     position: relative;
@@ -202,9 +203,9 @@ body {
     position: relative;
     clip-path: polygon(40% 0, 100% 0, 100% 100%, 0 100%);
   }
-}
+}/*/
 
-@media (max-width: 965px) and (min-width: 541px) {
+@media (max-width: 849px) and (min-width: 646px) {
   .banner-wrapper {
     height: 400px;
     width: 100vw;
@@ -218,30 +219,31 @@ body {
 
 .lacuna-stories-about {
     /*border: 1px solid black;*/
-    /*width: 30%;
-    min-width: 400px;*/
+    width: 30%;
     position: relative;
     top: 0;
     left: 0;
-    transform: translate(25%, 25%);
-    -webkit-transform: translate(25%, 25%);
+    transform: translate(30%, 20%);
+    -webkit-transform: translate(30%, 20%);
+    float: left;
+    vertical-align: baseline;
 }
 
 .annotating span {
     font-family: "Source Sans Pro", sans-serif;
-    letter-spacing: -.075em;
-    font-size: 48px;
+    /*letter-spacing: -.075em;*/
+    font-size: 35px;
     color: #000000;
-    line-height: 58px;
+    line-height: 35px;
 }
 
-.annotating {
-    /*padding-bottom: 20px;*/
+h2.annotating {
+  margin-bottom: 25px;
 }
 
 .ls-button {
     padding: 18px 20px;
-    font-size: 30px;
+    font-size: 15px;
     font-family: "Source Sans Pro", sans-serif;
     font-weight: bold;
     text-transform: none;
@@ -250,22 +252,18 @@ body {
 }
 
 .lacuna-stories-image {
-    /*float: right;
+    float: right;
     height: 400px;
-    width: 400px;
-    border: 1px solid black;
+    width: 40%;
     background-image: url(../images/bannerimage.png);
     background-size: cover;
     background-position: center;
     position: relative;
-    right: 0;
-    /*transform: translatex(-35%);*/
-    /*box-shadow: 0px 0px 5px 0 black;*/
-    display: none;
-}
+    clip-path: polygon(40% 0, 100% 0, 100% 100%, 0 100%);
+  }
 }
 
-@media (max-width: 540px) {
+@media (max-width: 645px) {
 .banner-wrapper {
     height: 250px;
     width: 100vw;
@@ -280,22 +278,31 @@ body {
 .lacuna-stories-about {
     font-family: "Source Sans Pro", sans-serif;
     color: black;
-    width: 100%;
+    width: 66%;
     text-align: center;
     margin: auto;
     position: relative;
     top: 4.5em;
     left: 0;
-    transform: none;
-    -webkit-transform: none;
+    display: inline-block;
 }
 
 .lacuna-stories-image {
-	display: none;
+    float: right;
+    height: 250px;
+    width: 33%;
+    background-image: url(../images/bannerimage.png);
+    background-size: cover;
+    background-position: center;
+    position: relative;
 }
 
 .ls-button {
 	display: none;
+}
+
+h2.annotating {
+  font-size: 1.1em;
 }
 
 .annotating span {
