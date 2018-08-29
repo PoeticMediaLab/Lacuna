@@ -9,14 +9,21 @@
  */
 function lacuna_stories_people_default_rules_configuration() {
   $items = array();
-  $items['rules_automatically_assign_student_role'] = entity_import('rules_config', '{ "rules_automatically_assign_student_role" : {
-      "LABEL" : "Automatically Assign Student Role",
+  $items['rules_browser_warning'] = entity_import('rules_config', '{ "rules_browser_warning" : {
+      "LABEL" : "Browser Warning",
       "PLUGIN" : "reaction rule",
       "OWNER" : "rules",
-      "REQUIRES" : [ "rules" ],
-      "ON" : { "user_insert" : [] },
+      "REQUIRES" : [ "php", "rules" ],
+      "ON" : { "user_login" : [] },
+      "IF" : [
+        { "php_eval" : { "code" : "if(strpos($_SERVER[\\u0027HTTP_USER_AGENT\\u0027], \\u0027MSIE\\u0027) !== FALSE)\\r\\n   return true;\\r\\n elseif(strpos($_SERVER[\\u0027HTTP_USER_AGENT\\u0027], \\u0027Trident\\u0027) !== FALSE) \\/\\/For Supporting IE 11\\r\\n    return true;\\r\\n else\\r\\n   return false;" } }
+      ],
       "DO" : [
-        { "user_add_role" : { "account" : [ "account" ], "roles" : { "value" : { "7" : "7" } } } }
+        { "drupal_message" : {
+            "message" : "Lacuna does not support annotation on Internet Explorer. Please switch to Firefox, Safari, or Chrome if you wish to annotate.",
+            "type" : "warning"
+          }
+        }
       ]
     }
   }');
